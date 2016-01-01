@@ -273,7 +273,8 @@ Files.readLine = function(file, index) {
 Files.readLines = function(file, startInd, endInd) {
 	if (!file.exists()) return null;
 	let reader = java.io.BufferedReader(new java.io.FileReader(file)),
-		count = -1, result = new Array();
+		count = -1,
+		result = new Array();
 	while (count <= endInd && (line = reader.readLine())) {
 		if (count >= startInd) {
 			result.push(line);
@@ -374,7 +375,8 @@ Archives.unpack = function(file, path) {
 		if (!element.isDirectory()) {
 			result.getParentFile().mkdir();
 			let bos = new java.io.BufferedOutputStream(new java.io.FileOutputStream(result)),
-				buf = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 4096), line = 0;
+				buf = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 4096),
+				line = 0;
 			while ((line = bis.read(buf)) >= 0) {
 				bos.write(buf, 0, line);
 			}
@@ -390,7 +392,8 @@ const Options = new Object();
 Options.getValue = function(key) {
 	let file = new java.io.File(Dirs.OPTION),
 		reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
-		line = new String(), result = new String();
+		line = new String(),
+		result = new String();
 	while ((line = reader.readLine()) != null) {
 		if (line.split(":")[0] == key) {
 			result = line.split(":")[1];
@@ -404,7 +407,8 @@ Options.getValue = function(key) {
 Options.setValue = function(name, key) {
 	let file = new java.io.File(Dirs.OPTION),
 		reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
-		line = new String(), result = new Array();
+		line = new String(),
+		result = new Array();
 	while ((line = reader.readLine()) != null) {
 		if (line.split(":")[0] == name) {
 			result.push(name + ":" + key);

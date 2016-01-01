@@ -12,16 +12,16 @@ const ControlWindow = function() {
 	slideOut.setMode(SlideActor.OUT);
 	slideOut.setDuration(800);
 	set.addActor(slideOut);
-	
+
 	this.setWidth(Ui.Display.MATCH);
 	this.setHeight(Ui.Display.MATCH);
 	this.setEnterActor(set);
 	this.setExitActor(set);
-	
+
 	this.elements = new Array();
 	this.reset();
 	this.setBackground("popupBackgroundMenu");
-	
+
 	let scope = this;
 	if (__code__.startsWith("develop")) {
 		let category = this.addCategory(translate("Development"));
@@ -50,26 +50,25 @@ ControlWindow.prototype.TYPE = "ControlWindow";
 ControlWindow.prototype.outside = true;
 
 ControlWindow.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
 	this.setContent(content);
-	
+
 	views.scroll = new android.widget.ScrollView(context);
-	let params = new android.widget.FrameLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	let params = new android.widget.FrameLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	content.addView(views.scroll, params);
-	
+
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setGravity(Ui.Gravity.TOP | Ui.Gravity.CENTER);
 	views.layout.setOrientation(Ui.Orientate.VERTICAL);
 	views.layout.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
-	params = new android.view.ViewGroup.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.MATCH);
+	params = new android.view.ViewGroup.LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	views.scroll.addView(views.layout, params);
 };
 
@@ -108,7 +107,8 @@ ControlWindow.prototype.indexOfElement = function(item) {
 };
 
 ControlWindow.prototype.scrollTo = function(y) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !views.scroll) return this;
 	let actor = new ScrollActor();
 	actor.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -191,27 +191,26 @@ ControlWindow.Header = function(parent) {
 ControlWindow.Header.prototype.reset = function() {
 	let views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
-	let params = new android.widget.LinearLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	let params = new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.bottomMargin = Ui.getY(32);
 	content.setLayoutParams(params);
 	this.content = content;
-	
+
 	views.slide = new android.widget.ImageView(context);
 	views.slide.setScaleX(3), views.slide.setScaleY(2);
 	params = new android.widget.FrameLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	content.addView(views.slide, params);
-	
+
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setGravity(Ui.Gravity.CENTER);
 	params = new android.widget.FrameLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	content.addView(views.layout, params);
-	
+
 	views.logo = new android.widget.ImageView(context);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.getY(320), Ui.getY(320));
+	LayoutParams(Ui.getY(320), Ui.getY(320));
 	params.leftMargin = params.topMargin =
 		params.rightMargin = params.bottomMargin = Ui.getY(12);
 	views.layout.addView(views.logo, params);
@@ -227,8 +226,8 @@ ControlWindow.Header.prototype.getWindow = function() {
 
 ControlWindow.Header.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
 		content = this.getContent();
 	if (!layout || !content) return this;
@@ -246,7 +245,8 @@ ControlWindow.Header.prototype.getCover = function() {
 };
 
 ControlWindow.Header.prototype.setCover = function(src) {
-	let content = this.getContent(), slide = this.views.slide;
+	let content = this.getContent(),
+		slide = this.views.slide;
 	if (!content || !slide || !src) return this;
 	this.cover = src;
 	slide.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -262,10 +262,12 @@ ControlWindow.Header.prototype.setMaxScroll = function(y) {
 };
 
 ControlWindow.Header.prototype.setupScroll = function() {
-	let scope = this, window = this.getWindow();
+	let scope = this,
+		window = this.getWindow();
 	if (!window || !window.views || !window.views.scroll) return this;
 	window.views.scroll.setOnScrollChangeListener(function(view, x, y) {
-		let logo = scope.views.logo.getY(), offset = y - logo - Ui.getY(12),
+		let logo = scope.views.logo.getY(),
+			offset = y - logo - Ui.getY(12),
 			real = Ui.getY(offset) / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
@@ -278,8 +280,10 @@ ControlWindow.Header.prototype.getSlideProgress = function() {
 
 ControlWindow.Header.prototype.setSlideProgress = function(procent) {
 	if (procent < 0 || procent > 100) return this;
-	let scope = this, content = this.getContent(),
-		slide = this.views.slide, logo = this.views.logo;
+	let scope = this,
+		content = this.getContent(),
+		slide = this.views.slide,
+		logo = this.views.logo;
 	if (!content || !slide || !logo) return this;
 	this.progress = procent, procent /= 100;
 	slide.post(function() {
@@ -303,7 +307,8 @@ ControlWindow.Header.prototype.getLogo = function() {
 };
 
 ControlWindow.Header.prototype.setLogo = function(src) {
-	let content = this.getContent(), logo = this.views.logo;
+	let content = this.getContent(),
+		logo = this.views.logo;
 	if (!content || !logo) return this;
 	this.logo = src;
 	logo.setImageDrawable(ImageFactory.getDrawable(src));
@@ -336,18 +341,16 @@ ControlWindow.ProjectHeader.prototype.reset = function() {
 	this.__resetCWH && this.__resetCWH();
 	let views = this.views;
 	views.background = new android.widget.LinearLayout(context);
-	let params = new android.widget.LinearLayout.LayoutParams
-			(Ui.getY(640), Ui.Display.WRAP);
+	let params = new android.widget.LinearLayout.LayoutParams(Ui.getY(640), Ui.Display.WRAP);
 	params.leftMargin = Ui.getY(48);
 	params.topMargin = params.rightMargin =
 		params.bottomMargin = Ui.getY(24);
 	views.layout.addView(views.background, params);
-	
+
 	views.scroll = new android.widget.ScrollView(context);
-	params = new android.widget.LinearLayout.LayoutParams
-				(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	views.background.addView(views.scroll, params);
-	
+
 	views.project = new android.widget.LinearLayout(context);
 	views.project.setOrientation(Ui.Orientate.VERTICAL);
 	views.project.setGravity(Ui.Gravity.CENTER);
@@ -359,7 +362,8 @@ ControlWindow.ProjectHeader.prototype.getBackground = function() {
 };
 
 ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !views.background || !src) {
 		return this;
 	}
@@ -369,7 +373,8 @@ ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
 };
 
 ControlWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !views.background) return this;
 	let window = this.getWindow();
 	if (window) {
@@ -420,7 +425,8 @@ ControlWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex)
 	let index = categoryOrIndex instanceof ControlWindow.ProjectHeader.Category ?
 		this.indexOfCategory(categoryOrIndex) : categoryOrIndex;
 	let category = this.getCategoryAt(index);
-	let layout = this.views.project, content = category.getContent();
+	let layout = this.views.project,
+		content = category.getContent();
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
@@ -459,19 +465,17 @@ ControlWindow.ProjectHeader.Category.prototype.reset = function() {
 	let views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
-	let params = new android.widget.LinearLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.MATCH);
+	let params = new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	params.topMargin = Ui.getY(12);
 	content.setLayoutParams(params);
 	this.content = content;
-	
+
 	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Ui.getFontSize(26));
 	views.title.setTextColor(Ui.Color.LTGRAY);
 	views.title.setSingleLine();
-	params = new android.widget.LinearLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.leftMargin = params.rightMargin = Ui.getY(16);
 	params.bottomMargin = Ui.getY(8);
 	content.addView(views.title, params);
@@ -489,8 +493,8 @@ ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header
 	if (!header || typeof header != "object") {
 		return this;
 	}
-	header.categories && header.categories.indexOf(this)
-		== -1 && header.categories.push(this);
+	header.categories && header.categories.indexOf(this) ==
+		-1 && header.categories.push(this);
 	let content = this.getContent();
 	if (!content) return this;
 	let layout = header.views.project;
@@ -522,7 +526,8 @@ ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
 };
 
 ControlWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.title.setText(String(text));
 	return this;
@@ -564,7 +569,8 @@ ControlWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex
 	let index = itemOrIndex instanceof ControlWindow.ProjectHeader.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
 	let item = this.getItemAt(index);
-	let layout = this.views.layout, content = item.getContent();
+	let layout = this.views.layout,
+		content = item.getContent();
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
@@ -615,7 +621,8 @@ ControlWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, ti
 };
 
 ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Ui.getY(12), Ui.getY(12), Ui.getY(12), Ui.getY(12));
 	content.setGravity(Ui.Gravity.CENTER);
@@ -626,30 +633,30 @@ ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	content.setLayoutParams(params);
 	this.content = content;
-	
+
 	views.icon = new android.widget.ImageView(context);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.getY(54), Ui.getY(54));
+	LayoutParams(Ui.getY(54), Ui.getY(54));
 	params.leftMargin = Ui.getY(48);
 	content.addView(views.icon, params);
-	
+
 	views.more = new android.widget.LinearLayout(context);
 	views.more.setOrientation(Ui.Orientate.VERTICAL);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.leftMargin = Ui.getY(24);
 	content.addView(views.more, params);
-	
+
 	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Ui.getFontSize(23));
 	views.title.setTextColor(Ui.Color.WHITE);
 	views.title.setSingleLine();
 	views.more.addView(views.title);
-	
+
 	views.params = new android.widget.TextView(context);
 	typeface && views.params.setTypeface(typeface);
 	views.params.setPadding(0, Ui.getY(4), 0, 0);
@@ -674,9 +681,10 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getParentCategory = function
 
 ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(category) {
 	if (!category || typeof category != "object") return this;
-	category.items && category.items.indexOf(this)
-		== -1 && category.items.push(this);
-	let layout = category.getContent(), content = this.getContent();
+	category.items && category.items.indexOf(this) ==
+		-1 && category.items.push(this);
+	let layout = category.getContent(),
+		content = this.getContent();
 	if (!content) return this;
 	let header = category.getParentHeader();
 	if (header) {
@@ -710,7 +718,8 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getIcon = function() {
 };
 
 ControlWindow.ProjectHeader.Category.Item.prototype.setIcon = function(src) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !src) return this;
 	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -724,7 +733,8 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
 };
 
 ControlWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.title.setText(String(text));
 	return this;
@@ -737,7 +747,8 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getDescription = function() 
 };
 
 ControlWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.params.setText(String(text));
 	return this;
@@ -794,22 +805,20 @@ ControlWindow.Category.prototype.reset = function() {
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
 	content.setGravity(Ui.Gravity.CENTER);
-	let params = new android.widget.LinearLayout.LayoutParams
-			(Ui.Display.WRAP, Ui.Display.WRAP);
+	let params = new android.widget.LinearLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.topMargin = Ui.getY(16);
 	content.setLayoutParams(params);
 	this.content = content;
-	
+
 	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Ui.getFontSize(30));
 	views.title.setTextColor(Ui.Color.LTGRAY);
-	params = new android.widget.LinearLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.leftMargin = params.rightMargin = Ui.getY(32);
 	params.bottomMargin = Ui.getY(8);
 	content.addView(views.title, params);
-	
+
 	views.layout = new android.widget.GridLayout(context);
 	views.layout.setColumnCount(parseInt(5 / uiScaler));
 	content.addView(views.layout);
@@ -825,8 +834,8 @@ ControlWindow.Category.prototype.getWindow = function() {
 
 ControlWindow.Category.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
 		content = this.getContent();
 	if (!layout || !content) return this;
@@ -845,7 +854,8 @@ ControlWindow.Category.prototype.getTitle = function() {
 };
 
 ControlWindow.Category.prototype.setTitle = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.title.setText(String(text));
 	return this;
@@ -880,7 +890,8 @@ ControlWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	let index = itemOrIndex instanceof ControlWindow.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
 	let item = this.getItemAt(index);
-	let layout = this.views.layout, content = item.getContent();
+	let layout = this.views.layout,
+		content = item.getContent();
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
@@ -936,7 +947,8 @@ ControlWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, a
 };
 
 ControlWindow.Category.Item.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
 	content.setGravity(Ui.Gravity.CENTER);
@@ -947,24 +959,24 @@ ControlWindow.Category.Item.prototype.reset = function() {
 		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Ui.getY(240), Ui.getY(296));
+	LayoutParams(Ui.getY(240), Ui.getY(296));
 	params.leftMargin = params.topMargin =
 		params.rightMargin = params.bottomMargin = Ui.getY(8);
 	content.setLayoutParams(params);
 	this.content = content;
-	
+
 	views.icon = new android.widget.ImageView(context);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.getY(172), Ui.getY(172));
+	LayoutParams(Ui.getY(172), Ui.getY(172));
 	content.addView(views.icon, params);
-	
+
 	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Ui.getFontSize(27));
 	views.title.setTextColor(Ui.Color.WHITE);
 	views.title.setSingleLine();
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
+	LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.topMargin = Ui.getY(16);
 	content.addView(views.title, params);
 };
@@ -984,10 +996,10 @@ ControlWindow.Category.Item.prototype.getParentCategory = function() {
 
 ControlWindow.Category.Item.prototype.setParentCategory = function(category) {
 	if (!category || typeof category != "object") return this;
-	category.items && category.items.indexOf(this)
-		== -1 && category.items.push(this);
+	category.items && category.items.indexOf(this) ==
+		-1 && category.items.push(this);
 	let layout = category.views ? category.views.layout : null,
-				content = this.getContent();
+		content = this.getContent();
 	if (!layout || !content) return this;
 	let window = category.getWindow();
 	if (window) {
@@ -1017,7 +1029,8 @@ ControlWindow.Category.Item.prototype.getIcon = function() {
 };
 
 ControlWindow.Category.Item.prototype.setIcon = function(src) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !src) return this;
 	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -1031,7 +1044,8 @@ ControlWindow.Category.Item.prototype.getTitle = function() {
 };
 
 ControlWindow.Category.Item.prototype.setTitle = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.title.setText(String(text));
 	return this;
@@ -1040,8 +1054,7 @@ ControlWindow.Category.Item.prototype.setTitle = function(text) {
 ControlWindow.Category.Item.prototype.click = function() {
 	this.__click && this.__click(this);
 	let category = this.getParentCategory();
-	category && category.__click && category.__click
-			(this, this.indexOf());
+	category && category.__click && category.__click(this, this.indexOf());
 	return this;
 };
 
@@ -1091,31 +1104,31 @@ ControlWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, act
 };
 
 ControlWindow.Message.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Ui.getY(128), Ui.getY(12), Ui.getY(128), Ui.getY(12));
-	content.setLayoutParams(new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP));
+	content.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP));
 	content.setGravity(Ui.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
 	this.content = content;
-	
+
 	views.icon = new android.widget.ImageView(context);
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Ui.getY(66), Ui.getY(66));
+	LayoutParams(Ui.getY(66), Ui.getY(66));
 	params.leftMargin = params.topMargin =
 		params.rightMargin = params.bottomMargin = Ui.getY(12);
 	content.addView(views.icon, params);
-	
+
 	views.message = new android.widget.TextView(context);
 	typeface && views.message.setTypeface(typeface);
 	views.message.setTextSize(Ui.getFontSize(25));
 	views.message.setTextColor(Ui.Color.WHITE);
 	views.message.setMaxLines(3);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.leftMargin = Ui.getY(32);
 	params.rightMargin = Ui.getY(24);
 	content.addView(views.message, params);
@@ -1131,10 +1144,10 @@ ControlWindow.Message.prototype.getWindow = function() {
 
 ControlWindow.Message.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-				content = this.getContent();
+		content = this.getContent();
 	if (!layout || !content) return this;
 	let actor = new BoundsActor();
 	actor.setDuration(400);
@@ -1174,7 +1187,8 @@ ControlWindow.Message.prototype.getIcon = function() {
 };
 
 ControlWindow.Message.prototype.setIcon = function(src) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views || !src) return this;
 	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -1188,7 +1202,8 @@ ControlWindow.Message.prototype.getMessage = function() {
 };
 
 ControlWindow.Message.prototype.setMessage = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.message.setText(String(text));
 	return this;

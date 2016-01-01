@@ -42,7 +42,8 @@ BlockConverter.prototype.buildDefine = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
 		return null;
 	}
-	let define = obj.define, result = new Array();
+	let define = obj.define,
+		result = new Array();
 	if (!define) return null;
 	result.push("IDRegistry.genBlockID(\"" + this.getIdentifier(obj) + "\");");
 	result.push("Block.createBlock(\"" + this.getIdentifier(obj) + "\"");
@@ -64,7 +65,8 @@ BlockConverter.prototype.buildRenderer = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
 		return null;
 	}
-	let renderer = obj.renderer, result = new Array();
+	let renderer = obj.renderer,
+		result = new Array();
 	if (!renderer) return null;
 	for (let i = 0; i < renderer.length; i++) {
 		let model = renderer[i];
@@ -85,7 +87,8 @@ BlockConverter.prototype.buildCollision = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
 		return null;
 	}
-	let collision = obj.collision, result = new Array();
+	let collision = obj.collision,
+		result = new Array();
 	if (!collision) return null;
 	for (let i = 0; i < collision.length; i++) {
 		let model = collision[i];

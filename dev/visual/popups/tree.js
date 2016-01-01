@@ -6,9 +6,7 @@ const TreePopup = function() {
 TreePopup.prototype = assign(FocusablePopup.prototype);
 TreePopup.prototype.TYPE = "TreePopup";
 
-TreePopup.prototype.__resetFP = FocusablePopup.prototype.reset;
 TreePopup.prototype.reset = function() {
-	this.__resetFP && this.__resetFP();
 	this.views.groups = new Array();
 	this.views.items = new Array();
 	this.views.footers = new Array();

@@ -6,7 +6,11 @@ const monthToName = function(number) {
 const STRINGIFY_TIMEOUT = 30000;
 
 const stringifyObject = function(obj, identate, action, hint, complete) {
-	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
+	let progress = 0,
+		count = 0,
+		indexated = false,
+		done = false,
+		active = Date.now();
 	const recursiveHint = function(update) {
 		handle(function() {
 			let result = count > 0 ? progress / count * 100 : 0;
@@ -98,7 +102,8 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 					return String(obj);
 				case "object":
 					if (Array.isArray(obj)) {
-						let array = new Array(), tabbed = false;
+						let array = new Array(),
+							tabbed = false;
 						for (let i = 0; i < obj.length; i++) {
 							let result = recursiveStringify(obj[i], tabs);
 							if (result && result.length > 0) {
@@ -117,7 +122,9 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 						}
 						return "[" + array.join(",") + "]";
 					} else {
-						let array = new Array(), tabbed = false, last, count = 0;
+						let array = new Array(),
+							tabbed = false,
+							last, count = 0;
 						for (let counted in obj) {
 							last = counted;
 							count++;
@@ -142,10 +149,10 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
 							(identate ? tabbed ? tabs.replace("\t", new String()) + "\n}" : " }" : "}");
 					}
-				default:
-					if (callback.onPassed) {
-						callback.onPassed(obj, typeof obj);
-					}
+					default:
+						if (callback.onPassed) {
+							callback.onPassed(obj, typeof obj);
+						}
 			}
 		} catch (e) {
 			reportError(e);
@@ -169,23 +176,23 @@ const readFile = function(path, isBytes, action) {
 
 const exportProject = function(object, isAutosave, path, action) {
 	stringifyObject(object, false, function(result) {
-		let file = new java.io.File(String(path));
-		result = compileToProduce(result);
-		file.getParentFile().mkdirs();
-		if (!isAutosave && file.exists()) {
-			handle(function() {
-				confirm(translate("File is exists"),
-					translate("File is already created. This process will be rewrite it. Continue?"),
-					function() {
-						Files.writeBytes(file, result);
-						if (action) action(result);
-					});
-			});
-		} else {
-			Files.writeBytes(file, result);
-			if (action) action(result);
-		}
-	}, isAutosave ? translate("Autosaving") : translate("Exporting"),
+			let file = new java.io.File(String(path));
+			result = compileToProduce(result);
+			file.getParentFile().mkdirs();
+			if (!isAutosave && file.exists()) {
+				handle(function() {
+					confirm(translate("File is exists"),
+						translate("File is already created. This process will be rewrite it. Continue?"),
+						function() {
+							Files.writeBytes(file, result);
+							if (action) action(result);
+						});
+				});
+			} else {
+				Files.writeBytes(file, result);
+				if (action) action(result);
+			}
+		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 		isAutosave ? translate("Autosaved") : translate("Exported"));
 };
 
@@ -201,7 +208,8 @@ const importProject = function(path, action) {
 				confirm(translate("Can't open file"),
 					translate("Looks like, project is damaged. Check project and following exception information:") +
 					"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
-					translate("Do you want to retry?"), function() {
+					translate("Do you want to retry?"),
+					function() {
 						importProject(path, action);
 					});
 			});
@@ -221,7 +229,7 @@ const importScript = function(path, action) {
 
 const compileScript = function(text) {
 	let code = "(function() { try { " + String(text) + "\n\t} catch (e) {" +
-			"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
+		"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "import.js");
 	if (!noImportedScripts) {
 		noImportedScripts = false;
@@ -275,16 +283,24 @@ const getScriptScope = function() {
 		setShape: function(id, x1, y1, z1, x2, y2, z2) {
 			__data__[id].collision.push({
 				boxes: [{
-					x1: x1, y1: y1, z1: z1,
-					x2: x2, y2: y2, z2: z2
+					x1: x1,
+					y1: y1,
+					z1: z1,
+					x2: x2,
+					y2: y2,
+					z2: z2
 				}]
 			});
 		},
 		setBlockShape: function(id, pos1, pos2) {
 			__data__[id].collision.push({
 				boxes: [{
-					x1: pos1.x, y1: pos1.y, z1: pos1.z,
-					x2: pos2.x, y2: pos2.y, z2: pos2.z
+					x1: pos1.x,
+					y1: pos1.y,
+					z1: pos1.z,
+					x2: pos2.x,
+					y2: pos2.y,
+					z2: pos2.z
 				}]
 			});
 		}
@@ -312,8 +328,12 @@ const getScriptScope = function() {
 			this.boxes = new Array();
 			this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
 				let index = this.boxes.push({
-					x1: x1, y1: y1, z1: z1,
-					x2: x2, y2: y2, z2: z2
+					x1: x1,
+					y1: y1,
+					z1: z1,
+					x2: x2,
+					y2: y2,
+					z2: z2
 				}) - 1;
 				if (texture !== undefined) this.boxes[index].texture = texture;
 				if (data !== undefined) this.boxes[index].texture = [[texture, data]];
@@ -363,8 +383,11 @@ const getScriptScope = function() {
 		this.__compareVectorPoint = function(index, request) {};
 		this.addFrame = function(x, y, z, yaw, pitch, duration, interpolator) {
 			let index = this.__data__.animation[0].frames.push({
-				x: x, y: y, z: z,
-				yaw: yaw, pitch: pitch,
+				x: x,
+				y: y,
+				z: z,
+				yaw: yaw,
+				pitch: pitch,
 				duration: duration || 1 / (this.__data__.define.fps || 60)
 			}) - 1;
 			if (typeof interpolator != "undefined")
@@ -381,8 +404,11 @@ const getScriptScope = function() {
 		this.isStarted = function() {};
 		this.withFrom = function(x, y, z, yaw, pitch) {
 			this.__data__.define.starting = {
-				x: x, y: y, z: z,
-				yaw: yaw, pitch: pitch
+				x: x,
+				y: y,
+				z: z,
+				yaw: yaw,
+				pitch: pitch
 			};
 		};
 		this.withEntity = function(entity) {
@@ -435,7 +461,8 @@ const Project = function(obj) {
 			this.isAutosaving = true;
 			this.updateCurrentWorker();
 			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
-				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp", function(result) {
+				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp",
+				function(result) {
 					delete scope.isAutosaving;
 				});
 		} catch (e) {
@@ -454,7 +481,8 @@ const Project = function(obj) {
 			(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
 	};
 	this.getByType = function(type) {
-		let obj = this.getAll(), values = new Array();
+		let obj = this.getAll(),
+			values = new Array();
 		for (let i = 0; i < this.getCount(); i++) {
 			if (obj[i].type == type) {
 				values.push(i);
@@ -523,8 +551,7 @@ const ProjectProvider = {
 		return (opened.time = Date.now(), opened);
 	},
 	addWorker: function(worker) {
-		this.setupEditor(this.opened.object.push
-			(worker.getProject()) - 1, worker);
+		this.setupEditor(this.opened.object.push(worker.getProject()) - 1, worker);
 		return worker;
 	},
 	addBlock: function() {
@@ -574,7 +601,8 @@ const ProjectProvider = {
 		return project.getCurrentType();
 	},
 	initializeAutosave: function() {
-		let scope = this, project = this.getProject();
+		let scope = this,
+			project = this.getProject();
 		if (project.isAutosaving) return;
 		if (!autosave || this.thread || autosavePeriod <= 0) {
 			project.updateCurrentWorker();

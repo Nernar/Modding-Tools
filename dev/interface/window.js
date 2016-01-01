@@ -176,7 +176,8 @@ FocusableWindow.prototype.setExitActor = function(actor) {
 };
 
 FocusableWindow.prototype.show = function() {
-	let scope = this, content = this.getContent();
+	let scope = this,
+		content = this.getContent();
 	content.post(function() {
 		WindowProvider.prepareActors(scope, scope.enterActor);
 		content.setVisibility(Ui.Visibility.VISIBLE);

@@ -107,8 +107,11 @@ const TransitionWorker = function(obj) {
 			this.addFrame = function() {
 				let frames = this.getFrames();
 				frames.push({
-					x: 0, y: 0, z: 0,
-					yaw: 0, pitch: 0,
+					x: 0,
+					y: 0,
+					z: 0,
+					yaw: 0,
+					pitch: 0,
 					duration: 3
 				});
 				return frames.length - 1;
@@ -133,7 +136,8 @@ const TransitionWorker = function(obj) {
 				return this.getFrames().length;
 			};
 			this.setupFrame = function(index) {
-				let real = this.getFrameCoords(index), frame = this.getFrame(index),
+				let real = this.getFrameCoords(index),
+					frame = this.getFrame(index),
 					coords = Entity.getPosition(worker.Define.getEntity()),
 					angle = Entity.getRotation(worker.Define.getEntity());
 				frame.x = preround(coords[0] - real.x, 1);
@@ -156,7 +160,8 @@ const TransitionWorker = function(obj) {
 				return result;
 			};
 			this.getFrameCoords = function(index, excludeStarting) {
-				let point = new Object(), frames = this.getFrames();
+				let point = new Object(),
+					frames = this.getFrames();
 				if (!excludeStarting) {
 					let starting = worker.Define.getStarting();
 					for (let item in starting) {

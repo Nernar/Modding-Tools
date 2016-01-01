@@ -1,29 +1,22 @@
 const CoordsPopup = function() {
-	FocusablePopup.call(this);
+	ListingPopup.call(this);
 	this.reset();
 };
 
 CoordsPopup.prototype = assign(ListingPopup.prototype);
 CoordsPopup.prototype.TYPE = "CoordsPopup";
 
-CoordsPopup.prototype.__resetLP = ListingPopup.prototype.reset;
 CoordsPopup.prototype.reset = function() {
-	this.__resetLP && this.__resetLP();
 	this.views.groups = new Array();
 	this.views.titles = new Array();
 	this.views.containers = new Array();
 	this.groups = new Array();
 };
 
-CoordsPopup.prototype.__addButtonElementLP = ListingPopup.prototype.addButtonElement;
 CoordsPopup.prototype.addButtonElement = function(name, click) {
-	if (!this.__addButtonElementLP) {
-		return null;
-	}
-	let button = this.__addButtonElementLP(name, click);
+	let button = ListingPopup.prototype.addButtonElement.call(this, name, click);
 	button.setBackground("popupBackground");
-	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams
-		(Ui.Display.MATCH, Ui.getY(84)));
+	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.getY(84)));
 	return button;
 };
 
@@ -54,7 +47,8 @@ CoordsPopup.prototype.getGroup = function(position) {
 	if (this.groups[position]) {
 		return this.groups[position];
 	}
-	let views = this.views, mathes = this.mathes;
+	let views = this.views,
+		mathes = this.mathes;
 	return this.groups[position] = {
 		items: new Array(),
 		addItem: function(current) {

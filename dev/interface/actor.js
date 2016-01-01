@@ -254,7 +254,7 @@ ActorManager.beginDelayedActor = function(container, actor) {
 		throw Error("Unable to use delayed actor on undefined");
 	}
 	if (actor && actor.getActor) {
-		actor = actor.getActor(); 
+		actor = actor.getActor();
 	}
 	android.transition.TransitionManager.beginDelayedTransition(container, actor);
 };

@@ -937,6 +937,9 @@ Translation.addTranslation("Log", {
 Translation.addTranslation("Currently log", {
 	ru: "Текущий лог"
 });
+Translation.addTranslation("Console", {
+	ru: "Консоль"
+});
 
 // Supportables
 Translation.addTranslation("Supportables", {

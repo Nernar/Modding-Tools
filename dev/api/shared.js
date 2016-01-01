@@ -29,7 +29,7 @@ const REQUIRE = function(path) {
 			let file = new java.io.File(Dirs.EVALUATE, path);
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
-				code ="(function() {\n" + source + "\n})();",
+				code = "(function() {\n" + source + "\n})();",
 				scope = runAtScope(code, REQUIRE.getScope(), path);
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
@@ -91,11 +91,14 @@ const playTune = function(time, min, max, static) {
 			android.media.AudioFormat.ENCODING_PCM_16BIT,
 			buffsize, android.media.AudioTrack.MODE_STREAM);
 		let samples = java.lang.reflect.Array.newInstance(java.lang.Short.TYPE, buffsize),
-			amp = 10000, twopi = 8. * Math.atan(1.), ph = 0.0;
+			amp = 10000,
+			twopi = 8. * Math.atan(1.),
+			ph = 0.0;
 		audioTrack.play();
 		playTune.track = audioTrack;
 		while (playTune.track == audioTrack) {
-			let evaluate = Date.now(), statable;
+			let evaluate = Date.now(),
+				statable;
 			if (!static) {
 				statable = min + Math.random() * (max - min);
 			}

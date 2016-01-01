@@ -76,10 +76,12 @@ const updateSettings = function() {
 		showProcesses = loadSetting("performance.show_processes", "boolean");
 		safetyProcesses = loadSetting("performance.safety_processes", "boolean");
 		autosave = loadSetting("autosave.enabled", "boolean");
-		/* autosaveInterface */ loadSetting("autosave.with_interface", "boolean", false);
+		/* autosaveInterface */
+		loadSetting("autosave.with_interface", "boolean", false);
 		autosavePeriod = loadSetting("autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
 		autosaveProjectable = __config__.getBool("autosave.as_projectable");
-		/* autosaveCount */ loadSetting("autosave.maximum_count", "number", 1, 50);
+		/* autosaveCount */
+		loadSetting("autosave.maximum_count", "number", 1, 50);
 		CURRENTLY_SERVER_LOCATION = loadSetting("network.default_location", "number", 0, 1);
 		SERVER_HAS_SAFE_CONNECTION = loadSetting("network.safe_connection", "boolean");
 		SERVER_LOCATION_LOCKED = loadSetting("network.switch_locked", "boolean");
@@ -96,7 +98,8 @@ const updateSettings = function() {
 		}
 		ignoreKeyDeprecation = loadSetting("user_login.ignore_deprecation", "boolean");
 		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
-		/* sendAnalytics */ loadSetting("user_login.send_analytics", "boolean", true);
+		/* sendAnalytics */
+		loadSetting("user_login.send_analytics", "boolean", true);
 		if (android.os.Build.VERSION.SDK_INT >= 26) {
 			useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
 		} else useOldExplorer = true;

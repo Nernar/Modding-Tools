@@ -8,7 +8,7 @@ if (typeof Object.assign != "function") {
 			let to = Object(target);
 			for (let index = 1; index < arguments.length; index++) {
 				let nextSource = arguments[index];
-				if (nextSource !== null && nextSource !== undefined) { 
+				if (nextSource !== null && nextSource !== undefined) {
 					for (let nextKey in nextSource) {
 						if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
 							to[nextKey] = nextSource[nextKey];

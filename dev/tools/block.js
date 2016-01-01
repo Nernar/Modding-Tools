@@ -1144,7 +1144,12 @@ const BlockEditor = {
 	shape: function() {
 		let params = BlockEditor.data.worker.Define.params,
 			shape = params.shape = params.shape || {
-				x1: 0, y1: 0, z1: 0, x2: 1, y2: 1, z2: 1
+				x1: 0,
+				y1: 0,
+				z1: 0,
+				x2: 1,
+				y2: 1,
+				z2: 1
 			};
 		let popup = new CoordsPopup();
 		popup.setTitle(translate("Shape"));

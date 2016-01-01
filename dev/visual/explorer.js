@@ -14,16 +14,16 @@ ExplorerWindow.prototype.TYPE = "ExplorerWindow";
 ExplorerWindow.prototype.multiple = false;
 
 ExplorerWindow.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
-	
+
 	views.layout = new android.widget.RelativeLayout(context);
 	views.layout.setId(java.lang.String("rootLayout").hashCode());
-	let params = android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.MATCH);
+	let params = android.widget.RelativeLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	content.addView(views.layout, params);
-	
+
 	views.files = new android.widget.ListView(context);
 	views.files.setId(java.lang.String("filesList").hashCode());
 	views.files.setOnItemClickListener(function(parent, view, position, id) {
@@ -34,8 +34,7 @@ ExplorerWindow.prototype.reset = function() {
 		scope.miltiple && scope.setMode(Ui.Choice.MULTIPLE);
 		return true;
 	});
-	params = android.widget.RelativeLayout.LayoutParams
-				(Ui.Display.MATCH, Ui.Display.MATCH);
+	params = android.widget.RelativeLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	this.setRootDirectory(), this.resetAdapter();
 	views.files.setEmptyView(this.makeEmptyView());
 	views.layout.addView(views.files, params);
@@ -179,12 +178,12 @@ ExplorerWindow.prototype.makeEmptyView = function() {
 	layout.setId(android.R.id.empty);
 	let params = android.view.ViewGroup.LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	layout.setLayoutParams(params);
-	
+
 	let icon = new android.widget.ImageView(context);
 	icon.setImageDrawable(ImageFactory.getDrawable("explorerFolder"));
 	params = android.widget.LinearLayout.LayoutParams(Ui.getY(180), Ui.getY(180));
 	layout.addView(icon, params);
-	
+
 	let info = new android.widget.TextView(context);
 	typeface && info.setTypeface(typeface);
 	info.setText(translate("No items."));
@@ -214,26 +213,28 @@ ExplorerWindow.prototype.setOnExploreListener = function(listener) {
 };
 
 ExplorerWindow.prototype.setOnSelectListener = function(listener) {
-	let scope = this, adapter = this.getAdapter();
+	let scope = this,
+		adapter = this.getAdapter();
 	adapter.setOnSelectListener(function(item, previous) {
 		try {
 			let file = adapter.getFile(item);
 			listener && listener(scope, file, item, previous);
 		} catch (e) {
 			reportError(e);
-		} 
+		}
 	});
 };
 
 ExplorerWindow.prototype.setOnUnselectListener = function(listener) {
-	let scope = this, adapter = this.getAdapter();
+	let scope = this,
+		adapter = this.getAdapter();
 	adapter.setOnUnselectListener(function(item) {
 		try {
 			let file = adapter.getFile(item);
 			listener && listener(scope, file, item);
 		} catch (e) {
 			reportError(e);
-		} 
+		}
 	});
 };
 
@@ -252,7 +253,8 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 };
 
 ExplorerWindow.Approve.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.ImageView(context);
 	content.setVisibility(Ui.Visibility.GONE);
 	content.setPadding(Ui.getY(20), Ui.getY(20), Ui.getY(20), Ui.getY(20));
@@ -261,8 +263,7 @@ ExplorerWindow.Approve.prototype.reset = function() {
 	content.setOnClickListener(function() {
 		scope.approve();
 	});
-	let params = android.widget.RelativeLayout.LayoutParams
-							(Ui.getY(120), Ui.getY(120));
+	let params = android.widget.RelativeLayout.LayoutParams(Ui.getY(120), Ui.getY(120));
 	params.setMargins(Ui.getY(40), Ui.getY(40), Ui.getY(40), Ui.getY(40));
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -280,10 +281,11 @@ ExplorerWindow.Approve.prototype.getWindow = function() {
 
 ExplorerWindow.Approve.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-			content = this.getContent(), scope = this;
+		content = this.getContent(),
+		scope = this;
 	if (!layout || !content) return this;
 	let actor = new BoundsActor();
 	actor.setDuration(600);
@@ -327,7 +329,8 @@ ExplorerWindow.Approve.prototype.approve = function() {
 };
 
 ExplorerWindow.Approve.prototype.checkIfCanBeApproved = function() {
-	let content = this.getContent(), window = this.getWindow();
+	let content = this.getContent(),
+		window = this.getWindow();
 	if (window) {
 		let actor = new FadeActor();
 		actor.setDuration(400);
@@ -367,7 +370,8 @@ ExplorerWindow.Path = function(parentOrAction, action) {
 };
 
 ExplorerWindow.Path.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setId(java.lang.String("pathLayout").hashCode());
 	content.setOrientation(Ui.Orientate.VERTICAL);
@@ -375,19 +379,16 @@ ExplorerWindow.Path.prototype.reset = function() {
 	content.setOnClickListener(function() {
 		scope.__outside && scope.__outside(scope);
 	});
-	let params = new android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.getY(110));
+	let params = new android.widget.RelativeLayout.LayoutParams(Ui.Display.MATCH, Ui.getY(110));
 	this.content = (content.setLayoutParams(params), content);
-	
+
 	views.scroll = new android.widget.HorizontalScrollView(context);
-	params = android.widget.LinearLayout.LayoutParams
-				(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	content.addView(views.scroll, params);
-	
+
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setPadding(Ui.getY(10), 0, Ui.getY(10), 0);
-	params = android.view.ViewGroup.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = android.view.ViewGroup.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	views.scroll.addView(views.layout, params);
 };
 
@@ -401,11 +402,13 @@ ExplorerWindow.Path.prototype.getWindow = function() {
 
 ExplorerWindow.Path.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-		content = this.getContent(), files = window.views ?
-		window.views.files : null, scope = this;
+		content = this.getContent(),
+		files = window.views ?
+		window.views.files : null,
+		scope = this;
 	if (!layout || !content || !files) return this;
 	let actor = new BoundsActor();
 	actor.setDuration(600);
@@ -489,7 +492,8 @@ ExplorerWindow.Path.prototype.setPath = function(path) {
 };
 
 ExplorerWindow.Path.prototype.updatePath = function() {
-	let views = this.views, window = this.getWindow(),
+	let views = this.views,
+		window = this.getWindow(),
 		path = (window ? window.file.getPath() : Dirs.EXTERNAL) + "/";
 	this.pathes = new Array();
 	views.layout.removeAllViews();
@@ -546,14 +550,14 @@ ExplorerWindow.Rename = function(parentOrAction, action) {
 ExplorerWindow.Rename.prototype.formatIndex = -1;
 
 ExplorerWindow.Rename.prototype.reset = function() {
-	let scope = this, views = this.views = new Object();
+	let scope = this,
+		views = this.views = new Object();
 	let content = new android.widget.RelativeLayout(context);
 	content.setId(java.lang.String("renameLayout").hashCode());
-	let params = android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	let params = android.widget.RelativeLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
 	this.content = (content.setLayoutParams(params), content);
-	
+
 	views.approve = new android.widget.TextView(context);
 	typeface && views.approve.setTypeface(typeface);
 	views.approve.setSingleLine();
@@ -564,13 +568,12 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.approve.setOnClickListener(function() {
 		scope.approve();
 	});
-	params = android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.WRAP, Ui.Display.WRAP);
+	params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	params.leftMargin = Ui.getY(24);
 	content.addView(views.approve, params);
-	
+
 	views.format = new android.widget.TextView(context);
 	typeface && views.format.setTypeface(typeface);
 	views.format.setSingleLine();
@@ -581,12 +584,11 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.format.setOnClickListener(function() {
 		scope.nextFormat();
 	});
-	params = android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.WRAP, Ui.Display.WRAP);
+	params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.approve.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	content.addView(views.format, params);
-	
+
 	views.name = new android.widget.EditText(context);
 	views.name.setInputType(android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.name.setId(java.lang.String("renameValue").hashCode());
@@ -594,8 +596,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.name.setTextColor(Ui.Color.WHITE);
 	views.name.setTextSize(Ui.getFontSize(24));
 	typeface && views.name.setTypeface(typeface);
-	params = android.widget.RelativeLayout.LayoutParams
-			(Ui.Display.MATCH, Ui.Display.WRAP);
+	params = android.widget.RelativeLayout.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.format.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	params.setMargins(Ui.getY(8), Ui.getY(8), Ui.getY(8), Ui.getY(8));
@@ -612,11 +613,13 @@ ExplorerWindow.Rename.prototype.getWindow = function() {
 
 ExplorerWindow.Rename.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
-	window.elements && window.elements.indexOf(this)
-		== -1 && window.elements.push(this);
+	window.elements && window.elements.indexOf(this) ==
+		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-		content = this.getContent(), files = window.views ?
-		window.views.files : null, scope = this;
+		content = this.getContent(),
+		files = window.views ?
+		window.views.files : null,
+		scope = this;
 	if (!layout || !content || !files) return this;
 	let actor = new FadeActor();
 	actor.setDuration(400);
@@ -660,7 +663,8 @@ ExplorerWindow.Rename.prototype.setCurrentName = function(text) {
 };
 
 ExplorerWindow.Rename.prototype.setName = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.name.setText(String(text));
 	return this;
@@ -716,7 +720,8 @@ ExplorerWindow.Rename.prototype.getTitle = function() {
 };
 
 ExplorerWindow.Rename.prototype.setTitle = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.approve.setText(String(text).toUpperCase());
 	return this;
@@ -729,7 +734,8 @@ ExplorerWindow.Rename.prototype.getHint = function() {
 };
 
 ExplorerWindow.Rename.prototype.setHint = function(text) {
-	let content = this.getContent(), views = this.views;
+	let content = this.getContent(),
+		views = this.views;
 	if (!content || !views) return this;
 	views.name.setHint(String(text));
 	return this;
@@ -767,15 +773,20 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		return this.array.length;
 	},
 	getItem: function(position) {
-		let item = this.array[position], file = this.getFile(position),
-		    extension = Files.getExtension(file), date = new java.util.Date(file.
-			lastModified()), format = new java.text.SimpleDateFormat(), obj = {
-			    name: extension ? item.replace("." + extension, new String()) : item,
-			    date: (format.applyPattern("d MMM, yyyy"), format.format(date)),
-			    time: (format.applyPattern("k:mm"), format.format(date)),
-				type: Files.getExtensionType(file), isDirectory: file.isDirectory(),
-				isApproved: this.isApproved(position) == true, file: file
-		    };
+		let item = this.array[position],
+			file = this.getFile(position),
+			extension = Files.getExtension(file),
+			date = new java.util.Date(file.lastModified()),
+			format = new java.text.SimpleDateFormat(),
+			obj = {
+				name: extension ? item.replace("." + extension, new String()) : item,
+				date: (format.applyPattern("d MMM, yyyy"), format.format(date)),
+				time: (format.applyPattern("k:mm"), format.format(date)),
+				type: Files.getExtensionType(file),
+				isDirectory: file.isDirectory(),
+				isApproved: this.isApproved(position) == true,
+				file: file
+			};
 		if (obj.isDirectory) obj.filesCount = file.list().length;
 		else obj.size = Files.prepareSize(file);
 		if (extension) obj.extension = extension.toUpperCase();
@@ -801,7 +812,8 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		return new java.io.File(this.direct, this.array[position]);
 	},
 	getApprovedFiles: function() {
-		let files = new Array(), approves = this.getApproved();
+		let files = new Array(),
+			approves = this.getApproved();
 		for (let i = 0; i < this.getApprovedCount(); i++) {
 			files.push(this.getFile(approves[i]));
 		}
@@ -809,24 +821,24 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	},
 	getView: function(position, convertView, parent) {
 		let view = convertView ? convertView : this.makeItemLayout(),
-		    item = this.getItem(position);
+			item = this.getItem(position);
 		view.post(function() {
-		    view.setBackgroundDrawable(item.isApproved ?
-		        ImageFactory.getDrawable("popupSelectionSelected") : null);
-		    view.findViewById(java.lang.String("fileName")
-		        .hashCode()).setText(item.name);
-		    view.findViewById(java.lang.String("fileSize").hashCode())
-		        .setText((item.extension ? item.extension : new String()) + (item.extension
-			        && item.size ? " / " : new String()) + (item.size ? item.size : new String()) +
-				    (item.isDirectory ? translateCounter(item.filesCount, "no files", "%s1 file",
-					"%s" + (item.filesCount % 10) + " files", "%s files", [item.filesCount]) : new String()));
-		    view.findViewById(java.lang.String("fileDate")
-		        .hashCode()).setText(item.date);
-		    let info = view.findViewById(java.lang.String("fileInfo").hashCode());
-		    if (item.type == "image") info.setText(ImageFactory.checkSize(item.file));
-		    else info.setText(item.time);
-		    let icon = view.findViewById(java.lang.String("fileIcon").hashCode());
-		    icon.setImageDrawable(ImageFactory.getDrawable(item.isDirectory ? "explorerFolder" : item.type ?
+			view.setBackgroundDrawable(item.isApproved ?
+				ImageFactory.getDrawable("popupSelectionSelected") : null);
+			view.findViewById(java.lang.String("fileName")
+				.hashCode()).setText(item.name);
+			view.findViewById(java.lang.String("fileSize").hashCode())
+				.setText((item.extension ? item.extension : new String()) + (item.extension &&
+						item.size ? " / " : new String()) + (item.size ? item.size : new String()) +
+					(item.isDirectory ? translateCounter(item.filesCount, "no files", "%s1 file",
+						"%s" + (item.filesCount % 10) + " files", "%s files", [item.filesCount]) : new String()));
+			view.findViewById(java.lang.String("fileDate")
+				.hashCode()).setText(item.date);
+			let info = view.findViewById(java.lang.String("fileInfo").hashCode());
+			if (item.type == "image") info.setText(ImageFactory.checkSize(item.file));
+			else info.setText(item.time);
+			let icon = view.findViewById(java.lang.String("fileIcon").hashCode());
+			icon.setImageDrawable(ImageFactory.getDrawable(item.isDirectory ? "explorerFolder" : item.type ?
 				"explorerExtension" + item.type.charAt(0).toUpperCase() + item.type.substring(1) : "explorerFile"));
 		});
 		return view;
@@ -845,7 +857,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		let layout = new android.widget.RelativeLayout(context);
 		let params = android.view.ViewGroup.LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
 		layout.setLayoutParams(params);
-		
+
 		let icon = new android.widget.ImageView(context);
 		icon.setPadding(Ui.getY(20), Ui.getY(20), Ui.getY(20), Ui.getY(20));
 		icon.setScaleType(Ui.Scale.CENTER_CROP);
@@ -855,7 +867,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		params.rightMargin = Ui.getY(15);
 		layout.addView(icon, params);
-		
+
 		let additional = new android.widget.LinearLayout(context);
 		additional.setOrientation(Ui.Orientate.VERTICAL);
 		additional.setGravity(Ui.Gravity.RIGHT);
@@ -865,7 +877,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		layout.addView(additional, params);
-		
+
 		let date = new android.widget.TextView(context);
 		typeface && date.setTypeface(typeface);
 		date.setGravity(Ui.Gravity.RIGHT);
@@ -873,7 +885,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		date.setTextColor(Ui.Color.LTGRAY);
 		date.setId(java.lang.String("fileDate").hashCode());
 		additional.addView(date);
-		
+
 		let info = new android.widget.TextView(context);
 		typeface && info.setTypeface(typeface);
 		info.setGravity(Ui.Gravity.RIGHT);
@@ -881,7 +893,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		info.setTextColor(Ui.Color.LTGRAY);
 		info.setId(java.lang.String("fileInfo").hashCode());
 		additional.addView(info);
-		
+
 		let uniqal = new android.widget.LinearLayout(context);
 		uniqal.setOrientation(Ui.Orientate.VERTICAL);
 		uniqal.setId(java.lang.String("uniqalInfo").hashCode());
@@ -891,14 +903,14 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		uniqal.post(function() { uniqal.requestLayout(); });
 		layout.addView(uniqal, params);
-		
+
 		let name = new android.widget.TextView(context);
 		typeface && name.setTypeface(typeface);
 		name.setTextSize(Ui.getFontSize(22.5));
 		name.setTextColor(Ui.Color.WHITE);
 		name.setId(java.lang.String("fileName").hashCode());
 		uniqal.addView(name);
-		
+
 		let size = new android.widget.TextView(context);
 		typeface && size.setTypeface(typeface);
 		size.setTextSize(Ui.getFontSize(21));
@@ -932,16 +944,16 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 			}
 		}
 		if (position !== undefined) {
-		    let selected = this.approves.indexOf(position);
+			let selected = this.approves.indexOf(position);
 			if (this.choice == Ui.Choice.SINGLE) {
-			    this.__select && this.__select(position, selected);
+				this.__select && this.__select(position, selected);
 				this.approves.push(position);
 				this.previous = position;
-		    } else if (selected != -1) {
+			} else if (selected != -1) {
 				this.__unselect && this.__unselect(position, selected);
-			    this.approves.splice(selected, 1);
+				this.approves.splice(selected, 1);
 				this.getApprovedCount() == 0 && this.setMode(Ui.Choice.SINGLE);
-		    } else {
+			} else {
 				this.__select && this.__select(position, selected);
 				this.approves.push(position);
 			}

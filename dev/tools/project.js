@@ -211,6 +211,11 @@ const ProjectEditor = {
 			checkForAdditionalInformation(control);
 			if (__code__.indexOf("alpha") != -1) {
 				category = control.addCategory(translate("Debug & testing"));
+				category.addItem("control", translate("Console"), function() {
+					handle(function() {
+						ConsoleViewer.show();
+					});
+				});
 				category.addItem("worldActionMeasure", translate("Log"), function() {
 					handle(function() {
 						LogViewer.show();

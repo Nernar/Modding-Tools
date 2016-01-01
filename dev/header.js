@@ -53,12 +53,13 @@ let importAutoselect = false;
 let safetyProcesses = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-29.05.2021-6";
+const __code__ = "develop-alpha-0.3.5-29.05.2021-7";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
 let typeface = android.graphics.Typeface.MONOSPACE;
-let isSupportEnv = false, currentEnvironment = __name__;
+let currentEnvironment = __name__;
+let isSupportEnv = false;
 
 let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSmeter;
 
@@ -115,40 +116,40 @@ Ui.getY = function(y) {
 IMPORT("Network:2");
 
 Network.prototype.getFormattedSize = function() {
-    return Files.prepareFormattedSize(this.getSize());
+	return Files.prepareFormattedSize(this.getSize());
 };
 
 Network.Reader.prototype.getThread = function() {
-    return this.thread || null;
+	return this.thread || null;
 };
 
 Network.Reader.prototype.readAsync = function(post) {
-    let scope = this;
-    this.thread = handleThread(function() {
-        scope.read();
-        delete scope.thread;
-        if (post) {
-        	post(scope.getResult());
-        }
-    });
+	let scope = this;
+	this.thread = handleThread(function() {
+		scope.read();
+		delete scope.thread;
+		if (post) {
+			post(scope.getResult());
+		}
+	});
 };
 
 Network.Reader.prototype.assureYield = function() {
-    try {
-        if (!this.getThread()) {
-        	return false;
-        }
-        while (this.inProcess()) {
-        	java.lang.Thread.yield();
-        }
-        return this.getReadedCount() >= 0;
-    } catch (e) {
-        return false;
-    }
+	try {
+		if (!this.getThread()) {
+			return false;
+		}
+		while (this.inProcess()) {
+			java.lang.Thread.yield();
+		}
+		return this.getReadedCount() >= 0;
+	} catch (e) {
+		return false;
+	}
 };
 
 Network.Writer.prototype.getThread = function() {
-    return this.thread || null;
+	return this.thread || null;
 };
 
 Network.Writer.prototype.downloadAsync = function(post) {

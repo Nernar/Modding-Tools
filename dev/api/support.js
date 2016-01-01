@@ -4,7 +4,7 @@ const ExecutableSupport = {
 		return context.getClassLoader();
 	},
 	updateClassReference: function(name) {
-		return name.startsWith("zhekasmirnov.launcher.") ? 
+		return name.startsWith("zhekasmirnov.launcher.") ?
 			"com.zhekasmirnov.innercore." + name.substring(22) : name;
 	},
 	newInstance: function(name, initialize) {
@@ -41,7 +41,8 @@ const ExecutableSupport = {
 		if (!(dir = this.checkDirectory(dir, isNative))) {
 			return null;
 		}
-		let builder = this.getModBuilder(), name = new java.io.File(dir).getName();
+		let builder = this.getModBuilder(),
+			name = new java.io.File(dir).getName();
 		if (!builder) {
 			throw Error("Submodule supportable " + name + " load cancelled");
 		}
@@ -92,7 +93,8 @@ const ExecutableSupport = {
 		if (!mod) {
 			throw Error("Can't find mod " + name);
 		}
-		let results = new Array(), ats = this.actionToString(action);
+		let results = new Array(),
+			ats = this.actionToString(action);
 		for (let i = 0; i < mod.compiledModSources.size(); i++) {
 			let source = mod.compiledModSources.get(i);
 			results.push(this.evaluateAtExecutable(source, ats));

@@ -248,13 +248,13 @@ const EntityWorker = function(obj) {
 				};
 				this.rotate = function(axis, value) {
 					if (axis == "x") {
-					    axis = 0;
+						axis = 0;
 					}
 					if (axis == "y") {
-					    axis = 1;
+						axis = 1;
 					}
 					if (axis == "z") {
-					    axis = 2;
+						axis = 2;
 					}
 					let rotate = this.prepareRotation();
 					if (axis >= 0) {
@@ -302,8 +302,12 @@ const EntityWorker = function(obj) {
 			};
 			this.Box = function(obj) {
 				this.params = {
-					x: 0, y: 0, z: 0,
-					width: 1, height: 1, length: 1
+					x: 0,
+					y: 0,
+					z: 0,
+					width: 1,
+					height: 1,
+					length: 1
 				};
 				// Get params and sizes
 				this.getParams = function() {
@@ -443,15 +447,18 @@ const EntityWorker = function(obj) {
 				this.mirror = function(orientate) {
 					let coords = this.getCoords();
 					if (orientate == 0) {
-						let x1 = coords.x1, x2 = coords.x2;
+						let x1 = coords.x1,
+							x2 = coords.x2;
 						coords.x2 = 2 * coords.x2 - x1;
 						coords.x1 = 2 * coords.x2 - x2;
 					} else if (orientate == 1) {
-						let y1 = coords.y1, y2 = coords.y2;
+						let y1 = coords.y1,
+							y2 = coords.y2;
 						coords.y2 = 2 * coords.y2 - y1;
 						coords.y1 = 2 * coords.y2 - y2;
 					} else if (orientate == 2) {
-						let z1 = coords.z1, z2 = coords.z2;
+						let z1 = coords.z1,
+							z2 = coords.z2;
 						coords.z2 = 2 * coords.z2 - z1;
 						coords.z1 = 2 * coords.z2 - z2;
 					}
@@ -502,33 +509,33 @@ const EntityWorker = function(obj) {
 					} else if (angle == 2) {
 						if (orientate == 0) {
 							let tech = coords.y1;
-							coords.y1 =- coords.z1;
-							coords.z1 =- tech;
+							coords.y1 = -coords.z1;
+							coords.z1 = -tech;
 							tech = coords.y2;
-							coords.y2 =- coords.z2;
-							coords.z2 =- tech;
+							coords.y2 = -coords.z2;
+							coords.z2 = -tech;
 							coords.y1 += coords.y1;
 							coords.y2 += coords.y1;
 							coords.z1 += coords.z1;
 							coords.z2 += coords.z1;
 						} else if (orientate == 1) {
 							let tech = coords.x1;
-							coords.x1 =- coords.z1;
-							coords.z1 =- tech;
+							coords.x1 = -coords.z1;
+							coords.z1 = -tech;
 							tech = coords.x2;
-							coords.x2 =- coords.z2;
-							coords.z2 =- tech;
+							coords.x2 = -coords.z2;
+							coords.z2 = -tech;
 							coords.x1 += coords.x1;
 							coords.x2 += coords.x1;
 							coords.z1 += coords.z1;
 							coords.z2 += coords.z1;
 						} else if (orientate == 2) {
 							let tech = coords.x1;
-							coords.x1 =- coords.y1;
-							coords.y1 =- tech;
+							coords.x1 = -coords.y1;
+							coords.y1 = -tech;
 							tech = coords.x2;
-							coords.x2 =- coords.y2;
-							coords.y2 =- tech;
+							coords.x2 = -coords.y2;
+							coords.y2 = -tech;
 							coords.x1 += coords.x1;
 							coords.x2 += coords.x1;
 							coords.y1 += coords.y1;

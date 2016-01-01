@@ -1,5 +1,5 @@
 const registerCustomEntity = function() {
-	return -1/* MobRegistry.registerEntity("__editorEntity__")*/;
+	return -1 /* MobRegistry.registerEntity("__editorEntity__")*/ ;
 };
 
 const TODO = registerCustomEntity();
@@ -29,7 +29,8 @@ const model2ToScript = function(obj) {
 	script += "let model = new EntityModel();\n";
 	script += "let render = new Render();\n";
 	for (let item in obj.elements) {
-		let part = obj.elements[item], params = new Object();
+		let part = obj.elements[item],
+			params = new Object();
 		part.offset && (params.offset = part.offset);
 		part.rotation && (params.rotation = part.rotation);
 		let bones = part.bones.slice();
@@ -72,7 +73,8 @@ const geometryToModel2 = function(obj) {
 	};
 	let bones = obj.bones;
 	for (let item in bones) {
-		let bone = bones[item], parent = bone.parent ? bone.parent : bone.name;
+		let bone = bones[item],
+			parent = bone.parent ? bone.parent : bone.name;
 		parents[parent] && (parent = parents[parent]);
 		!project.elements[bone.name] && (parents[bone.name] = parent);
 		let part = project.elements[parent];
@@ -89,7 +91,7 @@ const geometryToModel2 = function(obj) {
 		});
 		for (let n = 0; n < bone.cubes.length; n++) {
 			let box = bone.cubes[n];
-			switch(parent) {
+			switch (parent) {
 				case "body":
 					box.origin[0] -= -4;
 					box.origin[1] -= 12;
@@ -159,8 +161,8 @@ const EntityEditor = {
 		let autosaveable = !ProjectProvider.isOpened();
 		if (!this.data.worker) this.reset();
 		autosaveable && ProjectProvider.initializeAutosave(this.data.worker);
-		this.data.hasVisual = this.data.worker.Visual.getModelCount() > 0
-			&& this.data.worker.Visual.getModel(0).getAssigmentSize() > 0;
+		this.data.hasVisual = this.data.worker.Visual.getModelCount() > 0 &&
+			this.data.worker.Visual.getModel(0).getAssigmentSize() > 0;
 		let button = new ControlButton();
 		button.setIcon("entity");
 		button.setOnClickListener(function() {
@@ -319,12 +321,12 @@ const EntityEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Bones"));
 			// popup.setOnShowListener(function() {
-				// selectMode = 7;
-				// updateEntityRender(BlockEditor.data.worker);
+			// selectMode = 7;
+			// updateEntityRender(BlockEditor.data.worker);
 			// });
 			// popup.setOnHideListener(function() {
-				// selectMode = 0;
-				// updateEntityRender(BlockEditor.data.worker);
+			// selectMode = 0;
+			// updateEntityRender(BlockEditor.data.worker);
 			// });
 			popup.setOnSelectListener(function(index) {
 				EntityEditor.data.group = index;
@@ -468,8 +470,7 @@ const EntityEditor = {
 						model = EntityEditor.data.worker.Visual.getModel(0);
 					model.removeAssigment(selected);
 					EntityEditor.data.group = selected > 0 ? selected - 1 : -1;
-					if (EntityEditor.data.group >= 0) EntityEditor.data.item = model.getIndex
-								(EntityEditor.data.group).getBoxCount() > 0 ? 0 : -1;
+					if (EntityEditor.data.group >= 0) EntityEditor.data.item = model.getIndex(EntityEditor.data.group).getBoxCount() > 0 ? 0 : -1;
 					if (model.getAssigmentSize() == 0 || EntityEditor.data.item == -1) EntityEditor.create();
 					Popups.closeAllByTag("bone");
 					Popups.closeAllByTag("box");
@@ -485,12 +486,12 @@ const EntityEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			// popup.setOnShowListener(function() {
-				// selectMode = 8;
-				// updateEntityRender(EntityEditor.data.worker);
+			// selectMode = 8;
+			// updateEntityRender(EntityEditor.data.worker);
 			// });
 			// popup.setOnHideListener(function() {
-				// selectMode = 0;
-				// updateEntityRender(EntityEditor.data.worker);
+			// selectMode = 0;
+			// updateEntityRender(EntityEditor.data.worker);
 			// });
 			popup.setOnSelectListener(function(index) {
 				EntityEditor.data.item = index;
@@ -506,7 +507,8 @@ const EntityEditor = {
 		},
 		add: function() {
 			let model = EntityEditor.data.worker.Visual.getModel(0),
-				selected = EntityEditor.data.item, group = EntityEditor.data.group;
+				selected = EntityEditor.data.item,
+				group = EntityEditor.data.group;
 			if (EntityEditor.Box.hasSelection()) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -519,7 +521,8 @@ const EntityEditor = {
 					updateEntityRender(EntityEditor.data.worker);
 				});
 				popup.addButtonElement(translate("Copy current"), function() {
-					let last = EntityEditor.data.item, index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
+					let last = EntityEditor.data.item,
+						index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
 					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 					updateEntityRender(EntityEditor.data.worker);
 				});
@@ -536,9 +539,11 @@ const EntityEditor = {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
+			let selected = EntityEditor.data.group,
+				item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
+				box = model.getIndex(selected).getBox(item),
+				coords = box.getCoords();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
@@ -569,9 +574,11 @@ const EntityEditor = {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
+			let selected = EntityEditor.data.group,
+				item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
+				box = model.getIndex(selected).getBox(item),
+				coords = box.getCoords();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
@@ -599,9 +606,11 @@ const EntityEditor = {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
+			let selected = EntityEditor.data.group,
+				item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(selected).getBox(item), vertex = box.getVertex();
+				box = model.getIndex(selected).getBox(item),
+				vertex = box.getVertex();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("UV"));
 			let group = popup.addGroup("x");
@@ -626,7 +635,8 @@ const EntityEditor = {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					let selected = EntityEditor.data.group, item = EntityEditor.data.item,
+					let selected = EntityEditor.data.group,
+						item = EntityEditor.data.item,
 						model = EntityEditor.data.worker.Visual.getModel(0);
 					model.getIndex(selected).removeBox(item);
 					EntityEditor.data.item = item > 0 ? item - 1 : -1;

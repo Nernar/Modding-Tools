@@ -4,12 +4,12 @@ const SidebarWindow = function() {
 	this.setHeight(Ui.Display.MATCH);
 	this.setFragment(new SidebarFragment());
 	this.groups = new Array();
-	
+
 	let enter = new SlideActor(Ui.Gravity.RIGHT);
 	enter.setInterpolator(new DecelerateInterpolator());
 	enter.setDuration(400);
 	this.setEnterActor(enter);
-	
+
 	let exit = new SlideActor(Ui.Gravity.RIGHT);
 	exit.setInterpolator(new BounceInterpolator());
 	exit.setDuration(1000);
@@ -145,7 +145,8 @@ SidebarWindow.prototype.reinflateLayout = function() {
 		let group = this.getSelectedGroup();
 		if (group != null) {
 			for (let i = 0; i < group.getItemCount(); i++) {
-				let item = group.getItemAt(i), content = item.getContainer();
+				let item = group.getItemAt(i),
+					content = item.getContainer();
 				if (content != null) fragment.addItem(content);
 			}
 		}
@@ -206,7 +207,8 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 		} else window.select(scope);
 	});
 	this.setOnHoldListener(function() {
-		let window = scope.getWindow(), hint = null;
+		let window = scope.getWindow(),
+			hint = null;
 		if (window != null) {
 			window.onGroupFetch && (hint = window.onGroupFetch(window, scope, scope.indexOf()) || hint);
 		}
@@ -434,7 +436,8 @@ SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 		}
 	});
 	this.setOnHoldListener(function() {
-		let group = scope.getGroup(), hint = null;
+		let group = scope.getGroup(),
+			hint = null;
 		if (group != null) {
 			let window = group.getWindow();
 			if (window != null) {

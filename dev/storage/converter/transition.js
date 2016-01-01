@@ -34,7 +34,8 @@ TransitionConverter.prototype.buildCallback = function(obj) {
 	}
 	let result = new Array();
 	result.push("Callback.addCallback(\"" + (isHorizon ? "LevelDisplayed" : "LevelLoaded") + "\", function() {");
-	let define = obj.define, entity = define ? define.entity : undefined;
+	let define = obj.define,
+		entity = define ? define.entity : undefined;
 	if (define && entity == getPlayerEnt()) {
 		result.push("\ttransition.withEntity(Player.get());");
 	}
@@ -47,7 +48,8 @@ TransitionConverter.prototype.buildDefine = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
 		return null;
 	}
-	let define = obj.define, result = new Array();
+	let define = obj.define,
+		result = new Array();
 	if (!define) return null;
 	result.push("let transition = new Transition();");
 	if (define.starting !== undefined) {
@@ -66,7 +68,8 @@ TransitionConverter.prototype.buildAnimation = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
 		return null;
 	}
-	let animation = obj.animation, result = new Array();
+	let animation = obj.animation,
+		result = new Array();
 	if (!animation) return null;
 	for (let i = 0; i < animation.length; i++) {
 		let animate = animation[i];

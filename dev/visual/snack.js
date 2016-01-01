@@ -2,13 +2,13 @@ const HintAlert = function() {
 	this.setGravity(Ui.Gravity.LEFT | Ui.Gravity.BOTTOM);
 	this.setWidth(Ui.Display.MATCH);
 	this.setTouchable(false);
-	
+
 	let actor = new SlideActor(Ui.Gravity.BOTTOM),
 		interpolator = new DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
 	actor.setDuration(this.time / 6);
 	this.setEnterActor(actor);
-	
+
 	actor = new ActorSet();
 	actor.setOrdering(ActorSet.TOGETHER);
 	let slide = new SlideActor(Ui.Gravity.BOTTOM),
@@ -17,7 +17,7 @@ const HintAlert = function() {
 	actor.addActor(fade);
 	actor.setDuration(this.time / 6);
 	this.setExitActor(actor);
-	
+
 	this.reset();
 	this.clearStack();
 };
@@ -48,11 +48,10 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		layout.setOrientation(Ui.Orientate.VERTICAL);
 		layout.setGravity(Ui.Gravity.CENTER);
 		let content = this.getContent(),
-			params = new android.widget.LinearLayout.LayoutParams
-				(Ui.Display.WRAP, Ui.Display.WRAP);
+			params = new android.widget.LinearLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 		layout.setVisibility(Ui.Visibility.GONE);
 		content.addView(layout, params);
-		
+
 		let text = new android.widget.TextView(context);
 		text.setTextSize(Ui.getFontSize(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
@@ -61,7 +60,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		typeface && text.setTypeface(typeface);
 		text.setMinimumWidth(Ui.getY(405));
 		layout.addView(text);
-		
+
 		let actor = new ActorSet();
 		actor.setOrdering(ActorSet.TOGETHER);
 		let bounds = new BoundsActor(),
@@ -126,8 +125,8 @@ HintAlert.prototype.forceAddMessage = function(hint, color, force) {
 		this.attachMessage(hint, color);
 	}
 	if (force || (this.hasAutoReawait() && force !== false &&
-		(this.isStackable() ? !this.hasMoreStack() : true)))
-			this.reawait();
+			(this.isStackable() ? !this.hasMoreStack() : true)))
+		this.reawait();
 };
 
 HintAlert.prototype.addMessage = function(hint, color, force) {

@@ -181,7 +181,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 					reportError(e);
 				}
 			}
-			
+
 			handle(function() {
 				LoadingTipUtils.resetEncounter();
 				showHint(translate("Textures requested successfully") +

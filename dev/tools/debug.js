@@ -25,7 +25,7 @@ const LogViewer = {
 				}
 			});
 			let params = new android.widget.LinearLayout.
-				LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+			LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 			params.weight = 0.1;
 			popup.getContent().addView(seek, params);
 			handleThread(function() {
@@ -46,5 +46,49 @@ const LogViewer = {
 			});
 			Popups.open(popup, "innercore_log");
 		});
+	}
+};
+
+const ConsoleViewer = {
+	show: function() {
+		handle(function() {
+			let button = new ControlButton();
+			button.setIcon("menuModuleBack");
+			button.setOnClickListener(function() {
+				let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+				if (snack !== null) snack.dismiss();
+				ProjectEditor.create();
+				Popups.closeAll();
+			});
+			button.show();
+
+			ConsoleViewer.setupConsole();
+			ConsoleViewer.addEditable();
+		});
+	},
+	setupConsole: function() {
+		let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+		if (snack !== null) snack.dismiss();
+		snack = new HintAlert();
+		snack.setConsoleMode(true);
+		snack.setMaximumStacked(8);
+		snack.pin();
+		snack.show();
+	},
+	addEditable: function() {
+		let popup = new ListingPopup();
+		popup.setTitle(translate("Evaluate"));
+		popup.addEditElement(translate("Hi, I'm evaluate stroke"), "29 / 5");
+		popup.addButtonElement(translate("Eval"), function() {
+			let values = popup.getAllEditsValues();
+			if (String(values[0]).length > 0) {
+				showHint(" > " + values[0]);
+				let result = compileData(values[0]);
+				if (result.lineNumber !== undefined) {
+					showHint(result.message, Ui.Color.RED);
+				} else showHint(String(result), Ui.Color.LTGRAY);
+			}
+		}).setBackground("ground");
+		Popups.open(popup, "evaluate");
 	}
 };

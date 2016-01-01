@@ -126,8 +126,12 @@ const BlockWorker = function(obj) {
 			this.addBox = function(id, data) {
 				let boxes = this.getBoxes();
 				boxes.push({
-					x1: 0, y1: 0, z1: 0,
-					x2: 0.0625, y2: 0.0625, z2: 0.0625,
+					x1: 0,
+					y1: 0,
+					z1: 0,
+					x2: 0.0625,
+					y2: 0.0625,
+					z2: 0.0625,
 					texture: [[id, data]]
 				});
 				return boxes.length - 1;
@@ -242,104 +246,105 @@ const BlockWorker = function(obj) {
 				this.mirrorBox(index, "z", side, offset);
 			};
 			// this.mirrorBox = function(index, orientate, offset) {
-				// let box = this.getBox(index),
-					// offset = this.prepareOffset(offset);
-				// if (orientate == 0) {
-					// let x1 = box.x1, x2 = box.x2;
-					// box.x2 = 2 * box.x2 - x1;
-					// box.x1 = 2 * box.x2 - x2;
-				// } else if (orientate == 1) {
-					// let y1 = box.y1, y2 = box.y2;
-					// box.y2 = 2 * box.y2 - y1;
-					// box.y1 = 2 * box.y2 - y2;
-				// } else if (orientate == 2) {
-					// let z1 = box.z1, z2 = box.z2;
-					// box.z2 = 2 * box.z2 - z1;
-					// box.z1 = 2 * box.z2 - z2;
-				// }
+			// let box = this.getBox(index),
+			// offset = this.prepareOffset(offset);
+			// if (orientate == 0) {
+			// let x1 = box.x1, x2 = box.x2;
+			// box.x2 = 2 * box.x2 - x1;
+			// box.x1 = 2 * box.x2 - x2;
+			// } else if (orientate == 1) {
+			// let y1 = box.y1, y2 = box.y2;
+			// box.y2 = 2 * box.y2 - y1;
+			// box.y1 = 2 * box.y2 - y2;
+			// } else if (orientate == 2) {
+			// let z1 = box.z1, z2 = box.z2;
+			// box.z2 = 2 * box.z2 - z1;
+			// box.z1 = 2 * box.z2 - z2;
+			// }
 			// };
 			// this.rotateBox = function(index, orientate, angle) {
-				// let box = this.getBox(index);
-				// if (angle == 0) {
-					// if (orientate == 0) {
-						// let tech = box.y1;
-						// box.y1 = box.z1;
-						// box.z1 = tech;
-						// tech = box.y2;
-						// box.y2 = box.y2;
-						// box.z2 = tech;
-						// this.mirrorBox(index, 1);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 1) {
-						// let tech = box.x1;
-						// box.x1 = box.z1;
-						// box.z1 = tech;
-						// tech = box.x2;
-						// box.x2 = box.z2;
-						// box.z2 = tech;
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 2) {
-						// let tech = box.x1;
-						// box.x1 = box.y1;
-						// box.y1 = tech;
-						// tech = box.x2;
-						// box.x2 = box.y2;
-						// box.y2 = tech;
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 1);
-					// }
-				// } else if (angle == 1) {
-					// if (orientate == 0) {
-						// this.mirrorBox(index, 1);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 1) {
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 2) {
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 1);
-					// }
-				// } else if (angle == 2) {
-					// if (orientate == 0) {
-						// let tech = box.y1;
-						// box.y1 =- box.z1;
-						// box.z1 =- tech;
-						// tech = box.y2;
-						// box.y2 =- box.z2;
-						// box.z2 =- tech;
-						// box.y1 += box.y1;
-						// box.y2 += box.y1;
-						// box.z1 += box.z1;
-						// box.z2 += box.z1;
-					// } else if (orientate == 1) {
-						// let tech = box.x1;
-						// box.x1 =- box.z1;
-						// box.z1 =- tech;
-						// tech = box.x2;
-						// box.x2 =- box.z2;
-						// box.z2 =- tech;
-						// box.x1 += box.x1;
-						// box.x2 += box.x1;
-						// box.z1 += box.z1;
-						// box.z2 += box.z1;
-					// } else if (orientate == 2) {
-						// let tech = box.x1;
-						// box.x1 =- box.y1;
-						// box.y1 =- tech;
-						// tech = box.x2;
-						// box.x2 =- box.y2;
-						// box.y2 =- tech;
-						// box.x1 += box.x1;
-						// box.x2 += box.x1;
-						// box.y1 += box.y1;
-						// box.y2 += box.y1;
-					// }
-				// }
+			// let box = this.getBox(index);
+			// if (angle == 0) {
+			// if (orientate == 0) {
+			// let tech = box.y1;
+			// box.y1 = box.z1;
+			// box.z1 = tech;
+			// tech = box.y2;
+			// box.y2 = box.y2;
+			// box.z2 = tech;
+			// this.mirrorBox(index, 1);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 1) {
+			// let tech = box.x1;
+			// box.x1 = box.z1;
+			// box.z1 = tech;
+			// tech = box.x2;
+			// box.x2 = box.z2;
+			// box.z2 = tech;
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 2) {
+			// let tech = box.x1;
+			// box.x1 = box.y1;
+			// box.y1 = tech;
+			// tech = box.x2;
+			// box.x2 = box.y2;
+			// box.y2 = tech;
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 1);
+			// }
+			// } else if (angle == 1) {
+			// if (orientate == 0) {
+			// this.mirrorBox(index, 1);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 1) {
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 2) {
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 1);
+			// }
+			// } else if (angle == 2) {
+			// if (orientate == 0) {
+			// let tech = box.y1;
+			// box.y1 =- box.z1;
+			// box.z1 =- tech;
+			// tech = box.y2;
+			// box.y2 =- box.z2;
+			// box.z2 =- tech;
+			// box.y1 += box.y1;
+			// box.y2 += box.y1;
+			// box.z1 += box.z1;
+			// box.z2 += box.z1;
+			// } else if (orientate == 1) {
+			// let tech = box.x1;
+			// box.x1 =- box.z1;
+			// box.z1 =- tech;
+			// tech = box.x2;
+			// box.x2 =- box.z2;
+			// box.z2 =- tech;
+			// box.x1 += box.x1;
+			// box.x2 += box.x1;
+			// box.z1 += box.z1;
+			// box.z2 += box.z1;
+			// } else if (orientate == 2) {
+			// let tech = box.x1;
+			// box.x1 =- box.y1;
+			// box.y1 =- tech;
+			// tech = box.x2;
+			// box.x2 =- box.y2;
+			// box.y2 =- tech;
+			// box.x1 += box.x1;
+			// box.x2 += box.x1;
+			// box.y1 += box.y1;
+			// box.y2 += box.y1;
+			// }
+			// }
 			// };
 			// Innersection
 			this.checkBoxesInnersection = function(index1, index2) {
-				let box1 = this.getBox(index1), box2 = this.getBox(index2);
+				let box1 = this.getBox(index1),
+					box2 = this.getBox(index2);
 				if (box1.x1 < box2.x2 && box1.x2 > box2.x1 || box1.x1 > box2.x1 && box1.x2 < box2.x2) {
 					if (box1.y1 < box2.y2 && box1.y2 > box2.y1 || box1.y1 > box2.y1 && box1.y2 < box2.y2) {
 						if (box1.z1 < box2.z2 && box2.z1 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2) {
@@ -350,7 +355,8 @@ const BlockWorker = function(obj) {
 				return false;
 			};
 			this.checkBoxInnersection = function(index) {
-				let box = this.getBox(index), approved = new Array();
+				let box = this.getBox(index),
+					approved = new Array();
 				for (let i = 0; i < this.getBoxCount(); i++) {
 					if (i != index && this.checkBoxesInnersection(index, i)) {
 						approved.push(i);
@@ -453,8 +459,12 @@ const BlockWorker = function(obj) {
 			this.addBox = function() {
 				let boxes = this.getBoxes();
 				boxes.push({
-					x1: 0, y1: 0, z1: 0,
-					x2: 0.0625, y2: 0.0625, z2: 0.0625
+					x1: 0,
+					y1: 0,
+					z1: 0,
+					x2: 0.0625,
+					y2: 0.0625,
+					z2: 0.0625
 				});
 				return boxes.length - 1;
 			};
@@ -557,104 +567,105 @@ const BlockWorker = function(obj) {
 				this.mirrorBox(index, "z", side, offset);
 			};
 			// this.mirrorBox = function(index, orientate, offset) {
-				// let box = this.getBox(index),
-					// offset = this.prepareOffset(offset);
-				// if (orientate == 0) {
-					// let x1 = box.x1, x2 = box.x2;
-					// box.x2 = 2 * box.x2 - x1;
-					// box.x1 = 2 * box.x2 - x2;
-				// } else if (orientate == 1) {
-					// let y1 = box.y1, y2 = box.y2;
-					// box.y2 = 2 * box.y2 - y1;
-					// box.y1 = 2 * box.y2 - y2;
-				// } else if (orientate == 2) {
-					// let z1 = box.z1, z2 = box.z2;
-					// box.z2 = 2 * box.z2 - z1;
-					// box.z1 = 2 * box.z2 - z2;
-				// }
+			// let box = this.getBox(index),
+			// offset = this.prepareOffset(offset);
+			// if (orientate == 0) {
+			// let x1 = box.x1, x2 = box.x2;
+			// box.x2 = 2 * box.x2 - x1;
+			// box.x1 = 2 * box.x2 - x2;
+			// } else if (orientate == 1) {
+			// let y1 = box.y1, y2 = box.y2;
+			// box.y2 = 2 * box.y2 - y1;
+			// box.y1 = 2 * box.y2 - y2;
+			// } else if (orientate == 2) {
+			// let z1 = box.z1, z2 = box.z2;
+			// box.z2 = 2 * box.z2 - z1;
+			// box.z1 = 2 * box.z2 - z2;
+			// }
 			// };
 			// this.rotateBox = function(index, orientate, angle) {
-				// let box = this.getBox(index);
-				// if (angle == 0) {
-					// if (orientate == 0) {
-						// let tech = box.y1;
-						// box.y1 = box.z1;
-						// box.z1 = tech;
-						// tech = box.y2;
-						// box.y2 = box.y2;
-						// box.z2 = tech;
-						// this.mirrorBox(index, 1);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 1) {
-						// let tech = box.x1;
-						// box.x1 = box.z1;
-						// box.z1 = tech;
-						// tech = box.x2;
-						// box.x2 = box.z2;
-						// box.z2 = tech;
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 2) {
-						// let tech = box.x1;
-						// box.x1 = box.y1;
-						// box.y1 = tech;
-						// tech = box.x2;
-						// box.x2 = box.y2;
-						// box.y2 = tech;
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 1);
-					// }
-				// } else if (angle == 1) {
-					// if (orientate == 0) {
-						// this.mirrorBox(index, 1);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 1) {
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 2);
-					// } else if (orientate == 2) {
-						// this.mirrorBox(index, 0);
-						// this.mirrorBox(index, 1);
-					// }
-				// } else if (angle == 2) {
-					// if (orientate == 0) {
-						// let tech = box.y1;
-						// box.y1 =- box.z1;
-						// box.z1 =- tech;
-						// tech = box.y2;
-						// box.y2 =- box.z2;
-						// box.z2 =- tech;
-						// box.y1 += box.y1;
-						// box.y2 += box.y1;
-						// box.z1 += box.z1;
-						// box.z2 += box.z1;
-					// } else if (orientate == 1) {
-						// let tech = box.x1;
-						// box.x1 =- box.z1;
-						// box.z1 =- tech;
-						// tech = box.x2;
-						// box.x2 =- box.z2;
-						// box.z2 =- tech;
-						// box.x1 += box.x1;
-						// box.x2 += box.x1;
-						// box.z1 += box.z1;
-						// box.z2 += box.z1;
-					// } else if (orientate == 2) {
-						// let tech = box.x1;
-						// box.x1 =- box.y1;
-						// box.y1 =- tech;
-						// tech = box.x2;
-						// box.x2 =- box.y2;
-						// box.y2 =- tech;
-						// box.x1 += box.x1;
-						// box.x2 += box.x1;
-						// box.y1 += box.y1;
-						// box.y2 += box.y1;
-					// }
-				// }
+			// let box = this.getBox(index);
+			// if (angle == 0) {
+			// if (orientate == 0) {
+			// let tech = box.y1;
+			// box.y1 = box.z1;
+			// box.z1 = tech;
+			// tech = box.y2;
+			// box.y2 = box.y2;
+			// box.z2 = tech;
+			// this.mirrorBox(index, 1);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 1) {
+			// let tech = box.x1;
+			// box.x1 = box.z1;
+			// box.z1 = tech;
+			// tech = box.x2;
+			// box.x2 = box.z2;
+			// box.z2 = tech;
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 2) {
+			// let tech = box.x1;
+			// box.x1 = box.y1;
+			// box.y1 = tech;
+			// tech = box.x2;
+			// box.x2 = box.y2;
+			// box.y2 = tech;
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 1);
+			// }
+			// } else if (angle == 1) {
+			// if (orientate == 0) {
+			// this.mirrorBox(index, 1);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 1) {
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 2);
+			// } else if (orientate == 2) {
+			// this.mirrorBox(index, 0);
+			// this.mirrorBox(index, 1);
+			// }
+			// } else if (angle == 2) {
+			// if (orientate == 0) {
+			// let tech = box.y1;
+			// box.y1 =- box.z1;
+			// box.z1 =- tech;
+			// tech = box.y2;
+			// box.y2 =- box.z2;
+			// box.z2 =- tech;
+			// box.y1 += box.y1;
+			// box.y2 += box.y1;
+			// box.z1 += box.z1;
+			// box.z2 += box.z1;
+			// } else if (orientate == 1) {
+			// let tech = box.x1;
+			// box.x1 =- box.z1;
+			// box.z1 =- tech;
+			// tech = box.x2;
+			// box.x2 =- box.z2;
+			// box.z2 =- tech;
+			// box.x1 += box.x1;
+			// box.x2 += box.x1;
+			// box.z1 += box.z1;
+			// box.z2 += box.z1;
+			// } else if (orientate == 2) {
+			// let tech = box.x1;
+			// box.x1 =- box.y1;
+			// box.y1 =- tech;
+			// tech = box.x2;
+			// box.x2 =- box.y2;
+			// box.y2 =- tech;
+			// box.x1 += box.x1;
+			// box.x2 += box.x1;
+			// box.y1 += box.y1;
+			// box.y2 += box.y1;
+			// }
+			// }
 			// };
 			// Innersection
 			this.checkBoxesInnersection = function(index1, index2) {
-				let box1 = this.getBox(index1), box2 = this.getBox(index2);
+				let box1 = this.getBox(index1),
+					box2 = this.getBox(index2);
 				if (box1.x1 < box2.x2 && box1.x2 > box2.x1 || box1.x1 > box2.x1 && box1.x2 < box2.x2) {
 					if (box1.y1 < box2.y2 && box1.y2 > box2.y1 || box1.y1 > box2.y1 && box1.y2 < box2.y2) {
 						if (box1.z1 < box2.z2 && box2.z1 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2) {
@@ -665,7 +676,8 @@ const BlockWorker = function(obj) {
 				return false;
 			};
 			this.checkBoxInnersection = function(index) {
-				let box = this.getBox(index), approved = new Array();
+				let box = this.getBox(index),
+					approved = new Array();
 				for (let i = 0; i < this.getBoxCount(); i++) {
 					if (i != index && this.checkBoxesInnersection(index, i)) {
 						approved.push(i);
