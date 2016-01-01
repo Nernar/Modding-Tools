@@ -28,6 +28,7 @@ FocusableWindow.prototype.getContent = function() {
 FocusableWindow.prototype.setContent = function(content) {
 	this.content = content;
 	if (this.isOpened()) this.update();
+	else content.setVisibility(Ui.Visibility.GONE);
 };
 
 FocusableWindow.prototype.getFragment = function() {
@@ -40,6 +41,7 @@ FocusableWindow.prototype.getFragment = function() {
 FocusableWindow.prototype.setFragment = function(fragment) {
 	this.fragment = fragment;
 	if (this.isOpened()) this.update();
+	else fragment.getContainer().setVisibility(Ui.Visibility.GONE);
 };
 
 FocusableWindow.prototype.getFrame = function() {
@@ -49,6 +51,7 @@ FocusableWindow.prototype.getFrame = function() {
 FocusableWindow.prototype.setFrame = function(frame) {
 	this.frame = frame;
 	if (this.isOpened()) this.update();
+	else frame.getContainer().setVisibility(Ui.Visibility.GONE);
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -173,8 +176,11 @@ FocusableWindow.prototype.setExitActor = function(actor) {
 };
 
 FocusableWindow.prototype.show = function() {
-	WindowProvider.prepareActors(this);
-	this.getContent().setVisibility(Ui.Visibility.VISIBLE);
+	let scope = this, content = this.getContent();
+	content.post(function() {
+		WindowProvider.prepareActors(scope, scope.enterActor);
+		content.setVisibility(Ui.Visibility.VISIBLE);
+	});
 	if (!this.isOpened()) {
 		WindowProvider.openWindow(this);
 	}
@@ -187,12 +193,14 @@ FocusableWindow.prototype.update = function() {
 };
 
 FocusableWindow.prototype.hide = function() {
-	WindowProvider.prepareActors(this);
+	WindowProvider.prepareActors(this, this.exitActor);
 	this.getContent().setVisibility(Ui.Visibility.GONE);
 	this.__hide && this.__hide();
 };
 
 FocusableWindow.prototype.dismiss = function() {
+	WindowProvider.prepareActors(this, this.exitActor);
+	this.getContent().setVisibility(Ui.Visibility.GONE);
 	WindowProvider.closeWindow(this);
 	this.__close && this.__close();
 };

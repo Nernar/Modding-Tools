@@ -14,6 +14,7 @@ const Dirs = {
 	AUTOSAVE: __dir__ + "saves/.autosave",
 	LOGGING: __dir__ + "saves/.logging",
 	SUPPORT: __dir__ + "support",
+	TESTING: __dir__ + ".script",
 	EVALUATE: __dir__ + ".eval",
 	TODO: __dir__ + ".todo"
 };

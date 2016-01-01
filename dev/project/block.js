@@ -73,7 +73,7 @@ const BlockWorker = function(obj) {
 			else this.getParams().data = data;
 		},
 		setSpecialType: function(type) {
-			if (data.length == 0) delete this.getParams().special;
+			if (type.length == 0) delete this.getParams().special;
 			else this.getParams().special = type;
 		}
 	};

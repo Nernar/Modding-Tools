@@ -7,29 +7,25 @@ const STRINGIFY_TIMEOUT = 30000;
 
 const stringifyObject = function(obj, identate, action, hint, complete) {
 	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
-	function recursiveHint(state, max) {
+	const recursiveHint = function(update) {
 		handle(function() {
-			if (indexated) {
-				showHint((hint || translate("Stringify")) + " (" + Math.floor(progress / count * 100) + "%)");
+			let result = count > 0 ? progress / count * 100 : 0;
+			if (indexated && result < 100) {
+				update((hint || translate("Stringify")) + " (%s)", result);
 			} else if (!indexated) {
-				showHint(translate("Indexating") + " (" + count + ")");
+				update(translate("Indexating") + " (" + count + ")", 50);
 			} else if (!done) {
-				showHint(translate("Working"));
+				update(hint || translate("Working"), 95);
 			}
 			if (done) {
-				showHint((complete || translate("Done")) + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				hintStackableDenied = state;
-				maximumHints = max;
-			} else recursiveHint(state, max);
+				update((complete || translate("Done")) + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)), 100);
+				createProcess.complete();
+			} else recursiveHint(update);
 		}, 50);
-	}
+	};
 	if (showProcesses) {
-		let window = UniqueHelper.getWindow("HintAlert");
-		if (window) window.setStackable(false);
-		recursiveHint(hintStackableDenied, maximumHints);
-		hintStackableDenied = true;
-		maximumHints = 0;
+		recursiveHint(createProcess(translate("Preparing")));
 	}
 	const recursiveIndexate = function(obj) {
 		try {
@@ -54,6 +50,7 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 				let result = stringifyObjectUnsafe(obj, identate, {
 					onUpdate: function() {
 						if (done) throw Error("Was cancelled by timeout");
+						if (safetyProcesses) Ui.sleepMilliseconds(1);
 						progress++;
 					},
 					onPassed: function(result, type) {

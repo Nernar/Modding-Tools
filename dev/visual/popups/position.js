@@ -1,4 +1,5 @@
 const CoordsPopup = function() {
+	FocusablePopup.call(this);
 	this.reset();
 };
 

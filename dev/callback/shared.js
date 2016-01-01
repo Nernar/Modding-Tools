@@ -74,6 +74,7 @@ const updateSettings = function() {
 		maximumHints = loadSetting("performance.maximum_hints", "number", 1, 100);
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean");
 		showProcesses = loadSetting("performance.show_processes", "boolean");
+		safetyProcesses = loadSetting("performance.safety_processes", "boolean");
 		autosave = loadSetting("autosave.enabled", "boolean");
 		/* autosaveInterface */ loadSetting("autosave.with_interface", "boolean", false);
 		autosavePeriod = loadSetting("autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);

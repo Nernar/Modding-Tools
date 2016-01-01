@@ -1,4 +1,4 @@
-let ExecutableSupport = {
+const ExecutableSupport = {
 	mods: new Object(),
 	getClassLoader: function() {
 		return context.getClassLoader();

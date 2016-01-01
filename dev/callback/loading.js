@@ -24,7 +24,11 @@ const load = function() {
 		ImageFactory.loadDirectory();
 		LoadingTipUtils.resetEncounter();
 	} catch (e) {
-		reportError(e);
+		try {
+			ImageFactory.loadDirectory();
+		} catch (e) {
+			reportError(e);
+		}
 	}
 	try {
 		refreshSupportablesIcons();

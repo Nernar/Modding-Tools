@@ -29,15 +29,13 @@ const ControlWindow = function() {
 			checkEvaluate();
 		});
 		category.addItem("blockModuleVariation", translate("Investigate"), function() {
-			checkEvaluate("resolveScope()");
+			checkEvaluate("evaluateScope()");
 		});
 		category.addItem("explorerExtensionScript", translate("Launch"), function() {
 			checkEvaluate.loadEvaluate();
 		});
 		category.addItem("worldSelectionBiome", translate("Icons"), function() {
-			REQUIRE("scopes/icons.js")(function() {
-				ProjectEditor.menu();
-			});
+			REQUIRE("scopes/icons.js")();
 		});
 		category.addItem("worldLayer", translate("Sidebar"), function() {
 			REQUIRE("tools/sidebar.js")();

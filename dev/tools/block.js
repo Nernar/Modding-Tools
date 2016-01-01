@@ -315,7 +315,7 @@ const mergeConvertedBlock = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.id;
 					if (currently === undefined || currently.length < id.length) {
-						element.define.id = currently;
+						project.define.id = id;
 					}
 				}
 				let data = element.define.data;
@@ -323,7 +323,7 @@ const mergeConvertedBlock = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.data;
 					if (currently === undefined || currently.length < data.length) {
-						element.define.data = currently;
+						project.define.data = data;
 					}
 				}
 				let special = element.define.special;
@@ -331,7 +331,7 @@ const mergeConvertedBlock = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.special;
 					if (currently === undefined || currently.length < special.length) {
-						element.define.special = currently;
+						project.define.special = special;
 					}
 				}
 				let mapped = element.define.mapped;
@@ -593,7 +593,7 @@ const BlockEditor = {
 		control.show();
 	},
 	open: function(source) {
-		if (!(source instanceof Object)) {
+		if (typeof source != "object") {
 			source = ProjectProvider.getEditorById(source);
 		}
 		let index = ProjectProvider.indexOf(source);

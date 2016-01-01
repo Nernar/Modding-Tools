@@ -263,7 +263,7 @@ const EntityEditor = {
 		control.show();
 	},
 	open: function(source) {
-		if (!(source instanceof Object)) {
+		if (typeof source != "object") {
 			source = ProjectProvider.getEditorById(source);
 		}
 		let index = ProjectProvider.indexOf(source);

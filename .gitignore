@@ -117,16 +117,16 @@ _gsdata_/
 /loader/
 
 # Resources abilities
-.placeholder.ico
 /texts/
 /gui/
 
 # Local saves
 /saves/
-.todo/
-.eval/
+/.todo/
+/.eval/
 
 # Unrealized content
+/.script
 /dev/network/
 /dev/storage/message.js
 /assets/sounds-16.txt

@@ -46,15 +46,12 @@ const merge = function(target, source) {
 	}
 	if (Array.isArray(source) && Array.isArray(target)) {
 		return target.concat(source);
-	} else if (String(source) != "[object Object]") {
-		return String(source);
-	} else if (source instanceof Object || source instanceof Function) {
-		if (!(target instanceof Object)) {
+	} else if (typeof source == "object" || typeof source == "function") {
+		if (typeof target != "object") {
 			target = new Object();
 		}
 		for (let item in source) {
-			let result = merge(target[item], source[item]);
-			if (result !== undefined) target[item] = result;
+			target[item] = merge(target[item], source[item]);
 		}
 		return target;
 	}

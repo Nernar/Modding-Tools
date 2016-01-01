@@ -1,6 +1,8 @@
 # Dev Editor
 
-[](https://icmods.mineprogramming.org/mod?id=614)![Beta 0.3.2](https://img.shields.io/badge/version-0.3.2-green.svg)
+[![Alpha 0.3.5](https://img.shields.io/badge/version-0.3.5-green.svg)](https://icmods.mineprogramming.org/mod?id=614)
+[![Support](https://img.shields.io/github/repo-size/nernar/dev-editor)](https://vk.com/nteditor)
+[![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 ![Logo](https://i.imgur.com/DBA28dI.png)
 
@@ -8,11 +10,10 @@
 
 We created it for you, developers like us. *Creating content right in the game is the main purpose of this API link.* The menu button will open up extensive possibilities of the visual part of the modification, special tools for developers and fashion designers.
 
-*At the moment there are the following possibilities:*
-
-- Modeling static **ICRender** models
-- Creating custom **Transition**s
-- **Render** object model modeling
+At the moment there are the following possibilities:
+- Modeling static `ICRender` models
+- Creating and playing `Transition`
+- `Render` object model modeling
 - Environment editing and design
 - Modular system built into the modification
 - New features being developed
@@ -59,7 +60,7 @@ The default export folder is located in the `Dev Editor/saves` folder.  All proj
 
 The interface is divided into types - there are coordinate windows, selection of elements, project trees and others.  The modeling access is only available to *in the world*, as many of the capabilities are only available from within.
 
-To use many tools, a basic concept of [the coordinate axis is](https://ru.m.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82) needed. The coordinates form the actual position of the element in the world, the rotation of the elements is expressed in degrees at the option of the developer.
+To use many tools, a basic concept of [coordinate axis](https://wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82) is needed. The coordinates form the actual position of the element in the world, the rotation of the elements is expressed in degrees at the option of the developer.
 
 ---
 

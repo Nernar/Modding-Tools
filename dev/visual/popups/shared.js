@@ -3,7 +3,6 @@ const Popups = new Object();
 Popups.widgets = new Array();
 
 Popups.open = function(widget, name) {
-	this.closeUnactived();
 	let opened = this.closeIfOpened(name);
 	if (!opened) {
 		let index = this.widgets.length;
@@ -72,7 +71,14 @@ Popups.createAction = function(widget) {
 					case 2:
 						let x = event.getX() - dx,
 							y = event.getY() - dy;
-						widget.getPopup().update(event.getRawX() - dx, event.getRawY() - dy, -1, -1);
+						if (widget.isFocusable()) {
+							widget.setX(widget.getX() + x);
+							widget.setY(widget.getY() + y);
+						} else {
+							widget.setX(event.getRawX() - dx);
+							widget.setY(event.getRawY() - dy);
+						}
+						widget.update();
 						if (x > 0 || y > 0) {
 							if (closeable) {
 								closeable.destroy();
@@ -85,16 +91,6 @@ Popups.createAction = function(widget) {
 				}
 				return true;
 			});
-		}
-	}
-};
-
-Popups.closeUnactived = function() {
-	for (let i = 0; i < this.widgets.length; i++) {
-		let widget = this.widgets[i],
-			window = widget.window;
-		if (window && widget.focusable) {
-			Popups.close(widget);
 		}
 	}
 };
@@ -121,7 +117,7 @@ Popups.closeAllByTag = function(tag) {
 
 Popups.close = function(index) {
 	let widget = this.widgets[index];
-	if (widget && widget.getPopup()) {
+	if (widget) {
 		widget.dismiss();
 		this.widgets.splice(index, 1);
 		return true;

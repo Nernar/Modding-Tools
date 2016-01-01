@@ -24,8 +24,8 @@ const runAtScope = function(code, scope, name) {
 
 const REQUIRE = function(path) {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
+		MCSystem.setLoadingTip("Requiring " + path);
 		if (__code__.startsWith("develop")) {
-			MCSystem.setLoadingTip("Requiring " + path);
 			let file = new java.io.File(Dirs.EVALUATE, path);
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
@@ -34,8 +34,17 @@ const REQUIRE = function(path) {
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
-			MCSystem.setLoadingTip(new String());
+		} else if (__code__.startsWith("testing")) {
+			let file = new java.io.File(Dirs.TESTING, path);
+			if (!file.exists()) throw null;
+			let source = decompileFromProduce(Files.readBytes(file)),
+				code = "(function() {\n" + source + "\n})();",
+				scope = runAtScope(code, REQUIRE.getScope(), path);
+			if (scope.error) throw scope.error;
+			REQUIRE.results[path] = scope.result;
+			REQUIRE.loaded.push(path);
 		}
+		MCSystem.setLoadingTip(new String());
 	}
 	return REQUIRE.results[path];
 };
@@ -45,9 +54,7 @@ REQUIRE.results = new Object();
 
 REQUIRE.getScope = function() {
 	let scope = __mod__.compiledModSources.get(0).evaluateStringInScope("this");
-	return assign(scope, {
-		print: print,
-		MCSystem: MCSystem,
+	return assign(__code__.indexOf("alpha") != -1 ? scope : new Object(), {
 		SHARE: function(name, obj) {
 			if (__code__.startsWith("develop")) {
 				scope[name] = obj;
@@ -56,6 +63,8 @@ REQUIRE.getScope = function() {
 		FIND: function(name) {
 			if (__code__.startsWith("develop")) {
 				this[name] = scope.eval(name);
+			} else if (__code__.startsWith("testing")) {
+				this[name] = scope[name];
 			}
 		}
 	});

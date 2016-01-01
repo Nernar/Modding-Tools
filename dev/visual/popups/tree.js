@@ -1,4 +1,5 @@
 const TreePopup = function() {
+	FocusablePopup.call(this);
 	this.reset();
 };
 

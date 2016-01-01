@@ -9,8 +9,9 @@
   },
   "performance":{
     "hint_stackable":true,
-    "maximum_hints":50,
-    "show_processes":true
+    "maximum_hints":25,
+    "show_processes":true,
+    "safety_processes":true
   },
   "autosave":{
     "enabled":true,

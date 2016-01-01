@@ -659,6 +659,9 @@ Translation.addTranslation("Autosaving", {
 Translation.addTranslation("Autosaved", {
 	ru: "Сохранено"
 });
+Translation.addTranslation("Refreshed", {
+	ru: "Перезагружено"
+});
 Translation.addTranslation("Updating", {
 	ru: "Обновление"
 }); // DEPRECATED
@@ -1200,17 +1203,6 @@ Translation.addTranslation("As Obj", {
 	ru: "В Obj"
 }); // DEPRECATED
 
-// Development
-Translation.addTranslation("Asriel", {
-	ru: "Азриэль"
-}); // DEPRECATED
-Translation.addTranslation("Chara", {
-	ru: "Чара"
-}); // DEPRECATED
-Translation.addTranslation("Frisk", {
-	ru: "Фриск"
-}); // DEPRECATED
-
 // Non-organized content
 Translation.addTranslation("You're idiot. LMAO.", {
 	ru: "Ты идиот. LMAO."
@@ -1218,5 +1210,40 @@ Translation.addTranslation("You're idiot. LMAO.", {
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
 }); // DEPRECATED
+Translation.addTranslation("Oof", {
+	ru: "Уф"
+});
+Translation.addTranslation("What's happened", {
+	ru: "Что случилось"
+});
+Translation.addTranslation("Ah", {
+	ru: "А"
+});
+Translation.addTranslation("Something wrong, it isn't", {
+	ru: "Что-то не так, разве нет"
+});
+Translation.addTranslation("I just wanted to made my promise", {
+	ru: "Я лишь хочу исполнить свое обещание"
+});
+Translation.addTranslation("to show you glowing crystals", {
+	ru: "показав тебе сияющие кристаллы"
+});
+
+// Narration movements
+Translation.addTranslation("%s softy jumps and scariest looks around.", {
+	ru: "%s легонько подпрыгивает, испуганно осматривая окружение."
+});
+Translation.addTranslation("%s rotates self head directly to %s.", {
+	ru: "%s поворачивает свою голову прямо на %s."
+});
+Translation.addTranslation("%s just laughs slightly.", {
+	ru: "%s лишь мягко посмеивается."
+});
+Translation.addTranslation("%s places hand to friend shoulder.", {
+	ru: "%s ложит руку на плечо своего друга."
+});
+Translation.addTranslation("%s starts looking to %s eyes deeper.", {
+	ru: "%s начинает смотреть в глубину глаз %s."
+});
 
 // Not localized content will be appear here

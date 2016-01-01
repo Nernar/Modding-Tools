@@ -1,4 +1,5 @@
 const ListingPopup = function() {
+	FocusablePopup.call(this);
 	this.reset();
 };
 

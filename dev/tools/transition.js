@@ -88,7 +88,7 @@ const mergeConvertedTransition = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.entity;
 					if (currently === undefined) {
-						element.define.entity = currently;
+						project.define.entity = entity;
 					}
 				}
 				let fps = element.define.fps;
@@ -96,7 +96,7 @@ const mergeConvertedTransition = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.fps;
 					if (currently === undefined || currently < data) {
-						element.define.fps = currently;
+						project.define.fps = fps;
 					}
 				}
 				let starting = element.define.starting;
@@ -104,7 +104,7 @@ const mergeConvertedTransition = function(project, source, action) {
 					if (project.define === undefined) project.define = new Object();
 					let currently = project.define.starting;
 					if (currently === undefined) {
-						element.define.starting = currently;
+						project.define.starting = starting;
 					}
 				}
 			}
@@ -258,7 +258,7 @@ let TransitionEditor = {
 		control.show();
 	},
 	open: function(source) {
-		if (!(source instanceof Object)) {
+		if (typeof source != "object") {
 			source = ProjectProvider.getEditorById(source);
 		}
 		let index = ProjectProvider.indexOf(source);

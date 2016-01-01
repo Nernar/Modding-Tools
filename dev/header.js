@@ -42,18 +42,18 @@ let menuDividers = false;
 let supportSupportables = true;
 let loadSupportables = true;
 let hintStackableDenied = true;
-let maximumHints = 50;
+let maximumHints = 25;
 let showProcesses = true;
 let noImportedScripts = true;
 let keyExpiresSoon = false;
 let ignoreKeyDeprecation = false;
 let projectHeaderBackground = false;
 let useOldExplorer = false;
-let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
+let safetyProcesses = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-27.05.2021-5";
+const __code__ = "develop-alpha-0.3.5-29.05.2021-6";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
