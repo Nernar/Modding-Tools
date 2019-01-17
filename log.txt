@@ -1,0 +1,90 @@
+Alpha 0.2.4.1 (09.01.2019)
+- Russian language by default
+- Updated menus content
+- Auto selecting current box
+- No boxes special menu
+- Fixed project export
+- Texturing by massive
+- Added all textures
+- Updated import & export
+- Removed all model resizing
+- Bug fixes, but added new
+
+Beta 0.2.4 (20.07.2018)
+- Updated texture selectors
+- Fixed import mod scripts
+- Detailed menu for update
+- Showing shape box
+- Menus for rotate
+- Export fixes
+- Bug fixes
+
+Beta 0.2.3 (10.07.2018)
+- Interface improvements
+- Improved block editor
+- Texture selection for sides
+- Selecting change coordinates
+- Replace all textures
+- Bug fixes
+
+Beta 0.2.2 (27.06.2018)
+- Export with select name
+- Export to project fixed
+- Interface preferences
+- Resizeable interface
+- Bug fixes
+
+Beta 0.2.1 (26.06.2018)
+- Block information can be edited
+- Export to project fixed
+- Updated some textures
+- Message if no projects
+- New names for export
+- Menu can be closed
+- Bug fixes
+
+Beta 0.2 (25.06.2018)
+- New interface technology
+- Two menus to manage
+- New saves dir for projects
+- Test popup block editor
+- Interface animations
+- Confirmations to delete
+- Tap for block to start
+- Replaced all textures
+- Interface changes
+- Shape work fixes
+- Model resizer
+- Cloning box
+- Bug fixes
+
+Beta 0.1.3 (11.06.2018)
+- Categories for export and import
+- Confirmation if save on exit failed
+- Tap worked only down custom block
+- New catches for get errors
+- English translate
+- Bug fixes
+
+Beta 0.1.2 (10.06.2018)
+- Interface showed in menu
+- Russian translate
+- Bug fixes
+
+Beta 0.1.1 (10.06.2018)
+- New format for show sizes
+- Fixed undefined category
+- Import from script
+- Start modeling on tap
+- Move box
+- Bug fixes
+
+Beta 0.1 (10.06.2018)
+- Export to project fixed
+- Export to script
+- Select file to import
+- Shape fixes
+- Bug fixes
+
+Alpha 0.1 (09.10.2018)
+- First version
