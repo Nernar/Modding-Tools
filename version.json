@@ -1,5 +1,5 @@
 {
-	stable: {},
+	release: {},
 	testing: {
 		version: "0.2.4.1",
 		date: "09.01.2019",
