@@ -1,0 +1,15 @@
+{
+	stable: {},
+	testing: {
+		version: "0.2.4.1",
+		date: "09.01.2019",
+		type: "alpha",
+		code: 10
+	},
+	develop: {
+		version: "0.2.5",
+		date: "18.01.2019",
+		type: "beta",
+		code: 11
+	}
+}
