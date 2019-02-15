@@ -1,3 +1,18 @@
+Beta 0.2.5.1 (12.02.2019)
+- Fixed save window
+- Fixed application of settings
+- Added date to array texture
+- Some improvements
+
+Beta 0.2.5 (11.02.2019)
+- Changed the results of actions
+- Fixed a bug that did not show its texture
+- Fixed layout of interface windows
+- Fixed interface sizes
+- Fixed the work of the coordinate multiplier with fractions
+- Configuration applied to content
+- Fixed various bugs
+
 Alpha 0.2.4.1 (09.01.2019)
 - Russian language is used by default
 - Updated menu content
