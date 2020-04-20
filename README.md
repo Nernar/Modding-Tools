@@ -1,7 +1,7 @@
 # **Dev Editor**
 [![Бета 0.1.3](https://img.shields.io/badge/version-0.1.3-green.svg)]()
-[![Поддержка](http://img.shields.io/badge/support.svg)](https://vk.com/nteditor)
-[![Лицензия](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Поддержка](https://img.shields.io/github/repo-size/maxfeed/dev-editor)](https://vk.com/nteditor)
+[![Лицензия](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Мы создали его для вас, таких же разработчиков как и мы. Создавать контент прямо в игре - основная задача данного мода. Достаточно лишь запустить любой мир. Кнопка меню откроет обширные возможности мода, специальные средства для разработчиков.
 
