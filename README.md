@@ -1,5 +1,5 @@
 # **Dev Editor**
-[![Бета 0.1.3](https://img.shields.io/badge/version-0.1.3-green.svg)](https://vk.com/wall-168765348_66)
+[![Бета 0.1.4](https://img.shields.io/badge/version-0.1.4-green.svg)](https://vk.com/wall-168765348_66)
 [![Поддержка](https://img.shields.io/github/repo-size/maxfeed/dev-editor)](https://vk.com/nteditor)
 [![Лицензия](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
