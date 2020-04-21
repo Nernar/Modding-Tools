@@ -1,40 +1,40 @@
-Beta 0.1.4 (14.06.2018)
-- Russian translation returned
-- Render and shape checks
-- Block can be selected when importing
-- Lack of internet does not cause an error
-- Almost all errors are fixed by mod
-- Menu appears again with launch
-- Optimized texture loading
-- Bugs fixes
+Бета 0.1.4 (14.06.2018)
+ - Русский перевод вернулся
+ - Визуализация и проверка формы
+ - Блок может быть выбран при импорте
+ - Отсутствие интернета не вызывает ошибку
+ - Почти все ошибки исправлены модом
+ - Меню появляется снова при запуске
+ - Оптимизирована загрузка текстур
+ - Исправлены ошибки
 
-Beta 0.1.3 (11.06.2018)
-- Import and export categories
-- Confirm exit from the menu
-- Pressing works only on the surface of the block.
-- More errors are now checked
-- Original translations returned
-- Bugs fixes
+ Бета 0.1.3 (11.06.2018)
+ - Импорт и экспорт категорий
+ - Подтверждение выхода из меню
+ - Рендер работает только на поверхности блока
+ - Больше ошибок теперь проверено
+ - Вернулись оригинальные переводы
+ - Исправлены ошибки
 
-Beta 0.1.2 (10.06.2018)
-- The interface is shown in the menu
-- Russian translation is set by default
-- Bugs fixes
+ Бета 0.1.2 (10.06.2018)
+ - Интерфейс отображается в меню
+ - Русский установлен по умолчанию
+ - Исправлены ошибки
 
-Beta 0.1.1 (10.06.2018)
-- Sizes are shown in a different style
-- Fixed unknown category
-- Loading models from scripts
-- Start modeling by clicking on the surface
-- Move the box
-- Bugs fixes
+ Бета 0.1.1 (10.06.2018)
+ - Размеры показаны в другом стиле
+ - Исправлена ​​неизвестная категория
+ - Загрузка моделей из скриптов
+ - Нажатие на блок начнет моделирование
+ - Перемещение коробки
+ - Исправлены ошибки
 
-Beta 0.1 (10.06.2018)
-- Save fixes to project
-- Save to script
-- Select file to save
-- Shape corrections
-- Bugs fixes
+ Бета 0.1 (10.06.2018)
+ - Фиксы экспорта в проект
+ - Сохранение в скрипты
+ - Выбор файла для сохранения
+ - Коррекция работы формы
+ - Исправлены ошибки
 
-Alpha 0.1 (09.10.2018)
-- First version
+ Альфа 0.1 (09.10.2018)
+ - Первая версия
