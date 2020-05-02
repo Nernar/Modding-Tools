@@ -3,7 +3,7 @@
 [![Поддержка](https://img.shields.io/github/repo-size/maxfeed/dev-editor)](https://vk.com/nteditor)
 [![Лицензия](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-![Лого](https://i.imgur.com/BPqiC60.png)
+![Лого](https://i.imgur.com/DBA28dI.png)
 
 ## Вступление
 
