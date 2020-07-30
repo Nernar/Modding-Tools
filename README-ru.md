@@ -31,7 +31,7 @@ _На данный момент имеются следующие возможн
 ```js
 let render = new ICRender.Model(); 
 BlockRenderer.setStaticICRender(1, 0, render); 
-var model = BlockRenderer.createModel(); 
+let model = BlockRenderer.createModel(); 
 
 model.addBox(0/16, 0/16, 0/16, 1/16, 16/16, 16/16, "wood", 0);
 model.addBox(31/16, 0/16, 0/16, 32/16, 16/16, 16/16, "wood", 0);
