@@ -29,7 +29,7 @@ _На данный момент имеются следующие возможн
 
 Также Вы можете и добавить существующий рендер в свой проект, просто откройте любой скрипт своей модификации через импорт. Для примера можно создать файл в папке `Dev Editor` в формате _.js_ и использовать следующий код, который добавит тумбочку:
 ```js
-var render = new ICRender.Model(); 
+let render = new ICRender.Model(); 
 BlockRenderer.setStaticICRender(1, 0, render); 
 var model = BlockRenderer.createModel(); 
 
