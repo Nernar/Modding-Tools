@@ -1,37 +1,37 @@
 # Dev Editor
-[![Бета 0.2.6.1](https://img.shields.io/badge/version-0.2.6.1-green.svg)](https://vk.com/wall-168765348_89)
-[![Поддержка](https://img.shields.io/github/repo-size/maxfeed/dev-editor)](https://vk.com/nteditor)
-[![Лицензия](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Beta 0.3.2](https://img.shields.io/badge/version-0.3.2-green.svg)](https://vk.com/wall-168765348_96)
+[![Support](https://img.shields.io/github/repo-size/maxfeed/dev-editor)](https://vk.com/nteditor)
+[![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-![Лого](https://i.imgur.com/DBA28dI.png)
+![Logo](https://i.imgur.com/DBA28dI.png)
 
-## Вступление
+## Introduction
 
-Мы создали его для Вас, таких же разработчиков как и мы. _Создавать контент прямо в игре - основная задача данной связи API._ Кнопка меню откроет обширные возможности визуальной части модификации, специальные средства для разработчиков и модельеров.
+We're created it's for you, developers like us. _Creating content directly in-game — is the main task of this API._ Menu button will open extensive possibilities of visual modification part, special tools for developers and modelers.
 
-_На данный момент имеются следующие возможности:_ 
-- Моделирование статичных моделей **ICRender**
-- Создание специальных переходов **Transition**
-- Моделирование объектных моделей **Render**
-- Редактирование и проектирование окружения
-- Встроенная в модификацию система модулей
-- Разрабатываемые новые возможности
+_The following options are currently available:_
+- Simulation of static models **ICRender**
+- Create special transitions **Transition**
+- Modeling object models **Render**
+- Editing and designing the environment
+- Supportables built into modification
+- New features being developed
 
-## Разработка
+## Development
 
-Если у Вас есть предложения/пожелания и/или ошибки во время работы нашей среды, Вы можете рассказать об этом на нашей доске в [Trello](https://trello.com/b/wzYtpA3W/dev-editor). Нам будет крайне интересно изучить вашу проблему или предложение, чтобы исправить или добавить их в ближайшее время.
+If you have any suggestions/wishes and/or errors during work of our environment, you can report it on our board in [Trello](https://trello.com/b/wzYtpA3W/dev-editor). It's will be extremely interesting for us to study your problem or suggestion in order to fix or add them in near future.
 
-Принять участие в разработке мода можно будет как только исходный код будет опубликован здесь, каждый сможет вносить любого рода правки благодаря технологиям **GitHub**. По любым вопросам обращайтесь в [нашу группу](https://vk.me/nernar). Актуальную версию всегда можно найти в ней.
+You can takes part in development process as soon source code is published here, everyone will be able to make any kind of edits thanks to `GitHub` technologies. For any questions please contact [our group](https://vk.me/nernar). Currently version can always be found in it.
 
-## Использование
+## Usage
 
-Для начала достаточно зайти в любой мир. В правой нижней части экрана (может отличаться в зависимости от версии) появится всего _одна кнопка_ - ее достаточно, чтобы открыть обширные возможности мода. Для примера создадим с нуля рендер, просто добавьте в свой проект (модификацию или скрипт) блок с рендером. Немного откроем в себе дизайнера, создадим текстуры и смоделируем что-то новое.
+For start, just go into any world. In upper left part of screen (it may differ depending on version) there's will be only _one button_ — it's enough to open extensive possibilities of modification. For example, let's create a render from scratch, just add a block with a render to your project (modification or script). Let's open designer in ourselves a bit, create textures and simulate something new.
 
-Также Вы можете и добавить существующий рендер в свой проект, просто откройте любой скрипт своей модификации через импорт. Для примера можно создать файл в папке **Dev Editor/saves** в формате _.js_ и использовать следующий код, который добавит тумбочку:
+You can also add an existing render to your project, just open any script of your modification via import. For example, you can create a file in `Dev Editor/saves` folder as _.js_ format and use following code to add a nightstand:
 ```js
-var render = new ICRender.Model(); 
-BlockRenderer.setStaticICRender(1, 0, render); 
-var model = BlockRenderer.createModel(); 
+var render = new ICRender.Model();
+BlockRenderer.setStaticICRender(1, 0, render);
+var model = BlockRenderer.createModel();
 
 model.addBox(0/16, 0/16, 0/16, 1/16, 16/16, 16/16, "wood", 0);
 model.addBox(31/16, 0/16, 0/16, 32/16, 16/16, 16/16, "wood", 0);
@@ -47,18 +47,18 @@ model.addBox(5/16, 9/16, 10/16, 14/16, 11/16, 15/16, "stone", 0);
 
 render.addEntry(model);
 ```
-> Перед использованием этой модели в игре, замените идентификатор (1) установки рендера на свой!
+> Before using this model in-game, replace ID (1) of render setting with yours!
 
-## Информация
+## Information
 
-Меню открывает перед собой основные доступные пункты. **Вы можете напрямую импортировать часть кода, а модификация сама распознает поддерживаемые части проекта.** При этом, произойдет конвертирование скрипта в один проект - это позволит хранить информацию более удобно.
+Menu opens at fronts of itself main available items. _You can directly import a part of code, and modification itself recognizes supported parts of the project._ In this case, script will be converted into one project — this will allow storing information more conveniently.
+ 
+Default export folder is located in mods folder, `Dev Editor`. All projects are saved here and from here they are loaded, this folder changes in game's file explorer.
 
-Стандартная папка для экспорта находится в папке с модами, **Dev Editor**. Сюда сохраняются все проекты и отсюда же они загружаются, эта папка меняется в файловом проводнике игры.
+Interface is divided into types — there are coordinate windows, selection of elements, project trees, and others. Access to windows is available _only in world_, since many of possibilities are only accessible from inside.
 
-Интерфейс разделяется по типам - существуют окна координат, выделения элементов, деревьев проекта и прочие. Доступ к окнам доступен _только в мире_, так как многие возможности доступны только изнутри.
-
-Для использования многих инструментов, необходимо базовое понятие [оси координат](https://ru.m.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82). Координаты формируют реальное расположение элемента в мире, поворот элементов выражается в радианах, либо в градусах по выбору разработчика.
+To use many tools, you're need a basic concept of [coordinate system](https://en.m.wikipedia.org/wiki/Cartesian_coordinate_system). Coordinates form actual position of element in world, rotation of elements is expressed in degrees as developer's choice.
 
 -------
 
-**Желаем Вам приятного моделирования!**
+**We wish you a pleasant modeling!**

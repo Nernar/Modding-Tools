@@ -1,0 +1,355 @@
+{
+    "description": {
+        "en": "Manage your development process with this settings.",
+        "ru": "Управляйте своим процессом разработки с этими настройками."
+    },
+    
+    "properties": {
+        "enabled": {
+            "name": {
+                "en": "Launch",
+                "ru": "Запуск"
+            },
+            "description": {
+                "en": "Changes launch state of modification; if disabled, mod willn't be launched.",
+                "ru": "Меняет состояния запускаемости мода, если отключено - мод запущен не будет."
+            },
+            "index": 0
+        },
+        
+        "interface": {
+            "name": {
+                "en": "Interface",
+                "ru": "Интерфейс"
+            },
+            "index": 1,
+            "collapsible": false
+        },
+        
+        "interface.interface_scale": {
+            "name": {
+                "en": "Interface Scale",
+                "ru": "Масштаб интерфейса"
+            },
+            "description": {
+                "en": "Responsible for overall size of the entire interface, is it's factor",
+                "ru": "Отвечает за общий размер всего интерфейса, является его множителем"
+            },
+            
+            "index": 2 // ,
+            // "type": "SeekBar,
+            // "min": 0.5,
+            // "max": 2,
+            // "step": 0.1
+        },
+        
+        "interface.font_scale": {
+            "name": {
+                "en": "Font Scale",
+                "ru": "Масштаб шрифта"
+            },
+            "description": {
+                "en": "Affects font size, changes with interface size, multiplies interface size for font",
+                "ru": "Влияет на размер шрифта, меняется совместно с размером интерфейса, множит размер интерфейса для шрифта"
+            },
+            
+            "index": 3 // ,
+            // "type": "SeekBar,
+            // "min": 0.5,
+            // "max": 2,
+            // "step": 0.1
+        },
+        
+        "interface.max_windows": {
+            "name": {
+                "en": "Maximum Popups Count",
+                "ru": "Максимальное число окон"
+            },
+            "description": {
+                "en": "Maximum number of pop-ups; after exceeding this limit, firstly opened window will be closed",
+                "ru": "Максимальное количество всплывающих окон, после превышения ограничения первое открытое окно будет закрываться"
+            },
+            
+            "index": 4,
+            "type": "SeekBar",
+            "min": 1,
+            "max": 10
+        },
+        
+        "interface.show_dividers": {
+            "name": {
+                "en": "Show Groups Dividers",
+                "ru": "Показывать разделители групп"
+            },
+            "description": {
+                "en": "Responsible for displaying dividers between menu groups, also to some extent affects background layout",
+                "ru": "Отвечает за отображение рамки между группами меню, также в какой-то степени влияет на фоновую компоновку"
+            },
+            "index": 5
+        },
+        
+        "interface.header_background": {
+            "name": {
+                "en": "Project Header Background",
+                "ru": "Фон заголовка проекта"
+            },
+            "description": {
+                "en": "Adds background elements to project elements, otherwise there will be no background",
+                "ru": "Добавляет элементам проекта в заголовке фон, иначе фона не будет"
+            },
+            "index": 6
+        },
+        
+        "performance": {
+            "name": {
+                "en": "Performance",
+                "ru": "Производительность"
+            },
+            "index": 7,
+            "collapsible": false
+        },
+        
+        "performance.hint_stackable": {
+            "name": {
+                "en": "Hint Stackable",
+                "ru": "Очередность подсказок"
+            },
+            "description": {
+                "en": "Responsible for ability to create an array of displayed hints, hints will be shown in turn",
+                "ru": "Отвечает за возможность создавать массив из показанных подсказок, подсказки будут показаны по очереди"
+            },
+            "index": 8
+        },
+        
+        "performance.maximum_hints": {
+            "name": {
+                "en": "Maximum Hints Count",
+                "ru": "Максимальное число подсказок"
+            },
+            "description": {
+                "en": "Sets maximum number of tooltips updates during time spent on display tips",
+                "ru": "Устанавливает максимальное количество обновления подсказок за время, затрачиваемое подсказками на отображение"
+            },
+            
+            "index": 9,
+            "type": "SeekBar"
+        },
+        
+        "performance.show_processes": {
+            "name": {
+                "en": "Show Processes",
+                "ru": "Отображать процессы"
+            },
+            "description": {
+                "en": "Adds hints about current processes, such as export or import",
+                "ru": "Добавляет подсказки о текущих процессах, например, о экспорте или импорте"
+            },
+            "index": 10
+        },
+        
+        "performance.debug_animations": {
+            "name": {
+                "en": "Debug Animations",
+                "ru": "Отладочные анимации"
+            },
+            "description": {
+                "en": "Displays debugging, and sometimes unstable animations on some elements, specify personally with developer, changes with updates",
+                "ru": "Отображает отладочные, а иногда и нестабильные анимации на некоторых элементах, уточнять лично у разработчика, меняется с обновлениями"
+            },
+            "index": 11
+        },
+        
+        "project": {
+            "name": {
+                "en": "Project",
+                "ru": "Проект"
+            },
+            "index": 12,
+            "collapsible": false
+        },
+        
+        "project.autosave": {
+            "name": {
+                "en": "Autosave",
+                "ru": "Авто-сохранение"
+            },
+            "description": {
+                "en": "Changes general state of the autosave option, saving projectable in certain periods in a separate folder",
+                "ru": "Изменяет общее состояние опции автоматического сохранения, сохраняя проект в определенные периоды в отдельную папку"
+            },
+            "index": 13
+        },
+        
+        "project.autosave_period": {
+            "name": {
+                "en": "Autosave Period",
+                "ru": "Период авто-сохранений"
+            },
+            "description": {
+                "en": "Time as seconds, maximum time spent on delay between saves, a zero value means saving after each action",
+                "ru": "Время в секундах, максимально потраченное на задержку между сохранениями, нулевое значение означает сохранение после каждого действия"
+            },
+            
+            "index": 14,
+            "displayIf": "project.autosave",
+            "type": "SeekBar",
+            // "exclude": [[ 1, 4 ]],
+            "min": 0,
+            "max": 300
+        },
+        
+        "project.autosave_interface": {
+            "name": {
+                "en": "Autosave Interface",
+                "ru": "Авто-сохранение интерфейса"
+            },
+            "description": {
+                "en": "Determines whether to save after changing one of open windows, for example it's location",
+                "ru": "Определяет, нужно ли делать сохранение после изменения одного из открытых окон, например его расположения"
+            },
+            
+            "index": 15,
+            "displayIf": "project.autosave"
+        },
+        
+        "project.autosave_projectable": {
+            "name": {
+                "en": "Autosave Projectable",
+                "ru": "Авто-сохранение проекта"
+            },
+            "description": {
+                "en": "Changes state of automatic saving; when disabled, it saves only the current editable module, reducing the save time, but ignoring other editors",
+                "ru": "Меняет состояние автоматического сохранения, при отключении сохраняет только текущий редактируемый модуль, уменьшая время сохранения, но игнорируя другие редакторы"
+            },
+            
+            "index": 16,
+            "displayIf": "project.autosave"
+        },
+        
+        "project.import_autoselect": {
+            "name": {
+                "en": "Import Autoselect",
+                "ru": "Авто-выбор при импорте"
+            },
+            "description": {
+                "en": "After inclusion, if there are two or more editors in imported project, it automatically selects everything, giving user opportunity to change his choice",
+                "ru": "После включения, при наличии в импортированном проекте двух или более редакторов, автоматически выбирает все, давая пользователю возможность изменить свой выбор"
+            },
+            "index": 17
+        },
+        
+        "project.move_mapping": {
+            "name": {
+                "en": "Move Mapping",
+                "ru": "Перемещать маппинг"
+            },
+            "description": {
+                "en": "After switching on, it doesn't clear coordinates of mapped models, but uses old ones, saving them in newest editor",
+                "ru": "После включения не очищает координаты отрисованных моделей, а использует старые, сохраняя их в новый редактор"
+            },
+            "index": 18
+        },
+        
+        "render": {
+            "name": {
+                "en": "Render",
+                "ru": "Отрисовка"
+            },
+            "index": 19,
+            "collapsible": false
+        },
+        
+        "render.use_box_sizes": {
+            "name": {
+                "en": "Use Box Sizes",
+                "ru": "Использовать координаты коробок"
+            },
+            "description": {
+                "en": "After inclusion in editors with box sizes, instead of size and location, displays two coordinates points",
+                "ru": "После включения в редакторах с размерами коробок, вместо размера и расположения, отображает две точки координат"
+            },
+            "index": 20
+        },
+        
+        "render.draw_selection": {
+            "name": {
+                "en": "Draw Selection",
+                "ru": "Отрисовка выборки"
+            },
+            "description": {
+                "en": "When focusing on element selection window, draws selection in any of one possible ways",
+                "ru": "При фокусировке на окне выбора элементов, отрисовывает выборку любым из возможных способов"
+            },
+            "index": 21
+        },
+        
+        "render.inject_border": {
+            "name": {
+                "en": "Inject Border",
+                "ru": "Вставка границ"
+            },
+            "description": {
+                "en": "Draws a border around selected elements, perhaps less stable than drawing selection, but more clearly",
+                "ru": "Обводит границу для выбранных элементов, возможно менее стабильно чем отрисовка выборки, но более наглядно"
+            },
+            "displayIf": false
+        },
+        
+        "render.transparent_boxes": {
+            "name": {
+                "en": "Transparent Boxes",
+                "ru": "Прозрачные коробки"
+            },
+            "description": {
+                "en": "Changes rendering state of translucent textures, works only on translucent blocks, also automatically turns off on old version launcher",
+                "ru": "Меняет состояние отрисовки полупрозрачных текстур, работает только на полупрозрачных блоках, также автоматически отключается на старой версии лаунчера"
+            },
+            "index": 22
+        },
+        
+        "deprecated": {
+            "name": {
+                "en": "Deprecated",
+                "ru": "Устарело"
+            },
+            "displayIf": false
+        },
+        
+        "deprecated.use_old_explorer": {
+            "name": {
+                "en": "Use Old Explorer",
+                "ru": "Использовать старый проводник"
+            },
+            "displayIf": false
+        },
+        
+        "user_login": {
+            "name": {
+                "en": "User Login",
+                "ru": "Регистрация"
+            },
+            "displayIf": false
+        },
+        
+        "supportable": {
+            "name": {
+                "en": "Supportables",
+                "ru": "Модули"
+            },
+            "index": 23,
+            "collapsible": false
+        },
+        
+        "supportable.enabled": {
+            "name": {
+                "en": "Transparent Boxes",
+                "ru": "Прозрачные коробки"
+            },
+            "description": {
+                "en": "Responsible for general state of inclusion «Supportables» function, each of which can be disabled separately by changing it's config",
+                "ru": "Отвечает за общее состояние включения функции «Модулей», каждый из которых может быть отключен отдельно изменением их конфига"
+            },
+            "index": 24
+        }
+    }
+}
