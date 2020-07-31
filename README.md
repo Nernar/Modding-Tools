@@ -55,7 +55,7 @@ Menu opens at fronts of itself main available items. _You can directly import a 
  
 Default export folder is located in `Dev Editor/saves` folder. All projects are saved here and from here they are loaded, this folder changes in game's file explorer.
 
-Interface is divided into types — there are coordinate windows, selection of elements, project trees, and others. Access to windows is available _only in world_, since many of possibilities are only accessible from inside.
+Interface is divided into types — there are coordinate windows, selection of elements, project trees, and others. Access to modelers windows is available _only in world_, since many of possibilities are only accessible from inside.
 
 To use many tools, you're need a basic concept of [coordinate system](https://en.m.wikipedia.org/wiki/Cartesian_coordinate_system). Coordinates form actual position of element in world, rotation of elements is expressed in degrees as developer's choice.
 
