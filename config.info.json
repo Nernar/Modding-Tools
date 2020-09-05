@@ -11,8 +11,8 @@
                 "ru": "Запуск"
             },
             "description": {
-                "en": "Changes launch state of modification, if disabled - mod willn't be launched.",
-                "ru": "Меняет состояния возможности запуска мода, если отключено - мод запущен не будет."
+                "en": "Changes launch state of modification; if disabled - mod willn't be launched",
+                "ru": "Меняет состояния возможности запуска мода; если отключено - мод запущен не будет"
             },
             "index": 0
         },

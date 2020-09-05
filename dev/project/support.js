@@ -93,9 +93,7 @@ var ExecutableSupport = {
 	getAndLoadIcon: function(name) {
 		try {
 			if (ImageFactory.getCountByTag(name) > 0) {
-				if (ImageFactory.getBitmap("support" + name) != null) {
-					return "support" + name;
-				}
+				return "support" + name;
 			}
 			let file = new java.io.File(Dirs.SUPPORT, name);
 			if (file != null && file.exists()) {
@@ -103,8 +101,8 @@ var ExecutableSupport = {
 				if (icon != null && icon.exists()) {
 					let output = new java.io.File(Dirs.CACHE, name + ".dnr");
 					ImageFactory.encodeFile(icon, output);
-					ImageFactory.loadFromFile("encode:" + name, output);
-					return "encode:" + name;
+					ImageFactory.loadFromFile("cache:" + name, output);
+					return "cache:" + name;
 				}
 			}
 			return "support";

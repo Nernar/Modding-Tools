@@ -108,6 +108,7 @@ dist
 /.dex/
 /java/.build/
 /java/build/
+/assets/cache/
 
 # Dev Editor sources
 /res/.source/
