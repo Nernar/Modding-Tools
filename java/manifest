@@ -1,0 +1,6 @@
+{
+	"verbose": true,
+	"source-dirs": ["src/main/java"],
+	"boot-classes": ["com.nernar.editor.EditorSetup"],
+	"options": ["-cp", "/sdcard/games/horizon/packs/premium.boot.jar"]
+}

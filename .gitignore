@@ -110,16 +110,11 @@ main.js
 # Dev Editor sources
 res/.source/
 dev/.source/
-provider/
 dev/api/protect.js
 dev/callback/server.js
 gui/
-assets/studio.mcworld
-assets/sounds-16.txt
 res/mob/
 loader/
-pre/
-java/
 
 # Local saves
 saves/
