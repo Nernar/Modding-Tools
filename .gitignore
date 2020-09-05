@@ -104,22 +104,22 @@ dist
 .tern-port
 
 # Build files
-main.js
-.dex/
+/main.js
+/.dex/
 
 # Dev Editor sources
-res/.source/
-dev/.source/
-dev/api/protect.js
-dev/callback/server.js
-gui/
-res/mob/
-loader/
+/res/.source/
+/dev/.source/
+/dev/api/protect.js
+/dev/callback/server.js
+/gui/
+/res/mob/
+/loader/
 
 # Local saves
-saves/
-.todo/
-.eval/
+/saves/
+/.todo/
+/.eval/
 
 # Dropbox sync
-.ttxfolder
+/.ttxfolder
