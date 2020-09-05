@@ -28,35 +28,6 @@ var LogWindow = {
 	}
 };
 
-// function getIndexAndSymbol(source) {
-	// It's result of understading how works RegExp :)
-	// if (typeof source != "string" || source.length == 0) return null;
-	// var symbols = ["(", ")", "{", "}", "[", "]", "\""], indexes = [];
-	// for (var s in symbols) indexes.push(source.indexOf(symbols[s]));
-	// var minimalIndex = java.lang.Integer.MAX_VALUE, locatedAt = -1;
-	// for (var i in indexes) if (minimalIndex > indexes[i])
-		// (minimalIndex = indexes[i], locatedAt = i);
-	// return locatedAt > -1 ? {
-		// index: minimalIndex,
-		// symbol: symbols[locatedAt],
-		// isClosing: locatedAt % 2 == 1
-	// } : null;
-// }
-
-// function toCutedSource(source) {
-	// return source.substring(0, getCutIndex(source));
-// }
-
-// function getCutIndex(source, sublevel, indexer, stringed) {
-	// (sublevel = sublevel || 0, indexer = indexer || 0);
-	// var indexed = getIndexAndSymbol(source);
-	// if (!indexed || sublevel > 5) return indexer;
-	// var returnedString = indexed.symbol == "\"";
-	// if (indexed.isClosing || (returnedString && stringed)) return indexer + indexed.index;
-	// return getCutIndex(source.substring(indexed.index + 1,
-		// source.length), sublevel + 1, indexer + indexed.length, stringed || returnedString);
-// }
-
 function checkNotLocalized() {
 	var source = new java.io.File(__dir__ + "main.js"),
 		text = source.exists() ? Files.read(source) : null;
