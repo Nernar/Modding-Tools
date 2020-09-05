@@ -106,6 +106,8 @@ dist
 # Build files
 /main.js
 /.dex/
+/java/.build/
+/java/build/
 
 # Dev Editor sources
 /res/.source/
