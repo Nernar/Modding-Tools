@@ -10,7 +10,7 @@ ImageFactory.loadFromFile = function(key, path) {
 		if (LoadingTipUtils.hasEncounter()) LoadingTipUtils.updateCounter(++this.resourcesCount);
 		var params = new android.graphics.BitmapFactory.Options();
 		params.inPreferredConfig = android.graphics.Bitmap.Config.RGB_565;
-		var file = path ? new java.io.File(Dirs.ASSET, path) : null;
+		var file = path instanceof java.io.File ? path : new java.io.File(Dirs.ASSET, path);
 		if (file == null || !file.exists()) return null;
 		var readed = Files.readBytes(file);
 		if (!readed || readed.length == 0) return null;

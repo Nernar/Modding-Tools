@@ -90,6 +90,30 @@ var ExecutableSupport = {
 			return null;
 		};
 	},
+	getAndLoadIcon: function(name) {
+		try {
+			if (ImageFactory.getCountByTag(name) > 0) {
+				if (ImageFactory.getBitmap("support" + name) != null) {
+					return "support" + name;
+				}
+			}
+			let file = new java.io.File(Dirs.SUPPORT, name);
+			if (file != null && file.exists()) {
+				let icon = new java.io.File(file.getPath(), "mod_icon.png");
+				if (icon != null && icon.exists()) {
+					let output = new java.io.File(Dirs.CACHE, name + ".dnr");
+					ImageFactory.encodeFile(icon, output);
+					ImageFactory.loadFromFile("encode:" + name, output);
+					return "encode:" + name;
+				}
+			}
+			return "support";
+		} catch (e) {
+			Logger.Log("Failed to attempt icon load for " + name, "Dev-Core");
+			Logger.LogError(e);
+		}
+		return null;
+	},
 	isEnabled: function(name) {
 		var mod = this.getSupportable(name);
 		if (!mod) throw "Can't find mod " + name;
@@ -107,6 +131,7 @@ function importMod(dir, action) {
 			supportable.version = ExecutableSupport.getProperty(name, "version");
 			supportable.author = ExecutableSupport.getProperty(name, "author");
 			supportable.result = action ? ExecutableSupport.injectCustomEval(name, action)[0] : true;
+			supportable.icon = ExecutableSupport.getAndLoadIcon(name);
 			return (supportable.modName = name, supportable);
 		}
 	} catch(e) {

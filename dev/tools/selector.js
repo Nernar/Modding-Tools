@@ -203,7 +203,7 @@ var StartEditor = {
 			}
 			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit)) {
 				var category = control.addCategory(translate("Supportables"));
-				if (DumpCreator) category.addItem("DumpCreator", translate("Dumper"), function() {
+				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					var result = DumpCreator(function() {
 						try {
 							return __makeAndSaveDump__.dumped;
@@ -227,7 +227,7 @@ var StartEditor = {
 							if (evaluate != true && evaluate != false) reportError(evaluate);
 					});
 				});
-				if (UIEditor) category.addItem("UIEditor", translate("UIEditor"), function() {
+				if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"), function() {
 					isSupportEnv = true;
 					currentEnvironment = UIEditor.modName;
 					var result = UIEditor(function() {
@@ -252,7 +252,7 @@ var StartEditor = {
 					} else showHint(UIEditor.modName + " - " + UIEditor.author);
 					control.dismiss();
 				});
-				if (InstantRunner) category.addItem("InstantRunner", translate("IRunner"), function() {
+				if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"), function() {
 					var result = InstantRunner(function() {
 						try {
 							openAndroidUI();
@@ -268,7 +268,7 @@ var StartEditor = {
 						showHint(InstantRunner.author);
 					} else showHint(InstantRunner.modName + " - " + InstantRunner.author);
 				});
-				if (WorldEdit) category.addItem("WorldEdit", translate("WorldEdit"), function() {
+				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
 					var result = WorldEdit(function() {
 						try {
 							var array = new Array();

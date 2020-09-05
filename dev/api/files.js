@@ -3,7 +3,7 @@ MCSystem.setLoadingTip("Preparing APIs");
 var Dirs = {
 	EXTERNAL: android.os.Environment.getExternalStorageDirectory(),
 	DATA: android.os.Environment.getDataDirectory() + "/data/" + (isHorizon ? context.getPackageName() : "com.zhekasmirnov.innercore"),
-	IMAGE: __dir__ + "gui", ASSET: __dir__ + "assets", EXPORT: __dir__ + "saves",
+	IMAGE: __dir__ + "gui", ASSET: __dir__ + "assets", EXPORT: __dir__ + "saves", CACHE: __dir__ + "assets/cache",
 	AUTOSAVE: __dir__ + "saves/.autosave", LOGGING: __dir__ + "saves/.logging", SUPPORT: __dir__ + "support",
 	MOD: isHorizon ? __packdir__  + "innercore/mods" : "/games/com.mojang/mods",
 	WORLD: isHorizon ? __packdir__ + "worlds" : "/games/com.mojang/innercoreWorlds",
