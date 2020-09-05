@@ -261,8 +261,9 @@ var BlockEditor = {
 			group.addItem("blockBoxResize", this.Renderer.resize);
 			group.addItem("blockBoxMove", this.Renderer.move);
 			group.addItem("blockBoxMirror", this.Renderer.mirror);
-			group.addItem("blockBoxRotate", __code__.startsWith("develop") ? this.Renderer.rotate :
-				function() { showHint(translate("Not developed yet")); }).setBackground("popupSelectionLocked");
+			if (__code__.startsWith("develop")) {
+				    group.addItem("blockBoxRotate", this.Renderer.rotate);
+				}
 			group.addItem("blockBoxTexture", this.Renderer.texture);
 			group.addItem("blockBoxRemove", this.Renderer.remove);
 		} else group.addItem("blockBoxAdd", this.Renderer.add);
@@ -273,8 +274,9 @@ var BlockEditor = {
 			group.addItem("blockBoxResize", this.Collision.resize);
 			group.addItem("blockBoxMove", this.Collision.move);
 			group.addItem("blockBoxMirror", this.Collision.mirror);
-			group.addItem("blockBoxRotate", __code__.startsWith("develop") ? this.Collision.rotate :
-				function() { showHint(translate("Not developed yet")); }).setBackground("popupSelectionLocked");
+			if (__code__.startsWith("develop")) {
+				group.addItem("blockBoxRotate", this.Collision.rotate);
+			}
 			group.addItem("blockBoxRemove", this.Collision.remove);
 		} else group.addItem("blockBoxAdd", this.Collision.add);
 		this.data.selected >= 0 && menu.selectGroup(this.data.selected);
@@ -663,15 +665,15 @@ var BlockEditor = {
 			var popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBox(selected, 0);
+				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtX(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			popup.addButtonElement("Y", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBox(selected, 1);
+				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtY(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			popup.addButtonElement("Z", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBox(selected, 2);
+				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtZ(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			Popups.open(popup, "renderer_mirror");
@@ -869,15 +871,15 @@ var BlockEditor = {
 			var popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBox(selected, 0);
+				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtX(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			popup.addButtonElement("Y", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBox(selected, 1);
+				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtY(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			popup.addButtonElement("Z", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBox(selected, 2);
+				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtY(selected);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			Popups.open(popup, "collision_mirror");
