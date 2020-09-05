@@ -1,4 +1,4 @@
-var UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit;
+var UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, UtilsPlus, TPSMeter;
 
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	try {
@@ -85,6 +85,10 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			WorldEdit = importMod("WorldEdit", function() {
 				return !!this.Commands;
 			});
+			
+			UtilsPlus = importMod("Utils+");
+			
+			TPSMeter = importMod("TPS meter");
 		} else supportSupportables = false;
 	} catch(e) {
 		reportError(e);

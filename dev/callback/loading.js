@@ -47,6 +47,8 @@ Callback.addCallback("CoreConfigured", function(config) {
 				if (DumpCreator && isNotSupported(DumpCreator)) DumpCreator = null;
 				if (InstantRunner && isNotSupported(InstantRunner)) InstantRunner = null;
 				if (WorldEdit && isNotSupported(WorldEdit)) WorldEdit = null;
+				if (UtilsPlus && isNotSupported(UtilsPlus)) UtilsPlus = null;
+				if (TPSMeter && isNotSupported(TPSMeter)) TPSMeter = null;
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}
 	} catch(e) {
