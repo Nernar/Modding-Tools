@@ -2,10 +2,7 @@
   "name": "dev-editor",
   "version": "0.3.3-b1",
   "description": "Develop your mods with in-game tools.",
-  "main": "main.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "directories": {},
   "dependencies": {
     "liquidcore": "^0.7.10"
   },

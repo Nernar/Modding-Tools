@@ -32,4 +32,5 @@ jobs:
           ${{ runner.OS }}-
     - name: Install dependencies
       run: npm ci
+    - name: Rebuild task
       run: npm install
