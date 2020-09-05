@@ -32,7 +32,8 @@
   },
   "user_login":{
     "ignore_deprecation":false,
-    "imported_script":false
+    "imported_script":false,
+    "send_analytics":true
   },
   "supportable":{
     "enabled":true
