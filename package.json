@@ -1,0 +1,30 @@
+{
+  "name": "dev-editor",
+  "version": "0.3.3-b1",
+  "description": "Develop your mods with in-game tools.",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "liquidcore": "^0.7.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nernar/Dev-Editor.git"
+  },
+  "keywords": [
+    "modding",
+    "tool"
+  ],
+  "author": "Nernar",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/Nernar/Dev-Editor/issues"
+  },
+  "homepage": "https://github.com/Nernar/Dev-Editor#readme"
+}

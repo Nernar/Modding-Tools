@@ -1,6 +1,6 @@
 function load() {
 	try {
-		// creates a nonexistent project folder
+		// Creates a nonexistent project folder
 		MCSystem.setLoadingTip("Making Directories");
 		FileTools.assureDir(Dirs.EXPORT);
 		FileTools.assureDir(Dirs.LOGGING);
@@ -56,7 +56,7 @@ Callback.addCallback("CoreConfigured", function(config) {
 
 Callback.addCallback("PreBlocksDefined", function() {
 	try {
-		// loads all textures from the cache of engine (game + mods)
+		// Loads all textures from the cache of engine (game + mods)
 		MCSystem.setLoadingTip("Requesting Textures");
 		var path = Dirs.RESOURCE + "/textures/terrain_texture.json";
 		if (FileTools.exists(path)) {
@@ -96,7 +96,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 	}
 	
 	try {
-		// loads pre-generated game textures
+		// Loads pre-generated game textures
 		var path = Dirs.ASSET + (isHorizon ? "/blocks-12" : "/blocks-0") + ".json";
 		if (FileTools.exists(path)) {
 			var data = FileTools.readFileText(path);
@@ -110,7 +110,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 	}
 	
 	try {
-		// checks config of each mod for loading textures
+		// Checks config of each mod for loading textures
 		var mods = Files.listDirectories(Dirs.MOD);
 		for (var m = 0; m < mods.length; m++) {
 			var path = mods[m].getPath() + "/build.config";

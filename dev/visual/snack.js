@@ -88,7 +88,7 @@ HintAlert.prototype.getTimeForHint = function(hint) {
 	}
 	return 0;
 };
-// TODO: why this function if text != hint ALWAYS return false
+// TODO: Why this function if text != hint ALWAYS return false
 HintAlert.prototype.alreadyHasHint = function(hint) {
 	var stacked = this.isStackable() ? this.stack.indexOf(hint) != -1 : false;
 	return this.views.text.getText() == hint || stacked;
@@ -174,8 +174,8 @@ HintAlert.prototype.dismiss = function() {
 	this.__dismissHA && this.__dismissHA();
 };
 
+// Some useful code; warnings and information
 function showHint(hint, color, reawait) {
-	// some useful code; warnings and information
 	if (showHint.launchStacked) {
 		showHint.launchStacked.push({
 			hint: hint,

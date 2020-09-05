@@ -1,0 +1,19 @@
+{
+	"elements": {
+		"text_0": {
+			"type": "text",
+			"x": 350,
+			"y": 190,
+			"width": 120,
+			"height": 16,
+			"text": "This is a Text element",
+			"font": {
+				"color": -1,
+				"shadow": 0.6,
+				"size": 18
+			},
+			"clicker": {},
+			"onLongClick": null
+		}
+	}
+}

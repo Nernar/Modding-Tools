@@ -33,7 +33,7 @@ function translateCounter(count, empty, verb, little, many, args) {
 	}
 }
 
-// blocks content
+// Blocks content
 Translation.addTranslation("Block", {
 	ru: "Блок"
 });
@@ -134,7 +134,7 @@ Translation.addTranslation("Manually view boxes innersection", {
 	ru: "Ручной просмотр слияния коробок"
 });
 
-// transitions content
+// Transitions content
 Translation.addTranslation("Transition", {
 	ru: "Переход"
 });
@@ -227,7 +227,7 @@ Translation.addTranslation("Current entity will be lost.", {
 	ru: "Текущее существо будет потеряно."
 });
 
-// entities content
+// Entities content
 Translation.addTranslation("Entity", {
 	ru: "Существо"
 });
@@ -281,22 +281,22 @@ Translation.addTranslation("Offset", {
 	ru: "Отступ"
 });
 
-// animations content
+// Animations content
 Translation.addTranslation("Animation", {
 	ru: "Анимация"
 });
 
-// worlds content
+// Worlds content
 Translation.addTranslation("World", {
 	ru: "Мир"
 });
 
-// scenes content
+// Scenes content
 Translation.addTranslation("Scene", {
 	ru: "Сцена"
 });
 
-// different tools
+// Different tools
 Translation.addTranslation("Move", {
 	ru: "Перемещение"
 });
@@ -343,7 +343,7 @@ Translation.addTranslation("Linear", {
 	ru: "Линейный"
 });
 
-// textures
+// Textures
 Translation.addTranslation("Texture", {
 	ru: "Текстура"
 });
@@ -369,7 +369,7 @@ Translation.addTranslation("This mod not included any texture.", {
 	ru: "Этот мод не содержит текстур."
 });
 
-// files
+// Files
 Translation.addTranslation("search filter", {
 	ru: "фильтр поиска"
 });
@@ -458,7 +458,7 @@ Translation.addTranslation("No items.", {
 	ru: "Нет файлов."
 });
 
-// panels
+// Panels
 Translation.addTranslation("Cancel", {
 	ru: "Отмена"
 });
@@ -523,7 +523,7 @@ Translation.addTranslation("Confirmation", {
 	ru: "Подтверждение"
 });
 
-// times
+// Times
 Translation.addTranslation("Jan", {
 	ru: "Янв"
 }); // DEPRECATED
@@ -561,7 +561,7 @@ Translation.addTranslation("Dec", {
 	ru: "Дек"
 }); // DEPRECATED
 
-// hints
+// Hints
 Translation.addTranslation("Nothing to update", {
 	ru: "Нечего обновить"
 });
@@ -620,7 +620,7 @@ Translation.addTranslation("Some (%s) changes are already has or deprecated", {
 	ru: "Некоторые (%s) изменения уже существуют или устарели"
 });
 
-// processes
+// Processes
 Translation.addTranslation("Downloading content...", {
 	ru: "Загрузка контента..."
 });
@@ -700,7 +700,7 @@ Translation.addTranslation("Script logging have several messages:", {
 	ru: "Отладка скрипта записала несколько сообщений:"
 });
 
-// messages
+// Messages
 Translation.addTranslation("Load or create your first editor, it'll appear here.", {
 	ru: "Загрузите или создайте свой первый редактор, он появится здесь."
 });
@@ -729,7 +729,7 @@ Translation.addTranslation("Key needs validation and will be expires soon. Pleas
 	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету, иначе появляется риск потерять тестируемые возможности."
 });
 
-// login
+// Login
 Translation.addTranslation("Thanks for attentiveness!", {
 	ru: "Спасибо за внимательность!"
 });
@@ -776,7 +776,7 @@ Translation.addTranslation("You're finded rare message, it's fully launching mod
 	ru: "Вы нашли редкое сообщение, оно полностью запускает модификацию без доступа к тестированию!"
 });
 
-// menu actions
+// Menu actions
 Translation.addTranslation("Editor", {
 	ru: "Редактор"
 });
@@ -847,7 +847,7 @@ Translation.addTranslation("Current project will be erased, all unsaved data wil
 	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны."
 });
 
-// supportables
+// Supportables
 Translation.addTranslation("Supportables", {
 	ru: "Модули"
 });
@@ -896,7 +896,7 @@ Translation.addTranslation("Supportables isn't supported and disabled", {
 	ru: "Модули не поддерживаются и отключены"
 });
 
-// mappings
+// Mappings
 Translation.addTranslation("Added mapping to %s, %s, %s", {
 	ru: "Маппинг добавлен в %s, %s, %s"
 });
@@ -931,7 +931,7 @@ Translation.addTranslation("Entity selected", {
 	ru: "Существо выбрано"
 });
 
-// selection
+// Selection
 Translation.addTranslation("Element selector", {
 	ru: "Выбор элементов"
 });
@@ -969,7 +969,7 @@ Translation.addTranslation("All", {
 	ru: "Все"
 });
 
-// fails
+// Fails
 Translation.addTranslation("Error of execute code", {
 	ru: "Ошибка при выполнении кода"
 });
@@ -1010,7 +1010,7 @@ Translation.addTranslation("Touch here to confirm.", {
 	ru: "Нажмите здесь для подтверждения."
 });
 
-// deprecated
+// Deprecated
 Translation.addTranslation("Deprecated translation", {
 	ru: "Устаревший перевод"
 }); // DEPRECATED
@@ -1060,7 +1060,7 @@ Translation.addTranslation("Scripts are empty", {
 	ru: "Скрипты не найдены"
 }); // DEPRECATED
 
-// non-organized content
+// Non-organized content
 Translation.addTranslation("You're idiot. LMAO.", {
 	ru: "Ты идиот. LMAO."
 });
@@ -1068,4 +1068,7 @@ Translation.addTranslation("Idiot", {
 	ru: "Идиот"
 });
 
-// not localized content will be appear here
+// Not localized content will be appear here
+Translation.addTranslation("Debug", {});
+Translation.addTranslation("Minify", {});
+Translation.addTranslation("Fetch", {});

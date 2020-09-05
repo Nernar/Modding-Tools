@@ -21,8 +21,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm init --yes
     - name: Cache Node.js modules
       uses: actions/cache@v2
       with:
@@ -34,3 +32,4 @@ jobs:
           ${{ runner.OS }}-
     - name: Install dependencies
       run: npm ci
+      run: npm install

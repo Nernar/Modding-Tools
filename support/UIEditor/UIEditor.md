@@ -1,0 +1,4 @@
+- Make clean code __TODO__ [dev\UI\MenuWidgets.js](dev\UI\MenuWidgets.js)
+- Make popup windows opening __TODO__ [dev\UI\MenuWidgets.js](dev\UI\MenuWidgets.js)
+- Not openning __BUG__ [dev\UI\MenuWidgets.js](dev\UI\MenuWidgets.js)
+- remake ui __TODO__ [dev\UIEditor\UI.js](dev\UIEditor\UI.js)

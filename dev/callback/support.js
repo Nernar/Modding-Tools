@@ -2,7 +2,7 @@ var UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit;
 
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	try {
-		api.ModAPI.registerAPI("DevInterface", {
+		api.ModAPI.registerAPI("DevEditor", {
 			createAndLock: function() {
 				restart();
 			},
@@ -11,9 +11,6 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			},
 			isLocked: function() {
 				return !isSupportEnv;
-			},
-			doNotLaunch: function() {
-				initializeLiquidation();
 			}
 		});
 	} catch(e) {
@@ -26,15 +23,15 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			MCSystem.setLoadingTip("Loading Supportables");
 			
 			UIEditor = importMod("UIEditor", function() {
-				var DevInterface = ModAPI.requireAPI("DevInterface");
+				var DevEditor = ModAPI.requireAPI("DevEditor");
 				if (!this.Windows) return false;
 				var menu = Windows.menu || null;
 				if (menu) {
 					var source = java.lang.String.valueOf("" + menu),
 						index = source.indexOf("{");
 					if (index > -1) {
-						var injectable = "if (DevInterface.isLocked()) return;\n" +
-							"if (layout.getChildCount() == 1) DevInterface.createAndLock();",
+						var injectable = "if (DevEditor.isLocked()) return;\n" +
+							"if (layout.getChildCount() == 1) DevEditor.createAndLock();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						Windows.menu = eval(first + "\n" + injectable + "\nelse " + second);
@@ -44,28 +41,28 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			});
 			
 			Setting = importMod("Setting", function() {
-				var DevInterface = ModAPI.requireAPI("DevInterface");
+				var DevEditor = ModAPI.requireAPI("DevEditor");
 				if (typeof this.rover == "undefined" || !this.removeMenu) return false;
 				if ((rover = false, removeMenu)) {
 					var source = java.lang.String.valueOf("" + removeMenu),
 						index = source.indexOf("{");
 					if (index > -1) {
-						var injectable = "if (!rover) DevInterface.createAndLock();",
+						var injectable = "if (!rover) DevEditor.createAndLock();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						removeMenu = eval(first + "\n" + injectable + "\n " + second);
 					} else return false;
 				} else return false;
 				Callback.addCallback("LevelLeft", function() {
-					if (!DevInterface.isLocked() && DevInterface.getCurrentEnvironment() == __name__) {
-						DevInterface.createAndLock(), rover = false;
+					if (!DevEditor.isLocked() && DevEditor.getCurrentEnvironment() == __name__) {
+						DevEditor.createAndLock(), rover = false;
 					}
 				});
 				return true;
 			});
 			
 			DumpCreator = importMod("Dump Creator", function() {
-				if (!this.alert || !this.__makeAndSaveDump__) return false;
+				if (!this.__makeAndSaveDump__) return false;
 				var originalAlert = alert;
 				alert = function(text) {
 					if (text == "Dump generated") __makeAndSaveDump__.dumped = true;
@@ -76,8 +73,9 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			
 			InstantRunner = importMod("InstantRunner", function() {
 				if (!this.openAndroidUI) return false;
-				if (!this.container) this.container = new Object();
-				container.close = new Function(),
+				if (!this.container) return false;
+				container = new Object();
+				container.close = new Function();
 				container.isOpened = function() {
 					return true;
 				};

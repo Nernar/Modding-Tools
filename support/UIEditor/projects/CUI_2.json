@@ -1,0 +1,22 @@
+{
+	"elements": {
+		"scale_0": {
+			"type": "scale",
+			"x": 450,
+			"y": 160,
+			"direction": 0,
+			"bitmap": "custom.scale",
+			"scale": 3.2,
+			"value": 1,
+			"invert": false,
+			"overlay": null,
+			"overlayScale": 3.2,
+			"overlayOffset": {
+				"x": 0,
+				"y": 0
+			},
+			"clicker": {},
+			"onLongClick": null
+		}
+	}
+}

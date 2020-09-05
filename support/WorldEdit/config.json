@@ -1,0 +1,7 @@
+{
+  "enabled":true,
+  "sizeBorderGrid":"1/16",
+  "sizeLineGrid":"1/32",
+  "spaceGrid":1,
+  "customGridColor":false
+}

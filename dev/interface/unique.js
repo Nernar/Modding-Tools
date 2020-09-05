@@ -66,7 +66,7 @@ var UniqueHelper = {
 		if (this.isAttached(window)) {
 			var opened = this.getWindow(window),
 				updatable = opened.isUpdatable();
-			// window are already opened
+			// Window are already opened
 			if (opened == window) return false;
 			if (updatable) {
 				var content = window.getContent();

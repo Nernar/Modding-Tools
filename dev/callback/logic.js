@@ -2,7 +2,7 @@ MCSystem.setLoadingTip("Injecting Callbacks");
 
 function updateSettings() {
 	try {
-		// update settings from config (worth updating?)
+		// Update settings from config (worth updating?)
 		uiScaler = __config__.getNumber("interface.interface_scale");
 		(uiScaler > 2 && (uiScaler = 2) || uiScaler < 0.5 && (uiScaler = 0.5)) && __config__.set("interface.interface_scale", uiScaler);
 		fontScale = __config__.getNumber("interface.font_scale");
@@ -44,14 +44,14 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 	context.runOnUiThread(function() {
 		try {
 			if (selectMode == 1) {
-				// block selection by tapping
+				// Block selection by tapping
 				var render = new ICRender.Model();
 				render.addEntry(new BlockRenderer.Model(block.id, block.data));
 				BlockRenderer.enableCoordMapping(block.id, block.data, render);
 				BlockEditor.data.worker.Define.addMapping(coords.x, coords.y, coords.z);
 				selectMode = 0, BlockEditor.create();
 			} else if (selectMode == 6) {
-				// entity summon by tapping
+				// Entity summon by tapping
 				var position = coords.relative;
 				(position.x += .5, position.y += .5, position.z += .5);
 				var custom = Entity.spawnCustomAtCoords("__editorEntity__", position);

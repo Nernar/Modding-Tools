@@ -8,24 +8,24 @@
                                                     
                                                     
    Copyright 2018-2020 Nernar (github.com/nernar)
-
+   
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-
+   
        http://www.apache.org/licenses/LICENSE-2.0
-
+   
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-
+   
 */
 
 MCSystem.setLoadingTip("Initialization Script");
 
-// menu content settings
+// Menu content settings
 var warningMessage = null;
 var maxWindows = 5;
 var saveCoords = false;
@@ -54,8 +54,8 @@ var useOldExplorer = false;
 var showedFocusableAnimationsHint = false;
 var importAutoselect = false;
 
-// interface & mod data
-var __code__ = "develop-alpha-0.3.3-31.07.2020-0";
+// Interface and mod data
+var __code__ = "develop-alpha-0.3.3-05.09.2020-0";
 var __author__ = __mod__.getInfoProperty("author");
 var __version__ = __mod__.getInfoProperty("version");
 var __description__ = __mod__.getInfoProperty("description");
@@ -65,9 +65,6 @@ var isSupportEnv = false, currentEnvironment = __name__;
 MCSystem.setLoadingTip("Import Libraries");
 var isInstant = !!this.isInstant;
 IMPORT("Retention:2");
-IMPORT("Transition:5");
-IMPORT("Scene:3");
-IMPORT("Action:3");
 
 reportError.setTitle(__name__ + " " + __version__);
 reportError.setInfoMessage("An error occurred while executing the mod. " +
@@ -110,6 +107,59 @@ Ui.getX = function(x) {
 Ui.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
+
+IMPORT("Network:1");
+
+Network.prototype.getFormattedSize = function() {
+    return Files.prepareFormattedSize(this.getSize());
+};
+
+Network.Reader.prototype.getThread = function() {
+    return this.thread || null;
+};
+Network.Reader.prototype.readAsync = function(post) {
+    let scope = this;
+    this.thread = handleThread(function() {
+        scope.read();
+        delete scope.thread;
+        post && post(scope.getResult());
+    });
+};
+Network.Reader.prototype.assureYield = function() {
+    try {
+        if (!this.getThread()) return false;
+        while (this.inProcess()) java.lang.Thread.yield();
+        return this.getReadedCount() >= 0;
+    } catch (e) {
+        return false;
+    }
+};
+
+Network.Writer.prototype.getThread = function() {
+    return this.thread || null;
+};
+Network.Writer.prototype.downloadAsync = function(post) {
+	let scope = this;
+	this.thread = handleThread(function() {
+		scope.download();
+		delete scope.thread;
+		post && post();
+	});
+};
+Network.Writer.prototype.assureYield = function() {
+	try {
+		if (!this.getThread()) return false;
+		while (this.inProcess()) java.lang.Thread.yield();
+		return this.getReadedCount() >= 0;
+	} catch(e) {
+		return false;
+	}
+};
+
+IMPORT("ModBrowser.Query:1");
+IMPORT("Transition:5");
+IMPORT("Scene:3");
+IMPORT("Action:3");
 
 function getPlayerEnt() {
 	return parseInt(Player.get());

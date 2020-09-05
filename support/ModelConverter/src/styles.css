@@ -1,0 +1,33 @@
+html {
+  text-align: center;
+  /* height: 100vh */
+}
+body {
+  background-image: url("images/bg.gif");
+  image-rendering: pixelated;
+  font-family: sans-serif;
+  font-size: 60px;
+  color: white;
+  background-position-x: center;
+  top: 10px
+}
+.base{
+  background: white; 
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 25px;
+  padding-top: 10px
+}
+.textarea{
+  width: -webkit-fill-available;
+  height: 240px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background: transparent;
+  border: 0px;
+  resize: none
+}
+.button {
+  margin: 0px 0px 10px 0px
+}
