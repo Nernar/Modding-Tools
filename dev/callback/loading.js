@@ -29,6 +29,12 @@ function load() {
 	} catch(e) {
 		reportError(e);
 	}
+	
+	try {
+		refreshSupportablesIcons();
+	} catch(e) {
+		reportError(e);
+	}
 }
 
 if (isInstant) load();

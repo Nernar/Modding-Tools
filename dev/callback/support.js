@@ -94,3 +94,17 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 		reportError(e);
 	}
 });
+
+function refreshSupportablesIcons() {
+	try {
+		ExecutableSupport.refreshIcon(UIEditor);
+		ExecutableSupport.refreshIcon(Setting);
+		ExecutableSupport.refreshIcon(DumpCreator);
+		ExecutableSupport.refreshIcon(IntantRunner);
+		ExecutableSupport.refreshIcon(WorldEdit);
+		ExecutableSupport.refreshIcon(UtilsPlus);
+		ExecutableSupport.refreshIcon(TPSmeter);
+	} catch(e) {
+		reportError(e);
+	}
+}

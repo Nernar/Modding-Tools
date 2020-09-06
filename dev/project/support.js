@@ -92,8 +92,9 @@ var ExecutableSupport = {
 	},
 	getAndLoadIcon: function(name) {
 		try {
-			if (ImageFactory.getCountByTag(name) > 0) {
-				return "support" + name;
+			let upper = name.substring(0, 1).toUpperCase() + name.substring(1);
+			if (ImageFactory.getCountByTag("support" + upper) > 0) {
+				return "support" + upper;
 			}
 			let file = new java.io.File(Dirs.SUPPORT, name);
 			if (file != null && file.exists()) {
@@ -105,12 +106,16 @@ var ExecutableSupport = {
 					return "cache:" + name;
 				}
 			}
-			return "support";
 		} catch (e) {
 			Logger.Log("Failed to attempt icon load for " + name, "Dev-Core");
 			Logger.LogError(e);
 		}
-		return null;
+		return "support";
+	},
+	refreshIcon: function(supportable) {
+		if (supportable) {
+			supportable.icon = this.getAndLoadIcon(supportable.modName);
+		}
 	},
 	isEnabled: function(name) {
 		var mod = this.getSupportable(name);
@@ -129,7 +134,6 @@ function importMod(dir, action) {
 			supportable.version = ExecutableSupport.getProperty(name, "version");
 			supportable.author = ExecutableSupport.getProperty(name, "author");
 			supportable.result = action ? ExecutableSupport.injectCustomEval(name, action)[0] : true;
-			supportable.icon = ExecutableSupport.getAndLoadIcon(name);
 			return (supportable.modName = name, supportable);
 		}
 	} catch(e) {
