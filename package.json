@@ -1,14 +1,14 @@
 {
   "name": "dev-editor",
-  "version": "0.3.3-b1",
+  "version": "0.3.3-b2",
   "description": "Develop your mods with in-game tools.",
-  "directories": {},
   "dependencies": {
     "liquidcore": "^0.7.10"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo Nothing to build right now.",
+    "prepack": "[ ! -f .buildme ] || npm run build",
+    "preinstall": "[ ! -f .buildme ] || npm run build"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,7 @@
     "tool"
   ],
   "author": "Nernar",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/Nernar/Dev-Editor/issues"
   },
