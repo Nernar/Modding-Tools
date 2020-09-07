@@ -113,10 +113,15 @@ dist
 # Dev Editor sources
 /res/.source/
 /dev/.source/
-/dev/api/protect.js
-/dev/callback/server.js
+
+# Resources directories
 /gui/
 /res/mob/
+
+# Non-compiled sources
+/dev/api/protect.js
+/dev/callback/server.js
+/dev/network/connect.js
 /loader/
 
 # Local saves
