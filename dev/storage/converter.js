@@ -1,4 +1,4 @@
-var ScriptConverter = new Function();
+let ScriptConverter = new Function();
 ScriptConverter.State = new Object();
 ScriptConverter.State.NOT_ATTACHED = 0;
 ScriptConverter.State.PREPARED = 1;
@@ -73,7 +73,7 @@ ScriptConverter.prototype.execute = function() {
 	}
 };
 ScriptConverter.prototype.executeAsync = function(post) {
-	var scope = this;
+	let scope = this;
 	this.thread = handleThread(function() {
 		scope.execute && scope.execute();
 		delete scope.thread;
@@ -84,11 +84,11 @@ ScriptConverter.prototype.getCurrentlyReaded = function() {
 	return this.result || null;
 };
 ScriptConverter.prototype.getReadedCount = function() {
-	var readed = this.getCurrentlyReaded();
+	let readed = this.getCurrentlyReaded();
 	return readed ? readed.length : -1;
 };
 ScriptConverter.prototype.getResult = function() {
-	var readed = this.getCurrentlyReaded();
+	let readed = this.getCurrentlyReaded();
 	if (!readed) return null;
 	return readed.join("\n\n");
 };

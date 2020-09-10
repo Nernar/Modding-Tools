@@ -1,13 +1,13 @@
-var ControlButton = function() {
+let ControlButton = function() {
 	this.reset();
 	this.setBackground("popupBackgroundControl");
 	
-	var actor = new FadeActor();
+	let actor = new FadeActor();
 	actor.setInterpolator(new AccelerateDecelerateInterpolator());
 	actor.setDuration(400);
 	this.setEnterActor(actor);
 	
-	var actor = new SlideActor(Ui.Gravity.LEFT);
+	let actor = new SlideActor(Ui.Gravity.LEFT);
 	actor.setInterpolator(new AccelerateInterpolator());
 	actor.setDuration(400);
 	this.setExitActor(actor);
@@ -15,8 +15,8 @@ var ControlButton = function() {
 ControlButton.prototype = new UniqueWindow();
 ControlButton.prototype.TYPE = "ControlButton";
 ControlButton.prototype.reset = function() {
-	var scope = this, views = (this.views = {});
-	var content = new android.widget.FrameLayout(context);
+	let scope = this, views = (this.views = {});
+	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
 	
 	views.layout = new android.widget.LinearLayout(context);
@@ -25,14 +25,14 @@ ControlButton.prototype.reset = function() {
 		scope.isCloseableOutside() && scope.dismiss();
 		scope.__click && scope.__click();
 	});
-	var params = android.widget.FrameLayout.LayoutParams
+	let params = android.widget.FrameLayout.LayoutParams
 		(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.setMargins(Ui.getY(20), Ui.getY(20), 0, 0);
 	content.addView(views.layout, params);
 	
 	views.button = new android.widget.ImageView(context);
 	views.button.setPadding(Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
-	var params = android.widget.LinearLayout.LayoutParams(Ui.getY(100), Ui.getY(100));
+	let params = android.widget.LinearLayout.LayoutParams(Ui.getY(100), Ui.getY(100));
 	views.layout.addView(views.button, params);
 };
 ControlButton.prototype.setBackground = function(src) {

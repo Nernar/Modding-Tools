@@ -18,8 +18,8 @@ function load() {
 	}
 	
 	try {
-		var list = Files.listFileNames(Dirs.ASSET, true),
-			count = Files.checkFormats(list, ".dnr").length;
+		var list = Files.listFileNames(Dirs.ASSET, true);
+		let count = Files.checkFormats(list, ".dnr").length;
 		LoadingTipUtils.setEncounter("Loading Resources [%count/" + count + "]");
 		ImageFactory.loadDirectory(), LoadingTipUtils.resetEncounter();
 		if (debugAnimationsEnabled) {
@@ -48,13 +48,27 @@ Callback.addCallback("CoreConfigured", function(config) {
 		if (loadSupportables) {
 			if (supportSupportables) {
 				MCSystem.setLoadingTip("Checking Supportables");
-				if (UIEditor && isNotSupported(UIEditor)) UIEditor = null;
-				if (Setting && isNotSupported(Setting)) Setting = null;
-				if (DumpCreator && isNotSupported(DumpCreator)) DumpCreator = null;
-				if (InstantRunner && isNotSupported(InstantRunner)) InstantRunner = null;
-				if (WorldEdit && isNotSupported(WorldEdit)) WorldEdit = null;
-				if (UtilsPlus && isNotSupported(UtilsPlus)) UtilsPlus = null;
-				if (TPSMeter && isNotSupported(TPSMeter)) TPSMeter = null;
+				if (UIEditor && isNotSupported(UIEditor)) {
+					UIEditor = null;
+				}
+				if (Setting && isNotSupported(Setting)) {
+					Setting = null;
+				}
+				if (DumpCreator && isNotSupported(DumpCreator)) {
+					DumpCreator = null;
+				}
+				if (InstantRunner && isNotSupported(InstantRunner)) {
+					InstantRunner = null;
+				}
+				if (WorldEdit && isNotSupported(WorldEdit)) {
+					WorldEdit = null;
+				}
+				if (UtilsPlus && isNotSupported(UtilsPlus)) {
+					UtilsPlus = null;
+				}
+				if (TPSMeter && isNotSupported(TPSMeter)) {
+					TPSMeter = null;
+				}
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}
 	} catch(e) {
@@ -77,15 +91,21 @@ Callback.addCallback("PreBlocksDefined", function() {
 						var index = addTextureMod(translate("All list"));
 						for (var i = 0; i < terrain.length; i++) {
 							var element = terrain[i];
-							if (!element) continue;
+							if (!element) {
+								continue;
+							}
 							var items = element.textures;
-							if (!items) continue;
+							if (!items) {
+								continue;
+							}
 							if (Array.isArray(items)) {
 								for (var t = 0; t < items.length; t++) {
 									var name = items[t];
 									if (name instanceof Object) {
 										var source = name.path;
-										if (!source) continue;
+										if (!source) {
+											continue;
+										}
 										addTexture(index, name.path, t);
 									} else {
 										addTexture(index, name, t);
@@ -124,9 +144,9 @@ Callback.addCallback("PreBlocksDefined", function() {
 			var path = mods[m].getPath() + "/build.config";
 			if (!FileTools.exists(path)) continue;
 			try {
-				var text = FileTools.readFileText(path),
-					config = compileData(text, "object"),
-					resources = config && config.resources ? config.resources : null;
+				var text = FileTools.readFileText(path);
+				let config = compileData(text, "object");
+				let resources = config && config.resources ? config.resources : null;
 				if (!resources || resources.length == 0) continue;
 				var index = addTextureMod(mods[m].getName());
 				for (var i = 0; i < resources.length; i++) {
@@ -167,7 +187,7 @@ function initialize() {
 		try {
 			MCSystem.setLoadingTip("Creating Interface");
 			if (__code__.startsWith("develop")) checkNotLocalized();
-			(checkUpdate(), checkExecute());
+			(checkOnlinable(), checkUpdatable(), checkExecutable());
 		} catch(e) {
 			reportError(e);
 		}

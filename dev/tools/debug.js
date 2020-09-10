@@ -1,7 +1,7 @@
-var LogWindow = {
+let LogWindow = {
 	show: function() {
 		try {
-			var widget = new ListingPopup();
+			let widget = new ListingPopup();
 			widget.setTitle("Current log");
 			this.hs = new android.widget.HorizontalScrollView(context);
 			this.scroll = new android.widget.ScrollView(context);
@@ -20,7 +20,7 @@ var LogWindow = {
 	},
 	update: function() {
 		if (this.view) {
-			var log = java.lang.Class.forName("zhekasmirnov.launcher.api.log.ICLog", true, context.getClass().getClassLoader()),
+			let log = java.lang.Class.forName("zhekasmirnov.launcher.api.log.ICLog", true, context.getClass().getClassLoader()),
 				result = log.getMethod("getLogFilter").invoke(null).buildFilteredLog(true);
 			this.view.setText(android.text.Html.fromHtml(result));
 			this.scroll.scrollTo(this.hs.getScrollX(), this.view.getMeasuredHeight());
@@ -29,29 +29,29 @@ var LogWindow = {
 };
 
 function checkNotLocalized() {
-	var source = new java.io.File(__dir__ + "main.js"),
+	let source = new java.io.File(__dir__ + "main.js"),
 		text = source.exists() ? Files.read(source) : null;
 	if (!text) throw "checkNotLocalized: Source is not provided, aborting";
-	var splited = text.split("translate("), result = [], already = [], locked = [],
+	let splited = text.split("translate("), result = [], already = [], locked = [],
 		file = new java.io.File(__dir__ + "dev/api/localize.js"), indexed = [],
 		has = Files.read(file), localized = has.split("addTranslation(");
 	function hasntAlready(substr) {
-		var check = already.indexOf(substr) == -1;
+		let check = already.indexOf(substr) == -1;
 		if (!check && locked.indexOf(substr) == -1)
 			locked.push(substr);
 		return check;
 	}
-	// var MAXIMUM_CUSTOM_SYMBOLS = 512;
+	// let MAXIMUM_CUSTOM_SYMBOLS = 512;
 	// function checkIsCustom(item, isLocalize) {
 		// if (!item || item.length > MAXIMUM_CUSTOM_SYMBOLS) return;
-		// var substr = toCutedSource(item), pushable = -1, start = false, copy = null;
+		// let substr = toCutedSource(item), pushable = -1, start = false, copy = null;
 		// showHint("Cuted source for " + item + " is " + substr);
 		// while ((pushable = substr.indexOf("\"")) != -1) {
 			// substr = substr.substring(pushable + 1, substr.length);
 			// start = !start;
 			// if (start) copy = substr;
 			// else if (pushable > 0) {
-				// var res = copy.substring(0, pushable);
+				// let res = copy.substring(0, pushable);
 				// if (isLocalize) {
 					// if (hasntAlready(res))
 						// already.push(res);
@@ -68,11 +68,11 @@ function checkNotLocalized() {
 	if (localized.length > 0) {
 		localized.forEach(function(item, index) {
 			if (!item.startsWith("\"")) return;
-			var substr = item.substring(1, item.length),
+			let substr = item.substring(1, item.length),
 				index = substr.indexOf("\"");
 			if (index < 0) index = item.indexOf("\",");
 			if (index < 0) return;
-			var substr = substr.substring(0, index);
+			let substr = substr.substring(0, index);
 			if (hasntAlready(substr))
 				already.push(substr);
 		});
@@ -81,11 +81,11 @@ function checkNotLocalized() {
 		splited.forEach(function(item, index) {
 			if (!item.startsWith("\"")) return;
 			else if (item.startsWith("\"), result")) return;
-			var substr = item.substring(1, item.length),
+			let substr = item.substring(1, item.length),
 				index = substr.indexOf("\"");
 			if (index < 0) index = item.indexOf("\",");
 			if (index < 0) return;
-			var substr = substr.substring(0, index);
+			let substr = substr.substring(0, index);
 			if (already.indexOf(substr) == -1 &&
 				result.indexOf(substr) == -1)
 					result.push(substr);
@@ -94,19 +94,19 @@ function checkNotLocalized() {
 		});
 	}
 	if (result.length > 0) {
-		var results = result.map(function(item) {
+		let results = result.map(function(item) {
 			return "Translation.addTranslation(\"" + item + "\", {});";
 		});
-		var preparedAddText = results.join("\n");
+		let preparedAddText = results.join("\n");
 		Files.addText(file, "\n" + preparedAddText);
 		showHint(translate("Changes will be detected and synced"));
 	}
 	if (locked.length > 0 || alwaysIndexate) {
-		var array = Files.read(file, true), started = false, isDeprecated = false,
+		let array = Files.read(file, true), started = false, isDeprecated = false,
 			toComment = false, first = new Array(), count = 0, last = null;
-		var out = array.map(function(e) {
+		let out = array.map(function(e) {
 			if (typeof e != "string") e = "" + e;
-			var comment = toComment, deprecation = isDeprecated;
+			let comment = toComment, deprecation = isDeprecated;
 			if (started && (e.endsWith(");") || e.endsWith(" // DEPRECATED"))) {
 				started = toComment = isDeprecated = false;
 				if (e.endsWith(" // DEPRECATED")) (count--, comment = false);
@@ -116,12 +116,12 @@ function checkNotLocalized() {
 			else if (indexed.indexOf(last) != -1 && e.endsWith(" // DEPRECATED"))
 				return e.replace(" // DEPRECATED", "");
 			if (e.startsWith("Translation.addTranslation")) {
-				var index = e.indexOf("\"");
+				let index = e.indexOf("\"");
 				if (index < 0) return e;
-				var substr = e.substring(index + 1, e.length),
+				let substr = e.substring(index + 1, e.length),
 					place = substr.indexOf("\"");
 				if (place < 0) return e;
-				var resulted = substr.substring(0, place);
+				let resulted = substr.substring(0, place);
 				if (indexed.indexOf(resulted) == -1 && first.indexOf(resulted) == -1) {
 					started = toComment = true;
 					first.push(resulted);
@@ -151,11 +151,11 @@ function checkNotLocalized() {
 
 function show(view) {
 	if (!__code__.startsWith("develop")) return;
-	var editText = new android.widget.EditText(context);
+	let editText = new android.widget.EditText(context);
 	editText.setHint("Hi, I'm evaluate stroke");
 	if (show.lastCode) editText.setText(show.lastCode);
 	
-	var dialog = new android.app.AlertDialog.Builder(context);
+	let dialog = new android.app.AlertDialog.Builder(context);
 	dialog.setTitle(__name__ + " " + __version__);
 	dialog.setPositiveButton("Eval", function() {
 		try {

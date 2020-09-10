@@ -1,5 +1,5 @@
 function EntityWorker(obj) {
-	var worker = this;
+	let worker = this;
 	this.getProject = function() {
 		return {
 			type: "entity",
@@ -17,7 +17,7 @@ function EntityWorker(obj) {
 			entities: new Array()
 		},
 		addEntity: function(entity) {
-			var entities = this.getEntities(),
+			let entities = this.getEntities(),
 				index = this.getEntityIndex(entity);
 			if (index == -1) entities.push(entity);
 			else entities.splice(index, 1);
@@ -39,7 +39,7 @@ function EntityWorker(obj) {
 			return this.getParams().id;
 		},
 		setParams: function(params) {
-			for (var name in params) this.params[name] = params[name];
+			for (let name in params) this.params[name] = params[name];
 		},
 		setIdentificator: function(id) {
 			this.getParams().id = id;
@@ -54,12 +54,12 @@ function EntityWorker(obj) {
 	this.Visual = {
 		models: [],
 		createModel: function() {
-			var models = this.getModels();
+			let models = this.getModels();
 			models.push(new this.Model());
 			return models.length - 1;
 		},
 		removeModel: function(index) {
-			var models = this.getModels();
+			let models = this.getModels();
 			models.splice(index, 1);
 		},
 		getModel: function(index) {
@@ -72,26 +72,26 @@ function EntityWorker(obj) {
 			return this.getModels().length;
 		},
 		getParams: function() {
-			var params = [];
-			for (var i = 0; i < this.getModelCount(); i++) {
-				var model = this.getModel(i);
-				var editable = model.params;
+			let params = [];
+			for (let i = 0; i < this.getModelCount(); i++) {
+				let model = this.getModel(i);
+				let editable = model.params;
 				editable.assigment = model.getAssigment();
 				params.push(editable);
 			}
 			return params;
 		},
 		setParams: function(params) {
-			for (var i = 0; i < params.length; i++) {
-				var model = this.createModel();
-				var editable = this.getModel(model);
+			for (let i = 0; i < params.length; i++) {
+				let model = this.createModel();
+				let editable = this.getModel(model);
 				editable.setAssigment(params[i].assigment);
 				delete params[i].assigment;
 				editable.params = params[i];
 			}
 		},
 		Model: function() {
-			var model = this;
+			let model = this;
 			this.assigment = new Array();
 			this.params = {
 				texture: "entity/steve.png"
@@ -105,11 +105,11 @@ function EntityWorker(obj) {
 			};
 			this.getAssigment = function(obj) {
 				if (!obj) obj = this;
-				var result = [];
-				var assigment = obj.assigment;
-				for (var name in assigment) {
-					var element = assigment[name];
-					var params = element.getParams();
+				let result = [];
+				let assigment = obj.assigment;
+				for (let name in assigment) {
+					let element = assigment[name];
+					let params = element.getParams();
 					if (element instanceof this.Bone) {
 						params.children = this.getAssigment(element);
 						params.type = "bone";
@@ -126,16 +126,16 @@ function EntityWorker(obj) {
 			this.setAssigment = function(assigment, obj) {
 				if (!obj) obj = this;
 				obj.assigment = [];
-				for (var name in assigment) {
-					var element = assigment[name];
+				for (let name in assigment) {
+					let element = assigment[name];
 					if (element.type == "bone") {
-						var bone = new this.Bone(element);
+						let bone = new this.Bone(element);
 						bone.setAssigment(element.children);
 						delete element.children;
 						bone.setParent(obj);
 						obj.assigment.push(bone);
 					} else if (element.type == "box") {
-						var box = new this.Box(element);
+						let box = new this.Box(element);
 						box.setParent(obj);
 						obj.assigment.push(box);
 					}
@@ -164,7 +164,7 @@ function EntityWorker(obj) {
 					return model.getAssigment(this);
 				};
 				this.setParams = function(params) {
-					for (var name in params) this.params[name] = params[name];
+					for (let name in params) this.params[name] = params[name];
 				};
 				this.setParent = function(parent) {
 					this.params.parent = parent;
@@ -178,34 +178,34 @@ function EntityWorker(obj) {
 				
 				// Assigment properties
 				this.getBones = function() {
-					var bones = new Array();
-					var editable = this.getEditable();
-					for (var name in editable) {
-						var element = editable[name];
+					let bones = new Array();
+					let editable = this.getEditable();
+					for (let name in editable) {
+						let element = editable[name];
 						if (element instanceof model.Bone)
 							bones.push(element);
 					}
 					return bones;
 				};
 				this.getBone = function(index) {
-					var bones = this.getBones();
+					let bones = this.getBones();
 					return bones[index] || null;
 				};
 				this.getBoneCount = function() {
 					return this.getBones().length;
 				};
 				this.getBoxes = function() {
-					var boxes = new Array();
-					var editable = this.getEditable();
-					for (var name in editable) {
-						var element = editable[name];
+					let boxes = new Array();
+					let editable = this.getEditable();
+					for (let name in editable) {
+						let element = editable[name];
 						if (element instanceof model.Box)
 							boxes.push(element);
 					}
 					return boxes;
 				};
 				this.getBox = function(index) {
-					var boxes = this.getBoxes();
+					let boxes = this.getBoxes();
 					return boxes[index] || null;
 				};
 				this.getBoxCount = function() {
@@ -214,19 +214,19 @@ function EntityWorker(obj) {
 				
 				// Assigment manage
 				this.addBox = function() {
-					var box = new model.Box();
-					var editable = this.getEditable();
+					let box = new model.Box();
+					let editable = this.getEditable();
 					return editable.push(box) - 1;
 				};
 				this.addBone = function() {
 					model.addBone(this);
 				};
 				this.cloneBox = function(index) {
-					var editable = this.getEditable();
+					let editable = this.getEditable();
 					return editable[index].clone();
 				};
 				this.removeBox = function(index) {
-					var editable = this.getEditable();
+					let editable = this.getEditable();
 					editable[index].remove();
 				};
 				this.removeBone = function(index) {
@@ -243,11 +243,11 @@ function EntityWorker(obj) {
 					axis == "x" && (axis = 0);
 					axis == "y" && (axis = 1);
 					axis == "z" && (axis = 2);
-					var rotate = this.prepareRotation();
+					let rotate = this.prepareRotation();
 					axis >= 0 && (rotate[axis] = value);
 				};
 				this.getRotation = function() {
-					var rotate = this.prepareRotation();
+					let rotate = this.prepareRotation();
 					return {
 						x: rotate[0],
 						y: rotate[1],
@@ -263,11 +263,11 @@ function EntityWorker(obj) {
 					axis == "x" && (axis = 0);
 					axis == "y" && (axis = 1);
 					axis == "z" && (axis = 2);
-					var offset = this.prepareOffset();
+					let offset = this.prepareOffset();
 					axis >= 0 && (offset[axis] = value);
 				};
 				this.getOffset = function() {
-					var offset = this.prepareOffset();
+					let offset = this.prepareOffset();
 					return {
 						x: offset[0],
 						y: offset[1],
@@ -291,7 +291,7 @@ function EntityWorker(obj) {
 					return this.params.parent;
 				};
 				this.getSize = function() {
-					var params = this.params;
+					let params = this.params;
 					return {
 						x: params.width,
 						y: params.height,
@@ -299,7 +299,7 @@ function EntityWorker(obj) {
 					};
 				};
 				this.getRadius = function() {
-					var size = this.getSize();
+					let size = this.getSize();
 					return {
 						x: size.x / 2,
 						y: size.y / 2,
@@ -307,7 +307,7 @@ function EntityWorker(obj) {
 					};
 				};
 				this.getCoords = function() {
-					var radius = this.getRadius(),
+					let radius = this.getRadius(),
 						params = this.getParams();
 					return {
 						x1: params.x - radius.x,
@@ -319,7 +319,7 @@ function EntityWorker(obj) {
 					};
 				};
 				this.setParams = function(params) {
-					for (var name in params) this.params[name] = params[name];
+					for (let name in params) this.params[name] = params[name];
 				};
 				this.setParent = function(parent) {
 					this.params.parent = parent;
@@ -335,17 +335,17 @@ function EntityWorker(obj) {
 				
 				// Assigment edit
 				this.clone = function() {
-					var parent = this.params.parent;
+					let parent = this.params.parent;
 					if (!parent) return -1;
-					var tree = parent.getEditable();
+					let tree = parent.getEditable();
 					tree.push(new model.Box(this.params));
 					return tree.length - 1;
 				};
 				this.remove = function() {
-					var parent = this.params.parent;
+					let parent = this.params.parent;
 					if (!parent) return;
-					var tree = parent.getEditable();
-					var index = tree.indexOf(this);
+					let tree = parent.getEditable();
+					let index = tree.indexOf(this);
 					tree.splice(index, 1);
 				};
 				
@@ -357,7 +357,7 @@ function EntityWorker(obj) {
 					axis && (this.params[axis] = value);
 				};
 				this.scretch = function(axis, value) {
-					var coords = this.getCoords();
+					let coords = this.getCoords();
 					axis && (coords[axis] = value);
 					this.setCoords(coords);
 				};
@@ -366,7 +366,7 @@ function EntityWorker(obj) {
 				};
 				this.move = function(axis, value) {
 					if (!axis) return;
-					var coords = this.getCoords(),
+					let coords = this.getCoords(),
 						size = this.getSize();
 					coords[axis + "1"] = value;
 					coords[axis + "2"] = value + size[axis];
@@ -382,11 +382,11 @@ function EntityWorker(obj) {
 					axis == "y" && (axis = 1);
 					axis == "u" && (axis = 0);
 					axis == "v" && (axis = 1);
-					var vertex = this.prepareVertex();
+					let vertex = this.prepareVertex();
 					axis >= 0 && (vertex[axis] = value);
 				};
 				this.getVertex = function() {
-					var vertex = this.prepareVertex();
+					let vertex = this.prepareVertex();
 					return {
 						x: vertex[0],
 						y: vertex[1]
@@ -395,27 +395,27 @@ function EntityWorker(obj) {
 				
 				// Mirror and rotate
 				this.mirror = function(orientate) {
-					var coords = this.getCoords();
+					let coords = this.getCoords();
 					if (orientate == 0) {
-						var x1 = coords.x1, x2 = coords.x2;
+						let x1 = coords.x1, x2 = coords.x2;
 						coords.x2 = 2 * coords.x2 - x1;
 						coords.x1 = 2 * coords.x2 - x2;
 					} else if (orientate == 1) {
-						var y1 = coords.y1, y2 = coords.y2;
+						let y1 = coords.y1, y2 = coords.y2;
 						coords.y2 = 2 * coords.y2 - y1;
 						coords.y1 = 2 * coords.y2 - y2;
 					} else if (orientate == 2) {
-						var z1 = coords.z1, z2 = coords.z2;
+						let z1 = coords.z1, z2 = coords.z2;
 						coords.z2 = 2 * coords.z2 - z1;
 						coords.z1 = 2 * coords.z2 - z2;
 					}
 					this.setCoords(coords);
 				};
 				this.rotate = function(orientate, angle) {
-					var coords = this.getCoords();
+					let coords = this.getCoords();
 					if (angle == 0) {
 						if (orientate == 0) {
-							var tech = coords.y1;
+							let tech = coords.y1;
 							coords.y1 = coords.z1;
 							coords.z1 = tech;
 							tech = coords.y2;
@@ -424,7 +424,7 @@ function EntityWorker(obj) {
 							this.mirror(1);
 							this.mirror(2);
 						} else if (orientate == 1) {
-							var tech = coords.x1;
+							let tech = coords.x1;
 							coords.x1 = coords.z1;
 							coords.z1 = tech;
 							tech = coords.x2;
@@ -433,7 +433,7 @@ function EntityWorker(obj) {
 							this.mirror(0);
 							this.mirror(2);
 						} else if (orientate == 2) {
-							var tech = coords.x1;
+							let tech = coords.x1;
 							coords.x1 = coords.y1;
 							coords.y1 = tech;
 							tech = coords.x2;
@@ -455,7 +455,7 @@ function EntityWorker(obj) {
 						}
 					} else if (angle == 2) {
 						if (orientate == 0) {
-							var tech = coords.y1;
+							let tech = coords.y1;
 							coords.y1 =- coords.z1;
 							coords.z1 =- tech;
 							tech = coords.y2;
@@ -466,7 +466,7 @@ function EntityWorker(obj) {
 							coords.z1 += coords.z1;
 							coords.z2 += coords.z1;
 						} else if (orientate == 1) {
-							var tech = coords.x1;
+							let tech = coords.x1;
 							coords.x1 =- coords.z1;
 							coords.z1 =- tech;
 							tech = coords.x2;
@@ -477,7 +477,7 @@ function EntityWorker(obj) {
 							coords.z1 += coords.z1;
 							coords.z2 += coords.z1;
 						} else if (orientate == 2) {
-							var tech = coords.x1;
+							let tech = coords.x1;
 							coords.x1 =- coords.y1;
 							coords.y1 =- tech;
 							tech = coords.x2;
@@ -498,17 +498,17 @@ function EntityWorker(obj) {
 			// Assigment manage
 			this.addBone = function(obj) {
 				if (!obj) obj = this;
-				var bone = new this.Bone();
-				var editable = obj.getEditable();
+				let bone = new this.Bone();
+				let editable = obj.getEditable();
 				return editable.push(bone) - 1;
 			};
 			this.cloneAssigment = function(index, obj) {
 				if (!obj) obj = this;
-				var tree = obj.getEditable();
-				var children = tree[index];
+				let tree = obj.getEditable();
+				let children = tree[index];
 				if (children instanceof this.Box) obj.clone();
 				else if(children instanceof this.Bone) {
-					var place = tree.push(new model.Bone(children.params)) - 1;
+					let place = tree.push(new model.Bone(children.params)) - 1;
 					tree[place].setAssigment(children.getAssigment());
 				}
 				return tree.length - 1;
@@ -520,14 +520,14 @@ function EntityWorker(obj) {
 				return this.getEditable()[index];
 			};
 			this.getName = function(index) {
-				var assigment = this.getIndex(index);
+				let assigment = this.getIndex(index);
 				if (assigment instanceof this.Bone)
 					return assigment.getName();
 				return translate("Non-assigment");
 			};
 			this.removeAssigment = function(index, obj) {
 				if (!obj) obj = this;
-				var tree = obj.getEditable();
+				let tree = obj.getEditable();
 				tree.splice(index, 1);
 			};
 		}

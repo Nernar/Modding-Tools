@@ -1,10 +1,10 @@
-var StartEditor = {
+let StartEditor = {
 	data: new Object(),
 	create: function() {
 		try {
 			selectMode = 0;
 			ProjectEditor.setOpenedState(false);
-			var button = new ControlButton();
+			let button = new ControlButton();
 			button.setIcon("menu");
 			button.setOnClickListener(function() {
 				StartEditor.menu();
@@ -16,59 +16,59 @@ var StartEditor = {
 	},
 	menu: function() {
 		try {
-			var control = new ControlWindow();
+			let control = new ControlWindow();
 			control.setOnClickListener(function() {
 				StartEditor.create();
 			});
-			var header = control.addProjectHeader();
+			let header = control.addProjectHeader();
 			if (ProjectEditor.isInitialized()) {
-				var project = ProjectEditor.getProject();
+				let project = ProjectEditor.getProject();
 				if (project && project.getCount()) {
-					var content = project.getAll(),
+					let content = project.getAll(),
 						blocks = project.getBlocks();
 					if (blocks && blocks.length > 0) {
-						var category = header.addCategory(translate("Blocks"));
-						for (var i = 0; i < blocks.length; i++) {
-							var block = content[blocks[i]], models = block.
+						let category = header.addCategory(translate("Blocks"));
+						for (let i = 0; i < blocks.length; i++) {
+							let block = content[blocks[i]], models = block.
 								renderer.length + block.collision.length;
 							category.addItem("block", block.define.id,
 								translateCounter(models, "no models", "%s1 model",
 								"%s" + (models % 10) + " models", "%s models", [models]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							var real = blocks[index], block = content[real];
+							let real = blocks[index], block = content[real];
 							if (BlockEditor.open(real)) content.splice(real, 1),
 								content.unshift(block), project.setCurrentlyId(0),
 								control.dismiss();
 						});
 					}
-					var entities = project.getEntities();
+					let entities = project.getEntities();
 					if (entities && entities.length > 0) {
-						var category = header.addCategory(translate("Entities"));
-						for (var i = 0; i < entities.length; i++) {
-							var entity = content[entities[i]], models = entity.visual.length;
+						let category = header.addCategory(translate("Entities"));
+						for (let i = 0; i < entities.length; i++) {
+							let entity = content[entities[i]], models = entity.visual.length;
 							category.addItem("entity", entity.define.id,
 								translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
 								"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							var real = entities[index], entity = content[real];
+							let real = entities[index], entity = content[real];
 							if (EntityEditor.open(real)) content.splice(real, 1),
 								content.unshift(entity), project.setCurrentlyId(0),
 								control.dismiss();
 						});
 					}
-					var transitions = project.getTransitions();
+					let transitions = project.getTransitions();
 					if (transitions && transitions.length > 0) {
-						var category = header.addCategory(translate("Transitions"));
-						for (var i = 0; i < transitions.length; i++) {
-							var transition = content[transitions[i]], animates = transition.animation.length;
+						let category = header.addCategory(translate("Transitions"));
+						for (let i = 0; i < transitions.length; i++) {
+							let transition = content[transitions[i]], animates = transition.animation.length;
 							category.addItem("transition", translate("Transition") + " (" + (transition.define.
 								fps || 60) + " fps)", translateCounter(animates, "no animates", "%s1 animate",
 								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							var real = transitions[index], transition = content[real];
+							let real = transitions[index], transition = content[real];
 							if (TransitionEditor.open(real)) content.splice(real, 1),
 								content.unshift(transition), project.setCurrentlyId(0),
 								control.dismiss();
@@ -76,7 +76,7 @@ var StartEditor = {
 					}
 				}
 			} else ProjectEditor.create();
-			var category = control.addCategory(translate("Editors"));
+			let category = control.addCategory(translate("Editors"));
 			category.addItem("block", translate("Block"), function() {
 				BlockEditor.create();
 				control.dismiss();
@@ -100,7 +100,7 @@ var StartEditor = {
 					if (Level.isLoaded()) {
 						isSupportEnv = true;
 						currentEnvironment = Setting.modName;
-						var result = Setting(function() {
+						let result = Setting(function() {
 							try {
 								rover = true;
 								createButton();
@@ -119,16 +119,16 @@ var StartEditor = {
 					} else showHint(translate("Supportable module can't be loaded at menu"));
 				});
 			checkForAdditionalInformation(control);
-			var category = control.addCategory(translate("Project"));
+			let category = control.addCategory(translate("Project"));
 			category.addItem("menuProjectLoad", translate("Open"), function() {
-				var formats = [".dnp", ".ndb", ".nds", ".js"];
+				let formats = [".dnp", ".ndb", ".nds", ".js"];
 				if (ModelConverter) formats.push(".json");
 				selectFile(formats, function(file) {
 					StartEditor.replace(file);
 				});
 			});
 			category.addItem("menuProjectImport", translate("Import"), function() {
-				var formats = [".dnp", ".ndb", ".nds", ".js"];
+				let formats = [".dnp", ".ndb", ".nds", ".js"];
 				if (ModelConverter) formats.push(".json");
 				selectFile(formats, function(file) {
 					StartEditor.add(file);
@@ -149,7 +149,7 @@ var StartEditor = {
 			});
 			checkForAdditionalInformation(control);
 			if (__code__.startsWith("develop")) {
-				var category = control.addCategory(translate("Debug"));
+				let category = control.addCategory(translate("Debug"));
 				category.addItem(null, translate("Minify"), function() {
 					selectFile([".js"], function(file) {
 						let text = Files.read(file);
@@ -202,9 +202,9 @@ var StartEditor = {
 				checkForAdditionalInformation(control);
 			}
 			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit)) {
-				var category = control.addCategory(translate("Supportables"));
+				let category = control.addCategory(translate("Supportables"));
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
-					var result = DumpCreator(function() {
+					let result = DumpCreator(function() {
 						try {
 							return __makeAndSaveDump__.dumped;
 						} catch(e) {
@@ -215,7 +215,7 @@ var StartEditor = {
 					confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
 						Level.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
 						"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
-							var evaluate = DumpCreator(function() {
+							let evaluate = DumpCreator(function() {
 								try {
 									__makeAndSaveDump__();
 									return true;
@@ -230,7 +230,7 @@ var StartEditor = {
 				if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"), function() {
 					isSupportEnv = true;
 					currentEnvironment = UIEditor.modName;
-					var result = UIEditor(function() {
+					let result = UIEditor(function() {
 						try {
 							start.open.click(null);
 							return true;
@@ -253,7 +253,7 @@ var StartEditor = {
 					control.dismiss();
 				});
 				if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"), function() {
-					var result = InstantRunner(function() {
+					let result = InstantRunner(function() {
 						try {
 							openAndroidUI();
 							return true;
@@ -269,11 +269,11 @@ var StartEditor = {
 					} else showHint(InstantRunner.modName + " - " + InstantRunner.author);
 				});
 				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
-					var result = WorldEdit(function() {
+					let result = WorldEdit(function() {
 						try {
-							var array = new Array();
-							for (var i in Commands) {
-								var command = Commands[i];
+							let array = new Array();
+							for (let i in Commands) {
+								let command = Commands[i];
 								array.push(command.name + (command.args && command.args.length > 0 ?
 									" " + command.args : "") + "\n" + command.description);
 							}
@@ -299,15 +299,15 @@ var StartEditor = {
 		}
 	},
 	add: function(file) {
-		var name = file.getName();
+		let name = file.getName();
 		if (name.endsWith(".dnp")) {
-			var active = Date.now();
+			let active = Date.now();
 			importProject(file.getPath(), function(result) {
 				handle(function() {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						var current = ProjectEditor.getProject();
+						let current = ProjectEditor.getProject();
 						current.object = assign(current.getAll(), selected);
 						StartEditor.menu();
 						showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
@@ -315,17 +315,17 @@ var StartEditor = {
 				});
 			});
 		} else if (name.endsWith(".json")) {
-			var active = Date.now();
+			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
-				var current = ProjectEditor.getProject();
+				let current = ProjectEditor.getProject();
 				current.object = assign(current.getAll(), [result]);
 				StartEditor.menu();
 				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
 			});
 		} else if (name.endsWith(".ndb")) {
-			var active = Date.now();
+			let active = Date.now();
 			handle(function() {
-				var current = ProjectEditor.getProject(),
+				let current = ProjectEditor.getProject(),
 					obj = compileData(Files.read(file)),
 					result = [convertNdb(obj)];
 				current.object = assign(current.getAll(), result);
@@ -333,9 +333,9 @@ var StartEditor = {
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
 			});
 		} else if (name.endsWith(".nds")) {
-			var active = Date.now();
+			let active = Date.now();
 			handle(function() {
-				var current = ProjectEditor.getProject(),
+				let current = ProjectEditor.getProject(),
 					obj = compileData(Files.read(file)),
 					result = [convertNds(obj)];
 				current.object = assign(current.getAll(), result);
@@ -345,38 +345,38 @@ var StartEditor = {
 		}
 	},
 	replace: function(file) {
-		var name = file.getName();
+		let name = file.getName();
 		if (name.endsWith(".dnp")) {
-			var active = Date.now();
+			let active = Date.now();
 			importProject(file.getPath(), function(result) {
 				handle(function() {
-					var current = ProjectEditor.create();
+					let current = ProjectEditor.create();
 					current.object = assign(current.getAll(), result);
 					StartEditor.menu();
 					showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
 				});
 			});
 		} else if (name.endsWith(".json")) {
-			var active = Date.now();
+			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
-				var current = ProjectEditor.create();
+				let current = ProjectEditor.create();
 				current.object = [result];
 				StartEditor.menu();
 				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
 			});
 		} else if (name.endsWith(".ndb")) {
-			var active = Date.now();
+			let active = Date.now();
 			handle(function() {
-				var current = ProjectEditor.create(),
+				let current = ProjectEditor.create(),
 					obj = compileData(Files.read(file));
 				current.object = [convertNdb(obj)];
 				StartEditor.menu();
 				showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
 			});
 		} else if (name.endsWith(".nds")) {
-			var active = Date.now();
+			let active = Date.now();
 			handle(function() {
-				var current = ProjectEditor.create(),
+				let current = ProjectEditor.create(),
 					obj = compileData(Files.read(file));
 				current.object = [convertNds(obj)];
 				StartEditor.menu();
@@ -385,7 +385,7 @@ var StartEditor = {
 		}
 	},
 	save: function(file, i) {
-		var name = (StartEditor.data.name = i, file.getName()),
+		let name = (StartEditor.data.name = i, file.getName()),
 			project = ProjectEditor.getProject().getAll();
 		if (name.endsWith(".dnp")) {
 			exportProject(project, false, file.getPath());
@@ -409,25 +409,25 @@ function checkForAdditionalInformation(control) {
 		if (hasAdditionalInformation("keyExpiresNotification"))
 			control.addMessage("menuLoginKey", translate("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities."));
 	if (ProjectEditor.getCurrentType() == "block") {
-		var worker = ProjectEditor.getProject().getCurrentWorker();
+		let worker = ProjectEditor.getProject().getCurrentWorker();
 		if (worker && (worker.Renderer.getModelCount() > 1 || worker.Collision.getModelCount() > 1))
 			if (hasAdditionalInformation("moreOneModelsWarning"))
 				control.addMessage("blockRenderMove", translate("Opened editor contains >1 models one of type. At currently moment, editor doesn't support few models.") +
 					" " + translate("Touch here to merge all models."), function(message) {
 						confirm(translate("Outliner"), translate("All models will be merged into one.") +
 							" " + translate("Do you want to continue?"), function() {
-								var active = Date.now(),
+								let active = Date.now(),
 									renderer = worker.Renderer.getModels(),
 									collision = worker.Collision.getModels();
 								if (renderer && renderer.length > 1) {
-									var source = renderer[0].params;
-									for (var i = 1; i < renderer.length; i++)
+									let source = renderer[0].params;
+									for (let i = 1; i < renderer.length; i++)
 										source = assign(source, renderer[i].params);
 									worker.Renderer.setParams([source]);
 								}
 								if (collision && collision.length > 1) {
-									var source = collision[0].params;
-									for (var i = 1; i < collision.length; i++)
+									let source = collision[0].params;
+									for (let i = 1; i < collision.length; i++)
 										source = assign(source, collision[i].params);
 									worker.Collision.setParams([source]);
 								}
@@ -459,24 +459,24 @@ function selectProjectData(result, action, single) {
 			action && action(single ? result[0] : result);
 			return;
 		}
-		var items = [], selected = [], real = [];
+		let items = [], selected = [], real = [];
 		result.forEach(function(element, index) {
 			if (element && element.type) {
 				switch (element.type) {
 					case "block":
-						var models = element.renderer.length + element.collision.length;
+						let models = element.renderer.length + element.collision.length;
 						items.push(translate("Block: %s", element.define.id) + "\n"
 							+ translateCounter(models, "no models", "%s1 model",
 							"%s" + (models % 10) + " models", "%s models", [models]));
 						break;
 					case "entity":
-						var models = element.visual.length;
+						let models = element.visual.length;
 						items.push(translate("Entity: %s", element.define.id) + "\n"
 							+ translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
 							"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
 						break;
 					case "transition":
-						var animates = element.animation.length;
+						let animates = element.animation.length;
 						items.push(translate("Transition: %s", (element.define.fps || 60) + " fps") + "\n"
 							+ translateCounter(animates, "no animates", "%s1 animate",
 							"%s" + (animates % 10) + " animates", "%s animates", [animates]));
@@ -486,7 +486,7 @@ function selectProjectData(result, action, single) {
 				real.push(index);
 			}
 		});
-		var builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate("Element selector"));
 		single ? builder.setItems(items, action ? function(dialog, item) {
@@ -504,7 +504,7 @@ function selectProjectData(result, action, single) {
 			} : null);
 			builder.setPositiveButton(translate("Select"), action ? function() {
 				try {
-					var value = new Array();
+					let value = new Array();
 					selected.forEach(function(element, index) {
 						element && value.push(result[real[index]]);
 					});
@@ -525,7 +525,7 @@ function selectProjectData(result, action, single) {
 
 function convertJsonBlock(string, action) {
 	if (!ModelConverter) return;
-	var runned = compileData("(function() {\n" + ModelConverter + "\n" +
+	let runned = compileData("(function() {\n" + ModelConverter + "\n" +
 		"document.getElementById(\"name\").value = " + string + ";\n" +
 		"myFunction();\nreturn {\nvalue: document.getElementById(\"frm2\").value,\n" +
 		"logged: console.logged.join(\"\\n\")\n};\n})()",
@@ -548,7 +548,7 @@ function convertJsonBlock(string, action) {
 		});
 	if (runned instanceof Error) reportError(runned);
 	else if (runned && runned.value) {
-		var compiled = compileScript(runned);
+		let compiled = compileScript(runned);
 		if (compiled && compiled[0]) action && action(compiled[0]);
 		else confirm(translate("Compilation failed"),
 			translate("Converter generated invalid script, they can't be runned.") + " " +
@@ -565,7 +565,7 @@ function convertJsonBlock(string, action) {
 
 function showSupportableInfo(mod) {
 	try {
-		var builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate(mod.modName) + " " + mod.version);
 		builder.setMessage((mod.description ? translate(mod.description) + "\n" : "") +
@@ -582,7 +582,7 @@ function showSupportableInfo(mod) {
 
 function confirm(title, message, action) {
 	try {
-		var builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(title || translate("Confirmation"));
 		if (message) builder.setMessage("" + message);
@@ -603,22 +603,22 @@ function selectFile(formats, onSelect, outside) {
 	function show(path, notRoot) {
 		try {
 			if (useOldExplorer) {
-				var files = Files.listFileNames(path),
+				let files = Files.listFileNames(path),
 					generated = Files.listDirectoryNames(path),
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (var i in formatted) generated.push(formatted[i]);
+				for (let i in formatted) generated.push(formatted[i]);
 				
-				var builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
+				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setNegativeButton(translate("Cancel"), null);
 				builder.setItems(generated, function(d, i) {
 					try {
 						if (notRoot && i == 0) {
-							var file = new java.io.File(path), parent = file.getParent();
+							let file = new java.io.File(path), parent = file.getParent();
 							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
 						} else {
-							var file = new java.io.File(path, generated[i]);
+							let file = new java.io.File(path, generated[i]);
 							if (file.isDirectory()) show(file.getPath(), true);
 							else if (onSelect) onSelect(file);
 						}
@@ -627,12 +627,12 @@ function selectFile(formats, onSelect, outside) {
 					}
 				});
 				
-				var alert = builder.create();
+				let alert = builder.create();
 				alert.show();
 			} else {
-				var explorer = new ExplorerWindow();
+				let explorer = new ExplorerWindow();
 				formats && explorer.setFilter(formats);
-				var bar = explorer.addPath();
+				let bar = explorer.addPath();
 				bar.setPath(path), bar.setOnOutsideListener(function(bar) {
 					explorer.dismiss();
 					outside && outside();
@@ -650,20 +650,20 @@ function selectFile(formats, onSelect, outside) {
 }
 
 function saveFile(currentName, formats, onSelect, outside) {
-	var currentFormat = 0;
+	let currentFormat = 0;
 	show(Dirs.EXPORT, true);
 	function show(path, notRoot) {
 		try {
 			if (useOldExplorer) {
-				var files = Files.listFileNames(path),
+				let files = Files.listFileNames(path),
 					generated = Files.listDirectoryNames(path),
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (var i in formatted) generated.push(formatted[i]);
+				for (let i in formatted) generated.push(formatted[i]);
 				
-				var layout = new android.widget.LinearLayout(context);
+				let layout = new android.widget.LinearLayout(context);
 				layout.setGravity(Ui.Gravity.CENTER);
-				var edit = new android.widget.EditText(context);
+				let edit = new android.widget.EditText(context);
 				currentName && edit.setText(currentName);
 				edit.setHint(translate("project"));
 				edit.setTextColor(Ui.Color.WHITE);
@@ -678,7 +678,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 				edit.setCursorVisible(false);
 				edit.setMaxLines(1);
 				layout.addView(edit);
-				var text = new android.widget.TextView(context);
+				let text = new android.widget.TextView(context);
 				text.setText(formats[currentFormat]);
 				text.setTextColor(Ui.Color.WHITE);
 				text.setOnClickListener(function() {
@@ -688,20 +688,20 @@ function saveFile(currentName, formats, onSelect, outside) {
 				});
 				layout.addView(text);
 				
-				var builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
+				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setPositiveButton(translate("Export"), function() {
-					var file = new java.io.File(path, edit.getText() + text.getText());
+					let file = new java.io.File(path, edit.getText() + text.getText());
 					if (onSelect) onSelect(file, currentName);
 				});
 				builder.setNegativeButton(translate("Cancel"), null);
 				builder.setItems(generated, function(d, i) {
 					try {
 						if (notRoot && i == 0) {
-							var file = new java.io.File(path), parent = file.getParent();
+							let file = new java.io.File(path), parent = file.getParent();
 							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
 						} else {
-							var file = new java.io.File(path, generated[i]);
+							let file = new java.io.File(path, generated[i]);
 							if (file.isDirectory()) show(file.getPath(), true);
 							else if (onSelect) onSelect(file, currentName);
 						}
@@ -711,17 +711,17 @@ function saveFile(currentName, formats, onSelect, outside) {
 				});
 				builder.setView(layout);
 				
-				var alert = builder.create();
+				let alert = builder.create();
 				alert.show();
 			} else {
-				var explorer = new ExplorerWindow();
+				let explorer = new ExplorerWindow();
 				formats && explorer.setFilter(formats);
-				var bar = explorer.addPath();
+				let bar = explorer.addPath();
 				bar.setPath(path), bar.setOnOutsideListener(function(bar) {
 					explorer.dismiss();
 					outside && outside();
 				});
-				var rename = explorer.addRename();
+				let rename = explorer.addRename();
 				rename.setAvailabledTypes(formats);
 				currentName && rename.setName(currentName);
 				rename.setOnApproveListener(function(window, file, last) {
@@ -738,7 +738,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 
 function compileData(text, type, scope) {
 	if (type == "string") text = "\"" + text + "\"";
-	var code = "(function() { return " + text + "; })();",
+	let code = "(function() { return " + text + "; })();",
 		scope = runAtScope(code, scope || {}, "Dev Editor$compile.js");
 	return scope.error ? scope.error : !type ? scope.result :
 		type == "string" ? ("" + scope.result) :

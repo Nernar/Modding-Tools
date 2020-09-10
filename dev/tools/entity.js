@@ -2,12 +2,12 @@ function registerCustomEntity() {
 	return 0/* MobRegistry.registerEntity("__editorEntity__") */;
 }
 
-var TODO = registerCustomEntity();
+let TODO = registerCustomEntity();
 
 function updateEntityRender() {
 	if (!Level.isLoaded()) return;
-	/* var model = eval(model2ToScript(EntityEditor.project));
-	var texture = new Texture("mob/bonnie.png");
+	/* let model = eval(model2ToScript(EntityEditor.project));
+	let texture = new Texture("mob/bonnie.png");
 	model.setTexture(texture);
 	TODO.customizeVisual({
 		getModels: function() {
@@ -18,14 +18,14 @@ function updateEntityRender() {
 }
 
 function model2ToScript(obj) {
-	var script = "";
-	script += "var model = new EntityModel();\n";
-	script += "var render = new Render();\n";
-	for (var i in obj.elements) {
-		var part = obj.elements[i], params = {};
+	let script = "";
+	script += "let model = new EntityModel();\n";
+	script += "let render = new Render();\n";
+	for (let i in obj.elements) {
+		let part = obj.elements[i], params = {};
 		part.offset && (params.offset = part.offset);
 		part.rotation && (params.rotation = part.rotation);
-		var bones = part.bones.slice();
+		let bones = part.bones.slice();
 		script += "render.setPart(\"" + i + "\", " + JSON.stringify(bones, null, "\t") + ", " + JSON.stringify(params, null, "\t") + ");\n";
 		// script += "render.getPart(\"" + i + "\").setOffset(" + part.offset.x + ", " + part.offset.y + ", " + part.offset.z + ");\n";
 	}
@@ -34,7 +34,7 @@ function model2ToScript(obj) {
 }
 
 function geometryToModel2(obj) {
-	var project = {
+	let project = {
 		texture: {
 			width: obj.texturewidth,
 			height: obj.textureheight
@@ -60,16 +60,16 @@ function geometryToModel2(obj) {
 			}
 		}
 	};
-	var parents = {
+	let parents = {
 		hat: "head"
 	};
 	
-	var bones = obj.bones;
-	for (var i in bones) {
-		var bone = bones[i], parent = bone.parent ? bone.parent : bone.name;
+	let bones = obj.bones;
+	for (let i in bones) {
+		let bone = bones[i], parent = bone.parent ? bone.parent : bone.name;
 		parents[parent] && (parent = parents[parent]);
 		!project.elements[bone.name] && (parents[bone.name] = parent);
-		var part = project.elements[parent];
+		let part = project.elements[parent];
 		if (!part || !bone.cubes) continue;
 		bone.pivot && (part.offset = {
 			x: bone.pivot[0],
@@ -81,8 +81,8 @@ function geometryToModel2(obj) {
 			y: bone.rotation[1],
 			z: bone.rotation[2],
 		});
-		for (var n = 0; n < bone.cubes.length; n++) {
-			var box = bone.cubes[n];
+		for (let n = 0; n < bone.cubes.length; n++) {
+			let box = bone.cubes[n];
 			switch(parent) {
 				case "body":
 					box.origin[0] -= -4;
@@ -135,7 +135,7 @@ function geometryToModel2(obj) {
 	return project;
 }
 
-var EntityEditor = {
+let EntityEditor = {
 	data: {},
 	reset: function() {
 		this.data.worker = ProjectEditor.addEntity();
@@ -144,14 +144,14 @@ var EntityEditor = {
 		this.data.group = this.data.item = -1;
 	},
 	create: function() {
-		var autosaveable = !ProjectEditor.isOpened();
+		let autosaveable = !ProjectEditor.isOpened();
 		if (!this.data.worker) this.reset();
 		autosaveable && ProjectEditor.initializeAutosave(this.data.worker);
 		this.data.hasVisual = this.data.worker.Visual.getModelCount() > 0
 			&& this.data.worker.Visual.getModel(0).getAssigmentSize() > 0;
 		updateEntityRender(this.data.worker);
 		
-		var button = new ControlButton();
+		let button = new ControlButton();
 		button.setIcon("menu");
 		button.setOnClickListener(function() {
 			EntityEditor.menu();
@@ -159,13 +159,13 @@ var EntityEditor = {
 		});
 		button.show();
 		
-		var menu = new MenuWindow();
-		var group = menu.addGroup("entity");
+		let menu = new MenuWindow();
+		let group = menu.addGroup("entity");
 		group.addItem("entity", null);
 		group.addItem("blockModuleIdentifier", null);
 		group.addItem("entityModuleDraw", null);
 		group.addItem("entityModuleUpdate", null);
-		var group = menu.addGroup("entityBoneBones");
+		let group = menu.addGroup("entityBoneBones");
 		if (this.data.hasVisual) {
 			group.addItem("entityBoneBones", this.bone.select);
 			group.addItem("entityBoxAdd", this.bone.add);
@@ -173,7 +173,7 @@ var EntityEditor = {
 			group.addItem("entityBoneOffset", this.bone.offset);
 			group.addItem("entityBoneRotate", this.bone.rotate);
 			group.addItem("entityBoxRemove", this.bone.remove);
-			var group = menu.addGroup("entityBoxBoxes");
+			let group = menu.addGroup("entityBoxBoxes");
 			if (this.data.item >= 0) {
 				group.addItem("entityBoxBoxes", this.box.select);
 				group.addItem("entityBoxAdd", this.box.add);
@@ -187,7 +187,7 @@ var EntityEditor = {
 		menu.show();
 	},
 	menu: function(view) {
-		var control = new ControlWindow();
+		let control = new ControlWindow();
 		control.setOnClickListener(function() {
 			EntityEditor.create();
 		});
@@ -202,7 +202,7 @@ var EntityEditor = {
 			control.dismiss();
 			selectMode = 6;
 			
-			var button = new ControlButton();
+			let button = new ControlButton();
 			button.setIcon("menuModuleBack");
 			button.setOnClickListener(function() {
 				EntityEditor.create();
@@ -225,9 +225,9 @@ var EntityEditor = {
 		control.show();
 	},
 	open: function(file) {
-		var name = file.getName();
+		let name = file.getName();
 		if (name.endsWith(".nde")) {
-			var project = compileData(Files.read(file));
+			let project = compileData(Files.read(file));
 			if (!project) return showHint(translate("Empty project"));
 			EntityEditor.reset();
 			EntityEditor.data.worker.loadProject(project);
@@ -237,14 +237,14 @@ var EntityEditor = {
 		} else if (name.endsWith(".js")) {
 			// TODO
 		} else if (name.endsWith(".json")) {
-			var project = compileData(Files.read(file)),
+			let project = compileData(Files.read(file)),
 				geometry = geometryToModel2(project["geometry.bonnie"]);
 			updateEntityRender(EntityEditor.data.worker);
 		}
 	},
 	save: function(file, i) {
 		EntityEditor.data.name = i;
-		var name = file.getName(),
+		let name = file.getName(),
 			project = EntityEditor.data.worker.getProject();
 		if (name.endsWith(".nde")) {
 			Files.write(file, JSON.stringify(project));
@@ -257,8 +257,8 @@ var EntityEditor = {
 	project: function(view) {},
 	bone: {
 		select: function(view) {
-			var model = EntityEditor.data.worker.Visual.getModel(0);
-			var popup = new ListingPopup();
+			let model = EntityEditor.data.worker.Visual.getModel(0);
+			let popup = new ListingPopup();
 			popup.setTitle(translate("Bones"));
 			// popup.setOnShowListener(function() {
 				// selectMode = 7;
@@ -270,13 +270,13 @@ var EntityEditor = {
 			// });
 			popup.setOnSelectListener(function(index) {
 				EntityEditor.data.group = index;
-				var hasBoxes = EntityEditor.data.item > 0;
+				let hasBoxes = EntityEditor.data.item > 0;
 				EntityEditor.data.item = model.getIndex(index).getBoxCount() > 0 ? 0 : -1;
 				if (hasBoxes && EntityEditor.data.item == -1) EntityEditor.create();
 				else if (!hasBoxes && !EntityEditor.data.item) EntityEditor.create();
 				updateEntityRender(EntityEditor.data.worker);
 			});
-			for (var i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++)
+			for (let i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++)
 				popup.addButtonElement(EntityEditor.data.worker.Visual.getModel(0).getName(i));
 			popup.selectButton(EntityEditor.data.group);
 			popup.setSelectMode(true);
@@ -285,20 +285,20 @@ var EntityEditor = {
 		add: function(view) {
 			// Can't adding bones without tree assigment
 			if (EntityEditor.data.hasVisual) {
-				var popup = new ListingPopup();
+				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
 				popup.setOnSelectListener(function(index) {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					var index = (EntityEditor.data.group = EntityEditor.data.worker.Visual.getModel(0).addBone());
+					let index = (EntityEditor.data.group = EntityEditor.data.worker.Visual.getModel(0).addBone());
 					(EntityEditor.data.item = -1, EntityEditor.create());
 					showHint(translate("Bone %s added", index + 1));
 					updateEntityRender(EntityEditor.data.worker);
 				});
 				popup.addButtonElement(translate("Copy current"), function() {
-					var model = EntityEditor.data.worker.Visual.getModel(0);
-					var last = EntityEditor.data.group, index = (EntityEditor.data.group = model.cloneAssigment(last));
+					let model = EntityEditor.data.worker.Visual.getModel(0);
+					let last = EntityEditor.data.group, index = (EntityEditor.data.group = model.cloneAssigment(last));
 					EntityEditor.data.item = model.getIndex(last).getBoxCount() > 0 ? 0 : -1;
 					showHint(translate("Bone %s cloned to %s", [last + 1, index + 1]));
 					updateEntityRender(EntityEditor.data.worker);
@@ -313,14 +313,14 @@ var EntityEditor = {
 			}
 		},
 		rename: function(view) {
-			var selected = EntityEditor.data.group,
+			let selected = EntityEditor.data.group,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				name = model.getName(selected);
-			var popup = new ListingPopup();
+			let popup = new ListingPopup();
 			popup.setTitle(translate("Rename"));
 			popup.addEditElement(translate("Name"), name);
 			popup.addButtonElement(translate("Save"), function() {
-				var values = popup.getAllEditsValues();
+				let values = popup.getAllEditsValues();
 				model.getIndex(selected).setName(compileData(values[0], "string"));
 				updateEntityRender(EntityEditor.data.worker);
 				showHint(translate("Data saved"));
@@ -328,25 +328,25 @@ var EntityEditor = {
 			Popups.open(popup, "bone_rename");
 		},
 		offset: function(view) {
-			var selected = EntityEditor.data.group,
+			let selected = EntityEditor.data.group,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				offset = model.getIndex(selected).getOffset();
-			var popup = new CoordsPopup();
+			let popup = new CoordsPopup();
 			popup.setTitle(translate("Offset"));
 			popup.setBaseMathes([1, 16, 32]);
-			var group = popup.addGroup("x");
+			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).offset(0, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(offset.x);
-			var group = popup.addGroup("y");
+			let group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).offset(1, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(offset.y);
-			var group = popup.addGroup("z");
+			let group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).offset(2, value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -355,25 +355,25 @@ var EntityEditor = {
 			Popups.open(popup, "bone_offset");
 		},
 		rotate: function(view) {
-			var selected = EntityEditor.data.group,
+			let selected = EntityEditor.data.group,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				rotate = model.getIndex(selected).getRotation();
-			var popup = new CoordsPopup();
+			let popup = new CoordsPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.setBaseMathes([-45, -10, 1, 10]);
-			var group = popup.addGroup("x");
+			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).rotate(0, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(rotate.x);
-			var group = popup.addGroup("y");
+			let group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).rotate(1, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(rotate.y);
-			var group = popup.addGroup("z");
+			let group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).rotate(2, value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -386,7 +386,7 @@ var EntityEditor = {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this bone?"),
 				function() {
-					var selected = EntityEditor.data.group,
+					let selected = EntityEditor.data.group,
 						model = EntityEditor.data.worker.Visual.getModel(0);
 					model.removeAssigment(selected);
 					EntityEditor.data.group = selected > 0 ? selected - 1 : -1;
@@ -401,7 +401,7 @@ var EntityEditor = {
 	},
 	box: {
 		select: function (view) {
-			var popup = new ListingPopup();
+			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			// popup.setOnShowListener(function () {
 				// selectMode = 8;
@@ -415,29 +415,29 @@ var EntityEditor = {
 				EntityEditor.data.item = index;
 				updateEntityRender(EntityEditor.data.worker);
 			});
-			var model = EntityEditor.data.worker.Visual.getModel(0);
-			for (var i = 0; i < model.getIndex(EntityEditor.data.group).getBoxCount(); i++)
+			let model = EntityEditor.data.worker.Visual.getModel(0);
+			for (let i = 0; i < model.getIndex(EntityEditor.data.group).getBoxCount(); i++)
 				popup.addButtonElement(translate("Box %s", i + 1));
 			popup.selectButton(EntityEditor.data.item);
 			popup.setSelectMode(true);
 			Popups.open(popup, "box_select");
 		},
 		add: function (view) {
-			var model = EntityEditor.data.worker.Visual.getModel(0),
+			let model = EntityEditor.data.worker.Visual.getModel(0),
 				selected = EntityEditor.data.item, group = EntityEditor.data.group;
 			if (EntityEditor.data.item >= 0) {
-				var popup = new ListingPopup();
+				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
 				popup.setOnSelectListener(function (index) {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function () {
-					var index = (EntityEditor.data.item = model.getIndex(group).addBox());
+					let index = (EntityEditor.data.item = model.getIndex(group).addBox());
 					showHint(translate("Box %s added", index + 1));
 					updateEntityRender(EntityEditor.data.worker);
 				});
 				popup.addButtonElement(translate("Copy current"), function () {
-					var last = EntityEditor.data.item, index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
+					let last = EntityEditor.data.item, index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
 					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 					updateEntityRender(EntityEditor.data.worker);
 				});
@@ -450,26 +450,26 @@ var EntityEditor = {
 			}
 		},
 		resize: function (view) {
-			var group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(group).getBox(selected), coords = box.getCoords();
-			var popup = new CoordsPopup();
+			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
-			var group = popup.addGroup("x");
+			let group = popup.addGroup("x");
 			group.setOnChangeListener(function (index, value) {
 				box.scretch(index == 0 ? "x1" : "x2", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.x1);
 			group.addItem(coords.x2);
-			var group = popup.addGroup("y");
+			let group = popup.addGroup("y");
 			group.setOnChangeListener(function (index, value) {
 				box.scretch(index == 0 ? "y1" : "y2", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.y1);
 			group.addItem(coords.y2);
-			var group = popup.addGroup("z");
+			let group = popup.addGroup("z");
 			group.setOnChangeListener(function (index, value) {
 				box.scretch(index == 0 ? "z1" : "z2", value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -479,24 +479,24 @@ var EntityEditor = {
 			Popups.open(popup, "box_resize");
 		},
 		move: function (view) {
-			var group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(group).getBox(selected), coords = box.getCoords();
-			var popup = new CoordsPopup();
+			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
-			var group = popup.addGroup("x");
+			let group = popup.addGroup("x");
 			group.setOnChangeListener(function (index, value) {
 				box.move("x", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.x1);
-			var group = popup.addGroup("y");
+			let group = popup.addGroup("y");
 			group.setOnChangeListener(function (index, value) {
 				box.move("y", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.y1);
-			var group = popup.addGroup("z");
+			let group = popup.addGroup("z");
 			group.setOnChangeListener(function (index, value) {
 				box.move("z", value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -505,18 +505,18 @@ var EntityEditor = {
 			Popups.open(popup, "box_move");
 		},
 		vertex: function (view) {
-			var group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(group).getBox(selected), vertex = box.getVertex();
-			var popup = new CoordsPopup();
+			let popup = new CoordsPopup();
 			popup.setTitle(translate("UV"));
-			var group = popup.addGroup("x");
+			let group = popup.addGroup("x");
 			group.setOnChangeListener(function (index, value) {
 				box.vertex("x", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(vertex.x);
-			var group = popup.addGroup("y");
+			let group = popup.addGroup("y");
 			group.setOnChangeListener(function (index, value) {
 				box.vertex("y", value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -528,7 +528,7 @@ var EntityEditor = {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					var group = EntityEditor.data.group, selected = EntityEditor.data.item,
+					let group = EntityEditor.data.group, selected = EntityEditor.data.item,
 						model = EntityEditor.data.worker.Visual.getModel(0);
 					model.getIndex(group).removeBox(selected);
 					EntityEditor.data.item = selected > 0 ? selected - 1 : -1;

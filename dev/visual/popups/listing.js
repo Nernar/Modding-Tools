@@ -1,6 +1,6 @@
 function ListingPopup() {
 	this.reset = function() {
-		var views = (this.views = { edits: [], buttons: [] });
+		let views = (this.views = { edits: [], buttons: [] });
 		views.root = new android.widget.FrameLayout(context);
 		views.layout = new android.widget.LinearLayout(context);
 		views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
@@ -17,7 +17,7 @@ function ListingPopup() {
 		views.layout.addView(views.title);
 	};
 	this.addButtonElement = function(name, click) {
-		var views = this.views, elements = this, index = views.buttons.length;
+		let views = this.views, elements = this, index = views.buttons.length;
 		views.buttons[index] = new android.widget.TextView(context);
 		views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Ui.getY(300), Ui.getY(84)));
 		views.buttons[index].setPadding(Ui.getY(30), 0, Ui.getY(30), 0);
@@ -39,7 +39,7 @@ function ListingPopup() {
 		return this.getButton(index);
 	};
 	this.addEditElement = function(hint, value) {
-		var views = this.views, index = views.edits.length;
+		let views = this.views, index = views.edits.length;
 		views.edits[index] = new android.widget.EditText(context);
 		views.edits[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(-1, Ui.getY(84)));
 		views.edits[index].setInputType(android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -54,7 +54,7 @@ function ListingPopup() {
 		return this.getEdit(index);
 	};
 	this.getButton = function(index) {
-		var button = this.views.buttons[index], visible = true;
+		let button = this.views.buttons[index], visible = true;
 		return {
 			setBackground: function(texture) {
 				button.setBackgroundDrawable(ImageFactory.getDrawable(texture));
@@ -69,10 +69,10 @@ function ListingPopup() {
 		};
 	};
 	this.getEdit = function(index) {
-		var edit = this.views.edits[index], visible = true;
+		let edit = this.views.edits[index], visible = true;
 		return {
 			getValue: function() {
-				var editable = edit.getText();
+				let editable = edit.getText();
 				return editable.toString() || "";
 			},
 			setBackground: function(texture) {
@@ -88,12 +88,12 @@ function ListingPopup() {
 		};
 	};
 	this.getAllEditsValues = function() {
-		var edits = this.views.edits, values = new Array();
-		for (var i in edits) values.push(this.getEdit(i).getValue());
+		let edits = this.views.edits, values = new Array();
+		for (let i in edits) values.push(this.getEdit(i).getValue());
 		return values;
 	};
 	this.selectButton = function(index) {
-		var buttons = this.views.buttons;
+		let buttons = this.views.buttons;
 		this.unselect();
 		if (index + "" != "undefined") {
 			buttons[index] && buttons[index].setBackgroundDrawable
@@ -103,7 +103,7 @@ function ListingPopup() {
 		} else delete this.selected;
 	};
 	this.unselect = function() {
-		var buttons = this.views.buttons, selected = this.selected;
+		let buttons = this.views.buttons, selected = this.selected;
 		if (selected + "" != "undefined" && buttons[selected])
 			buttons[selected].setBackgroundDrawable(null);
 	};
@@ -145,13 +145,13 @@ function ListingPopup() {
 	};
 	this.update = function() {};
 	this.show = function() {
-		var views = this.views;
+		let views = this.views;
 		views.root.post(function() {
-			var animate = android.view.animation.AlphaAnimation(0, 1);
+			let animate = android.view.animation.AlphaAnimation(0, 1);
 			views.layout.startAnimation(animate);
 			animate.setDuration(400);
 		});
-		var place = Popups.getAvailablePlace();
+		let place = Popups.getAvailablePlace();
 		this.window = new android.widget.PopupWindow(views.root, Ui.Display.WRAP, Ui.Display.WRAP);
 		this.focusable = views.edits.length > 0 && (this.window.setFocusable(true), true);
 		this.window.setAttachedInDecor(false);
@@ -159,9 +159,9 @@ function ListingPopup() {
 		this.__show && this.__show();
 	};
 	this.hide = function() {
-		var _ = this, views = this.views;
+		let _ = this, views = this.views;
 		if (this.window) {
-			var animate = android.view.animation.AlphaAnimation(1, 0);
+			let animate = android.view.animation.AlphaAnimation(1, 0);
 			views.layout.startAnimation(animate);
 			animate.setDuration(400);
 			views.root.postDelayed(function() {

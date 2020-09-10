@@ -9,7 +9,7 @@ function Project(obj) {
 			return;
 		}
 		try {
-			var scope = this;
+			let scope = this;
 			this.isAutosaving = true;
 			this.updateCurrentWorker();
 			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
@@ -20,7 +20,7 @@ function Project(obj) {
 		}
 	};
 	this.getProjectTime = function() {
-		var time = new Date(this.time);
+		let time = new Date(this.time);
 		if (!this.time) return translate("Autosave %s", random(0, 10000000));
 		return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
 			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + ":" +
@@ -29,8 +29,8 @@ function Project(obj) {
 	};
 	
 	this.getByType = function(type) {
-		var obj = this.getAll(), values = new Array();
-		for (var i = 0; i < this.getCount(); i++)
+		let obj = this.getAll(), values = new Array();
+		for (let i = 0; i < this.getCount(); i++)
 			obj[i].type == type && values.push(i);
 		return values;
 	};
@@ -54,7 +54,7 @@ function Project(obj) {
 		return this.currentId;
 	};
 	this.getCurrentObject = function() {
-		var id = this.getCurrentId(),
+		let id = this.getCurrentId(),
 			obj = this.getAll()[id];
 		if (obj) return obj;
 		delete this.worker;
@@ -62,14 +62,14 @@ function Project(obj) {
 		return null;
 	};
 	this.getCurrentType = function() {
-		var object = this.getCurrentObject();
+		let object = this.getCurrentObject();
 		return object ? object.type : null;
 	};
 	this.getCurrentWorker = function() {
 		return this.worker || null;
 	};
 	this.updateCurrentWorker = function() {
-		var id = this.getCurrentId(),
+		let id = this.getCurrentId(),
 			worker = this.getCurrentWorker();
 		if (!worker || id < 0) return;
 		this.getAll()[id] = worker.getProject();
@@ -78,7 +78,7 @@ function Project(obj) {
 		this.worker = worker;
 	};
 	this.getIdByObject = function(obj) {
-		var content = this.getAll();
+		let content = this.getAll();
 		return content.indexOf(obj);
 	};
 	this.setCurrentlyId = function(id) {
@@ -92,12 +92,12 @@ function Project(obj) {
 }
 
 function monthToName(number) {
-	var monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
 }
 
 function stringifyObject(obj, identate, action, hint, complete) {
-	var progress = 0, count = 0, indexated = false, done = false, active = Date.now();
+	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
 	function recursiveHint() {
 		handle(function() {
 			if (indexated) showHint((hint || translate("Stringify")) + " (" + Math.floor(progress / count * 100) + "%)");
@@ -109,7 +109,7 @@ function stringifyObject(obj, identate, action, hint, complete) {
 		}, 50);
 	}
 	if (showProcesses) {
-		var window = UniqueHelper.getWindow("HintAlert"),
+		let window = UniqueHelper.getWindow("HintAlert"),
 			state = hintStackableDenied, max = maximumHints;
 		window && window.setStackable(false);
 		maximumHints = 0, hintStackableDenied = true;
@@ -119,7 +119,7 @@ function stringifyObject(obj, identate, action, hint, complete) {
 		try {
 			count++;
 			if (obj && typeof obj == "object")
-				for (var i in obj)
+				for (let i in obj)
 					recursiveIndexate(obj[i]);
 		} catch(e) {
 			count++;
@@ -128,7 +128,7 @@ function stringifyObject(obj, identate, action, hint, complete) {
 	handleThread(function() {
 		try {
 			recursiveIndexate(obj), indexated = true;
-			var result = stringifyObjectUnsafe(obj, identate, {
+			let result = stringifyObjectUnsafe(obj, identate, {
 				onUpdate: function() {
 					progress++;
 				},
@@ -168,9 +168,9 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 					return "" + obj;
 				case "object":
 					if(typeof obj.length != "undefined") {
-						var array = new Array(), tabbed = false;
-						for (var i = 0; i < obj.length; i++) {
-							var result = recursiveStringify(obj[i], tabs);
+						let array = new Array(), tabbed = false;
+						for (let i = 0; i < obj.length; i++) {
+							let result = recursiveStringify(obj[i], tabs);
 							if(result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 48) {
@@ -184,10 +184,10 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 						}
 						return "[" + array.join(",") + "]";
 					} else {
-						var array = new Array(), tabbed = false, last, count = 0;
-						for (var c in obj) last = c, count++;
-						for (var i in obj) {
-							var result = recursiveStringify(obj[i], tabs);
+						let array = new Array(), tabbed = false, last, count = 0;
+						for (let c in obj) last = c, count++;
+						for (let i in obj) {
+							let result = recursiveStringify(obj[i], tabs);
 							if (result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 8) {
@@ -199,7 +199,7 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 								} else array.push("\"" + i + "\":" + result);
 							}
 						}
-						var joined = array.join(",");
+						let joined = array.join(",");
 						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
 							(identate ? tabbed ? tabs.replace("\t", "") + "\n}" : " }" : "}");
 					}
@@ -217,9 +217,9 @@ function readFile(path, isBytes, action) {
 	try {
 		handleThread(function() {
 			try {
-				var file = new java.io.File("" + path);
+				let file = new java.io.File("" + path);
 				if (!file.exists()) return;
-				var readed = isBytes ? Files.readBytes(file) : Files.read(file);
+				let readed = isBytes ? Files.readBytes(file) : Files.read(file);
 				action && action(readed);
 			} catch(e) {
 				reportError(e);
@@ -244,7 +244,7 @@ function compileToProduce(string) {
 function exportProject(object, isAutosave, path, action) {
 	try {
 		stringifyObject(object, false, function(result) {
-			var file = new java.io.File("" + path);
+			let file = new java.io.File("" + path);
 			result = compileToProduce(result);
 			file.getParentFile().mkdirs();
 			if (!isAutosave && file.exists()) {
@@ -281,7 +281,7 @@ function decompileFromProduce(bytes) {
 function importProject(path, action) {
 	try {
 		readFile(path, true, function(bytes) {
-			var result = decompileFromProduce(bytes),
+			let result = decompileFromProduce(bytes),
 				data = compileData(result, "object");
 			if (data && !(data instanceof Error))
 				typeof data.length != "undefined" ?
@@ -298,9 +298,9 @@ function importProject(path, action) {
 	}
 }
 
-var ProjectEditor = {
+let ProjectEditor = {
 	create: function() {
-		var opened = this.opened = new Project();
+		let opened = this.opened = new Project();
 		return (opened.time = Date.now(), opened);
 	},
 	addWorker: function(worker) {
@@ -309,52 +309,52 @@ var ProjectEditor = {
 		return worker;
 	},
 	addBlock: function() {
-		var worker = new BlockWorker();
+		let worker = new BlockWorker();
 		return this.addWorker(worker);
 	},
 	addEntity: function() {
-		var worker = new EntityWorker();
+		let worker = new EntityWorker();
 		return this.addWorker(worker);
 	},
 	addTransition: function() {
-		var worker = new TransitionWorker();
+		let worker = new TransitionWorker();
 		return this.addWorker(worker);
 	},
 	getProject: function() {
 		return this.opened;
 	},
 	getEditorById: function(index) {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return null;
-		var obj = project.getAll();
+		let obj = project.getAll();
 		return obj[index] || null;
 	},
 	isInitialized: function() {
 		return !!this.getProject();
 	},
 	isOpened: function() {
-		var project = this.getProject();
+		let project = this.getProject();
 		if(!project) return false;
 		return project.isOpened;
 	},
 	getCount: function() {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return 0;
 		return project.getCount();
 	},
 	setOpenedState: function(state) {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return;
 		project.isOpened = !!state;
 	},
 	getCurrentType: function() {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project || !project.isOpened)
 			return "none";
 		return project.getCurrentType();
 	},
 	initializeAutosave: function() {
-		var scope = this, project = this.getProject();
+		let scope = this, project = this.getProject();
 		if (!autosave || this.thread) {
 			project.updateCurrentWorker();
 			return;
@@ -368,18 +368,18 @@ var ProjectEditor = {
 		});
 	},
 	indexOf: function(obj) {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return -1;
 		return project.getAll().indexOf(obj);
 	},
 	setupEditor: function(id, worker) {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return;
 		project.switchToWorker(worker);
 		project.setCurrentlyId(id);
 	},
 	popEditor: function() {
-		var project = this.getProject();
+		let project = this.getProject();
 		if (!project) return;
 		project.getAll().pop();
 		delete project.worker;
@@ -387,24 +387,24 @@ var ProjectEditor = {
 };
 
 function compileScript(text) {
-	var code = "(function() {\n" + text + "\nreturn __data__;\n})();",
+	let code = "(function() {\n" + text + "\nreturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "Dev Editor$import.js");
 	noImportedScripts = false, __config__.set("user_login.imported_script", true);
 	return scope.error ? (reportError(scope.error), null) : scope.result;
 }
 
 function getScriptScope() {
-	var __data__ = [];
-	var Callback = {
+	let __data__ = [];
+	let Callback = {
 		addCallback: function(name, func) {}
 	};
-	var BlockID = {};
-	var IDRegistry = {
+	let BlockID = {};
+	let IDRegistry = {
 		fromString: function(id) {
 			return BlockID[id] || -1;
 		},
 		genBlockID: function(name) {
-			var nid = (BlockID[name] = __data__.length);
+			let nid = (BlockID[name] = __data__.length);
 			__data__[nid] = {
 				type: "block",
 				define: {
@@ -416,9 +416,9 @@ function getScriptScope() {
 			return nid;
 		}
 	};
-	var Block = {
+	let Block = {
 		createBlock: function(id, data, special) {
-			var nid = IDRegistry.fromString(id);
+			let nid = IDRegistry.fromString(id);
 			if (!nid) return;
 			data && (__data__[nid].define.data = data);
 			special && (__data__[nid].define.special = special);
@@ -443,7 +443,7 @@ function getScriptScope() {
 			});
 		}
 	};
-	var ICRender = {
+	let ICRender = {
 		Model: function() {
 			this.renderer = [];
 			this.addEntry = function(model) {
@@ -453,7 +453,7 @@ function getScriptScope() {
 			};
 		}
 	};
-	var BlockRenderer = {
+	let BlockRenderer = {
 		Model: function() {
 			this.boxes = [];
 			this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
@@ -482,7 +482,7 @@ function getScriptScope() {
 			this.setStaticICRender(id, meta, render);
 		}
 	};
-	var Transition = function(obj) {
+	let Transition = function(obj) {
 		this.__data__ = (__data__[__data__.length] = {
 			type: "transition",
 			define: {
@@ -494,7 +494,7 @@ function getScriptScope() {
 		});
 		this.__compareVectorPoint = function(index, request) {};
 		this.addFrame = function(x, y, z, yaw, pitch, duration, interpolator) {
-			var index = this.__data__.animation[0].frames.push({
+			let index = this.__data__.animation[0].frames.push({
 				x: x, y: y, z: z,
 				yaw: yaw, pitch: pitch,
 				duration: duration || 1 / (this.__data__.define.fps || 60)
@@ -524,7 +524,7 @@ function getScriptScope() {
 		this.withOnFrameListener = function(listener) {};
 		this.withOnFinishListener = function(listener) {};
 		this.withFrames = function(frames) {
-			for (var i = 0; i < frames.length; i++)
+			for (let i = 0; i < frames.length; i++)
 				this.addFrame(frames[i].x, frames[i].y, frames[i].z,
 					frames[i].yaw, frames[i].pitch,
 					frames[i].duration, frames[i].vector);

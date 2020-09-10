@@ -1,15 +1,15 @@
-var HintAlert = function() {
+let HintAlert = function() {
 	this.setGravity(Ui.Gravity.CENTER | Ui.Gravity.BOTTOM);
 	this.setWidth(Ui.Display.MATCH);
 	this.setTouchable(false);
 	
-	var actor = new SlideActor(Ui.Gravity.BOTTOM),
+	let actor = new SlideActor(Ui.Gravity.BOTTOM),
 		interpolator = new DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
 	actor.setDuration(400);
 	this.setEnterActor(actor);
 	
-	var actor = new ActorSet(),
+	let actor = new ActorSet(),
 		slide = new SlideActor(Ui.Gravity.BOTTOM),
 		fade = new FadeActor(FadeActor.OUT);
 	actor.setOrdering(ActorSet.TOGETHER);
@@ -24,8 +24,8 @@ HintAlert.prototype = new UniqueWindow();
 HintAlert.prototype.TYPE = "HintAlert";
 HintAlert.prototype.time = 3000;
 HintAlert.prototype.reset = function() {
-	var views = (this.views = {});
-	var content = new android.widget.FrameLayout(context);
+	let views = (this.views = {});
+	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
 	
 	views.layout = new android.widget.LinearLayout(context);
@@ -70,7 +70,7 @@ HintAlert.prototype.hasMoreStack = function() {
 	return this.isStackable() ? this.stack.length > 0 : false;
 };
 HintAlert.prototype.addActionForHint = function(hint, action) {
-	var scope = this;
+	let scope = this;
 	action && handle(function() {
 		try { scope.isOpened() && scope.action &&
 			action && action(scope); }
@@ -83,14 +83,14 @@ HintAlert.prototype.getTimeForNextHint = function() {
 HintAlert.prototype.getTimeForHint = function(hint) {
 	if (this.alreadyHasHint(hint)) {
 		if (this.views.text.getText() == hint) return 0;
-		var action = this.action ? this.action.getLeftTime() : 0;
+		let action = this.action ? this.action.getLeftTime() : 0;
 		return this.stack.indexOf(hint) * this.time + action;
 	}
 	return 0;
 };
 // TODO: Why this function if text != hint ALWAYS return false
 HintAlert.prototype.alreadyHasHint = function(hint) {
-	var stacked = this.isStackable() ? this.stack.indexOf(hint) != -1 : false;
+	let stacked = this.isStackable() ? this.stack.indexOf(hint) != -1 : false;
 	return this.views.text.getText() == hint || stacked;
 };
 HintAlert.prototype.clearStack = function() {
@@ -105,7 +105,7 @@ HintAlert.prototype.setAutoReawait = function(enabled) {
 };
 HintAlert.prototype.replayHint = function(hint) {
 	this.addActionForHint(hint, function(scope) {
-		var actor = new FadeActor();
+		let actor = new FadeActor();
 		actor.setInterpolator(new CycleInterpolator(1.3));
 		actor.setDuration(scope.time / 8);
 		scope.views.text.setVisibility(Ui.Visibility.INVISIBLE);
@@ -114,7 +114,7 @@ HintAlert.prototype.replayHint = function(hint) {
 	});
 };
 HintAlert.prototype.setHintForce = function(hint) {
-	var actor = new FadeActor();
+	let actor = new FadeActor();
 	actor.setInterpolator(new OvershootInterpolator());
 	actor.setDuration(this.time / 8);
 	this.views.text.setVisibility(Ui.Visibility.INVISIBLE);
@@ -141,7 +141,7 @@ HintAlert.prototype.reawait = function() {
 };
 HintAlert.prototype.__showHA = HintAlert.prototype.show;
 HintAlert.prototype.show = function() {
-	var scope = this;
+	let scope = this;
 	if (!this.action) {
 		this.action = handleAction(function() {
 			handle(function() {
@@ -191,7 +191,7 @@ function showHint(hint, color, reawait) {
 	}
 	context.runOnUiThread(function() {
 		try {
-			var window = new HintAlert();
+			let window = new HintAlert();
 			if (window.isAttached())
 				window = UniqueHelper.getWindow(window);
 			window.setStackable(!hintStackableDenied);
@@ -218,9 +218,9 @@ showHint.handleCounter = function() {
 };
 showHint.launchStacked = new Array();
 showHint.unstackLaunch = function() {
-	var stack = this.launchStacked;
+	let stack = this.launchStacked;
 	delete this.launchStacked;
 	delete this.unstackLaunch;
-	for (var i = 0; i < stack.length; i++)
+	for (let i = 0; i < stack.length; i++)
 		showHint(stack[i].hint, stack[i].color, stack[i].reawait);
 };

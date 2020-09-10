@@ -1,7 +1,7 @@
 // TODO: Refactor this code.
 function TreePopup() {
 	this.reset = function() {
-		var views = (this.views = { groups: [], items: [], footers: [] });
+		let views = (this.views = { groups: [], items: [], footers: [] });
 		this.tree = {};
 		views.root = new android.widget.FrameLayout(context);
 		views.layout = new android.widget.LinearLayout(context);
@@ -18,7 +18,7 @@ function TreePopup() {
 		views.title.setTypeface(typeface);
 		views.layout.addView(views.title);
 		
-		var scroll = new android.widget.HorizontalScrollView(context);
+		let scroll = new android.widget.HorizontalScrollView(context);
 		scroll.setLayoutParams(android.widget.RelativeLayout.LayoutParams(Ui.getY(400), Ui.getY(350)));
 		views.layout.addView(scroll);
 		views.scroll = new android.widget.ScrollView(context);
@@ -32,7 +32,7 @@ function TreePopup() {
 		views.layout.addView(views.footer);
 	};
 	this.addGroup = function(name, parent) {
-		var _ = this, views = this.views, index = views.groups.length;
+		let _ = this, views = this.views, index = views.groups.length;
 		parent && (this.tree[name] = parent);
 		views.groups[index] = new android.widget.LinearLayout(context);
 		views.groups[index].setPadding(this.getParentsCount(name) * Ui.getY(30) + Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
@@ -43,12 +43,12 @@ function TreePopup() {
 		});
 		views.content.addView(views.groups[index]);
 		
-		var image = new android.widget.ImageView(context);
+		let image = new android.widget.ImageView(context);
 		image.setLayoutParams(android.widget.RelativeLayout.LayoutParams(Ui.getY(30), Ui.getY(30)));
 		image.setImageDrawable(ImageFactory.getDrawable("controlExpandClose"));
 		views.groups[index].addView(image);
 		
-		var text = new android.widget.TextView(context);
+		let text = new android.widget.TextView(context);
 		text.setPadding(Ui.getY(15), 0, 0, 0);
 		text.setTextSize(Ui.getFontSize(20));
 		text.setTextColor(Ui.Color.WHITE);
@@ -57,19 +57,19 @@ function TreePopup() {
 		views.groups[index].addView(text);
 	};
 	this.addItem = function(name, parent) {
-		var _ = this, views = this.views, index = views.items.length;
+		let _ = this, views = this.views, index = views.items.length;
 		views.items[index] = new android.widget.LinearLayout(context);
 		views.items[index].setPadding((this.getParentsCount(parent) + 1) * Ui.getY(30) + Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
 		views.items[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(-1, Ui.getY(60)));
 		views.items[index].setOnClickListener(function() {
 			_.selectItem(index);
-			var parents = _.getParents(parent);
+			let parents = _.getParents(parent);
 			parents.push(parent);
 			_.__click && _.__click(name, parents);
 		});
 		views.content.addView(views.items[index]);
 		
-		var text = new android.widget.TextView(context);
+		let text = new android.widget.TextView(context);
 		text.setPadding(Ui.getY(15), 0, 0, 0);
 		text.setTextSize(Ui.getFontSize(20));
 		text.setTextColor(Ui.Color.WHITE);
@@ -78,7 +78,7 @@ function TreePopup() {
 		views.items[index].addView(text);
 	};
 	this.addFooterElement = function(src, click) {
-		var views = this.views, index = views.items.length;
+		let views = this.views, index = views.items.length;
 		views.footers[index] = new android.widget.ImageView(context);
 		views.footers[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Ui.getY(60), Ui.getY(60)));
 		views.footers[index].setPadding(Ui.getY(9), Ui.getY(9), Ui.getY(9), Ui.getY(9));
@@ -93,7 +93,7 @@ function TreePopup() {
 		return this.tree[name];
 	};
 	this.getParents = function(name) {
-		var parents = [];
+		let parents = [];
 		while ((i = this.getParent(name)))
 			(name = i) && parents.push(name);
 		return parents.reverse();
@@ -105,13 +105,13 @@ function TreePopup() {
 		this.views.title.setText(title);
 	};
 	this.selectGroup = function(index) {
-		var groups = this.views.groups;
+		let groups = this.views.groups;
 		this.group + "" != "undefined" && groups[this.group].setBackgroundDrawable(null);
 		groups[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 		this.group = index;
 	};
 	this.selectItem = function(index) {
-		var items = this.views.items;
+		let items = this.views.items;
 		this.item + "" != "undefined" && items[this.item].setBackgroundDrawable(null);
 		items[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 		this.item = index;
@@ -148,22 +148,22 @@ function TreePopup() {
 	};
 	this.update = function() {};
 	this.show = function() {
-		var views = this.views;
+		let views = this.views;
 		views.root.post(function() {
-			var animate = android.view.animation.AlphaAnimation(0, 1);
+			let animate = android.view.animation.AlphaAnimation(0, 1);
 			views.layout.startAnimation(animate);
 			animate.setDuration(400);
 		});
-		var place = Popups.getAvailablePlace();
+		let place = Popups.getAvailablePlace();
 		this.window = new android.widget.PopupWindow(views.root, Ui.Display.WRAP, Ui.Display.WRAP);
 		this.window.setAttachedInDecor(false);
 		this.window.showAtLocation(context.getWindow().getDecorView(), 0, place.x, place.y);
 		this.__show && this.__show();
 	};
 	this.hide = function() {
-		var _ = this, views = this.views;
+		let _ = this, views = this.views;
 		if (this.window) {
-			var animate = android.view.animation.AlphaAnimation(1, 0);
+			let animate = android.view.animation.AlphaAnimation(1, 0);
 			views.layout.startAnimation(animate);
 			animate.setDuration(400);
 			views.root.postDelayed(function() {

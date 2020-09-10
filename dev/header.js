@@ -26,44 +26,44 @@
 MCSystem.setLoadingTip("Initialization Script");
 
 // Menu content settings
-var warningMessage = null;
-var maxWindows = 5;
-var saveCoords = false;
-var autosave = true;
-var autosaveInterface = false;
-var autosavePeriod = 45;
-var entityBoxType = true;
-var fontScale = uiScaler = 1.0;
-var drawSelection = true;
-var autosaveProjectable = true;
-var injectBorder = false;
-var transparentBoxes = true;
-var menuDividers = false;
-var supportSupportables = true;
-var loadSupportables = true;
-var hintStackableDenied = true;
-var alwaysIndexate = false;
-var maximumHints = 50;
-var showProcesses = true;
-var noImportedScripts = true;
-var keyExpiresSoon = false;
-var ignoreKeyDeprecation = false;
-var projectHeaderBackground = false;
-var debugAnimationsEnabled = true;
-var useOldExplorer = false;
-var showedFocusableAnimationsHint = false;
-var importAutoselect = false;
+let warningMessage = null;
+let maxWindows = 5;
+let saveCoords = false;
+let autosave = true;
+let autosaveInterface = false;
+let autosavePeriod = 45;
+let entityBoxType = true;
+let fontScale = uiScaler = 1.0;
+let drawSelection = true;
+let autosaveProjectable = true;
+let injectBorder = false;
+let transparentBoxes = true;
+let menuDividers = false;
+let supportSupportables = true;
+let loadSupportables = true;
+let hintStackableDenied = true;
+let alwaysIndexate = false;
+let maximumHints = 50;
+let showProcesses = true;
+let noImportedScripts = true;
+let keyExpiresSoon = false;
+let ignoreKeyDeprecation = false;
+let projectHeaderBackground = false;
+let debugAnimationsEnabled = true;
+let useOldExplorer = false;
+let showedFocusableAnimationsHint = false;
+let importAutoselect = false;
 
 // Interface and mod data
-var __code__ = "develop-alpha-0.3.3-05.09.2020-0";
-var __author__ = __mod__.getInfoProperty("author");
-var __version__ = __mod__.getInfoProperty("version");
-var __description__ = __mod__.getInfoProperty("description");
-var typeface = android.graphics.Typeface.MONOSPACE;
-var isSupportEnv = false, currentEnvironment = __name__;
+const __code__ = "develop-alpha-0.3.3-05.09.2020-0";
+const __author__ = __mod__.getInfoProperty("author");
+const __version__ = __mod__.getInfoProperty("version");
+const __description__ = __mod__.getInfoProperty("description");
+let typeface = android.graphics.Typeface.MONOSPACE;
+let isSupportEnv = false, currentEnvironment = __name__;
 
 MCSystem.setLoadingTip("Import Libraries");
-var isInstant = !!this.isInstant;
+const isInstant = !!this.isInstant;
 IMPORT("Retention:2");
 
 reportError.setTitle(__name__ + " " + __version__);
@@ -80,9 +80,9 @@ reportError.addDebugValue("moveMapping", saveCoords);
 reportError.addDebugValue("useBoxSizes", uiScaler);
 reportError.addDebugValue("drawSelection", drawSelection);
 
-var alreadyHasDate = false;
+let alreadyHasDate = false;
 reportError.setStackAction(function(err) {
-	var message = reportError.getCode(err) + ": " + reportError.getStack(err),
+	let message = reportError.getCode(err) + ": " + reportError.getStack(err),
 		file = new java.io.File(Dirs.LOGGING, __code__ + ".log");
 	if (!file.exists()) Files.write(file, reportError.prepareDebugInfo());
 	if (!reportError.alreadyHasDate) {

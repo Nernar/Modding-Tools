@@ -1,4 +1,4 @@
-var ExecutableSupport = {
+let ExecutableSupport = {
 	mods: new Object(),
 	getClassLoader: function() {
 		return context.getClassLoader();
@@ -25,7 +25,7 @@ var ExecutableSupport = {
 	checkDirectory: function(dir, isNative) {
 		if (!dir.endsWith("/")) dir += "/";
 		dir = isNative ? dir : Dirs.SUPPORT + "/" + dir;
-		var file = new java.io.File(dir);
+		let file = new java.io.File(dir);
 		if (file.exists()) return dir;
 		Logger.Log("Can't find executable directory " + file.getName() + ", ignoring", "Dev-Core");
 		return null;
@@ -35,20 +35,20 @@ var ExecutableSupport = {
 	},
 	buildDirectory: function(dir, isNative) {
 		if (!(dir = this.checkDirectory(dir, isNative))) return null;
-		var builder = this.getModBuilder(), name = new java.io.File(dir).getName();
+		let builder = this.getModBuilder(), name = new java.io.File(dir).getName();
 		if (!builder) throw "Submodule supportable " + name + " load cancelled";
-		var mod = builder.buildModForDir(dir);
+		let mod = builder.buildModForDir(dir);
 		if (!mod) MCSystem.throwException("Build mod directory " + name + " failed, api disabled");
 		return (mod.onImport(), this.mods[mod.getName()] = mod, mod.getName());
 	},
 	launchMod: function(name) {
-		var mod = this.getSupportable(name);
+		let mod = this.getSupportable(name);
 		if (!mod) throw "Can't launch mod " + name;
 		mod.RunPreloaderScripts(), mod.RunLauncherScripts();
 		Logger.Log("Injected mod supportable " + name + " prepared", "Dev-Core");
 	},
 	getProperty: function(name, property) {
-		var mod = this.getSupportable(name);
+		let mod = this.getSupportable(name);
 		if(!mod) return null;
 		try {
 			return "" + mod.getInfoProperty(property);
@@ -71,11 +71,11 @@ var ExecutableSupport = {
 		return "(" + action + ")();";
 	},
 	injectCustomEval: function(name, action) {
-		var mod = this.getSupportable(name);
+		let mod = this.getSupportable(name);
 		if (!mod) throw "Can't find mod " + name;
-		var results = [], ats = this.actionToString(action);
-		for (var i = 0; i < mod.compiledModSources.size(); i++) {
-			var source = mod.compiledModSources.get(i);
+		let results = [], ats = this.actionToString(action);
+		for (let i = 0; i < mod.compiledModSources.size(); i++) {
+			let source = mod.compiledModSources.get(i);
 			results.push(this.evaluateAtExecutable(source, ats));
 		}
 		return results;
@@ -118,7 +118,7 @@ var ExecutableSupport = {
 		}
 	},
 	isEnabled: function(name) {
-		var mod = this.getSupportable(name);
+		let mod = this.getSupportable(name);
 		if (!mod) throw "Can't find mod " + name;
 		return loadSupportables && mod.isEnabled;
 	}
@@ -126,10 +126,10 @@ var ExecutableSupport = {
 
 function importMod(dir, action) {
 	try {
-		var name = ExecutableSupport.buildDirectory(dir);
+		let name = ExecutableSupport.buildDirectory(dir);
 		if (name && ExecutableSupport.isEnabled(name)) {
 			ExecutableSupport.launchMod(name);
-			var supportable = ExecutableSupport.buildSupportable(name);
+			let supportable = ExecutableSupport.buildSupportable(name);
 			supportable.description = ExecutableSupport.getProperty(name, "description");
 			supportable.version = ExecutableSupport.getProperty(name, "version");
 			supportable.author = ExecutableSupport.getProperty(name, "author");

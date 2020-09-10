@@ -22,10 +22,16 @@ function updateSettings() {
 		drawSelection = __config__.getBool("render.draw_selection");
 		injectBorder = __config__.getBool("render.inject_border");
 		transparentBoxes = __config__.getBool("render.transparent_boxes");
-		if (!isHorizon) (transparentBoxes = false, __config__.set("render.transparent_boxes", transparentBoxes));
+		if (!isHorizon) {
+			transparentBoxes = false;
+			__config__.set("render.transparent_boxes", transparentBoxes);
+		}
 		hintStackableDenied = !__config__.getBool("performance.hint_stackable");
-		if (supportSupportables) loadSupportables = __config__.getBool("supportable.enabled");
-		else Logger.Log("Supportables disabled, because it's not approved by developer", "Dev-Core");
+		if (supportSupportables) {
+			loadSupportables = __config__.getBool("supportable.enabled");
+		} else {
+			Logger.Log("Supportables disabled, because it's not approved by developer", "Dev-Core");
+		}
 		debugAnimationsEnabled = __config__.getBool("performance.debug_animations");
 		projectHeaderBackground = __config__.getBool("interface.header_background");
 		showProcesses = __config__.getBool("performance.show_processes");
