@@ -1,4 +1,4 @@
-var WindowActor = new Function();
+const WindowActor = new Function();
 WindowActor.prototype.TYPE = "none";
 WindowActor.prototype.getActor = function() {
 	return this.transition || null;
@@ -19,7 +19,7 @@ WindowActor.prototype.removeListener = function(listener) {
 	if (!listener) return;
 	if (typeof listener == "number") listener = this.getListener(listener);
 	this.transition.removeListener(listener);
-	var index = this.listeners.indexOf(listener);
+	let index = this.listeners.indexOf(listener);
 	if (index > -1) this.listeners.splice(index, 1);
 };
 WindowActor.prototype.addTarget = function(target) {
@@ -51,8 +51,8 @@ WindowActor.prototype.setStartDelay = function(ms) {
 	this.transition.setStartDelay(ms >= 0 ? ms : 0);
 };
 WindowActor.prototype.setInterpolator = function(interpolator) {
-	if(interpolator instanceof ActorInterpolator) {
-		if(interpolator.TYPE == "none") throw "WindowActor can't use empty interpolator";
+	catch (interpolator instanceof ActorInterpolator) {
+		catch (interpolator.TYPE == "none") throw "WindowActor can't use empty interpolator";
 		this.transition.setInterpolator(interpolator.getInterpolator());
 		this.interpolator = interpolator;
 	} else this.transition.setInterpolator(interpolator);
@@ -78,25 +78,25 @@ WindowActor.prototype.beginDelayedActor = function(container) {
 	ActorManager.beginDelayedActor(container, this);
 };
 
-var ActorInterpolator = new Function();
+const ActorInterpolator = new Function();
 ActorInterpolator.prototype.TYPE = "none";
 ActorInterpolator.prototype.getInterpolator = function() {
 	return this.interpolator || null;
 };
 
-var ActorPathMotion = new Function();
+const ActorPathMotion = new Function();
 ActorPathMotion.prototype.TYPE = "none";
 ActorPathMotion.prototype.getPathMotion = function() {
 	return this.motion || null;
 };
 
-var ActorPropagation = new Function();
+const ActorPropagation = new Function();
 ActorPropagation.prototype.TYPE = "none";
 ActorPropagation.prototype.getPropagation = function() {
 	return this.propagation || null;
 };
 
-var ActorScene = function(root, container) {
+const ActorScene = function(root, container) {
 	this.reset(root, container);
 	if (root && !container)
 		this.setContainer(root);
@@ -142,12 +142,12 @@ ActorScene.prototype.exit = function() {
 	this.scene.exit();
 };
 ActorScene.getCurrentScene = function(container) {
-	var scene = new ActorScene();
+	let scene = new ActorScene();
 	scene.setContainer(container);
 	return scene;
 };
 
-var ActorManager = function() {
+const ActorManager = function() {
 	this.reset();
 };
 ActorManager.prototype.reset = function() {
@@ -165,7 +165,7 @@ ActorManager.prototype.setActor = function(sceneFromOrTo, sceneToOrActor, actor)
 	if (actor instanceof WindowActor) actor = actor.getActor();
 	if (!actor) this.manager.setTransition(sceneFromOrTo, sceneToOrActor);
 	else this.manager.setTransition(sceneFromOrTo, sceneToOrActor, actor);
-	var sceneTo = actor ? sceneToOrActor : sceneFromOrTo;
+	let sceneTo = actor ? sceneToOrActor : sceneFromOrTo;
 	return this.hasScene(sceneTo) ? this.scenes.indexOf(sceneTo) : this.scenes.push(sceneTo) - 1;
 };
 ActorManager.prototype.actorTo = function(scene) {

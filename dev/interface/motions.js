@@ -1,4 +1,4 @@
-var ArcMotion = function() {
+const ArcMotion = function() {
 	this.reset();
 };
 ArcMotion.prototype = new ActorPathMotion();
@@ -25,7 +25,7 @@ ArcMotion.prototype.setMinimumVerticalAngle = function(angle) {
 	this.motion.setMinimumVerticalAngle(angle || 0);
 };
 
-var PatternPathMotion = function() {
+const PatternPathMotion = function() {
 	this.reset();
 };
 PatternPathMotion.prototype = new ActorPathMotion();
@@ -40,10 +40,10 @@ PatternPathMotion.prototype.setPatternPath = function(path) {
 	this.motion.setPatternPath(path || null);
 };
 
-var VisibilityPropagation = new Function();
+const VisibilityPropagation = new Function();
 VisibilityPropagation.prototype = new ActorPropagation();
 
-var CircularPropagation = function() {
+const CircularPropagation = function() {
 	this.reset();
 };
 CircularPropagation.prototype = new VisibilityPropagation();
@@ -58,7 +58,7 @@ CircularPropagation.prototype.setPropagationSpeed = function(speed) {
 	this.propagation.setPropagationSpeed(speed);
 };
 
-var SidePropagation = function() {
+const SidePropagation = function() {
 	this.reset();
 };
 SidePropagation.prototype = new VisibilityPropagation();
@@ -79,7 +79,7 @@ SidePropagation.prototype.setSide = function(side) {
 	this.propagation.setSide(side);
 };
 
-var AccelerateInterpolator = function(cycle) {
+const AccelerateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
 AccelerateInterpolator.prototype = new ActorInterpolator();
@@ -89,7 +89,7 @@ AccelerateInterpolator.prototype.reset = function(cycle) {
 	else this.interpolator = new android.view.animation.AccelerateInterpolator(cycle);
 };
 
-var DecelerateInterpolator = function(cycle) {
+const DecelerateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
 DecelerateInterpolator.prototype = new ActorInterpolator();
@@ -99,7 +99,7 @@ DecelerateInterpolator.prototype.reset = function(cycle) {
 	else this.interpolator = new android.view.animation.DecelerateInterpolator(cycle);
 };
 
-var AccelerateDecelerateInterpolator = function() {
+const AccelerateDecelerateInterpolator = function() {
 	this.reset();
 };
 AccelerateDecelerateInterpolator.prototype = new ActorInterpolator();
@@ -108,7 +108,7 @@ AccelerateDecelerateInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.AccelerateDecelerateInterpolator();
 };
 
-var AnticipateInterpolator = function(cycle) {
+const AnticipateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
 AnticipateInterpolator.prototype = new ActorInterpolator();
@@ -118,7 +118,7 @@ AnticipateInterpolator.prototype.reset = function(cycle) {
 	else this.interpolator = new android.view.animation.AnticipateInterpolator(cycle);
 };
 
-var OvershootInterpolator = function(cycle) {
+const OvershootInterpolator = function(cycle) {
 	this.reset(cycle);
 };
 OvershootInterpolator.prototype = new ActorInterpolator();
@@ -128,7 +128,7 @@ OvershootInterpolator.prototype.reset = function(cycle) {
 	else this.interpolator = new android.view.animation.OvershootInterpolator(cycle);
 };
 
-var AnticipateOvershootInterpolator = function(cycle1, cycle2) {
+const AnticipateOvershootInterpolator = function(cycle1, cycle2) {
 	this.reset(cycle1, cycle2);
 };
 AnticipateOvershootInterpolator.prototype = new ActorInterpolator();
@@ -139,7 +139,7 @@ AnticipateOvershootInterpolator.prototype.reset = function(cycle1, cycle2) {
 	else this.interpolator = new android.view.animation.AnticipateOvershootInterpolator(cycle1, cycle2);
 };
 
-var BounceInterpolator = function() {
+const BounceInterpolator = function() {
 	this.reset();
 };
 BounceInterpolator.prototype = new ActorInterpolator();
@@ -148,7 +148,7 @@ BounceInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.BounceInterpolator();
 };
 
-var PathInterpolator = function(path) {
+const PathInterpolator = function(path) {
 	this.reset(psth);
 };
 PathInterpolator.prototype = new ActorInterpolator();
@@ -162,7 +162,7 @@ PathInterpolator.prototype.getPath = function() {
 	return this.path || null;
 };
 
-var CycleInterpolator = function(cycle) {
+const CycleInterpolator = function(cycle) {
 	this.reset(cycle);
 };
 CycleInterpolator.prototype = new ActorInterpolator();
@@ -172,7 +172,7 @@ CycleInterpolator.prototype.reset = function(cycle) {
 	this.interpolator = new android.view.animation.CycleInterpolator(cycle);
 };
 
-var LinearInterpolator = function() {
+const LinearInterpolator = function() {
 	this.reset();
 };
 LinearInterpolator.prototype = new ActorInterpolator();
@@ -181,7 +181,7 @@ LinearInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.LinearInterpolator();
 };
 
-var FastOutLinearInInterpolator = function() {
+const FastOutLinearInInterpolator = function() {
 	this.reset();
 };
 FastOutLinearInInterpolator.prototype = new ActorInterpolator();
@@ -190,7 +190,7 @@ FastOutLinearInInterpolator.prototype.reset = function() {
 	this.interpolator = new android.support.v4.view.animation.FastOutLinearInInterpolator();
 };
 
-var FastOutSlowInInterpolator = function() {
+const FastOutSlowInInterpolator = function() {
 	this.reset();
 };
 FastOutSlowInInterpolator.prototype = new ActorInterpolator();
@@ -199,7 +199,7 @@ FastOutSlowInInterpolator.prototype.reset = function() {
 	this.interpolator = new android.support.v4.view.animation.FastOutSlowInInterpolator();
 };
 
-var LinearOutSlowInInterpolator = function() {
+const LinearOutSlowInInterpolator = function() {
 	this.reset();
 };
 LinearOutSlowInInterpolator.prototype = new ActorInterpolator();

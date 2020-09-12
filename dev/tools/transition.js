@@ -140,7 +140,7 @@ let TransitionEditor = {
 		group.addItem("transitionModuleRotate", this.Transition.rotate);
 		group.addItem("transitionModuleFps", this.reframe);
 		group.addItem("transitionModuleReload", this.reload);
-		let group = menu.addGroup("transitionFrameFrames");
+		group = menu.addGroup("transitionFrameFrames");
 		if (this.data.hasAnimate) {
 			group.addItem("transitionFrameFrames", this.Frame.select);
 			group.addItem("transitionFrameAdd", this.Frame.add);
@@ -192,7 +192,7 @@ let TransitionEditor = {
 			StartEditor.menu();
 		});
 		checkForAdditionalInformation(control);
-		let category = control.addCategory(translate("Transition"));
+		category = control.addCategory(translate("Transition"));
 		category.addItem("entityModuleSelect", translate("Entity"), function() {
 			if (!Level.isLoaded()) {
 				showHint(translate("Can't hit entity at menu"));
@@ -350,7 +350,7 @@ let TransitionEditor = {
 				return preround(Entity.getX(getPlayerEnt()), 1);
 			});
 			group.addItem(point.x);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Define.moveStarting("y", value);
 			});
@@ -358,7 +358,7 @@ let TransitionEditor = {
 				return preround(Entity.getY(getPlayerEnt()), 1);
 			});
 			group.addItem(point.y);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Define.moveStarting("z", value);
 			});
@@ -384,7 +384,7 @@ let TransitionEditor = {
 				return preround(Entity.getYaw(getPlayerEnt()), 2);
 			});
 			group.addItem(point.yaw);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Define.moveStarting("pitch", value);
 			});
@@ -414,8 +414,9 @@ let TransitionEditor = {
 				TransitionEditor.data.frame = index;
 				drawTransitionPoints(TransitionEditor.data.worker);
 			});
-			for (let i = 0; i < TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount(); i++)
+			for (let i = 0; i < TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount(); i++) {
 				popup.addButtonElement(translate("Frame %s", i + 1));
+			}
 			popup.selectButton(TransitionEditor.data.frame);
 			popup.setSelectMode(true);
 			Popups.open(popup, "frame_select");
@@ -487,7 +488,7 @@ let TransitionEditor = {
 				return preround(Entity.getX(getPlayerEnt()) - real.x, 1);
 			});
 			group.addItem(frame.x);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "y", value);
 			});
@@ -496,7 +497,7 @@ let TransitionEditor = {
 				return preround(Entity.getY(getPlayerEnt()) - real.y, 1);
 			});
 			group.addItem(frame.y);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "z", value);
 			});
@@ -529,7 +530,7 @@ let TransitionEditor = {
 				return preround(Entity.getYaw(getPlayerEnt()) - real.yaw, 2);
 			});
 			group.addItem(frame.yaw);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "pitch", value);
 			});

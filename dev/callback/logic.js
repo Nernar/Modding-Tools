@@ -45,22 +45,22 @@ function updateSettings() {
 	}
 }
 
-var selectMode = 0;
+let selectMode = 0;
 Callback.addCallback("ItemUse", function(coords, item, block) {
 	context.runOnUiThread(function() {
 		try {
 			if (selectMode == 1) {
 				// Block selection by tapping
-				var render = new ICRender.Model();
+				let render = new ICRender.Model();
 				render.addEntry(new BlockRenderer.Model(block.id, block.data));
 				BlockRenderer.enableCoordMapping(block.id, block.data, render);
 				BlockEditor.data.worker.Define.addMapping(coords.x, coords.y, coords.z);
 				selectMode = 0, BlockEditor.create();
 			} else if (selectMode == 6) {
 				// Entity summon by tapping
-				var position = coords.relative;
+				let position = coords.relative;
 				(position.x += .5, position.y += .5, position.z += .5);
-				var custom = Entity.spawnCustomAtCoords("__editorEntity__", position);
+				let custom = Entity.spawnCustomAtCoords("__editorEntity__", position);
 				Entity.setMobile(custom.entity, false);
 				EntityEditor.data.worker.Define.addEntity(custom.entity);
 				showHint(translate("Entity summoned"));

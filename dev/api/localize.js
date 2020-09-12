@@ -3,7 +3,7 @@ MCSystem.setLoadingTip("Localizing Content");
 function translate(str, args) {
 	try {
 		if (typeof args != "object") args = ["" + args];
-		else for (var i in args) args[i] = "" + args[i];
+		else for (let i in args) args[i] = "" + args[i];
 		str = java.lang.String(Translation.translate(str));
 		return args ? java.lang.String.format(str, args) : str;
 	} catch(e) {
@@ -24,8 +24,8 @@ function isMany(count) {
 
 function translateCounter(count, empty, verb, little, many, args) {
 	try {
-		var value = count.toString(), pasteable = value.length > 0 ? value.substring(0, value.length - 1) : "";
-		if (args && !isMany(count)) for (var i = 0; i < args.length; i++) if (args[i] == count) args[i] = pasteable;
+		let value = count.toString(), pasteable = value.length > 0 ? value.substring(0, value.length - 1) : "";
+		if (args && !isMany(count)) for (let i = 0; i < args.length; i++) if (args[i] == count) args[i] = pasteable;
 		return translate(count == 0 ? empty : isVerb(count) ? verb : isMany(count) ? many : little, args);
 	} catch(e) {
 		__code__.startsWith("develop") && reportError(e);

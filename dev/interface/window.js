@@ -1,4 +1,4 @@
-var FocusableWindow = new Function();
+const FocusableWindow = new Function();
 FocusableWindow.prototype.TYPE = "FocusableWindow";
 FocusableWindow.prototype.getContent = function() {
 	return this.content || null;
@@ -25,7 +25,7 @@ FocusableWindow.prototype.isFullscreen = function() {
 		(this.height == Ui.Display.MATCH || this.height == Ui.Display.HEIGHT);
 };
 FocusableWindow.prototype.getParams = function(flags) {
-	var params = new android.view.WindowManager.LayoutParams(this.width, this.height,
+	let params = new android.view.WindowManager.LayoutParams(this.width, this.height,
 		this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
 	return (params.gravity = this.gravity, params);
 };

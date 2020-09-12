@@ -119,7 +119,7 @@ let StartEditor = {
 					} else showHint(translate("Supportable module can't be loaded at menu"));
 				});
 			checkForAdditionalInformation(control);
-			let category = control.addCategory(translate("Project"));
+			category = control.addCategory(translate("Project"));
 			category.addItem("menuProjectLoad", translate("Open"), function() {
 				let formats = [".dnp", ".ndb", ".nds", ".js"];
 				if (ModelConverter) formats.push(".json");
@@ -149,7 +149,7 @@ let StartEditor = {
 			});
 			checkForAdditionalInformation(control);
 			if (__code__.startsWith("develop")) {
-				let category = control.addCategory(translate("Debug"));
+				category = control.addCategory(translate("Debug"));
 				category.addItem(null, translate("Minify"), function() {
 					selectFile([".js"], function(file) {
 						let text = Files.read(file);
@@ -202,7 +202,7 @@ let StartEditor = {
 				checkForAdditionalInformation(control);
 			}
 			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit)) {
-				let category = control.addCategory(translate("Supportables"));
+				category = control.addCategory(translate("Supportables"));
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					let result = DumpCreator(function() {
 						try {

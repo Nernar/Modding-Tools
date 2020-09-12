@@ -1,4 +1,4 @@
-var ActoredWindow = function() {
+const ActoredWindow = function() {
 	this.reset();
 };
 ActoredWindow.prototype = new FocusableWindow();
@@ -25,7 +25,7 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 	return new ActorScene(rootOrContainer || this.content, container);
 };
 
-var UniqueWindow = new Function();
+const UniqueWindow = new Function();
 UniqueWindow.prototype = new ActoredWindow();
 UniqueWindow.prototype.TYPE = "UniqueWindow";
 UniqueWindow.prototype.isAttached = function() {
@@ -52,7 +52,7 @@ UniqueWindow.prototype.dismiss = function() {
 		this.__dismissUW && this.__dismissUW();
 };
 
-var UniqueHelper = {
+const UniqueHelper = {
 	opened: new Object(),
 	getWindow: function(window) {
 		if (typeof window == "object")
@@ -64,12 +64,12 @@ var UniqueHelper = {
 	},
 	prepareWindow: function(window) {
 		if (this.isAttached(window)) {
-			var opened = this.getWindow(window),
+			let opened = this.getWindow(window),
 				updatable = opened.isUpdatable();
 			// Window are already opened
 			if (opened == window) return false;
 			if (updatable) {
-				var content = window.getContent();
+				let content = window.getContent();
 				opened.setContent(content);
 				opened.update();
 				return false;
@@ -82,7 +82,7 @@ var UniqueHelper = {
 	},
 	deattachWindow: function(window) {
 		if (this.isAttached(window)) {
-			var opened = this.getWindow(window),
+			let opened = this.getWindow(window),
 				updatable = opened.isUpdatable();
 			this.shiftWindow(window);
 			if (window != opened) {

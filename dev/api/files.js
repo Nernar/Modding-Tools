@@ -1,6 +1,6 @@
 MCSystem.setLoadingTip("Preparing APIs");
 
-var Dirs = {
+const Dirs = {
 	EXTERNAL: android.os.Environment.getExternalStorageDirectory(),
 	DATA: android.os.Environment.getDataDirectory() + "/data/" + (isHorizon ? context.getPackageName() : "com.zhekasmirnov.innercore"),
 	IMAGE: __dir__ + "gui", ASSET: __dir__ + "assets", EXPORT: __dir__ + "saves", CACHE: __dir__ + "assets/cache",
@@ -11,9 +11,15 @@ var Dirs = {
 	RESOURCE: isHorizon ? __packdir__ + "assets/resource_packs/vanilla" : "/games/com.mojang/resource_packs/innercore-resources"
 };
 
-for (var i in Dirs) if (i != "EXTERNAL" && i != "DATA")
-	if (!Dirs[i].startsWith(Dirs.EXTERNAL))
-		Dirs[i] = new String(Dirs.EXTERNAL + Dirs[i]);
+(function() {
+	for (let i in Dirs) {
+		if (i != "EXTERNAL" && i != "DATA") {
+			if (!Dirs[i].startsWith(Dirs.EXTERNAL)) {
+				Dirs[i] = new String(Dirs.EXTERNAL + Dirs[i]);
+			}
+		}
+	}
+})();
 
 function formatSize(size) {
 	// Rounds file sizes (per 2^10 bytes)
@@ -22,53 +28,56 @@ function formatSize(size) {
 		size < 1024 ? new Number(size).toFixed() : "?";
 }
 
-var MediaTypes = { // Claimed by system media
+const MediaTypes = { // Claimed by system media
 	AUDIO: ["3gp", "mp4", "m4a", "aac", "ts", "flac", "gsm", "mid", "xmf",
 	    "mxmf", "rtttl", "rtx", "ota", "imy", "mp3", "mkv", "wav", "ogg"],
 	VIDEO: ["3gp", "mp4", "ts", "webm", "mkv"],
 	IMAGE: ["bmp", "gif", "jpg", "jpeg", "png", "webp", "heic", "heif"]
 };
 
-var Files = {
+const Files = {
 	createFile: function(path, name) {
-		if (name == undefined) var file = new java.io.File(path);
-		else var file = new java.io.File(path, name);
+		if (name == undefined) let file = new java.io.File(path);
+		else file = new java.io.File(path, name);
 		if (!file.exists()) file.createNewFile();
 	},
 	createNewWithParent: function(path, name) {
-		if (name == undefined) var file = new java.io.File(path);
-		else var file = new java.io.File(path, name);
+		if (name == undefined) let file = new java.io.File(path);
+		else file = new java.io.File(path, name);
 		file.getParentFile().mkdirs();
 		file.createNewFile();
 	},
 	checkFormats: function(list, formats) {
 		// Filters files by extension
-		var formatted = [];
+		let formatted = [];
 		typeof formats == "string" && (formats = [formats]);
-		for (var i in formats) for (var l in list)
-			if (list[l].endsWith(formats[i]))
-				formatted.push(list[l]);
+		for (let i in formats) {
+			for (let l in list) {
+				if (list[l].endsWith(formats[i])) {
+					formatted.push(list[l]);
+				}
+			}
+		}
 		return formatted;
 	},
 	getNameExtension: function(name) {
-		var index = name.lastIndexOf(".");
+		let index = name.lastIndexOf(".");
 		if (index == 0) return null;
 		return index != -1 ? name.substring(index + 1) : null;
 	},
 	getNameWithoutExtension: function(name) {
-		var index = name.lastIndexOf(".");
+		let index = name.lastIndexOf(".");
 		if (index == 0) return name;
 		return index != -1 ? name.substring(0, index) : name;
 	},
 	getExtension: function(file) {
-		var name = file.getName(), index = name.lastIndexOf(".");
+		let name = file.getName(), index = name.lastIndexOf(".");
 		if (file.isDirectory() || index == 0) return null;
 		return index != -1 ? name.substring(index + 1) : null;
 	},
 	getExtensionType: function(file) {
 		if (file.isDirectory()) return "folder";
-		var name = file.getName(),
-		    type = this.getExtension(file);
+		let name = file.getName(), type = this.getExtension(file);
 		if (type) type = new String(type).toLowerCase();
 		return (type == "zip" || type == "tar" || type == "rar" || type == "7z"
 				|| type == "mcpack" || type == "apk" || type == "aar" || type == "script"
@@ -93,7 +102,7 @@ var Files = {
 			name == "icon" ? "image" : "unknown" : "none";
 	},
 	prepareSize: function(file) {
-		var size = file.length();
+		let size = file.length();
 		// Used to display dimensions in explorer
 		return this.prepareFormattedSize(size);
 	},
@@ -105,47 +114,61 @@ var Files = {
 			translate("%s TB", formatSize(size / (1024 * 1024 * 1024 * 1024)));
 	},
 	listFiles: function(path, explore) {
-		var files = new Array(),
+		let files = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
-		for (var i in list)
-			if (list[i].isFile()) files.push(list[i]);
-			else if (explore) files = files.concat(this.listFiles(list[i], explore));
+		for (let i in list) {
+			if (list[i].isFile()) {
+				files.push(list[i]);
+			} else if (explore) {
+				files = files.concat(this.listFiles(list[i], explore));
+			}
+		}
 		return files.sort();
 	},
 	listDirectories: function(path, explore) {
-		var directories = new Array(),
+		let directories = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
-		for (var i in list)
+		for (let i in list) {
 			if (list[i].isDirectory()) {
 				directories.push(list[i]);
 				if (explore) directories = directories.concat(this.listDirectories(list[i], explore));
 			}
+		}
 		return directories.sort();
 	},
 	listFileNames: function(path, explore, root) {
 		if (!("" + path).endsWith("/")) path += "/";
-		var files = new Array(),
+		let files = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
-		if (root == undefined) root = path;
-		for (var i = 0; i < list.length; i++) {
-			if (list[i].isFile()) files.push(("" + list[i]).replace(root, ""));
-			else if (explore) files = files.concat(this.listFileNames(list[i], explore, root));
+		if (root == undefined) {
+			root = path;
+		}
+		for (let i = 0; i < list.length; i++) {
+			if (list[i].isFile()) {
+				files.push(("" + list[i]).replace(root, ""));
+			} else if (explore) {
+				files = files.concat(this.listFileNames(list[i], explore, root));
+			}
 		}
 		return files.sort();
 	},
 	listDirectoryNames: function(path, explore, root) {
 		if (!("" + path).endsWith("/")) path += "/";
-		var directories = new Array(),
+		let directories = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
-		if (root == undefined) root = path;
-		for (var i = 0; i < list.length; i++) {
+		if (root == undefined) {
+			root = path;
+		}
+		for (let i = 0; i < list.length; i++) {
 			if (list[i].isDirectory()) {
 				directories.push(("" + list[i]).replace(root, ""));
-				if (explore) directories = directories.concat(this.listDirectoryNames(list[i], explore, root));
+				if (explore) {
+					directories = directories.concat(this.listDirectoryNames(list[i], explore, root));
+				}
 			}
 		}
 		return directories.sort();
@@ -155,50 +178,50 @@ var Files = {
 	},
 	deleteDir: function(path) {
 		// Recursive file deletion
-		var file = new java.io.File(path);
+		let file = new java.io.File(path);
 		if (file.isDirectory()) {
-			var list = file.listFiles();
-			for (var i = 0; i < list.length; i++)
+			let list = file.listFiles();
+			for (let i = 0; i < list.length; i++)
 				this.deleteDir(list[i].getPath());
 		}
 		file["delete"]();
 	},
 	getFromAssets: function(name) {
-		var assets = context.getAssets();
+		let assets = context.getAssets();
 		return assets.open(name);
 	},
 	readKey: function(a, b) {
 		b = b || "=";
-        var d = this.read(a, true), e = {};
-        for (var f = 0; f < d.length; f++) {
-            var g = d[f].split(b);
+        let d = this.read(a, true), e = {};
+        for (let f = 0; f < d.length; f++) {
+            let g = d[f].split(b);
             2 == g.length && (e[g[0]] = g[1]);
         }
         return e;
     },
     writeKey: function(a, b, c) {
         c = c || "=";
-        var d = [];
-        for (var e in b) {
+        let d = [];
+        for (let e in b) {
 			d.push(e + c + b[e]);
 		}
         this.write(a, d.join("\n"));
     },
 	read: function(file, massive) {
 		if (!file.exists()) return massive ? [] : null;
-		var reader = java.io.BufferedReader(new java.io.FileReader(file)), result = [];
+		let reader = java.io.BufferedReader(new java.io.FileReader(file)), result = [];
 		while (line = reader.readLine()) result.push(line);
 		return massive ? result : result.join("\n");
 	},
 	readLine: function(file, index) {
 		if (!file.exists()) return null;
-		var reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1;
+		let reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1;
 		while (count < index && (line = reader.readLine())) count++;
 		return count == index ? line : null;
 	},
 	readLines: function(file, startInd, endInd) {
 		if (!file.exists()) return null;
-		var reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1, result = [];
+		let reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1, result = [];
 		while (count <= endInd && (line = reader.readLine())) {
 			if (count >= startInd) result.push(line);
 			count++;
@@ -207,18 +230,18 @@ var Files = {
 	},
 	readBytes: function(file) {
 		if (!file.exists()) return;
-		var stream = new java.io.FileInputStream(file);
-		var output = new java.io.ByteArrayOutputStream();
-		var arr = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 1024);
+		let stream = new java.io.FileInputStream(file);
+		let output = new java.io.ByteArrayOutputStream();
+		let arr = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 1024);
 		while (true) {
-			var read = stream.read(arr);
+			let read = stream.read(arr);
 			if (read < 0) return output.toByteArray();
 			output.write(arr, 0, read);
 		}
 	},
 	writeBytes: function(file, bytes) {
 		file.createNewFile();
-		var stream = new java.io.FileOutputStream(file);
+		let stream = new java.io.FileOutputStream(file);
 		stream.write(bytes);
 		stream.close();
 	},
@@ -230,7 +253,7 @@ var Files = {
 	},
 	sendMail: function(file) {
 		// Tries send a message to users (likes Gmail, etc.)
-		var intent = new android.content.Intent("android.intent.action.SEND");
+		let intent = new android.content.Intent("android.intent.action.SEND");
 		intent.setType("text/plain");
 		intent.putExtra("android.intent.extra.TEXT", Files.read(file));
 		context.startActivity(intent);
@@ -242,7 +265,7 @@ var Files = {
 		eval(Files.read(file));
 	},
 	copy: function(file, path) {
-		var result = new java.io.File(result),
+		let result = new java.io.File(result),
 			exists = result.exists();
 		if (!exists) result.createNewFile();
 		Files.write(result, Files.read(file));
@@ -257,7 +280,7 @@ var Files = {
 	}
 };
 
-var Archives = {
+const Archives = {
 	getFile: function(zip) {
 		return new java.util.zip.ZipFile(zip);
 	},
@@ -269,12 +292,12 @@ var Archives = {
 	},
 	unpack: function(file, path) {
 		// A lot of high level code
-		var zip = new java.util.zip.ZipFile(file),
+		let zip = new java.util.zip.ZipFile(file),
 			elements = zip.entries();
 		new java.io.File(path).mkdirs();
 
 		while (elements.hasMoreElements()) {
-			var element = elements.nextElement(),
+			let element = elements.nextElement(),
 				source = zip.getInputStream(element),
 				result = new java.io.File(path, element.getName()),
 				bis = new java.io.BufferedInputStream(source);
@@ -282,9 +305,9 @@ var Archives = {
 			if (element.isDirectory()) result.mkdir();
 			else {
 				result.getParentFile().mkdir();
-				var bos = new java.io.BufferedOutputStream(new java.io.FileOutputStream(result)),
+				let bos = new java.io.BufferedOutputStream(new java.io.FileOutputStream(result)),
 					buf = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 4096);
-				var line = 0;
+				let line = 0;
 				while ((line = bis.read(buf)) >= 0) bos.write(buf, 0, line);
 				bis.close();
 				bos.close();
@@ -294,9 +317,9 @@ var Archives = {
 	}
 };
 
-var Options = {
+const Options = {
 	getValue: function(key) {
-		var file = new java.io.File(Dirs.OPTION),
+		let file = new java.io.File(Dirs.OPTION),
 			reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
 			line = "", result = "";
 		while ((line = reader.readLine()) != null) {
@@ -309,7 +332,7 @@ var Options = {
 		return result;
 	},
 	setValue: function(name, key) {
-		var file = new java.io.File(Dirs.OPTION),
+		let file = new java.io.File(Dirs.OPTION),
 			reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
 			line = "", result = [];
 		while ((line = reader.readLine()) != null) {

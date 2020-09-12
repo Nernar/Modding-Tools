@@ -1,9 +1,9 @@
 function convertNdb(obj) {
 	if (!obj) return null;
-	var worker = new BlockWorker();
+	let worker = new BlockWorker();
 	worker.Renderer.createModel();
 	worker.Collision.createModel();
-	var result = worker.getProject();
+	let result = worker.getProject();
 	obj.namedID && (result.define.id = obj.namedID);
 	obj.defineData && Array.isArray(obj.defineData) &&
 		stringifyObject(obj.defineData, true, function(string) {
@@ -46,9 +46,9 @@ function convertNdb(obj) {
 
 function convertNds(obj) {
 	if (!obj) return null;
-	var worker = new TransitionWorker();
+	let worker = new TransitionWorker();
 	worker.Animation.createAnimate();
-	var result = worker.getProject();
+	let result = worker.getProject();
 	obj.entity && (result.define.entity = obj.entity);
 	if (obj.point && obj.point.length == 5) {
 		result.define.starting.x = obj.point[0];
@@ -86,7 +86,7 @@ function convertNds(obj) {
 }
 
 function handleThread(action) {
-	var thread = new java.lang.Thread(function() {
+	let thread = new java.lang.Thread(function() {
 		try { action && action(); }
 		catch(e) { reportError(e); }
 	});
@@ -102,7 +102,7 @@ handleThread.clear = function() {
 	handleThread.stack = new Array();
 };
 
-var MathUtils = new Object();
+const MathUtils = new Object();
 MathUtils.mathDivider = function(number) {
 	if (number % 100000000 == 0) return Math.round(number / 1e8) + "e8";
 	if (number % 10000000 == 0) return Math.round(number / 1e7) + "e7";
@@ -124,7 +124,7 @@ MathUtils.mathDivider = function(number) {
 	return number;
 };
 
-var Base64 = new Object();
+const Base64 = new Object();
 Base64.encode = function(bytes) {
 	return java.util.Base64.getEncoder().encode(bytes);
 };
@@ -132,7 +132,7 @@ Base64.decode = function(bytes) {
 	return java.util.Base64.getDecoder().decode(bytes);
 };
 
-var LoadingTipUtils = new Object();
+const LoadingTipUtils = new Object();
 LoadingTipUtils.setEncounter = function(tip) {
 	this.encounter = new java.lang.String(tip);
 	this.updateCounter(0);

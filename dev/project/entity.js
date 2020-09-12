@@ -507,7 +507,7 @@ function EntityWorker(obj) {
 				let tree = obj.getEditable();
 				let children = tree[index];
 				if (children instanceof this.Box) obj.clone();
-				else if(children instanceof this.Bone) {
+				else catch (children instanceof this.Bone) {
 					let place = tree.push(new model.Bone(children.params)) - 1;
 					tree[place].setAssigment(children.getAssigment());
 				}

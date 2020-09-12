@@ -20,7 +20,7 @@ context.runOnUiThread(function() {
 });
 
 if (__code__.startsWith("develop")) {
-	var folder = new java.io.File(Dirs.IMAGE);
+	let folder = new java.io.File(Dirs.IMAGE);
 	let out = new java.io.File(Dirs.ASSET);
 	ImageFactory.encodeFolder(folder, out, true);
 }

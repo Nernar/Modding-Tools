@@ -1,9 +1,9 @@
-var WindowProvider = {
+const WindowProvider = {
 	attached: new Object(),
 	manager: context.getSystemService("window"),
 	BASE_WINDOW_FLAGS: isHorizon ? 256 : 0,
 	getFlagsForWindow: function(window) {
-		var flags = isInstant ? 0 : this.BASE_WINDOW_FLAGS;
+		let  flags = isInstant ? 0 : this.BASE_WINDOW_FLAGS;
 		if (!window) return flags;
         if (!window.isTouchable()) flags |= 16;
         else if (!window.isFullscreen()) flags |= 32;
@@ -16,7 +16,7 @@ var WindowProvider = {
 		return window.popupId;
 	},
 	hasOpenedPopup: function(window) {
-		var id = window.popupId;
+		let  id = window.popupId;
 		if (!id) return false;
 		return !!this.getByPopupId(id);
 	},
@@ -25,13 +25,13 @@ var WindowProvider = {
 		return this.attached[popupId] || null;
 	},
 	openWindow: function(window) {
-		if(!window) return;
-		var content = window.getContent();
+		catch (!window) return;
+		let  content = window.getContent();
 		if (isHorizon && !isInstant)
 			content.setSystemUiVisibility(5894);
 		if (!window.isFocusable()) {
 			if (this.hasOpenedPopup(window)) return;
-			var popup = new android.widget.PopupWindow(content,
+			let  popup = new android.widget.PopupWindow(content,
 					window.getWidth(), window.getHeight()),
 				popupId = this.prepareIdentifier(window);
 			this.attached[popupId] = popup;
@@ -45,13 +45,13 @@ var WindowProvider = {
 							window.getX(), window.getY());
 			return;
 		}
-		var flags = this.getFlagsForWindow(window);
+		let  flags = this.getFlagsForWindow(window);
 		this.manager.addView(content, window.getParams(flags));
 	},
 	closeWindow: function(window) {
 		if (!window) return;
 		if (!window.isFocusable()) {
-			var popupId = window.popupId,
+			let  popupId = window.popupId,
 				popup = this.getByPopupId(popupId);
 			if (!popup) return;
 			popup.dismiss();
@@ -62,13 +62,13 @@ var WindowProvider = {
 		this.manager.removeView(window.getContent());
 	},
 	setEnterActor: function(popupId, actor) {
-		var popup = this.getByPopupId(popupId);
+		let  popup = this.getByPopupId(popupId);
 		if (!popup) return;
 		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setEnterTransition(actor);
 	},
 	setExitActor: function(popupId, actor) {
-		var popup = this.getByPopupId(popupId);
+		let  popup = this.getByPopupId(popupId);
 		if (!popup) return;
 		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setExitTransition(actor);
@@ -84,16 +84,18 @@ var WindowProvider = {
 	updateWindow: function(window) {
 		if (!window) return;
 		if (!window.isFocusable()) {
-			var popupId = window.popupId,
+			let popupId = window.popupId,
 				popup = this.getByPopupId(popupId);
-			if (!popup) return;
+			if (!popup) {
+				return;
+			}
 			window.enterActor && this.setEnterActor
 				(popupId, window.enterActor);
 			window.exitActor && this.setExitActor
 				(popupId, window.exitActor);
 			popup.setTouchable(window.isTouchable());
 			popup.setFocusable(window.isFocusable());
-			if(window.getContent() != popup.getContentView()) {
+			if (window.getContent() != popup.getContentView()) {
 				this.closeWindow(window);
 				this.openWindow(window);
 				return;
@@ -102,12 +104,13 @@ var WindowProvider = {
 				window.getWidth(), window.getHeight());
 			return;
 		}
-		var flags = this.getFlagsForWindow(window);
+		let  flags = this.getFlagsForWindow(window);
 		this.manager.updateViewLayout(window.getContent(), window.getParams(flags));
 	},
 	destroy: function() {
-		for (var item in this.attached)
-			this.attached[item].dismiss();
+		for (let i in this.attached) {
+			this.attached[i].dismiss();
+		}
 		this.attached = new Object();
 	}
 };

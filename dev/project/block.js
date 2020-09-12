@@ -336,42 +336,49 @@ function BlockWorker(obj) {
 			};
 			this.hasInnersection = function() {
 				let result = this.checkInnersection();
-				for (let i in result) return true;
+				for (let i in result) {
+					return true;
+				}
 				return false;
 			};
 			
 			// Model actions
 			this.moveModel = function(axis, value) {
-				for (let i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.moveBox(i, axis, this.getBox(i)[axis + 1] + value);
+				}
 			};
 			this.textureModel = function(texture, data) {
-				for (let i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.textureBox(i, texture, data);
+				}
 			};
 			this.textureModelSide = function(side, texture, data) {
-				for (let i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.textureBoxSide(i, side, texture, data);
+				}
 			};
 			this.mirrorModel = function(orientate) {
-				for (var i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.mirrorBox(i, orientate);
+				}
 			};
 			this.rotateModel = function(orientate, angle) {
-				for (var i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.rotateBox(i, orientate, angle);
+				}
 			};
 		}
 	};
 	this.Collision = {
 		models: new Array(),
 		createModel: function() {
-			var models = this.getModels();
+			let models = this.getModels();
 			models.push(new this.Model());
 			return models.length - 1;
 		},
 		removeModel: function(index) {
-			var models = this.getModels();
+			let models = this.getModels();
 			models.splice(index, 1);
 		},
 		getModel: function(index) {
@@ -384,21 +391,23 @@ function BlockWorker(obj) {
 			return this.getModels().length;
 		},
 		getBoxCount: function() {
-			var count = 0;
-			for (var i = 0; i < this.getModelCount(); i++)
+			let count = 0;
+			for (let i = 0; i < this.getModelCount(); i++) {
 				count += this.getModel(i).getBoxCount();
+			}
 			return count;
 		},
 		getParams: function() {
-			var params = [];
-			for (var i = 0; i < this.getModelCount(); i++)
+			let params = [];
+			for (let i = 0; i < this.getModelCount(); i++) {
 				params.push(this.getModel(i).params);
+			}
 			return params;
 		},
 		setParams: function(params) {
 			this.models = new Array();
-			for (var i = 0; i < params.length; i++) {
-				var model = this.createModel();
+			for (let i = 0; i < params.length; i++) {
+				let model = this.createModel();
 				this.getModel(model).params = params[i];
 			}
 		},
@@ -409,7 +418,7 @@ function BlockWorker(obj) {
 			
 			// Create and removing
 			this.addBox = function() {
-				var boxes = this.getBoxes();
+				let boxes = this.getBoxes();
 				boxes.push({
 					x1: 0, y1: 0, z1: 0,
 					x2: 0.0625, y2: 0.0625, z2: 0.0625
@@ -417,12 +426,12 @@ function BlockWorker(obj) {
 				return boxes.length - 1;
 			};
 			this.cloneBox = function(index) {
-				var boxes = this.getBoxes();
+				let boxes = this.getBoxes();
 				boxes.push(assign(boxes[index]));
 				return boxes.length - 1;
 			};
 			this.removeBox = function(index) {
-				var boxes = this.getBoxes();
+				let boxes = this.getBoxes();
 				boxes.splice(index, 1);
 			};
 			
@@ -437,7 +446,7 @@ function BlockWorker(obj) {
 				return this.getBoxes().length;
 			};
 			this.getBoxSize = function(index) {
-				var box = this.getBox(index);
+				let box = this.getBox(index);
 				return {
 					x: box.x2 - box.x1,
 					y: box.y2 - box.y1,
@@ -447,11 +456,11 @@ function BlockWorker(obj) {
 			
 			// Scretch
 			this.scretchBox = function(index, axis, value) {
-				var box = this.getBox(index);
+				let box = this.getBox(index);
 				axis && (box[axis] = value);
 			};
 			this.moveBox = function(index, axis, value) {
-				var size = this.getBoxSize(index);
+				let size = this.getBoxSize(index);
 				this.scretchBox(index, axis + 1, value);
 				this.scretchBox(index, axis + 2, size[axis] + value);
 			};
@@ -469,16 +478,18 @@ function BlockWorker(obj) {
 				if (orientate == 0) return "x";
 				if (orientate == 1) return "y";
 				if (orientate == 2) return "z";
-				var index = ["x", "y", "z"].indexOf(orientate);
+				let index = ["x", "y", "z"].indexOf(orientate);
 				return index != -1 ? orientate : "x";
 			};
 			this.mirrorBox = function(index, orientate, side, offset) {
-				var box = this.getBox(index);
-				if (orientate == undefined) return;
+				let box = this.getBox(index);
+				if (orientate == undefined) {
+					return;
+				}
 				orientate = this.validateOrientate(orientate);
 				side == undefined && (side = 0);
 				offset == undefined && (offset = 0);
-				var size = box[orientate + "2"] - box[orientate + "1"];
+				let size = box[orientate + "2"] - box[orientate + "1"];
 				if (side == 0) {
 					box[orientate + "1"] += offset + size;
 					box[orientate + "2"] += offset + size;
@@ -497,28 +508,28 @@ function BlockWorker(obj) {
 				this.mirrorBox(index, "z", side, offset);
 			};
 			// this.mirrorBox = function(index, orientate, offset) {
-				// var box = this.getBox(index),
+				// let box = this.getBox(index),
 					// offset = this.prepareOffset(offset);
 				// if (orientate == 0) {
-					// var x1 = box.x1, x2 = box.x2;
+					// let x1 = box.x1, x2 = box.x2;
 					// box.x2 = 2 * box.x2 - x1;
 					// box.x1 = 2 * box.x2 - x2;
 				// } else if (orientate == 1) {
-					// var y1 = box.y1, y2 = box.y2;
+					// let y1 = box.y1, y2 = box.y2;
 					// box.y2 = 2 * box.y2 - y1;
 					// box.y1 = 2 * box.y2 - y2;
 				// } else if (orientate == 2) {
-					// var z1 = box.z1, z2 = box.z2;
+					// let z1 = box.z1, z2 = box.z2;
 					// box.z2 = 2 * box.z2 - z1;
 					// box.z1 = 2 * box.z2 - z2;
 				// }
 			// };
 			
 			// this.rotateBox = function(index, orientate, angle) {
-				// var box = this.getBox(index);
+				// let box = this.getBox(index);
 				// if (angle == 0) {
 					// if (orientate == 0) {
-						// var tech = box.y1;
+						// let tech = box.y1;
 						// box.y1 = box.z1;
 						// box.z1 = tech;
 						// tech = box.y2;
@@ -527,7 +538,7 @@ function BlockWorker(obj) {
 						// this.mirrorBox(index, 1);
 						// this.mirrorBox(index, 2);
 					// } else if (orientate == 1) {
-						// var tech = box.x1;
+						// let tech = box.x1;
 						// box.x1 = box.z1;
 						// box.z1 = tech;
 						// tech = box.x2;
@@ -536,7 +547,7 @@ function BlockWorker(obj) {
 						// this.mirrorBox(index, 0);
 						// this.mirrorBox(index, 2);
 					// } else if (orientate == 2) {
-						// var tech = box.x1;
+						// let tech = box.x1;
 						// box.x1 = box.y1;
 						// box.y1 = tech;
 						// tech = box.x2;
@@ -558,7 +569,7 @@ function BlockWorker(obj) {
 					// }
 				// } else if (angle == 2) {
 					// if (orientate == 0) {
-						// var tech = box.y1;
+						// let tech = box.y1;
 						// box.y1 =- box.z1;
 						// box.z1 =- tech;
 						// tech = box.y2;
@@ -569,7 +580,7 @@ function BlockWorker(obj) {
 						// box.z1 += box.z1;
 						// box.z2 += box.z1;
 					// } else if (orientate == 1) {
-						// var tech = box.x1;
+						// let tech = box.x1;
 						// box.x1 =- box.z1;
 						// box.z1 =- tech;
 						// tech = box.x2;
@@ -580,7 +591,7 @@ function BlockWorker(obj) {
 						// box.z1 += box.z1;
 						// box.z2 += box.z1;
 					// } else if (orientate == 2) {
-						// var tech = box.x1;
+						// let tech = box.x1;
 						// box.x1 =- box.y1;
 						// box.y1 =- tech;
 						// tech = box.x2;
@@ -596,50 +607,60 @@ function BlockWorker(obj) {
 			
 			// Innersection
 			this.checkBoxesInnersection = function(index1, index2) {
-				var box1 = this.getBox(index1), box2 = this.getBox(index2);
-				if (box1.x1 < box2.x2 && box1.x2 > box2.x1 || box1.x1 > box2.x1 && box1.x2 < box2.x2)
-					if (box1.y1 < box2.y2 && box1.y2 > box2.y1 || box1.y1 > box2.y1 && box1.y2 < box2.y2)
-						if (box1.z1 < box2.z2 && box2.z1 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2)
+				let box1 = this.getBox(index1), box2 = this.getBox(index2);
+				if (box1.x1 < box2.x2 && box1.x2 > box2.x1 || box1.x1 > box2.x1 && box1.x2 < box2.x2) {
+					if (box1.y1 < box2.y2 && box1.y2 > box2.y1 || box1.y1 > box2.y1 && box1.y2 < box2.y2) {
+						if (box1.z1 < box2.z2 && box2.z1 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2) {
 							return true;
+						}
+					}
+				}
 				return false;
 			};
 			this.checkBoxInnersection = function(index) {
-				var box = this.getBox(index), approved = new Array();
-				for (var i = 0; i < this.getBoxCount(); i++)
-					if (i != index && this.checkBoxesInnersection(index, i))
+				let box = this.getBox(index), approved = new Array();
+				for (let i = 0; i < this.getBoxCount(); i++) {
+					if (i != index && this.checkBoxesInnersection(index, i)) {
 						approved.push(i);
+					}
+				}
 				return approved;
 			};
 			this.hasBoxInnersection = function(index) {
-				var result = this.checkBoxInnersection(index);
+				let result = this.checkBoxInnersection(index);
 				return result.length > 0;
 			};
 			this.checkInnersection = function() {
-				var result = new Object();
-				for (var i = 0; i < this.getBoxCount(); i++) {
-					var approved = this.checkBoxInnersection(i);
+				let result = new Object();
+				for (let i = 0; i < this.getBoxCount(); i++) {
+					let approved = this.checkBoxInnersection(i);
 					approved.length > 0 && (result[i] = approved);
 				}
 				return result;
 			};
 			this.hasInnersection = function() {
-				var result = this.checkInnersection();
-				for (var i in result) return true;
+				let result = this.checkInnersection();
+				for (let i in result) {
+					return true;
+				}
 				return false;
 			};
 			
 			// Model actions
 			this.moveModel = function(axis, value) {
-				for (var i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.moveBox(i, axis, this.getBox(i)[axis + 1] + value);
+				}
 			};
 			this.mirrorModel = function(orientate) {
-				for (var i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.mirrorBox(i, orientate);
+				}
 			};
 			this.rotateModel = function(orientate, angle) {
-				for (var i = 0; i < this.getBoxCount(); i++)
+				for (let i = 0; i < this.getBoxCount(); i++) {
 					this.rotateBox(i, orientate, angle);
+				}
 			};
 		}
 	};

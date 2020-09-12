@@ -1,4 +1,4 @@
-var UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, UtilsPlus, TPSMeter;
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, UtilsPlus, TPSMeter;
 
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	try {
@@ -23,14 +23,14 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			MCSystem.setLoadingTip("Loading Supportables");
 			
 			UIEditor = importMod("UIEditor", function() {
-				var DevEditor = ModAPI.requireAPI("DevEditor");
+				let DevEditor = ModAPI.requireAPI("DevEditor");
 				if (!this.Windows) return false;
-				var menu = Windows.menu || null;
+				let menu = Windows.menu || null;
 				if (menu) {
-					var source = java.lang.String.valueOf("" + menu),
+					let source = java.lang.String.valueOf("" + menu),
 						index = source.indexOf("{");
 					if (index > -1) {
-						var injectable = "if (DevEditor.isLocked()) return;\n" +
+						let injectable = "if (DevEditor.isLocked()) return;\n" +
 							"if (layout.getChildCount() == 1) DevEditor.createAndLock();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
@@ -41,13 +41,13 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			});
 			
 			Setting = importMod("Setting", function() {
-				var DevEditor = ModAPI.requireAPI("DevEditor");
+				let DevEditor = ModAPI.requireAPI("DevEditor");
 				if (typeof this.rover == "undefined" || !this.removeMenu) return false;
 				if ((rover = false, removeMenu)) {
-					var source = java.lang.String.valueOf("" + removeMenu),
+					let source = java.lang.String.valueOf("" + removeMenu),
 						index = source.indexOf("{");
 					if (index > -1) {
-						var injectable = "if (!rover) DevEditor.createAndLock();",
+						let injectable = "if (!rover) DevEditor.createAndLock();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						removeMenu = eval(first + "\n" + injectable + "\n " + second);
@@ -63,7 +63,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			
 			DumpCreator = importMod("Dump Creator", function() {
 				if (!this.__makeAndSaveDump__) return false;
-				var originalAlert = alert;
+				let originalAlert = alert;
 				alert = function(text) {
 					if (text == "Dump generated") __makeAndSaveDump__.dumped = true;
 					originalAlert && originalAlert(text);

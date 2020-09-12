@@ -165,7 +165,7 @@ let EntityEditor = {
 		group.addItem("blockModuleIdentifier", null);
 		group.addItem("entityModuleDraw", null);
 		group.addItem("entityModuleUpdate", null);
-		let group = menu.addGroup("entityBoneBones");
+		group = menu.addGroup("entityBoneBones");
 		if (this.data.hasVisual) {
 			group.addItem("entityBoneBones", this.bone.select);
 			group.addItem("entityBoxAdd", this.bone.add);
@@ -173,7 +173,7 @@ let EntityEditor = {
 			group.addItem("entityBoneOffset", this.bone.offset);
 			group.addItem("entityBoneRotate", this.bone.rotate);
 			group.addItem("entityBoxRemove", this.bone.remove);
-			let group = menu.addGroup("entityBoxBoxes");
+			group = menu.addGroup("entityBoxBoxes");
 			if (this.data.item >= 0) {
 				group.addItem("entityBoxBoxes", this.box.select);
 				group.addItem("entityBoxAdd", this.box.add);
@@ -340,13 +340,13 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(offset.x);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).offset(1, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(offset.y);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).offset(2, value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -367,13 +367,13 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(rotate.x);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).rotate(1, value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(rotate.y);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				model.getIndex(selected).rotate(2, value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -416,8 +416,9 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			let model = EntityEditor.data.worker.Visual.getModel(0);
-			for (let i = 0; i < model.getIndex(EntityEditor.data.group).getBoxCount(); i++)
+			for (let i = 0; i < model.getIndex(EntityEditor.data.group).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
+			}
 			popup.selectButton(EntityEditor.data.item);
 			popup.setSelectMode(true);
 			Popups.open(popup, "box_select");
@@ -450,27 +451,27 @@ let EntityEditor = {
 			}
 		},
 		resize: function (view) {
-			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(group).getBox(selected), coords = box.getCoords();
+				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.scretch(index == 0 ? "x1" : "x2", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.x1);
 			group.addItem(coords.x2);
-			let group = popup.addGroup("y");
-			group.setOnChangeListener(function (index, value) {
+			group = popup.addGroup("y");
+			group.setOnChangeListener(function(index, value) {
 				box.scretch(index == 0 ? "y1" : "y2", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.y1);
 			group.addItem(coords.y2);
-			let group = popup.addGroup("z");
-			group.setOnChangeListener(function (index, value) {
+			group = popup.addGroup("z");
+			group.setOnChangeListener(function(index, value) {
 				box.scretch(index == 0 ? "z1" : "z2", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
@@ -479,9 +480,9 @@ let EntityEditor = {
 			Popups.open(popup, "box_resize");
 		},
 		move: function (view) {
-			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(group).getBox(selected), coords = box.getCoords();
+				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
@@ -490,13 +491,13 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.x1);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function (index, value) {
 				box.move("y", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.y1);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function (index, value) {
 				box.move("z", value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -505,9 +506,9 @@ let EntityEditor = {
 			Popups.open(popup, "box_move");
 		},
 		vertex: function (view) {
-			let group = EntityEditor.data.group, selected = EntityEditor.data.item,
+			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
-				box = model.getIndex(group).getBox(selected), vertex = box.getVertex();
+				box = model.getIndex(selected).getBox(item), vertex = box.getVertex();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("UV"));
 			let group = popup.addGroup("x");
@@ -516,7 +517,7 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(vertex.x);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function (index, value) {
 				box.vertex("y", value);
 				updateEntityRender(EntityEditor.data.worker);
@@ -528,10 +529,10 @@ let EntityEditor = {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					let group = EntityEditor.data.group, selected = EntityEditor.data.item,
+					let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 						model = EntityEditor.data.worker.Visual.getModel(0);
-					model.getIndex(group).removeBox(selected);
-					EntityEditor.data.item = selected > 0 ? selected - 1 : -1;
+					model.getIndex(selected).removeBox(item);
+					EntityEditor.data.item = item > 0 ? item - 1 : -1;
 					if (EntityEditor.data.item == -1) EntityEditor.create();
 					Popups.closeAllByTag("box");
 					showHint(translate("Box deleted"));

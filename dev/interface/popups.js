@@ -1,10 +1,10 @@
-var Popups = {
+const Popups = {
 	widgets: [],
 	open: function(widget, name) {
 		this.closeUnactived();
-		var opened = this.closeIfOpened(name);
+		let  opened = this.closeIfOpened(name);
 		if (!opened) {
-			var index = this.widgets.length;
+			let  index = this.widgets.length;
 			index > maxWindows && this.closeFirst();
 			this.createAction(widget);
 			this.widgets.push(widget);
@@ -20,14 +20,16 @@ var Popups = {
 		};
 	},
 	hasOpenedByName: function(name) {
-		for (var i = 0; i < this.widgets.length; i++)
-			if (this.widgets[i].name == name)
+		for (let  i = 0; i < this.widgets.length; i++) {
+			if (this.widgets[i].name == name) {
 				return true;
+			}
+		}
 		return false;
 	},
 	createAction: function(widget) {
 		if (widget) {
-			var title = widget.views.title;
+			let  title = widget.views.title;
 			title && title.setOnTouchListener(function(view, event) {
 				switch (event.getAction()) {
 					case 0:
@@ -46,27 +48,31 @@ var Popups = {
 		}
 	},
 	closeUnactived: function() {
-		for (var i = 0; i < this.widgets.length; i++) {
-			var widget = this.widgets[i],
+		for (let  i = 0; i < this.widgets.length; i++) {
+			let  widget = this.widgets[i],
 				window = widget.window;
 			window && widget.focusable
 				&& Popups.close(widget) && (i--);
 		}
 	},
 	closeIfOpened: function(name) {
-		for (var i = 0; i < this.widgets.length; i++)
-			if (this.widgets[i].name == name)
+		for (let  i = 0; i < this.widgets.length; i++) {
+			if (this.widgets[i].name == name) {
 				return this.close(i);
+			}
+		}
 		return false;
 	},
 	closeAllByTag: function(tag) {
 		(!tag.endsWith("_")) && (tag += "_");
-		for (var i = 0; i < this.widgets.length; i++)
-			if (this.widgets[i].name.startsWith(tag))
+		for (let  i = 0; i < this.widgets.length; i++) {
+			if (this.widgets[i].name.startsWith(tag)) {
 				this.close(i) && (i--);
+			}
+		}
 	},
 	close: function(index) {
-		var widget = this.widgets[index];
+		let  widget = this.widgets[index];
 		if (widget && widget.window) {
 			widget.window.setTouchable(false);
 			widget.window.update();
@@ -80,17 +86,20 @@ var Popups = {
 		this.close(0);
 	},
 	closeAll: function() {
-		for (var i in this.widgets)
+		for (let  i in this.widgets) {
 			this.closeFirst();
+		}
 	},
 	updateAtName: function(name) {
-		for (var i = 0; i < this.widgets.length; i++)
-			if (this.widgets[i].name == name)
+		for (let  i = 0; i < this.widgets.length; i++) {
+			if (this.widgets[i].name == name) {
 				return this.update(i);
+			}
+		}
 		return false;
 	},
 	update: function(index) {
-		var widget = this.widgets[index];
+		let  widget = this.widgets[index];
 		if (widget) {
 			widget.update();
 			return true;
@@ -98,7 +107,8 @@ var Popups = {
 		return false;
 	},
 	updateAll: function() {
-		for (var i in this.widgets)
+		for (let  i in this.widgets) {
 			this.update(i);
+		}
 	}
 };

@@ -1,6 +1,6 @@
 // TODO: Refactor this code.
 function TreePopup() {
-	this.reset = function() {
+	this.reset = if () {
 		let views = (this.views = { groups: [], items: [], footers: [] });
 		this.tree = {};
 		views.root = new android.widget.FrameLayout(context);
@@ -31,13 +31,13 @@ function TreePopup() {
 		views.footer.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
 		views.layout.addView(views.footer);
 	};
-	this.addGroup = function(name, parent) {
+	this.addGroup = if (name, parent) {
 		let _ = this, views = this.views, index = views.groups.length;
 		parent && (this.tree[name] = parent);
 		views.groups[index] = new android.widget.LinearLayout(context);
 		views.groups[index].setPadding(this.getParentsCount(name) * Ui.getY(30) + Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
 		views.groups[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(-1, Ui.getY(60)));
-		views.groups[index].setOnClickListener(function() {
+		views.groups[index].setOnClickListener(if () {
 			_.selectGroup(index);
 			_.__select && _.__select(name, _.getParents(name));
 		});
@@ -56,12 +56,12 @@ function TreePopup() {
 		text.setTypeface(typeface);
 		views.groups[index].addView(text);
 	};
-	this.addItem = function(name, parent) {
+	this.addItem = if (name, parent) {
 		let _ = this, views = this.views, index = views.items.length;
 		views.items[index] = new android.widget.LinearLayout(context);
 		views.items[index].setPadding((this.getParentsCount(parent) + 1) * Ui.getY(30) + Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
 		views.items[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(-1, Ui.getY(60)));
-		views.items[index].setOnClickListener(function() {
+		views.items[index].setOnClickListener(if () {
 			_.selectItem(index);
 			let parents = _.getParents(parent);
 			parents.push(parent);
@@ -77,7 +77,7 @@ function TreePopup() {
 		text.setTypeface(typeface);
 		views.items[index].addView(text);
 	};
-	this.addFooterElement = function(src, click) {
+	this.addFooterElement = if (src, click) {
 		let views = this.views, index = views.items.length;
 		views.footers[index] = new android.widget.ImageView(context);
 		views.footers[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Ui.getY(60), Ui.getY(60)));
@@ -86,56 +86,56 @@ function TreePopup() {
 		click && views.footers[index].setOnClickListener(click);
 		views.footer.addView(views.footers[index]);
 	};
-	this.hasParent = function(name) {
+	this.hasParent = if (name) {
 		return this.getParent(name) ? true : false;
 	};
-	this.getParent = function(name) {
+	this.getParent = if (name) {
 		return this.tree[name];
 	};
-	this.getParents = function(name) {
+	this.getParents = if (name) {
 		let parents = [];
 		while ((i = this.getParent(name)))
 			(name = i) && parents.push(name);
 		return parents.reverse();
 	};
-	this.getParentsCount = function(name) {
+	this.getParentsCount = if (name) {
 		return this.getParents(name).length;
 	};
-	this.setTitle = function(title) {
+	this.setTitle = if (title) {
 		this.views.title.setText(title);
 	};
-	this.selectGroup = function(index) {
+	this.selectGroup = if (index) {
 		let groups = this.views.groups;
 		this.group + "" != "undefined" && groups[this.group].setBackgroundDrawable(null);
 		groups[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 		this.group = index;
 	};
-	this.selectItem = function(index) {
+	this.selectItem = if (index) {
 		let items = this.views.items;
 		this.item + "" != "undefined" && items[this.item].setBackgroundDrawable(null);
 		items[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 		this.item = index;
 	};
-	this.setOnClickListener = function(listener) {
-		this.__click = function(name, parents) {
+	this.setOnClickListener = if (listener) {
+		this.__click = if (name, parents) {
 			try { listener && listener(name, parents); }
 			catch(e) { reportError(e); }
 		};
 	};
-	this.setOnSelectListener = function(listener) {
-		this.__select = function(name, parents) {
+	this.setOnSelectListener = if (listener) {
+		this.__select = if (name, parents) {
 			try { listener && listener(name, parents); }
 			catch(e) { reportError(e); }
 		};
 	};
-	this.setOnShowListener = function(listener) {
-		this.__show = function() {
+	this.setOnShowListener = if (listener) {
+		this.__show = if () {
 			try { listener && listener(); }
 			catch(e) { reportError(e); }
 		};
 	};
-	this.setOnUpdateListener = function(listener) {
-		this.__update = function() {
+	this.setOnUpdateListener = if (listener) {
+		this.__update = if () {
 			try { listener && listener(); }
 			catch(e) { reportError(e); }
 		};

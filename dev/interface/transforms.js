@@ -1,4 +1,4 @@
-var BoundsActor = function() {
+const BoundsActor = function() {
 	this.reset();
 };
 BoundsActor.prototype = new WindowActor();
@@ -19,7 +19,7 @@ BoundsActor.prototype.setResizeClip = function(enabled) {
 	this.transition.setResizeClip(!!enabled);
 };
 
-var ClipBoundsActor = function() {
+const ClipBoundsActor = function() {
 	this.reset();
 };
 ClipBoundsActor.prototype = new WindowActor();
@@ -28,7 +28,7 @@ ClipBoundsActor.prototype.reset = function() {
 	this.transition = new android.transition.ChangeClipBounds();
 };
 
-var ImageTransformActor = function() {
+const ImageTransformActor = function() {
 	this.reset();
 };
 ImageTransformActor.prototype = new WindowActor();
@@ -37,7 +37,7 @@ ImageTransformActor.prototype.reset = function() {
 	this.transition = new android.transition.ChangeImageTransform();
 };
 
-var ScrollActor = function() {
+const ScrollActor = function() {
 	this.reset();
 };
 ScrollActor.prototype = new WindowActor();
@@ -46,7 +46,7 @@ ScrollActor.prototype.reset = function() {
 	this.transition = new android.transition.ChangeScroll();
 };
 
-var TransformActor = function() {
+const TransformActor = function() {
 	this.reset();
 };
 TransformActor.prototype = new WindowActor();
@@ -67,7 +67,7 @@ TransformActor.prototype.setReparentWithOverlay = function(enabled) {
 	this.transition.setReparentWithOverlay(!!enabled);
 };
 
-var VisibilityActor = new Function();
+const VisibilityActor = new Function();
 VisibilityActor.prototype = new WindowActor();
 VisibilityActor.prototype.getMode = function() {
 	return this.transition.getMode();
@@ -78,7 +78,7 @@ VisibilityActor.prototype.setMode = function(mode) {
 VisibilityActor.IN = android.transition.Visibility.MODE_IN;
 VisibilityActor.OUT = android.transition.Visibility.MODE_OUT;
 
-var SlideActor = function(side) {
+const SlideActor = function(side) {
 	this.reset(side);
 };
 SlideActor.prototype = new VisibilityActor();
@@ -96,7 +96,7 @@ SlideActor.prototype.setSlideEdge = function(side) {
 SlideActor.IN = VisibilityActor.IN;
 SlideActor.OUT = VisibilityActor.OUT;
 
-var ExplodeActor = function() {
+const ExplodeActor = function() {
 	this.reset();
 };
 ExplodeActor.prototype = new VisibilityActor();
@@ -107,7 +107,7 @@ ExplodeActor.prototype.reset = function() {
 ExplodeActor.IN = VisibilityActor.IN;
 ExplodeActor.OUT = VisibilityActor.OUT;
 
-var FadeActor = function(mode) {
+const FadeActor = function(mode) {
 	this.reset(mode);
 };
 FadeActor.prototype = new VisibilityActor();
@@ -119,7 +119,7 @@ FadeActor.prototype.reset = function(mode) {
 FadeActor.IN = android.transition.Fade.IN;
 FadeActor.OUT = android.transition.Fade.OUT;
 
-var ActorSet = function() {
+const ActorSet = function() {
 	this.reset();
 };
 ActorSet.prototype = new WindowActor();
@@ -152,7 +152,7 @@ ActorSet.prototype.setOrdering = function(mode) {
 ActorSet.SEQUENTIAL = android.transition.TransitionSet.ORDERING_SEQUENTIAL;
 ActorSet.TOGETHER = android.transition.TransitionSet.ORDERING_TOGETHER;
 
-var AutoActor = function() {
+const AutoActor = function() {
 	this.reset();
 };
 AutoActor.prototype = new ActorSet();

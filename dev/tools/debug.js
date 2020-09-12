@@ -68,11 +68,11 @@ function checkNotLocalized() {
 	if (localized.length > 0) {
 		localized.forEach(function(item, index) {
 			if (!item.startsWith("\"")) return;
-			let substr = item.substring(1, item.length),
-				index = substr.indexOf("\"");
+			let substr = item.substring(1, item.length);
+			let index = substr.indexOf("\"");
 			if (index < 0) index = item.indexOf("\",");
 			if (index < 0) return;
-			let substr = substr.substring(0, index);
+			substr = substr.substring(0, index);
 			if (hasntAlready(substr))
 				already.push(substr);
 		});
@@ -81,11 +81,11 @@ function checkNotLocalized() {
 		splited.forEach(function(item, index) {
 			if (!item.startsWith("\"")) return;
 			else if (item.startsWith("\"), result")) return;
-			let substr = item.substring(1, item.length),
-				index = substr.indexOf("\"");
+			let substr = item.substring(1, item.length);
+			let index = substr.indexOf("\"");
 			if (index < 0) index = item.indexOf("\",");
 			if (index < 0) return;
-			let substr = substr.substring(0, index);
+			substr = substr.substring(0, index);
 			if (already.indexOf(substr) == -1 &&
 				result.indexOf(substr) == -1)
 					result.push(substr);
@@ -118,8 +118,8 @@ function checkNotLocalized() {
 			if (e.startsWith("Translation.addTranslation")) {
 				let index = e.indexOf("\"");
 				if (index < 0) return e;
-				let substr = e.substring(index + 1, e.length),
-					place = substr.indexOf("\"");
+				let substr = e.substring(index + 1, e.length);
+				let place = substr.indexOf("\"");
 				if (place < 0) return e;
 				let resulted = substr.substring(0, place);
 				if (indexed.indexOf(resulted) == -1 && first.indexOf(resulted) == -1) {

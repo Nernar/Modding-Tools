@@ -1,4 +1,4 @@
-let ControlWindow = function() {
+let ControlWindow = if () {
 	let set = new ActorSet(),
 		slideIn = new SlideActor(),
 		slideOut = new SlideActor();
@@ -24,10 +24,10 @@ let ControlWindow = function() {
 };
 ControlWindow.prototype = new UniqueWindow();
 ControlWindow.prototype.TYPE = "ControlWindow";
-ControlWindow.prototype.reset = function() {
+ControlWindow.prototype.reset = if () {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
-	content.setOnClickListener(function() {
+	content.setOnClickListener(if () {
 		scope.click && scope.click();
 	});
 	this.setContent(content);
@@ -40,17 +40,17 @@ ControlWindow.prototype.reset = function() {
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setGravity(Ui.Gravity.TOP | Ui.Gravity.CENTER);
 	views.layout.setOrientation(Ui.Orientate.VERTICAL);
-	views.layout.setOnClickListener(function() {
+	views.layout.setOnClickListener(if () {
 		scope.click && scope.click();
 	});
 	let params = new android.view.ViewGroup.LayoutParams
 			(Ui.Display.MATCH, Ui.Display.MATCH);
 	views.scroll.addView(views.layout, params);
 };
-ControlWindow.prototype.getBackground = function() {
+ControlWindow.prototype.getBackground = if () {
 	return this.background || null;
 };
-ControlWindow.prototype.setBackground = function(src) {
+ControlWindow.prototype.setBackground = if (src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
 	this.background = src;
@@ -58,24 +58,24 @@ ControlWindow.prototype.setBackground = function(src) {
 	return this;
 };
 ControlWindow.prototype.elements = new Array();
-ControlWindow.prototype.addElement = function(element) {
+ControlWindow.prototype.addElement = if (element) {
 	this.indexOfElement(element) == -1 &&
 		this.getElements().push(element);
 	return element;
 };
-ControlWindow.prototype.getElementAt = function(index) {
+ControlWindow.prototype.getElementAt = if (index) {
 	return this.getElements()[index] || null;
 };
-ControlWindow.prototype.getElements = function(index) {
+ControlWindow.prototype.getElements = if (index) {
 	return this.elements;
 };
-ControlWindow.prototype.getElementCount = function(index) {
+ControlWindow.prototype.getElementCount = if (index) {
 	return this.getElements().length;
 };
-ControlWindow.prototype.indexOfElement = function(item) {
+ControlWindow.prototype.indexOfElement = if (item) {
 	return this.getElements().indexOf(item);
 };
-ControlWindow.prototype.scrollTo = function(y) {
+ControlWindow.prototype.scrollTo = if (y) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.scroll) return this;
 	let actor = new ScrollActor();
@@ -84,7 +84,7 @@ ControlWindow.prototype.scrollTo = function(y) {
 	views.scroll.scrollTo(0, y);
 	return this;
 };
-ControlWindow.prototype.scrollToElement = function(elementOrIndex) {
+ControlWindow.prototype.scrollToElement = if (elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
@@ -94,13 +94,13 @@ ControlWindow.prototype.scrollToElement = function(elementOrIndex) {
 	this.scrollTo(content.getY());
 	return this;
 };
-ControlWindow.prototype.scrollDown = function() {
+ControlWindow.prototype.scrollDown = if () {
 	let content = this.getContent();
 	if (!content) return this;
 	this.scrollTo(content.getMeasuredHeight());
 	return this;
 };
-ControlWindow.prototype.removeElement = function(elementOrIndex) {
+ControlWindow.prototype.removeElement = if (elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
@@ -121,20 +121,20 @@ ControlWindow.prototype.removeElement = function(elementOrIndex) {
 	return this;
 };
 ControlWindow.prototype.outside = true;
-ControlWindow.prototype.isCloseableOutside = function() {
+ControlWindow.prototype.isCloseableOutside = if () {
 	return this.outside;
 };
-ControlWindow.prototype.setCloseableOutside = function(enabled) {
+ControlWindow.prototype.setCloseableOutside = if (enabled) {
 	this.outside = !!enabled;
 	return this;
 };
-ControlWindow.prototype.click = function() {
+ControlWindow.prototype.click = if () {
 	this.outside && this.dismiss();
 	this.__click && this.__click(this);
 	return this;
 };
-ControlWindow.prototype.setOnClickListener = function(listener) {
-	listener && (this.__click = function(window) {
+ControlWindow.prototype.setOnClickListener = if (listener) {
+	listener && (this.__click = if (window) {
 		try { return listener(window); }
 		catch(e) { reportError(e); }
 		return false;
@@ -142,14 +142,14 @@ ControlWindow.prototype.setOnClickListener = function(listener) {
 	return this;
 };
 
-ControlWindow.Header = function(parent) {
+ControlWindow.Header = if (parent) {
 	(this.reset(), this.setLogo("logo"));
 	parent && this.setWindow(parent);
 	this.setMaxScroll(Ui.getY(480));
 	this.updateSlideProgress();
 	this.setCover("popupCover");
 };
-ControlWindow.Header.prototype.reset = function() {
+ControlWindow.Header.prototype.reset = if () {
 	let views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	let params = new android.widget.LinearLayout.LayoutParams
@@ -177,13 +177,13 @@ ControlWindow.Header.prototype.reset = function() {
 		params.rightMargin = params.bottomMargin = Ui.getY(12);
 	views.layout.addView(views.logo, params);
 };
-ControlWindow.Header.prototype.getContent = function() {
+ControlWindow.Header.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.Header.prototype.getWindow = function() {
+ControlWindow.Header.prototype.getWindow = if () {
 	return this.window || null;
 };
-ControlWindow.Header.prototype.setWindow = function(window) {
+ControlWindow.Header.prototype.setWindow = if (window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
 		== -1 && window.elements.push(this);
@@ -198,59 +198,59 @@ ControlWindow.Header.prototype.setWindow = function(window) {
 	this.setupScroll();
 	return this;
 };
-ControlWindow.Header.prototype.getCover = function() {
+ControlWindow.Header.prototype.getCover = if () {
 	return this.cover || null;
 };
-ControlWindow.Header.prototype.setCover = function(src) {
+ControlWindow.Header.prototype.setCover = if (src) {
 	let content = this.getContent(), slide = this.views.slide;
 	if (!content || !slide || !src) return this;
 	this.cover = src;
 	slide.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.Header.prototype.getMaxScroll = function() {
+ControlWindow.Header.prototype.getMaxScroll = if () {
 	return this.maxScroll || 0;
 };
-ControlWindow.Header.prototype.setMaxScroll = function(y) {
+ControlWindow.Header.prototype.setMaxScroll = if (y) {
 	y > 0 && (this.maxScroll = y);
 };
-ControlWindow.Header.prototype.setupScroll = function() {
+ControlWindow.Header.prototype.setupScroll = if () {
 	let scope = this, window = this.getWindow();
 	if (!window || !window.views || !window.views.scroll) return this;
-	window.views.scroll.setOnScrollChangeListener(function(view, x, y) {
+	window.views.scroll.setOnScrollChangeListener(if (view, x, y) {
 		let logo = scope.views.logo.getY(), offset = y - logo - Ui.getY(12),
 			real = Ui.getY(offset) / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
 	return this;
 };
-ControlWindow.Header.prototype.getSlideProgress = function() {
+ControlWindow.Header.prototype.getSlideProgress = if () {
 	return this.progress || 0;
 };
-ControlWindow.Header.prototype.setSlideProgress = function(procent) {
+ControlWindow.Header.prototype.setSlideProgress = if (procent) {
 	if (procent < 0 || procent > 100) return this;
 	let scope = this, content = this.getContent(),
 		slide = this.views.slide, logo = this.views.logo;
 	if (!content || !slide || !logo) return this;
 	this.progress = procent, procent /= 100;
-	slide.post(function() {
+	slide.post(if () {
 		slide.setRotation(-8 + 8 * procent);
 		slide.setTranslationY(-slide.getHeight() + logo.getHeight() *
 			0.1 + (scope.offset || 0) - logo.getHeight() * procent);
 	});
 	return this;
 };
-ControlWindow.Header.prototype.updateSlideProgress = function() {
+ControlWindow.Header.prototype.updateSlideProgress = if () {
 	this.setSlideProgress(this.progress || 0);
 };
-ControlWindow.Header.prototype.setSlideOffset = function(y) {
+ControlWindow.Header.prototype.setSlideOffset = if (y) {
 	this.offset = y || 0;
 	this.updateSlideProgress();
 };
-ControlWindow.Header.prototype.getLogo = function() {
+ControlWindow.Header.prototype.getLogo = if () {
 	return this.logo || null;
 };
-ControlWindow.Header.prototype.setLogo = function(src) {
+ControlWindow.Header.prototype.setLogo = if (src) {
 	let content = this.getContent(), logo = this.views.logo;
 	if (!content || !logo) return this;
 	this.logo = src;
@@ -258,14 +258,14 @@ ControlWindow.Header.prototype.setLogo = function(src) {
 	return this;
 };
 
-ControlWindow.prototype.addHeader = function(header) {
+ControlWindow.prototype.addHeader = if (header) {
 	let header = header instanceof ControlWindow.Header ?
 		header : new ControlWindow.Header(this);
 	this.indexOfElement(header) == -1 && this.getElements().push(header);
 	return header;
 };
 
-ControlWindow.ProjectHeader = function(parent) {
+ControlWindow.ProjectHeader = if (parent) {
 	(this.reset(), this.setLogo("logo"));
 	parent && this.setWindow(parent);
 	projectHeaderBackground &&
@@ -276,7 +276,7 @@ ControlWindow.ProjectHeader = function(parent) {
 };
 ControlWindow.ProjectHeader.prototype = new ControlWindow.Header();
 ControlWindow.ProjectHeader.prototype.__resetCWH = ControlWindow.ProjectHeader.prototype.reset;
-ControlWindow.ProjectHeader.prototype.reset = function() {
+ControlWindow.ProjectHeader.prototype.reset = if () {
 	this.__resetCWH && this.__resetCWH();
 	let views = this.views;
 	views.background = new android.widget.LinearLayout(context);
@@ -297,17 +297,17 @@ ControlWindow.ProjectHeader.prototype.reset = function() {
 	views.project.setGravity(Ui.Gravity.CENTER);
 	views.scroll.addView(views.project);
 };
-ControlWindow.ProjectHeader.prototype.getBackground = function() {
+ControlWindow.ProjectHeader.prototype.getBackground = if () {
 	return this.background || null;
 };
-ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
+ControlWindow.ProjectHeader.prototype.setBackground = if (src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.background || !src) return this;
 	this.background = src;
 	views.background.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
+ControlWindow.ProjectHeader.prototype.checkNothingNeedable = if () {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.background) return this;
 	let window = this.getWindow();
@@ -329,7 +329,7 @@ ControlWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
 	return this;
 };
 ControlWindow.ProjectHeader.prototype.categories = new Array();
-ControlWindow.ProjectHeader.prototype.addCategory = function(nameOrCategory, name) {
+ControlWindow.ProjectHeader.prototype.addCategory = if (nameOrCategory, name) {
 	let category = nameOrCategory instanceof ControlWindow.ProjectHeader.Category ?
 		nameOrCategory : new ControlWindow.ProjectHeader.Category(this, nameOrCategory);
 	name && nameOrCategory instanceof ControlWindow.ProjectHeader.Category &&
@@ -338,19 +338,19 @@ ControlWindow.ProjectHeader.prototype.addCategory = function(nameOrCategory, nam
 	this.updateSlideProgress(), this.checkNothingNeedable();
 	return category;
 };
-ControlWindow.ProjectHeader.prototype.getCategoryAt = function(index) {
+ControlWindow.ProjectHeader.prototype.getCategoryAt = if (index) {
 	return this.getCategories()[index] || null;
 };
-ControlWindow.ProjectHeader.prototype.getCategories = function(index) {
+ControlWindow.ProjectHeader.prototype.getCategories = if (index) {
 	return this.categories;
 };
-ControlWindow.ProjectHeader.prototype.getCategoryCount = function(index) {
+ControlWindow.ProjectHeader.prototype.getCategoryCount = if (index) {
 	return this.getCategories().length;
 };
-ControlWindow.ProjectHeader.prototype.indexOfCategory = function(category) {
+ControlWindow.ProjectHeader.prototype.indexOfCategory = if (category) {
 	return this.getCategories().indexOf(category);
 };
-ControlWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
+ControlWindow.ProjectHeader.prototype.removeCategory = if (categoryOrIndex) {
 	let index = categoryOrIndex instanceof ControlWindow.ProjectHeader.Category ?
 		this.indexOfCategory(categoryOrIndex) : categoryOrIndex;
 	let category = this.getCategoryAt(index);
@@ -369,14 +369,14 @@ ControlWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex)
 	return this;
 };
 
-ControlWindow.prototype.addProjectHeader = function(header) {
+ControlWindow.prototype.addProjectHeader = if (header) {
 	let header = header instanceof ControlWindow.ProjectHeader ?
 		header : new ControlWindow.ProjectHeader(this);
 	this.indexOfElement(header) == -1 && this.getElements().push(header);
 	return header;
 };
 
-ControlWindow.ProjectHeader.Category = function(parentOrName, name) {
+ControlWindow.ProjectHeader.Category = if (parentOrName, name) {
 	this.reset();
 	if (parentOrName instanceof ControlWindow.ProjectHeader) {
 		this.setParentHeader(parentOrName);
@@ -384,7 +384,7 @@ ControlWindow.ProjectHeader.Category = function(parentOrName, name) {
 	} else if (parentOrName) this.setTitle(parentOrName);
 	this.items = new Array();
 };
-ControlWindow.ProjectHeader.Category.prototype.reset = function() {
+ControlWindow.ProjectHeader.Category.prototype.reset = if () {
 	let views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
@@ -405,13 +405,13 @@ ControlWindow.ProjectHeader.Category.prototype.reset = function() {
 	params.bottomMargin = Ui.getY(8);
 	content.addView(views.title, params);
 };
-ControlWindow.ProjectHeader.Category.prototype.getContent = function() {
+ControlWindow.ProjectHeader.Category.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.ProjectHeader.Category.prototype.getParentHeader = function() {
+ControlWindow.ProjectHeader.Category.prototype.getParentHeader = if () {
 	return this.header || null;
 };
-ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header) {
+ControlWindow.ProjectHeader.Category.prototype.setParentHeader = if (header) {
 	if (!header || typeof header != "object") return this;
 	header.categories && header.categories.indexOf(this)
 		== -1 && header.categories.push(this);
@@ -431,23 +431,23 @@ ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header
 		header.checkNothingNeedable();
 	return this;
 };
-ControlWindow.ProjectHeader.Category.prototype.indexOf = function() {
+ControlWindow.ProjectHeader.Category.prototype.indexOf = if () {
 	let header = this.getParentHeader();
 	return header ? header.indexOfCategory(this) : -1;
 };
-ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
+ControlWindow.ProjectHeader.Category.prototype.getTitle = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
-ControlWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
+ControlWindow.ProjectHeader.Category.prototype.setTitle = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
 ControlWindow.ProjectHeader.Category.prototype.items = new Array();
-ControlWindow.ProjectHeader.Category.prototype.addItem = function(srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action) {
+ControlWindow.ProjectHeader.Category.prototype.addItem = if (srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action) {
 	let item = srcOrItem instanceof ControlWindow.ProjectHeader.Category.Item ?
 		srcOrItem : new ControlWindow.ProjectHeader.Category.Item(this, srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action);
 	titleOrSrc && srcOrItem instanceof ControlWindow.ProjectHeader.Category.Item &&
@@ -462,19 +462,19 @@ ControlWindow.ProjectHeader.Category.prototype.addItem = function(srcOrItem, tit
 	this.getParentHeader() && this.getParentHeader().updateSlideProgress();
 	return item;
 };
-ControlWindow.ProjectHeader.Category.prototype.getItemAt = function(index) {
+ControlWindow.ProjectHeader.Category.prototype.getItemAt = if (index) {
 	return this.getItems()[index] || null;
 };
-ControlWindow.ProjectHeader.Category.prototype.getItems = function(index) {
+ControlWindow.ProjectHeader.Category.prototype.getItems = if (index) {
 	return this.items;
 };
-ControlWindow.ProjectHeader.Category.prototype.getItemCount = function(index) {
+ControlWindow.ProjectHeader.Category.prototype.getItemCount = if (index) {
 	return this.getItems().length;
 };
-ControlWindow.ProjectHeader.Category.prototype.indexOfItem = function(item) {
+ControlWindow.ProjectHeader.Category.prototype.indexOfItem = if (item) {
 	return this.getItems().indexOf(item);
 };
-ControlWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
+ControlWindow.ProjectHeader.Category.prototype.removeItem = if (itemOrIndex) {
 	let index = itemOrIndex instanceof ControlWindow.ProjectHeader.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
 	let item = this.getItemAt(index);
@@ -492,8 +492,8 @@ ControlWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex
 		this.getParentHeader().updateSlideProgress();
 	return this;
 };
-ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function(listener) {
-	listener && (this.__click = function(item, index) {
+ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = if (listener) {
+	listener && (this.__click = if (item, index) {
 		try { return listener(item, index); }
 		catch(e) { reportError(e); }
 		return false;
@@ -501,7 +501,7 @@ ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function
 	return this;
 };
 
-ControlWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, titleOrDescription, descriptionOrAction, action) {
+ControlWindow.ProjectHeader.Category.Item = if (parentOrSrc, srcOrTitle, titleOrDescription, descriptionOrAction, action) {
 	this.reset();
 	if (parentOrSrc instanceof ControlWindow.ProjectHeader.Category) {
 		this.setParentCategory(parentOrSrc);
@@ -517,12 +517,12 @@ ControlWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, ti
 	}
 	this.setBackground("popupBackgroundMenu");
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.reset = if () {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Ui.getY(12), Ui.getY(12), Ui.getY(12), Ui.getY(12));
 	content.setGravity(Ui.Gravity.CENTER);
-	content.setOnClickListener(function() {
+	content.setOnClickListener(if () {
 		scope.click && scope.click();
 	});
 	let params = new android.widget.LinearLayout.
@@ -558,17 +558,17 @@ ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	views.params.setSingleLine();
 	views.more.addView(views.params);
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getContent = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.indexOf = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.indexOf = if () {
 	let category = this.getParentCategory();
 	return category ? category.indexOfItem(this) : -1;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getParentCategory = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getParentCategory = if () {
 	return this.category || null;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(category) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = if (category) {
 	if (!category || typeof category != "object") return this;
 	category.items && category.items.indexOf(this)
 		== -1 && category.items.push(this);
@@ -588,57 +588,57 @@ ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function
 	this.category = category;
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getBackground = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getBackground = if () {
 	return this.background || null;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setBackground = if (src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
 	this.background = src;
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getIcon = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getIcon = if () {
 	return this.icon || null;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setIcon = function(src) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setIcon = if (src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
 	this.background = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getTitle = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setTitle = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.getDescription = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.getDescription = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.params.getText();
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setDescription = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.params.setText("" + text);
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.click = function() {
+ControlWindow.ProjectHeader.Category.Item.prototype.click = if () {
 	this.__click && this.__click(this);
 	let category = this.getParentCategory();
 	category && category.__click && category.__click
 			(this, this.indexOf());
 	return this;
 };
-ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = function(listener) {
-	listener && (this.__click = function(item) {
+ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = if (listener) {
+	listener && (this.__click = if (item) {
 		try { return listener(item); }
 		catch(e) { reportError(e); }
 		return false;
@@ -646,14 +646,14 @@ ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = functio
 	return this;
 };
 
-ControlWindow.Category = function(parentOrName, name) {
+ControlWindow.Category = if (parentOrName, name) {
 	this.reset();
 	if (parentOrName instanceof ControlWindow) {
 		this.setWindow(parentOrName);
 		name && this.setTitle(name);
 	} else if (parentOrName) this.setTitle(parentOrName);
 };
-ControlWindow.Category.prototype.reset = function() {
+ControlWindow.Category.prototype.reset = if () {
 	let views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
@@ -678,13 +678,13 @@ ControlWindow.Category.prototype.reset = function() {
 	views.layout.setColumnCount(parseInt(5 / uiScaler));
 	content.addView(views.layout);
 };
-ControlWindow.Category.prototype.getContent = function() {
+ControlWindow.Category.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.Category.prototype.getWindow = function() {
+ControlWindow.Category.prototype.getWindow = if () {
 	return this.window || null;
 };
-ControlWindow.Category.prototype.setWindow = function(window) {
+ControlWindow.Category.prototype.setWindow = if (window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
 		== -1 && window.elements.push(this);
@@ -698,19 +698,19 @@ ControlWindow.Category.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
-ControlWindow.Category.prototype.getTitle = function() {
+ControlWindow.Category.prototype.getTitle = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
-ControlWindow.Category.prototype.setTitle = function(text) {
+ControlWindow.Category.prototype.setTitle = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
 ControlWindow.Category.prototype.items = new Array();
-ControlWindow.Category.prototype.addItem = function(srcOrItem, titleOrAction, action) {
+ControlWindow.Category.prototype.addItem = if (srcOrItem, titleOrAction, action) {
 	let item = srcOrItem instanceof ControlWindow.Category.Item ?
 		srcOrItem : new ControlWindow.Category.Item(this, srcOrItem, titleOrAction, action);
 	titleOrAction && srcOrItem instanceof ControlWindow.Category.Item &&
@@ -718,19 +718,19 @@ ControlWindow.Category.prototype.addItem = function(srcOrItem, titleOrAction, ac
 	this.indexOfItem(item) == -1 && this.getItems().push(item);
 	return item;
 };
-ControlWindow.Category.prototype.getItemAt = function(index) {
+ControlWindow.Category.prototype.getItemAt = if (index) {
 	return this.getItems()[index] || null;
 };
-ControlWindow.Category.prototype.getItems = function(index) {
+ControlWindow.Category.prototype.getItems = if (index) {
 	return this.items;
 };
-ControlWindow.Category.prototype.getItemCount = function(index) {
+ControlWindow.Category.prototype.getItemCount = if (index) {
 	return this.getItems().length;
 };
-ControlWindow.Category.prototype.indexOfItem = function(item) {
+ControlWindow.Category.prototype.indexOfItem = if (item) {
 	return this.getItems().indexOf(item);
 };
-ControlWindow.Category.prototype.removeItem = function(itemOrIndex) {
+ControlWindow.Category.prototype.removeItem = if (itemOrIndex) {
 	let index = itemOrIndex instanceof ControlWindow.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
 	let item = this.getItemAt(index);
@@ -746,8 +746,8 @@ ControlWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	this.getItems().splice(index, 1);
 	return this;
 };
-ControlWindow.Category.prototype.setOnItemClickListener = function(listener) {
-	listener && (this.__click = function(item, index) {
+ControlWindow.Category.prototype.setOnItemClickListener = if (listener) {
+	listener && (this.__click = if (item, index) {
 		try { return listener(item, index); }
 		catch(e) { reportError(e); }
 		return false;
@@ -755,7 +755,7 @@ ControlWindow.Category.prototype.setOnItemClickListener = function(listener) {
 	return this;
 };
 
-ControlWindow.prototype.addCategory = function(nameOrCategory, name) {
+ControlWindow.prototype.addCategory = if (nameOrCategory, name) {
 	let category = nameOrCategory instanceof ControlWindow.Category ?
 		nameOrCategory : new ControlWindow.Category(this, nameOrCategory);
 	name && nameOrCategory instanceof ControlWindow.Category &&
@@ -764,7 +764,7 @@ ControlWindow.prototype.addCategory = function(nameOrCategory, name) {
 	return category;
 };
 
-ControlWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, action) {
+ControlWindow.Category.Item = if (parentOrSrc, srcOrTitle, titleOrAction, action) {
 	this.reset();
 	if (parentOrSrc instanceof ControlWindow.Category) {
 		this.setParentCategory(parentOrSrc);
@@ -778,12 +778,12 @@ ControlWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, a
 	}
 	this.setBackground("popupBackgroundMenu");
 };
-ControlWindow.Category.Item.prototype.reset = function() {
+ControlWindow.Category.Item.prototype.reset = if () {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Ui.Orientate.VERTICAL);
 	content.setGravity(Ui.Gravity.CENTER);
-	content.setOnClickListener(function() {
+	content.setOnClickListener(if () {
 		scope.click && scope.click();
 	});
 	let params = new android.widget.LinearLayout.
@@ -808,17 +808,17 @@ ControlWindow.Category.Item.prototype.reset = function() {
 	params.topMargin = Ui.getY(16);
 	content.addView(views.title, params);
 };
-ControlWindow.Category.Item.prototype.getContent = function() {
+ControlWindow.Category.Item.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.Category.Item.prototype.indexOf = function() {
+ControlWindow.Category.Item.prototype.indexOf = if () {
 	let category = this.getParentCategory();
 	return category ? category.indexOfItem(this) : -1;
 };
-ControlWindow.Category.Item.prototype.getParentCategory = function() {
+ControlWindow.Category.Item.prototype.getParentCategory = if () {
 	return this.category || null;
 };
-ControlWindow.Category.Item.prototype.setParentCategory = function(category) {
+ControlWindow.Category.Item.prototype.setParentCategory = if (category) {
 	if (!category || typeof category != "object") return this;
 	category.items && category.items.indexOf(this)
 		== -1 && category.items.push(this);
@@ -835,46 +835,46 @@ ControlWindow.Category.Item.prototype.setParentCategory = function(category) {
 	this.category = category;
 	return this;
 };
-ControlWindow.Category.Item.prototype.getBackground = function() {
+ControlWindow.Category.Item.prototype.getBackground = if () {
 	return this.background || null;
 };
-ControlWindow.Category.Item.prototype.setBackground = function(src) {
+ControlWindow.Category.Item.prototype.setBackground = if (src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
 	this.background = src;
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.Category.Item.prototype.getIcon = function() {
+ControlWindow.Category.Item.prototype.getIcon = if () {
 	return this.icon || null;
 };
-ControlWindow.Category.Item.prototype.setIcon = function(src) {
+ControlWindow.Category.Item.prototype.setIcon = if (src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
 	this.background = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.Category.Item.prototype.getTitle = function() {
+ControlWindow.Category.Item.prototype.getTitle = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
-ControlWindow.Category.Item.prototype.setTitle = function(text) {
+ControlWindow.Category.Item.prototype.setTitle = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
-ControlWindow.Category.Item.prototype.click = function() {
+ControlWindow.Category.Item.prototype.click = if () {
 	this.__click && this.__click(this);
 	let category = this.getParentCategory();
 	category && category.__click && category.__click
 			(this, this.indexOf());
 	return this;
 };
-ControlWindow.Category.Item.prototype.setOnClickListener = function(listener) {
-	listener && (this.__click = function(item) {
+ControlWindow.Category.Item.prototype.setOnClickListener = if (listener) {
+	listener && (this.__click = if (item) {
 		try { return listener(item); }
 		catch(e) { reportError(e); }
 		return false;
@@ -882,7 +882,7 @@ ControlWindow.Category.Item.prototype.setOnClickListener = function(listener) {
 	return this;
 };
 
-ControlWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action) {
+ControlWindow.Message = if (parentOrSrc, srcOrMessage, messageOrAction, action) {
 	this.reset();
 	if (parentOrSrc instanceof ControlWindow) {
 		this.setWindow(parentOrSrc);
@@ -898,14 +898,14 @@ ControlWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, act
 		this.setAnimation("message", "popup/message", 20);
 	else this.setBackground("popupBackgroundMenu");
 };
-ControlWindow.Message.prototype.reset = function() {
+ControlWindow.Message.prototype.reset = if () {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Ui.getY(128), Ui.getY(12), Ui.getY(128), Ui.getY(12));
 	content.setLayoutParams(new android.widget.LinearLayout.
 		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP));
 	content.setGravity(Ui.Gravity.CENTER);
-	content.setOnClickListener(function() {
+	content.setOnClickListener(if () {
 		scope.click && scope.click();
 	});
 	this.content = content;
@@ -928,13 +928,13 @@ ControlWindow.Message.prototype.reset = function() {
 	params.rightMargin = Ui.getY(24);
 	content.addView(views.message, params);
 };
-ControlWindow.Message.prototype.getContent = function() {
+ControlWindow.Message.prototype.getContent = if () {
 	return this.content || null;
 };
-ControlWindow.Message.prototype.getWindow = function() {
+ControlWindow.Message.prototype.getWindow = if () {
 	return this.window || null;
 };
-ControlWindow.Message.prototype.setWindow = function(window) {
+ControlWindow.Message.prototype.setWindow = if (window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
 		== -1 && window.elements.push(this);
@@ -948,20 +948,20 @@ ControlWindow.Message.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
-ControlWindow.Message.prototype.getBackground = function() {
+ControlWindow.Message.prototype.getBackground = if () {
 	return this.background || null;
 };
-ControlWindow.Message.prototype.setBackground = function(src) {
+ControlWindow.Message.prototype.setBackground = if (src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
 	this.background = src;
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.Message.prototype.getAnimation = function() {
+ControlWindow.Message.prototype.getAnimation = if () {
 	return this.drawable || null;
 };
-ControlWindow.Message.prototype.setAnimation = function(name, path, time) {
+ControlWindow.Message.prototype.setAnimation = if (name, path, time) {
 	let content = this.getContent();
 	if (!content || !name) return this;
 	this.drawable = ImageFactory.loadFileFrames(name, path, time);
@@ -969,33 +969,33 @@ ControlWindow.Message.prototype.setAnimation = function(name, path, time) {
 	this.drawable && this.drawable.start && this.drawable.start();
 	return this;
 };
-ControlWindow.Message.prototype.getIcon = function() {
+ControlWindow.Message.prototype.getIcon = if () {
 	return this.icon || null;
 };
-ControlWindow.Message.prototype.setIcon = function(src) {
+ControlWindow.Message.prototype.setIcon = if (src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
 	this.background = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.Message.prototype.getMessage = function() {
+ControlWindow.Message.prototype.getMessage = if () {
 	let views = this.views;
 	if (!views) return null;
 	return views.message.getText();
 };
-ControlWindow.Message.prototype.setMessage = function(text) {
+ControlWindow.Message.prototype.setMessage = if (text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.message.setText("" + text);
 	return this;
 };
-ControlWindow.Message.prototype.click = function() {
+ControlWindow.Message.prototype.click = if () {
 	this.__click && this.__click(this);
 	return this;
 };
-ControlWindow.Message.prototype.setOnClickListener = function(listener) {
-	listener && (this.__click = function(card) {
+ControlWindow.Message.prototype.setOnClickListener = if (listener) {
+	listener && (this.__click = if (card) {
 		try { return listener(card); }
 		catch(e) { reportError(e); }
 		return false;
@@ -1003,7 +1003,7 @@ ControlWindow.Message.prototype.setOnClickListener = function(listener) {
 	return this;
 };
 
-ControlWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrMessage, action) {
+ControlWindow.prototype.addMessage = if (srcOrMessage, messageOrSrc, actionOrMessage, action) {
 	let message = srcOrMessage instanceof ControlWindow.Message ?
 		srcOrMessage : new ControlWindow.Message(this, srcOrMessage, messageOrSrc, actionOrMessage);
 	messageOrSrc && srcOrMessage instanceof ControlWindow.Message &&

@@ -1,4 +1,4 @@
-var AbstractEvent = function(obj) {
+const AbstractEvent = function(obj) {
 	this.events = new Object();
 };
 AbstractEvent.prototype.events = new Object();

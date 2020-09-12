@@ -117,7 +117,9 @@ function removeMappings() {
 		saved.splice(i, 1), (i--, count++);
 	}
 	checkMapping.current = new Array();
-	if (count > 0) showHint(translate("Removed %s mappings", count));
+	if (count > 0) {
+		showHint(translate("Removed %s mappings", count));
+	}
 	return count > 0;
 }
 
@@ -254,7 +256,7 @@ let BlockEditor = {
 		group.addItem("blockModuleType", this.type);
 		group.addItem("blockModuleShape", this.shape);
 		group.addItem("blockRenderReload", this.reload);
-		let group = menu.addGroup("blockBoxBoxes");
+		group = menu.addGroup("blockBoxBoxes");
 		if (this.data.hasRender) {
 			group.addItem("blockBoxBoxes", this.Renderer.select);
 			group.addItem("blockBoxAdd", this.Renderer.add);
@@ -262,12 +264,12 @@ let BlockEditor = {
 			group.addItem("blockBoxMove", this.Renderer.move);
 			group.addItem("blockBoxMirror", this.Renderer.mirror);
 			if (__code__.startsWith("develop")) {
-				    group.addItem("blockBoxRotate", this.Renderer.rotate);
-				}
+				group.addItem("blockBoxRotate", this.Renderer.rotate);
+			}
 			group.addItem("blockBoxTexture", this.Renderer.texture);
 			group.addItem("blockBoxRemove", this.Renderer.remove);
 		} else group.addItem("blockBoxAdd", this.Renderer.add);
-		let group = menu.addGroup("blockModuleShape");
+		group = menu.addGroup("blockModuleShape");
 		if (this.data.hasCollision) {
 			group.addItem("blockBoxBoxes", this.Collision.select);
 			group.addItem("blockBoxAdd", this.Collision.add);
@@ -326,7 +328,7 @@ let BlockEditor = {
 			StartEditor.menu();
 		});
 		checkForAdditionalInformation(control);
-		let category = control.addCategory(translate("Block"));
+		category = control.addCategory(translate("Block"));
 		category.addItem("blockRenderTexture", translate("Map"), function() {
 			if (!Level.isLoaded()) {
 				showHint(translate("Can't map render at menu"));
@@ -543,9 +545,9 @@ let BlockEditor = {
 		}
 	},
 	reload: function(view) {
-		if (mapRenderBlock(BlockEditor.data.worker))
+		if (mapRenderBlock(BlockEditor.data.worker)) {
 			showHint(translate("Render updated"));
-		else showHint(translate("Nothing to update"));
+		} else showHint(translate("Nothing to update"));
 	},
 	Renderer: {
 		hasSelection: function() {
@@ -610,14 +612,14 @@ let BlockEditor = {
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
 				mapRenderBlock(BlockEditor.data.worker);
@@ -641,13 +643,13 @@ let BlockEditor = {
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.x1);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Renderer.getModel(0).moveBox(selected, "y", value);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.y1);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Renderer.getModel(0).moveBox(selected, "z", value);
 				mapRenderBlock(BlockEditor.data.worker);
@@ -732,8 +734,9 @@ let BlockEditor = {
 					showHint(translate("Texture changed"));
 				}
 			}).switchVisibility().setBackground("ground");
-			for (let i = 0; i < textures.length; i++)
+			for (let i = 0; i < textures.length; i++) {
 				popup.addButtonElement(textures[i].name);
+			}
 			Popups.open(popup, "renderer_texture");
 		},
 		remove: function() {
@@ -765,8 +768,9 @@ let BlockEditor = {
 				selectMode = 0;
 				mapRenderBlock(BlockEditor.data.worker);
 			});
-			for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++)
+			for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
+			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 11;
 				BlockEditor.data.collision = index;
@@ -816,14 +820,14 @@ let BlockEditor = {
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
 				mapRenderBlock(BlockEditor.data.worker);
@@ -847,13 +851,13 @@ let BlockEditor = {
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.x1);
-			let group = popup.addGroup("y");
+			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Collision.getModel(0).moveBox(selected, "y", value);
 				mapRenderBlock(BlockEditor.data.worker);
 			});
 			group.addItem(box.y1);
-			let group = popup.addGroup("z");
+			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
 				BlockEditor.data.worker.Collision.getModel(0).moveBox(selected, "z", value);
 				mapRenderBlock(BlockEditor.data.worker);
@@ -948,7 +952,7 @@ let BlockEditor = {
 		});
 		group.addItem(shape.x1);
 		group.addItem(shape.x2);
-		let group = popup.addGroup("y");
+		group = popup.addGroup("y");
 		group.setOnChangeListener(function(index, value) {
 			shape["y" + (index + 1)] = value;
 			selectMode = 5;
@@ -956,7 +960,7 @@ let BlockEditor = {
 		});
 		group.addItem(shape.y1);
 		group.addItem(shape.y2);
-		let group = popup.addGroup("z");
+		group = popup.addGroup("z");
 		group.setOnChangeListener(function(index, value) {
 			shape["z" + (index + 1)] = value;
 			selectMode = 5;
