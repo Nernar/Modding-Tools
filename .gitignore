@@ -124,6 +124,9 @@ dist
 /dev/network/connect.js
 /loader/
 
+# ADB Pusher/Puller
+/adb/
+
 # Local saves
 /saves/
 /.todo/
@@ -131,3 +134,4 @@ dist
 
 # Dropbox sync
 /.ttxfolder
+/_gsdata_/
