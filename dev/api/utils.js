@@ -88,7 +88,7 @@ function convertNds(obj) {
 function handleThread(action) {
 	let thread = new java.lang.Thread(function() {
 		try { action && action(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	handleThread.stack.push(thread);
 	return (thread.start(), thread);

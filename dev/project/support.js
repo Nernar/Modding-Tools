@@ -11,7 +11,7 @@ let ExecutableSupport = {
 		try {
 			return java.lang.Class.forName(isHorizon ? this.updateClassReference(name) :
 				name, initialize || false, this.getClassLoader()).newInstance();
-		} catch(e) {
+		} catch (e) {
 			__code__.startsWith("develop") && reportError(e);
 		}
 		return null;
@@ -52,7 +52,7 @@ let ExecutableSupport = {
 		if (!mod) return null;
 		try {
 			return "" + mod.getInfoProperty(property);
-		} catch(e) {
+		} catch (e) {
 			__code__.startsWith("develop") && reportError(e);
 		}
 		return null;
@@ -60,7 +60,7 @@ let ExecutableSupport = {
 	evaluateAtExecutable: function(source, action) {
 		try {
 			return source.evaluateStringInScope(action);
-		} catch(e) {
+		} catch (e) {
 			Logger.Log("Failed to run exec source " + (source ?
 				source.name : "unknown") + ", ignoring", "Dev-Core");
 			__code__.startsWith("develop") && reportError(e);
@@ -84,7 +84,7 @@ let ExecutableSupport = {
 		return function(action) {
 			try {
 				return ExecutableSupport.injectCustomEval(name, action);
-			} catch(e) {
+			} catch (e) {
 				__code__.startsWith("develop") && reportError(e);
 			}
 			return null;
@@ -136,7 +136,7 @@ function importMod(dir, action) {
 			supportable.result = action ? ExecutableSupport.injectCustomEval(name, action)[0] : true;
 			return (supportable.modName = name, supportable);
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	return null;

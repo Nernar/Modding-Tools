@@ -1,4 +1,4 @@
-let HintAlert = if () {
+let HintAlert = function() {
 	this.setGravity(Ui.Gravity.CENTER | Ui.Gravity.BOTTOM);
 	this.setWidth(Ui.Display.MATCH);
 	this.setTouchable(false);
@@ -9,10 +9,10 @@ let HintAlert = if () {
 	actor.setDuration(400);
 	this.setEnterActor(actor);
 	
-	let actor = new ActorSet(),
-		slide = new SlideActor(Ui.Gravity.BOTTOM),
-		fade = new FadeActor(FadeActor.OUT);
+	actor = new ActorSet();
 	actor.setOrdering(ActorSet.TOGETHER);
+	let slide = new SlideActor(Ui.Gravity.BOTTOM),
+		fade = new FadeActor(FadeActor.OUT);
 	actor.addActor(slide);
 	actor.addActor(fade);
 	actor.setDuration(400);
@@ -23,7 +23,7 @@ let HintAlert = if () {
 HintAlert.prototype = new UniqueWindow();
 HintAlert.prototype.TYPE = "HintAlert";
 HintAlert.prototype.time = 3000;
-HintAlert.prototype.reset = if () {
+HintAlert.prototype.reset = function() {
 	let views = (this.views = {});
 	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
@@ -46,41 +46,41 @@ HintAlert.prototype.reset = if () {
 	views.layout.addView(views.text);
 };
 HintAlert.prototype.forever = false;
-HintAlert.prototype.isPinned = if () {
+HintAlert.prototype.isPinned = function() {
 	return this.forever;
 };
-HintAlert.prototype.pin = if () {
+HintAlert.prototype.pin = function() {
 	this.forever = true;
 };
-HintAlert.prototype.unpin = if () {
+HintAlert.prototype.unpin = function() {
 	this.forever = false;
 };
 HintAlert.prototype.stackable = false;
 HintAlert.prototype.stack = new Array();
-HintAlert.prototype.isStackable = if () {
+HintAlert.prototype.isStackable = function() {
 	return this.stackable;
 };
-HintAlert.prototype.setStackable = if (enabled) {
+HintAlert.prototype.setStackable = function(enabled) {
 	this.stackable = !!enabled;
 };
-HintAlert.prototype.addToStack = if (hint) {
+HintAlert.prototype.addToStack = function(hint) {
 	this.isStackable() && this.stack.push(hint);
 };
-HintAlert.prototype.hasMoreStack = if () {
+HintAlert.prototype.hasMoreStack = function() {
 	return this.isStackable() ? this.stack.length > 0 : false;
 };
-HintAlert.prototype.addActionForHint = if (hint, action) {
+HintAlert.prototype.addActionForHint = function(hint, action) {
 	let scope = this;
-	action && handle(if () {
+	action && handle(function() {
 		try { scope.isOpened() && scope.action &&
 			action && action(scope); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	}, this.getTimeForHint(hint) + 50);
 };
-HintAlert.prototype.getTimeForNextHint = if () {
+HintAlert.prototype.getTimeForNextHint = function() {
 	return this.action ? this.action.getLeftTime() : 0;
 };
-HintAlert.prototype.getTimeForHint = if (hint) {
+HintAlert.prototype.getTimeForHint = function(hint) {
 	if (this.alreadyHasHint(hint)) {
 		if (this.views.text.getText() == hint) return 0;
 		let action = this.action ? this.action.getLeftTime() : 0;
@@ -89,22 +89,22 @@ HintAlert.prototype.getTimeForHint = if (hint) {
 	return 0;
 };
 // TODO: Why this function if text != hint ALWAYS return false
-HintAlert.prototype.alreadyHasHint = if (hint) {
+HintAlert.prototype.alreadyHasHint = function(hint) {
 	let stacked = this.isStackable() ? this.stack.indexOf(hint) != -1 : false;
 	return this.views.text.getText() == hint || stacked;
 };
-HintAlert.prototype.clearStack = if () {
+HintAlert.prototype.clearStack = function() {
 	this.stack = new Array();
 };
 HintAlert.prototype.autoReawait = true;
-HintAlert.prototype.hasAutoReawait = if () {
+HintAlert.prototype.hasAutoReawait = function() {
 	return this.autoReawait;
 };
-HintAlert.prototype.setAutoReawait = if (enabled) {
+HintAlert.prototype.setAutoReawait = function(enabled) {
 	this.autoReawait = !!enabled;
 };
-HintAlert.prototype.replayHint = if (hint) {
-	this.addActionForHint(hint, if (scope) {
+HintAlert.prototype.replayHint = function(hint) {
+	this.addActionForHint(hint, function(scope) {
 		let actor = new FadeActor();
 		actor.setInterpolator(new CycleInterpolator(1.3));
 		actor.setDuration(scope.time / 8);
@@ -113,7 +113,7 @@ HintAlert.prototype.replayHint = if (hint) {
 		scope.views.text.setVisibility(Ui.Visibility.VISIBLE);
 	});
 };
-HintAlert.prototype.setHintForce = if (hint) {
+HintAlert.prototype.setHintForce = function(hint) {
 	let actor = new FadeActor();
 	actor.setInterpolator(new OvershootInterpolator());
 	actor.setDuration(this.time / 8);
@@ -122,29 +122,29 @@ HintAlert.prototype.setHintForce = if (hint) {
 	this.beginDelayedActor(actor);
 	this.views.text.setVisibility(Ui.Visibility.VISIBLE);
 };
-HintAlert.prototype.setHint = if (hint, force) {
+HintAlert.prototype.setHint = function(hint, force) {
 	this.alreadyHasHint(hint) ? this.replayHint(hint) : this.isOpened() &&
 		this.isStackable() ? this.addToStack(hint) : this.setHintForce(hint);
 	if (force || (this.hasAutoReawait() && force != false &&
 		(this.isStackable() ? !this.hasMoreStack() : true)))
 			this.reawait();
 };
-HintAlert.prototype.setColor = if (color) {
+HintAlert.prototype.setColor = function(color) {
 	color && this.views.text.setTextColor(color);
 };
-HintAlert.prototype.setTime = if (ms) {
+HintAlert.prototype.setTime = function(ms) {
 	ms > 0 && (this.time = ms);
 	this.isOpened() && this.reawait();
 };
-HintAlert.prototype.reawait = if () {
+HintAlert.prototype.reawait = function() {
 	this.action && this.action.setCurrentTick(0);
 };
 HintAlert.prototype.__showHA = HintAlert.prototype.show;
-HintAlert.prototype.show = if () {
+HintAlert.prototype.show = function() {
 	let scope = this;
 	if (!this.action) {
-		this.action = handleAction(if () {
-			handle(if () {
+		this.action = handleAction(function() {
+			handle(function() {
 				if (scope.hasMoreStack()) {
 					scope.setHintForce(scope.stack.shift());
 					scope.action.isActive = true;
@@ -154,11 +154,11 @@ HintAlert.prototype.show = if () {
 				delete scope.action;
 				scope.dismiss();
 			});
-		}, if () {
+		}, function() {
 			if (scope.forever) scope.reawait();
 			return scope.action && scope.isAttached();
 		}, this.time);
-		this.action.setOnCancelListener(if () {
+		this.action.setOnCancelListener(function() {
 			scope.hasMoreStack() && scope.clearStack();
 			scope.action.complete();
 			scope.action.destroy();
@@ -168,7 +168,7 @@ HintAlert.prototype.show = if () {
 	} else this.reawait();
 };
 HintAlert.prototype.__dismissHA = HintAlert.prototype.dismiss;
-HintAlert.prototype.dismiss = if () {
+HintAlert.prototype.dismiss = function() {
 	this.action && this.action.destroy();
 	delete this.action;
 	this.__dismissHA && this.__dismissHA();
@@ -189,7 +189,7 @@ function showHint(hint, color, reawait) {
 		print(translate("Too many hints (%s)", showHint.countedHints));
 		return;
 	}
-	context.runOnUiThread(if () {
+	context.runOnUiThread(function() {
 		try {
 			let window = new HintAlert();
 			if (window.isAttached())
@@ -197,10 +197,10 @@ function showHint(hint, color, reawait) {
 			window.setStackable(!hintStackableDenied);
 			hint && window.setHint(hint, reawait);
 			if (!window.isOpened()) window.show();
-			window.addActionForHint(hint, if () {
+			window.addActionForHint(hint, function() {
 				window.setColor(color ? color : Ui.Color.WHITE);
 			});
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	});
@@ -210,14 +210,14 @@ function showHint(hint, color, reawait) {
 	}
 }
 showHint.countedHints = 0;
-showHint.handleCounter = if () {
-	handle(if () {
+showHint.handleCounter = function() {
+	handle(function() {
 		showHint.countedHints = 0;
 		delete showHint.isHandled;
 	}, HintAlert.prototype.time);
 };
 showHint.launchStacked = new Array();
-showHint.unstackLaunch = if () {
+showHint.unstackLaunch = function() {
 	let stack = this.launchStacked;
 	delete this.launchStacked;
 	delete this.unstackLaunch;

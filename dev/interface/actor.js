@@ -40,7 +40,7 @@ WindowActor.prototype.canRemoveViews = function() {
 WindowActor.prototype.setEpicenterCallback = function(listener) {
 	this.transition.setEpicenterCallback(listener ? function(transition) {
 		try { return listener(transition); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 		return null;
 	} : null);
 };
@@ -123,13 +123,13 @@ ActorScene.prototype.setContainer = function(container) {
 ActorScene.prototype.setEnterAction = function(listener) {
 	this.scene.setEnterAction(listener ? function() {
 		try { listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	} : null);
 };
 ActorScene.prototype.setExitAction = function(listener) {
 	this.scene.setExitAction(listener ? function() {
 		try { listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	} : null);
 };
 ActorScene.prototype.enter = function() {

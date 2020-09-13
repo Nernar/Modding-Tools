@@ -66,7 +66,7 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 				showHint(translate("Entity summoned"));
 				selectMode = 0, EntityEditor.create();
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	});

@@ -21,10 +21,10 @@ function checkScope(hieracly) {
 		if (typeof scope != "object" || scope == null) message = "" + scope;
 		else if (typeof scope.length != "undefined") message = scope.join(", ");
 		else for (let item in scope) items.push("" + item);
-	} catch(e) {
+	} catch (e) {
 		try {
 			message = "" + scope;
-		} catch(e) {
+		} catch (e) {
 			message = e.message;
 		}
 		reportError(e);

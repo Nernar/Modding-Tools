@@ -164,19 +164,19 @@ function CoordsPopup() {
 	this.setOnShowListener = function(listener) {
 		this.__show = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnUpdateListener = function(listener) {
 		this.__update = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnHideListener = function(listener) {
 		this.__hide = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setBaseMathes = function(mathes) {

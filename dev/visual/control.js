@@ -7,7 +7,7 @@ let ControlButton = function() {
 	actor.setDuration(400);
 	this.setEnterActor(actor);
 	
-	let actor = new SlideActor(Ui.Gravity.LEFT);
+	actor = new SlideActor(Ui.Gravity.LEFT);
 	actor.setInterpolator(new AccelerateInterpolator());
 	actor.setDuration(400);
 	this.setExitActor(actor);
@@ -32,7 +32,7 @@ ControlButton.prototype.reset = function() {
 	
 	views.button = new android.widget.ImageView(context);
 	views.button.setPadding(Ui.getY(15), Ui.getY(15), Ui.getY(15), Ui.getY(15));
-	let params = android.widget.LinearLayout.LayoutParams(Ui.getY(100), Ui.getY(100));
+	params = android.widget.LinearLayout.LayoutParams(Ui.getY(100), Ui.getY(100));
 	views.layout.addView(views.button, params);
 };
 ControlButton.prototype.setBackground = function(src) {
@@ -46,7 +46,7 @@ ControlButton.prototype.setIcon = function(src) {
 ControlButton.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function() {
 		try { listener && listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 };
 ControlButton.prototype.unclose = true;

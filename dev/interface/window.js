@@ -67,25 +67,25 @@ FocusableWindow.prototype.setHeight = function(height) {
 FocusableWindow.prototype.setOnShowListener = function(listener) {
 	this.__show = function() {
 		try { listener && listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	};
 };
 FocusableWindow.prototype.setOnUpdateListener = function(listener) {
 	this.__update = function() {
 		try { listener && listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	};
 };
 FocusableWindow.prototype.setOnHideListener = function(listener) {
 	this.__hide = function() {
 		try { listener && listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	};
 };
 FocusableWindow.prototype.setOnCloseListener = function(listener) {
 	this.__close = function() {
 		try { listener && listener(); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	};
 };
 FocusableWindow.prototype.isOpened = function() {

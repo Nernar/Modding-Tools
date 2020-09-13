@@ -5,7 +5,7 @@ function load() {
 		FileTools.assureDir(Dirs.EXPORT);
 		FileTools.assureDir(Dirs.LOGGING);
 		updateSettings();
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	
@@ -13,7 +13,7 @@ function load() {
 		MCSystem.setLoadingTip("Loading Assets");
 		AssetFactory.loadAsset("minecraftFont", "font.ttf");
 		typeface = AssetFactory.createFont("minecraft");
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	
@@ -26,13 +26,13 @@ function load() {
 			ImageFactory.prepareParams("message", Ui.getY(456), Ui.getY(228));
 			ImageFactory.prepareTileMode("message", Ui.TileMode.CLAMP, Ui.TileMode.REPEAT);
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	
 	try {
 		refreshSupportablesIcons();
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -71,7 +71,7 @@ Callback.addCallback("CoreConfigured", function(config) {
 				}
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 });
@@ -119,7 +119,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 				}
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	
@@ -133,7 +133,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 				textures[index].items = data;
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	
@@ -173,11 +173,11 @@ Callback.addCallback("PreBlocksDefined", function() {
 						}
 					}
 				}
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		}
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 });
@@ -188,7 +188,7 @@ function initialize() {
 			MCSystem.setLoadingTip("Creating Interface");
 			if (__code__.startsWith("develop")) checkNotLocalized();
 			(checkOnlinable(), checkUpdatable(), checkExecutable());
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 		
@@ -196,7 +196,7 @@ function initialize() {
 			try {
 				StartEditor.create();
 				showHint.unstackLaunch();
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		});

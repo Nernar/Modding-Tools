@@ -15,7 +15,7 @@ function Project(obj) {
 			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
 				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp",
 				function(result) { delete scope.isAutosaving; });
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	};
@@ -121,7 +121,7 @@ function stringifyObject(obj, identate, action, hint, complete) {
 			if (obj && typeof obj == "object")
 				for (let i in obj)
 					recursiveIndexate(obj[i]);
-		} catch(e) {
+		} catch (e) {
 			count++;
 		}
 	}
@@ -140,7 +140,7 @@ function stringifyObject(obj, identate, action, hint, complete) {
 			});
 			action && result && action(result);
 			active = Date.now() - active, done = true;
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 			done = true;
 		}
@@ -206,7 +206,7 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 				default:
 					callback.onPassed && callback.onPassed(obj, typeof obj);
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	}
@@ -221,11 +221,11 @@ function readFile(path, isBytes, action) {
 				if (!file.exists()) return;
 				let readed = isBytes ? Files.readBytes(file) : Files.read(file);
 				action && action(readed);
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		});
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -234,7 +234,7 @@ function compileToProduce(string) {
 	try {
 		Encyption.updateKey("nernar", "editorProject");
 		return Encyption.encryptString("" + string);
-	} catch(e) {
+	} catch (e) {
 		__code__.startsWith("develop") && reportError(e);
 		return e.name + "\n" + e.stack;
 	}
@@ -262,7 +262,7 @@ function exportProject(object, isAutosave, path, action) {
 			}
 		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 			isAutosave ? translate("Autosaved") : translate("Exported"));
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -271,7 +271,7 @@ function decompileFromProduce(bytes) {
 	try {
 		Encyption.updateKey("nernar", "editorProject");
 		return "" + Encyption.decryptAsString(bytes);
-	} catch(e) {
+	} catch (e) {
 		__code__.startsWith("develop") && reportError(e);
 		return e.name + "\n" + e.stack;
 	}
@@ -293,7 +293,7 @@ function importProject(path, action) {
 						translate("Do you want to retry?"), function() { importProject(path, action); });
 			});
 		});
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }

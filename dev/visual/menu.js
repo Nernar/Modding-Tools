@@ -8,7 +8,7 @@ let MenuWindow = function() {
 	actor.setDuration(400);
 	this.setEnterActor(actor);
 	
-	let actor = new SlideActor(Ui.Gravity.RIGHT);
+	actor = new SlideActor(Ui.Gravity.RIGHT);
 	actor.setInterpolator(new BounceInterpolator());
 	actor.setDuration(1000);
 	this.setExitActor(actor);
@@ -122,27 +122,27 @@ MenuWindow.prototype.selectGroup = function(groupOrIndex) {
 MenuWindow.prototype.setOnGroupClickListener = function(listener) {
 	listener && (this.__clickGroup = function(group, index) {
 		try { return listener(group, index); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 		return false;
 	});
 };
 MenuWindow.prototype.setOnSelectListener = function(listener) {
 	listener && (this.__selectGroup = function(group, index, selected, count) {
 		try { listener(group, index, selected, count); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 };
 MenuWindow.prototype.setOnUndockListener = function(listener) {
 	listener && (this.__undockGroup = function(group, index) {
 		try { listener(group, index); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
 MenuWindow.prototype.setOnItemClickListener = function(listener) {
 	listener && (this.__clickItem = function(group, item, groupIndex, itemIndex) {
 		try { listener(group, item, groupIndex, itemIndex); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 };
 
@@ -177,7 +177,7 @@ MenuWindow.Group.prototype.reset = function() {
 	this.views.icon = new android.widget.ImageView(context);
 	this.views.icon.setScaleType(Ui.Scale.CENTER_CROP);
 	this.views.icon.setPadding(Ui.getY(42), 0, 0, 0);
-	let params = new android.widget.LinearLayout.
+	params = new android.widget.LinearLayout.
 		LayoutParams(Ui.getY(54), Ui.getY(81));
 	content.addView(this.views.icon, params);
 };
@@ -207,7 +207,7 @@ MenuWindow.Group.prototype.click = function(overrideSelect) {
 MenuWindow.Group.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(group) {
 		try { return listener(group); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 		return false;
 	});
 	return this;
@@ -280,14 +280,14 @@ MenuWindow.Group.prototype.select = function(force) {
 MenuWindow.Group.prototype.setOnSelectListener = function(listener) {
 	listener && (this.__select = function(group, selected) {
 		try { listener(group, selected); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
 MenuWindow.Group.prototype.setOnUndockListener = function(listener) {
 	listener && (this.__undock = function(group) {
 		try { listener(group); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -335,7 +335,7 @@ MenuWindow.Group.prototype.removeItem = function(itemOrIndex) {
 MenuWindow.Group.prototype.setOnItemClickListener = function(listener) {
 	listener && (this.__clickItem = function(item, index) {
 		try { listener(item, index); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -410,7 +410,7 @@ MenuWindow.Group.Item.prototype.setIcon = function(src) {
 MenuWindow.Group.Item.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(item) {
 		try { listener(item); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };

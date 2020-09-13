@@ -13,7 +13,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return !isSupportEnv;
 			}
 		});
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 		return;
 	}
@@ -90,7 +90,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			
 			TPSMeter = importMod("TPS meter");
 		} else supportSupportables = false;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 });
@@ -104,7 +104,7 @@ function refreshSupportablesIcons() {
 		ExecutableSupport.refreshIcon(WorldEdit);
 		ExecutableSupport.refreshIcon(UtilsPlus);
 		ExecutableSupport.refreshIcon(TPSmeter);
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }

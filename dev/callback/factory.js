@@ -23,7 +23,7 @@ ImageFactory.loadFromFile = function(key, path) {
 			(bytes, 0, bytes.length, params);
 		this.checkAndResize(key), this.checkAndRetile(key);
 		return key;
-	} catch(e) {
+	} catch (e) {
 		__code__.startsWith("develop") && reportError(e);
 		Logger.Log("Can't decode resource " + key, "Warning");
 	}

@@ -151,7 +151,7 @@ Network.Writer.prototype.assureYield = function() {
 		if (!this.getThread()) return false;
 		while (this.inProcess()) java.lang.Thread.yield();
 		return this.getReadedCount() >= 0;
-	} catch(e) {
+	} catch (e) {
 		return false;
 	}
 };

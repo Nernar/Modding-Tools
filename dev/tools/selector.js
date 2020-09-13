@@ -10,7 +10,7 @@ let StartEditor = {
 				StartEditor.menu();
 			});
 			button.show();
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	},
@@ -105,7 +105,7 @@ let StartEditor = {
 								rover = true;
 								createButton();
 								return true;
-							} catch(e) {
+							} catch (e) {
 								return e;
 							}
 							return false;
@@ -207,7 +207,7 @@ let StartEditor = {
 					let result = DumpCreator(function() {
 						try {
 							return __makeAndSaveDump__.dumped;
-						} catch(e) {
+						} catch (e) {
 							return e;
 						}
 						return false;
@@ -219,7 +219,7 @@ let StartEditor = {
 								try {
 									__makeAndSaveDump__();
 									return true;
-								} catch(e) {
+								} catch (e) {
 									return e;
 								}
 								return false;
@@ -234,7 +234,7 @@ let StartEditor = {
 						try {
 							start.open.click(null);
 							return true;
-						} catch(e) {
+						} catch (e) {
 							return e;
 						}
 						return false;
@@ -257,7 +257,7 @@ let StartEditor = {
 						try {
 							openAndroidUI();
 							return true;
-						} catch(e) {
+						} catch (e) {
 							return e;
 						}
 						return false;
@@ -278,7 +278,7 @@ let StartEditor = {
 									" " + command.args : "") + "\n" + command.description);
 							}
 							return array.join("\n\n");
-						} catch(e) {
+						} catch (e) {
 							return e;
 						}
 						return null;
@@ -294,7 +294,7 @@ let StartEditor = {
 			}
 			resetAdditionalInformation();
 			control.show();
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	},
@@ -464,10 +464,10 @@ function selectProjectData(result, action, single) {
 			if (element && element.type) {
 				switch (element.type) {
 					case "block":
-						let models = element.renderer.length + element.collision.length;
+						let renderers = element.renderer.length + element.collision.length;
 						items.push(translate("Block: %s", element.define.id) + "\n"
-							+ translateCounter(models, "no models", "%s1 model",
-							"%s" + (models % 10) + " models", "%s models", [models]));
+							+ translateCounter(renderers, "no models", "%s1 model",
+							"%s" + (renderers % 10) + " models", "%s models", [renderers]));
 						break;
 					case "entity":
 						let models = element.visual.length;
@@ -491,16 +491,16 @@ function selectProjectData(result, action, single) {
 		builder.setTitle(translate("Element selector"));
 		single ? builder.setItems(items, action ? function(dialog, item) {
 			try { action(result[real[item]]); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		} : null) : builder.setMultiChoiceItems(items, selected, function(dialog, item, active) {
 			try { selected[item] = active; }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		});
 		builder.setNegativeButton(translate("Cancel"), null);
 		if (!single) {
 			builder.setNeutralButton(translate("All"), action ? function() {
 				try { action(result); }
-				catch(e) { reportError(e); }
+				catch (e) { reportError(e); }
 			} : null);
 			builder.setPositiveButton(translate("Select"), action ? function() {
 				try {
@@ -511,14 +511,14 @@ function selectProjectData(result, action, single) {
 					if (value.length == 0)
 						selectProjectData(result, action);
 					else action(value);
-				} catch(e) {
+				} catch (e) {
 					reportError(e);
 				}
 			} : null);
 		}
 		builder.setCancelable(false);
 		builder.create().show();
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -575,7 +575,7 @@ function showSupportableInfo(mod) {
 				"FAILED" : !mod.result ? "DISABLED" : "UNKNOWN"))));
 		builder.setPositiveButton(translate("OK"), null);
 		builder.create().show();
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -589,11 +589,11 @@ function confirm(title, message, action) {
 		builder.setNegativeButton(translate("Cancel"), null);
 		builder.setPositiveButton(translate("Yes"), action ? function() {
 			try { action && action(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		} : null);
 		builder.setCancelable(false);
 		builder.create().show();
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 }
@@ -622,7 +622,7 @@ function selectFile(formats, onSelect, outside) {
 							if (file.isDirectory()) show(file.getPath(), true);
 							else if (onSelect) onSelect(file);
 						}
-					} catch(e) {
+					} catch (e) {
 						reportError(e);
 					}
 				});
@@ -643,7 +643,7 @@ function selectFile(formats, onSelect, outside) {
 				});
 				explorer.show();
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	}
@@ -705,7 +705,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 							if (file.isDirectory()) show(file.getPath(), true);
 							else if (onSelect) onSelect(file, currentName);
 						}
-					} catch(e) {
+					} catch (e) {
 						reportError(e);
 					}
 				});
@@ -730,7 +730,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 				});
 				explorer.show();
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	}

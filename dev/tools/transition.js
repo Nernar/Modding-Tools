@@ -5,7 +5,7 @@ function playTransition(worker, frame) {
 			return false;
 		}
 		if (TransitionEditor.data.transition) let transition = TransitionEditor.data.transition;
-		else let transition = TransitionEditor.data.transition = new Transition();
+		else transition = TransitionEditor.data.transition = new Transition();
 		transition.withEntity(worker.Define.getEntity() || getPlayerEnt());
 		transition.setFramesPerSecond(worker.Define.getFps() || 60);
 		transition.getFrameCount() > 0 && transition.clearFrames();
@@ -27,7 +27,7 @@ function playTransition(worker, frame) {
 		});
 		transition.start();
 		return true;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	return false;
@@ -45,7 +45,7 @@ function stopTransition(worker) {
 		}
 		TransitionEditor.data.transition.stop();
 		return true;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	return false;
@@ -96,7 +96,7 @@ function drawTransitionPoints(worker) {
 		// TODO: Add spawn particles
 		// if (selectMode == 4)
 		// return true;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	return false;
@@ -626,7 +626,7 @@ Callback.addCallback("LevelPreLoaded", function() {
 			TransitionEditor.data.worker.Define.getEntity() == -1)
 				TransitionEditor.data.worker.Define.setEntity(getPlayerEnt()),
 					needTransitionReset = true;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 });
@@ -639,7 +639,7 @@ Callback.addCallback("LevelLoaded", function() {
 				Popups.closeAllByTag("transition");
 				needTransitionReset = false;
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	});
@@ -654,7 +654,7 @@ Callback.addCallback("EntityHurt", function(attacker, victim) {
 				showHint(translate("Entity selected"));
 				selectMode = 0, TransitionEditor.create();
 			}
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	});
@@ -665,7 +665,7 @@ Callback.addCallback("tick", function() {
 		// Mostly spawn selection particles
 		if (ProjectEditor.getCurrentType() == "transition")
 			drawTransitionPoints(TransitionEditor.data.worker);
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 });

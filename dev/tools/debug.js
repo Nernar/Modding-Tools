@@ -14,7 +14,7 @@ let LogWindow = {
 			this.hs.addView(this.scroll);
 			widget.views.layout.addView(this.hs);
 			Popups.open(widget, "log");
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	},
@@ -161,7 +161,7 @@ function show(view) {
 		try {
 			show.lastCode = "" + editText.getText().toString();
 			showHint(eval(show.lastCode) || "Success");
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		}
 	});

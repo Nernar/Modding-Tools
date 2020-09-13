@@ -28,7 +28,7 @@ ExplorerWindow.prototype.reset = function() {
 		scope.miltiple && scope.setMode(Ui.Choice.MULTIPLE);
 		return true;
 	});
-	let params = android.widget.RelativeLayout.LayoutParams
+	params = android.widget.RelativeLayout.LayoutParams
 				(Ui.Display.MATCH, Ui.Display.MATCH);
 	this.setRootDirectory(), this.resetAdapter();
 	views.files.setEmptyView(this.makeEmptyView());
@@ -154,7 +154,7 @@ ExplorerWindow.prototype.makeEmptyView = function() {
 	
 	let icon = new android.widget.ImageView(context);
 	icon.setImageDrawable(ImageFactory.getDrawable("explorerFolder"));
-	let params = android.widget.LinearLayout.LayoutParams(Ui.getY(180), Ui.getY(180));
+	params = android.widget.LinearLayout.LayoutParams(Ui.getY(180), Ui.getY(180));
 	layout.addView(icon, params);
 	
 	let info = new android.widget.TextView(context);
@@ -170,7 +170,7 @@ ExplorerWindow.prototype.setOnApproveListener = function(listener) {
 	let scope = this;
 	listener && (this.__approve = function(files) {
 		try { listener(scope, files); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -178,7 +178,7 @@ ExplorerWindow.prototype.setOnExploreListener = function(listener) {
 	let scope = this;
 	listener && (this.__explore = function(file) {
 		try { listener(scope, file); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -188,7 +188,7 @@ ExplorerWindow.prototype.setOnSelectListener = function(listener) {
 		try {
 			let file = adapter.getFile(item);
 			listener && listener(scope, file, item, previous);
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		} 
 	});
@@ -199,7 +199,7 @@ ExplorerWindow.prototype.setOnUnselectListener = function(listener) {
 		try {
 			let file = adapter.getFile(item);
 			listener && listener(scope, file, item);
-		} catch(e) {
+		} catch (e) {
 			reportError(e);
 		} 
 	});
@@ -297,7 +297,7 @@ ExplorerWindow.Approve.prototype.checkIfCanBeApproved = function() {
 ExplorerWindow.Approve.prototype.setOnApproveListener = function(listener) {
 	listener && (this.__approve = function(approve, files) {
 		try { listener(approve, files); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -336,13 +336,13 @@ ExplorerWindow.Path.prototype.reset = function() {
 	this.content = (content.setLayoutParams(params), content);
 	
 	views.scroll = new android.widget.HorizontalScrollView(context);
-	let params = android.widget.LinearLayout.LayoutParams
+	params = android.widget.LinearLayout.LayoutParams
 				(Ui.Display.MATCH, Ui.Display.WRAP);
 	content.addView(views.scroll, params);
 	
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setPadding(Ui.getY(10), 0, Ui.getY(10), 0);
-	let params = android.view.ViewGroup.LayoutParams
+	params = android.view.ViewGroup.LayoutParams
 			(Ui.Display.MATCH, Ui.Display.WRAP);
 	views.scroll.addView(views.layout, params);
 };
@@ -453,14 +453,14 @@ ExplorerWindow.Path.prototype.setOnExploreListener = function(listener) {
 	let scope = this;
 	listener && (this.__explore = function(file) {
 		try { listener(scope, file); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
 ExplorerWindow.Path.prototype.setOnOutsideListener = function(listener) {
 	listener && (this.__outside = function(scope) {
 		try { listener(scope); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -504,7 +504,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.approve.setOnClickListener(function() {
 		scope.approve();
 	});
-	let params = android.widget.RelativeLayout.LayoutParams
+	params = android.widget.RelativeLayout.LayoutParams
 			(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
@@ -521,7 +521,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.format.setOnClickListener(function() {
 		scope.nextFormat();
 	});
-	let params = android.widget.RelativeLayout.LayoutParams
+	params = android.widget.RelativeLayout.LayoutParams
 			(Ui.Display.WRAP, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.approve.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
@@ -534,7 +534,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	views.name.setTextColor(Ui.Color.WHITE);
 	views.name.setTextSize(Ui.getFontSize(24));
 	typeface && views.name.setTypeface(typeface);
-	let params = android.widget.RelativeLayout.LayoutParams
+	params = android.widget.RelativeLayout.LayoutParams
 			(Ui.Display.MATCH, Ui.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.format.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
@@ -666,7 +666,7 @@ ExplorerWindow.Rename.prototype.setHint = function(text) {
 ExplorerWindow.Rename.prototype.setOnApproveListener = function(listener) {
 	listener && (this.__approve = function(rename, file, name) {
 		try { listener(rename, file, name); }
-		catch(e) { reportError(e); }
+		catch (e) { reportError(e); }
 	});
 	return this;
 };
@@ -776,7 +776,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		icon.setPadding(Ui.getY(20), Ui.getY(20), Ui.getY(20), Ui.getY(20));
 		icon.setScaleType(Ui.Scale.CENTER_CROP);
 		icon.setId(java.lang.String("fileIcon").hashCode());
-		let params = android.widget.RelativeLayout.LayoutParams(Ui.getY(75), Ui.getY(100));
+		params = android.widget.RelativeLayout.LayoutParams(Ui.getY(75), Ui.getY(100));
 		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		params.rightMargin = Ui.getY(15);
@@ -787,7 +787,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		additional.setGravity(Ui.Gravity.RIGHT);
 		additional.setPadding(Ui.getY(30), 0, Ui.getY(30), 0);
 		additional.setId(java.lang.String("additionalInfo").hashCode());
-		let params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
+		params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		layout.addView(additional, params);
@@ -811,7 +811,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		let uniqal = new android.widget.LinearLayout(context);
 		uniqal.setOrientation(Ui.Orientate.VERTICAL);
 		uniqal.setId(java.lang.String("uniqalInfo").hashCode());
-		let params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
+		params = android.widget.RelativeLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
 		params.addRule(android.widget.RelativeLayout.LEFT_OF, java.lang.String("additionalInfo").hashCode());
 		params.addRule(android.widget.RelativeLayout.RIGHT_OF, java.lang.String("fileIcon").hashCode());
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);

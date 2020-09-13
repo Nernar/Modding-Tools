@@ -27,7 +27,7 @@ if (__code__.startsWith("develop")) {
 
 // try {
 	// ExecutableSupport.newInstance("zhekasmirnov.launcher.mod.build.ModLoader").instance.modsList.remove(__mod__);
-// } catch(e) {
+// } catch (e) {
 	// __code__.startsWith("develop") && reportError(e);
 	// Logger.Log("Dev Editor assertion failed, it's may cause some problems", "Warning");
 // }

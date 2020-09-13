@@ -2,7 +2,7 @@ function requireMethod(pointer, field, denyConversion) {
 	try {
 		denyConversion == undefined && (denyConversion = false);
 		return requireMethodFromNativeAPI(pointer, field, denyConversion);
-	} catch(e) {
+	} catch (e) {
 		Logger.Log("Can't find method " + field, "Dev-Editor");
 		return requireMethod.IMPL;
 	}

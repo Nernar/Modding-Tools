@@ -24,7 +24,7 @@ ScriptConverter.prototype.validate = function(obj) {
 		if (!(obj instanceof Object)) return ScriptConverter.State.PARSE_FAILED;
 		if (obj.type != this.getType()) return ScriptConverter.State.BAD_TYPE;
 		return ScriptConverter.State.PREPARED;
-	} catch(throwable) {
+	} catch (throwable) {
 		this.throwable = throwable;
 		return ScriptConverter.State.UNKNOWN;
 	}
@@ -54,7 +54,7 @@ ScriptConverter.prototype.assureYield = function() {
 		if (!this.getThread()) return false;
 		while (this.inProcess()) java.lang.Thread.yield();
 		return this.isConverted();
-	} catch(e) {
+	} catch (e) {
 		return false;
 	}
 };
@@ -67,7 +67,7 @@ ScriptConverter.prototype.execute = function() {
 		if (!this.isValid() || this.inProcess()) return;
 		this.result = this.process(this.getAttached());
 		this.state = ScriptConverter.State.VALID;
-	} catch(throwable) {
+	} catch (throwable) {
 		this.throwable = throwable;
 		this.state = ScriptConverter.State.THROWED;
 	}

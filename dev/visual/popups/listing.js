@@ -26,7 +26,7 @@ function ListingPopup() {
 				click && click();
 				elements.__click && elements.__click(index);
 				elements.__mode && elements.selectButton(index);
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		});
@@ -110,31 +110,31 @@ function ListingPopup() {
 	this.setOnSelectListener = function(listener) {
 		this.__select = function(index) {
 			try { listener && listener(index); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnClickListener = function(listener) {
 		this.__click = function(index) {
 			try { listener && listener(index); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnShowListener = function(listener) {
 		this.__show = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnUpdateListener = function(listener) {
 		this.__update = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setOnHideListener = function(listener) {
 		this.__hide = function() {
 			try { listener && listener(); }
-			catch(e) { reportError(e); }
+			catch (e) { reportError(e); }
 		};
 	};
 	this.setSelectMode = function(enabled) {

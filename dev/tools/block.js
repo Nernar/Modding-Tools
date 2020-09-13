@@ -25,7 +25,7 @@ function selectTexture(index, onSelect) {
 				adapter.getFilter().filter(text, {
 					onFilterComplete: function(count) {}
 				});
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		}
@@ -46,7 +46,7 @@ function selectTexture(index, onSelect) {
 				let adapter = alert.getListView().getAdapter(),
 					texture = ("" + adapter.getItem(i)).split(", ");
 				onSelect(texture[0], parseInt(texture[1]));
-			} catch(e) {
+			} catch (e) {
 				reportError(e);
 			}
 		});
@@ -208,7 +208,7 @@ function mapRenderBlock(worker) {
 		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
 		removeUnusedMappings(), checkMapping.current = new Array();
 		return true;
-	} catch(e) {
+	} catch (e) {
 		reportError(e);
 	}
 	return false;

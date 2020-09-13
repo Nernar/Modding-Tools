@@ -1,19 +1,17 @@
 @echo off
 set ADBDir="D:\Projects\Dev-Editor\adb\adb.exe"
-set ModPath="D:\Projects"
-set ModPathPC="D:\Projects\Dev-Editor"
-set PushJSPath="D:\Projects\Dev-Editor\dev"
-set PushAssetsPath="D:\Projects\Dev-Editor\res"
-set ModsDir="/sdcard/Android/data/io.spck/files"
-set ModPathDevice="/sdcard/Android/data/io.spck/files/Dev-Editor"
-set DeviceJSDir="/sdcard/Android/data/io.spck/files/Dev-Editor/dev"
-set DeviceAssetsDir="/sdcard/Android/data/io.spck/files/Dev-Editor/res"
-set DeviceMainJSDir="/sdcard/Android/data/io.spck/files/Dev-Editor/main.js"
-set DeviceAutoLaunchFile="/sdcard/games/horizon/.flag_auto_launch"
+set ModPathPC="D:\Projects\Dev-Editor\"
+set PushJSPath="D:\Projects\Dev-Editor\dev\"
+set PushAssetsPath="D:\Projects\Dev-Editor\res\"
+set ModPathDevice="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/"
+set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/dev/"
+set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/res/"
+set DeviceMainJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/main.js"
+set DeviceAutoLaunchFile="/mnt/sdcard/games/horizon/.flag_auto_launch"
 cls & title ADB Mod Pusher/Puller & @Color 0F
 
 set EmulatorAddress=127.0.0.1:62001
-set lastUpdate=13.09.2020 12:39
+set lastUpdate=13.09.2020 15:38
 set version=2.0 beta
 
 :: Used for reset resources & reconnect
@@ -21,11 +19,9 @@ set version=2.0 beta
 :reload
 cls & echo.Currently Path: %CD% & echo.Reloading
 
-echo.Projects Path:       %ModPath%
 echo.Mod Path:            %ModPathPC%
 echo.Mod/Sources Path:    %PushJSPath%
 echo.Mod/Assets Path:     %PushAssetsPath%
-echo.Horizon Pack Mods:   %ModsDir%
 echo.Horizon Mod:         %ModPathDevice%
 echo.Horizon Mod Sources: %DeviceJSDir%
 echo.Horizon Mod Assets:  %DeviceAssetsDir%
@@ -248,11 +244,11 @@ if /i %pulling%==assets (
     exit 0
 )
 if /i %pulling%==3 (
-    %ADBDir% pull %ModPathDevice% %ModPath%
+    %ADBDir% pull %ModPathDevice% %ModPathPC%
     exit 0
 )
 if %pulling%==all (
-    %ADBDir% pull %ModPathDevice% %ModPath%
+    %ADBDir% pull %ModPathDevice% %ModPathPC%
     exit 0
 )
 if /i %pulling%==4 (
