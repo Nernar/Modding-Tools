@@ -1,17 +1,17 @@
 @echo off
 set ADBDir="D:\Projects\Dev-Editor\adb\adb.exe"
-set ModPathPC="D:\Projects\Dev-Editor\"
-set PushJSPath="D:\Projects\Dev-Editor\dev\"
-set PushAssetsPath="D:\Projects\Dev-Editor\res\"
-set ModPathDevice="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/"
-set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/dev/"
-set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/res/"
+set ModPathPC="D:\Projects\Dev-Editor"
+set PushJSPath="D:\Projects\Dev-Editor\dev"
+set PushAssetsPath="D:\Projects\Dev-Editor\res"
+set ModPathDevice="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor"
+set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/dev"
+set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/res"
 set DeviceMainJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/main.js"
 set DeviceAutoLaunchFile="/mnt/sdcard/games/horizon/.flag_auto_launch"
 cls & title ADB Mod Pusher/Puller & @Color 0F
 
 set EmulatorAddress=127.0.0.1:62001
-set lastUpdate=13.09.2020 15:38
+set lastUpdate=13.09.2020 17:10
 set version=2.0 beta
 
 :: Used for reset resources & reconnect
