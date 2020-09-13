@@ -1,0 +1,52 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: build",
+			"type": "npm",
+			"script": "build",
+			"problemMatcher": [
+				"$jshint"
+			],
+			"group": "build"
+		},
+		{
+			"label": "push: device",
+			"detail": "Sends latest files to device.",
+			"type": "shell",
+			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
+			"windows": {
+				"command": "D:\\Projects\\Dev-Editor\\adb\\pusher.bat"
+			},
+			"args": [
+				"push",
+				"${input:pushType}"
+			],
+			"group": "build",
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			},
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "pushType",
+			"description": "How should to push?",
+			"type": "pickString",
+			"options": [
+				"sources-run",
+				"sources",
+				"assets-run",
+				"assets",
+				"all-run",
+				"all"
+			],
+			"default": "sources-run"
+		}
+	]
+}
