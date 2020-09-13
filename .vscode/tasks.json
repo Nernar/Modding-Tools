@@ -11,7 +11,7 @@
 			"group": "build"
 		},
 		{
-			"label": "push: device",
+			"label": "Push to Device",
 			"detail": "Sends latest files to device.",
 			"type": "shell",
 			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
@@ -31,6 +31,80 @@
 				"clear": true
 			},
 			"problemMatcher": []
+		},
+		{
+			"label": "Pull from Device",
+			"detail": "Sends latest files from device.",
+			"type": "shell",
+			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
+			"windows": {
+				"command": "D:\\Projects\\Dev-Editor\\adb\\pusher.bat"
+			},
+			"args": [
+				"pull",
+				"${input:pullType}"
+			],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Stop Horizon",
+			"detail": "Stops currently opened Horizon session.",
+			"type": "shell",
+			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
+			"windows": {
+				"command": "D:\\Projects\\Dev-Editor\\adb\\pusher.bat"
+			},
+			"args": [
+				"stop-horizon"
+			],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Restart Horizon",
+			"detail": "Restarts or opens Horizon and Launch.",
+			"type": "shell",
+			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
+			"windows": {
+				"command": "D:\\Projects\\Dev-Editor\\adb\\pusher.bat"
+			},
+			"args": [
+				"restart-horizon"
+			],
+			"presentation": {
+				"revealProblems": "onProblem",
+				"showReuseMessage": false,
+				"reveal": "silent",
+				"panel": "shared",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Device Crashes",
+			"detail": "Shows all crashes and it causes (advanced).",
+			"type": "shell",
+			"command": "D:/Projects/Dev-Editor/adb/pusher.bat",
+			"windows": {
+				"command": "D:\\Projects\\Dev-Editor\\adb\\pusher.bat"
+			},
+			"args": [
+				"log"
+			],
+			"problemMatcher": []
 		}
 	],
 	"inputs": [
@@ -47,6 +121,18 @@
 				"all"
 			],
 			"default": "sources-run"
+		},
+		{
+			"id": "pullType",
+			"description": "How should to pull?",
+			"type": "pickString",
+			"options": [
+				"build",
+				"source",
+				"assets",
+				"all"
+			],
+			"default": "build"
 		}
 	]
 }
