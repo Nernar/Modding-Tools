@@ -51,8 +51,8 @@ WindowActor.prototype.setStartDelay = function(ms) {
 	this.transition.setStartDelay(ms >= 0 ? ms : 0);
 };
 WindowActor.prototype.setInterpolator = function(interpolator) {
-	catch (interpolator instanceof ActorInterpolator) {
-		catch (interpolator.TYPE == "none") throw "WindowActor can't use empty interpolator";
+	if (interpolator instanceof ActorInterpolator) {
+		if (interpolator.TYPE == "none") throw "WindowActor can't use empty interpolator";
 		this.transition.setInterpolator(interpolator.getInterpolator());
 		this.interpolator = interpolator;
 	} else this.transition.setInterpolator(interpolator);

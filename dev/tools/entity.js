@@ -400,18 +400,18 @@ let EntityEditor = {
 		}
 	},
 	box: {
-		select: function (view) {
+		select: function(view) {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
-			// popup.setOnShowListener(function () {
+			// popup.setOnShowListener(function() {
 				// selectMode = 8;
 				// updateEntityRender(EntityEditor.data.worker);
 			// });
-			// popup.setOnHideListener(function () {
+			// popup.setOnHideListener(function() {
 				// selectMode = 0;
 				// updateEntityRender(EntityEditor.data.worker);
 			// });
-			popup.setOnSelectListener(function (index) {
+			popup.setOnSelectListener(function(index) {
 				EntityEditor.data.item = index;
 				updateEntityRender(EntityEditor.data.worker);
 			});
@@ -423,21 +423,21 @@ let EntityEditor = {
 			popup.setSelectMode(true);
 			Popups.open(popup, "box_select");
 		},
-		add: function (view) {
+		add: function(view) {
 			let model = EntityEditor.data.worker.Visual.getModel(0),
 				selected = EntityEditor.data.item, group = EntityEditor.data.group;
 			if (EntityEditor.data.item >= 0) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
-				popup.setOnSelectListener(function (index) {
+				popup.setOnSelectListener(function(index) {
 					Popups.updateAll();
 				});
-				popup.addButtonElement(translate("New of"), function () {
+				popup.addButtonElement(translate("New of"), function() {
 					let index = (EntityEditor.data.item = model.getIndex(group).addBox());
 					showHint(translate("Box %s added", index + 1));
 					updateEntityRender(EntityEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Copy current"), function () {
+				popup.addButtonElement(translate("Copy current"), function() {
 					let last = EntityEditor.data.item, index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
 					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 					updateEntityRender(EntityEditor.data.worker);
@@ -450,7 +450,7 @@ let EntityEditor = {
 				updateEntityRender(EntityEditor.data.worker);
 			}
 		},
-		resize: function (view) {
+		resize: function(view) {
 			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
@@ -479,53 +479,53 @@ let EntityEditor = {
 			group.addItem(coords.z2);
 			Popups.open(popup, "box_resize");
 		},
-		move: function (view) {
+		move: function(view) {
 			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(selected).getBox(item), coords = box.getCoords();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.move("x", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.x1);
 			group = popup.addGroup("y");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.move("y", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.y1);
 			group = popup.addGroup("z");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.move("z", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(coords.z1);
 			Popups.open(popup, "box_move");
 		},
-		vertex: function (view) {
+		vertex: function(view) {
 			let selected = EntityEditor.data.group, item = EntityEditor.data.item,
 				model = EntityEditor.data.worker.Visual.getModel(0),
 				box = model.getIndex(selected).getBox(item), vertex = box.getVertex();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("UV"));
 			let group = popup.addGroup("x");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.vertex("x", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(vertex.x);
 			group = popup.addGroup("y");
-			group.setOnChangeListener(function (index, value) {
+			group.setOnChangeListener(function(index, value) {
 				box.vertex("y", value);
 				updateEntityRender(EntityEditor.data.worker);
 			});
 			group.addItem(vertex.y);
 			Popups.open(popup, "box_vertex");
 		},
-		remove: function () {
+		remove: function() {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {

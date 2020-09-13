@@ -425,21 +425,21 @@ let TransitionEditor = {
 			if (TransitionEditor.data.hasAnimate) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
-				popup.setOnSelectListener(function (index) {
+				popup.setOnSelectListener(function(index) {
 					Popups.updateAll();
 				});
-				popup.addButtonElement(translate("New of"), function () {
+				popup.addButtonElement(translate("New of"), function() {
 					let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
 					showHint(translate("Frame %s added", index + 1));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Currently"), function () {
+				popup.addButtonElement(translate("Currently"), function() {
 					let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
 					TransitionEditor.data.worker.Animation.getAnimate(0).setupFrame(index);
 					showHint(translate("Frame %s added as currently", index + 1));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Copy current"), function () {
+				popup.addButtonElement(translate("Copy current"), function() {
 					let last = TransitionEditor.data.frame, index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
 					showHint(translate("Frame %s cloned to %s", [last + 1, index + 1]));
 					drawTransitionPoints(TransitionEditor.data.worker);

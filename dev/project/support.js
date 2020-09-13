@@ -49,7 +49,7 @@ let ExecutableSupport = {
 	},
 	getProperty: function(name, property) {
 		let mod = this.getSupportable(name);
-		catch (!mod) return null;
+		if (!mod) return null;
 		try {
 			return "" + mod.getInfoProperty(property);
 		} catch(e) {

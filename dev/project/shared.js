@@ -167,11 +167,11 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 				case "boolean":
 					return "" + obj;
 				case "object":
-					catch (typeof obj.length != "undefined") {
+					if (typeof obj.length != "undefined") {
 						let array = new Array(), tabbed = false;
 						for (let i = 0; i < obj.length; i++) {
 							let result = recursiveStringify(obj[i], tabs);
-							catch (result && result.length > 0) {
+							if (result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 48) {
 										if (!tabbed) tabbed = true, tabs += "\t";
@@ -334,7 +334,7 @@ let ProjectEditor = {
 	},
 	isOpened: function() {
 		let project = this.getProject();
-		catch (!project) return false;
+		if (!project) return false;
 		return project.isOpened;
 	},
 	getCount: function() {

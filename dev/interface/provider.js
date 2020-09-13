@@ -3,7 +3,7 @@ const WindowProvider = {
 	manager: context.getSystemService("window"),
 	BASE_WINDOW_FLAGS: isHorizon ? 256 : 0,
 	getFlagsForWindow: function(window) {
-		let  flags = isInstant ? 0 : this.BASE_WINDOW_FLAGS;
+		let flags = isInstant ? 0 : this.BASE_WINDOW_FLAGS;
 		if (!window) return flags;
         if (!window.isTouchable()) flags |= 16;
         else if (!window.isFullscreen()) flags |= 32;
@@ -16,7 +16,7 @@ const WindowProvider = {
 		return window.popupId;
 	},
 	hasOpenedPopup: function(window) {
-		let  id = window.popupId;
+		let id = window.popupId;
 		if (!id) return false;
 		return !!this.getByPopupId(id);
 	},
@@ -25,13 +25,13 @@ const WindowProvider = {
 		return this.attached[popupId] || null;
 	},
 	openWindow: function(window) {
-		catch (!window) return;
-		let  content = window.getContent();
+		if (!window) return;
+		let content = window.getContent();
 		if (isHorizon && !isInstant)
 			content.setSystemUiVisibility(5894);
 		if (!window.isFocusable()) {
 			if (this.hasOpenedPopup(window)) return;
-			let  popup = new android.widget.PopupWindow(content,
+			let popup = new android.widget.PopupWindow(content,
 					window.getWidth(), window.getHeight()),
 				popupId = this.prepareIdentifier(window);
 			this.attached[popupId] = popup;
@@ -45,13 +45,13 @@ const WindowProvider = {
 							window.getX(), window.getY());
 			return;
 		}
-		let  flags = this.getFlagsForWindow(window);
+		let flags = this.getFlagsForWindow(window);
 		this.manager.addView(content, window.getParams(flags));
 	},
 	closeWindow: function(window) {
 		if (!window) return;
 		if (!window.isFocusable()) {
-			let  popupId = window.popupId,
+			let popupId = window.popupId,
 				popup = this.getByPopupId(popupId);
 			if (!popup) return;
 			popup.dismiss();
@@ -62,13 +62,13 @@ const WindowProvider = {
 		this.manager.removeView(window.getContent());
 	},
 	setEnterActor: function(popupId, actor) {
-		let  popup = this.getByPopupId(popupId);
+		let popup = this.getByPopupId(popupId);
 		if (!popup) return;
 		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setEnterTransition(actor);
 	},
 	setExitActor: function(popupId, actor) {
-		let  popup = this.getByPopupId(popupId);
+		let popup = this.getByPopupId(popupId);
 		if (!popup) return;
 		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setExitTransition(actor);
@@ -104,7 +104,7 @@ const WindowProvider = {
 				window.getWidth(), window.getHeight());
 			return;
 		}
-		let  flags = this.getFlagsForWindow(window);
+		let flags = this.getFlagsForWindow(window);
 		this.manager.updateViewLayout(window.getContent(), window.getParams(flags));
 	},
 	destroy: function() {

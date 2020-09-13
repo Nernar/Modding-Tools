@@ -403,7 +403,7 @@ let BlockEditor = {
 				renderer = new ListingPopup();
 				renderer.setTitle(translate("Renderer"));
 				renderer.setSelectMode(true);
-				renderer.setOnSelectListener(function (index) {
+				renderer.setOnSelectListener(function(index) {
 					selectMode = 9;
 					BlockEditor.data.rendererInst = index;
 					mapRenderBlock(BlockEditor.data.worker);
@@ -420,7 +420,7 @@ let BlockEditor = {
 				collision = new ListingPopup();
 				collision.setTitle(translate("Collision"));
 				collision.setSelectMode(true);
-				collision.setOnSelectListener(function (index) {
+				collision.setOnSelectListener(function(index) {
 					selectMode = 10;
 					BlockEditor.data.collisionInst = index;
 					mapRenderBlock(BlockEditor.data.worker);
@@ -783,7 +783,7 @@ let BlockEditor = {
 			if (BlockEditor.data.hasCollision) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
-				popup.setOnSelectListener(function (index) {
+				popup.setOnSelectListener(function(index) {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
@@ -901,7 +901,7 @@ let BlockEditor = {
 			popup.addButtonElement(translate("At %s angle", 90));
 			popup.addButtonElement(translate("At %s angle", 180));
 			popup.addButtonElement(translate("At %s angle", 270));
-			popup.setOnClickListener(function (index) {
+			popup.setOnClickListener(function(index) {
 				let values = popup.getAllEditsValues(),
 					side = compileData(values[0], "string").toLowerCase(),
 					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
