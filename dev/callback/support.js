@@ -100,10 +100,10 @@ function refreshSupportablesIcons() {
 		ExecutableSupport.refreshIcon(UIEditor);
 		ExecutableSupport.refreshIcon(Setting);
 		ExecutableSupport.refreshIcon(DumpCreator);
-		ExecutableSupport.refreshIcon(IntantRunner);
+		ExecutableSupport.refreshIcon(InstantRunner);
 		ExecutableSupport.refreshIcon(WorldEdit);
 		ExecutableSupport.refreshIcon(UtilsPlus);
-		ExecutableSupport.refreshIcon(TPSmeter);
+		ExecutableSupport.refreshIcon(TPSMeter);
 	} catch (e) {
 		reportError(e);
 	}
