@@ -1,0 +1,17 @@
+{
+  "test": "Test",
+  "array": {
+    "value1": "Element 1",
+    "value2": "Element 2",
+    "nested": {
+      "element": "Nested element"
+    }
+  },
+  "loop.inside": "Inside hierarchy",
+  "array.nested": "Nested array",
+  "test_1": "One test",
+  "test_few": "%s tests",
+  "test_many": "% s tests",
+  "test_10000": "Lots of tests",
+  "files": "{count, plural, one {{count} file.} other {{count} files.}}"
+}
