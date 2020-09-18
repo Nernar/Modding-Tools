@@ -1,3 +1,17 @@
 {
-	"test": "Тест"
+	"test": "Тест",
+	"array": {
+		"value1": "Элемент 1",
+		"value2": "Элемент 2",
+		"nested": {
+			"element": "Вложенный элемент"
+		}
+	},
+	"loop.inside": "Внутри иерархии",
+	"array.nested": "Вложенный массив",
+	"test_1": "Один тест",
+	"test_few": "%s теста",
+	"test_many": "%s тестов",
+	"test_10000": "Много тестов",
+	"files": "{count, plural, one {{count} файл.} other {{count} файлов.}}"
 }
