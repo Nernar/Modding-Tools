@@ -192,14 +192,16 @@ function initialize() {
 			reportError(e);
 		}
 		
-		context.runOnUiThread(function() {
-			try {
-				StartEditor.create();
-				showHint.unstackLaunch();
-			} catch (e) {
-				reportError(e);
-			}
-		});
+		if (showHint.unstackLaunch) {
+			context.runOnUiThread(function() {
+				try {
+					StartEditor.create();
+					showHint.unstackLaunch();
+				} catch (e) {
+					reportError(e);
+				}
+			});
+		}
 	});
 }
 

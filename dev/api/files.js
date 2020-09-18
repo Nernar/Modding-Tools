@@ -176,7 +176,7 @@ const Files = {
 	filesCount: function(path) {
 		return new java.io.File(path).list().length;
 	},
-	deleteDir: function(path) {
+	deleteDir: function(path, include, exclude, root) {
 		// Recursive file deletion
 		let file = new java.io.File(path);
 		if (file.isDirectory()) {

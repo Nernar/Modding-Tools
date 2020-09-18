@@ -1067,6 +1067,15 @@ Translation.addTranslation("You're idiot. LMAO.", {
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
 });
+Translation.addTranslation("The administration deemed it appropriate to issue you a ban, you can contact with administration about unlocking.", {
+	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней по поводу разблокировки."
+});
+Translation.addTranslation("Deleting mod folder for installation", {
+	ru: "Удаление папки мода для установки"
+});
+Translation.addTranslation("Nothing loaded, may connection have been dropped", {
+	ru: "Ничего не загрузилось, возможно подключение было сброшено"
+});
 
 // Not localized content will be appear here
 Translation.addTranslation("Debug", {});

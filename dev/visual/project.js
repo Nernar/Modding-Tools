@@ -221,6 +221,7 @@ ControlWindow.Header.prototype.setupScroll = function() {
 		let logo = scope.views.logo.getY(), offset = y - logo - Ui.getY(12),
 			real = Ui.getY(offset) / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
+		Logger.Log((real > 0 ? "real > 0: " + real : real) + ", " + scope.progress);
 	});
 	return this;
 };
