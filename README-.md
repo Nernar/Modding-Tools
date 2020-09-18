@@ -11,17 +11,17 @@ We created it for you, developers like us. *Creating content right in the game i
 *At the moment there are the following possibilities:*
 
 - Modeling static **ICRender** models
-- Создание специальных переходов **Transition**
-- Моделирование объектных моделей **Render**
-- Редактирование и проектирование окружения
+- Creating custom **Transition**s
+- **Render** object model modeling
+- Environment editing and design
 - Modular system built into the modification
 - New features being developed
 
 ## Development of
 
-Если у Вас есть предложения/пожелания и/или ошибки во время работы нашей среды, Вы можете рассказать об этом на нашей доске в [Trello](https://trello.com/b/wzYtpA3W/dev-editor). Нам будет крайне интересно изучить Вашу проблему или предложение, чтобы исправить или добавить их в ближайшее время.
+If you have any suggestions/wishes and/or errors during the work of our environment, you can tell about it on our board in [Trello](https://trello.com/b/wzYtpA3W/dev-editor). It will be extremely interesting for us to study your problem or suggestion in order to fix or add them in the near future.
 
-Принять участие в разработке мода можно будет как только исходный код будет опубликован здесь, каждый сможет вносить любого рода правки благодаря технологиям `GitHub`. По любым вопросам обращайтесь в [нашу группу](https://vk.me/nernar). Актуальную версию всегда можно найти в ней.
+It will be possible to take part in the development of the mod as soon as the source code is published here, everyone will be able to make any kind of edits thanks to the technologies of `GitHub`. For any questions please contact [our group](https://vk.me/nernar). The current version can always be found in it.
 
 ## Using
 
@@ -55,9 +55,9 @@ render.addEntry(model);
 
 The menu opens in front of itself the main available items. *You can directly import part of the code, and the modification itself recognizes the supported parts of the project.* At the same time, the script will be converted into one project - this will allow storing information more conveniently.
 
-Стандартная папка для экспорта находится в папке `Dev Editor/saves`. Сюда сохраняются все проекты и отсюда же они загружаются, эта папка меняется в файловом проводнике игры.
+The default export folder is located in the `Dev Editor/saves` folder.  All projects are saved here and from here they are loaded, this folder changes in the file explorer of the game.
 
-Интерфейс разделяется по типам — существуют окна координат, выделения элементов, деревьев проекта и прочие. Доступ к моделированию доступен *только в мире*, так как многие возможности доступны только изнутри.
+The interface is divided into types - there are coordinate windows, selection of elements, project trees and others.  The modeling access is only available to *in the world*, as many of the capabilities are only available from within.
 
 To use many tools, a basic concept of [the coordinate axis is](https://ru.m.wikipedia.org/wiki/%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82) needed. The coordinates form the actual position of the element in the world, the rotation of the elements is expressed in degrees at the option of the developer.
 
