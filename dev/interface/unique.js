@@ -1,7 +1,7 @@
 const ActoredWindow = function() {
 	this.reset();
 };
-ActoredWindow.prototype = new FocusableWindow();
+ActoredWindow.prototype = new FocusableWindow;
 ActoredWindow.prototype.TYPE = "ActoredWindow";
 ActoredWindow.prototype.reset = function() {
 	this.manager = new ActorManager();
@@ -26,7 +26,7 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 };
 
 const UniqueWindow = new Function();
-UniqueWindow.prototype = new ActoredWindow();
+UniqueWindow.prototype = new ActoredWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";
 UniqueWindow.prototype.isAttached = function() {
 	return UniqueHelper.isAttached(this);

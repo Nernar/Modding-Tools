@@ -12,7 +12,7 @@ let ControlButton = function() {
 	actor.setDuration(400);
 	this.setExitActor(actor);
 };
-ControlButton.prototype = new UniqueWindow();
+ControlButton.prototype = new UniqueWindow;
 ControlButton.prototype.TYPE = "ControlButton";
 ControlButton.prototype.reset = function() {
 	let scope = this, views = (this.views = {});

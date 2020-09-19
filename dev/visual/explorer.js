@@ -5,7 +5,7 @@ let ExplorerWindow = function() {
 	this.reset();
 	this.setBackground("popupBackground");
 };
-ExplorerWindow.prototype = new UniqueWindow();
+ExplorerWindow.prototype = new UniqueWindow;
 ExplorerWindow.prototype.TYPE = "ExplorerWindow";
 ExplorerWindow.prototype.reset = function() {
 	let scope = this, views = this.views = {};

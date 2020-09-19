@@ -1,5 +1,5 @@
 let BlockConverter = new Function();
-BlockConverter.prototype = new ScriptConverter();
+BlockConverter.prototype = new ScriptConverter;
 BlockConverter.prototype.getType = function() {
 	return "block";
 };

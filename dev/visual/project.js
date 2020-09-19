@@ -22,7 +22,7 @@ let ControlWindow = function() {
 	this.reset();
 	this.setBackground("popupBackgroundMenu");
 };
-ControlWindow.prototype = new UniqueWindow();
+ControlWindow.prototype = new UniqueWindow;
 ControlWindow.prototype.TYPE = "ControlWindow";
 ControlWindow.prototype.reset = function() {
 	let scope = this, views = this.views = new Object();
@@ -275,8 +275,8 @@ ControlWindow.ProjectHeader = function(parent) {
 	this.checkNothingNeedable();
 	this.updateSlideProgress();
 };
-ControlWindow.ProjectHeader.prototype = new ControlWindow.Header();
-ControlWindow.ProjectHeader.prototype.__resetCWH = ControlWindow.ProjectHeader.prototype.reset;
+ControlWindow.ProjectHeader.prototype = new ControlWindow.Header;
+ControlWindow.ProjectHeader.prototype.__resetCWH = ControlWindow.Header.prototype.reset;
 ControlWindow.ProjectHeader.prototype.reset = function() {
 	this.__resetCWH && this.__resetCWH();
 	let views = this.views;
@@ -303,7 +303,9 @@ ControlWindow.ProjectHeader.prototype.getBackground = function() {
 };
 ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
 	let content = this.getContent(), views = this.views;
-	if (!content || !views || !views.background || !src) return this;
+	if (!content || !views || !views.background || !src) {
+		return this;
+	}
 	this.background = src;
 	views.background.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
@@ -373,7 +375,9 @@ ControlWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex)
 ControlWindow.prototype.addProjectHeader = function(header) {
 	let header = header instanceof ControlWindow.ProjectHeader ?
 		header : new ControlWindow.ProjectHeader(this);
-	this.indexOfElement(header) == -1 && this.getElements().push(header);
+	if (this.indexOfElement(header) == -1) {
+		this.getElements().push(header);
+	}
 	return header;
 };
 
@@ -382,7 +386,9 @@ ControlWindow.ProjectHeader.Category = function(parentOrName, name) {
 	if (parentOrName instanceof ControlWindow.ProjectHeader) {
 		this.setParentHeader(parentOrName);
 		name && this.setTitle(name);
-	} else if (parentOrName) this.setTitle(parentOrName);
+	} else if (parentOrName) {
+		this.setTitle(parentOrName);
+	}
 	this.items = new Array();
 };
 ControlWindow.ProjectHeader.Category.prototype.reset = function() {
@@ -417,9 +423,13 @@ ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header
 	header.categories && header.categories.indexOf(this)
 		== -1 && header.categories.push(this);
 	let content = this.getContent();
-	if (!content) return this;
+	if (!content) {
+		return this;
+	}
 	let layout = header.views.project;
-	if (!layout) return this;
+	if (!layout) {
+		return this;
+	}
 	let window = header.getWindow();
 	if (window) {
 		let actor = new BoundsActor();
@@ -438,12 +448,16 @@ ControlWindow.ProjectHeader.Category.prototype.indexOf = function() {
 };
 ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
 	let views = this.views;
-	if (!views) return null;
+	if (!views) {
+		return null;
+	}
 	return views.title.getText();
 };
 ControlWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
-	if (!content || !views) return this;
+	if (!content || !views) {
+		return this;
+	}
 	views.title.setText("" + text);
 	return this;
 };

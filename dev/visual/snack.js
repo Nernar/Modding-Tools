@@ -20,7 +20,7 @@ let HintAlert = function() {
 	
 	this.reset();
 };
-HintAlert.prototype = new UniqueWindow();
+HintAlert.prototype = new UniqueWindow;
 HintAlert.prototype.TYPE = "HintAlert";
 HintAlert.prototype.time = 3000;
 HintAlert.prototype.reset = function() {

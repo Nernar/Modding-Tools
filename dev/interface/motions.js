@@ -1,7 +1,7 @@
 const ArcMotion = function() {
 	this.reset();
 };
-ArcMotion.prototype = new ActorPathMotion();
+ArcMotion.prototype = new ActorPathMotion;
 ArcMotion.prototype.TYPE = "arc";
 ArcMotion.prototype.reset = function() {
 	this.motion = new android.transition.ArcMotion();
@@ -28,7 +28,7 @@ ArcMotion.prototype.setMinimumVerticalAngle = function(angle) {
 const PatternPathMotion = function() {
 	this.reset();
 };
-PatternPathMotion.prototype = new ActorPathMotion();
+PatternPathMotion.prototype = new ActorPathMotion;
 PatternPathMotion.prototype.TYPE = "patternPath";
 PatternPathMotion.prototype.reset = function() {
 	this.motion = new android.transition.PatternPathMotion();
@@ -41,12 +41,12 @@ PatternPathMotion.prototype.setPatternPath = function(path) {
 };
 
 const VisibilityPropagation = new Function();
-VisibilityPropagation.prototype = new ActorPropagation();
+VisibilityPropagation.prototype = new ActorPropagation;
 
 const CircularPropagation = function() {
 	this.reset();
 };
-CircularPropagation.prototype = new VisibilityPropagation();
+CircularPropagation.prototype = new VisibilityPropagation;
 CircularPropagation.prototype.TYPE = "circular";
 CircularPropagation.prototype.reset = function() {
 	this.propagation = new android.transition.CircularPropagation();
@@ -61,7 +61,7 @@ CircularPropagation.prototype.setPropagationSpeed = function(speed) {
 const SidePropagation = function() {
 	this.reset();
 };
-SidePropagation.prototype = new VisibilityPropagation();
+SidePropagation.prototype = new VisibilityPropagation;
 SidePropagation.prototype.TYPE = "side";
 SidePropagation.prototype.reset = function() {
 	this.propagation = new android.transition.SidePropagation();
@@ -82,7 +82,7 @@ SidePropagation.prototype.setSide = function(side) {
 const AccelerateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
-AccelerateInterpolator.prototype = new ActorInterpolator();
+AccelerateInterpolator.prototype = new ActorInterpolator;
 AccelerateInterpolator.prototype.TYPE = "accelerate";
 AccelerateInterpolator.prototype.reset = function(cycle) {
 	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.AccelerateInterpolator();
@@ -92,7 +92,7 @@ AccelerateInterpolator.prototype.reset = function(cycle) {
 const DecelerateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
-DecelerateInterpolator.prototype = new ActorInterpolator();
+DecelerateInterpolator.prototype = new ActorInterpolator;
 DecelerateInterpolator.prototype.TYPE = "decelerate";
 DecelerateInterpolator.prototype.reset = function(cycle) {
 	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.DecelerateInterpolator();
@@ -102,7 +102,7 @@ DecelerateInterpolator.prototype.reset = function(cycle) {
 const AccelerateDecelerateInterpolator = function() {
 	this.reset();
 };
-AccelerateDecelerateInterpolator.prototype = new ActorInterpolator();
+AccelerateDecelerateInterpolator.prototype = new ActorInterpolator;
 AccelerateDecelerateInterpolator.prototype.TYPE = "accelerateDecelerate";
 AccelerateDecelerateInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.AccelerateDecelerateInterpolator();
@@ -111,7 +111,7 @@ AccelerateDecelerateInterpolator.prototype.reset = function() {
 const AnticipateInterpolator = function(cycle) {
 	this.reset(cycle);
 };
-AnticipateInterpolator.prototype = new ActorInterpolator();
+AnticipateInterpolator.prototype = new ActorInterpolator;
 AnticipateInterpolator.prototype.TYPE = "anticipate";
 AnticipateInterpolator.prototype.reset = function(cycle) {
 	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.AnticipateInterpolator();
@@ -121,7 +121,7 @@ AnticipateInterpolator.prototype.reset = function(cycle) {
 const OvershootInterpolator = function(cycle) {
 	this.reset(cycle);
 };
-OvershootInterpolator.prototype = new ActorInterpolator();
+OvershootInterpolator.prototype = new ActorInterpolator;
 OvershootInterpolator.prototype.TYPE = "overshoot";
 OvershootInterpolator.prototype.reset = function(cycle) {
 	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.OvershootInterpolator();
@@ -131,7 +131,7 @@ OvershootInterpolator.prototype.reset = function(cycle) {
 const AnticipateOvershootInterpolator = function(cycle1, cycle2) {
 	this.reset(cycle1, cycle2);
 };
-AnticipateOvershootInterpolator.prototype = new ActorInterpolator();
+AnticipateOvershootInterpolator.prototype = new ActorInterpolator;
 AnticipateOvershootInterpolator.prototype.TYPE = "anticipateOvershoot";
 AnticipateOvershootInterpolator.prototype.reset = function(cycle1, cycle2) {
 	if (typeof cycle1 == "undefined" || typeof cycle2 == "undefined")
@@ -142,7 +142,7 @@ AnticipateOvershootInterpolator.prototype.reset = function(cycle1, cycle2) {
 const BounceInterpolator = function() {
 	this.reset();
 };
-BounceInterpolator.prototype = new ActorInterpolator();
+BounceInterpolator.prototype = new ActorInterpolator;
 BounceInterpolator.prototype.TYPE = "bounce";
 BounceInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.BounceInterpolator();
@@ -151,7 +151,7 @@ BounceInterpolator.prototype.reset = function() {
 const PathInterpolator = function(path) {
 	this.reset(psth);
 };
-PathInterpolator.prototype = new ActorInterpolator();
+PathInterpolator.prototype = new ActorInterpolator;
 PathInterpolator.prototype.TYPE = "path";
 PathInterpolator.prototype.reset = function(path) {
 	if (!path) throw "Can't create path interpolator without path";
@@ -165,7 +165,7 @@ PathInterpolator.prototype.getPath = function() {
 const CycleInterpolator = function(cycle) {
 	this.reset(cycle);
 };
-CycleInterpolator.prototype = new ActorInterpolator();
+CycleInterpolator.prototype = new ActorInterpolator;
 CycleInterpolator.prototype.TYPE = "cycle";
 CycleInterpolator.prototype.reset = function(cycle) {
 	if (!cycle) throw "Can't create cycle interpolator without cycle time";
@@ -175,7 +175,7 @@ CycleInterpolator.prototype.reset = function(cycle) {
 const LinearInterpolator = function() {
 	this.reset();
 };
-LinearInterpolator.prototype = new ActorInterpolator();
+LinearInterpolator.prototype = new ActorInterpolator;
 LinearInterpolator.prototype.TYPE = "linear";
 LinearInterpolator.prototype.reset = function() {
 	this.interpolator = new android.view.animation.LinearInterpolator();
@@ -184,7 +184,7 @@ LinearInterpolator.prototype.reset = function() {
 const FastOutLinearInInterpolator = function() {
 	this.reset();
 };
-FastOutLinearInInterpolator.prototype = new ActorInterpolator();
+FastOutLinearInInterpolator.prototype = new ActorInterpolator;
 FastOutLinearInInterpolator.prototype.TYPE = "fastOutLinearIn";
 FastOutLinearInInterpolator.prototype.reset = function() {
 	this.interpolator = new android.support.v4.view.animation.FastOutLinearInInterpolator();
@@ -193,7 +193,7 @@ FastOutLinearInInterpolator.prototype.reset = function() {
 const FastOutSlowInInterpolator = function() {
 	this.reset();
 };
-FastOutSlowInInterpolator.prototype = new ActorInterpolator();
+FastOutSlowInInterpolator.prototype = new ActorInterpolator;
 FastOutSlowInInterpolator.prototype.TYPE = "fastOutSlowIn";
 FastOutSlowInInterpolator.prototype.reset = function() {
 	this.interpolator = new android.support.v4.view.animation.FastOutSlowInInterpolator();
@@ -202,7 +202,7 @@ FastOutSlowInInterpolator.prototype.reset = function() {
 const LinearOutSlowInInterpolator = function() {
 	this.reset();
 };
-LinearOutSlowInInterpolator.prototype = new ActorInterpolator();
+LinearOutSlowInInterpolator.prototype = new ActorInterpolator;
 LinearOutSlowInInterpolator.prototype.TYPE = "linearOutSlowIn";
 LinearOutSlowInInterpolator.prototype.reset = function() {
 	this.interpolator = new android.support.v4.view.animation.LinearOutSlowInInterpolator();

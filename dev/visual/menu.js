@@ -13,7 +13,7 @@ let MenuWindow = function() {
 	actor.setDuration(1000);
 	this.setExitActor(actor);
 };
-MenuWindow.prototype = new UniqueWindow();
+MenuWindow.prototype = new UniqueWindow;
 MenuWindow.prototype.TYPE = "MenuWindow";
 MenuWindow.prototype.reset = function() {
 	let views = this.views = new Object();
