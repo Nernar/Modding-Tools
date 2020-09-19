@@ -1,7 +1,7 @@
 {
 	"name":"Dev Editor",
 	"author":"Nernar",
-	"version":"Alpha 0.3.4",
+	"version":"Alpha 0.3.4.1",
 	"description":"Develop your mods with in-game tools.",
 	"instantLaunch":true
 }

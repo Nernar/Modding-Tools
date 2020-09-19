@@ -5,7 +5,16 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
 		}
 		if (isHorizon) {
-			window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
+			if (android.os.Build.VERSION.SDK_INT >= 30) {
+				window.setDecorFitsSystemWindows(false);
+				let controller = window.getInsetsController();
+				if (controller != null) {
+					controller.hide(android.view.WindowInsets.Type.statusBars() | android.view.WindowInsets.Type.navigationBars());
+					controller.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+				}
+			} else {
+				window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
+			}
 			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 		}
 	});
