@@ -1,8 +1,13 @@
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	context.runOnUiThread(function() {
-		if (isHorizon && __code__.startsWith("develop")) context.getWindow().setFlags(512, 512);
-		else if (isHorizon) context.getWindow().setFlags(512 | 8192, 512 | 8192);
-		else context.getWindow().setFlags(8192, 8192);
+		let window = context.getWindow();
+		if (__code__.startsWith("testing")) {
+			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
+		}
+		if (isHorizon) {
+			window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
+			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		}
 	});
 });
 

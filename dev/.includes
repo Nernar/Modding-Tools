@@ -9,10 +9,10 @@ api/scope.js
 api/shared.js
 api/utils.js
 
-java/event.js
+java/shared.js
 java/FileTools.js
 java/Level.js
-java/shared.js
+java/event.js
 
 network/browser.js
 network/connect.js

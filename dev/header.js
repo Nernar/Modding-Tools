@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-beta-0.3.4-19.09.2020-0";
+const __code__ = "develop-alpha-0.3.4-19.09.2020-1";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
@@ -90,7 +90,7 @@ reportError.setStackAction(function(err) {
 		reportError.alreadyHasDate = true;
 	}
 	Files.addText(file, "\n" + message);
-	showHint(translate("Error stack saved into internal storage"), Ui.Color.YELLOW);
+	showHint(translate("Error stack saved into internal storage"), Ui.Color.WHITE);
 });
 
 reportError.prepareDebugInfo = function() {
