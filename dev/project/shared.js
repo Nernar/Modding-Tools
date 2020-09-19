@@ -98,29 +98,38 @@ function monthToName(number) {
 
 function stringifyObject(obj, identate, action, hint, complete) {
 	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
-	function recursiveHint() {
+	function recursiveHint(state, max) {
 		handle(function() {
-			if (indexated) showHint((hint || translate("Stringify")) + " (" + Math.floor(progress / count * 100) + "%)");
-			else if (!indexated) showHint((hint || translate("Indexating")) + " (" + count + ")");
-			else if (!done) showHint(translate("Working"));
-			if (!done || progress < count) recursiveHint();
-			else if (done) showHint((complete || translate("Done")) + " " + translate("as %s ms", active)),
-				hintStackableDenied = state, maximumHints = max;
+			if (indexated) {
+				showHint((hint || translate("Stringify")) + " (" + Math.floor(progress / count * 100) + "%)");
+			} else if (!indexated) {
+				showHint((hint || translate("Indexating")) + " (" + count + ")");
+			} else if (!done) {
+				showHint(translate("Working"));
+			}
+			if (!done || progress < count) {
+				recursiveHint();
+			} else if (done) {
+				showHint((complete || translate("Done")) + " " + translate("as %s ms", active));
+				hintStackableDenied = state;
+				maximumHints = max;
+			}
 		}, 50);
 	}
 	if (showProcesses) {
-		let window = UniqueHelper.getWindow("HintAlert"),
-			state = hintStackableDenied, max = maximumHints;
+		let window = UniqueHelper.getWindow("HintAlert");
 		window && window.setStackable(false);
+		recursiveHint(hintStackableDenied, maximumHints);
 		maximumHints = 0, hintStackableDenied = true;
-		recursiveHint();
 	}
 	function recursiveIndexate(obj) {
 		try {
 			count++;
-			if (obj && typeof obj == "object")
-				for (let i in obj)
+			if (obj && typeof obj == "object") {
+				for (let i in obj) {
 					recursiveIndexate(obj[i]);
+				}
+			}
 		} catch (e) {
 			count++;
 		}
@@ -139,7 +148,8 @@ function stringifyObject(obj, identate, action, hint, complete) {
 				}
 			});
 			action && result && action(result);
-			active = Date.now() - active, done = true;
+			active = Date.now() - active;
+			done = true;
 		} catch (e) {
 			reportError(e);
 			done = true;
@@ -283,15 +293,19 @@ function importProject(path, action) {
 		readFile(path, true, function(bytes) {
 			let result = decompileFromProduce(bytes),
 				data = compileData(result, "object");
-			if (data && !(data instanceof Error))
+			if (data && !(data instanceof Error)) {
 				typeof data.length != "undefined" ?
 					action(data) : action([data]);
-			else handle(function() {
+			} else {
+				handle(function() {
 				confirm(translate("Can't open file"),
 					translate("Looks like, project is damaged. Check project and following exception information:") +
 						"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
-						translate("Do you want to retry?"), function() { importProject(path, action); });
-			});
+						translate("Do you want to retry?"), function() {
+							importProject(path, action);
+						});
+				});
+			}
 		});
 	} catch (e) {
 		reportError(e);
@@ -349,8 +363,9 @@ let ProjectEditor = {
 	},
 	getCurrentType: function() {
 		let project = this.getProject();
-		if (!project || !project.isOpened)
+		if (!project || !project.isOpened) {
 			return "none";
+		}
 		return project.getCurrentType();
 	},
 	initializeAutosave: function() {
@@ -361,7 +376,9 @@ let ProjectEditor = {
 		}
 		scope.thread = handleThread(function() {
 			do {
-				(!project.isAutosaving) && project.callAutosave();
+				if (!project.isAutosaving) {
+					project.callAutosave();
+				}
 				Ui.sleepMilliseconds(autosavePeriod * 1000);
 			} while (project.isOpened);
 			delete scope.thread;
@@ -369,18 +386,24 @@ let ProjectEditor = {
 	},
 	indexOf: function(obj) {
 		let project = this.getProject();
-		if (!project) return -1;
+		if (!project) {
+			return -1;
+		}
 		return project.getAll().indexOf(obj);
 	},
 	setupEditor: function(id, worker) {
 		let project = this.getProject();
-		if (!project) return;
+		if (!project) {
+			return;
+		}
 		project.switchToWorker(worker);
 		project.setCurrentlyId(id);
 	},
 	popEditor: function() {
 		let project = this.getProject();
-		if (!project) return;
+		if (!project) {
+			return;
+		}
 		project.getAll().pop();
 		delete project.worker;
 	}
@@ -419,7 +442,9 @@ function getScriptScope() {
 	let Block = {
 		createBlock: function(id, data, special) {
 			let nid = IDRegistry.fromString(id);
-			if (!nid) return;
+			if (!nid) {
+				return;
+			}
 			data && (__data__[nid].define.data = data);
 			special && (__data__[nid].define.special = special);
 		},
@@ -468,15 +493,18 @@ function getScriptScope() {
 			return new this.Model();
 		},
 		setStaticICRender: function(id, meta, render) {
-			if (!(id >= 0)) __data__.push({
-				type: "block",
-				define: {
-					id: "invalidIdentifier"
-				},
-				renderer: render.renderer,
-				collision: new Array()
-			});
-			else __data__[id].renderer = render.renderer;
+			if (!(id >= 0)) {
+				__data__.push({
+					type: "block",
+					define: {
+						id: "invalidIdentifier"
+					},
+					renderer: render.renderer,
+					collision: new Array()
+				});
+			} else {
+				__data__[id].renderer = render.renderer;
+			}
 		},
 		enableCoordMapping: function(id, meta, render) {
 			this.setStaticICRender(id, meta, render);
@@ -524,10 +552,11 @@ function getScriptScope() {
 		this.withOnFrameListener = function(listener) {};
 		this.withOnFinishListener = function(listener) {};
 		this.withFrames = function(frames) {
-			for (let i = 0; i < frames.length; i++)
+			for (let i = 0; i < frames.length; i++) {
 				this.addFrame(frames[i].x, frames[i].y, frames[i].z,
 					frames[i].yaw, frames[i].pitch,
 					frames[i].duration, frames[i].vector);
+			}
 		};
 		if (obj) {
 			typeof obj == "object" && this.withFrames(obj);
