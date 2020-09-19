@@ -221,7 +221,6 @@ ControlWindow.Header.prototype.setupScroll = function() {
 		let logo = scope.views.logo.getY(), offset = y - logo - Ui.getY(12),
 			real = Ui.getY(offset) / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
-		Logger.Log((real > 0 ? "real > 0: " + real : real) + ", " + scope.progress);
 	});
 	return this;
 };
@@ -273,7 +272,9 @@ ControlWindow.ProjectHeader = function(parent) {
 		this.setBackground("popupBackgroundMenu");
 	this.categories = new Array();
 	this.checkNothingNeedable();
+	this.setMaxScroll(Ui.getY(480));
 	this.updateSlideProgress();
+	this.setCover("popupCover");
 };
 ControlWindow.ProjectHeader.prototype = new ControlWindow.Header;
 ControlWindow.ProjectHeader.prototype.__resetCWH = ControlWindow.Header.prototype.reset;
@@ -419,7 +420,9 @@ ControlWindow.ProjectHeader.Category.prototype.getParentHeader = function() {
 	return this.header || null;
 };
 ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header) {
-	if (!header || typeof header != "object") return this;
+	if (!header || typeof header != "object") {
+		return this;
+	}
 	header.categories && header.categories.indexOf(this)
 		== -1 && header.categories.push(this);
 	let content = this.getContent();
