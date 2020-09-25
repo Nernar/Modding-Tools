@@ -1,4 +1,4 @@
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, UtilsPlus, TPSMeter;
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSMeter;
 
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	try {
@@ -86,8 +86,6 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return !!this.Commands;
 			});
 			
-			UtilsPlus = importMod("Utils+");
-			
 			TPSMeter = importMod("TPS meter");
 		} else supportSupportables = false;
 	} catch (e) {
@@ -102,7 +100,6 @@ function refreshSupportablesIcons() {
 		ExecutableSupport.refreshIcon(DumpCreator);
 		ExecutableSupport.refreshIcon(InstantRunner);
 		ExecutableSupport.refreshIcon(WorldEdit);
-		ExecutableSupport.refreshIcon(UtilsPlus);
 		ExecutableSupport.refreshIcon(TPSMeter);
 	} catch (e) {
 		reportError(e);

@@ -63,9 +63,6 @@ Callback.addCallback("CoreConfigured", function(config) {
 				if (WorldEdit && isNotSupported(WorldEdit)) {
 					WorldEdit = null;
 				}
-				if (UtilsPlus && isNotSupported(UtilsPlus)) {
-					UtilsPlus = null;
-				}
 				if (TPSMeter && isNotSupported(TPSMeter)) {
 					TPSMeter = null;
 				}
@@ -142,7 +139,9 @@ Callback.addCallback("PreBlocksDefined", function() {
 		let mods = Files.listDirectories(Dirs.MOD);
 		for (let m = 0; m < mods.length; m++) {
 			let path = mods[m].getPath() + "/build.config";
-			if (!FileTools.exists(path)) continue;
+			if (!FileTools.exists(path)) {
+				continue;
+			}
 			try {
 				let text = FileTools.readFileText(path);
 				let config = compileData(text, "object");
@@ -153,17 +152,25 @@ Callback.addCallback("PreBlocksDefined", function() {
 					let resource = resources[i];
 					if (resource && resource.resourceType == "resource") {
 						let res = mods[m] + "/" + resource.path + "terrain-atlas";
-						if (!FileTools.exists(res)) continue;
+						if (!FileTools.exists(res)) {
+							continue;
+						}
 						let files = Files.listFileNames(res, true);
 						files = Files.checkFormats(files, "png");
 						for (let t = 0; t < files.length; t++) {
 							let name = files[t];
-							if (!name || name.length == 0) continue;
+							if (!name || name.length == 0) {
+								continue;
+							}
 							name = Files.getNameWithoutExtension(name);
 							let slash = name.lastIndexOf("/");
-							if (slash != -1) name = name.substring(slash + 1); 
+							if (slash != -1) {
+								name = name.substring(slash + 1);
+							}
 							let begin = name.indexOf(resource.path);
-							if (begin != -1) name = name.substring(begin);
+							if (begin != -1) {
+								name = name.substring(begin);
+							}
 							let underscore = name.lastIndexOf("_");
 							if (underscore != -1) {
 								addTexture(index, name.substr(0, underscore), name.substr(underscore + 1));
