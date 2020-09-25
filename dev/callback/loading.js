@@ -193,8 +193,13 @@ function initialize() {
 	checkValidate(function() {
 		try {
 			MCSystem.setLoadingTip("Creating Interface");
-			if (__code__.startsWith("develop")) checkNotLocalized();
-			(checkOnlinable(), checkUpdatable(), checkExecutable());
+			if (__code__.startsWith("develop")) {
+				checkNotLocalized();
+			}
+			checkOnlinable(function() {
+				checkUpdatable();
+				checkExecutable();
+			});
 		} catch (e) {
 			reportError(e);
 		}
