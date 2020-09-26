@@ -1,4 +1,4 @@
-function Project(obj) {
+function ProjectOldest(obj) {
 	this.object = new Array();
 	this.isOpened = false;
 	this.currentId = -1;
@@ -314,7 +314,7 @@ function importProject(path, action) {
 
 let ProjectEditor = {
 	create: function() {
-		let opened = this.opened = new Project();
+		let opened = this.opened = new ProjectOldest();
 		return (opened.time = Date.now(), opened);
 	},
 	addWorker: function(worker) {
