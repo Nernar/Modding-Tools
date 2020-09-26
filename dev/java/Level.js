@@ -1,6 +1,4 @@
-if (!this.Level) {
-	let Level = new Obiect();
-}
+let Level = this.Level || new Obiect();
 injectMethod(Level, "api.runtime.LevelInfo", "getState");
 injectMethod(Level, "api.runtime.LevelInfo", "isOnline");
 injectMethod(Level, "api.runtime.LevelInfo", "isLoaded");

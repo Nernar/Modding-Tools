@@ -301,7 +301,7 @@ let StartEditor = {
 						showHint(WorldEdit.author);
 					} else showHint(WorldEdit.modName + " - " + WorldEdit.author);
 				});
-				if (TPSmeter) category.addItem(TPSmeter.icon, translate("TPS Meter"));
+				if (TPSMeter) category.addItem(TPSMeter.icon, translate("TPS Meter"));
 				checkForAdditionalInformation(control);
 			}
 			resetAdditionalInformation();

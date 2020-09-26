@@ -1,6 +1,4 @@
-if (!this.FileTools) {
-	let FileTools = new Object();
-}
+let FileTools = this.FileTools || new Object();
 injectMethod(FileTools, "utils.FileTools", "assureAndGetCrashDir");
 injectMethod(FileTools, "utils.FileTools", "unpackInputStream");
 injectMethod(FileTools, "utils.FileTools", "assetExists");

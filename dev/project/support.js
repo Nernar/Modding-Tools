@@ -127,7 +127,7 @@ let ExecutableSupport = {
 			}
 		} catch (e) {
 			Logger.Log("Failed to attempt icon load for " + name, "Dev-Core");
-			Logger.LogError(e);
+			__code__.startsWith("develop") && reportError(e);
 		}
 		return "support";
 	},

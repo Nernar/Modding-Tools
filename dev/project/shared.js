@@ -426,7 +426,7 @@ let ProjectEditor = {
 	},
 	initializeAutosave: function() {
 		let scope = this, project = this.getProject();
-		if (!autosave || this.thread) {
+		if (!autosave || this.thread || autosavePeriod <= 0) {
 			project.updateCurrentWorker();
 			return;
 		}

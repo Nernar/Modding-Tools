@@ -60,7 +60,7 @@ ImageFactory.encode = function(file) {
 	return result;
 };
 ImageFactory.encodeFile = function(file, out) {
-	if (!file || !file.exists() || !out) {
+	if (!out) {
 		return;
 	}
 	let encoded = this.encode(file);

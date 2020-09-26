@@ -1,17 +1,20 @@
 MCSystem.setLoadingTip("Injecting Callbacks");
 
-function resetSettingIfNeeded(key, value, minOrIteratorOrValueOrValue, maxOrValues, filter, exclude) {
+function resetSettingIfNeeded(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
+	if (minOrIteratorOrValue == undefined) {
+		return value;
+	}
 	let base = value;
-	if (minOrIteratorOrValueOrValue instanceof Function) {
+	if (minOrIteratorOrValue instanceof Function) {
 		value = minOrIteratorOrValue(value);
 		let tech = filter;
 		filter = maxOrValues;
 		exclude = tech;
 	} else if (Array.isArray(maxOrValues)) {
-		if (!maxOrValues.indexOf(value) || filter) {
+		if (maxOrValues.indexOf(value) == -1) {
 			value = minOrIteratorOrValue;
 		}
-	} else if (minOrIteratorOrValue instanceof Number) {
+	} else if (typeof minOrIteratorOrValue == "number") {
 		if (value < minOrIteratorOrValue) {
 			value = minOrIteratorOrValue;
 		} else if (value > maxOrValues) {
@@ -26,7 +29,9 @@ function resetSettingIfNeeded(key, value, minOrIteratorOrValueOrValue, maxOrValu
 	if (filter instanceof Function) {
 		value = filter(value);
 	} else if (Array.isArray(filter)) {
-		if (!filter.indexOf(value) || exclude) {
+		if (filter.indexOf(value) == -1) {
+			value = minOrIteratorOrValue;
+		} else if (exclude) {
 			value = minOrIteratorOrValue;
 		}
 	}
@@ -52,7 +57,7 @@ function loadSetting(key, type) {
 		default:
 			args[1] = __config__.get(key);
 	}
-	return resetSettingIfNeeded.call(this, args);
+	return resetSettingIfNeeded.apply(this, args);
 }
 
 function updateSettings() {

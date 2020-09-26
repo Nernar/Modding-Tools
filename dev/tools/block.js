@@ -223,9 +223,9 @@ function mapRenderBlock(worker) {
 		for (let i = 0; i < mapped.length; i++) {
 			let map = mapped[i], x = map.x, y = map.y, z = map.z;
 			checkMapping(x, y, z, render);
-			let id = World.getBlockID(x, y, z);
+			let id = Level.getTile(x, y, z);
 			if (id >= CUSTOM_BLOCKS_ID_OFFSET) {
-				let meta = World.getBlockData(x, y, z);
+				let meta = Level.getData(x, y, z);
 				BlockRenderer.setCustomCollisionShape(id, meta, form);
 			}
 		}
