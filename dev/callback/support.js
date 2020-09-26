@@ -24,7 +24,9 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
-				if (!this.Windows) return false;
+				if (!this.Windows) {
+					return false;
+				}
 				let menu = Windows.menu || null;
 				if (menu) {
 					let source = java.lang.String.valueOf("" + menu),
@@ -35,15 +37,22 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						Windows.menu = eval(first + "\n" + injectable + "\nelse " + second);
-					} else return false;
-				} else return false;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
 				return true;
 			});
 			
 			Setting = importMod("Setting", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
-				if (typeof this.rover == "undefined" || !this.removeMenu) return false;
-				if ((rover = false, removeMenu)) {
+				if (typeof this.rover == "undefined" || !this.removeMenu) {
+					return false;
+				}
+				rover = false;
+				if (removeMenu) {
 					let source = java.lang.String.valueOf("" + removeMenu),
 						index = source.indexOf("{");
 					if (index > -1) {
@@ -51,8 +60,12 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						removeMenu = eval(first + "\n" + injectable + "\n " + second);
-					} else return false;
-				} else return false;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
 				Callback.addCallback("LevelLeft", function() {
 					if (!DevEditor.isLocked() && DevEditor.getCurrentEnvironment() == __name__) {
 						DevEditor.createAndLock(), rover = false;
@@ -62,18 +75,23 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			});
 			
 			DumpCreator = importMod("Dump Creator", function() {
-				if (!this.__makeAndSaveDump__) return false;
+				if (!this.__makeAndSaveDump__) {
+					return false;
+				}
 				let originalAlert = alert;
 				alert = function(text) {
-					if (text == "Dump generated") __makeAndSaveDump__.dumped = true;
+					if (text == "Dump generated") {
+						__makeAndSaveDump__.dumped = true;
+					}
 					originalAlert && originalAlert(text);
 				};
 				return true;
 			});
 			
 			InstantRunner = importMod("InstantRunner", function() {
-				if (!this.openAndroidUI) return false;
-				if (!this.container) return false;
+				if (!this.openAndroidUI || !this.container) {
+					return false;
+				}
 				container = new Object();
 				container.close = new Function();
 				container.isOpened = function() {
@@ -87,7 +105,9 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			});
 			
 			TPSMeter = importMod("TPS meter");
-		} else supportSupportables = false;
+		} else {
+			supportSupportables = false;
+		}
 	} catch (e) {
 		reportError(e);
 	}

@@ -37,20 +37,30 @@ const MediaTypes = { // Claimed by system media
 
 const Files = {
 	createFile: function(path, name) {
-		if (name == undefined) let file = new java.io.File(path);
-		else file = new java.io.File(path, name);
-		if (!file.exists()) file.createNewFile();
+		if (name == undefined) {
+			let file = new java.io.File(path);
+		} else {
+			file = new java.io.File(path, name);
+		}
+		if (!file.exists()) {
+			file.createNewFile();
+		}
 	},
 	createNewWithParent: function(path, name) {
-		if (name == undefined) let file = new java.io.File(path);
-		else file = new java.io.File(path, name);
+		if (name == undefined) {
+			let file = new java.io.File(path);
+		} else {
+			file = new java.io.File(path, name);
+		}
 		file.getParentFile().mkdirs();
 		file.createNewFile();
 	},
 	checkFormats: function(list, formats) {
 		// Filters files by extension
-		let formatted = [];
-		typeof formats == "string" && (formats = [formats]);
+		let formatted = new Array();
+		if (!Array.isArray(formats)) {
+			formats = [formats];
+		}
 		for (let i in formats) {
 			for (let l in list) {
 				if (list[l].endsWith(formats[i])) {
@@ -62,23 +72,33 @@ const Files = {
 	},
 	getNameExtension: function(name) {
 		let index = name.lastIndexOf(".");
-		if (index == 0) return null;
-		return index != -1 ? name.substring(index + 1) : null;
+		if (index <= 0) {
+			return null;
+		}
+		return name.substring(index + 1);
 	},
 	getNameWithoutExtension: function(name) {
 		let index = name.lastIndexOf(".");
-		if (index == 0) return name;
-		return index != -1 ? name.substring(0, index) : name;
+		if (index <= 0) {
+			return name;
+		}
+		return name.substring(0, index);
 	},
 	getExtension: function(file) {
 		let name = file.getName(), index = name.lastIndexOf(".");
-		if (file.isDirectory() || index == 0) return null;
-		return index != -1 ? name.substring(index + 1) : null;
+		if (file.isDirectory() || index <= 0) {
+			return null;
+		}
+		return name.substring(index + 1);
 	},
 	getExtensionType: function(file) {
-		if (file.isDirectory()) return "folder";
+		if (file.isDirectory()) {
+			return "folder";
+		}
 		let name = file.getName(), type = this.getExtension(file);
-		if (type) type = new String(type).toLowerCase();
+		if (type) {
+			type = new String(type).toLowerCase();
+		}
 		return (type == "zip" || type == "tar" || type == "rar" || type == "7z"
 				|| type == "mcpack" || type == "apk" || type == "aar" || type == "script"
 				|| type == "odex" || type == "vdex" || type == "zipp" || type == "rarr"
@@ -133,13 +153,17 @@ const Files = {
 		for (let i in list) {
 			if (list[i].isDirectory()) {
 				directories.push(list[i]);
-				if (explore) directories = directories.concat(this.listDirectories(list[i], explore));
+				if (explore) {
+					directories = directories.concat(this.listDirectories(list[i], explore));
+				}
 			}
 		}
 		return directories.sort();
 	},
 	listFileNames: function(path, explore, root) {
-		if (!("" + path).endsWith("/")) path += "/";
+		if (!("" + path).endsWith("/")) {
+			path += "/";
+		}
 		let files = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
@@ -156,7 +180,9 @@ const Files = {
 		return files.sort();
 	},
 	listDirectoryNames: function(path, explore, root) {
-		if (!("" + path).endsWith("/")) path += "/";
+		if (!("" + path).endsWith("/")) {
+			path += "/";
+		}
 		let directories = new Array(),
 			file = new java.io.File(path),
 			list = file.listFiles();
@@ -181,10 +207,11 @@ const Files = {
 		let file = new java.io.File(path);
 		if (file.isDirectory()) {
 			let list = file.listFiles();
-			for (let i = 0; i < list.length; i++)
+			for (let i = 0; i < list.length; i++) {
 				this.deleteDir(list[i].getPath());
+			}
 		}
-		file["delete"]();
+		file.delete();
 	},
 	getFromAssets: function(name) {
 		let assets = context.getAssets();
@@ -192,50 +219,68 @@ const Files = {
 	},
 	readKey: function(a, b) {
 		b = b || "=";
-        let d = this.read(a, true), e = {};
+        let d = this.read(a, true), e = new Object();
         for (let f = 0; f < d.length; f++) {
             let g = d[f].split(b);
-            2 == g.length && (e[g[0]] = g[1]);
+            if (g.length == 2) {
+            	e[g[0]] = g[1];
+            }
         }
         return e;
     },
     writeKey: function(a, b, c) {
         c = c || "=";
-        let d = [];
+        let d = new Array();
         for (let e in b) {
 			d.push(e + c + b[e]);
 		}
         this.write(a, d.join("\n"));
     },
 	read: function(file, massive) {
-		if (!file.exists()) return massive ? [] : null;
-		let reader = java.io.BufferedReader(new java.io.FileReader(file)), result = [];
-		while (line = reader.readLine()) result.push(line);
+		if (!file.exists()) {
+			return massive ? new Array() : null;
+		}
+		let reader = java.io.BufferedReader(new java.io.FileReader(file)), result = new Array();
+		while (line = reader.readLine()) {
+			result.push(line);
+		}
 		return massive ? result : result.join("\n");
 	},
 	readLine: function(file, index) {
-		if (!file.exists()) return null;
+		if (!file.exists()) {
+			return null;
+		}
 		let reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1;
-		while (count < index && (line = reader.readLine())) count++;
+		while (count < index && (line = reader.readLine())) {
+			count++;
+		}
 		return count == index ? line : null;
 	},
 	readLines: function(file, startInd, endInd) {
-		if (!file.exists()) return null;
-		let reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1, result = [];
+		if (!file.exists()) {
+			return null;
+		}
+		let reader = java.io.BufferedReader(new java.io.FileReader(file)), count = -1, result = new Array();
 		while (count <= endInd && (line = reader.readLine())) {
-			if (count >= startInd) result.push(line);
+			if (count >= startInd) {
+				result.push(line);
+			}
 			count++;
 		}
 		return result.length > 0 ? result : null;
 	},
 	readBytes: function(file) {
-		if (!file.exists()) return;
+		if (!file.exists()) {
+			return null;
+		}
 		let stream = new java.io.FileInputStream(file);
 		let output = new java.io.ByteArrayOutputStream();
 		let arr = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 1024);
 		while (true) {
 			let read = stream.read(arr);
-			if (read < 0) return output.toByteArray();
+			if (read < 0) {
+				return output.toByteArray();
+			}
 			output.write(arr, 0, read);
 		}
 	},
@@ -265,14 +310,15 @@ const Files = {
 		eval(Files.read(file));
 	},
 	copy: function(file, path) {
-		let result = new java.io.File(result),
-			exists = result.exists();
-		if (!exists) result.createNewFile();
+		let result = new java.io.File(path);
+		if (!result.exists()) {
+			result.createNewFile();
+		}
 		Files.write(result, Files.read(file));
 	},
 	cut: function(file, path) {
 		Files.copy(file, path);
-		file["delete"]();
+		file.delete();
 	},
 	createFromBase64: function(file, code) {
 		file.createNewFile();
@@ -302,13 +348,16 @@ const Archives = {
 				result = new java.io.File(path, element.getName()),
 				bis = new java.io.BufferedInputStream(source);
 			
-			if (element.isDirectory()) result.mkdir();
-			else {
+			if (element.isDirectory()) {
+				result.mkdir();
+			} else {
 				result.getParentFile().mkdir();
 				let bos = new java.io.BufferedOutputStream(new java.io.FileOutputStream(result)),
 					buf = java.lang.reflect.Array.newInstance(java.lang.Byte.TYPE, 4096);
 				let line = 0;
-				while ((line = bis.read(buf)) >= 0) bos.write(buf, 0, line);
+				while ((line = bis.read(buf)) >= 0) {
+					bos.write(buf, 0, line);
+				}
 				bis.close();
 				bos.close();
 			}
@@ -321,7 +370,7 @@ const Options = {
 	getValue: function(key) {
 		let file = new java.io.File(Dirs.OPTION),
 			reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
-			line = "", result = "";
+			line = new String(), result = new String();
 		while ((line = reader.readLine()) != null) {
 			if (line.split(":")[0] == key) {
 				result = line.split(":")[1];
@@ -334,10 +383,13 @@ const Options = {
 	setValue: function(name, key) {
 		let file = new java.io.File(Dirs.OPTION),
 			reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
-			line = "", result = [];
+			line = new String(), result = new Array();
 		while ((line = reader.readLine()) != null) {
-			if (line.split(":")[0] == name) result.push(name + ":" + key);
-			else result.push(line);
+			if (line.split(":")[0] == name) {
+				result.push(name + ":" + key);
+			} else {
+				result.push(line);
+			}
 		}
 		Files.write(file, result.join("\n"));
 	}

@@ -19,10 +19,18 @@ ScriptConverter.prototype.getAttached = function() {
 };
 ScriptConverter.prototype.validate = function(obj) {
 	try {
-		if (!this.getType) throw "Can't resolve project type for ScriptConverter";
-		if (!obj || !this.getType()) return ScriptConverter.State.ILLEGAL;
-		if (!(obj instanceof Object)) return ScriptConverter.State.PARSE_FAILED;
-		if (obj.type != this.getType()) return ScriptConverter.State.BAD_TYPE;
+		if (!this.getType) {
+			throw new Error("Can't resolve project type for ScriptConverter");
+		}
+		if (!obj || !this.getType()) {
+			return ScriptConverter.State.ILLEGAL;
+		}
+		if (!(obj instanceof Object)) {
+			return ScriptConverter.State.PARSE_FAILED;
+		}
+		if (obj.type != this.getType()) {
+			return ScriptConverter.State.BAD_TYPE;
+		}
 		return ScriptConverter.State.PREPARED;
 	} catch (throwable) {
 		this.throwable = throwable;
@@ -51,8 +59,12 @@ ScriptConverter.prototype.inProcess = function() {
 };
 ScriptConverter.prototype.assureYield = function() {
 	try {
-		if (!this.getThread()) return false;
-		while (this.inProcess()) java.lang.Thread.yield();
+		if (!this.getThread()) {
+			return false;
+		}
+		while (this.inProcess()) {
+			java.lang.Thread.yield();
+		}
 		return this.isConverted();
 	} catch (e) {
 		return false;
@@ -63,8 +75,12 @@ ScriptConverter.prototype.getThread = function() {
 };
 ScriptConverter.prototype.execute = function() {
 	try {
-		if (!this.process) throw "Can't find process for ScriptConverter";
-		if (!this.isValid() || this.inProcess()) return;
+		if (!this.process) {
+			throw new Error("Can't find process for ScriptConverter");
+		}
+		if (!this.isValid() || this.inProcess()) {
+			return;
+		}
 		this.result = this.process(this.getAttached());
 		this.state = ScriptConverter.State.VALID;
 	} catch (throwable) {
@@ -75,9 +91,13 @@ ScriptConverter.prototype.execute = function() {
 ScriptConverter.prototype.executeAsync = function(post) {
 	let scope = this;
 	this.thread = handleThread(function() {
-		scope.execute && scope.execute();
+		if (scope.execute) {
+			scope.execute();
+		}
 		delete scope.thread;
-		post && post(scope.getResult());
+		if (post) {
+			post(scope.getResult());
+		}
 	});
 };
 ScriptConverter.prototype.getCurrentlyReaded = function() {
@@ -89,7 +109,9 @@ ScriptConverter.prototype.getReadedCount = function() {
 };
 ScriptConverter.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
-	if (!readed) return null;
+	if (!readed) {
+		return null;
+	}
 	return readed.join("\n\n");
 };
 ScriptConverter.prototype.hasResult = function() {

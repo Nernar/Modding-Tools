@@ -31,14 +31,17 @@ let LogWindow = {
 function checkNotLocalized() {
 	let source = new java.io.File(__dir__ + "main.js"),
 		text = source.exists() ? Files.read(source) : null;
-	if (!text) throw "checkNotLocalized: Source is not provided, aborting";
-	let splited = text.split("translate("), result = [], already = [], locked = [],
-		file = new java.io.File(__dir__ + "dev/api/localize.js"), indexed = [],
+	if (!text) {
+		throw new Error("checkNotLocalized: source is not provided, aborting");
+	}
+	let splited = text.split("translate("), result = new Array(), already = new Array(), locked = new Array(),
+		file = new java.io.File(__dir__ + "dev/api/localize.js"), indexed = new Array(),
 		has = Files.read(file), localized = has.split("addTranslation(");
 	function hasntAlready(substr) {
 		let check = already.indexOf(substr) == -1;
-		if (!check && locked.indexOf(substr) == -1)
+		if (!check && locked.indexOf(substr) == -1) {
 			locked.push(substr);
+		}
 		return check;
 	}
 	// let MAXIMUM_CUSTOM_SYMBOLS = 512;
@@ -67,30 +70,47 @@ function checkNotLocalized() {
 	// }
 	if (localized.length > 0) {
 		localized.forEach(function(item, index) {
-			if (!item.startsWith("\"")) return;
+			if (!item.startsWith("\"")) {
+				return;
+			}
 			let substr = item.substring(1, item.length);
 			let index = substr.indexOf("\"");
-			if (index < 0) index = item.indexOf("\",");
-			if (index < 0) return;
+			if (index < 0) {
+				index = item.indexOf("\",");
+			}
+			if (index < 0) {
+				return;
+			}
 			substr = substr.substring(0, index);
-			if (hasntAlready(substr))
+			if (hasntAlready(substr)) {
 				already.push(substr);
+			}
 		});
 	}
 	if (splited.length > 0) {
 		splited.forEach(function(item, index) {
-			if (!item.startsWith("\"")) return;
-			else if (item.startsWith("\"), result")) return;
+			if (!item.startsWith("\"")) {
+				return;
+			}
+			if(item.startsWith("\"), result")) {
+				return;
+			}
 			let substr = item.substring(1, item.length);
 			let index = substr.indexOf("\"");
-			if (index < 0) index = item.indexOf("\",");
-			if (index < 0) return;
+			if (index < 0) {
+				index = item.indexOf("\",");
+			}
+			if (index < 0) {
+				return;
+			}
 			substr = substr.substring(0, index);
 			if (already.indexOf(substr) == -1 &&
-				result.indexOf(substr) == -1)
+				result.indexOf(substr) == -1) {
 					result.push(substr);
-			if (indexed.indexOf(substr) == -1)
+				}
+			if (indexed.indexOf(substr) == -1) {
 				indexed.push(substr);
+			}
 		});
 	}
 	if (result.length > 0) {
@@ -105,40 +125,62 @@ function checkNotLocalized() {
 		let array = Files.read(file, true), started = false, isDeprecated = false,
 			toComment = false, first = new Array(), count = 0, last = null;
 		let out = array.map(function(e) {
-			if (typeof e != "string") e = "" + e;
+			if (typeof e != "string") {
+				e = "" + e;
+			}
 			let comment = toComment, deprecation = isDeprecated;
 			if (started && (e.endsWith(");") || e.endsWith(" // DEPRECATED"))) {
 				started = toComment = isDeprecated = false;
 				if (e.endsWith(" // DEPRECATED")) (count--, comment = false);
 			}
-			if (comment && !toComment) return e + (deprecation ? " // DEPRECATED" : " */");
-			else if (toComment) return e;
-			else if (indexed.indexOf(last) != -1 && e.endsWith(" // DEPRECATED"))
+			if (comment && !toComment) {
+				return e + (deprecation ? " // DEPRECATED" : " */");
+			} else if (toComment) {
+				return e;
+			} else if (indexed.indexOf(last) != -1 && e.endsWith(" // DEPRECATED")) {
 				return e.replace(" // DEPRECATED", "");
+			}
 			if (e.startsWith("Translation.addTranslation")) {
 				let index = e.indexOf("\"");
-				if (index < 0) return e;
+				if (index < 0) {
+					return e;
+				}
 				let substr = e.substring(index + 1, e.length);
 				let place = substr.indexOf("\"");
-				if (place < 0) return e;
+				if (place < 0) {
+					return e;
+				}
 				let resulted = substr.substring(0, place);
 				if (indexed.indexOf(resulted) == -1 && first.indexOf(resulted) == -1) {
 					started = toComment = true;
 					first.push(resulted);
 					(count++, isDeprecated = true);
-					if (e.endsWith(");") || e.endsWith(" // DEPRECATED")) started = toComment = isDeprecated = false;
-					if (!e.endsWith(" // DEPRECATED")) return e + (e.endsWith(");") ? " // DEPRECATED" : "");
+					if (e.endsWith(");") || e.endsWith(" // DEPRECATED")) {
+						started = toComment = isDeprecated = false;
+					}
+					if (!e.endsWith(" // DEPRECATED")) {
+						return e + (e.endsWith(");") ? " // DEPRECATED" : "");
+					}
 				} else if (locked.indexOf(resulted) != -1) {
 					if (first.indexOf(resulted) != -1) {
 						started = toComment = true;
-						(count++, last = resulted);
-						if (e.endsWith(");")) started = toComment = false;
+						count++;
+						last = resulted;
+						if (e.endsWith(");")) {
+							started = toComment = false;
+						}
 						return "/* " + e + ((e.endsWith(");") || e.endsWith(" // DEPRECATED")) ? " */" : "");
-					} else (started = true, first.push(resulted));
-					if ((e.endsWith(");") || e.endsWith(" // DEPRECATED"))) started = false;
+					} else {
+						started = true;
+						first.push(resulted);
+					}
+					if ((e.endsWith(");") || e.endsWith(" // DEPRECATED"))) {
+						started = false;
+					}
 				}
-				if (indexed.indexOf(last) != -1 && e.endsWith(" // DEPRECATED"))
+				if (indexed.indexOf(last) != -1 && e.endsWith(" // DEPRECATED")) {
 					return e.replace(" // DEPRECATED", "");
+				}
 			}
 			return e;
 		});
@@ -150,10 +192,14 @@ function checkNotLocalized() {
 }
 
 function show(view) {
-	if (!__code__.startsWith("develop")) return;
+	if (!__code__.startsWith("develop")) {
+		return;
+	}
 	let editText = new android.widget.EditText(context);
 	editText.setHint("Hi, I'm evaluate stroke");
-	if (show.lastCode) editText.setText(show.lastCode);
+	if (show.lastCode) {
+		editText.setText(show.lastCode);
+	}
 	
 	let dialog = new android.app.AlertDialog.Builder(context);
 	dialog.setTitle(__name__ + " " + __version__);

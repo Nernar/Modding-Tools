@@ -5,7 +5,9 @@ const Popups = {
 		let opened = this.closeIfOpened(name);
 		if (!opened) {
 			let index = this.widgets.length;
-			index > maxWindows && this.closeFirst();
+			if (index > maxWindows) {
+				this.closeFirst();
+			}
 			this.createAction(widget);
 			this.widgets.push(widget);
 			widget.name = name;
@@ -30,29 +32,33 @@ const Popups = {
 	createAction: function(widget) {
 		if (widget) {
 			let title = widget.views.title;
-			title && title.setOnTouchListener(function(view, event) {
-				switch (event.getAction()) {
-					case 0:
-						dx = event.getX();
-						dy = event.getY();
-						break;
-					case 2:
-						widget.window.update(event.getRawX() - dx,
-							event.getRawY() - dy, -1, -1);
-						// ProjectEditor.getProject().updatePopup(widget.name,
-							// event.getRawX() - dx, event.getRawY() - dy);
-						break;
-				}
-				return true;
-			});
+			if (title) {
+				title.setOnTouchListener(function(view, event) {
+					switch (event.getAction()) {
+						case 0:
+							dx = event.getX();
+							dy = event.getY();
+							break;
+						case 2:
+							widget.window.update(event.getRawX() - dx,
+								event.getRawY() - dy, -1, -1);
+							// ProjectEditor.getProject().updatePopup(widget.name,
+								// event.getRawX() - dx, event.getRawY() - dy);
+							break;
+					}
+					return true;
+				});
+			}
 		}
 	},
 	closeUnactived: function() {
 		for (let i = 0; i < this.widgets.length; i++) {
 			let widget = this.widgets[i],
 				window = widget.window;
-			window && widget.focusable
-				&& Popups.close(widget) && (i--);
+			if (window && widget.focusable) {
+				Popups.close(widget);
+				i--;
+			}
 		}
 	},
 	closeIfOpened: function(name) {
@@ -64,7 +70,9 @@ const Popups = {
 		return false;
 	},
 	closeAllByTag: function(tag) {
-		(!tag.endsWith("_")) && (tag += "_");
+		if (!tag.endsWith("_")) {
+			tag += "_";
+		}
 		for (let i = 0; i < this.widgets.length; i++) {
 			if (this.widgets[i].name.startsWith(tag)) {
 				this.close(i) && (i--);

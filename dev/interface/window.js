@@ -26,7 +26,7 @@ FocusableWindow.prototype.isFullscreen = function() {
 };
 FocusableWindow.prototype.getParams = function(flags) {
 	let params = new android.view.WindowManager.LayoutParams(this.width, this.height,
-		this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
+			this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
 	return (params.gravity = this.gravity, params);
 };
 FocusableWindow.prototype.gravity = Ui.Gravity.NONE;
@@ -95,17 +95,27 @@ FocusableWindow.prototype.getPopup = function() {
 	return WindowProvider.getByPopupId(this.popupId);
 };
 FocusableWindow.prototype.setEnterActor = function(actor) {
-	if (this.isOpened()) WindowProvider.setEnterActor(this.popupId, actor);
-	actor && (this.enterActor = actor);
+	if (this.isOpened()) {
+		WindowProvider.setEnterActor(this.popupId, actor);
+	}
+	if (actor) {
+		this.enterActor = actor;
+	}
 };
 FocusableWindow.prototype.setExitActor = function(actor) {
-	if (this.isOpened()) WindowProvider.setEnterActor(this.popupId, actor);
-	actor && (this.exitActor = actor);
+	if (this.isOpened()) {
+		WindowProvider.setEnterActor(this.popupId, actor);
+	}
+	if (actor) {
+		this.exitActor = actor;
+	}
 };
 FocusableWindow.prototype.show = function() {
 	WindowProvider.prepareActors(this);
 	this.getContent().setVisibility(Ui.Visibility.VISIBLE);
-	if (!this.isOpened()) WindowProvider.openWindow(this);
+	if (!this.isOpened()) {
+		WindowProvider.openWindow(this);
+	}
 	this.__show && this.__show();
 };
 FocusableWindow.prototype.update = function() {

@@ -1,50 +1,105 @@
 MCSystem.setLoadingTip("Injecting Callbacks");
 
+function resetSettingIfNeeded(key, value, minOrIteratorOrValueOrValue, maxOrValues, filter, exclude) {
+	let base = value;
+	if (minOrIteratorOrValueOrValue instanceof Function) {
+		value = minOrIteratorOrValue(value);
+		let tech = filter;
+		filter = maxOrValues;
+		exclude = tech;
+	} else if (Array.isArray(maxOrValues)) {
+		if (!maxOrValues.indexOf(value) || filter) {
+			value = minOrIteratorOrValue;
+		}
+	} else if (minOrIteratorOrValue instanceof Number) {
+		if (value < minOrIteratorOrValue) {
+			value = minOrIteratorOrValue;
+		} else if (value > maxOrValues) {
+			value = maxOrValues;
+		}
+	} else if (value != minOrIteratorOrValue) {
+		value = minOrIteratorOrValue;
+		let tech = filter;
+		filter = maxOrValues;
+		exclude = tech;
+	}
+	if (filter instanceof Function) {
+		value = filter(value);
+	} else if (Array.isArray(filter)) {
+		if (!filter.indexOf(value) || exclude) {
+			value = minOrIteratorOrValue;
+		}
+	}
+	if (base != value) {
+		__config__.set(key, value);
+	}
+	return value;
+}
+
+function loadSetting(key, type) {
+	let args = Array.prototype.slice.call(arguments);
+	switch (type) {
+		case "bool":
+		case "boolean":
+			args[1] = __config__.getBool(key);
+			break;
+		case "number":
+			args[1] = __config__.getNumber(key);
+			break;
+		case "string":
+			args[1] = __config__.getString(key);
+			break;
+		default:
+			args[1] = __config__.get(key);
+	}
+	return resetSettingIfNeeded.call(this, args);
+}
+
 function updateSettings() {
 	try {
 		// Update settings from config (worth updating?)
-		uiScaler = __config__.getNumber("interface.interface_scale");
-		(uiScaler > 2 && (uiScaler = 2) || uiScaler < 0.5 && (uiScaler = 0.5)) && __config__.set("interface.interface_scale", uiScaler);
-		fontScale = __config__.getNumber("interface.font_scale");
-		(fontScale > 2 && (fontScale = 2) || fontScale < 0.5 && (fontScale = 0.5)) && __config__.set("interface.font_scale", fontScale);
-		maxWindows = __config__.getNumber("interface.max_windows");
-		(maxWindows > 10 && (maxWindows = 10) || maxWindows < 1 && (maxWindows = 1)) && __config__.set("interface.max_windows", maxWindows);
-		maximumHints = __config__.getNumber("performance.maximum_hints");
-		(maximumHints > 100 && (maximumHints = 100) || maximumHints < 1 && (maximumHints = 1)) && __config__.set("performance.maximum_hints", uiScaler);
-		menuDividers = __config__.getBool("interface.show_dividers");
-		autosave = __config__.getBool("autosave.enabled");
-		autosaveInterface = __config__.getBool("autosave.with_interface");
-		autosavePeriod = __config__.getNumber("autosave.between_period");
-		autosavePeriod != 0 && (autosavePeriod > 300 && (autosavePeriod = 300) || autosavePeriod < 5 && (autosavePeriod = 5)) && __config__.set("autosave.between_period", autosavePeriod);
+		uiScaler = loadSetting("interface.interface_scale", "number", 0.5, 2);
+		fontScale = loadSetting("interface.font_scale", "number", 0.5, 2);
+		maxWindows = loadSetting("interface.max_windows", "number", 1, 10);
+		menuDividers = loadSetting("interface.show_dividers", "boolean");
+		projectHeaderBackground = loadSetting("interface.header_background", "boolean");
+		
+		maximumHints = loadSetting("performance.maximum_hints", "number", 1, 100);
+		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean");
+		debugAnimationsEnabled = loadSetting("performance.debug_animations", "boolean");
+		showProcesses = loadSetting("performance.show_processes", "boolean");
+		
+		autosave = loadSetting("autosave.enabled", "boolean");
+		/* autosaveInterface */ loadSetting("autosave.with_interface", "boolean", false);
+		autosavePeriod = loadSetting("autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
 		autosaveProjectable = __config__.getBool("autosave.as_projectable");
-		// autosaveCount = __config__.getNumber("autosave.maximum_count");
-		// autosaveCount < 0 && (autosaveCount = 0) && __config__.set("autosave.maximum_count", autosaveCount);
-		CURRENTLY_SERVER_LOCATION = __config__.getNumber("network.default_location");
-		(CURRENTLY_SERVER_LOCATION > 1 && (CURRENTLY_SERVER_LOCATION = 1) || CURRENTLY_SERVER_LOCATION < 0 && (CURRENTLY_SERVER_LOCATION = 0)) && __config__.set("network.default_location", CURRENTLY_SERVER_LOCATION);
-		SERVER_HAS_SAFE_CONNECTION = __config__.getBool("network.safe_connection");
-		SERVER_LOCATION_LOCKED = __config__.getBool("network.switch_locked");
-		entityBoxType = __config__.getBool("render.use_box_sizes");
-		drawSelection = __config__.getBool("render.draw_selection");
-		injectBorder = __config__.getBool("render.inject_border");
-		transparentBoxes = __config__.getBool("render.transparent_boxes");
-		if (!isHorizon) {
-			transparentBoxes = false;
-			__config__.set("render.transparent_boxes", transparentBoxes);
-		}
-		hintStackableDenied = !__config__.getBool("performance.hint_stackable");
+		/* autosaveCount */ loadSetting("autosave.maximum_count", "number", 1, 50);
+		
+		CURRENTLY_SERVER_LOCATION = loadSetting("network.default_location", "number", 0, 1);
+		SERVER_HAS_SAFE_CONNECTION = loadSetting("network.safe_connection", "boolean");
+		SERVER_LOCATION_LOCKED = loadSetting("network.switch_locked", "boolean");
+		
+		entityBoxType = loadSetting("render.use_box_sizes", "boolean");
+		drawSelection = loadSetting("render.draw_selection", "boolean");
+		injectBorder = loadSetting("render.inject_border", "boolean");
+		transparentBoxes = loadSetting("render.transparent_boxes", "boolean", function(value) {
+			return value && isHorizon;
+		});
+		
 		if (supportSupportables) {
-			loadSupportables = __config__.getBool("supportable.enabled");
+			loadSupportables = loadSetting("supportable.enabled", "boolean");
 		} else {
 			Logger.Log("Supportables disabled, because it's not approved by developer", "Dev-Core");
 		}
-		debugAnimationsEnabled = __config__.getBool("performance.debug_animations");
-		projectHeaderBackground = __config__.getBool("interface.header_background");
-		showProcesses = __config__.getBool("performance.show_processes");
-		ignoreKeyDeprecation = __config__.getBool("user_login.ignore_deprecation");
-		noImportedScripts = !__config__.getBool("user_login.imported_script");
-		useOldExplorer = __config__.getBool("other.use_old_explorer");
-		importAutoselect = __config__.getBool("other.import_autoselect");
-		saveCoords = __config__.getBool("other.autosave_mapping");
+		
+		ignoreKeyDeprecation = loadSetting("user_login.ignore_deprecation", "boolean");
+		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
+		/* sendAnalytics */ loadSetting("user_login.send_analytics", "boolean", true);
+		
+		useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
+		importAutoselect = loadSetting("other.import_autoselect", "boolean");
+		saveCoords = loadSetting("other.autosave_mapping", "boolean");
+		
 		__config__.save();
 	} catch (e) {
 		reportError(e);
@@ -61,7 +116,8 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 				render.addEntry(new BlockRenderer.Model(block.id, block.data));
 				BlockRenderer.enableCoordMapping(block.id, block.data, render);
 				BlockEditor.data.worker.Define.addMapping(coords.x, coords.y, coords.z);
-				selectMode = 0, BlockEditor.create();
+				selectMode = 0;
+				BlockEditor.create();
 			} else if (selectMode == 6) {
 				// Entity summon by tapping
 				let position = coords.relative;
@@ -70,7 +126,8 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 				Entity.setMobile(custom.entity, false);
 				EntityEditor.data.worker.Define.addEntity(custom.entity);
 				showHint(translate("Entity summoned"));
-				selectMode = 0, EntityEditor.create();
+				selectMode = 0;
+				EntityEditor.create();
 			}
 		} catch (e) {
 			reportError(e);

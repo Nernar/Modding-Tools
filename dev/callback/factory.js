@@ -7,21 +7,32 @@ const ImageFactory = {
 ImageFactory.resourcesCount = 0;
 ImageFactory.loadFromFile = function(key, path) {
 	try {
-		if (LoadingTipUtils.hasEncounter()) LoadingTipUtils.updateCounter(++this.resourcesCount);
+		if (LoadingTipUtils.hasEncounter()) {
+			LoadingTipUtils.updateCounter(++this.resourcesCount);
+		}
 		let params = new android.graphics.BitmapFactory.Options();
 		params.inPreferredConfig = android.graphics.Bitmap.Config.RGB_565;
 		let file = path instanceof java.io.File ? path : new java.io.File(Dirs.ASSET, path);
-		if (file == null || !file.exists()) return null;
+		if (file == null || !file.exists()) {
+			return null;
+		}
 		let readed = Files.readBytes(file);
-		if (!readed || readed.length == 0) return null;
+		if (!readed || readed.length == 0) {
+			return null;
+		}
 		Encyption.updateKey("nernar", "editorResource");
 		let base64 = Encyption.decrypt(readed);
-		if (!base64 || base64.length == 0) return null;
+		if (!base64 || base64.length == 0) {
+			return null;
+		}
 		let bytes = Base64.decode(base64);
-		if (!bytes || bytes.length == 0) return null;
+		if (!bytes || bytes.length == 0) {
+			return null;
+		}
 		this.loaded[key] = android.graphics.BitmapFactory.decodeByteArray
 			(bytes, 0, bytes.length, params);
-		this.checkAndResize(key), this.checkAndRetile(key);
+		this.checkAndResize(key);
+		this.checkAndRetile(key);
 		return key;
 	} catch (e) {
 		__code__.startsWith("develop") && reportError(e);
@@ -30,25 +41,39 @@ ImageFactory.loadFromFile = function(key, path) {
 	return null;
 };
 ImageFactory.encode = function(file) {
-	if (!file || !file.exists()) return null;
+	if (!file || !file.exists()) {
+		return null;
+	}
 	let bytes = Files.readBytes(file);
-	if (!bytes || bytes.length == 0) return null;
+	if (!bytes || bytes.length == 0) {
+		return null;
+	}
 	let base64 = Base64.encode(bytes);
-	if (!base64 || base64.length == 0) return null;
+	if (!base64 || base64.length == 0) {
+		return null;
+	}
 	Encyption.updateKey("nernar", "editorResource");
 	let result = Encyption.encrypt(base64);
-	if (!result || result.length == 0) return null;
+	if (!result || result.length == 0) {
+		return null;
+	}
 	return result;
 };
 ImageFactory.encodeFile = function(file, out) {
-	if (!out) return;
+	if (!file || !file.exists() || !out) {
+		return;
+	}
 	let encoded = this.encode(file);
-	if (!encoded) return;
+	if (!encoded) {
+		return;
+	}
 	Files.createNewWithParent(out.getPath());
 	Files.writeBytes(out, encoded);
 };
 ImageFactory.encodeFolder = function(folder, out, explore) {
-	if (!folder || !folder.exists() || !out) return;
+	if (!folder || !folder.exists() || !out) {
+		return;
+	}
 	let sources = Files.listFiles(folder);
 	for (let i = 0; i < sources.length; i++) {
 		let name = Files.getNameWithoutExtension(sources[i].getName()),
@@ -72,29 +97,41 @@ ImageFactory.checkSize = function(file) {
 };
 ImageFactory.getCountByTag = function(tag) {
 	let count = 0;
-	for (let item in this.loaded)
-		if (item.indexOf(tag) != -1) count++;
+	for (let item in this.loaded) {
+		if (item.indexOf(tag) != -1) {
+			count++;
+		}
+	}
 	return count;
 };
 ImageFactory.getBitmap = function(key) {
 	return this.loaded[key];
 };
 ImageFactory.getDrawable = function(key) {
-	if (this.drawables[key]) return this.drawables[key];
+	if (this.drawables[key]) {
+		return this.drawables[key];
+	}
 	let drawable = new android.graphics.drawable.BitmapDrawable(this.getBitmap(key));
-	return (drawable.setFilterBitmap(false), drawable);
+	drawable.setFilterBitmap(false)
+	return drawable;
 };
 ImageFactory.resizeBitmap = function(key, dx, dy) {
 	let bitmap = this.getBitmap(key);
-	if (!bitmap) return;
-	if (!dy) dy = dx;
+	if (!bitmap) {
+		return;
+	}
+	if (!dy) {
+		dy = dx;
+	}
 	let width = bitmap.getWidth(), height = bitmap.getHeight();
 	this.loaded[key] = android.graphics.Bitmap.createScaledBitmap
 		(android.graphics.Bitmap.createBitmap(bitmap, 0, 0, width, height), dx, dy, false);
 };
 ImageFactory.compressBitmap = function(key, min, max) {
 	let bitmap = this.getBitmap(key);
-	if (!bitmap) return;
+	if (!bitmap) {
+		return;
+	}
 	let size = Ui.Display.HEIGHT > 480 ? Ui.Display.HEIGHT < 1080 ?
 			min + Ui.Display.HEIGHT / 1560 * (max - min) : max : min,
 		width = bitmap.getWidth(), height = bitmap.getHeight(),
@@ -102,14 +139,21 @@ ImageFactory.compressBitmap = function(key, min, max) {
 	this.resizeBitmap(key, dx, dy);
 };
 ImageFactory.loadFileFrames = function(name, keysOrPath, time, oneshot) {
-	if (typeof keysOrPath == "string")
+	if (keysOrPath == undefined || keysOrPath == null) {
+		return null;
+	}
+	if (typeof keysOrPath == "string") {
 		keysOrPath = this.loadDirectory(name, keysOrPath);
-	if (keysOrPath == null) return null;
+	}
 	let animation = new android.graphics.drawable.AnimationDrawable(),
 		timeInFrames = typeof time != "number";
-	oneshot && animation.setOneShot(true);
+	if (oneshot) {
+		animation.setOneShot(true);
+	}
 	for (let i = 0; i < keysOrPath.length; i++) {
-		if (!keysOrPath[i]) continue;
+		if (!keysOrPath[i]) {
+			continue;
+		}
 		let drawable = this.getDrawable(keysOrPath[i]), 
 			ms = timeInFrames ? time[i] : time;
 		animation.addFrame(drawable, ms);
@@ -117,12 +161,22 @@ ImageFactory.loadFileFrames = function(name, keysOrPath, time, oneshot) {
 	return animation;
 };
 ImageFactory.loadDirectory = function(key, pathOrExplore, explore) {
-	if (key == undefined) key = "", pathOrExplore = "", explore = true;
-	else if (pathOrExplore == undefined && explore == undefined) pathOrExplore = "", explore = true;
-	else if (typeof pathOrExplore == "boolean") explore = pathOrExplore, pathOrExplore = "";
+	if (key == undefined) {
+		key = new String();
+		pathOrExplore = new String();
+		explore = true;
+	} else if (pathOrExplore == undefined && explore == undefined) {
+		pathOrExplore = new String();
+		explore = true;
+	} else if (typeof pathOrExplore == "boolean") {
+		explore = pathOrExplore;
+		pathOrExplore = new String();
+	}
 	let file = new java.io.File(Dirs.ASSET, pathOrExplore);
-	if (!file.exists()) return null;
-	let list = file.listFiles(), keys = new Array;
+	if (!file.exists()) {
+		return null;
+	}
+	let list = file.listFiles(), keys = new Array();
 	for (let i = 0; i < list.length; i++) {
 		let name = list[i].getName(), path = pathOrExplore.length == 0 ? name : pathOrExplore + "/" + name;
 		name = Files.getNameWithoutExtension(name) || name;
@@ -131,8 +185,13 @@ ImageFactory.loadDirectory = function(key, pathOrExplore, explore) {
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
 			current += name;
 		}
-		if (list[i].isDirectory()) explore && this.loadDirectory(current, path, explore);
-		else if (list[i].getName().endsWith(".dnr")) keys.push(this.loadFromFile(current, path));
+		if (list[i].isDirectory()) {
+			if (explore) {
+				this.loadDirectory(current, path, explore);
+			}
+		} else if (list[i].getName().endsWith(".dnr")) {
+			keys.push(this.loadFromFile(current, path));
+		}
 	}
 	return keys;
 };
@@ -142,8 +201,9 @@ ImageFactory.prepareParams = function(key, dx, dy) {
 ImageFactory.checkAndResize = function(key) {
 	for (let i in this.resizes) {
 		let size = this.resizes[i];
-		if (key.startsWith(i))
+		if (key.startsWith(i)) {
 			this.resizeBitmap(key, size[0], size[1]);
+		}
 	}
 };
 ImageFactory.prepareTileMode = function(key, xt, yt) {
@@ -164,7 +224,7 @@ ImageFactory.checkAndRetile = function(key) {
 };
 
 const AssetFactory = {
-	loaded: {}
+	loaded: new Object()
 };
 AssetFactory.loadAsset = function(key, path) {
 	return (this.loaded[key] = new java.io.File(__dir__ + "assets", path));

@@ -13,15 +13,18 @@ function ProjectOldest(obj) {
 			this.isAutosaving = true;
 			this.updateCurrentWorker();
 			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
-				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp",
-				function(result) { delete scope.isAutosaving; });
+				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp", function(result) {
+					delete scope.isAutosaving;
+				});
 		} catch (e) {
 			reportError(e);
 		}
 	};
 	this.getProjectTime = function() {
 		let time = new Date(this.time);
-		if (!this.time) return translate("Autosave %s", random(0, 10000000));
+		if (!this.time) {
+			return translate("Autosave %s", random(Number.MIN_VALUE, Number.MAX_VALUE));
+		}
 		return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
 			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + ":" +
 			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + ":" +
@@ -30,8 +33,11 @@ function ProjectOldest(obj) {
 	
 	this.getByType = function(type) {
 		let obj = this.getAll(), values = new Array();
-		for (let i = 0; i < this.getCount(); i++)
-			obj[i].type == type && values.push(i);
+		for (let i = 0; i < this.getCount(); i++) {
+			if (obj[i].type == type) {
+				values.push(i);
+			}
+		}
 		return values;
 	};
 	this.getBlocks = function() {
@@ -56,7 +62,9 @@ function ProjectOldest(obj) {
 	this.getCurrentObject = function() {
 		let id = this.getCurrentId(),
 			obj = this.getAll()[id];
-		if (obj) return obj;
+		if (obj) {
+			return obj;
+		}
 		delete this.worker;
 		this.currentId = -1;
 		return null;
@@ -71,7 +79,9 @@ function ProjectOldest(obj) {
 	this.updateCurrentWorker = function() {
 		let id = this.getCurrentId(),
 			worker = this.getCurrentWorker();
-		if (!worker || id < 0) return;
+		if (!worker || id < 0) {
+			return;
+		}
 		this.getAll()[id] = worker.getProject();
 	};
 	this.switchToWorker = function(worker) {
@@ -118,9 +128,12 @@ function stringifyObject(obj, identate, action, hint, complete) {
 	}
 	if (showProcesses) {
 		let window = UniqueHelper.getWindow("HintAlert");
-		window && window.setStackable(false);
+		if (window) {
+			window.setStackable(false);
+		}
 		recursiveHint(hintStackableDenied, maximumHints);
-		maximumHints = 0, hintStackableDenied = true;
+		hintStackableDenied = true;
+		maximumHints = 0;
 	}
 	function recursiveIndexate(obj) {
 		try {
@@ -147,7 +160,9 @@ function stringifyObject(obj, identate, action, hint, complete) {
 					});
 				}
 			});
-			action && result && action(result);
+			if (action && result) {
+				action(result);
+			}
 			active = Date.now() - active;
 			done = true;
 		} catch (e) {
@@ -158,11 +173,17 @@ function stringifyObject(obj, identate, action, hint, complete) {
 }
 
 function stringifyObjectUnsafe(obj, identate, callback) {
-	if (callback == undefined) callback = new Object();
+	if (callback == undefined) {
+		callback = new Object();
+	}
 	function recursiveStringify(obj, tabs) {
-		callback.onUpdate && callback.onUpdate();
+		if (callback.onUpdate) {
+			callback.onUpdate();
+		}
 		try {
-			if (obj === null) return "null";
+			if (obj === null) {
+				return "null";
+			}
 			switch (typeof obj) {
 				case "undefined":
 					return "undefined";
@@ -184,29 +205,46 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 							if (result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 48) {
-										if (!tabbed) tabbed = true, tabs += "\t";
+										if (!tabbed) {
+											tabbed = true;
+											tabs += "\t";
+										}
 										array.push(result + (i < obj.length ? "\n" + tabs : ""));
 									} else if (i != 0) {
 										array.push(" " + result);
-									} else array.push(result);
-								} else array.push(result);
+									} else {
+										array.push(result);
+									}
+								} else {
+									array.push(result);
+								}
 							}
 						}
 						return "[" + array.join(",") + "]";
 					} else {
 						let array = new Array(), tabbed = false, last, count = 0;
-						for (let c in obj) last = c, count++;
+						for (let c in obj) {
+							last = c;
+							count++;
+						}
 						for (let i in obj) {
 							let result = recursiveStringify(obj[i], tabs);
 							if (result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 8) {
-										if (!tabbed) tabbed = true, tabs += "\t";
+										if (!tabbed) {
+											tabbed = true;
+											tabs += "\t";
+										}
 										array.push(i + ": " + result + (i != last ? "\n" + tabs : ""));
 									} else if (i != 0) {
 										array.push(" " + i + ": " + result);
-									} else array.push(result);
-								} else array.push("\"" + i + "\":" + result);
+									} else {
+										array.push(result);
+									}
+								} else {
+									array.push("\"" + i + "\":" + result);
+								}
 							}
 						}
 						let joined = array.join(",");
@@ -214,7 +252,9 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 							(identate ? tabbed ? tabs.replace("\t", "") + "\n}" : " }" : "}");
 					}
 				default:
-					callback.onPassed && callback.onPassed(obj, typeof obj);
+					if (callback.onPassed) {
+						callback.onPassed(obj, typeof obj);
+					}
 			}
 		} catch (e) {
 			reportError(e);
@@ -228,9 +268,13 @@ function readFile(path, isBytes, action) {
 		handleThread(function() {
 			try {
 				let file = new java.io.File("" + path);
-				if (!file.exists()) return;
+				if (!file.exists()) {
+					return;
+				}
 				let readed = isBytes ? Files.readBytes(file) : Files.read(file);
-				action && action(readed);
+				if (action) {
+					action(readed);
+				}
 			} catch (e) {
 				reportError(e);
 			}
@@ -263,12 +307,16 @@ function exportProject(object, isAutosave, path, action) {
 						translate("File is already created. This process will be rewrite it. Continue?"),
 						function() {
 							Files.writeBytes(file, result);
-							action && action(result);
+							if (action) {
+								action(result);
+							}
 						});
 				});
 			} else {
 				Files.writeBytes(file, result);
-				action && action(result);
+				if (action) {
+					action(result);
+				}
 			}
 		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 			isAutosave ? translate("Autosaved") : translate("Exported"));
@@ -339,7 +387,9 @@ let ProjectEditor = {
 	},
 	getEditorById: function(index) {
 		let project = this.getProject();
-		if (!project) return null;
+		if (!project) {
+			return null;
+		}
 		let obj = project.getAll();
 		return obj[index] || null;
 	},
@@ -348,17 +398,23 @@ let ProjectEditor = {
 	},
 	isOpened: function() {
 		let project = this.getProject();
-		if (!project) return false;
+		if (!project) {
+			return false;
+		}
 		return project.isOpened;
 	},
 	getCount: function() {
 		let project = this.getProject();
-		if (!project) return 0;
+		if (!project) {
+			return 0;
+		}
 		return project.getCount();
 	},
 	setOpenedState: function(state) {
 		let project = this.getProject();
-		if (!project) return;
+		if (!project) {
+			return;
+		}
 		project.isOpened = !!state;
 	},
 	getCurrentType: function() {

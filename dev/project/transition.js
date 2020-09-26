@@ -8,8 +8,12 @@ function TransitionWorker(obj) {
 		};
 	};
 	this.loadProject = function(obj) {
-		obj.define && this.Define.setParams(obj.define);
-		obj.animation && this.Animation.setParams(obj.animation);
+		if (obj.define) {
+			this.Define.setParams(obj.define);
+		}
+		if (obj.animation) {
+			this.Animation.setParams(obj.animation);
+		}
 	};
 	this.Define = {
 		params: {
@@ -29,7 +33,9 @@ function TransitionWorker(obj) {
 			return this.getParams().fps;
 		},
 		setParams: function(params) {
-			for (let name in params) this.params[name] = params[name];;
+			for (let name in params) {
+				this.params[name] = params[name];
+			}
 		},
 		setEntity: function(entity) {
 			this.params.entity = entity;
@@ -39,7 +45,9 @@ function TransitionWorker(obj) {
 		},
 		moveStarting: function(axis, value) {
 			let starting = this.getStarting();
-			axis && (starting[axis] = value);
+			if (axis) {
+				starting[axis] = value;
+			}
 		},
 		resetStarting: function() {
 			let starting = this.getStarting(),
@@ -74,14 +82,16 @@ function TransitionWorker(obj) {
 		},
 		getFrameCount: function() {
 			let count = 0;
-			for (let i = 0; i < this.getAnimateCount(); i++)
+			for (let i = 0; i < this.getAnimateCount(); i++) {
 				count += this.getAnimate(i).getFrameCount();
+			}
 			return count;
 		},
 		getParams: function() {
-			let params = [];
-			for (let i = 0; i < this.getAnimateCount(); i++)
+			let params = new Array();
+			for (let i = 0; i < this.getAnimateCount(); i++) {
 				params.push(this.getAnimate(i).params);
+			}
 			return params;
 		},
 		setParams: function(params) {
@@ -148,21 +158,28 @@ function TransitionWorker(obj) {
 				}
 				return result;
 			};
-			this.getFrameCoords = function(index) {
-				let point = new Object(), frames = this.getFrames(),
-					starting = worker.Define.getStarting();
-				for (let i in starting)
-					point[i] = starting[i];
-				for (let i = 0; i < index; i++)
-					for (let f in point)
+			this.getFrameCoords = function(index, excludeStarting) {
+				let point = new Object(), frames = this.getFrames();
+				if (!excludeStarting) {
+					let starting = worker.Define.getStarting();
+					for (let i in starting) {
+						point[i] = starting[i];
+					}
+				}
+				for (let i = 0; i < index; i++) {
+					for (let f in point) {
 						point[f] += frames[i][f];
+					}
+				}
 				return point;
 			};
 			
 			// Move and durate
 			this.moveFrame = function(index, axis, value) {
 				let frame = this.getFrame(index);
-				axis && (frame[axis] = value);
+				if (axis) {
+					frame[axis] = value;
+				}
 			};
 			this.durateFrame = function(index, value) {
 				let frame = this.getFrame(index);
@@ -173,8 +190,9 @@ function TransitionWorker(obj) {
 				return typeof frame.interpolator != "undefined";
 			};
 			this.resetInterpolation = function(index) {
-				if (this.hasInterpolator(index))
+				if (this.hasInterpolator(index)) {
 					delete this.getFrame(index).interpolator;
+				}
 			};
 			this.interpolateFrame = function(index, value) {
 				let frame = this.getFrame(index);
@@ -184,8 +202,9 @@ function TransitionWorker(obj) {
 			// Scene actions
 			this.durateScene = function(value) {
 				let count = this.getFrameCount();
-				for (let i = 0; i < count; i++)
+				for (let i = 0; i < count; i++) {
 					this.durateFrame(i, value / count);
+				}
 			};
 		}
 	};

@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-26.09.2020-2";
+const __code__ = "develop-alpha-0.3.4-27.09.2020-2";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
@@ -84,7 +84,9 @@ let alreadyHasDate = false;
 reportError.setStackAction(function(err) {
 	let message = reportError.getCode(err) + ": " + reportError.getStack(err),
 		file = new java.io.File(Dirs.LOGGING, __code__ + ".log");
-	if (!file.exists()) Files.write(file, reportError.prepareDebugInfo());
+	if (!file.exists()) {
+		Files.write(file, reportError.prepareDebugInfo());
+	}
 	if (!reportError.alreadyHasDate) {
 		Files.addText(file, "\n" + reportError.getLaunchTime());
 		reportError.alreadyHasDate = true;
@@ -122,13 +124,19 @@ Network.Reader.prototype.readAsync = function(post) {
     this.thread = handleThread(function() {
         scope.read();
         delete scope.thread;
-        post && post(scope.getResult());
+        if (post) {
+        	post(scope.getResult());
+        }
     });
 };
 Network.Reader.prototype.assureYield = function() {
     try {
-        if (!this.getThread()) return false;
-        while (this.inProcess()) java.lang.Thread.yield();
+        if (!this.getThread()) {
+        	return false;
+        }
+        while (this.inProcess()) {
+        	java.lang.Thread.yield();
+        }
         return this.getReadedCount() >= 0;
     } catch (e) {
         return false;
@@ -143,13 +151,19 @@ Network.Writer.prototype.downloadAsync = function(post) {
 	this.thread = handleThread(function() {
 		scope.download();
 		delete scope.thread;
-		post && post();
+		if (post) {
+			post();
+		}
 	});
 };
 Network.Writer.prototype.assureYield = function() {
 	try {
-		if (!this.getThread()) return false;
-		while (this.inProcess()) java.lang.Thread.yield();
+		if (!this.getThread()) {
+			return false;
+		}
+		while (this.inProcess()) {
+			java.lang.Thread.yield();
+		}
 		return this.getReadedCount() >= 0;
 	} catch (e) {
 		return false;

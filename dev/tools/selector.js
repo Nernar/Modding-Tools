@@ -37,9 +37,12 @@ let StartEditor = {
 						}
 						category.setOnItemClickListener(function(item, index) {
 							let real = blocks[index], block = content[real];
-							if (BlockEditor.open(real)) content.splice(real, 1),
-								content.unshift(block), project.setCurrentlyId(0),
+							if (BlockEditor.open(real)) {
+								content.splice(real, 1);
+								content.unshift(block);
+								project.setCurrentlyId(0);
 								control.dismiss();
+							}
 						});
 					}
 					let entities = project.getEntities();
@@ -53,9 +56,12 @@ let StartEditor = {
 						}
 						category.setOnItemClickListener(function(item, index) {
 							let real = entities[index], entity = content[real];
-							if (EntityEditor.open(real)) content.splice(real, 1),
-								content.unshift(entity), project.setCurrentlyId(0),
+							if (EntityEditor.open(real)) {
+								content.splice(real, 1);
+								content.unshift(entity);
+								project.setCurrentlyId(0);
 								control.dismiss();
+							}
 						});
 					}
 					let transitions = project.getTransitions();
@@ -69,13 +75,18 @@ let StartEditor = {
 						}
 						category.setOnItemClickListener(function(item, index) {
 							let real = transitions[index], transition = content[real];
-							if (TransitionEditor.open(real)) content.splice(real, 1),
-								content.unshift(transition), project.setCurrentlyId(0),
+							if (TransitionEditor.open(real)) {
+								content.splice(real, 1);
+								content.unshift(transition);
+								project.setCurrentlyId(0);
 								control.dismiss();
+							}
 						});
 					}
 				}
-			} else ProjectEditor.create();
+			} else {
+				ProjectEditor.create();
+			}
 			let category = control.addCategory(translate("Editors"));
 			category.addItem("block", translate("Block"), function() {
 				BlockEditor.create();
@@ -201,7 +212,7 @@ let StartEditor = {
 				});
 				checkForAdditionalInformation(control);
 			}
-			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit)) {
+			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSmeter)) {
 				category = control.addCategory(translate("Supportables"));
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					let result = DumpCreator(function() {
@@ -290,6 +301,7 @@ let StartEditor = {
 						showHint(WorldEdit.author);
 					} else showHint(WorldEdit.modName + " - " + WorldEdit.author);
 				});
+				if (TPSmeter) category.addItem(TPSmeter.icon, translate("TPS Meter"));
 				checkForAdditionalInformation(control);
 			}
 			resetAdditionalInformation();
@@ -440,9 +452,12 @@ function checkForAdditionalInformation(control) {
 }
 
 function hasAdditionalInformation(message) {
-	if (!message) return false;
-	if (checkForAdditionalInformation.already.indexOf(message) == -1)
+	if (!message) {
+		return false;
+	}
+	if (checkForAdditionalInformation.already.indexOf(message) == -1) {
 		return (checkForAdditionalInformation.already.push(message), true);
+	}
 	return false;
 }
 

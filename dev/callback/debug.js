@@ -20,23 +20,27 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 	});
 });
 
-MCSystem.setLoadingTip("Profiling Process");
-
-context.runOnUiThread(function() {
-	show.button = new android.widget.Button(context);
-	show.button.setText("Eval");
-	show.button.setOnClickListener(show);
-	
-	show.window = new FocusableWindow();
-	show.window.setGravity(Ui.Gravity.BOTTOM | Ui.Gravity.RIGHT);
-	show.window.setContent(show.button);
-	show.window.show();
-});
-
-if (__code__.startsWith("develop")) {
-	let folder = new java.io.File(Dirs.IMAGE);
-	let out = new java.io.File(Dirs.ASSET);
-	ImageFactory.encodeFolder(folder, out, true);
+try {
+	if (__code__.startsWith("develop")) {
+		MCSystem.setLoadingTip("Profiling Process");
+		
+		context.runOnUiThread(function() {
+			show.button = new android.widget.Button(context);
+			show.button.setText("Eval");
+			show.button.setOnClickListener(show);
+			
+			show.window = new FocusableWindow();
+			show.window.setGravity(Ui.Gravity.BOTTOM | Ui.Gravity.RIGHT);
+			show.window.setContent(show.button);
+			show.window.show();
+		});
+		
+		let folder = new java.io.File(Dirs.IMAGE);
+		let out = new java.io.File(Dirs.ASSET);
+		ImageFactory.encodeFolder(folder, out, true);
+	}
+} catch (e) {
+	__code__.startsWith("develop") && reportError(e);
 }
 
 // try {

@@ -21,7 +21,8 @@ function load() {
 		let list = Files.listFileNames(Dirs.ASSET, true);
 		let count = Files.checkFormats(list, ".dnr").length;
 		LoadingTipUtils.setEncounter("Loading Resources [%count/" + count + "]");
-		ImageFactory.loadDirectory(), LoadingTipUtils.resetEncounter();
+		ImageFactory.loadDirectory();
+		LoadingTipUtils.resetEncounter();
 		if (debugAnimationsEnabled) {
 			ImageFactory.prepareParams("message", Ui.getY(456), Ui.getY(228));
 			ImageFactory.prepareTileMode("message", Ui.TileMode.CLAMP, Ui.TileMode.REPEAT);
@@ -37,10 +38,14 @@ function load() {
 	}
 }
 
-if (isInstant) load();
+if (isInstant) {
+	load();
+}
 
 Callback.addCallback("ModsLoaded", function() {
-	if (!isInstant) load();
+	if (!isInstant) {
+		load();
+	}
 });
 
 Callback.addCallback("CoreConfigured", function(config) {
@@ -146,7 +151,9 @@ Callback.addCallback("PreBlocksDefined", function() {
 				let text = FileTools.readFileText(path);
 				let config = compileData(text, "object");
 				let resources = config && config.resources ? config.resources : null;
-				if (!resources || resources.length == 0) continue;
+				if (!resources || resources.length == 0) {
+					continue;
+				}
 				let index = addTextureMod(mods[m].getName());
 				for (let i = 0; i < resources.length; i++) {
 					let resource = resources[i];
@@ -217,15 +224,25 @@ function initialize() {
 	});
 }
 
-if (isInstant) initialize();
+if (isInstant) {
+	initialize();
+}
 
 Callback.addCallback("PostLoaded", function() {
-	if (!isInstant) initialize();
+	if (!isInstant) {
+		initialize();
+	}
 	isInstant = false;
 });
 
 let ModelConverter;
 (function() {
-	let file = new java.io.File(Dirs.SUPPORT, "ModelConverter/src/index.js");
-	if (file.exists()) ModelConverter = FileTools.readFileText(file.getPath());
+	try {
+		let file = new java.io.File(Dirs.SUPPORT, "ModelConverter/src/index.js");
+		if (file.exists() && file.length() > 0) {
+			ModelConverter = FileTools.readFileText(file.getPath());
+		}
+	} catch (e) {
+		reportError(e);
+	}
 })();

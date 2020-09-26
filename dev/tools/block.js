@@ -2,18 +2,22 @@ let textures = [];
 function addTextureMod(name) {
 	return textures.push({
 		name: name,
-		items: []
+		items: new Array()
 	}) - 1;
 }
 
 function addTexture(index, name, data) {
-	typeof data != "number" && (data = parseInt(data));
+	if (typeof data != "number") {
+		data = parseInt(data);
+	}
 	textures[index].items.push([name, data]);
 }
 
 function selectTexture(index, onSelect) {
 	let mod = textures[index];
-	if (!mod) return showHint(translate("Unknown mod"));
+	if (!mod) {
+		return showHint(translate("Unknown mod"));
+	}
 	let edit = new android.widget.EditText(context);
 	edit.setHint(translate("search filter"));
 	edit.setTextColor(Ui.Color.WHITE);
@@ -38,9 +42,10 @@ function selectTexture(index, onSelect) {
 	builder.setTitle(mod.name);
 	builder.setNegativeButton(translate("Cancel"), null);
 	if (mod.items.length > 0) {
-		let converted = [];
-		for (let i in mod.items)
+		let converted = new Array();
+		for (let i in mod.items) {
 			converted.push(mod.items[i][0] + ", " + mod.items[i][1]);
+		}
 		builder.setItems(converted, function(d, i) {
 			try {
 				let adapter = alert.getListView().getAdapter(),
@@ -51,8 +56,9 @@ function selectTexture(index, onSelect) {
 			}
 		});
 		builder.setView(edit);
-	} else
+	} else {
 		builder.setMessage(translate("This mod not included any texture."));
+	}
 	let alert = builder.create();
 	alert.show();
 }
@@ -61,8 +67,10 @@ function checkMapping(x, y, z, render) {
 	let exists = false, saved = getSavedMappings();
 	for (let i = 0; i < saved.length; i++) {
 		let map = saved[i];
-		if (map.x == x && map.y == y && map.z == z)
+		if (map.x == x && map.y == y && map.z == z) {
 			exists = true;
+			break;
+		}
 	}
 	BlockRenderer.mapAtCoords(x, y, z, render);
 	getCurrentMappings().push({ x: x, y: y, z: z });
@@ -97,8 +105,10 @@ function removeUnusedMappings() {
 		let exists = false, map = saved[i];
 		for (let c = 0; c < current.length; c++) {
 			let item = current[c];
-			if (map.x == item.x && map.y == item.y && map.z == item.z)
+			if (map.x == item.x && map.y == item.y && map.z == item.z) {
 				exists = true;
+				break;
+			}
 		}
 		if (!exists) {
 			BlockRenderer.unmapAtCoords(map.x, map.y, map.z);
@@ -157,15 +167,17 @@ function mapRenderBlock(worker) {
 					} else {
 						let texture = box.texture;
 						if (texture) {
-							if (texture.length > 1)
+							if (texture.length > 1) {
 								model.addBox(box.x1, box.y1, box.z1,
 									box.x2, box.y2, box.z2, box.texture);
-							else
+							} else {
 								model.addBox(box.x1, box.y1, box.z1, box.x2,
 									box.y2, box.z2, box.texture[0][0], box.texture[0][1]);
-						} else
+							}
+						} else {
 							model.addBox(box.x1, box.y1, box.z1, box.x2,
 								box.y2, box.z2, "missing_block", 0);
+						}
 					}
 				}
 				render.addEntry(model);
@@ -189,9 +201,10 @@ function mapRenderBlock(worker) {
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
 							innersection ? "renderer_innersection" : "renderer_unselect", transparentBoxes ? 1 : 0);
-					} else if (MenuWindow.isSelected(2))
+					} else if (MenuWindow.isSelected(2)) {
 						model.addBox(box.x1, box.y1, box.z1, box.x2,
 							box.y2, box.z2, "renderer_shape", transparentBoxes ? 1 : 0);
+					}
 					collision.addBox(box.x1, box.y1, box.z1,
 						box.x2, box.y2, box.z2);
 				}
@@ -199,11 +212,13 @@ function mapRenderBlock(worker) {
 			}
 		}
 		if (shape && selectMode != 9 && selectMode != 10) {
-			if (selectMode == 5) render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1,
-				shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
-			else if (!hasRenderer && (!hasCollision || !MenuWindow.isSelected(2)))
+			if (selectMode == 5) {
+				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1,
+					shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
+			} else if (!hasRenderer && (!hasCollision || !MenuWindow.isSelected(2))) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1, shape.z1,
 					shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
+			}
 		}
 		for (let i = 0; i < mapped.length; i++) {
 			let map = mapped[i], x = map.x, y = map.y, z = map.z;
@@ -214,8 +229,11 @@ function mapRenderBlock(worker) {
 				BlockRenderer.setCustomCollisionShape(id, meta, form);
 			}
 		}
-		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
-		removeUnusedMappings(), checkMapping.current = new Array();
+		if (autosavePeriod == 0) {
+			ProjectEditor.getProject().callAutosave();
+		}
+		removeUnusedMappings();
+		checkMapping.current = new Array();
 		return true;
 	} catch (e) {
 		reportError(e);
@@ -230,7 +248,10 @@ let BlockEditor = {
 		ProjectEditor.setOpenedState(true);
 		this.data.worker.Renderer.createModel();
 		this.data.worker.Collision.createModel();
-		if (!saveCoords) removeMappings(), removeUnusedMappings();
+		if (!saveCoords) {
+			removeMappings();
+			removeUnusedMappings();
+		}
 		else this.data.worker.Define.params.mapped = copyMappings();
 		this.unselect();
 	},
@@ -242,7 +263,9 @@ let BlockEditor = {
 	},
 	create: function() {
 		let autosaveable = !ProjectEditor.isOpened();
-		if (!this.data.worker) this.reset();
+		if (!this.data.worker) {
+			this.reset();
+		}
 		autosaveable && ProjectEditor.initializeAutosave();
 		this.data.hasRender = this.data.worker.Renderer.getModelCount() > 0
 			&& this.data.worker.Renderer.getModel(0).getBoxCount() > 0;
@@ -289,15 +312,20 @@ let BlockEditor = {
 				group.addItem("blockBoxRotate", this.Collision.rotate);
 			}
 			group.addItem("blockBoxRemove", this.Collision.remove);
-		} else group.addItem("blockBoxAdd", this.Collision.add);
-		this.data.selected >= 0 && menu.selectGroup(this.data.selected);
+		} else {
+			group.addItem("blockBoxAdd", this.Collision.add);
+		}
+		if (this.data.selected >= 0) {
+			menu.selectGroup(this.data.selected);
+		}
 		menu.setOnSelectListener(function(group, index, selected, count) {
 			if (selected) {
 				mapRenderBlock(BlockEditor.data.worker);
 				BlockEditor.data.selected = index;
 			} else {
 				delete BlockEditor.data.selected;
-				selectMode = 0, mapRenderBlock(BlockEditor.data.worker);
+				selectMode = 0;
+				mapRenderBlock(BlockEditor.data.worker);
 			}
 		});
 		menu.show();
@@ -312,14 +340,18 @@ let BlockEditor = {
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
 			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) formats.push(".json");
+			if (ModelConverter) {
+				formats.push(".json");
+			}
 			selectFile(formats, function(file) {
 				BlockEditor.replace(file);
 			});
 		});
 		category.addItem("menuProjectImport", translate("Import"), function() {
 			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) formats.push(".json");
+			if (ModelConverter) {
+				formats.push(".json");
+			}
 			selectFile(formats, function(file) {
 				BlockEditor.add(file);
 			});
@@ -331,7 +363,8 @@ let BlockEditor = {
 		});
 		category.addItem("menuProjectLeave", translate("Back"), function() {
 			control.dismiss();
-			Popups.closeAll(), BlockEditor.unselect();
+			Popups.closeAll();
+			BlockEditor.unselect();
 			ProjectEditor.setOpenedState(false);
 			ProjectEditor.getProject().callAutosave();
 			checkValidate(function() {
@@ -360,10 +393,11 @@ let BlockEditor = {
 		});
 		category.addItem("blockRenderReload", translate("Remap"), function() {
 			selectMode = 0;
-			if (mapRenderBlock(BlockEditor.data.worker))
+			if (mapRenderBlock(BlockEditor.data.worker)) {
 				showHint(translate("Render updated"));
-			else if (!removeUnusedMappings())
+			} else if (!removeUnusedMappings()) {
 				showHint(translate("Nothing to update"));
+			}
 		});
 		let hasRemoveMessage = false;
 		category.addItem("blockRenderRemove", translate("Unmap"), function() {
@@ -375,7 +409,9 @@ let BlockEditor = {
 				let message = control.addMessage("menuModuleWarning", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
 					function() {
 						BlockEditor.data.worker.Define.params.mapped = new Array();
-						if (!removeMappings()) showHint(translate("Nothing to remove"));
+						if (!removeMappings()) {
+							showHint(translate("Nothing to remove"));
+						}
 						control.removeElement(message);
 					});
 				handle(function() {
@@ -398,7 +434,8 @@ let BlockEditor = {
 				return;
 			}
 			showHint(translate("Manually view boxes innersection"));
-			Popups.closeAll(), control.dismiss();
+			Popups.closeAll();
+			control.dismiss();
 			
 			let button = new ControlButton();
 			button.setIcon("menuModuleBack");
@@ -406,7 +443,8 @@ let BlockEditor = {
 				Popups.closeAllByTag("innersection");
 				delete BlockEditor.data.rendererInst;
 				delete BlockEditor.data.collisionInst;
-				selectMode = 0, BlockEditor.create();
+				selectMode = 0;
+				BlockEditor.create();
 			});
 			button.show();
 			
@@ -419,10 +457,13 @@ let BlockEditor = {
 					selectMode = 9;
 					BlockEditor.data.rendererInst = index;
 					mapRenderBlock(BlockEditor.data.worker);
-					collision && collision.unselect();
+					if (collision) {
+						collision.unselect();
+					}
 				});
-				for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++)
+				for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++) {
 					renderer.addButtonElement(translate("Box %s", i + 1));
+				}
 				renderer.selectButton(0);
 				Popups.open(renderer, "innersection_renderer");
 			}
@@ -436,11 +477,16 @@ let BlockEditor = {
 					selectMode = 10;
 					BlockEditor.data.collisionInst = index;
 					mapRenderBlock(BlockEditor.data.worker);
-					renderer && renderer.unselect();
+					if (renderer) {
+						renderer.unselect();
+					}
 				});
-				for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++)
+				for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++) {
 					collision.addButtonElement(translate("Box %s", i + 1));
-				if (!BlockEditor.data.hasRender) collision.selectButton(0);
+				}
+				if (!BlockEditor.data.hasRender) {
+					collision.selectButton(0);
+				}
 				Popups.open(collision, "innersection_collision");
 			}
 		});
@@ -457,7 +503,8 @@ let BlockEditor = {
 		let worker = this.data.worker = new BlockWorker(obj);
 		ProjectEditor.setupEditor(index, worker);
 		ProjectEditor.setOpenedState(true);
-		BlockEditor.unselect(), BlockEditor.create();
+		BlockEditor.unselect();
+		BlockEditor.create();
 		return true;
 	},
 	add: function(file) {
@@ -559,7 +606,9 @@ let BlockEditor = {
 	reload: function(view) {
 		if (mapRenderBlock(BlockEditor.data.worker)) {
 			showHint(translate("Render updated"));
-		} else showHint(translate("Nothing to update"));
+		} else {
+			showHint(translate("Nothing to update"));
+		}
 	},
 	Renderer: {
 		hasSelection: function() {
@@ -573,8 +622,9 @@ let BlockEditor = {
 				selectMode = 0;
 				mapRenderBlock(BlockEditor.data.worker);
 			});
-			for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++)
+			for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
+			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 3;
 				BlockEditor.data.renderer = index;
@@ -733,14 +783,17 @@ let BlockEditor = {
 				});
 			});
 			popup.addButtonElement(translate("Enter array"), function() {
-				edit.switchVisibility() && button.switchVisibility();
+				if (edit.switchVisibility()) {
+					button.switchVisibility();
+				}
 			});
 			let edit = popup.addEditElement(translate("Texture"), JSON.stringify(box.texture)).
 				switchVisibility().setBackground("ground");
 			let button = popup.addButtonElement(translate("Save"), function() {
 				let array = compileData(popup.getEdit(0).getValue());
-				if (!array) showHint(translate("Array is incorrect"), Ui.Color.YELLOW);
-				else {
+				if (!array) {
+					showHint(translate("Array is incorrect"), Ui.Color.YELLOW);
+				} else {
 					BlockEditor.data.worker.Renderer.getModel(0).textureBox(selected, array);
 					mapRenderBlock(BlockEditor.data.worker);
 					showHint(translate("Texture changed"));
@@ -761,8 +814,11 @@ let BlockEditor = {
 				function() {
 					BlockEditor.data.worker.Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
 					BlockEditor.data.renderer = BlockEditor.data.renderer > 0 ? BlockEditor.data.renderer - 1 : 0;
-					if (BlockEditor.data.worker.Renderer.getModel(0).getBoxCount() == 0) BlockEditor.create();
-					else mapRenderBlock(BlockEditor.data.worker);
+					if (BlockEditor.data.worker.Renderer.getModel(0).getBoxCount() == 0) {
+						BlockEditor.create();
+					} else {
+						mapRenderBlock(BlockEditor.data.worker);
+					}
 					Popups.closeAllByTag("renderer");
 					showHint(translate("Box deleted"));
 				});
@@ -933,8 +989,11 @@ let BlockEditor = {
 				function() {
 					BlockEditor.data.worker.Collision.getModel(0).removeBox(BlockEditor.data.collision);
 					BlockEditor.data.collision = BlockEditor.data.collision > 0 ? BlockEditor.data.collision - 1 : 0;
-					if (BlockEditor.data.worker.Collision.getModel(0).getBoxCount() == 0) BlockEditor.create();
-					else mapRenderBlock(BlockEditor.data.worker);
+					if (BlockEditor.data.worker.Collision.getModel(0).getBoxCount() == 0) {
+						BlockEditor.create();
+					} else {
+						mapRenderBlock(BlockEditor.data.worker);
+					}
 					Popups.closeAllByTag("collision");
 					showHint(translate("Box deleted"));
 				});

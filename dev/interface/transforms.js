@@ -84,8 +84,11 @@ const SlideActor = function(side) {
 SlideActor.prototype = new VisibilityActor;
 SlideActor.prototype.TYPE = "slide";
 SlideActor.prototype.reset = function(side) {
-	if (typeof side == "undefined") this.transition = new android.transition.Slide();
-	else this.transition = new android.transition.Slide(side);
+	if (typeof side == "undefined") {
+		this.transition = new android.transition.Slide();
+	} else {
+		this.transition = new android.transition.Slide(side);
+	}
 };
 SlideActor.prototype.getSlideEdge = function() {
 	return this.transition.getSlideEdge();
@@ -113,8 +116,11 @@ const FadeActor = function(mode) {
 FadeActor.prototype = new VisibilityActor;
 FadeActor.prototype.TYPE = "fade";
 FadeActor.prototype.reset = function(mode) {
-	if (typeof mode == "undefined") this.transition = new android.transition.Fade();
-	else this.transition = new android.transition.Fade(mode);
+	if (typeof mode == "undefined") {
+		this.transition = new android.transition.Fade();
+	} else {
+		this.transition = new android.transition.Fade(mode);
+	}
 };
 FadeActor.IN = android.transition.Fade.IN;
 FadeActor.OUT = android.transition.Fade.OUT;
@@ -136,15 +142,23 @@ ActorSet.getActorCount = function() {
 };
 ActorSet.prototype.addActor = function(actor) {
 	if (actor instanceof WindowActor) {
-		if (actor.TYPE == "none") MCSystem.throwException("ActorSet can't use empty actor");
+		if (actor.TYPE == "none") {
+			throw new Error("ActorSet can't use none actor");
+		}
 		this.transition.addTransition(actor.getActor());
-	} else this.transition.addTransition(actor);
+	} else {
+		this.transition.addTransition(actor);
+	}
 };
 ActorSet.prototype.removeActor = function(actor) {
 	if (actor instanceof WindowActor) {
-		if (actor.TYPE == "none") MCSystem.throwException("ActorSet can't remove empty actor");
+		if (actor.TYPE == "none") {
+			throw new Error("ActorSet can't remove none actor");
+		}
 		this.transition.removeTransition(actor.getActor());
-	} else this.transition.removeTransition(actor);
+	} else {
+		this.transition.removeTransition(actor);
+	}
 };
 ActorSet.prototype.setOrdering = function(mode) {
 	this.transition.setOrdering(mode || 0);

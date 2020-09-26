@@ -85,8 +85,11 @@ const AccelerateInterpolator = function(cycle) {
 AccelerateInterpolator.prototype = new ActorInterpolator;
 AccelerateInterpolator.prototype.TYPE = "accelerate";
 AccelerateInterpolator.prototype.reset = function(cycle) {
-	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.AccelerateInterpolator();
-	else this.interpolator = new android.view.animation.AccelerateInterpolator(cycle);
+	if (typeof cycle == "undefined") {
+		this.interpolator = new android.view.animation.AccelerateInterpolator();
+	} else {
+		this.interpolator = new android.view.animation.AccelerateInterpolator(cycle);
+	}
 };
 
 const DecelerateInterpolator = function(cycle) {
@@ -95,8 +98,11 @@ const DecelerateInterpolator = function(cycle) {
 DecelerateInterpolator.prototype = new ActorInterpolator;
 DecelerateInterpolator.prototype.TYPE = "decelerate";
 DecelerateInterpolator.prototype.reset = function(cycle) {
-	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.DecelerateInterpolator();
-	else this.interpolator = new android.view.animation.DecelerateInterpolator(cycle);
+	if (typeof cycle == "undefined") {
+		this.interpolator = new android.view.animation.DecelerateInterpolator();
+	} else {
+		this.interpolator = new android.view.animation.DecelerateInterpolator(cycle);
+	}
 };
 
 const AccelerateDecelerateInterpolator = function() {
@@ -114,8 +120,11 @@ const AnticipateInterpolator = function(cycle) {
 AnticipateInterpolator.prototype = new ActorInterpolator;
 AnticipateInterpolator.prototype.TYPE = "anticipate";
 AnticipateInterpolator.prototype.reset = function(cycle) {
-	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.AnticipateInterpolator();
-	else this.interpolator = new android.view.animation.AnticipateInterpolator(cycle);
+	if (typeof cycle == "undefined") {
+		this.interpolator = new android.view.animation.AnticipateInterpolator();
+	} else {
+		this.interpolator = new android.view.animation.AnticipateInterpolator(cycle);
+	}
 };
 
 const OvershootInterpolator = function(cycle) {
@@ -124,8 +133,11 @@ const OvershootInterpolator = function(cycle) {
 OvershootInterpolator.prototype = new ActorInterpolator;
 OvershootInterpolator.prototype.TYPE = "overshoot";
 OvershootInterpolator.prototype.reset = function(cycle) {
-	if (typeof cycle == "undefined") this.interpolator = new android.view.animation.OvershootInterpolator();
-	else this.interpolator = new android.view.animation.OvershootInterpolator(cycle);
+	if (typeof cycle == "undefined") {
+		this.interpolator = new android.view.animation.OvershootInterpolator();
+	} else {
+		this.interpolator = new android.view.animation.OvershootInterpolator(cycle);
+	}
 };
 
 const AnticipateOvershootInterpolator = function(cycle1, cycle2) {
@@ -134,9 +146,11 @@ const AnticipateOvershootInterpolator = function(cycle1, cycle2) {
 AnticipateOvershootInterpolator.prototype = new ActorInterpolator;
 AnticipateOvershootInterpolator.prototype.TYPE = "anticipateOvershoot";
 AnticipateOvershootInterpolator.prototype.reset = function(cycle1, cycle2) {
-	if (typeof cycle1 == "undefined" || typeof cycle2 == "undefined")
+	if (typeof cycle1 == "undefined" || typeof cycle2 == "undefined") {
 		this.interpolator = new android.view.animation.AnticipateOvershootInterpolator();
-	else this.interpolator = new android.view.animation.AnticipateOvershootInterpolator(cycle1, cycle2);
+	} else {
+		this.interpolator = new android.view.animation.AnticipateOvershootInterpolator(cycle1, cycle2);
+	}
 };
 
 const BounceInterpolator = function() {
@@ -154,7 +168,9 @@ const PathInterpolator = function(path) {
 PathInterpolator.prototype = new ActorInterpolator;
 PathInterpolator.prototype.TYPE = "path";
 PathInterpolator.prototype.reset = function(path) {
-	if (!path) throw "Can't create path interpolator without path";
+	if (!path) {
+		throw new Error("Can't create path interpolator without path");
+	}
 	this.interpolator = new android.view.animation.PathInterpolator(path);
 	this.path = path;
 };
@@ -168,7 +184,9 @@ const CycleInterpolator = function(cycle) {
 CycleInterpolator.prototype = new ActorInterpolator;
 CycleInterpolator.prototype.TYPE = "cycle";
 CycleInterpolator.prototype.reset = function(cycle) {
-	if (!cycle) throw "Can't create cycle interpolator without cycle time";
+	if (!cycle) {
+		throw new Error("Can't create cycle interpolator without cycle time");
+	}
 	this.interpolator = new android.view.animation.CycleInterpolator(cycle);
 };
 

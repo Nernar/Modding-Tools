@@ -43,20 +43,23 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 };
 UniqueWindow.prototype.__showUW = UniqueWindow.prototype.show;
 UniqueWindow.prototype.show = function() {
-	if (UniqueHelper.prepareWindow(this))
+	if (UniqueHelper.prepareWindow(this)) {
 		this.__showUW && this.__showUW();
+	}
 };
 UniqueWindow.prototype.__dismissUW = UniqueWindow.prototype.dismiss;
 UniqueWindow.prototype.dismiss = function() {
-	if (UniqueHelper.deattachWindow(this))
+	if (UniqueHelper.deattachWindow(this)) {
 		this.__dismissUW && this.__dismissUW();
+	}
 };
 
 const UniqueHelper = {
 	opened: new Object(),
 	getWindow: function(window) {
-		if (typeof window == "object")
+		if (typeof window == "object") {
 			window = window ? window.TYPE : null;
+		}
 		return this.opened[window] || null;
 	},
 	isAttached: function(window) {
@@ -67,7 +70,9 @@ const UniqueHelper = {
 			let opened = this.getWindow(window),
 				updatable = opened.isUpdatable();
 			// Window are already opened
-			if (opened == window) return false;
+			if (opened == window) {
+				return false;
+			}
 			if (updatable) {
 				let content = window.getContent();
 				opened.setContent(content);
@@ -93,11 +98,15 @@ const UniqueHelper = {
 		return false;
 	},
 	stackWindow: function(window) {
-		if (this.isAttached(window)) return;
+		if (this.isAttached(window)) {
+			return;
+		}
 		this.opened[window.TYPE] = window;
 	},
 	shiftWindow: function(window) {
-		if (!this.isAttached(window)) return;
+		if (!this.isAttached(window)) {
+			return;
+		}
 		delete this.opened[window.TYPE];
 	}
 };

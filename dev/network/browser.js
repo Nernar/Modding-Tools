@@ -56,7 +56,7 @@ Object.defineProperty(BrowserWorker.prototype, "fetchList", {
 			}
 			count += json.length;
 			query.setOffset(count);
-		} while (count % (/*isHorizon ? query.getLimit() : */query.getLimit() + 1) == 0);
+		} while (count % (isHorizon ? query.getLimit() : query.getLimit() + 1) == 0);
 		return mods;
 	},
 	enumerable: true

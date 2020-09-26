@@ -155,9 +155,10 @@ let TransitionEditor = {
 		} else group.addItem("transitionFrameAdd", this.Frame.add);
 		this.data.selected >= 0 && menu.selectGroup(this.data.selected);
 		menu.setOnSelectListener(function(group, index, selected, count) {
-			if (selected) (drawTransitionPoints(TransitionEditor.data.worker),
-				TransitionEditor.data.selected = index);
-			else {
+			if (selected) {
+				drawTransitionPoints(TransitionEditor.data.worker);
+				TransitionEditor.data.selected = index;
+			} else {
 				delete TransitionEditor.data.selected;
 				selectMode = 0, drawTransitionPoints(TransitionEditor.data.worker);
 			}
@@ -216,9 +217,9 @@ let TransitionEditor = {
 		});
 		category.addItem("transitionModuleReload", translate("Reload"), function() {
 			selectMode = 0;
-			if (drawTransitionPoints(TransitionEditor.data.worker))
+			if (drawTransitionPoints(TransitionEditor.data.worker)) {
 				showHint(translate("Transition updated"));
-			else showHint(translate("Nothing to update"));
+			} else showHint(translate("Nothing to update"));
 		});
 		if (TransitionEditor.data.worker.Define.getEntity() != getPlayerEnt()) {
 			let hasResetMessage = false;

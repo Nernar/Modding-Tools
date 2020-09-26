@@ -23,10 +23,14 @@ let ExecutableSupport = {
 		return this.newInstance("zhekasmirnov.launcher.mod.build.ModBuilder");
 	},
 	checkDirectory: function(dir, isNative) {
-		if (!dir.endsWith("/")) dir += "/";
+		if (!dir.endsWith("/")) {
+			dir += "/";
+		}
 		dir = isNative ? dir : Dirs.SUPPORT + "/" + dir;
 		let file = new java.io.File(dir);
-		if (file.exists()) return dir;
+		if (file.exists()) {
+			return dir;
+		}
 		Logger.Log("Can't find executable directory " + file.getName() + ", ignoring", "Dev-Core");
 		return null;
 	},
@@ -34,22 +38,35 @@ let ExecutableSupport = {
 		return !isInstant && this.getModBuilder();
 	},
 	buildDirectory: function(dir, isNative) {
-		if (!(dir = this.checkDirectory(dir, isNative))) return null;
+		if (!(dir = this.checkDirectory(dir, isNative))) {
+			return null;
+		}
 		let builder = this.getModBuilder(), name = new java.io.File(dir).getName();
-		if (!builder) throw "Submodule supportable " + name + " load cancelled";
+		if (!builder) {
+			throw new Error("Submodule supportable " + name + " load cancelled");
+		}
 		let mod = builder.buildModForDir(dir);
-		if (!mod) MCSystem.throwException("Build mod directory " + name + " failed, api disabled");
-		return (mod.onImport(), this.mods[mod.getName()] = mod, mod.getName());
+		if (!mod) {
+			throw new Error("Build mod directory " + name + " failed, api disabled");
+		}
+		mod.onImport();
+		this.mods[mod.getName()] = mod;
+		return mod.getName();
 	},
 	launchMod: function(name) {
 		let mod = this.getSupportable(name);
-		if (!mod) throw "Can't launch mod " + name;
-		mod.RunPreloaderScripts(), mod.RunLauncherScripts();
+		if (!mod) {
+			throw new Error("Can't launch mod " + name);
+		}
+		mod.RunPreloaderScripts();
+		mod.RunLauncherScripts();
 		Logger.Log("Injected mod supportable " + name + " prepared", "Dev-Core");
 	},
 	getProperty: function(name, property) {
 		let mod = this.getSupportable(name);
-		if (!mod) return null;
+		if (!mod) {
+			return null;
+		}
 		try {
 			return "" + mod.getInfoProperty(property);
 		} catch (e) {
@@ -72,8 +89,10 @@ let ExecutableSupport = {
 	},
 	injectCustomEval: function(name, action) {
 		let mod = this.getSupportable(name);
-		if (!mod) throw "Can't find mod " + name;
-		let results = [], ats = this.actionToString(action);
+		if (!mod) {
+			throw new Error("Can't find mod " + name);
+		}
+		let results = new Array(), ats = this.actionToString(action);
 		for (let i = 0; i < mod.compiledModSources.size(); i++) {
 			let source = mod.compiledModSources.get(i);
 			results.push(this.evaluateAtExecutable(source, ats));
@@ -119,7 +138,9 @@ let ExecutableSupport = {
 	},
 	isEnabled: function(name) {
 		let mod = this.getSupportable(name);
-		if (!mod) throw "Can't find mod " + name;
+		if (!mod) {
+			throw new Error("Can't find mod " + name);
+		}
 		return loadSupportables && mod.isEnabled;
 	}
 };
@@ -134,7 +155,8 @@ function importMod(dir, action) {
 			supportable.version = ExecutableSupport.getProperty(name, "version");
 			supportable.author = ExecutableSupport.getProperty(name, "author");
 			supportable.result = action ? ExecutableSupport.injectCustomEval(name, action)[0] : true;
-			return (supportable.modName = name, supportable);
+			supportable.modName = name;
+			return supportable;
 		}
 	} catch (e) {
 		reportError(e);
@@ -143,10 +165,16 @@ function importMod(dir, action) {
 }
 
 function isNotSupported(obj) {
-	if (obj.result == true) Logger.Log("Supportable " + obj.modName + " module works fine, has been activated", "Dev-Editor");
-	else if (obj.result == false) Logger.Log(obj.modName + " supportable module outdated and will be disabled", "Dev-Editor");
-	else if (obj.result instanceof Error && __code__.startsWith("develop")) reportError(obj.result);
-	else if (__code__.startsWith("develop")) Logger.Log("Can't resolve modification with invalid result: " + obj.result, obj.modName);
-	else Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);
+	if (obj.result == true) {
+		Logger.Log("Supportable " + obj.modName + " module works fine, has been activated", "Dev-Editor");
+	} else if (obj.result == false) {
+		Logger.Log(obj.modName + " supportable module outdated and will be disabled", "Dev-Editor");
+	} else if (obj.result instanceof Error && __code__.startsWith("develop")) {
+		reportError(obj.result);
+	} else if (__code__.startsWith("develop")) {
+		Logger.Log("Can't resolve modification with invalid result: " + obj.result, obj.modName);
+	} else {
+		Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);
+	}
 	return obj.result != true;
 }
