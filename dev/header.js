@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-19.09.2020-1";
+const __code__ = "develop-alpha-0.3.4-26.09.2020-2";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
@@ -67,9 +67,9 @@ const isInstant = !!this.isInstant;
 IMPORT("Retention:2");
 
 reportError.setTitle(__name__ + " " + __version__);
-reportError.setInfoMessage("An error occurred while executing the mod. " +
-	"If the develop process is affected, try export all non-saved data. " +
-	"Send a screenshot of error to our group or save the error in the internal storage.");
+reportError.setInfoMessage("An error occurred while executing modification. " +
+	"If your developing process is affected, try export all non-saved data. " +
+	"Send a screenshot of error to our group or save error in internal storage.");
 
 reportError.addDebugValue("isHorizon", isHorizon);
 reportError.addDebugValue("interfaceScale", uiScaler);
@@ -90,7 +90,7 @@ reportError.setStackAction(function(err) {
 		reportError.alreadyHasDate = true;
 	}
 	Files.addText(file, "\n" + message);
-	showHint(translate("Error stack saved into internal storage"), Ui.Color.WHITE);
+	showHint(translate("Error stack saved into internal storage"));
 });
 
 reportError.prepareDebugInfo = function() {

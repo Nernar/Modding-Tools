@@ -123,9 +123,13 @@ function removeMappings() {
 	return count > 0;
 }
 
+const CUSTOM_BLOCKS_ID_OFFSET = 8192;
+
 function mapRenderBlock(worker) {
 	try {
-		if (!Level.isLoaded()) return false;
+		if (!worker || !Level.isLoaded()) {
+			return false;
+		}
 		let render = new ICRender.Model(),
 			form = new ICRender.CollisionShape(),
 			mapped = worker.Define.getMapped(),
@@ -201,10 +205,15 @@ function mapRenderBlock(worker) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1, shape.z1,
 					shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
 		}
-		// Usage only by id and meta, but it rewrite fully
-		// BlockRenderer.setCustomCollisionShape(id, meta, form);
-		for (let i = 0; i < mapped.length; i++)
-			checkMapping(mapped[i].x, mapped[i].y, mapped[i].z, render);
+		for (let i = 0; i < mapped.length; i++) {
+			let map = mapped[i], x = map.x, y = map.y, z = map.z;
+			checkMapping(x, y, z, render);
+			let id = World.getBlockID(x, y, z);
+			if (id >= CUSTOM_BLOCKS_ID_OFFSET) {
+				let meta = World.getBlockData(x, y, z);
+				BlockRenderer.setCustomCollisionShape(id, meta, form);
+			}
+		}
 		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
 		removeUnusedMappings(), checkMapping.current = new Array();
 		return true;
@@ -283,9 +292,10 @@ let BlockEditor = {
 		} else group.addItem("blockBoxAdd", this.Collision.add);
 		this.data.selected >= 0 && menu.selectGroup(this.data.selected);
 		menu.setOnSelectListener(function(group, index, selected, count) {
-			if (selected) (mapRenderBlock(BlockEditor.data.worker),
-				BlockEditor.data.selected = index);
-			else {
+			if (selected) {
+				mapRenderBlock(BlockEditor.data.worker);
+				BlockEditor.data.selected = index;
+			} else {
 				delete BlockEditor.data.selected;
 				selectMode = 0, mapRenderBlock(BlockEditor.data.worker);
 			}
@@ -324,8 +334,10 @@ let BlockEditor = {
 			Popups.closeAll(), BlockEditor.unselect();
 			ProjectEditor.setOpenedState(false);
 			ProjectEditor.getProject().callAutosave();
-			delete BlockEditor.data.worker;
-			StartEditor.menu();
+			checkValidate(function() {
+				delete BlockEditor.data.worker;
+				StartEditor.menu();
+			});
 		});
 		checkForAdditionalInformation(control);
 		category = control.addCategory(translate("Block"));
