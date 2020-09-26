@@ -1,6 +1,6 @@
 var __mod__ = new com.zhekasmirnov.innercore.mod.build.Mod();
 var __name__ = "Dump Creator";
-var __dir__ = "/storage/emulated/0/games/horizon/packs/Inner_Core_1/innercore/mods/Dev Editor/Dump Creator/";
+var __dir__ = "/storage/emulated/0/Android/data/io.spck/files/Dev-Editor/support/Dump Creator/";
 var __config__ = new com.zhekasmirnov.innercore.mod.build.Config();
 function __debug_typecheck__() {}
 function runCustomSource() {}
@@ -15,19 +15,22 @@ function IMPORT() {}
 function IMPORT_NATIVE() {}
 function WRAP_NATIVE() {}
 function WRAP_JAVA() {}
-var __packdir__ = "/storage/emulated/0/games/horizon/packs/Inner_Core_1/";
+var __packdir__ = "/storage/emulated/0/games/horizon/packs/Inner_Core/";
 function getCoreAPILevel() {return 10;}
 function runOnMainThread(func) {}
 function getMCPEVersion() {return {"str":"1.11.4","array":[1,11,4],"main":28};}
 var Debug = {};
-Debug.sysTime = function() {return 1594153928552;};
+Debug.sysTime = function() {return 1601121530090;};
 Debug.addParticle = function(id, x, y, z, vx, vy, vz, data) {};
 Debug.message = function(message) {};
 Debug.warning = function(message) {};
 Debug.error = function(message) {};
 Debug.m = function() {};
 Debug.bitmap = function(bitmap, title) {};
+Debug.big = function() {};
 
+var NBT = {};
+var TagRegistry = {};
 var Resources = {};
 Resources.addRuntimePack = function(type, name) {};
 
@@ -53,7 +56,7 @@ var Commands = {};
 var FileTools = {};
 FileTools.mntdir = "/mnt";
 FileTools.root = "/storage/emulated/0/";
-FileTools.moddir = "/storage/emulated/0/games/horizon/packs/Inner_Core_1/innercore/mods/";
+FileTools.moddir = "/storage/emulated/0/games/horizon/packs/Inner_Core/innercore/mods/";
 FileTools.mkdir = function(dir) {};
 FileTools.mkworkdirs = function() {};
 FileTools.getFullPath = function(path) {return "/storage/emulated/0/test";};
@@ -87,32 +90,10 @@ var UpdatableAPI = {};
 var Updatable = {};
 var TileEntity = {};
 TileEntity.tileEntityPrototypes = {};
-TileEntity.tileEntityPrototypes.1 = {};
-TileEntity.tileEntityPrototypes.1.remove = false;
-TileEntity.tileEntityPrototypes.1.isLoaded = false;
-TileEntity.tileEntityPrototypes.1.__initialized = false;
-TileEntity.tileEntityPrototypes.1.defaultValues = {};
-TileEntity.tileEntityPrototypes.1.update = function() {};
-TileEntity.tileEntityPrototypes.1.created = function() {};
-TileEntity.tileEntityPrototypes.1.load = function() {};
-TileEntity.tileEntityPrototypes.1.unload = function() {};
-TileEntity.tileEntityPrototypes.1.init = function() {};
-TileEntity.tileEntityPrototypes.1.onCheckerTick = function(isInitialized, isLoaded, wasLoaded) {};
-TileEntity.tileEntityPrototypes.1.click = function(id, count, data, coords) {};
-TileEntity.tileEntityPrototypes.1.destroyBlock = function(coords, player) {};
-TileEntity.tileEntityPrototypes.1.redstone = function(params) {};
-TileEntity.tileEntityPrototypes.1.projectileHit = function(coords, projectile) {};
-TileEntity.tileEntityPrototypes.1.destroy = function() {};
-TileEntity.tileEntityPrototypes.1.getGuiScreen = function() {return null;};
-TileEntity.tileEntityPrototypes.1.onItemClick = function(id, count, data, coords) {};
-TileEntity.tileEntityPrototypes.1.selfDestroy = function() {};
-TileEntity.tileEntityPrototypes.1.requireMoreLiquid = function(liquid, amount) {};
-TileEntity.tileEntityPrototypes.1.blockID = 1;
-TileEntity.tileEntityPrototypes.1.saverId = 1390014972;
 TileEntity.tileEntityList = [];
 TileEntity.resetEngine = function() {};
 TileEntity.registerPrototype = function(blockID, customPrototype) {};
-TileEntity.getPrototype = function(blockID) {return {"remove":false,"isLoaded":false,"__initialized":false,"defaultValues":{},"blockID":1,"saverId":1390014973};};
+TileEntity.getPrototype = function(blockID) {return {"remove":false,"isLoaded":false,"__initialized":false,"defaultValues":{},"blockID":1,"saverId":1390014972};};
 TileEntity.isTileEntityBlock = function(blockID) {return true;};
 TileEntity.createTileEntityForPrototype = function(Prototype, addToUpdate) {};
 TileEntity.addTileEntity = function(x, y, z) {return null;};
@@ -128,24 +109,23 @@ TileEntity.DeployDestroyChecker = function(tileEntity) {};
 
 var MobRegistry = {};
 MobRegistry.customEntities = {};
-MobRegistry.customEntities.__editorEntity__ = new Object();;
 MobRegistry.customEntities.test = new Object();;
-MobRegistry.loadedEntities; // Cyclic {0} value not allowed.
-MobRegistry.registerEntity = function(name) {return {"nameId":"test","controllers":{"event":{"parent":null,"__controller_name":"event"},"description":{"isDynamic":false,"parent":null,"__controller_name":"description"},"visual":{"modelWatchers":{},"modelWatcherStack":{},"parent":null,"__controller_name":"visual"},"AI":{"currentPriority":0,"loadedAI":{},"loadedData":{},"isAILoaded":false,"parent":null,"__controller_name":"AI"}},"isInstance":false,"entity":null,"age":0,"unloadedTime":0,"realPosition":null,"__base_type":28,"saverId":3556501,"lockRemovalHook":false,"event":{"parent":null,"__controller_name":"event"},"description":{"isDynamic":false,"parent":null,"__controller_name":"description"},"visual":{"modelWatchers":{},"modelWatcherStack":{},"parent":null,"__controller_name":"visual"},"AI":{"currentPriority":0,"loadedAI":{},"loadedData":{},"isAILoaded":false,"parent":null,"__controller_name":"AI"}};};
+MobRegistry.loadedEntities = [];
+MobRegistry.registerEntity = function(name) {return {"nameId":"test","controllers":{"event":{"parent":null,"__controller_name":"event"},"description":{"isDynamic":false,"parent":null,"__controller_name":"description"},"visual":{"modelWatchers":{},"modelWatcherStack":{},"parent":null,"__controller_name":"visual"},"AI":{"currentPriority":0,"loadedAI":{},"loadedData":{},"isAILoaded":false,"parent":null,"__controller_name":"AI"}},"isInstance":false,"entity":null,"age":0,"unloadedTime":0,"realPosition":null,"__base_type":28,"saverId":3556499,"lockRemovalHook":false,"event":{"parent":null,"__controller_name":"event"},"description":{"isDynamic":false,"parent":null,"__controller_name":"description"},"visual":{"modelWatchers":{},"modelWatcherStack":{},"parent":null,"__controller_name":"visual"},"AI":{"currentPriority":0,"loadedAI":{},"loadedData":{},"isAILoaded":false,"parent":null,"__controller_name":"AI"}};};
 MobRegistry.registerUpdatableAsEntity = function(updatable) {};
 MobRegistry.spawnEntityAsPrototype = function(typeName, coords, extraData) {};
-MobRegistry.getEntityUpdatable = function(entity) {return null;};
+MobRegistry.getEntityUpdatable = function(entity) {};
 MobRegistry.registerNativeEntity = function(entity) {};
 MobRegistry.registerEntityRemove = function(entity) {};
 MobRegistry.resetEngine = function() {};
 
 var MobSpawnRegistry = {};
-MobSpawnRegistry.spawnData = [{}];
+MobSpawnRegistry.spawnData = [];
 MobSpawnRegistry.registerSpawn = function(entityType, rarity, condition, denyNaturalDespawn) {};
 MobSpawnRegistry.getRandomSpawn = function(rarityMultiplier) {};
-MobSpawnRegistry.getRandPosition = function() {return {"x":-53.31735826459807,"z":-18.932432566506993};};
+MobSpawnRegistry.getRandPosition = function() {return {"x":-35.403196838987384,"z":35.75802305162795};};
 MobSpawnRegistry.executeSpawn = function(spawn, position) {};
-MobSpawnRegistry.counter = 1;
+MobSpawnRegistry.counter = 0;
 MobSpawnRegistry.tick = function() {};
 MobSpawnRegistry.onChunkGenerated = function(x, z) {};
 
@@ -155,9 +135,8 @@ function GameObject(name, Prototype) {}
 var GameObjectRegistry = {};
 GameObjectRegistry.gameObjectTypes = {};
 GameObjectRegistry.gameObjectTypes.test = this;
-GameObjectRegistry.gameObjectTypes._test = this;
 GameObjectRegistry.activeGameObjects = {};
-GameObjectRegistry.genUniqueName = function(name) {return "__test";};
+GameObjectRegistry.genUniqueName = function(name) {return "_test";};
 GameObjectRegistry.registerClass = function(gameObjectClass) {};
 GameObjectRegistry.deployGameObject = function(gameobject) {};
 GameObjectRegistry.addGameObject = function(gameobject) {};
@@ -169,14 +148,14 @@ GameObjectRegistry.callForTypeSafe = function() {};
 
 var ModAPI = {};
 ModAPI.modAPIs = {};
-ModAPI.modAPIs.DevInterface = {};
-ModAPI.modAPIs.DevInterface.api = {};
-ModAPI.modAPIs.DevInterface.api.createAndLock = function() {};
-ModAPI.modAPIs.DevInterface.api.getCurrentEnvironment = function() {return "Dev Editor";};
-ModAPI.modAPIs.DevInterface.api.isLocked = function() {return true;};
-ModAPI.modAPIs.DevInterface.descr = {};
-ModAPI.modAPIs.DevInterface.descr.name = "DevInterface";
-ModAPI.modAPIs.DevInterface.descr.props = {};
+ModAPI.modAPIs.DevEditor = {};
+ModAPI.modAPIs.DevEditor.api = {};
+ModAPI.modAPIs.DevEditor.api.createAndLock = function() {};
+ModAPI.modAPIs.DevEditor.api.getCurrentEnvironment = function() {return "Dev-Editor";};
+ModAPI.modAPIs.DevEditor.api.isLocked = function() {return true;};
+ModAPI.modAPIs.DevEditor.descr = {};
+ModAPI.modAPIs.DevEditor.descr.name = "DevEditor";
+ModAPI.modAPIs.DevEditor.descr.props = {};
 ModAPI.modAPIs.WorldEdit = {};
 ModAPI.modAPIs.WorldEdit.api = {};
 ModAPI.modAPIs.WorldEdit.api.addCommand = function(name, desc, event, args, selectedArea) {};
@@ -188,11 +167,6 @@ ModAPI.modAPIs.WorldEdit.api.selectPosition = function(p1, p2) {};
 ModAPI.modAPIs.WorldEdit.descr = {};
 ModAPI.modAPIs.WorldEdit.descr.name = "WorldEdit";
 ModAPI.modAPIs.WorldEdit.descr.props = {};
-ModAPI.modAPIs.test = {};
-ModAPI.modAPIs.test.api = null;
-ModAPI.modAPIs.test.descr = {};
-ModAPI.modAPIs.test.descr.name = "test";
-ModAPI.modAPIs.test.descr.props = {};
 ModAPI.registerAPI = function(name, api, descr) {};
 ModAPI.requireAPI = function(name) {return null;};
 ModAPI.requireGlobal = function(name) {return null;};
@@ -218,7 +192,7 @@ Saver.registerObject = function(obj, saverId) {};
 Saver.setObjectIgnored = function(obj, ignore) {};
 
 var World = {};
-World.isLoaded = null;
+World.isLoaded = false;
 World.setLoaded = function(isLoaded) {};
 World.isWorldLoaded = function() {};
 World.getThreadTime = function() {};
@@ -285,8 +259,11 @@ Entity.healEntity = function(ent, heal) {};
 Entity.getType = function(ent) {};
 Entity.getTypeUniversal = function(ent) {};
 Entity.getTypeAddon = function(ent) {return null;};
+Entity.getCompoundTag = function(ent) {};
+Entity.setCompoundTag = function(ent, tag) {};
 Entity.setHitbox = function(ent, w, h) {};
 Entity.isExist = function(entity) {};
+Entity.getDimension = function(entity) {};
 Entity.spawn = function() {};
 Entity.spawnAtCoords = function() {};
 Entity.spawnCustom = function(name, x, y, z, extra) {};
@@ -357,6 +334,7 @@ Entity.setDroppedItem = function(ent, id, count, data, extra) {};
 Entity.getProjectileItem = function(projectile) {return {"id":0,"count":0,"data":0,"extra":null};};
 Entity.getAttribute = function(ent, attribute) {};
 Entity.getPathNavigation = function(ent) {};
+Entity.getAllInsideBox = function(pos1, pos2, type, flag) {return [];};
 
 var AddonEntityRegistry = {};
 AddonEntityRegistry.data = {};
@@ -438,9 +416,10 @@ Game.setGameMode = function(gameMode) {};
 Game.getGameMode = function() {};
 Game.getMinecraftVersion = function() {return "1.11.4";};
 Game.getEngineVersion = function() {return "2.0";};
-Game.spendItemsInCreative = false;
-Game.isDeveloperMode = false;
+Game.spendItemsInCreative = true;
+Game.isDeveloperMode = true;
 Game.isItemSpendingAllowed = function() {return true;};
+Game.simulateBackPressed = function() {};
 
 function Render(params) {}
 function Texture(path) {}
@@ -537,13 +516,13 @@ EntityAI.Panic.__execute = function() {};
 EntityAI.Panic.setExecutionTimer = function(timer) {};
 EntityAI.Panic.removeExecutionTimer = function() {};
 EntityAI.Panic.data = {};
-EntityAI.Panic.data.yaw = 3.024461833675011;
-EntityAI.Panic.data.add = -0.005496114276754671;
+EntityAI.Panic.data.yaw = 4.627930617495301;
+EntityAI.Panic.data.add = 0;
 EntityAI.Panic.data.executionTimer = -1;
 EntityAI.Panic.isInstance = false;
 EntityAI.Panic.parent = null;
 EntityAI.Panic.entity = null;
-EntityAI.Panic.instantiate = function(parent, name) {return {"params":{"speed":0.22,"angular_speed":0.5},"data":{"yaw":3.024461833675011,"add":-0.005496114276754671,"executionTimer":-1},"isInstance":true,"parent":"test"};};
+EntityAI.Panic.instantiate = function(parent, name) {return {"params":{"speed":0.22,"angular_speed":0.5},"data":{"yaw":4.627930617495301,"add":0,"executionTimer":-1},"isInstance":true,"parent":"test"};};
 EntityAI.Panic.aiEntityChanged = function(entity) {};
 EntityAI.Panic.finishExecution = function() {};
 EntityAI.Panic.changeSelfPriority = function(priority) {};
@@ -574,7 +553,7 @@ EntityAI.Wander.__execute = function() {};
 EntityAI.Wander.setExecutionTimer = function(timer) {};
 EntityAI.Wander.removeExecutionTimer = function() {};
 EntityAI.Wander.data = {};
-EntityAI.Wander.data.yaw = 2.76401570197204;
+EntityAI.Wander.data.yaw = 2.766359942150908;
 EntityAI.Wander.data.add = 0;
 EntityAI.Wander.data.delay = false;
 EntityAI.Wander.data._delay = true;
@@ -582,7 +561,7 @@ EntityAI.Wander.data.executionTimer = -1;
 EntityAI.Wander.isInstance = false;
 EntityAI.Wander.parent = null;
 EntityAI.Wander.entity = null;
-EntityAI.Wander.instantiate = function(parent, name) {return {"params":{"speed":0.08,"angular_speed":0.1,"delay_weight":0.3},"data":{"yaw":2.76401570197204,"add":0,"delay":false,"_delay":true,"executionTimer":-1},"isInstance":true,"parent":"test"};};
+EntityAI.Wander.instantiate = function(parent, name) {return {"params":{"speed":0.08,"angular_speed":0.1,"delay_weight":0.3},"data":{"yaw":2.766359942150908,"add":0,"delay":false,"_delay":true,"executionTimer":-1},"isInstance":true,"parent":"test"};};
 EntityAI.Wander.aiEntityChanged = function(entity) {};
 EntityAI.Wander.finishExecution = function() {};
 EntityAI.Wander.changeSelfPriority = function(priority) {};
@@ -684,11 +663,11 @@ EntityAI.PanicWatcher.__execute = function() {};
 EntityAI.PanicWatcher.setExecutionTimer = function(timer) {};
 EntityAI.PanicWatcher.removeExecutionTimer = function() {};
 EntityAI.PanicWatcher.data = {};
-EntityAI.PanicWatcher.data.timer = 198;
+EntityAI.PanicWatcher.data.timer = -1;
 EntityAI.PanicWatcher.data.executionTimer = -1;
 EntityAI.PanicWatcher.isInstance = false;
 EntityAI.PanicWatcher.entity = null;
-EntityAI.PanicWatcher.instantiate = function(parent, name) {return {"parent":"test","params":{"panic_time":200,"priority_panic":5,"priority_default":1,"name":"panic"},"data":{"timer":198,"executionTimer":-1},"isInstance":true};};
+EntityAI.PanicWatcher.instantiate = function(parent, name) {return {"parent":"test","params":{"panic_time":200,"priority_panic":5,"priority_default":1,"name":"panic"},"data":{"timer":-1,"executionTimer":-1},"isInstance":true};};
 EntityAI.PanicWatcher.aiEntityChanged = function(entity) {};
 EntityAI.PanicWatcher.finishExecution = function() {};
 EntityAI.PanicWatcher.changeSelfPriority = function(priority) {};
@@ -707,12 +686,12 @@ GenerationUtils.isTerrainBlock = function(id) {};
 GenerationUtils.isTransparentBlock = function(id) {};
 GenerationUtils.canSeeSky = function(x, y, z) {};
 GenerationUtils.randomXZ = function(cx, cz) {return {"x":null,"z":null};};
-GenerationUtils.randomCoords = function(cx, cz, lowest, highest) {return {"x":null,"z":null,"y":98};};
+GenerationUtils.randomCoords = function(cx, cz, lowest, highest) {return {"x":null,"z":null,"y":34};};
 GenerationUtils.findSurface = function(x, y, z) {return {"x":0,"y":0,"z":0};};
 GenerationUtils.findHighSurface = function(x, z) {return {"x":0,"y":0,"z":0};};
 GenerationUtils.findLowSurface = function(x, z) {return {"x":0,"y":0,"z":0};};
 GenerationUtils.__lockedReal = {};
-GenerationUtils.__lockedReal.id = 1;
+GenerationUtils.__lockedReal.id = 0;
 GenerationUtils.__lockedReal.data = 0;
 GenerationUtils.lockInBlock = function(id, data, checkerTile, checkerMode) {};
 GenerationUtils.setLockedBlock = function(x, y, z) {};
@@ -726,46 +705,6 @@ Animation.base = function(x, y, z) {};
 Animation.Base = function(x, y, z) {};
 Animation.item = function(x, y, z) {};
 Animation.Item = function(x, y, z) {};
-Animation.render = null;
-Animation.setPos = function(x, y, z) {};
-Animation.setInterpolationEnabled = function(enabled) {};
-Animation.setIgnoreBlocklight = function(ignore) {};
-Animation.setBlockLightPos = function(x, y, z) {};
-Animation.resetBlockLightPos = function() {};
-Animation.setSkylightMode = function() {};
-Animation.setBlocklightMode = function() {};
-Animation.setIgnoreLightMode = function() {};
-Animation.transform = function() {return null;};
-Animation.getShaderUniforms = function() {return null;};
-Animation.newTransform = function(transformations, noClear) {};
-Animation.coords = {};
-Animation.coords.x = 0;
-Animation.coords.y = 0;
-Animation.coords.z = 0;
-Animation.description = {};
-Animation.createRenderIfNeeded = function() {};
-Animation.isLoaded = false;
-Animation.updateRender = function() {};
-Animation.load = function(tickFunc) {};
-Animation.loadCustom = function(func) {};
-Animation.getAge = function() {};
-Animation.refresh = function() {};
-Animation.describe = function(description) {};
-Animation.getRenderAPI = function() {};
-Animation.destroy = function() {};
-Animation.parent = function(x, y, z) {};
-Animation.__rotation = [0,0,0];
-Animation.__scale = 1;
-Animation.describeItemDefault = function(item) {};
-Animation.describeItemAlternative = function(item, offset) {};
-Animation.describeItem = function(item) {};
-Animation.tick = function() {};
-Animation.resetTransform = function() {};
-Animation.setItemRotation = function(x, y, z) {};
-Animation.setItemSize = function(size) {};
-Animation.setItemSizeAndRotation = function(size, x, y, z) {};
-Animation._destroy = function() {};
-Animation._load = function() {};
 
 var Particles = {};
 var IDRegistry = {};
@@ -773,17 +712,9 @@ var IDData = {};
 var Block = {};
 Block.dropFunctions = {};
 Block.popResourceFunctions = {};
-Block.popResourceFunctions.1 = function() {};
-Block.popResourceFunctions.NaN = null;
 Block.entityInsideFunctions = {};
-Block.entityInsideFunctions.1 = function() {};
-Block.entityInsideFunctions.NaN = null;
 Block.entityStepOnFunctions = {};
-Block.entityStepOnFunctions.1 = function() {};
-Block.entityStepOnFunctions.NaN = null;
 Block.neighbourChangeFunctions = {};
-Block.neighbourChangeFunctions.1 = function() {};
-Block.neighbourChangeFunctions.NaN = null;
 Block.getNumericId = function(id) {return 1;};
 Block.createBlock = function(namedID, defineData, blockType) {};
 Block.createBlockWithRotation = function(namedID, defineData, blockType) {};
@@ -839,23 +770,20 @@ Block.setAnimateTickCallback = function(id, callback) {};
 Block.TYPE_BASE = "createBlock";
 Block.TYPE_ROTATION = "createBlockWithRotation";
 Block.setPrototype = function(namedID, Prototype) {};
-Block.__func = function(blockCoords, blockID, blockData, diggingLevel) {return null;};
 
 var ItemModel = {};
 var BlockRenderer = {};
 var ICRender = {};
 var Item = {};
 Item.useFunctions = {};
-Item.useFunctions.1 = null;
 Item.throwableFunctions = {};
-Item.throwableFunctions.1 = null;
 Item.getNumericId = function(id) {return 1;};
 Item.getItemById = function(id) {return null;};
-Item.createItem = function() {};
-Item.createFoodItem = function() {};
+Item.createItem = function(namedID, name, texture, params) {};
+Item.createFoodItem = function(namedID, name, texture, params) {return null;};
 Item.createFuelItem = function(namedID, name, texture, params) {};
 Item.createArmorItem = function(namedID, name, texture, params) {};
-Item.createThrowableItem = function() {};
+Item.createThrowableItem = function(namedID, name, texture, params) {};
 Item.isNativeItem = function(id) {};
 Item.getMaxDamage = function(id) {};
 Item.getMaxStack = function(id) {return 64;};
@@ -873,18 +801,19 @@ Item.setMaxDamage = function(id, maxdamage) {};
 Item.setGlint = function(id, enabled) {};
 Item.setLiquidClip = function(id, enabled) {};
 Item.setStackedByData = function(id, enabled) {};
+Item.setAllowedInOffhand = function(id, allowed) {};
 Item.setProperties = function(id, props) {};
 Item.setUseAnimation = function(id, animType) {};
 Item.setMaxUseDuration = function(id, duration) {};
 Item.registerUseFunctionForID = function(numericID, useFunc) {return true;};
-Item.registerUseFunction = function(namedID, useFunc) {return true;};
+Item.registerUseFunction = function(namedID, useFunc) {};
 Item.onItemUsed = function(coords, item, block) {};
 Item.registerThrowableFunctionForID = function(numericID, useFunc) {return true;};
-Item.registerThrowableFunction = function(namedID, useFunc) {return true;};
+Item.registerThrowableFunction = function(namedID, useFunc) {};
 Item.onProjectileHit = function(projectile, item, target) {};
 Item.iconOverrideFunctions = {};
 Item.registerIconOverrideFunction = function(namedID, func) {};
-Item.onIconOverride = function(item) {};
+Item.onIconOverride = function(item, isModUi) {};
 Item.nameOverrideFunctions = {};
 Item.setItemNameOverrideCallbackForced = function() {};
 Item.registerNameOverrideFunction = function(namedID, func, preventForcing) {};
@@ -908,7 +837,6 @@ Item.TYPE_THROWABLE = "createThrowableItem";
 Item.setPrototype = function(namedID, Prototype) {};
 Item.invokeItemUseOn = function(coords, item, noModCallback, entity) {};
 Item.invokeItemUseNoTarget = function(item, noModCallback) {};
-Item.__func = null;
 
 var Recipes = {};
 var ToolAPI = {};
@@ -964,27 +892,6 @@ LiquidRegistry.getEmptyItem = function(id, data) {};
 LiquidRegistry.getItemLiquid = function(id, data) {};
 LiquidRegistry.getFullItem = function(id, data, liquid) {};
 LiquidRegistry.Storage = function(tileEntity) {};
-LiquidRegistry.liquidAmounts = {};
-LiquidRegistry.liquidLimits = {};
-LiquidRegistry.tileEntity = null;
-LiquidRegistry.setParent = function(obj) {};
-LiquidRegistry.getParent = function(obj) {return {"key":"value","_json_ignore":false};};
-LiquidRegistry.hasDataFor = function(liquid) {};
-LiquidRegistry.setLimit = function(liquid, limit) {};
-LiquidRegistry.getLimit = function(liquid) {return 99999999;};
-LiquidRegistry.getAmount = function(liquid) {};
-LiquidRegistry.getRelativeAmount = function(liquid) {};
-LiquidRegistry._setContainerScale = function(container, scale, liquid, val) {};
-LiquidRegistry.updateUiScale = function(scale, liquid, container) {};
-LiquidRegistry.setAmount = function(liquid, amount) {};
-LiquidRegistry.getLiquidStored = function() {return null;};
-LiquidRegistry.isFull = function(liquid) {};
-LiquidRegistry.isEmpty = function(liquid) {};
-LiquidRegistry.addLiquid = function(liquid, amount, onlyFullAmount) {};
-LiquidRegistry.getLiquid_flag = false;
-LiquidRegistry.getLiquid = function(liquid, amount, onlyFullAmount) {};
-LiquidRegistry.save = function() {return {"amounts":{"lava":null},"limits":{}};};
-LiquidRegistry.read = function(data) {};
 
 var Native = {};
 Native.ArmorType = {};
@@ -1005,7 +912,7 @@ Native.ParticleType.cloud = 4;
 Native.ParticleType.crit = 2;
 Native.ParticleType.dripLava = 24;
 Native.ParticleType.dripWater = 23;
-Native.ParticleType.enchantmenttable = 32;
+Native.ParticleType.enchantmenttable = 34;
 Native.ParticleType.fallingDust = 26;
 Native.ParticleType.flame = 7;
 Native.ParticleType.happyVillager = 33;
@@ -1345,367 +1252,3 @@ Native.PlayerAbility.WORLDBUILDER = "worldbuilder";
 function alert(text) {}
 function ItemExtraData() {}
 function RenderMesh() {}
-var gameobjectName = "_test";
-var originalName = "test";
-var saverId = 91290993;
-var isInstance = false;
-var isDeployed = false;
-var Prototype = null;
-function instantiate(parent, name) {}
-function deploy() {}
-function destroy() {}
-function getRenderType() {return 4100;}
-function getId() {return 4100;}
-function getID() {return 4100;}
-function init(params) {}
-function initModel() {}
-function checkChangeable() {}
-function rebuild() {}
-function getModel() {}
-function transform() {}
-function getPart(name) {return null;}
-function addPart(name, params) {}
-function setPartParams(name, params) {}
-function setPart(name, data, params) {}
-function _setPartRecursive(part, data, coords) {}
-var localCache = {};
-
-function fromCache(data) {}
-function toCache() {return {};}
-function saveState(name, isLocal) {}
-function loadState(name, isLocal) {return true;}
-function loadInitialState(name) {}
-function saveToNext(name, isLocal) {}
-var isEmpty = true;
-var isChangeable = true;
-var renderer = {};
-renderer.getClass = function() {};
-renderer.wait = function() {};
-renderer.humanoid = null;
-renderer.release = function() {};
-renderer.notifyAll = function() {};
-renderer.skin = null;
-renderer.scale = 1;
-renderer.addFinalizeCallback = function() {};
-renderer.getRenderType = function() {return 4104;};
-renderer.notify = function() {};
-renderer.transform = {};
-renderer.transform.getClass = function() {};
-renderer.transform.rotate = function() {};
-renderer.transform.wait = function() {};
-renderer.transform.unlock = function() {};
-renderer.transform.notifyAll = function() {};
-renderer.transform.clear = function() {};
-renderer.transform.scale = function() {};
-renderer.transform.matrix = function() {};
-renderer.transform.translate = function() {};
-renderer.transform.notify = function() {};
-renderer.transform.hashCode = function() {return 190863791;};
-renderer.transform.equals = function() {};
-renderer.transform.lock = function() {};
-renderer.transform.toString = function() {};
-renderer.finalizeable = null;
-renderer.hashCode = function() {return 142391293;};
-renderer.model = {};
-renderer.model.getClass = function() {};
-renderer.model.wait = function() {};
-renderer.model.hasPart = function() {};
-renderer.model.notifyAll = function() {};
-renderer.model.part = null;
-renderer.model.getPart = function() {};
-renderer.model.notify = function() {};
-renderer.model.hashCode = function() {return 123097304;};
-renderer.model.equals = function() {};
-renderer.model.reset = function() {};
-renderer.model.toString = function() {};
-renderer.model.clearAllParts = function() {};
-renderer.setFinalizeable = function() {};
-renderer.renderType = 4104;
-renderer.getModel = function() {};
-renderer.pointer = -1332356480;
-renderer.setScale = function() {};
-renderer.getPointer = function() {return -1332356480;};
-renderer.setSkin = function() {};
-renderer.isHumanoid = true;
-renderer.getScale = function() {return 1;};
-renderer.equals = function() {};
-renderer.toString = function() {};
-
-var model = {};
-model.getClass = function() {};
-model.wait = function() {};
-model.hasPart = function() {};
-model.notifyAll = function() {};
-model.part = null;
-model.getPart = function() {};
-model.notify = function() {};
-model.hashCode = function() {return 123097304;};
-model.equals = function() {};
-model.reset = function() {};
-model.toString = function() {};
-model.clearAllParts = function() {};
-
-var parts = {};
-parts.head = {};
-parts.head.textureOffset = null;
-parts.head.getClass = function() {};
-parts.head.getMesh = function() {return null;};
-parts.head.wait = function() {};
-parts.head.setMesh = function() {};
-parts.head.offset = null;
-parts.head.notifyAll = function() {};
-parts.head.rotation = null;
-parts.head.clear = function() {};
-parts.head.setTextureOffset = function() {};
-parts.head.setRotation = function() {};
-parts.head.notify = function() {};
-parts.head.setTextureSize = function() {};
-parts.head.textureSize = null;
-parts.head.setOffset = function() {};
-parts.head.hashCode = function() {return 85317393;};
-parts.head.equals = function() {};
-parts.head.toString = function() {};
-parts.head.addPart = function() {};
-parts.head.mesh = null;
-parts.head.addBox = function() {};
-parts.body = {};
-parts.body.textureOffset = null;
-parts.body.getClass = function() {};
-parts.body.getMesh = function() {return null;};
-parts.body.wait = function() {};
-parts.body.setMesh = function() {};
-parts.body.offset = null;
-parts.body.notifyAll = function() {};
-parts.body.rotation = null;
-parts.body.clear = function() {};
-parts.body.setTextureOffset = function() {};
-parts.body.setRotation = function() {};
-parts.body.notify = function() {};
-parts.body.setTextureSize = function() {};
-parts.body.textureSize = null;
-parts.body.setOffset = function() {};
-parts.body.hashCode = function() {return 160016001;};
-parts.body.equals = function() {};
-parts.body.toString = function() {};
-parts.body.addPart = function() {};
-parts.body.mesh = null;
-parts.body.addBox = function() {};
-parts.leftArm = {};
-parts.leftArm.textureOffset = null;
-parts.leftArm.getClass = function() {};
-parts.leftArm.getMesh = function() {return null;};
-parts.leftArm.wait = function() {};
-parts.leftArm.setMesh = function() {};
-parts.leftArm.offset = null;
-parts.leftArm.notifyAll = function() {};
-parts.leftArm.rotation = null;
-parts.leftArm.clear = function() {};
-parts.leftArm.setTextureOffset = function() {};
-parts.leftArm.setRotation = function() {};
-parts.leftArm.notify = function() {};
-parts.leftArm.setTextureSize = function() {};
-parts.leftArm.textureSize = null;
-parts.leftArm.setOffset = function() {};
-parts.leftArm.hashCode = function() {return 151532017;};
-parts.leftArm.equals = function() {};
-parts.leftArm.toString = function() {};
-parts.leftArm.addPart = function() {};
-parts.leftArm.mesh = null;
-parts.leftArm.addBox = function() {};
-parts.rightArm = {};
-parts.rightArm.textureOffset = null;
-parts.rightArm.getClass = function() {};
-parts.rightArm.getMesh = function() {return null;};
-parts.rightArm.wait = function() {};
-parts.rightArm.setMesh = function() {};
-parts.rightArm.offset = null;
-parts.rightArm.notifyAll = function() {};
-parts.rightArm.rotation = null;
-parts.rightArm.clear = function() {};
-parts.rightArm.setTextureOffset = function() {};
-parts.rightArm.setRotation = function() {};
-parts.rightArm.notify = function() {};
-parts.rightArm.setTextureSize = function() {};
-parts.rightArm.textureSize = null;
-parts.rightArm.setOffset = function() {};
-parts.rightArm.hashCode = function() {return 163084641;};
-parts.rightArm.equals = function() {};
-parts.rightArm.toString = function() {};
-parts.rightArm.addPart = function() {};
-parts.rightArm.mesh = null;
-parts.rightArm.addBox = function() {};
-parts.leftLeg = {};
-parts.leftLeg.textureOffset = null;
-parts.leftLeg.getClass = function() {};
-parts.leftLeg.getMesh = function() {return null;};
-parts.leftLeg.wait = function() {};
-parts.leftLeg.setMesh = function() {};
-parts.leftLeg.offset = null;
-parts.leftLeg.notifyAll = function() {};
-parts.leftLeg.rotation = null;
-parts.leftLeg.clear = function() {};
-parts.leftLeg.setTextureOffset = function() {};
-parts.leftLeg.setRotation = function() {};
-parts.leftLeg.notify = function() {};
-parts.leftLeg.setTextureSize = function() {};
-parts.leftLeg.textureSize = null;
-parts.leftLeg.setOffset = function() {};
-parts.leftLeg.hashCode = function() {return 159481041;};
-parts.leftLeg.equals = function() {};
-parts.leftLeg.toString = function() {};
-parts.leftLeg.addPart = function() {};
-parts.leftLeg.mesh = null;
-parts.leftLeg.addBox = function() {};
-parts.rightLeg = {};
-parts.rightLeg.textureOffset = null;
-parts.rightLeg.getClass = function() {};
-parts.rightLeg.getMesh = function() {return null;};
-parts.rightLeg.wait = function() {};
-parts.rightLeg.setMesh = function() {};
-parts.rightLeg.offset = null;
-parts.rightLeg.notifyAll = function() {};
-parts.rightLeg.rotation = null;
-parts.rightLeg.clear = function() {};
-parts.rightLeg.setTextureOffset = function() {};
-parts.rightLeg.setRotation = function() {};
-parts.rightLeg.notify = function() {};
-parts.rightLeg.setTextureSize = function() {};
-parts.rightLeg.textureSize = null;
-parts.rightLeg.setOffset = function() {};
-parts.rightLeg.hashCode = function() {return 235551809;};
-parts.rightLeg.equals = function() {};
-parts.rightLeg.toString = function() {};
-parts.rightLeg.addPart = function() {};
-parts.rightLeg.mesh = null;
-parts.rightLeg.addBox = function() {};
-parts.headwear = {};
-parts.headwear.textureOffset = null;
-parts.headwear.getClass = function() {};
-parts.headwear.getMesh = function() {return null;};
-parts.headwear.wait = function() {};
-parts.headwear.setMesh = function() {};
-parts.headwear.offset = null;
-parts.headwear.notifyAll = function() {};
-parts.headwear.rotation = null;
-parts.headwear.clear = function() {};
-parts.headwear.setTextureOffset = function() {};
-parts.headwear.setRotation = function() {};
-parts.headwear.notify = function() {};
-parts.headwear.setTextureSize = function() {};
-parts.headwear.textureSize = null;
-parts.headwear.setOffset = function() {};
-parts.headwear.hashCode = function() {return 79280049;};
-parts.headwear.equals = function() {};
-parts.headwear.toString = function() {};
-parts.headwear.addPart = function() {};
-parts.headwear.mesh = null;
-parts.headwear.addBox = function() {};
-
-var renderId = 4104;
-function setTextureResolution() {}
-var path = "test";
-var isAnimated = false;
-var animator = {};
-animator.animation = [];
-animator.animationDelay = 1;
-animator.animationOffsets = {};
-animator.animationOffsets.0 = 0;
-animator.getOffset = function(token) {};
-animator.setOffset = function(token, offset) {};
-animator.getGlobalTime = function() {return 31883078604.46;};
-animator.getTime = function(token) {return 31883078604.46;};
-animator.resetAnimation = function(token) {};
-animator.getFrameNumber = function(token) {};
-animator.setDelay = function(delay) {};
-animator.setAnimation = function(arr) {};
-animator.clearAnimation = function() {};
-animator.addFrame = function(frame) {};
-animator.getFrame = function(token) {};
-animator.inherit = function(animator) {};
-
-var resolution = {};
-resolution.w = 64;
-resolution.h = 32;
-
-function setTexture(textureObj) {}
-function setResolution(w, h) {}
-function setAnimation(animation, delay) {}
-function resetAnimation() {}
-function getTexture() {return "images/mob/ce_missing_entity_texture.png";}
-function getResolution() {return {"w":0.8,"h":1.6};}
-var pixelScale = 1;
-function setPixelScale(scale) {}
-function applyTextureResolution() {}
-function getTextureObj() {return {"path":"images/mob/ce_missing_entity_texture.png","isAnimated":false,"animator":{"animation":[],"animationDelay":1,"animationOffsets":{"0":0}},"resolution":{"w":64,"h":32},"pixelScale":1};}
-function getTextureResolution() {return {"w":64,"h":32};}
-function setRender(render) {}
-function createAnimation(ticks, func, delay) {}
-function getTextureAndRender(token) {}
-var texture = {};
-texture.path = "images/mob/ce_missing_entity_texture.png";
-texture.isAnimated = false;
-texture.animator = {};
-texture.animator.animation = [];
-texture.animator.animationDelay = 1;
-texture.animator.animationOffsets = {};
-texture.animator.animationOffsets.0 = 0;
-texture.animator.getOffset = function(token) {};
-texture.animator.setOffset = function(token, offset) {};
-texture.animator.getGlobalTime = function() {return 31883078606.64;};
-texture.animator.getTime = function(token) {return 31883078606.66;};
-texture.animator.resetAnimation = function(token) {};
-texture.animator.getFrameNumber = function(token) {};
-texture.animator.setDelay = function(delay) {};
-texture.animator.setAnimation = function(arr) {};
-texture.animator.clearAnimation = function() {};
-texture.animator.addFrame = function(frame) {};
-texture.animator.getFrame = function(token) {};
-texture.animator.inherit = function(animator) {};
-texture.resolution = {};
-texture.resolution.w = 64;
-texture.resolution.h = 32;
-texture.setTexture = function(path) {return {"path":"test","isAnimated":false,"animator":{"animation":[],"animationDelay":1,"animationOffsets":{"0":31883078606.68}},"resolution":{"w":64,"h":32},"pixelScale":1};};
-texture.setResolution = function(w, h) {return {"path":"test","isAnimated":false,"animator":{"animation":[],"animationDelay":1,"animationOffsets":{"0":31883078606.68}},"resolution":{"w":0.8,"h":1.6},"pixelScale":1};};
-texture.setAnimation = function(animation, delay) {return {"path":"test","isAnimated":true,"animator":{"animationDelay":1,"animationOffsets":{"0":31883078606.68}},"resolution":{"w":0.8,"h":1.6},"pixelScale":1};};
-texture.resetAnimation = function(token) {return {"path":"test","isAnimated":true,"animator":{"animationDelay":1,"animationOffsets":{"0":31883078606.98}},"resolution":{"w":0.8,"h":1.6},"pixelScale":1};};
-texture.getTexture = function(token) {};
-texture.getResolution = function() {return {"w":0.8,"h":1.6};};
-texture.pixelScale = 1;
-texture.setPixelScale = function(scale) {return {"path":"test","isAnimated":true,"animator":{"animationDelay":1,"animationOffsets":{"0":31883078606.98}},"resolution":{"w":0.8,"h":1.6}};};
-
-var render = 3;
-var _texture = null;
-var _render = null;
-var entity = null;
-var token = 6;
-function update() {}
-function getDefaultPriority() {return -1;}
-function getDefaultName() {return "basic-entity-ai";}
-var params = {};
-
-function setParams(params) {}
-function executionStarted() {}
-function executionEnded() {}
-function executionPaused() {}
-function executionResumed() {}
-function execute() {}
-function __execute() {}
-function setExecutionTimer(timer) {}
-function removeExecutionTimer() {}
-var data = {};
-data.executionTimer = -1;
-
-var parent = null;
-
-function aiEntityChanged(entity) {}
-function finishExecution() {}
-function changeSelfPriority(priority) {}
-function enableAI(name, priority, extra) {}
-function disableAI(name) {}
-function setPriority(name, priority) {}
-function getAI(name) {}
-function getPriority(name) {}
-function attackedBy(entity) {}
-function hurtBy(entity) {}
-function projectileHit(projectile) {}
-function death(entity) {}

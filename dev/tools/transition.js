@@ -9,16 +9,16 @@ function playTransition(worker, frame) {
 		transition.withEntity(worker.Define.getEntity() || getPlayerEnt());
 		transition.setFramesPerSecond(worker.Define.getFps() || 60);
 		transition.getFrameCount() > 0 && transition.clearFrames();
-		if (typeof frame == "undefined") {
+		if (frame == undefined || frame == null) {
 			let point = worker.Define.getStarting();
 			transition.withFrom(point.x, point.y, point.z, point.yaw, point.pitch);
 			transition.withFrames(worker.Animation.getAnimate(0).asArray());
 		} else {
 			let real = worker.Animation.getAnimate(0).getFrameCoords(frame - 1);
 			transition.withFrom(real.x, real.y, real.z, real.yaw, real.pitch);
-			let frame = worker.Animation.getAnimate(0).getFrame(frame);
-			transition.addFrame(frame.x, frame.y, frame.z,
-				frame.yaw, frame.pitch, frame.duration, frame.interpolator);
+			let offset = worker.Animation.getAnimate(0).getFrame(frame);
+			transition.addFrame(offset.x, offset.y, offset.z,
+				offset.yaw, offset.pitch, offset.duration, offset.interpolator);
 		}
 		transition.withOnFinishListener(function() {
 			handle(function() {
@@ -92,7 +92,9 @@ function sceneToScript(project) {
 
 function drawTransitionPoints(worker) {
 	try {
-		if (!Level.isLoaded()) return false;
+		if (!worker || !Level.isLoaded()) {
+			return false;
+		}
 		// TODO: Add spawn particles
 		// if (selectMode == 4)
 		// return true;
@@ -188,8 +190,10 @@ let TransitionEditor = {
 			Popups.closeAll(), TransitionEditor.unselect();
 			ProjectEditor.setOpenedState(false);
 			ProjectEditor.getProject().callAutosave();
-			delete TransitionEditor.data.worker;
-			StartEditor.menu();
+			checkValidate(function() {
+				delete TransitionEditor.data.worker;
+				StartEditor.menu();
+			});
 		});
 		checkForAdditionalInformation(control);
 		category = control.addCategory(translate("Transition"));
@@ -223,7 +227,7 @@ let TransitionEditor = {
 					let message = control.addMessage("menuModuleWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
 						function() {
 							TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
-							control.removeElement(message), TransitionEditor.create();
+							control.dismiss(), TransitionEditor.create();
 						});
 					handle(function() {
 						control.scrollToElement(message);
@@ -464,8 +468,9 @@ let TransitionEditor = {
 			let transition = TransitionEditor.data.transition,
 				selected = TransitionEditor.data.frame;
 			if (transition && transition.isStarted()) {
-				if (stopTransition(TransitionEditor.data.worker))
+				if (stopTransition(TransitionEditor.data.worker)) {
 					showHint(translate("Transition stopped"));
+				}
 			} else playTransition(TransitionEditor.data.worker, selected),
 				TransitionEditor.create();
 		},
