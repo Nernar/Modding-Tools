@@ -13,22 +13,23 @@
     "show_processes":true,
     "debug_animations":true
   },
-  "project":{
-    "autosave":true,
-    "autosave_period":45,
-    "autosave_interface":false,
-    "autosave_projectable":true,
-    "import_autoselect":false,
-    "move_mapping":false
+  "autosave":{
+    "enabled":true,
+    "between_period":45,
+    "with_interface":false,
+    "as_projectable":true,
+    "maximum_count":20
+  },
+  "network":{
+    "default_location":0,
+    "safe_connection":true,
+    "switch_locked":false
   },
   "render":{
     "use_box_sizes":true,
     "draw_selection":true,
     "inject_border":false,
     "transparent_boxes":true
-  },
-  "deprecated":{
-    "use_old_explorer":false
   },
   "user_login":{
     "ignore_deprecation":false,
@@ -37,5 +38,10 @@
   },
   "supportable":{
     "enabled":true
+  },
+  "other":{
+    "use_old_explorer":false,
+    "import_autoselect":false,
+    "autosave_mapping":false
   }
 }

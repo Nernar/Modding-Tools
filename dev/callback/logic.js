@@ -12,12 +12,17 @@ function updateSettings() {
 		maximumHints = __config__.getNumber("performance.maximum_hints");
 		(maximumHints > 100 && (maximumHints = 100) || maximumHints < 1 && (maximumHints = 1)) && __config__.set("performance.maximum_hints", uiScaler);
 		menuDividers = __config__.getBool("interface.show_dividers");
-		autosave = __config__.getBool("project.autosave");
-		autosaveInterface = __config__.getBool("project.autosave_interface");
-		autosavePeriod = __config__.getNumber("project.autosave_period");
-		autosavePeriod != 0 && (autosavePeriod > 300 && (autosavePeriod = 300) || autosavePeriod < 5 && (autosavePeriod = 5)) && __config__.set("project.autosave_period", autosavePeriod);
-		autosaveProjectable = __config__.getBool("project.autosave_projectable");
-		saveCoords = __config__.getBool("project.move_mapping");
+		autosave = __config__.getBool("autosave.enabled");
+		autosaveInterface = __config__.getBool("autosave.with_interface");
+		autosavePeriod = __config__.getNumber("autosave.between_period");
+		autosavePeriod != 0 && (autosavePeriod > 300 && (autosavePeriod = 300) || autosavePeriod < 5 && (autosavePeriod = 5)) && __config__.set("autosave.between_period", autosavePeriod);
+		autosaveProjectable = __config__.getBool("autosave.as_projectable");
+		// autosaveCount = __config__.getNumber("autosave.maximum_count");
+		// autosaveCount < 0 && (autosaveCount = 0) && __config__.set("autosave.maximum_count", autosaveCount);
+		CURRENTLY_SERVER_LOCATION = __config__.getNumber("network.default_location");
+		(CURRENTLY_SERVER_LOCATION > 1 && (CURRENTLY_SERVER_LOCATION = 1) || CURRENTLY_SERVER_LOCATION < 0 && (CURRENTLY_SERVER_LOCATION = 0)) && __config__.set("network.default_location", CURRENTLY_SERVER_LOCATION);
+		SERVER_HAS_SAFE_CONNECTION = __config__.getBool("network.safe_connection");
+		SERVER_LOCATION_LOCKED = __config__.getBool("network.switch_locked");
 		entityBoxType = __config__.getBool("render.use_box_sizes");
 		drawSelection = __config__.getBool("render.draw_selection");
 		injectBorder = __config__.getBool("render.inject_border");
@@ -37,8 +42,9 @@ function updateSettings() {
 		showProcesses = __config__.getBool("performance.show_processes");
 		ignoreKeyDeprecation = __config__.getBool("user_login.ignore_deprecation");
 		noImportedScripts = !__config__.getBool("user_login.imported_script");
-		useOldExplorer = __config__.getBool("deprecated.use_old_explorer");
-		importAutoselect = __config__.getBool("project.import_autoselect");
+		useOldExplorer = __config__.getBool("other.use_old_explorer");
+		importAutoselect = __config__.getBool("other.import_autoselect");
+		saveCoords = __config__.getBool("other.autosave_mapping");
 		__config__.save();
 	} catch (e) {
 		reportError(e);

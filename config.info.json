@@ -22,6 +22,7 @@
                 "en": "Interface",
                 "ru": "Интерфейс"
             },
+            
             "index": 1,
             "collapsible": false
         },
@@ -35,7 +36,6 @@
                 "en": "Responsible for overall size of the entire interface, is it's factor",
                 "ru": "Отвечает за общий размер всего интерфейса, является его множителем"
             },
-            
             "index": 2
         },
         
@@ -48,7 +48,6 @@
                 "en": "Affects font size, changes with interface size, multiplies interface size for font",
                 "ru": "Влияет на размер шрифта, меняется совместно с размером интерфейса, множит размер интерфейса для шрифта"
             },
-            
             "index": 3
         },
         
@@ -97,6 +96,7 @@
                 "en": "Performance",
                 "ru": "Производительность"
             },
+            
             "index": 7,
             "collapsible": false
         },
@@ -151,19 +151,20 @@
             "index": 11
         },
         
-        "project": {
+        "autosave": {
             "name": {
-                "en": "Project",
-                "ru": "Проект"
+                "en": "Autosaves",
+                "ru": "Авто-сохранения"
             },
+            
             "index": 12,
             "collapsible": false
         },
         
-        "project.autosave": {
+        "autosave.enabled": {
             "name": {
-                "en": "Autosave",
-                "ru": "Авто-сохранение"
+                "en": "Enabled",
+                "ru": "Включено"
             },
             "description": {
                 "en": "Changes general state of the autosave option, saving projectable in certain periods in a separate folder",
@@ -172,27 +173,27 @@
             "index": 13
         },
         
-        "project.autosave_period": {
+        "autosave.between_period": {
             "name": {
-                "en": "Autosave Period",
-                "ru": "Период авто-сохранений"
+                "en": "Between Period",
+                "ru": "Период между"
             },
             "description": {
-                "en": "Time as seconds, maximum time spent on delay between saves, a zero value means saving after each action",
-                "ru": "Время в секундах, максимально потраченное на задержку между сохранениями, нулевое значение означает сохранение после каждого действия"
+                "en": "Time as seconds, maximum time spent on delay between saves, a zero value sets saving after each action",
+                "ru": "Время в секундах, максимально потраченное на задержку между сохранениями, нулевое значение делает сохранение после каждого действия"
             },
             
             "index": 14,
-            "displayIf": "project.autosave",
+            "displayIf": "autosave.enabled",
             "type": "SeekBar",
             "min": 0,
             "max": 300
         },
         
-        "project.autosave_interface": {
+        "autosave.with_interface": {
             "name": {
-                "en": "Autosave Interface",
-                "ru": "Авто-сохранение интерфейса"
+                "en": "With Interface",
+                "ru": "С интерфейсом"
             },
             "description": {
                 "en": "Determines whether to save after changing one of open windows, for example it's location",
@@ -201,42 +202,84 @@
             "displayIf": false
         },
         
-        "project.autosave_projectable": {
+        "autosave.as_projectable": {
             "name": {
-                "en": "Autosave Projectable",
-                "ru": "Авто-сохранение проекта"
+                "en": "As Projectable",
+                "ru": "В виде проекта"
             },
             "description": {
                 "en": "Changes state of automatic saving; when disabled, it saves only the current editable module, reducing the save time, but ignoring other editors",
-                "ru": "Меняет состояние автоматического сохранения, при отключении сохраняет только текущий редактируемый модуль, уменьшая время сохранения, но игнорируя другие редакторы"
+                "ru": "Меняет состояние автоматического сохранения; при отключении сохраняет только текущий редактируемый модуль, уменьшая время сохранения, но игнорируя другие редакторы"
             },
             
             "index": 15,
-            "displayIf": "project.autosave"
+            "displayIf": "autosave.enabled"
         },
         
-        "project.import_autoselect": {
-            "name": {
-                "en": "Import Autoselect",
-                "ru": "Авто-выбор при импорте"
-            },
-            "description": {
-                "en": "After inclusion, if there are two or more editors in imported project, it automatically selects everything, giving user opportunity to change his choice",
-                "ru": "После включения, при наличии в импортированном проекте двух или более редакторов, автоматически выбирает все, давая пользователю возможность изменить свой выбор"
-            },
-            "index": 16
+        "autosave.maximum_count": {
+        	"name": {
+        		"en": "Maximum Count",
+        		"ru": "Максимальное количество"
+        	},
+        	"description": {
+        		"en": "Sets maximum count of in folder, where zhero value sets it's without limitations",
+        		"ru": "Устанавливает максимальное количество сохранений в папке, где ноль делает их без ограничений"
+        	},
+        	
+        	"displayIf": false,
+        	"type": "SeekBar",
+        	"min": 0,
+        	"max": 50
         },
         
-        "project.move_mapping": {
+        "network": {
             "name": {
-                "en": "Move Mapping",
-                "ru": "Перемещать маппинг"
+                "en": "Networking",
+                "ru": "Подключения"
+            },
+            
+            "index": 16,
+            "collapsible": false
+        },
+        
+        "network.default_location": {
+            "name": {
+                "en": "Default Location",
+                "ru": "Стандартная локация"
             },
             "description": {
-                "en": "After switching on, it doesn't clear coordinates of mapped models, but uses old ones, moves them to newest editor",
-                "ru": "После включения не очищает координаты отрисованных моделей, а использует старые, перемещая их в новый редактор"
+                "en": "Responsible for default connection location, may influence on requests speed",
+                "ru": "Отвечает за стандартную локацию для подключения, может влиять на скорость запросов"
             },
-            "index": 17
+            
+            "index": 17,
+            "type": "SeekBar",
+            "min": 0,
+            "max": 1
+        },
+        
+        "network.safe_connection": {
+            "name": {
+                "en": "Safe Protocol",
+                "ru": "Безопасный протокол"
+            },
+            "description": {
+                "en": "Makes connecting to server safe, all connections pass through HTTPS connections",
+                "ru": "Делает подключение к серверу безопасным, все подключения проходят через HTTPS соединения"
+            },
+            "index": 18
+        },
+        
+        "network.switch_locked": {
+            "name": {
+                "en": "Switch Locked",
+                "ru": "Изменения запрещены"
+            },
+            "description": {
+                "en": "Prohibits switching between locations and connections protocols, can increase speed of work, but not advocated to use if you don't know what you doing",
+                "ru": "Запрещает переключения между локациями и протоколами соединений, может увеличить скорость работы, но не советуется использовать, если вы не знаете что делаете"
+            },
+            "index": 19
         },
         
         "render": {
@@ -244,7 +287,8 @@
                 "en": "Render",
                 "ru": "Отрисовка"
             },
-            "index": 18,
+            
+            "index": 20,
             "collapsible": false
         },
         
@@ -257,7 +301,7 @@
                 "en": "After inclusion in editors with box sizes, instead of size and location, displays two coordinates points",
                 "ru": "После включения в редакторах с размерами коробок, вместо размера и расположения, отображает две точки координат"
             },
-            "index": 19
+            "index": 21
         },
         
         "render.draw_selection": {
@@ -269,7 +313,7 @@
                 "en": "When focusing on element selection window, draws selection in any of one possible ways",
                 "ru": "При фокусировке на окне выбора элементов, отрисовывает выборку любым из возможных способов"
             },
-            "index": 20
+            "index": 22
         },
         
         "render.inject_border": {
@@ -293,23 +337,7 @@
                 "en": "Changes rendering state of translucent textures, works only on translucent blocks, also automatically turns off on old version launcher",
                 "ru": "Меняет состояние отрисовки полупрозрачных текстур, работает только на полупрозрачных блоках, также автоматически отключается на старой версии лаунчера"
             },
-            "index": 21
-        },
-        
-        "deprecated": {
-            "name": {
-                "en": "Deprecated",
-                "ru": "Устарело"
-            },
-            "displayIf": false
-        },
-        
-        "deprecated.use_old_explorer": {
-            "name": {
-                "en": "Use Old Explorer",
-                "ru": "Использовать старый проводник"
-            },
-            "displayIf": false
+            "index": 23
         },
         
         "user_login": {
@@ -325,7 +353,8 @@
                 "en": "Supportables",
                 "ru": "Модули"
             },
-            "index": 22,
+            
+            "index": 24,
             "collapsible": false
         },
         
@@ -338,7 +367,53 @@
                 "en": "Responsible for general state of inclusion «Supportables» function, each of which can be disabled separately by changing it's config",
                 "ru": "Отвечает за общее состояние включения функции «Модулей», каждый из которых может быть отключен отдельно изменением их конфига"
             },
-            "index": 23
+            "index": 25
+        },
+        
+        "other": {
+            "name": {
+                "en": "Other",
+                "ru": "Другое"
+            },
+            
+            "index": 26,
+            "collapsible": false
+        },
+        
+        "other.use_old_explorer": {
+        	"name": {
+                "en": "Use Old Explorer",
+                "ru": "Использовать старый проводник"
+            },
+            "description": {
+            	"en": "Replaces file manager from new versions to oldest, use if a new explorer stopped working or in cases of extreme necessity",
+            	"ru": "Заменяет файловый менеджер из новых версий на старый, используйте если новый проводник перестал работать или в случаях крайней необходимости"
+            },
+            "index": 27
+        },
+        
+        "other.import_autoselect": {
+            "name": {
+                "en": "Import Autoselect",
+                "ru": "Авто-выбор при импорте"
+            },
+            "description": {
+                "en": "After inclusion, if there are two or more editors in imported project, it automatically selects everything, giving user opportunity to change his choice",
+                "ru": "После включения, при наличии в импортированном проекте двух или более редакторов, автоматически выбирает все, давая пользователю возможность изменить свой выбор"
+            },
+            "index": 28
+        },
+        
+        "other.autosave_mapping": {
+            "name": {
+                "en": "Autosave Mapping",
+                "ru": "Авто-сохранение маппинга"
+            },
+            "description": {
+                "en": "After switching on, it doesn't clear coordinates of mapped models, but uses old ones, saves them to newest editor",
+                "ru": "После включения не очищает координаты отрисованных моделей, а использует старые, сохраняя их в новый редактор"
+            },
+            "index": 29
         }
     }
 }

@@ -412,7 +412,13 @@ let ProjectEditor = {
 function compileScript(text) {
 	let code = "(function() {\n" + text + "\nreturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "Dev Editor$import.js");
-	noImportedScripts = false, __config__.set("user_login.imported_script", true);
+	try {
+		noImportedScripts = false;
+		__config__.set("user_login.imported_script", !noImportedScripts);
+		__config__.save();
+	} catch (e) {
+		reportError(e);
+	}
 	return scope.error ? (reportError(scope.error), null) : scope.result;
 }
 
