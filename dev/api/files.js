@@ -22,13 +22,13 @@ const Dirs = {
 })();
 
 function formatSize(size) {
-	// Rounds file sizes (per 2^10 bytes)
+	// Rounds file sizes (per 2^10 bytes).
 	return size < 100 ? new Number(size).toFixed(2) :
 	    size < 1000 ? new Number(size).toFixed(1) :
 		size < 1024 ? new Number(size).toFixed() : "?";
 }
 
-const MediaTypes = { // Claimed by system media
+const MediaTypes = { // Claimed by system media.
 	AUDIO: ["3gp", "mp4", "m4a", "aac", "ts", "flac", "gsm", "mid", "xmf",
 	    "mxmf", "rtttl", "rtx", "ota", "imy", "mp3", "mkv", "wav", "ogg"],
 	VIDEO: ["3gp", "mp4", "ts", "webm", "mkv"],
@@ -50,7 +50,7 @@ const Files = {
 		file.createNewFile();
 	},
 	checkFormats: function(list, formats) {
-		// Filters files by extension
+		// Filters files by extension.
 		let formatted = new Array();
 		if (!Array.isArray(formats)) {
 			formats = [formats];

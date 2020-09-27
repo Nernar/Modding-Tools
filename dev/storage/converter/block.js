@@ -12,11 +12,11 @@ BlockConverter.prototype.process = function(obj) {
 		let define = this.buildDefine(obj);
 		define && result.push(define);
 	}
-	if (obj.renderer && obj.renderer.length > 0) {
+	if (obj.renderer) {
 		let renderer = this.buildRenderer(obj);
 		renderer && result.push(renderer);
 	}
-	if (obj.collision && obj.collision.length > 0) {
+	if (obj.collision) {
 		let collision = this.buildCollision(obj);
 		collision && result.push(collision);
 	}

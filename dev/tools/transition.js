@@ -14,7 +14,7 @@ function playTransition(worker, frame) {
 			transition.withFrom(point.x, point.y, point.z, point.yaw, point.pitch);
 			transition.withFrames(worker.Animation.getAnimate(0).asArray());
 		} else {
-			let real = worker.Animation.getAnimate(0).getFrameCoords(frame - 1);
+			let real = worker.Animation.getAnimate(0).getFrameCoords(frame);
 			transition.withFrom(real.x, real.y, real.z, real.yaw, real.pitch);
 			let offset = worker.Animation.getAnimate(0).getFrame(frame);
 			transition.addFrame(offset.x, offset.y, offset.z,

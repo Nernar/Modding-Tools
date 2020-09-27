@@ -57,7 +57,6 @@ const Popups = {
 				window = widget.window;
 			if (window && widget.focusable) {
 				Popups.close(widget);
-				i--;
 			}
 		}
 	},
@@ -75,7 +74,7 @@ const Popups = {
 		}
 		for (let i = 0; i < this.widgets.length; i++) {
 			if (this.widgets[i].name.startsWith(tag)) {
-				this.close(i) && (i--);
+				this.close(i--);
 			}
 		}
 	},

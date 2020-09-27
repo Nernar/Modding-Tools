@@ -143,7 +143,12 @@ Callback.addCallback("PreBlocksDefined", function() {
 		// Checks config of each mod for loading textures
 		let mods = Files.listDirectories(Dirs.MOD);
 		for (let m = 0; m < mods.length; m++) {
-			let path = mods[m].getPath() + "/build.config";
+			let directory = mods[m].getPath() + "/";
+			let redirect = directory + ".redirect";
+			if (FileTools.exists(redirect)) {
+				directory = FileTools.readFileText(redirect).trim();
+			}
+			let path = directory + "build.config";
 			if (!FileTools.exists(path)) {
 				continue;
 			}
@@ -158,7 +163,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 				for (let i = 0; i < resources.length; i++) {
 					let resource = resources[i];
 					if (resource && resource.resourceType == "resource") {
-						let res = mods[m] + "/" + resource.path + "terrain-atlas";
+						let res = directory + resource.path + "terrain-atlas";
 						if (!FileTools.exists(res)) {
 							continue;
 						}

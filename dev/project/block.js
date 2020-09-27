@@ -105,7 +105,7 @@ function BlockWorker(obj) {
 			return count;
 		},
 		getParams: function() {
-			let params = [];
+			let params = new Array();
 			for (let i = 0; i < this.getModelCount(); i++) {
 				params.push(this.getModel(i).params);
 			}
@@ -442,7 +442,7 @@ function BlockWorker(obj) {
 			return count;
 		},
 		getParams: function() {
-			let params = [];
+			let params = new Array();
 			for (let i = 0; i < this.getModelCount(); i++) {
 				params.push(this.getModel(i).params);
 			}

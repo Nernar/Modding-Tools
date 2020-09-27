@@ -320,7 +320,9 @@ let StartEditor = {
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
 						let current = ProjectEditor.getProject();
-						current.object = assign(current.getAll(), selected);
+						selected.forEach(function(value) {
+							current.getAll().push(value);
+						});
 						StartEditor.menu();
 						showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
 					});
@@ -330,7 +332,7 @@ let StartEditor = {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
 				let current = ProjectEditor.getProject();
-				current.object = assign(current.getAll(), [result]);
+				current.getAll().push(result);
 				StartEditor.menu();
 				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
 			});
@@ -339,8 +341,8 @@ let StartEditor = {
 			handle(function() {
 				let current = ProjectEditor.getProject(),
 					obj = compileData(Files.read(file)),
-					result = [convertNdb(obj)];
-				current.object = assign(current.getAll(), result);
+					result = convertNdb(obj);
+				current.getAll().push(result);
 				StartEditor.menu();
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
 			});
@@ -349,8 +351,8 @@ let StartEditor = {
 			handle(function() {
 				let current = ProjectEditor.getProject(),
 					obj = compileData(Files.read(file)),
-					result = [convertNds(obj)];
-				current.object = assign(current.getAll(), result);
+					result = convertNds(obj);
+				current.getAll().push(result);
 				StartEditor.menu();
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
 			});
@@ -363,7 +365,7 @@ let StartEditor = {
 			importProject(file.getPath(), function(result) {
 				handle(function() {
 					let current = ProjectEditor.create();
-					current.object = assign(current.getAll(), result);
+					current.object = result;
 					StartEditor.menu();
 					showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
 				});

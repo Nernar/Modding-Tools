@@ -29,9 +29,10 @@ function resetSettingIfNeeded(key, value, minOrIteratorOrValue, maxOrValues, fil
 	if (filter instanceof Function) {
 		value = filter(value);
 	} else if (Array.isArray(filter)) {
-		if (filter.indexOf(value) == -1) {
+		let index = filter.indexOf(value);
+		if (!exclude && index == -1) {
 			value = minOrIteratorOrValue;
-		} else if (exclude) {
+		} else if (exclude && index != -1) {
 			value = minOrIteratorOrValue;
 		}
 	}

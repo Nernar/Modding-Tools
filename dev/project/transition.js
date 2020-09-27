@@ -139,7 +139,7 @@ function TransitionWorker(obj) {
 			this.setupFrame = function(index) {
 				let real = this.getFrameCoords(index), frame = this.getFrame(index),
 					coords = Entity.getPosition(worker.Define.getEntity()),
-					angle = Entity.getLookAngle(worker.Define.getEntity());
+					angle = Entity.getRotation(worker.Define.getEntity());
 				frame.x = preround(coords[0] - real.x, 1);
 				frame.y = preround(coords[1] - real.y, 1);
 				frame.z = preround(coords[2] - real.z, 1);
