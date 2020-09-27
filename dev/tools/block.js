@@ -8,7 +8,7 @@ function addTextureMod(name) {
 
 function addTexture(index, name, data) {
 	if (typeof data != "number") {
-		data = parseInt(data);
+		data = parseInt(data) || 0;
 	}
 	textures[index].items.push([name, data]);
 }

@@ -273,11 +273,15 @@ let StartEditor = {
 						}
 						return false;
 					})[0];
-					if (result != true && result != false) reportError(result);
+					if (result != true && result != false) {
+						reportError(result);
+					}
 					if (!hintStackableDenied) {
 						showHint(InstantRunner.modName + " " + InstantRunner.version);
 						showHint(InstantRunner.author);
-					} else showHint(InstantRunner.modName + " - " + InstantRunner.author);
+					} else {
+						showHint(InstantRunner.modName + " - " + InstantRunner.author);
+					}
 				});
 				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
 					let result = WorldEdit(function() {
@@ -294,14 +298,26 @@ let StartEditor = {
 						}
 						return null;
 					})[0];
-					if (result instanceof Error) reportError(result);
-					else if (result) confirm(WorldEdit.modName + " " + WorldEdit.version, result);
+					if (result instanceof Error) {
+						reportError(result);
+					} else if (result) {
+						confirm(WorldEdit.modName + " " + WorldEdit.version, result);
+					}
 					if (!hintStackableDenied) {
 						showHint(WorldEdit.modName + " " + WorldEdit.version);
 						showHint(WorldEdit.author);
-					} else showHint(WorldEdit.modName + " - " + WorldEdit.author);
+					} else {
+						showHint(WorldEdit.modName + " - " + WorldEdit.author);
+					}
 				});
-				if (TPSMeter) category.addItem(TPSMeter.icon, translate("TPS Meter"));
+				if (TPSMeter) category.addItem(TPSMeter.icon, translate("TPS Meter"), function() {
+					if (!hintStackableDenied) {
+						showHint(TPSMeter.modName + " " + TPSMeter.version);
+						showHint(TPSMeter.author);
+					} else {
+						showHint(TPSMeter.modName + " - " + TPSMeter.author);
+					}
+				});
 				checkForAdditionalInformation(control);
 			}
 			resetAdditionalInformation();
