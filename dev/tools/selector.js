@@ -559,17 +559,18 @@ function selectProjectData(result, action, single) {
 function convertJsonBlock(string, action) {
 	if (!ModelConverter) return;
 	let runned = compileData("(function() {\n" + ModelConverter + "\n" +
-		"document.getElementById(\"name\").value = " + string + ";\n" +
 		"myFunction();\nreturn {\nvalue: document.getElementById(\"frm2\").value,\n" +
 		"logged: console.logged.join(\"\\n\")\n};\n})()",
 		"object", {
 			document: {
 				elements: {
-					name: new Object(),
+					name: {
+						value: string
+					},
 					frm2: new Object()
 				},
 				getElementById: function(id) {
-					return this.elements[id] || null;
+					return this.elements[id];
 				}
 			},
 			console: {
@@ -769,10 +770,10 @@ function saveFile(currentName, formats, onSelect, outside) {
 	}
 }
 
-function compileData(text, type, scope) {
+function compileData(text, type, additional) {
 	if (type == "string") text = "\"" + text + "\"";
 	let code = "(function() { return " + text + "; })();",
-		scope = runAtScope(code, scope || {}, "Dev Editor$compile.js");
+		scope = runAtScope(code, additional || {}, "compile.js");
 	return scope.error ? scope.error : !type ? scope.result :
 		type == "string" ? ("" + scope.result) :
 		type == "number" ? parseInt(scope.result) :

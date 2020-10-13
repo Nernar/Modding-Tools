@@ -1,11 +1,13 @@
 function runAtScope(code, scope, name) {
 	// Runs code in a separate data stream
 	let scriptable = org.mozilla.javascript.ScriptableObject,
-        source = name || "<no name>",
+        source = name ? __name__ + "$" + name : "<no name>",
         ctx = org.mozilla.javascript.Context.enter();
     ctx.setLanguageVersion(200);
     let standart = ctx.initStandardObjects(null, !1);
-    for (item in scope) scriptable.putProperty(standart, new String(item), scope[item]);
+    for (let item in scope) {
+    	scriptable.putProperty(standart, "" + item, scope[item]);
+    }
     scope = new Object();
     try {
        	scope.result = ctx.evaluateString(standart, code, source, 0, null);
