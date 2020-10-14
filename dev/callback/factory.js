@@ -115,6 +115,9 @@ ImageFactory.getDrawable = function(key) {
 	drawable.setFilterBitmap(false)
 	return drawable;
 };
+ImageFactory.isLoaded = function(key) {
+	return !!this.getBitmap(key);
+};
 ImageFactory.resizeBitmap = function(key, dx, dy) {
 	let bitmap = this.getBitmap(key);
 	if (!bitmap) {

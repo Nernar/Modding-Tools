@@ -541,9 +541,11 @@ function selectProjectData(result, action, single) {
 					selected.forEach(function(element, index) {
 						element && value.push(result[real[index]]);
 					});
-					if (value.length == 0)
+					if (value.length == 0) {
 						selectProjectData(result, action);
-					else action(value);
+					} else {
+						action(value);
+					}
 				} catch (e) {
 					reportError(e);
 				}
@@ -583,17 +585,22 @@ function convertJsonBlock(string, action) {
 	if (runned instanceof Error) reportError(runned);
 	else if (runned && runned.value) {
 		let compiled = compileScript(runned);
-		if (compiled && compiled[0]) action && action(compiled[0]);
-		else confirm(translate("Compilation failed"),
-			translate("Converter generated invalid script, they can't be runned.") + " " +
-				translate("Retry compile with another converted model.") + " " +
-				translate("Save exported result?"), function() {
-					saveFile(translate("converted"), [".js"], function(file) {
-						Files.write(file, runned.value);
+		if (compiled && compiled[0]) {
+			action && action(compiled[0]);
+		} else {
+			confirm(translate("Compilation failed"),
+				translate("Converter generated invalid script, they can't be runned.") + " " +
+					translate("Retry compile with another converted model.") + " " +
+					translate("Save exported result?"), function() {
+						saveFile(translate("converted"), [".js"], function(file) {
+							Files.write(file, runned.value);
+						});
 					});
-				});
-		if (runned.logged) confirm(translate("Script report"),
-			translate("Script logging have several messages:") + "\n" + runned.logged);
+		}
+		if (runned.logged) {
+			confirm(translate("Script report"),
+				translate("Script logging have several messages:") + "\n" + runned.logged);
+		}
 	}
 }
 
