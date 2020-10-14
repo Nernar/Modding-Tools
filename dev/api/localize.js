@@ -708,11 +708,14 @@ Translation.addTranslation("Retry compile with another converted model.", {
 Translation.addTranslation("Save exported result?", {
 	ru: "Сохранить экспортированный результат?"
 });
-Translation.addTranslation("Script report", {
-	ru: "Отчет скрипта"
+Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
+	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны."
 });
 Translation.addTranslation("Script logging have several messages:", {
 	ru: "Отладка скрипта записала несколько сообщений:"
+});
+Translation.addTranslation("Deleting mod folder for installation", {
+	ru: "Удаление папки мода для установки"
 });
 
 // Messages
@@ -742,6 +745,9 @@ Translation.addTranslation("Can't check update at this moment, maybe server is c
 }); // DEPRECATED
 Translation.addTranslation("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities.", {
 	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету, иначе появляется риск потерять тестируемые возможности."
+});
+Translation.addTranslation("The administration deemed it appropriate to issue you a ban, you can contact with administration about unlocking.", {
+	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней по поводу разблокировки."
 });
 
 // Login
@@ -855,11 +861,11 @@ Translation.addTranslation("Player", {
 Translation.addTranslation("Reload", {
 	ru: "Обновить"
 });
+Translation.addTranslation("Script report", {
+	ru: "Отчет скрипта"
+});
 Translation.addTranslation("Creating project", {
 	ru: "Создание проекта"
-});
-Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
-	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны."
 });
 
 // Supportables
@@ -871,6 +877,7 @@ Translation.addTranslation("Dumper", {});
 Translation.addTranslation("UIEditor", {});
 Translation.addTranslation("IRunner", {});
 Translation.addTranslation("WorldEdit", {});
+Translation.addTranslation("TPS Meter", {});
 Translation.addTranslation("Dump will be saved into supportable directory. Do you want to overwrite it?", {
 	ru: "Дамп уже сохранен в папку модуля. Вы хотите перезаписать его?"
 }); // DEPRECATED
@@ -1024,6 +1031,9 @@ Translation.addTranslation("Do you want to continue?", {
 Translation.addTranslation("Touch here to confirm.", {
 	ru: "Нажмите здесь для подтверждения."
 });
+Translation.addTranslation("Nothing loaded, may connection have been dropped", {
+	ru: "Ничего не загрузилось, возможно подключение было сброшено"
+});
 
 // Deprecated
 Translation.addTranslation("Deprecated translation", {
@@ -1074,6 +1084,9 @@ Translation.addTranslation("Projects are empty", {
 Translation.addTranslation("Scripts are empty", {
 	ru: "Скрипты не найдены"
 }); // DEPRECATED
+Translation.addTranslation("As Obj", {
+	ru: "В Obj"
+});
 
 // Non-organized content
 Translation.addTranslation("You're idiot. LMAO.", {
@@ -1081,15 +1094,6 @@ Translation.addTranslation("You're idiot. LMAO.", {
 });
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
-});
-Translation.addTranslation("The administration deemed it appropriate to issue you a ban, you can contact with administration about unlocking.", {
-	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней по поводу разблокировки."
-});
-Translation.addTranslation("Deleting mod folder for installation", {
-	ru: "Удаление папки мода для установки"
-});
-Translation.addTranslation("Nothing loaded, may connection have been dropped", {
-	ru: "Ничего не загрузилось, возможно подключение было сброшено"
 });
 
 // Not localized content will be appear here
