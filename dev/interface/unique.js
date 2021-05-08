@@ -43,15 +43,21 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 };
 UniqueWindow.prototype.__showUW = UniqueWindow.prototype.show;
 UniqueWindow.prototype.show = function() {
-	if (UniqueHelper.prepareWindow(this)) {
-		this.__showUW && this.__showUW();
-	}
+  let window = this;
+  context.runOnUiThread(function() {
+	  if (UniqueHelper.prepareWindow(window)) {
+	  	window.__showUW && window.__showUW();
+	  }
+  });
 };
 UniqueWindow.prototype.__dismissUW = UniqueWindow.prototype.dismiss;
 UniqueWindow.prototype.dismiss = function() {
-	if (UniqueHelper.deattachWindow(this)) {
-		this.__dismissUW && this.__dismissUW();
-	}
+  let window = this;
+  context.runOnUiThread(function() {
+	  if (UniqueHelper.deattachWindow(window)) {
+	  	window.__dismissUW && window.__dismissUW();
+	  }
+  });
 };
 
 const UniqueHelper = {

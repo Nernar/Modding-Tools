@@ -4,7 +4,7 @@ polyfill/Object.js
 
 api/files.js
 api/localize.js
-api/protect.js
+# api/protect.js
 api/scope.js
 api/shared.js
 api/utils.js
@@ -15,7 +15,7 @@ java/Level.js
 java/event.js
 
 network/browser.js
-network/connect.js
+# network/connect.js
 network/local.js
 network/remote.js
 
@@ -36,13 +36,14 @@ project/block.js
 project/transition.js
 project/entity.js
 
+# tools/message.js
 tools/selector.js
 tools/block.js
 tools/transition.js
 tools/entity.js
 tools/debug.js
 
-callback/factory.js
+# callback/factory.js
 callback/debug.js
 
 visual/control.js
@@ -54,7 +55,7 @@ visual/popups/listing.js
 visual/popups/position.js
 visual/popups/tree.js
 
-callback/server.js
+# callback/server.js
 callback/logic.js
 callback/support.js
 callback/loading.js

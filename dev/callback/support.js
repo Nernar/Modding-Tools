@@ -1,5 +1,3 @@
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSMeter;
-
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	try {
 		api.ModAPI.registerAPI("DevEditor", {

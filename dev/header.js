@@ -62,6 +62,8 @@ const __description__ = __mod__.getInfoProperty("description");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let isSupportEnv = false, currentEnvironment = __name__;
 
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSMeter;
+
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = !!this.isInstant;
 IMPORT("Retention:2");

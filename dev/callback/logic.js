@@ -117,7 +117,7 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 	context.runOnUiThread(function() {
 		try {
 			if (selectMode == 1) {
-				// Block selection by tapping
+				// Block selection by tapping.
 				let render = new ICRender.Model();
 				render.addEntry(new BlockRenderer.Model(block.id, block.data));
 				BlockRenderer.enableCoordMapping(block.id, block.data, render);
@@ -125,7 +125,7 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 				selectMode = 0;
 				BlockEditor.create();
 			} else if (selectMode == 6) {
-				// Entity summon by tapping
+				// Entity summon by tapping.
 				let position = coords.relative;
 				(position.x += .5, position.y += .5, position.z += .5);
 				let custom = Entity.spawnCustomAtCoords("__editorEntity__", position);

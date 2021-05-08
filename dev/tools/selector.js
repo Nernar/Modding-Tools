@@ -212,7 +212,7 @@ let StartEditor = {
 				});
 				checkForAdditionalInformation(control);
 			}
-			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSmeter)) {
+			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSMeter)) {
 				category = control.addCategory(translate("Supportables"));
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					let result = DumpCreator(function() {

@@ -160,7 +160,7 @@ const Files = {
 		}
 		let files = new Array(),
 			file = new java.io.File(path),
-			list = file.listFiles();
+			list = file.listFiles() || [];
 		if (root == undefined) {
 			root = path;
 		}
@@ -179,7 +179,7 @@ const Files = {
 		}
 		let directories = new Array(),
 			file = new java.io.File(path),
-			list = file.listFiles();
+			list = file.listFiles() || [];
 		if (root == undefined) {
 			root = path;
 		}
@@ -197,10 +197,9 @@ const Files = {
 		return new java.io.File(path).list().length;
 	},
 	deleteDir: function(path, include, exclude, root) {
-		// Recursive file deletion
 		let file = new java.io.File(path);
 		if (file.isDirectory()) {
-			let list = file.listFiles();
+			let list = file.listFiles() || [];
 			for (let i = 0; i < list.length; i++) {
 				this.deleteDir(list[i].getPath());
 			}
@@ -212,24 +211,24 @@ const Files = {
 		return assets.open(name);
 	},
 	readKey: function(a, b) {
-		b = b || "=";
-        let d = this.read(a, true), e = new Object();
-        for (let f = 0; f < d.length; f++) {
-            let g = d[f].split(b);
-            if (g.length == 2) {
-            	e[g[0]] = g[1];
-            }
-        }
-        return e;
-    },
-    writeKey: function(a, b, c) {
-        c = c || "=";
-        let d = new Array();
-        for (let e in b) {
-			d.push(e + c + b[e]);
+	  b = b || "=";
+    let d = this.read(a, true), e = new Object();
+    for (let f = 0; f < d.length; f++) {
+      let g = d[f].split(b);
+      if (g.length == 2) {
+        e[g[0]] = g[1];
+      }
+    }
+    return e;
+  },
+  writeKey: function(a, b, c) {
+    c = c || "=";
+    let d = new Array();
+    for (let e in b) {
+      d.push(e + c + b[e]);
 		}
-        this.write(a, d.join("\n"));
-    },
+		this.write(a, d.join("\n"));
+  },
 	read: function(file, massive) {
 		if (!file.exists()) {
 			return massive ? new Array() : null;
