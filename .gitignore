@@ -103,31 +103,50 @@ dist
 # TernJS port file
 .tern-port
 
+# Dropbox sync
+.ttxfolder
+_gsdata_/
+
 # Build files
 /main.js
-/.dex/
-/java/.build/
-/java/build/
 /assets/cache/
 
 # Dev Editor sources
 /res/.source/
 /dev/.source/
-
-# Resources directories
-/gui/
-
-# Non-compiled sources
-/dev/api/protect.js
-/dev/callback/server.js
-/dev/network/connect.js
 /loader/
+
+# Resources abilities
+.placeholder.ico
+/texts/
+/gui/
 
 # Local saves
 /saves/
 .todo/
 .eval/
 
-# Dropbox sync
-.ttxfolder
-_gsdata_/
+# Unrealized content
+/dev/api/protect.js
+/dev/callback/server.js
+/dev/callback/factory.js
+/dev/network/connect.js
+/dev/tools/message.js
+/assets/sounds-16.txt
+/assets/studio.mcworld
+/lib/Process.js
+
+# Enstablized sources
+/pre/
+/java/
+/native/
+
+# Engine unused
+/.github/workflows/
+/package.json
+/package-lock.json
+/jsconfig.json
+/preloader.js
+/provider.js
+/support.js
+/example.js
