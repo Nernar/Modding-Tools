@@ -1,5 +1,0 @@
-{
-	"source-dirs": ["src"],
-	"library-dirs":["lib"],
-	"verbose":true
-}

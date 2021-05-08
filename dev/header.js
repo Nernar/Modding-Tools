@@ -7,7 +7,7 @@
    |_____/ \___| \_/   |______\__,_|_|\__\___/|_|   
                                                     
                                                     
-   Copyright 2018-2020 Nernar (github.com/nernar)
+   Copyright 2018-2021 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-14.10.2020-2";
+const __code__ = "develop-alpha-0.3.4-08.05.2021-0";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");

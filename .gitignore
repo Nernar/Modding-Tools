@@ -116,7 +116,6 @@ dist
 
 # Resources directories
 /gui/
-/res/mob/
 
 # Non-compiled sources
 /dev/api/protect.js
@@ -126,9 +125,9 @@ dist
 
 # Local saves
 /saves/
-/.todo/
-/.eval/
+.todo/
+.eval/
 
 # Dropbox sync
-/.ttxfolder
-/_gsdata_/
+.ttxfolder
+_gsdata_/
