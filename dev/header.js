@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-08.05.2021-0";
+const __code__ = "develop-alpha-0.3.4-09.05.2021-0";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
@@ -66,7 +66,7 @@ let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSMeter;
 
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = !!this.isInstant;
-IMPORT("Retention:2");
+IMPORT("Retention:3");
 
 reportError.setTitle(__name__ + " " + __version__);
 reportError.setInfoMessage("An error occurred while executing modification. " +
@@ -112,7 +112,7 @@ Ui.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
 
-IMPORT("Network:1");
+IMPORT("Network:2");
 
 Network.prototype.getFormattedSize = function() {
     return Files.prepareFormattedSize(this.getSize());
@@ -172,10 +172,10 @@ Network.Writer.prototype.assureYield = function() {
 	}
 };
 
-IMPORT("ModBrowser.Query:1");
-IMPORT("Transition:5");
-IMPORT("Scene:3");
-IMPORT("Action:3");
+// IMPORT("ModBrowser.Query:1");
+IMPORT("Transition:6");
+IMPORT("Scene:4");
+IMPORT("Action:4");
 
 function getPlayerEnt() {
 	return parseInt(Player.get());
