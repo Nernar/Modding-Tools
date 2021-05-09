@@ -1,4 +1,4 @@
-function CoordsPopup() {
+const CoordsPopup = function() {
 	this.reset = function() {
 		let views = (this.views = { groups: [], buttons: [] }),
 			groups = (this.groups = []);
@@ -213,4 +213,4 @@ function CoordsPopup() {
 		}
 	};
 	this.reset();
-}
+};

@@ -129,14 +129,16 @@ _gsdata_/
 # Unrealized content
 /dev/api/protect.js
 /dev/callback/server.js
-/dev/callback/factory.js
+/dev/storage/factory.js
 /dev/network/connect.js
 /dev/tools/message.js
 /assets/sounds-16.txt
 /assets/studio.mcworld
-/lib/Process.js
 
 # Enstablized sources
+/lib/ModBrowser.Query.js
+/lib/Process.js
+/lib/Music.js
 /pre/
 /java/
 /native/
@@ -147,6 +149,5 @@ _gsdata_/
 /package-lock.json
 /jsconfig.json
 /preloader.js
-/provider.js
 /support.js
 /example.js

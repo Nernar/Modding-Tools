@@ -1,4 +1,4 @@
-function load() {
+const load = function() {
 	try {
 		// Creates a nonexistent project folder.
 		MCSystem.setLoadingTip("Making Directories");
@@ -36,7 +36,7 @@ function load() {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};
 
 if (isInstant) {
 	load();
@@ -201,7 +201,7 @@ Callback.addCallback("PreBlocksDefined", function() {
 	}
 });
 
-function initialize() {
+const initialize = function() {
 	checkValidate(function() {
 		try {
 			MCSystem.setLoadingTip("Creating Interface");
@@ -227,7 +227,7 @@ function initialize() {
 			});
 		}
 	});
-}
+};
 
 if (isInstant) {
 	initialize();

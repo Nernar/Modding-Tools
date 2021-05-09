@@ -1,4 +1,4 @@
-function convertNdb(obj) {
+const convertNdb = function(obj) {
 	if (!obj) {
 		return null;
 	}
@@ -55,9 +55,9 @@ function convertNdb(obj) {
 		});
 	}
 	return result;
-}
+};
 
-function convertNds(obj) {
+const convertNds = function(obj) {
 	if (!obj) {
 		return null;
 	}
@@ -107,16 +107,16 @@ function convertNds(obj) {
 		});
 	}
 	return result;
-}
+};
 
-function handleThread(action) {
+const handleThread = function(action) {
 	let thread = new java.lang.Thread(function() {
 		try { action && action(); }
 		catch (e) { reportError(e); }
 	});
 	handleThread.stack.push(thread);
 	return (thread.start(), thread);
-}
+};
 
 handleThread.stack = new Array();
 handleThread.clear = function() {
@@ -187,13 +187,13 @@ Base64.encode = function(bytes) {
 	if (android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getEncoder().encode(bytes);
 	}
-	return java.util.Base64.encode(bytes, java.util.Base64.DEFAULT);
+	return android.util.Base64.encode(bytes, android.util.Base64.NO_WRAP);
 };
 Base64.decode = function(bytes) {
 	if (android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getDecoder().decode(bytes);
 	}
-	return java.util.Base64.decode(bytes, java.util.Base64.DEFAULT);
+	return android.util.Base64.decode(bytes, android.util.Base64.NO_WRAP);
 };
 
 const LoadingTipUtils = new Object();

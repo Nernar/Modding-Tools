@@ -1,4 +1,4 @@
-function playTransition(worker, frame) {
+const playTransition = function(worker, frame) {
 	try {
 		if (Transition.isTransitioning()) {
 			showHint(translate("Transition are already transitioning"), Ui.Color.YELLOW);
@@ -31,9 +31,9 @@ function playTransition(worker, frame) {
 		reportError(e);
 	}
 	return false;
-}
+};
 
-function stopTransition(worker) {
+const stopTransition = function(worker) {
 	try {
 		if (!Transition.isTransitioning()) {
 			showHint(translate("Transition are already stopped"), Ui.Color.YELLOW);
@@ -49,9 +49,9 @@ function stopTransition(worker) {
 		reportError(e);
 	}
 	return false;
-}
+};
 
-function sceneToScript(project) {
+const sceneToScript = function(project) {
 	let frames = project.frames,
 		point = project.point;
 	
@@ -88,9 +88,9 @@ function sceneToScript(project) {
 	result += "});";
 	
 	return result;
-}
+};
 
-function drawTransitionPoints(worker) {
+const drawTransitionPoints = function(worker) {
 	try {
 		if (!worker || !Level.isLoaded()) {
 			return false;
@@ -102,7 +102,7 @@ function drawTransitionPoints(worker) {
 		reportError(e);
 	}
 	return false;
-}
+};
 
 let TransitionEditor = {
 	data: new Object(),

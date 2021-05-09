@@ -1,5 +1,5 @@
 // TODO: Refactor this code.
-function TreePopup() {
+const TreePopup = function() {
 	this.reset = function() {
 		let views = (this.views = { groups: [], items: [], footers: [] });
 		this.tree = {};
@@ -174,4 +174,4 @@ function TreePopup() {
 		}
 	};
 	this.reset();
-}
+};

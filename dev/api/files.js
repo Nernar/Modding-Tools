@@ -21,12 +21,12 @@ const Dirs = {
 	}
 })();
 
-function formatSize(size) {
+const formatSize = function(size) {
 	// Rounds file sizes (per 2^10 bytes).
 	return size < 100 ? new Number(size).toFixed(2) :
 	    size < 1000 ? new Number(size).toFixed(1) :
 		size < 1024 ? new Number(size).toFixed() : "?";
-}
+};
 
 const MediaTypes = { // Claimed by system media.
 	AUDIO: ["3gp", "mp4", "m4a", "aac", "ts", "flac", "gsm", "mid", "xmf",

@@ -175,7 +175,7 @@ HintAlert.prototype.dismiss = function() {
 };
 
 // Some useful code; warnings and information
-function showHint(hint, color, reawait) {
+const showHint = function(hint, color, reawait) {
 	if (showHint.launchStacked) {
 		showHint.launchStacked.push({
 			hint: hint,
@@ -208,7 +208,8 @@ function showHint(hint, color, reawait) {
 		showHint.handleCounter();
 		showHint.isHandled = true;
 	}
-}
+};
+
 showHint.countedHints = 0;
 showHint.handleCounter = function() {
 	handle(function() {

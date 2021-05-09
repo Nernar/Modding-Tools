@@ -1,4 +1,4 @@
-function ListingPopup() {
+const ListingPopup = function() {
 	this.reset = function() {
 		let views = (this.views = { edits: [], buttons: [] });
 		views.root = new android.widget.FrameLayout(context);
@@ -172,4 +172,4 @@ function ListingPopup() {
 		}
 	};
 	this.reset();
-}
+};

@@ -1,4 +1,4 @@
-function restart() {
+const restart = function() {
 	if (!isSupportEnv) {
 		return;
 	}
@@ -7,9 +7,9 @@ function restart() {
 		currentEnvironment = __name__;
 	});
 	isSupportEnv = false;
-}
+};
 
-function playTune(time, min, max, static) {
+const playTune = function(time, min, max, static) {
 	handleThread(function() {
 		let buffsize = android.media.AudioTrack.getMinBufferSize(4000,
 			android.media.AudioFormat.CHANNEL_OUT_MONO,
@@ -41,8 +41,8 @@ function playTune(time, min, max, static) {
 		audioTrack.stop();
 		audioTrack.release();
 	});
-}
+};
 
-function stopTune() {
+const stopTune = function() {
 	delete playTune.track;
-}
+};

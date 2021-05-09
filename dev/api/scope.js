@@ -1,4 +1,4 @@
-function runAtScope(code, scope, name) {
+const runAtScope = function(code, scope, name) {
 	// Runs code in a separate data stream
 	let scriptable = org.mozilla.javascript.ScriptableObject,
         source = name ? __name__ + "$" + name : "<no name>",
@@ -15,9 +15,9 @@ function runAtScope(code, scope, name) {
     	scope.error = e;
     }
     return scope;
-}
+};
 
-function checkScope(hieracly, asObj) {
+const checkScope = function(hieracly, asObj) {
 	if (!__code__.startsWith("develop")) {
 		throw new Error("checkScope: illegal access, denied");
 	}
@@ -67,4 +67,4 @@ function checkScope(hieracly, asObj) {
 		});
 	}
 	builder.create().show();
-}
+};
