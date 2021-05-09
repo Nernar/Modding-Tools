@@ -184,10 +184,16 @@ MathUtils.mathDivider = function(number) {
 
 const Base64 = new Object();
 Base64.encode = function(bytes) {
-	return java.util.Base64.getEncoder().encode(bytes);
+	if (android.os.Build.VERSION.SDK_INT >= 26) {
+		return java.util.Base64.getEncoder().encode(bytes);
+	}
+	return java.util.Base64.encode(bytes, java.util.Base64.DEFAULT);
 };
 Base64.decode = function(bytes) {
-	return java.util.Base64.getDecoder().decode(bytes);
+	if (android.os.Build.VERSION.SDK_INT >= 26) {
+		return java.util.Base64.getDecoder().decode(bytes);
+	}
+	return java.util.Base64.decode(bytes, java.util.Base64.DEFAULT);
 };
 
 const LoadingTipUtils = new Object();

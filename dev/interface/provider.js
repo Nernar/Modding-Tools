@@ -86,30 +86,39 @@ const WindowProvider = {
 		this.manager.removeView(window.getContent());
 	},
 	setEnterActor: function(popupId, actor) {
-		let popup = this.getByPopupId(popupId);
-		if (!popup) {
-			return;
+		if (android.os.Build.VERSION.SDK_INT >= 23) {
+			let popup = this.getByPopupId(popupId);
+			if (!popup) {
+				return;
+			}
+			if (actor instanceof WindowActor) {
+				actor = actor.getActor();
+			}
+			popup.setEnterTransition(actor);
 		}
-		if (actor instanceof WindowActor) {
-			actor = actor.getActor();
-		}
-		popup.setEnterTransition(actor);
 	},
 	setExitActor: function(popupId, actor) {
-		let popup = this.getByPopupId(popupId);
-		if (!popup) {
-			return;
+		if (android.os.Build.VERSION.SDK_INT >= 23) {
+			let popup = this.getByPopupId(popupId);
+			if (!popup) {
+				return;
+			}
+			if (actor instanceof WindowActor) {
+				actor = actor.getActor();
+			}
+			popup.setExitTransition(actor);
 		}
-		if (actor instanceof WindowActor) {
-			actor = actor.getActor();
-		}
-		popup.setExitTransition(actor);
 	},
 	prepareActors: function(window) {
-		if (!window || !window.isFocusable()) {
-			return;
-		}
 		if (!showedFocusableAnimationsHint) {
+			if (android.os.Build.VERSION.SDK_INT < 23) {
+				showHint(translate("Window actors isn't availabled on your device"));
+				showedFocusableAnimationsHint = true;
+				return;
+			}
+			if (!window || !window.isFocusable()) {
+				return;
+			}
 			showHint(translate("Focusable windows doesn't have actors at moment"));
 			showedFocusableAnimationsHint = true;
 		}

@@ -611,7 +611,10 @@ Translation.addTranslation("Supportable module can't be loaded at menu", {
 	ru: "Модуль не может быть загружен в меню"
 });
 Translation.addTranslation("Focusable windows doesn't have actors at moment", {
-	ru: "Фокусные окна не имеют анимацию на текущий момент"
+	ru: "Активные окна не имеют анимаций на текущий момент"
+});
+Translation.addTranslation("Window actors isn't availabled on your device", {
+	ru: "На вашем устройстве анимации окон отсутствуют"
 });
 Translation.addTranslation("Can't map render at menu", {
 	ru: "Невозможно отобразить маппинг в меню"

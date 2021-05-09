@@ -5,7 +5,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
 		}
 		if (isHorizon) {
-			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+			if (android.os.Build.VERSION.SDK_INT >= 30) {
 				window.setDecorFitsSystemWindows(false);
 				let controller = window.getInsetsController();
 				if (controller != null) {
