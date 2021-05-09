@@ -26,8 +26,8 @@ function ProjectOldest(obj) {
 			return translate("Autosave %s", random(Number.MIN_VALUE, Number.MAX_VALUE));
 		}
 		return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
-			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + ":" +
-			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + ":" +
+			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + "-" +
+			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + "-" +
 			(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
 	};
 	
