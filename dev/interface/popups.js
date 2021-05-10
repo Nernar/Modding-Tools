@@ -67,7 +67,7 @@ const Popups = {
 						case 2:
 							let x = event.getX() - dx, y = event.getY() - dy;
 							widget.getPopup().update(event.getRawX() - dx, event.getRawY() - dy, -1, -1);
-							if (x >= Ui.Display.WIDTH / 1000 || y >= Ui.Display.HEIGHT / 1000) {
+							if (x > 0 || y > 0) {
 								if (closeable) {
 									closeable.destroy();
 								}

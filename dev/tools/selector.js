@@ -46,12 +46,12 @@ let StartEditor = {
 							}
 						});
 						category.setOnItemHoldListener(function(item, index) {
-							confirm(translate("Removing worker"),
+							confirm(translate("Warning!"),
 								translate("Selected worker will be removed, including all it's data.") + " " +
 								translate("Do you want to continue?"),
 								function() {
-									let position = content.indexOf(blocks[index]);
-									if (position >= 0) {
+									let position = blocks[index];
+									if (position >= 0 && position < content.length) {
 										content.splice(position, 1);
 										showHint(translate("Worker has been removed"));
 									} else showHint(translate("Something went wrong"));
@@ -81,12 +81,12 @@ let StartEditor = {
 							}
 						});
 						category.setOnItemHoldListener(function(item, index) {
-							confirm(translate("Removing worker"),
+							confirm(translate("Warning!"),
 								translate("Selected worker will be removed, including all it's data.") + " " +
 								translate("Do you want to continue?"),
 								function() {
-									let position = content.indexOf(entities[index]);
-									if (position >= 0) {
+									let position = entities[index];
+									if (position >= 0 && position < content.length) {
 										content.splice(position, 1);
 										showHint(translate("Worker has been removed"));
 									} else showHint(translate("Something went wrong"));
@@ -101,8 +101,8 @@ let StartEditor = {
 						for (let i = 0; i < transitions.length; i++) {
 							let transition = content[transitions[i]],
 								animates = transition.animation.length;
-							category.addItem("transition", translate("Transition") + " (" + (transition.define.fps || 60) + " fps)", translateCounter(animates, "no animates", "%s1 animate",
-								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
+							category.addItem("transition", translate("Transition"), translateCounter(animates, "no animates", "%s1 animate",
+								"%s" + (animates % 10) + " animates", "%s animates", [animates]) + " / " + translate("%s fps", transition.define.fps || 60));
 						}
 						category.setOnItemClickListener(function(item, index) {
 							let real = transitions[index],
@@ -115,12 +115,12 @@ let StartEditor = {
 							}
 						});
 						category.setOnItemHoldListener(function(item, index) {
-							confirm(translate("Removing worker"),
+							confirm(translate("Warning!"),
 								translate("Selected worker will be removed, including all it's data.") + " " +
 								translate("Do you want to continue?"),
 								function() {
-									let position = content.indexOf(transitions[index]);
-									if (position >= 0) {
+									let position = transitions[index];
+									if (position >= 0 && position < content.length) {
 										content.splice(position, 1);
 										showHint(translate("Worker has been removed"));
 									} else showHint(translate("Something went wrong"));
@@ -475,9 +475,9 @@ let StartEditor = {
 				});
 				checkForAdditionalInformation(control);
 			}
-			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSMeter)) {
+			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSmeter)) {
 				category = control.addCategory(translate("Supportables")).setOnHoldItemListener(function(item, index) {
-					return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit, TPSMeter][index]);
+					return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit, TPSmeter][index]);
 				});
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					let result = DumpCreator(function() {
@@ -575,12 +575,12 @@ let StartEditor = {
 						showHint(WorldEdit.modName + " - " + WorldEdit.author);
 					}
 				});
-				if (TPSMeter) category.addItem(TPSMeter.icon, translate("TPS Meter"), function() {
+				if (TPSmeter) category.addItem(TPSmeter.icon, translate("TPS Meter"), function() {
 					if (!hintStackableDenied) {
-						showHint(TPSMeter.modName + " " + TPSMeter.version);
-						showHint(TPSMeter.author);
+						showHint(TPSmeter.modName + " " + TPSmeter.version);
+						showHint(TPSmeter.author);
 					} else {
-						showHint(TPSMeter.modName + " - " + TPSMeter.author);
+						showHint(TPSmeter.modName + " - " + TPSmeter.author);
 					}
 				});
 				checkForAdditionalInformation(control);
@@ -884,6 +884,19 @@ function showSupportableInfo(mod) {
 				translate("State: %s", "" + translate(mod.result == true ? "ACTIVE" :
 					mod.result == false ? "OUTDATED" : mod.result instanceof Error == true ?
 					"FAILED" : !mod.result ? "DISABLED" : "UNKNOWN"))));
+		builder.setNegativeButton(translate("Remove"), function() {
+			handle(function() {
+				confirm(translate("Warning!"), translate("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.") + " " +
+					translate("Do you want to continue?"), function() {
+						if (mod.result == true) {
+							showHint(translate("Restart game for better stability"));
+						}
+						eval(mod.modName.replace(" ", "") + " = null;");
+						ExecutableSupport.uninstall(mod.modName);
+						StartEditor.menu();
+					});
+			});
+		});
 		builder.setPositiveButton(translate("OK"), null);
 		builder.create().show();
 		return true;

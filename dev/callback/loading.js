@@ -68,8 +68,8 @@ Callback.addCallback("CoreConfigured", function(config) {
 				if (WorldEdit && isNotSupported(WorldEdit)) {
 					WorldEdit = null;
 				}
-				if (TPSMeter && isNotSupported(TPSMeter)) {
-					TPSMeter = null;
+				if (TPSmeter && isNotSupported(TPSmeter)) {
+					TPSmeter = null;
 				}
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}

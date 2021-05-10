@@ -185,7 +185,7 @@ const showHint = function(hint, color, reawait) {
 		return;
 	}
 	showHint.countedHints++;
-	if (maximumHints > 0 && showHint.countedHints > maximumHints) {
+	if (!hintStackableDenied && maximumHints > 0 && showHint.countedHints > maximumHints) {
 		print(translate("Too many hints (%s)", showHint.countedHints));
 		return;
 	}

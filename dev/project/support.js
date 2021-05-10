@@ -142,6 +142,11 @@ let ExecutableSupport = {
 			throw new Error("Can't find mod " + name);
 		}
 		return loadSupportables && mod.isEnabled;
+	},
+	uninstall: function(name) {
+		Files.deleteDir(Dirs.SUPPORT + "/" + name);
+		Logger.Log("Uninstalling " + name, "Dev-Core")
+		delete this.mods[name];
 	}
 };
 

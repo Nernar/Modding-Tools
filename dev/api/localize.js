@@ -166,6 +166,9 @@ Translation.addTranslation("Current all", {
 	ru: "Все текущие"
 });
 Translation.addTranslation("FPS", {});
+Translation.addTranslation("%s fps", {
+	ru: "%s к./с."
+});
 Translation.addTranslation("Frames/sec.", {
 	ru: "Кадры/сек."
 });
@@ -246,6 +249,9 @@ Translation.addTranslation("First bone added", {
 Translation.addTranslation("UV", {});
 Translation.addTranslation("Offset", {
 	ru: "Отступ"
+});
+Translation.addTranslation("Summon", {
+	ru: "Призвать"
 });
 
 // Animations content
@@ -541,6 +547,12 @@ Translation.addTranslation("Nothing to check", {
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
 });
+Translation.addTranslation("Removing worker", {
+	ru: "Удаление редактора"
+});
+Translation.addTranslation("Worker has been removed", {
+	ru: "Редактор был удален"
+});
 Translation.addTranslation("This content will be availabled soon", {
 	ru: "Этот контент станет скоро доступен"
 });
@@ -573,6 +585,9 @@ Translation.addTranslation("Can't map render at menu", {
 });
 Translation.addTranslation("Can't check innersection at menu", {
 	ru: "Невозможно проверить слияния в меню"
+});
+Translation.addTranslation("Can't summon entity at menu", {
+	ru: "Нельзя призвать существо в меню"
 });
 Translation.addTranslation("Can't hit entity at menu", {
 	ru: "Нельзя ударить существо в меню"
@@ -816,6 +831,36 @@ Translation.addTranslation("Player", {
 Translation.addTranslation("Reload", {
 	ru: "Обновить"
 });
+Translation.addTranslation("Debug", {
+	ru: "Отладка"
+});
+Translation.addTranslation("Debug & testing", {
+	ru: "Отладка и тестирование"
+});
+Translation.addTranslation("Minify", {
+	ru: "Сжатие"
+});
+Translation.addTranslation("Fetch", {
+	ru: "Получить"
+});
+Translation.addTranslation("Tree", {
+	ru: "Дерево"
+});
+Translation.addTranslation("Sounds", {
+	ru: "Звуки"
+});
+Translation.addTranslation("Explorer", {
+	ru: "Проводник"
+});
+Translation.addTranslation("Menu", {
+	ru: "Меню"
+});
+Translation.addTranslation("Music", {
+	ru: "Музыка"
+});
+Translation.addTranslation("Math", {
+	ru: "Алгебра"
+});
 Translation.addTranslation("Script report", {
 	ru: "Отчет скрипта"
 });
@@ -842,6 +887,12 @@ Translation.addTranslation("Dump will be generated and saved into supportable di
 Translation.addTranslation("Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?", {
 	ru: "Запуск генерации дампа в меню может стать причиной краша, возможно стоит зайти в мир. Все равно продолжить?"
 }); // DEPRECATED
+Translation.addTranslation("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
+	ru: "Модуль будет удален со всеми прилежащими данными, пожалуйста убедитесь в сохранности своих файлов."
+});
+Translation.addTranslation("Restart game for better stability", {
+	ru: "Перезапустите игру для наилучшей стабильности"
+});
 Translation.addTranslation("Developer: %s", {
 	ru: "Разработчик: %s"
 });
@@ -947,6 +998,9 @@ Translation.addTranslation("All", {
 });
 
 // Fails
+Translation.addTranslation("Something went wrong", {
+	ru: "Что-то пошло не так"
+});
 Translation.addTranslation("Error of execute code", {
 	ru: "Ошибка при выполнении кода"
 });
@@ -974,8 +1028,17 @@ Translation.addTranslation("Looks like, you entered invalid object. Check it wit
 Translation.addTranslation("Looks like, you entered invalid array. Check it with following exception:", {
 	ru: "По всей видимости, введен некорректный массив. Проверьте его со следующей ошибкой:"
 });
+Translation.addTranslation("%s library isn't availabled!", {
+	ru: "Библиотека %s не доступна!"
+});
+Translation.addTranslation("Firstly, place correctly %s into modification", {
+	ru: "Для начала поместите корректный %s в модификацию"
+});
 Translation.addTranslation("Unknown or unsupported stringify type for:", {
 	ru: "Неизвестный или неподдерживаемый тип приведения для:"
+});
+Translation.addTranslation("Selected worker will be removed, including all it's data.", {
+	ru: "Выбранный редактор будет удален без возможности восстановления."
 });
 Translation.addTranslation("Do you want to retry?", {
 	ru: "Вы хотите попробовать еще раз?"
@@ -1050,62 +1113,8 @@ Translation.addTranslation("You're idiot. LMAO.", {
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
 });
-Translation.addTranslation("Debug", {
-	ru: "Отладка"
-});
-Translation.addTranslation("Minify", {
-	ru: "Сжатие"
-});
-Translation.addTranslation("Fetch", {
-	ru: "Получить"
-});
-Translation.addTranslation("Debug & testing", {
-	ru: "Отладка и тестирование"
-});
-Translation.addTranslation("Tree", {
-	ru: "Дерево"
-});
-Translation.addTranslation("Sounds", {
-	ru: "Звуки"
-});
-Translation.addTranslation("Explorer", {
-	ru: "Проводник"
-});
-Translation.addTranslation("Menu", {
-	ru: "Меню"
-});
-Translation.addTranslation("Music", {
-	ru: "Музыка"
-});
-Translation.addTranslation("Math", {
-	ru: "Алгебра"
-});
-Translation.addTranslation("%s library isn't availabled!", {
-	ru: "Библиотека %s не доступна!"
-});
-Translation.addTranslation("Firstly, place correctly %s into modification", {
-	ru: "Для начала поместите корректный %s в модификацию"
-});
-Translation.addTranslation("Removing worker", {
-	ru: "Удаление редактора"
-});
-Translation.addTranslation("Selected worker will be removed, including all it's data.", {
-	ru: "Выбранный редактор будет удален без возможности восстановления."
-});
-Translation.addTranslation("Worker has been removed", {
-	ru: "Редактор был удален"
-});
-Translation.addTranslation("Something went wrong", {
-	ru: "Что-то пошло не так"
-});
-Translation.addTranslation("Summon", {
-	ru: "Призвать"
-});
-Translation.addTranslation("Can't summon entity at menu", {
-	ru: "Нельзя призвать существо в меню"
-});
 Translation.addTranslation("Asriel", {
-	ru: "Асриел"
-})
+	ru: "Азриэль"
+});
 
 // Not localized content will be appear here

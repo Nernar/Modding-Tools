@@ -55,14 +55,14 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-10.05.2021-2";
+const __code__ = "develop-alpha-0.3.4-10.05.2021-3";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let isSupportEnv = false, currentEnvironment = __name__;
 
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSMeter;
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSmeter;
 
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = !!this.isInstant;
@@ -172,6 +172,7 @@ Network.Writer.prototype.assureYield = function() {
 	}
 };
 
+// IMPORT("Music:1");
 // IMPORT("ModBrowser.Query:1");
 IMPORT("Transition:6");
 IMPORT("Scene:4");
