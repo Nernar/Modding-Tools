@@ -102,7 +102,10 @@ function updateSettings() {
 		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
 		/* sendAnalytics */ loadSetting("user_login.send_analytics", "boolean", true);
 		
-		useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
+		if (android.os.Build.VERSION.SDK_INT >= 26) {
+			useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
+		} else useOldExplorer = true;
+		
 		importAutoselect = loadSetting("other.import_autoselect", "boolean");
 		saveCoords = loadSetting("other.autosave_mapping", "boolean");
 		

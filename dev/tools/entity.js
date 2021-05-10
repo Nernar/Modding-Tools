@@ -190,14 +190,42 @@ let EntityEditor = {
 		let control = new ControlWindow();
 		control.setOnClickListener(function() {
 			EntityEditor.create();
+		}).addHeader();
+		let category = control.addCategory(translate("Editor"));
+		category.addItem("menuProjectLoad", translate("Open"), function() {
+			selectFile([".dnp", ".nde", ".js", ".json"], function(file) {
+				// EntityEditor.replace(file);
+				EntityEditor.open(file);
+			});
 		});
-		control.addItem("menuProjectLoad", translate("Open"), function() {
-			selectFile([".nde"/*, ".js"*/, ".json"], EntityEditor.open);
+		category.addItem("menuProjectImport", translate("Import"), function() {
+			selectFile([".dnp", ".nde", ".js", ".json"], function(file) {
+				EntityEditor.add(file);
+			});
+		}).setBackground("popupSelectionLocked");
+		category.addItem("menuProjectSave", translate("Export"), function() {
+			saveFile(EntityEditor.data.name, [".dnp", ".js", ".nde", ".json"], function(file, i) {
+				EntityEditor.save(file, i);
+			});
 		});
-		control.addItem("menuProjectSave", translate("Export"), function() {
-			saveFile(EntityEditor.data.name, [".nde"/*, ".js"*/], EntityEditor.save);
+		category.addItem("menuProjectLeave", translate("Back"), function() {
+			control.dismiss();
+			Popups.closeAll();
+			// EntityEditor.unselect();
+			ProjectEditor.setOpenedState(false);
+			ProjectEditor.getProject().callAutosave();
+			checkValidate(function() {
+				delete EntityEditor.data.worker;
+				StartEditor.menu();
+			});
 		});
-		control.addItem("entityModuleSelect", translate("Select"), function() {
+		checkForAdditionalInformation(control);
+		category = control.addCategory(translate("Entity"));
+		category.addItem("entityModuleSelect", translate("Summon"), function() {
+			if (!Level.isLoaded()) {
+				showHint(translate("Can't summon entity at menu"));
+				return;
+			}
 			showHint(translate("Tap block"));
 			control.dismiss();
 			selectMode = 6;
@@ -205,30 +233,26 @@ let EntityEditor = {
 			let button = new ControlButton();
 			button.setIcon("menuModuleBack");
 			button.setOnClickListener(function() {
-				EntityEditor.create();
+				BlockEditor.create();
 				selectMode = 0;
 			});
 			button.show();
 		});
-		control.addItem("menuProjectLeave", translate("Exit"), function() {
-			confirm(translate("Warning!"),
-				translate("Are you sure want to exit? Unsave data will be lost."),
-				function() {
-					control.dismiss();
-					Popups.closeAll();
-					StartEditor.menu();
-					ProjectEditor.setOpenedState(false);
-					ProjectEditor.getProject().callAutosave();
-					delete EntityEditor.data.worker;
-				});
+		category.addItem("entityModuleUpdate", translate("Reload"), function() {
+			selectMode = 0;
+			if (updateEntityRender(EntityEditor.data.worker)) {
+				showHint(translate("Render updated"));
+			} else showHint(translate("Nothing to update"));
 		});
+		checkForAdditionalInformation(control);
+		resetAdditionalInformation();
 		control.show();
 	},
 	open: function(file) {
 		let name = file.getName();
 		if (name.endsWith(".nde")) {
 			let project = compileData(Files.read(file));
-			if (!project) return showHint(translate("Empty project"));
+			if (!project) return showHint(translate("Asriel"));
 			EntityEditor.reset();
 			EntityEditor.data.worker.loadProject(project);
 			updateEntityRender(EntityEditor.data.worker);

@@ -541,8 +541,8 @@ Translation.addTranslation("Nothing to check", {
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
 });
-Translation.addTranslation("This content will be awailabled soon", {
-	ru: "Этот контент будет доступен скоро"
+Translation.addTranslation("This content will be availabled soon", {
+	ru: "Этот контент станет скоро доступен"
 });
 Translation.addTranslation("Warning!", {
 	ru: "Внимание!"
@@ -1050,8 +1050,62 @@ Translation.addTranslation("You're idiot. LMAO.", {
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
 });
+Translation.addTranslation("Debug", {
+	ru: "Отладка"
+});
+Translation.addTranslation("Minify", {
+	ru: "Сжатие"
+});
+Translation.addTranslation("Fetch", {
+	ru: "Получить"
+});
+Translation.addTranslation("Debug & testing", {
+	ru: "Отладка и тестирование"
+});
+Translation.addTranslation("Tree", {
+	ru: "Дерево"
+});
+Translation.addTranslation("Sounds", {
+	ru: "Звуки"
+});
+Translation.addTranslation("Explorer", {
+	ru: "Проводник"
+});
+Translation.addTranslation("Menu", {
+	ru: "Меню"
+});
+Translation.addTranslation("Music", {
+	ru: "Музыка"
+});
+Translation.addTranslation("Math", {
+	ru: "Алгебра"
+});
+Translation.addTranslation("%s library isn't availabled!", {
+	ru: "Библиотека %s не доступна!"
+});
+Translation.addTranslation("Firstly, place correctly %s into modification", {
+	ru: "Для начала поместите корректный %s в модификацию"
+});
+Translation.addTranslation("Removing worker", {
+	ru: "Удаление редактора"
+});
+Translation.addTranslation("Selected worker will be removed, including all it's data.", {
+	ru: "Выбранный редактор будет удален без возможности восстановления."
+});
+Translation.addTranslation("Worker has been removed", {
+	ru: "Редактор был удален"
+});
+Translation.addTranslation("Something went wrong", {
+	ru: "Что-то пошло не так"
+});
+Translation.addTranslation("Summon", {
+	ru: "Призвать"
+});
+Translation.addTranslation("Can't summon entity at menu", {
+	ru: "Нельзя призвать существо в меню"
+});
+Translation.addTranslation("Asriel", {
+	ru: "Асриел"
+})
 
 // Not localized content will be appear here
-Translation.addTranslation("Debug", {});
-Translation.addTranslation("Minify", {});
-Translation.addTranslation("Fetch", {});

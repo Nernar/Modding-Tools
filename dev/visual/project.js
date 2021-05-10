@@ -518,6 +518,14 @@ ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function
 	});
 	return this;
 };
+ControlWindow.ProjectHeader.Category.prototype.setOnItemHoldListener = function(listener) {
+	listener && (this.__hold = function(item, index) {
+		try { return listener(item, index); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
+};
 
 ControlWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, titleOrDescription, descriptionOrAction, action) {
 	this.reset();
@@ -542,6 +550,9 @@ ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	content.setGravity(Ui.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
+	});
+	content.setOnLongClickListener(function() {
+		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.LinearLayout.
 		LayoutParams(Ui.Display.MATCH, Ui.Display.WRAP);
@@ -655,8 +666,27 @@ ControlWindow.ProjectHeader.Category.Item.prototype.click = function() {
 			(this, this.indexOf());
 	return this;
 };
+ControlWindow.ProjectHeader.Category.Item.prototype.hold = function() {
+	let clicked = false;
+	if (this.__hold && this.__hold(this)) {
+		clicked = true;
+	}
+	let category = this.getParentCategory();
+	if (category && category.__hold && category.__hold(this, this.indexOf())) {
+		clicked = true;
+	}
+	return clicked;
+};
 ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(item) {
+		try { return listener(item); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
+};
+ControlWindow.ProjectHeader.Category.Item.prototype.setOnHoldListener = function(listener) {
+	listener && (this.__hold = function(item) {
 		try { return listener(item); }
 		catch (e) { reportError(e); }
 		return false;
@@ -670,6 +700,7 @@ ControlWindow.Category = function(parentOrName, name) {
 		this.setWindow(parentOrName);
 		name && this.setTitle(name);
 	} else if (parentOrName) this.setTitle(parentOrName);
+	this.items = new Array();
 };
 ControlWindow.Category.prototype.reset = function() {
 	let views = this.views = new Object();
@@ -772,6 +803,14 @@ ControlWindow.Category.prototype.setOnItemClickListener = function(listener) {
 	});
 	return this;
 };
+ControlWindow.Category.prototype.setOnHoldItemListener = function(listener) {
+	listener && (this.__hold = function(item, index) {
+		try { return listener(item, index); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
+};
 
 ControlWindow.prototype.addCategory = function(nameOrCategory, name) {
 	let category = nameOrCategory instanceof ControlWindow.Category ?
@@ -803,6 +842,9 @@ ControlWindow.Category.Item.prototype.reset = function() {
 	content.setGravity(Ui.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
+	});
+	content.setOnLongClickListener(function() {
+		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.LinearLayout.
 		LayoutParams(Ui.getY(240), Ui.getY(296));
@@ -891,8 +933,27 @@ ControlWindow.Category.Item.prototype.click = function() {
 			(this, this.indexOf());
 	return this;
 };
+ControlWindow.Category.Item.prototype.hold = function() {
+	let clicked = false;
+	if (this.__hold && this.__hold(this)) {
+		clicked = true;
+	}
+	let category = this.getParentCategory();
+	if (category && category.__hold && category.__hold(this, this.indexOf())) {
+		clicked = true;
+	}
+	return clicked;
+};
 ControlWindow.Category.Item.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(item) {
+		try { return listener(item); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
+};
+ControlWindow.Category.Item.prototype.setOnHoldListener = function(listener) {
+	listener && (this.__hold = function(item) {
 		try { return listener(item); }
 		catch (e) { reportError(e); }
 		return false;

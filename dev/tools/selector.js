@@ -29,14 +29,15 @@ let StartEditor = {
 					if (blocks && blocks.length > 0) {
 						let category = header.addCategory(translate("Blocks"));
 						for (let i = 0; i < blocks.length; i++) {
-							let block = content[blocks[i]], models = block.
-								renderer.length + block.collision.length;
+							let block = content[blocks[i]],
+								models = block.renderer.length + block.collision.length;
 							category.addItem("block", block.define.id,
 								translateCounter(models, "no models", "%s1 model",
-								"%s" + (models % 10) + " models", "%s models", [models]));
+									"%s" + (models % 10) + " models", "%s models", [models]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							let real = blocks[index], block = content[real];
+							let real = blocks[index],
+								block = content[real];
 							if (BlockEditor.open(real)) {
 								content.splice(real, 1);
 								content.unshift(block);
@@ -44,18 +45,34 @@ let StartEditor = {
 								control.dismiss();
 							}
 						});
+						category.setOnItemHoldListener(function(item, index) {
+							confirm(translate("Removing worker"),
+								translate("Selected worker will be removed, including all it's data.") + " " +
+								translate("Do you want to continue?"),
+								function() {
+									let position = content.indexOf(blocks[index]);
+									if (position >= 0) {
+										content.splice(position, 1);
+										showHint(translate("Worker has been removed"));
+									} else showHint(translate("Something went wrong"));
+									StartEditor.menu();
+								});
+							return true;
+						});
 					}
 					let entities = project.getEntities();
 					if (entities && entities.length > 0) {
 						let category = header.addCategory(translate("Entities"));
 						for (let i = 0; i < entities.length; i++) {
-							let entity = content[entities[i]], models = entity.visual.length;
+							let entity = content[entities[i]],
+								models = entity.visual.length;
 							category.addItem("entity", entity.define.id,
 								translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-								"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
+									"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							let real = entities[index], entity = content[real];
+							let real = entities[index],
+								entity = content[real];
 							if (EntityEditor.open(real)) {
 								content.splice(real, 1);
 								content.unshift(entity);
@@ -63,24 +80,53 @@ let StartEditor = {
 								control.dismiss();
 							}
 						});
+						category.setOnItemHoldListener(function(item, index) {
+							confirm(translate("Removing worker"),
+								translate("Selected worker will be removed, including all it's data.") + " " +
+								translate("Do you want to continue?"),
+								function() {
+									let position = content.indexOf(entities[index]);
+									if (position >= 0) {
+										content.splice(position, 1);
+										showHint(translate("Worker has been removed"));
+									} else showHint(translate("Something went wrong"));
+									StartEditor.menu();
+								});
+							return true;
+						});
 					}
 					let transitions = project.getTransitions();
 					if (transitions && transitions.length > 0) {
 						let category = header.addCategory(translate("Transitions"));
 						for (let i = 0; i < transitions.length; i++) {
-							let transition = content[transitions[i]], animates = transition.animation.length;
-							category.addItem("transition", translate("Transition") + " (" + (transition.define.
-								fps || 60) + " fps)", translateCounter(animates, "no animates", "%s1 animate",
+							let transition = content[transitions[i]],
+								animates = transition.animation.length;
+							category.addItem("transition", translate("Transition") + " (" + (transition.define.fps || 60) + " fps)", translateCounter(animates, "no animates", "%s1 animate",
 								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
 						}
 						category.setOnItemClickListener(function(item, index) {
-							let real = transitions[index], transition = content[real];
+							let real = transitions[index],
+								transition = content[real];
 							if (TransitionEditor.open(real)) {
 								content.splice(real, 1);
 								content.unshift(transition);
 								project.setCurrentlyId(0);
 								control.dismiss();
 							}
+						});
+						category.setOnItemHoldListener(function(item, index) {
+							confirm(translate("Removing worker"),
+								translate("Selected worker will be removed, including all it's data.") + " " +
+								translate("Do you want to continue?"),
+								function() {
+									let position = content.indexOf(transitions[index]);
+									if (position >= 0) {
+										content.splice(position, 1);
+										showHint(translate("Worker has been removed"));
+									} else showHint(translate("Something went wrong"));
+									StartEditor.menu();
+								});
+							return true;
 						});
 					}
 				}
@@ -93,20 +139,22 @@ let StartEditor = {
 				control.dismiss();
 			});
 			category.addItem("entity", translate("Entity"), function() {
-				showHint(translate("This content will be awailabled soon"));
-				// EntityEditor.create();
-				// control.dismiss();
+				if (__code__.startsWith("develop")) {
+					EntityEditor.create();
+					control.dismiss();
+				} else showHint(translate("This content will be availabled soon"));
 			}).setBackground("popupSelectionLocked");
 			category.addItem("animation", translate("Animation"), function() {
-				showHint(translate("This content will be awailabled soon"));
-				// AnimationWindow.create();
-				// control.dismiss();
+				if (__code__.startsWith("develop")) {
+					AnimationWindow.create();
+					control.dismiss();
+				} else showHint(translate("This content will be availabled soon"));
 			}).setBackground("popupSelectionLocked");
 			category.addItem("transition", translate("Transition"), function() {
 				TransitionEditor.create();
 				control.dismiss();
 			});
-			if (loadSupportables && supportSupportables && Setting)
+			if (loadSupportables && supportSupportables && Setting) {
 				category.addItem("world", translate("World"), function() {
 					if (Level.isLoaded()) {
 						isSupportEnv = true;
@@ -128,7 +176,10 @@ let StartEditor = {
 							if (result != false) reportError(result);
 						} else control.dismiss();
 					} else showHint(translate("Supportable module can't be loaded at menu"));
+				}).setOnHoldListener(function(item) {
+					return showSupportableInfo(Setting);
 				});
+			}
 			checkForAdditionalInformation(control);
 			category = control.addCategory(translate("Project"));
 			category.addItem("menuProjectLoad", translate("Open"), function() {
@@ -154,14 +205,15 @@ let StartEditor = {
 			category.addItem("menuProjectManage", translate("Manage"), function() {
 				confirm(translate("Creating project"),
 					translate("Current project will be erased, all unsaved data will be lost.") + " " +
-					translate("Do you want to continue?"), function() {
+					translate("Do you want to continue?"),
+					function() {
 						ProjectEditor.create(), StartEditor.menu();
 					});
 			});
 			checkForAdditionalInformation(control);
-			if (__code__.startsWith("develop")) {
-				category = control.addCategory(translate("Debug"));
-				category.addItem(null, translate("Minify"), function() {
+			if (__code__.indexOf("alpha") != -1) {
+				category = control.addCategory(translate("Debug & testing"));
+				category.addItem("support", translate("Minify"), function() {
 					selectFile([".js"], function(file) {
 						let text = Files.read(file);
 						saveFile(null, [".js"], function(file) {
@@ -171,49 +223,262 @@ let StartEditor = {
 						});
 					});
 				});
-				category.addItem(null, translate("Fetch"), function() {
+				category.addItem("support", translate("Fetch"), function() {
 					handleThread(function() {
-						let list = BrowserWorker.fetchList();
-						let count = BrowserWorker.getCount();
-						handle(function() {
-							confirm(list.length + "/" + count + " mods", list.join("\n"));
-						});
+						try {
+							let list = BrowserWorker.fetchList();
+							let count = BrowserWorker.getCount();
+							handle(function() {
+								confirm(list.length + "/" + count + " mods", list.join("\n"));
+							});
+						} catch (e) {
+							showHint(translate("%s library isn't availabled!", "ModBrowser.Query"));
+						}
 					});
 				});
-				category.addItem(null, translate("Install"), function() {
+				category.addItem("support", translate("Install"), function() {
 					handleThread(function() {
-						new java.io.File(__dir__ + "mods").mkdirs();
-				    	let worker = new BrowserWorker();
-				    	let fetched = new Array();
-				    	worker.setCallback({
-				    		onFetchMod: function(list, mod) {
-				    			fetched.push(mod.title + " " + mod.version_name);
-				    			print(mod.title + ": " + mod.description);
-				    		},
-				    		onUrlChanged: function(reader, url) {
-				    			print("new url: " + url);
-				    		},
-				    		onReadLine: function(reader, result, line) {
-				    			print(line);
-				    		}
-				    	});
-				    	let list = worker.getList();
-				    	for (let i = 0; i < list.length; i++) {
-				    		let file = new java.io.File(__dir__ + "mods", list[i].title);
-				    		if (!file.exists()) file.mkdirs();
-				    		else Files.deleteDir(file.getPath());
-				    		worker.download(list[i].id, file);
-				    	}
-				    	handle(function() {
-				    		confirm("Done", "Downloaded " + list.length + " mods\n" + fetched.join("\n"));
-							Files.write(new java.io.File(__dir__ + "mods", "fetch.json"), JSON.stringify(list));
-				    	});
+						try {
+							let worker = new BrowserWorker();
+							new java.io.File(__dir__ + "mods").mkdirs();
+							let fetched = new Array();
+							worker.setCallback({
+								onFetchMod: function(list, mod) {
+									fetched.push(mod.title + " " + mod.version_name);
+									print(mod.title + ": " + mod.description);
+								},
+								onUrlChanged: function(reader, url) {
+									print("new url: " + url);
+								},
+								onReadLine: function(reader, result, line) {
+									print(line);
+								}
+							});
+							let list = worker.getList();
+							for (let i = 0; i < list.length; i++) {
+								let file = new java.io.File(__dir__ + "mods", list[i].title);
+								if (!file.exists()) file.mkdirs();
+								else Files.deleteDir(file.getPath());
+								worker.download(list[i].id, file);
+							}
+							handle(function() {
+								confirm("Done", "Downloaded " + list.length + " mods\n" + fetched.join("\n"));
+								Files.write(new java.io.File(__dir__ + "mods", "fetch.json"), JSON.stringify(list));
+							});
+						} catch (e) {
+							showHint(translate("%s library isn't availabled!", "ModBrowser.Query"));
+						}
+					});
+				});
+				category.addItem("support", translate("Tree"), function() {
+					handle(function() {
+						let popup = new TreePopup();
+						popup.setTitle("Bones");
+						popup.setOnClickListener(function(name, parents) {
+							showHint("Item click: " + name);
+							showHint("Parents: " + parents.join(", "));
+						});
+						popup.setOnSelectListener(function(name, parents) {
+							showHint("Group selected: " + name);
+							showHint("Parents: " + parents.join(", "));
+						});
+						popup.addFooter("controlExpandCreate");
+						popup.addFooter("controlExpandEdit");
+						popup.addFooter("controlExpandRemove");
+						popup.addGroup("body");
+						popup.addItem("Bone 1", "body");
+						popup.addItem("Bone 2", "body");
+						popup.addItem("Bone 1");
+						popup.addItem("Bone 3", "body");
+						popup.addItem("Bone 4", "body");
+						popup.addGroup("chestplate", "body");
+						popup.addItem("Bone 1", "chestplate");
+						popup.addItem("Bone 2", "chestplate");
+						popup.addGroup("horns", "chestplate");
+						popup.addItem("Bone 1", "horns");
+						popup.addItem("Bone 5", "body");
+						Popups.open(popup, "bone_select");
+					});
+				});
+				category.addItem("menuModuleManual", translate("Sounds"), function() {
+					handle(function() {
+						try {
+							var json = FileTools.ReadJSON(__dir__ + "sound_definitions.json") || {},
+								sounds = "Minecraft Sound Defitions\n\n",
+								categories = {},
+								out = [];
+							for (var item in json) categories[json[item].category] = new Array();
+							for (var item in json) categories[json[item].category].push(item);
+							for (var c in categories) out.push(c + ": " + categories[c].join(", "));
+							FileTools.WriteText(__dir__ + "out.txt", sounds + out.join(";\n\n"));
+						} catch (e) {
+							showHint(translate("Firstly, place correctly %s into modification", "sound_definitions.json"));
+						}
+					});
+				});
+				category.addItem("explorer", translate("Explorer"), function() {
+					handle(function() {
+						let popup = new ExplorerWindow();
+						popup.setMode(Ui.Choice.SINGLE);
+						popup.setPath(__dir__);
+						popup.setOnSelectListener(function(file, item) {
+							alert("Selected " + file.getName() + " (" + item + ")");
+						});
+						popup.setOnUnselectListener(function(file, item) {
+							alert("Unselected " + file.getName() + " (" + item + ")");
+						});
+						popup.show();
+					});
+				});
+				category.addItem("control", translate("Menu"), function() {
+					handle(function() {
+						let window = new MenuWindow();
+						let group = window.addGroup("menuProjectLeave");
+						for (let i = 0; i < 8; i++)
+							group.addItem("menuModuleBack", function(item) {
+								showHint(translate("Selected %s item", item.indexOf()));
+							});
+						group = window.addGroup("menuLoginCode", function(group, selected) {
+							showHint(translate("Selected %s group", group.indexOf()) + ": " + selected);
+						});
+						for (i = 0; i < 5; i++)
+							group.addItem("menuLoginCode", function(item) {
+								showHint(translate("Selected %s item", item.indexOf()));
+							});
+						group = window.addGroup("control", function(group, selected) {
+							showHint(translate("Selected %s group", group.indexOf()) + ": " + selected);
+						}).setSelectedBackground("popupSelectionLocked");
+						for (i = 0; i < 3; i++)
+							group.addItem("menuModuleSupport", function(item) {
+								showHint(translate(item.indexOf() % 2 == 0 ?
+									"Selected correct item" : "Bad selection"));
+								group.addItem(item.clone());
+							});
+						window.setOnSelectListener(function(group, index, selected, count) {
+							showHint(translate(selected ? "Selected %s group with items count %s" :
+								"Unselected %s group with items count %s", [index, count]));
+						});
+						let custom = new MenuWindow.Group("menuProjectManage").setUnselectedBackground("popupSelectionLocked").
+						setWindow(window).setOnClickListener(function(group) {
+							showHint(translate("Not developed yet"));
+							group.remove();
+							return true;
+						});
+						window.selectGroup(group);
+						window.setOnGroupClickListener(function(group, index) {
+							if (index == 2 && !group.isSelected()) {
+								showHint(translate("You can open this window only once"));
+								return true;
+							}
+							showHint(translate("Clicked %s group", index));
+						});
+						window.setOnItemClickListener(function(group, item, groupIndex, itemIndex) {
+							showHint(translate("Clicked %s item at group %s", [itemIndex, groupIndex]));
+							item.setIcon(["explorer", "menuConfig", "menuLoginKey"][random(0, 2)]);
+						});
+						window.show();
+					});
+				});
+				category.addItem("menuConfig", translate("Music"), function() {
+					handle(function() {
+						try {
+							let music = new Music();
+							music.setVolume(95);
+							music.resizeSource(0.8);
+							music.setIsDynamical(true);
+							music.setReceiver(Player.get());
+							music.updateVolume(function() {
+								return random(90, 100);
+							});
+							music.randomizeSource(function(music, baseSource) {
+								return "radio_" + random(0, 3) + ".mp3";
+							});
+							music.setAsCustom(function(music) {
+								var position = Player.getPosition();
+								position.z += random(9.5, 10);
+								return position;
+							});
+							music.setIsReversedSource(false);
+							music.play();
+						} catch (e) {
+							showHint(translate("%s library isn't availabled!", "Music"));
+						}
+					});
+				});
+				category.addItem("explorerSelectionSame", translate("Math"), function() {
+					handle(function() {
+						let e = Math.E,
+							ln2 = Math.LN2,
+							ln10 = Math.LN10,
+							log2e = Math.LOG2E,
+							log10e = Math.LOG10E,
+							pi = Math.PI,
+							sqrt1_2 = Math.SQRT1_2,
+							sqrt2 = Math.SQRT2;
+
+						function logMath(name) {
+							let func = Math[name],
+								logged = [];
+							for (var x = -1.1; x <= 1.1; x += 0.03)
+								logged.push(preround(x) + ": " + preround(func(preround(x))));
+							confirm("Math." + name, logged.join("\n"));
+						}
+
+						var toMath = [
+							// Returns the absolute value of a number.
+							"abs",
+							// Returns the arccosine (in radians) of a number.
+							"acos",
+							// Returns the arcsine (in radians) of a number.
+							"asin",
+							// Returns the arctangent (in radians) of a number.
+							"atan",
+							// Returns the arctangent of the quotient of its arguments.
+							// "atan2",
+							// Returns the smallest integer greater than or equal to a number.
+							"ceil",
+							// Returns the cosine of a number.
+							"cos",
+							// Returns Enumber, where number is the argument, and E is Euler's constant, the base of the natural logarithms.
+							// "exp",
+							// Returns the largest integer less than or equal to a number.
+							"floor",
+							// Returns the natural logarithm (base E) of a number.
+							// "log",
+							// Returns the greater of two numbers.
+							// "max",
+							// Returns the lesser of two numbers.
+							// "min",
+							// Returns base to the exponent power, that is, base exponent.
+							// "pow",
+							// Returns a pseudo-random number between 0 and 1.
+							// "random",
+							// Returns the value of a number rounded to the nearest integer.
+							"round",
+							// Returns the sine of a number.
+							"sin",
+							// Returns the square root of a number.
+							"sqrt",
+							// Returns the tangent of a number.
+							"tan"
+						];
+
+						for (let i in toMath) logMath(toMath[i]);
+					});
+				});
+				category.addItem("entityModuleDraw", translate("Summon"), function() {
+					handle(function() {
+						EntityEditor.create();
+						control.dismiss();
+						showHint(translate("This content will be availabled soon"));
 					});
 				});
 				checkForAdditionalInformation(control);
 			}
 			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || TPSMeter)) {
-				category = control.addCategory(translate("Supportables"));
+				category = control.addCategory(translate("Supportables")).setOnHoldItemListener(function(item, index) {
+					return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit, TPSMeter][index]);
+				});
 				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
 					let result = DumpCreator(function() {
 						try {
@@ -226,16 +491,16 @@ let StartEditor = {
 					confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
 						Level.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
 						"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
-							let evaluate = DumpCreator(function() {
-								try {
-									__makeAndSaveDump__();
-									return true;
-								} catch (e) {
-									return e;
-								}
-								return false;
-							})[0];
-							if (evaluate != true && evaluate != false) reportError(evaluate);
+						let evaluate = DumpCreator(function() {
+							try {
+								__makeAndSaveDump__();
+								return true;
+							} catch (e) {
+								return e;
+							}
+							return false;
+						})[0];
+						if (evaluate != true && evaluate != false) reportError(evaluate);
 					});
 				});
 				if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"), function() {
@@ -443,9 +708,11 @@ function checkForAdditionalInformation(control) {
 		if (worker && (worker.Renderer.getModelCount() > 1 || worker.Collision.getModelCount() > 1))
 			if (hasAdditionalInformation("moreOneModelsWarning"))
 				control.addMessage("blockRenderMove", translate("Opened editor contains >1 models one of type. At currently moment, editor doesn't support few models.") +
-					" " + translate("Touch here to merge all models."), function(message) {
+					" " + translate("Touch here to merge all models."),
+					function(message) {
 						confirm(translate("Outliner"), translate("All models will be merged into one.") +
-							" " + translate("Do you want to continue?"), function() {
+							" " + translate("Do you want to continue?"),
+							function() {
 								let active = Date.now(),
 									renderer = worker.Renderer.getModels(),
 									collision = worker.Collision.getModels();
@@ -492,27 +759,29 @@ function selectProjectData(result, action, single) {
 			action && action(single ? result[0] : result);
 			return;
 		}
-		let items = [], selected = [], real = [];
+		let items = [],
+			selected = [],
+			real = [];
 		result.forEach(function(element, index) {
 			if (element && element.type) {
 				switch (element.type) {
 					case "block":
 						let renderers = element.renderer.length + element.collision.length;
-						items.push(translate("Block: %s", element.define.id) + "\n"
-							+ translateCounter(renderers, "no models", "%s1 model",
-							"%s" + (renderers % 10) + " models", "%s models", [renderers]));
+						items.push(translate("Block: %s", element.define.id) + "\n" +
+							translateCounter(renderers, "no models", "%s1 model",
+								"%s" + (renderers % 10) + " models", "%s models", [renderers]));
 						break;
 					case "entity":
 						let models = element.visual.length;
-						items.push(translate("Entity: %s", element.define.id) + "\n"
-							+ translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-							"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
+						items.push(translate("Entity: %s", element.define.id) + "\n" +
+							translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
+								"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
 						break;
 					case "transition":
 						let animates = element.animation.length;
-						items.push(translate("Transition: %s", (element.define.fps || 60) + " fps") + "\n"
-							+ translateCounter(animates, "no animates", "%s1 animate",
-							"%s" + (animates % 10) + " animates", "%s animates", [animates]));
+						items.push(translate("Transition: %s", (element.define.fps || 60) + " fps") + "\n" +
+							translateCounter(animates, "no animates", "%s1 animate",
+								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
 						break;
 				}
 				(!single) && selected.push(!!importAutoselect);
@@ -590,12 +859,13 @@ function convertJsonBlock(string, action) {
 		} else {
 			confirm(translate("Compilation failed"),
 				translate("Converter generated invalid script, they can't be runned.") + " " +
-					translate("Retry compile with another converted model.") + " " +
-					translate("Save exported result?"), function() {
-						saveFile(translate("converted"), [".js"], function(file) {
-							Files.write(file, runned.value);
-						});
+				translate("Retry compile with another converted model.") + " " +
+				translate("Save exported result?"),
+				function() {
+					saveFile(translate("converted"), [".js"], function(file) {
+						Files.write(file, runned.value);
 					});
+				});
 		}
 		if (runned.logged) {
 			confirm(translate("Script report"),
@@ -611,14 +881,16 @@ function showSupportableInfo(mod) {
 		builder.setTitle(translate(mod.modName) + " " + mod.version);
 		builder.setMessage((mod.description ? translate(mod.description) + "\n" : "") +
 			translate("Developer: %s", (mod.author || translate("Unknown")) + "\n" +
-			translate("State: %s", "" + translate(mod.result == true ? "ACTIVE" :
-				mod.result == false ? "OUTDATED" : mod.result instanceof Error == true ?
-				"FAILED" : !mod.result ? "DISABLED" : "UNKNOWN"))));
+				translate("State: %s", "" + translate(mod.result == true ? "ACTIVE" :
+					mod.result == false ? "OUTDATED" : mod.result instanceof Error == true ?
+					"FAILED" : !mod.result ? "DISABLED" : "UNKNOWN"))));
 		builder.setPositiveButton(translate("OK"), null);
 		builder.create().show();
+		return true;
 	} catch (e) {
 		reportError(e);
 	}
+	return false;
 }
 
 function confirm(title, message, action) {
@@ -641,6 +913,7 @@ function confirm(title, message, action) {
 
 function selectFile(formats, onSelect, outside) {
 	show(Dirs.EXPORT, true);
+
 	function show(path, notRoot) {
 		try {
 			if (useOldExplorer) {
@@ -649,14 +922,15 @@ function selectFile(formats, onSelect, outside) {
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
 				for (let i in formatted) generated.push(formatted[i]);
-				
+
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setNegativeButton(translate("Cancel"), null);
 				builder.setItems(generated, function(d, i) {
 					try {
 						if (notRoot && i == 0) {
-							let file = new java.io.File(path), parent = file.getParent();
+							let file = new java.io.File(path),
+								parent = file.getParent();
 							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
 						} else {
 							let file = new java.io.File(path, generated[i]);
@@ -667,7 +941,7 @@ function selectFile(formats, onSelect, outside) {
 						reportError(e);
 					}
 				});
-				
+
 				let alert = builder.create();
 				alert.show();
 			} else {
@@ -693,6 +967,7 @@ function selectFile(formats, onSelect, outside) {
 function saveFile(currentName, formats, onSelect, outside) {
 	let currentFormat = 0;
 	show(Dirs.EXPORT, true);
+
 	function show(path, notRoot) {
 		try {
 			if (useOldExplorer) {
@@ -701,7 +976,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
 				for (let i in formatted) generated.push(formatted[i]);
-				
+
 				let layout = new android.widget.LinearLayout(context);
 				layout.setGravity(Ui.Gravity.CENTER);
 				let edit = new android.widget.EditText(context);
@@ -728,7 +1003,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 					text.setText(formats[currentFormat]);
 				});
 				layout.addView(text);
-				
+
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setPositiveButton(translate("Export"), function() {
@@ -739,7 +1014,8 @@ function saveFile(currentName, formats, onSelect, outside) {
 				builder.setItems(generated, function(d, i) {
 					try {
 						if (notRoot && i == 0) {
-							let file = new java.io.File(path), parent = file.getParent();
+							let file = new java.io.File(path),
+								parent = file.getParent();
 							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
 						} else {
 							let file = new java.io.File(path, generated[i]);
@@ -751,7 +1027,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 					}
 				});
 				builder.setView(layout);
-				
+
 				let alert = builder.create();
 				alert.show();
 			} else {

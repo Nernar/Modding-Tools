@@ -94,9 +94,6 @@ function ProjectOldest(obj) {
 	this.setCurrentlyId = function(id) {
 		this.currentId = new Number(id);
 	};
-	this.updatePopup = function(name, x, y) {
-		// TODO
-	};
 	
 	obj && (this.object = obj);
 }
