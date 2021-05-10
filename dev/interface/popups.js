@@ -33,44 +33,46 @@ const Popups = {
 		if (widget) {
 			let title = widget.views.title;
 			if (title) {
-				let closeable, minimizeable;
+				let closeable, expandable;
 				title.setOnTouchListener(function(view, event) {
 					switch (event.getAction()) {
 						case 0:
 							dx = event.getX();
 							dy = event.getY();
-							if (minimizeable) {
-								if (minimizeable.isActive && widget.minimize) {
-									widget.mininize();
+							if (expandable && expandable.isActive) {
+								if (widget.expand) {
+									widget.expand();
+									// ProjectEditor.getProject().updatePopupExpanded(widget.name, widget.isExpanded());
 								}
-								minimizeable.destroy();
+								expandable.destroy();
 							} else {
-								minimizeable = new Action(500);
-								minimizeable.create().execute();
+								if (expandable) {
+									expandable.destroy();
+								}
+								expandable = new Action(500);
+								expandable.create().execute();
 							}
 							if (closeable) {
 								closeable.destroy();
 							}
-							closeable = new Action(1500);
+							closeable = new Action(750);
 							closeable.create().execute();
 							break;
 						case 1:
-							// ProjectEditor.getProject().updatePopup(widget.name,
-								// event.getRawX() - dx, event.getRawY() - dy);
 							if (closeable && closeable.thread && closeable.getLeftTime() == 0) {
 								closeable.destroy();
 								Popups.closeIfOpened(widget.name);
-							}
+							} // else ProjectEditor.getProject().updatePopupLocation(widget.name, event.getRawX() - dx, event.getRawY() - dy);
 							break;
 						case 2:
 							let x = event.getX() - dx, y = event.getY() - dy;
-							widget.window.update(event.getRawX() - dx, event.getRawY() - dy, -1, -1);
+							widget.getPopup().update(event.getRawX() - dx, event.getRawY() - dy, -1, -1);
 							if (x >= Ui.Display.WIDTH / 1000 || y >= Ui.Display.HEIGHT / 1000) {
-								if (closeable && closeable.isActive) {
+								if (closeable) {
 									closeable.destroy();
 								}
-								if (minimizeable && minimizeable.isActive) {
-									minimizeable.destroy();
+								if (expandable) {
+									expandable.destroy();
 								}
 							}
 							break;
@@ -109,10 +111,8 @@ const Popups = {
 	},
 	close: function(index) {
 		let widget = this.widgets[index];
-		if (widget && widget.window) {
-			widget.window.setTouchable(false);
-			widget.window.update();
-			widget.hide();
+		if (widget && widget.getPopup()) {
+			widget.dismiss();
 			this.widgets.splice(index, 1);
 			return true;
 		}
@@ -122,7 +122,7 @@ const Popups = {
 		this.close(0);
 	},
 	closeAll: function() {
-		for (let i = 0; i < this.widgets.length; i++) {
+		while (this.widgets.length > 0) {
 			this.closeFirst();
 		}
 	},

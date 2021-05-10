@@ -1,15 +1,36 @@
 const FocusablePopup = function() {
+	let set = new ActorSet(),
+		fadeIn = new FadeActor(),
+		fadeOut = new FadeActor();
+	fadeIn.setInterpolator(new DecelerateInterpolator());
+	fadeIn.setMode(FadeActor.IN);
+	fadeIn.setDuration(400);
+	set.addActor(fadeIn);
+	fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
+	fadeOut.setMode(FadeActor.OUT);
+	fadeOut.setDuration(400);
+	set.addActor(fadeOut);
+	
+	this.setEnterActor(set);
+	this.setExitActor(set);
+	
+	let place = Popups.getAvailablePlace();
+	this.setX(place.x), this.setY(place.y);
+	
 	this.reset();
 };
 
+FocusablePopup.prototype = new ActoredWindow;
+FocusablePopup.prototype.TYPE = "FocusablePopup";
+FocusablePopup.prototype.expanded = true;
+
 FocusablePopup.prototype.reset = function() {
-	let views = (this.views = { edits: [], buttons: [] });
-	views.root = new android.widget.FrameLayout(context);
+	let views = this.views = new Object();
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
 	views.layout.setOrientation(Ui.Orientate.VERTICAL);
-	views.root.addView(views.layout);
-
+	this.setContent(views.layout);
+	
 	views.title = new android.widget.TextView(context);
 	views.title.setPadding(Ui.getY(30), Ui.getY(18), Ui.getY(30), Ui.getY(18));
 	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
@@ -18,60 +39,44 @@ FocusablePopup.prototype.reset = function() {
 	views.title.setTextColor(Ui.Color.WHITE);
 	views.title.setTypeface(typeface);
 	views.layout.addView(views.title);
-};
-
-FocusablePopup.prototype.setOnShowListener = function(listener) {
-	this.__show = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
-	};
-};
-
-FocusablePopup.prototype.setOnUpdateListener = function(listener) {
-	this.__update = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
-	};
-};
-
-FocusablePopup.prototype.setOnHideListener = function(listener) {
-	this.__hide = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
-	};
+	
+	views.scroll = new android.widget.ScrollView(context);
+	params = new android.widget.LinearLayout.LayoutParams
+				(Ui.Display.MATCH, Ui.Display.WRAP);
+	views.layout.addView(views.scroll, params);
+	
+	views.content = new android.widget.LinearLayout(context);
+	views.content.setOrientation(Ui.Orientate.VERTICAL);
+	views.content.setGravity(Ui.Gravity.CENTER);
+	views.scroll.addView(views.content)
 };
 
 FocusablePopup.prototype.setTitle = function(title) {
 	this.views.title.setText(title);
 };
 
-FocusablePopup.prototype.update = new Function();
-
-FocusablePopup.prototype.show = function() {
-	let views = this.views;
-	views.root.post(function() {
-		let animate = android.view.animation.AlphaAnimation(0, 1);
-		views.layout.startAnimation(animate);
-		animate.setDuration(400);
-	});
-	let place = Popups.getAvailablePlace();
-	this.window = new android.widget.PopupWindow(views.root, Ui.Display.WRAP, Ui.Display.WRAP);
-	this.focusable = views.edits.length > 0 && (this.window.setFocusable(true), true);
-	this.window.setAttachedInDecor(false);
-	this.window.showAtLocation(context.getWindow().getDecorView(), 0, place.x, place.y);
-	this.__show && this.__show();
+FocusablePopup.prototype.isExpanded = function() {
+	return this.expanded;
 };
 
-FocusablePopup.prototype.hide = function() {
-	let scope = this, views = this.views;
-	if (this.window) {
-		let animate = android.view.animation.AlphaAnimation(1, 0);
-		views.layout.startAnimation(animate);
-		animate.setDuration(400);
-		views.root.postDelayed(function() {
-			scope.window.dismiss();
-			delete scope.window;
-			scope.__hide && scope.__hide();
-		}, 400);
-	}
+FocusablePopup.prototype.expand = function() {
+	if (this.isExpanded()) {
+		this.minimize();
+	} else this.maximize();
+};
+
+FocusablePopup.prototype.minimize = function() {
+	let actor = new FadeActor();
+	actor.setDuration(200);
+	this.beginDelayedActor(actor);
+	this.views.scroll.setVisibility(Ui.Visibility.GONE);
+	this.expanded = false;
+};
+
+FocusablePopup.prototype.maximize = function() {
+	let actor = new FadeActor();
+	actor.setDuration(400);
+	this.beginDelayedActor(actor);
+	this.views.scroll.setVisibility(Ui.Visibility.VISIBLE);
+	this.expanded = true;
 };

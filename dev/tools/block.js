@@ -296,7 +296,7 @@ let BlockEditor = {
 			group.addItem("blockBoxMove", this.Renderer.move);
 			group.addItem("blockBoxMirror", this.Renderer.mirror);
 			if (__code__.startsWith("develop")) {
-				group.addItem("blockBoxRotate", this.Renderer.rotate);
+				group.addItem("blockBoxRotate", this.Renderer.rotate).setBackground("popupSelectionLocked");
 			}
 			group.addItem("blockBoxTexture", this.Renderer.texture);
 			group.addItem("blockBoxRemove", this.Renderer.remove);
@@ -309,7 +309,7 @@ let BlockEditor = {
 			group.addItem("blockBoxMove", this.Collision.move);
 			group.addItem("blockBoxMirror", this.Collision.mirror);
 			if (__code__.startsWith("develop")) {
-				group.addItem("blockBoxRotate", this.Collision.rotate);
+				group.addItem("blockBoxRotate", this.Collision.rotate).setBackground("popupSelectionLocked");
 			}
 			group.addItem("blockBoxRemove", this.Collision.remove);
 		} else {
