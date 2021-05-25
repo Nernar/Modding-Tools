@@ -516,7 +516,7 @@ const BlockEditor = {
 						active = Date.now() - active;
 						let current = BlockEditor.data.worker.getProject();
 						selected.forEach(function(element, index) {
-							current = assign(element, current);
+							current = assign(current, element);
 						});
 						BlockEditor.data.worker.loadProject(current);
 						mapRenderBlock(BlockEditor.data.worker);
@@ -528,7 +528,7 @@ const BlockEditor = {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
 				let current = BlockEditor.data.worker.getProject(),
-					assigned = assign(result, current);
+					assigned = assign(current, result);
 				BlockEditor.data.worker.loadProject(assigned);
 				mapRenderBlock(BlockEditor.data.worker);
 				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
@@ -539,7 +539,7 @@ const BlockEditor = {
 				let current = BlockEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNdb(obj),
-					assigned = assign(result, current);
+					assigned = assign(current, result);
 				BlockEditor.data.worker.loadProject(assigned);
 				mapRenderBlock(BlockEditor.data.worker);
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
@@ -592,10 +592,12 @@ const BlockEditor = {
 			handle(function() {
 				let converter = new BlockConverter();
 				converter.attach(project);
-				converter.executeAsync(function(result) {
+				converter.executeAsync(function(link, result) {
 					handle(function() {
-						Files.write(file, result);
-						showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+						if (link.hasResult()) {
+							Files.write(file, result);
+							showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+						} else reportError(link.getLastException());
 					});
 				});
 			});
@@ -604,9 +606,7 @@ const BlockEditor = {
 	reload: function(view) {
 		if (mapRenderBlock(BlockEditor.data.worker)) {
 			showHint(translate("Render updated"));
-		} else {
-			showHint(translate("Nothing to update"));
-		}
+		} else showHint(translate("Nothing to update"));
 	},
 	Renderer: {
 		hasSelection: function() {

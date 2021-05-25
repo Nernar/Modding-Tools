@@ -267,7 +267,7 @@ let TransitionEditor = {
 						active = Date.now() - active;
 						let current = TransitionEditor.data.worker.getProject();
 						selected.forEach(function(element, index) {
-							current = assign(element, current);
+							current = assign(current, element);
 						});
 						TransitionEditor.data.worker.loadProject(current);
 						drawTransitionPoints(TransitionEditor.data.worker);
@@ -281,7 +281,7 @@ let TransitionEditor = {
 				let current = TransitionEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNds(obj),
-					assigned = assign(result, current);
+					assigned = assign(current, result);
 				TransitionEditor.data.worker.loadProject(assigned);
 				drawTransitionPoints(TransitionEditor.data.worker);
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));

@@ -22,7 +22,7 @@ CoordsPopup.prototype.addButtonElement = function(name, click) {
 	let button = this.__addButtonElementLP(name, click);
 	button.setBackground("popupBackground");
 	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams
-		(Ui.Display.MATCH, Ui.getY(84));
+		(Ui.Display.MATCH, Ui.getY(84)));
 	return button;
 };
 

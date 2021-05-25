@@ -109,7 +109,7 @@ ScriptConverter.prototype.executeAsync = function(post) {
 			scope.execute();
 		}
 		delete scope.thread;
-		post && post(scope.getResult());
+		post && post(this, scope.getResult());
 	});
 };
 
@@ -124,12 +124,10 @@ ScriptConverter.prototype.getReadedCount = function() {
 
 ScriptConverter.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
-	if (!readed) {
-		return null;
-	}
+	if (!readed) return null;
 	return readed.join("\n\n");
 };
 
 ScriptConverter.prototype.hasResult = function() {
-	return this.getState() == ScriptConverter.State.VALID && this.getCurrentlyReaded();
+	return this.isConverted() && this.getCurrentlyReaded() !== null;
 };

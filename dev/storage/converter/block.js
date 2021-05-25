@@ -73,7 +73,7 @@ BlockConverter.prototype.buildRenderer = function(obj) {
 		if (!model) continue;
 		if (i > 0) result.push("");
 		result.push("let renderer = new ICRender.Model();");
-		result.push("BlockRenderer.setStaticICRender(BlockID." + this.getIdentitifer(obj) + ", " +
+		result.push("BlockRenderer.setStaticICRender(BlockID." + this.getIdentifier(obj) + ", " +
 			(i == 0 && renderer.length == 1 ? "-1" : i) + ", renderer);");
 		result.push("let model = BlockRenderer.createModel();");
 		let boxes = this.buildModel(model.boxes);
@@ -94,7 +94,7 @@ BlockConverter.prototype.buildCollision = function(obj) {
 		if (!model) continue;
 		if (i > 0) result.push("");
 		result.push("let collision = new ICRender.CollisionShape();");
-		result.push("BlockRenderer.setCustomCollisionShape(BlockID." + this.getIdentitifer(obj) + ", " +
+		result.push("BlockRenderer.setCustomCollisionShape(BlockID." + this.getIdentifier(obj) + ", " +
 			(i == 0 && collision.length == 1 ? "-1" : i) + ", collision);");
 		result.push("let model = BlockRenderer.createModel();");
 		let boxes = this.buildModel(model.boxes);
