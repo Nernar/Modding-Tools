@@ -15,11 +15,9 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 		reportError(e);
 		return;
 	}
-	
 	try {
 		if (ExecutableSupport.isModuleMissed()) {
 			MCSystem.setLoadingTip("Loading Supportables");
-			
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
 				if (!this.Windows) {
@@ -35,15 +33,10 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						Windows.menu = eval(first + "\n" + injectable + "\nelse " + second);
-					} else {
-						return false;
-					}
-				} else {
-					return false;
-				}
+					} else return false;
+				} else return false;
 				return true;
 			});
-			
 			Setting = importMod("Setting", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
 				if (typeof this.rover == "undefined" || !this.removeMenu) {
@@ -58,12 +51,8 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						removeMenu = eval(first + "\n" + injectable + "\n " + second);
-					} else {
-						return false;
-					}
-				} else {
-					return false;
-				}
+					} else return false;
+				} else return false;
 				Callback.addCallback("LevelLeft", function() {
 					if (!DevEditor.isLocked() && DevEditor.getCurrentEnvironment() == __name__) {
 						DevEditor.createAndLock(), rover = false;
@@ -71,7 +60,6 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				});
 				return true;
 			});
-			
 			DumpCreator = importMod("Dump Creator", function() {
 				if (!this.__makeAndSaveDump__) {
 					return false;
@@ -85,7 +73,6 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				};
 				return true;
 			});
-			
 			InstantRunner = importMod("InstantRunner", function() {
 				if (!this.openAndroidUI || !this.container) {
 					return false;
@@ -97,21 +84,17 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				};
 				return true;
 			});
-			
 			WorldEdit = importMod("WorldEdit", function() {
 				return !!this.Commands;
 			});
-			
 			TPSmeter = importMod("TPS meter");
-		} else {
-			supportSupportables = false;
-		}
+		} else supportSupportables = false;
 	} catch (e) {
 		reportError(e);
 	}
 });
 
-function refreshSupportablesIcons() {
+const refreshSupportablesIcons = function() {
 	try {
 		ExecutableSupport.refreshIcon(UIEditor);
 		ExecutableSupport.refreshIcon(Setting);
@@ -122,4 +105,4 @@ function refreshSupportablesIcons() {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};

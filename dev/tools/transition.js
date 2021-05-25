@@ -54,7 +54,6 @@ const stopTransition = function(worker) {
 const sceneToScript = function(project) {
 	let frames = project.frames,
 		point = project.point;
-	
 	let result = "let transition = new Transition();";
 	if (project.fps && project.fps != 60) {
 		result += "\n";
@@ -68,8 +67,8 @@ const sceneToScript = function(project) {
 	result += "transition.withFrom(" + point[0] + ", " + point[1] + ", " + point[2] + ", " + point[3] + ", " + point[4] + ");";
 	if (frames.length > 0) {
 		result += "\n";
-		for (let i in frames) {
-			let frame = frames[i];
+		for (let item in frames) {
+			let frame = frames[item];
 			result += "\n";
 			result += "transition.addFrame(" + frame[0] + ", " + frame[1] + ", " + frame[2] + ", " + frame[3] + ", " + frame[4] + ", " + frame[5];
 			if (frame.length > 6) result += ", Transition.Interpolator." + (frame[6] == 1 ? "ACCELERATE" : frame[6] == 2 ? "DECELERATE" : frame[6] == 3 ? "ACCELERATE_DECELERATE" : "LINEAR");
@@ -86,18 +85,20 @@ const sceneToScript = function(project) {
 	result += "transition.start();";
 	result += "\n";
 	result += "});";
-	
 	return result;
 };
 
+/**
+ * TODO: Add spawn particles.
+ */
 const drawTransitionPoints = function(worker) {
 	try {
 		if (!worker || !Level.isLoaded()) {
 			return false;
 		}
-		// TODO: Add spawn particles
-		// if (selectMode == 4)
-		// return true;
+		/* if (selectMode == 4)
+		return true; */
+		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
 	} catch (e) {
 		reportError(e);
 	}
@@ -121,28 +122,27 @@ let TransitionEditor = {
 		let autosaveable = !ProjectEditor.isOpened();
 		if (!this.data.worker) this.reset();
 		autosaveable && ProjectEditor.initializeAutosave(this.data.worker);
-		this.data.hasAnimate = this.data.worker.Animation.getAnimateCount() > 0
-			&& this.data.worker.Animation.getAnimate(0).getFrameCount() > 0;
+		this.data.hasAnimate = this.data.worker.Animation.getAnimateCount() > 0 &&
+			this.data.worker.Animation.getAnimate(0).getFrameCount() > 0;
 		this.data.isStarted = !!Transition.currently;
 		drawTransitionPoints(this.data.worker);
-		
 		let button = new ControlButton();
 		button.setIcon("menu");
 		button.setOnClickListener(function() {
 			TransitionEditor.menu();
-			menu.dismiss();
+			sidebar.dismiss();
 		});
 		button.show();
-		
-		let menu = new MenuWindow();
-		let group = menu.addGroup("transition");
-		if (this.data.hasAnimate)
+		let sidebar = new SidebarWindow(),
+			group = sidebar.addGroup("transition");
+		if (this.data.hasAnimate) {
 			group.addItem(this.data.isStarted ? "transitionModulePreview" : "transitionModulePause", this.Transition.play);
+		}
 		group.addItem("transitionModuleMove", this.Transition.move);
 		group.addItem("transitionModuleRotate", this.Transition.rotate);
 		group.addItem("transitionModuleFps", this.reframe);
 		group.addItem("transitionModuleReload", this.reload);
-		group = menu.addGroup("transitionFrameFrames");
+		group = sidebar.addGroup("transitionFrameFrames");
 		if (this.data.hasAnimate) {
 			group.addItem("transitionFrameFrames", this.Frame.select);
 			group.addItem("transitionFrameAdd", this.Frame.add);
@@ -153,17 +153,18 @@ let TransitionEditor = {
 			group.addItem("transitionFrameInterpolator", this.Frame.interpolator);
 			group.addItem("transitionFrameRemove", this.Frame.remove);
 		} else group.addItem("transitionFrameAdd", this.Frame.add);
-		this.data.selected >= 0 && menu.selectGroup(this.data.selected);
-		menu.setOnSelectListener(function(group, index, selected, count) {
-			if (selected) {
-				drawTransitionPoints(TransitionEditor.data.worker);
-				TransitionEditor.data.selected = index;
-			} else {
+		if (this.data.selected >= 0) sidebar.select(this.data.selected);
+		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
+			TransitionEditor.data.selected = index;
+			drawTransitionPoints(TransitionEditor.data.worker);
+		});
+		sidebar.setOnGroupUndockListener(function(window, group, index, previous) {
+			if (!previous) {
 				delete TransitionEditor.data.selected;
 				selectMode = 0, drawTransitionPoints(TransitionEditor.data.worker);
 			}
 		});
-		menu.show();
+		sidebar.show();
 	},
 	menu: function(view) {
 		let control = new ControlWindow();
@@ -206,7 +207,6 @@ let TransitionEditor = {
 			showHint(translate("Hit entity"));
 			control.dismiss();
 			selectMode = 2;
-			
 			let button = new ControlButton();
 			button.setIcon("menuModuleBack");
 			button.setOnClickListener(function() {
@@ -267,7 +267,7 @@ let TransitionEditor = {
 						active = Date.now() - active;
 						let current = TransitionEditor.data.worker.getProject();
 						selected.forEach(function(element, index) {
-							current = assign(current, element);
+							current = assign(element, current);
 						});
 						TransitionEditor.data.worker.loadProject(current);
 						drawTransitionPoints(TransitionEditor.data.worker);
@@ -281,7 +281,7 @@ let TransitionEditor = {
 				let current = TransitionEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNds(obj),
-					assigned = assign(current, result);
+					assigned = assign(result, current);
 				TransitionEditor.data.worker.loadProject(assigned);
 				drawTransitionPoints(TransitionEditor.data.worker);
 				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
@@ -325,9 +325,9 @@ let TransitionEditor = {
 		}
 	},
 	reload: function(view) {
-		if (drawTransitionPoints(TransitionEditor.data.worker))
+		if (drawTransitionPoints(TransitionEditor.data.worker)) {
 			showHint(translate("Transition updated"));
-		else showHint(translate("Nothing to update"));
+		} else showHint(translate("Nothing to update"));
 	},
 	Transition: {
 		play: function(view) {
@@ -337,8 +337,9 @@ let TransitionEditor = {
 			}
 			let transition = TransitionEditor.data.transition;
 			if (transition && transition.isStarted()) {
-				if (stopTransition(TransitionEditor.data.worker))
+				if (stopTransition(TransitionEditor.data.worker)) {
 					showHint(translate("Transition stopped"));
+				}
 			} else playTransition(TransitionEditor.data.worker),
 				TransitionEditor.create();
 		},
@@ -445,7 +446,8 @@ let TransitionEditor = {
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
 				popup.addButtonElement(translate("Copy current"), function() {
-					let last = TransitionEditor.data.frame, index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
+					let last = TransitionEditor.data.frame,
+						index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
 					showHint(translate("Frame %s cloned to %s", [last + 1, index + 1]));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
@@ -623,55 +625,3 @@ let TransitionEditor = {
 		Popups.open(popup, "reframe");
 	}
 };
-
-let needTransitionReset = false;
-Callback.addCallback("LevelPreLoaded", function() {
-	try {
-		// Reset entity if entity isn't defined
-		if (ProjectEditor.getCurrentType() == "transition" &&
-			TransitionEditor.data.worker.Define.getEntity() == -1)
-				TransitionEditor.data.worker.Define.setEntity(getPlayerEnt()),
-					needTransitionReset = true;
-	} catch (e) {
-		reportError(e);
-	}
-});
-
-Callback.addCallback("LevelLoaded", function() {
-	context.runOnUiThread(function() {
-		try {
-			if (needTransitionReset) {
-				TransitionEditor.data.worker.Define.resetStarting();
-				Popups.closeAllByTag("transition");
-				needTransitionReset = false;
-			}
-		} catch (e) {
-			reportError(e);
-		}
-	});
-});
-
-Callback.addCallback("EntityHurt", function(attacker, victim) {
-	context.runOnUiThread(function() {
-		try {
-			// Hit entity selection
-			if (selectMode == 2 && attacker == getPlayerEnt()) {
-				TransitionEditor.data.worker.Define.setEntity(victim);
-				showHint(translate("Entity selected"));
-				selectMode = 0, TransitionEditor.create();
-			}
-		} catch (e) {
-			reportError(e);
-		}
-	});
-});
-
-Callback.addCallback("tick", function() {
-	try {
-		// Mostly spawn selection particles
-		if (ProjectEditor.getCurrentType() == "transition")
-			drawTransitionPoints(TransitionEditor.data.worker);
-	} catch (e) {
-		reportError(e);
-	}
-});

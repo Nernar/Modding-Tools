@@ -1,4 +1,4 @@
-let HintAlert = function() {
+const HintAlert = function() {
 	this.setGravity(Ui.Gravity.CENTER | Ui.Gravity.BOTTOM);
 	this.setWidth(Ui.Display.MATCH);
 	this.setTouchable(false);
@@ -19,10 +19,17 @@ let HintAlert = function() {
 	this.setExitActor(actor);
 	
 	this.reset();
+	this.clearStack();
 };
-HintAlert.prototype = new UniqueWindow;
+
+HintAlert.prototype = assign(UniqueWindow.prototype);
 HintAlert.prototype.TYPE = "HintAlert";
+
+HintAlert.prototype.autoReawait = true;
+HintAlert.prototype.stackable = false;
+HintAlert.prototype.forever = false;
 HintAlert.prototype.time = 3000;
+
 HintAlert.prototype.reset = function() {
 	let views = (this.views = {});
 	let content = new android.widget.FrameLayout(context);
@@ -45,30 +52,35 @@ HintAlert.prototype.reset = function() {
 	typeface && views.text.setTypeface(typeface);
 	views.layout.addView(views.text);
 };
-HintAlert.prototype.forever = false;
+
 HintAlert.prototype.isPinned = function() {
 	return this.forever;
 };
+
 HintAlert.prototype.pin = function() {
 	this.forever = true;
 };
+
 HintAlert.prototype.unpin = function() {
 	this.forever = false;
 };
-HintAlert.prototype.stackable = false;
-HintAlert.prototype.stack = new Array();
+
 HintAlert.prototype.isStackable = function() {
 	return this.stackable;
 };
+
 HintAlert.prototype.setStackable = function(enabled) {
 	this.stackable = !!enabled;
 };
+
 HintAlert.prototype.addToStack = function(hint) {
 	this.isStackable() && this.stack.push(hint);
 };
+
 HintAlert.prototype.hasMoreStack = function() {
 	return this.isStackable() ? this.stack.length > 0 : false;
 };
+
 HintAlert.prototype.addActionForHint = function(hint, action) {
 	let scope = this;
 	action && handle(function() {
@@ -77,9 +89,11 @@ HintAlert.prototype.addActionForHint = function(hint, action) {
 		catch (e) { reportError(e); }
 	}, this.getTimeForHint(hint) + 50);
 };
+
 HintAlert.prototype.getTimeForNextHint = function() {
 	return this.action ? this.action.getLeftTime() : 0;
 };
+
 HintAlert.prototype.getTimeForHint = function(hint) {
 	if (this.alreadyHasHint(hint)) {
 		if (this.views.text.getText() == hint) return 0;
@@ -88,21 +102,27 @@ HintAlert.prototype.getTimeForHint = function(hint) {
 	}
 	return 0;
 };
-// TODO: Why this function if text != hint ALWAYS return false
+
+/**
+ * TODO: Why this function if text != hint ALWAYS return false.
+ */
 HintAlert.prototype.alreadyHasHint = function(hint) {
 	let stacked = this.isStackable() ? this.stack.indexOf(hint) != -1 : false;
 	return this.views.text.getText() == hint || stacked;
 };
+
 HintAlert.prototype.clearStack = function() {
 	this.stack = new Array();
 };
-HintAlert.prototype.autoReawait = true;
+
 HintAlert.prototype.hasAutoReawait = function() {
 	return this.autoReawait;
 };
+
 HintAlert.prototype.setAutoReawait = function(enabled) {
 	this.autoReawait = !!enabled;
 };
+
 HintAlert.prototype.replayHint = function(hint) {
 	this.addActionForHint(hint, function(scope) {
 		let actor = new FadeActor();
@@ -113,6 +133,7 @@ HintAlert.prototype.replayHint = function(hint) {
 		scope.views.text.setVisibility(Ui.Visibility.VISIBLE);
 	});
 };
+
 HintAlert.prototype.setHintForce = function(hint) {
 	let actor = new FadeActor();
 	actor.setInterpolator(new OvershootInterpolator());
@@ -122,6 +143,7 @@ HintAlert.prototype.setHintForce = function(hint) {
 	this.beginDelayedActor(actor);
 	this.views.text.setVisibility(Ui.Visibility.VISIBLE);
 };
+
 HintAlert.prototype.setHint = function(hint, force) {
 	this.alreadyHasHint(hint) ? this.replayHint(hint) : this.isOpened() &&
 		this.isStackable() ? this.addToStack(hint) : this.setHintForce(hint);
@@ -129,16 +151,20 @@ HintAlert.prototype.setHint = function(hint, force) {
 		(this.isStackable() ? !this.hasMoreStack() : true)))
 			this.reawait();
 };
+
 HintAlert.prototype.setColor = function(color) {
 	color && this.views.text.setTextColor(color);
 };
+
 HintAlert.prototype.setTime = function(ms) {
 	ms > 0 && (this.time = ms);
 	this.isOpened() && this.reawait();
 };
+
 HintAlert.prototype.reawait = function() {
 	this.action && this.action.setCurrentTick(0);
 };
+
 HintAlert.prototype.__showHA = HintAlert.prototype.show;
 HintAlert.prototype.show = function() {
 	let scope = this;
@@ -167,6 +193,7 @@ HintAlert.prototype.show = function() {
 		this.__showHA && this.__showHA();
 	} else this.reawait();
 };
+
 HintAlert.prototype.__dismissHA = HintAlert.prototype.dismiss;
 HintAlert.prototype.dismiss = function() {
 	this.action && this.action.destroy();
@@ -174,7 +201,9 @@ HintAlert.prototype.dismiss = function() {
 	this.__dismissHA && this.__dismissHA();
 };
 
-// Some useful code; warnings and information
+/**
+ * Some useful code; warnings and information.
+ */
 const showHint = function(hint, color, reawait) {
 	if (showHint.launchStacked) {
 		showHint.launchStacked.push({
@@ -211,17 +240,20 @@ const showHint = function(hint, color, reawait) {
 };
 
 showHint.countedHints = 0;
+showHint.launchStacked = new Array();
+
 showHint.handleCounter = function() {
 	handle(function() {
 		showHint.countedHints = 0;
 		delete showHint.isHandled;
 	}, HintAlert.prototype.time);
 };
-showHint.launchStacked = new Array();
+
 showHint.unstackLaunch = function() {
 	let stack = this.launchStacked;
 	delete this.launchStacked;
 	delete this.unstackLaunch;
-	for (let i = 0; i < stack.length; i++)
+	for (let i = 0; i < stack.length; i++) {
 		showHint(stack[i].hint, stack[i].color, stack[i].reawait);
+	}
 };

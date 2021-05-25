@@ -1,4 +1,4 @@
-let StartEditor = {
+const StartEditor = {
 	data: new Object(),
 	create: function() {
 		try {
@@ -213,64 +213,12 @@ let StartEditor = {
 			checkForAdditionalInformation(control);
 			if (__code__.indexOf("alpha") != -1) {
 				category = control.addCategory(translate("Debug & testing"));
-				category.addItem("support", translate("Minify"), function() {
-					selectFile([".js"], function(file) {
-						let text = Files.read(file);
-						saveFile(null, [".js"], function(file) {
-							minifyJs(text, function(result) {
-								Files.write(file, result);
-							});
-						});
+				category.addItem("worldActionMeasure", translate("Log"), function() {
+					handle(function() {
+						LogViewer.show();
 					});
 				});
-				category.addItem("support", translate("Fetch"), function() {
-					handleThread(function() {
-						try {
-							let list = BrowserWorker.fetchList();
-							let count = BrowserWorker.getCount();
-							handle(function() {
-								confirm(list.length + "/" + count + " mods", list.join("\n"));
-							});
-						} catch (e) {
-							showHint(translate("%s library isn't availabled!", "ModBrowser.Query"));
-						}
-					});
-				});
-				category.addItem("support", translate("Install"), function() {
-					handleThread(function() {
-						try {
-							let worker = new BrowserWorker();
-							new java.io.File(__dir__ + "mods").mkdirs();
-							let fetched = new Array();
-							worker.setCallback({
-								onFetchMod: function(list, mod) {
-									fetched.push(mod.title + " " + mod.version_name);
-									print(mod.title + ": " + mod.description);
-								},
-								onUrlChanged: function(reader, url) {
-									print("new url: " + url);
-								},
-								onReadLine: function(reader, result, line) {
-									print(line);
-								}
-							});
-							let list = worker.getList();
-							for (let i = 0; i < list.length; i++) {
-								let file = new java.io.File(__dir__ + "mods", list[i].title);
-								if (!file.exists()) file.mkdirs();
-								else Files.deleteDir(file.getPath());
-								worker.download(list[i].id, file);
-							}
-							handle(function() {
-								confirm("Done", "Downloaded " + list.length + " mods\n" + fetched.join("\n"));
-								Files.write(new java.io.File(__dir__ + "mods", "fetch.json"), JSON.stringify(list));
-							});
-						} catch (e) {
-							showHint(translate("%s library isn't availabled!", "ModBrowser.Query"));
-						}
-					});
-				});
-				category.addItem("support", translate("Tree"), function() {
+				category.addItem("menuLoginServer", translate("Tree"), function() {
 					handle(function() {
 						let popup = new TreePopup();
 						popup.setTitle("Bones");
@@ -298,172 +246,6 @@ let StartEditor = {
 						popup.addItem("Bone 1", "horns");
 						popup.addItem("Bone 5", "body");
 						Popups.open(popup, "bone_select");
-					});
-				});
-				category.addItem("menuModuleManual", translate("Sounds"), function() {
-					handle(function() {
-						try {
-							var json = FileTools.ReadJSON(__dir__ + "sound_definitions.json") || {},
-								sounds = "Minecraft Sound Defitions\n\n",
-								categories = {},
-								out = [];
-							for (var item in json) categories[json[item].category] = new Array();
-							for (var item in json) categories[json[item].category].push(item);
-							for (var c in categories) out.push(c + ": " + categories[c].join(", "));
-							FileTools.WriteText(__dir__ + "out.txt", sounds + out.join(";\n\n"));
-						} catch (e) {
-							showHint(translate("Firstly, place correctly %s into modification", "sound_definitions.json"));
-						}
-					});
-				});
-				category.addItem("explorer", translate("Explorer"), function() {
-					handle(function() {
-						let popup = new ExplorerWindow();
-						popup.setMode(Ui.Choice.SINGLE);
-						popup.setPath(__dir__);
-						popup.setOnSelectListener(function(file, item) {
-							alert("Selected " + file.getName() + " (" + item + ")");
-						});
-						popup.setOnUnselectListener(function(file, item) {
-							alert("Unselected " + file.getName() + " (" + item + ")");
-						});
-						popup.show();
-					});
-				});
-				category.addItem("control", translate("Menu"), function() {
-					handle(function() {
-						let window = new MenuWindow();
-						let group = window.addGroup("menuProjectLeave");
-						for (let i = 0; i < 8; i++)
-							group.addItem("menuModuleBack", function(item) {
-								showHint(translate("Selected %s item", item.indexOf()));
-							});
-						group = window.addGroup("menuLoginCode", function(group, selected) {
-							showHint(translate("Selected %s group", group.indexOf()) + ": " + selected);
-						});
-						for (i = 0; i < 5; i++)
-							group.addItem("menuLoginCode", function(item) {
-								showHint(translate("Selected %s item", item.indexOf()));
-							});
-						group = window.addGroup("control", function(group, selected) {
-							showHint(translate("Selected %s group", group.indexOf()) + ": " + selected);
-						}).setSelectedBackground("popupSelectionLocked");
-						for (i = 0; i < 3; i++)
-							group.addItem("menuModuleSupport", function(item) {
-								showHint(translate(item.indexOf() % 2 == 0 ?
-									"Selected correct item" : "Bad selection"));
-								group.addItem(item.clone());
-							});
-						window.setOnSelectListener(function(group, index, selected, count) {
-							showHint(translate(selected ? "Selected %s group with items count %s" :
-								"Unselected %s group with items count %s", [index, count]));
-						});
-						let custom = new MenuWindow.Group("menuProjectManage").setUnselectedBackground("popupSelectionLocked").
-						setWindow(window).setOnClickListener(function(group) {
-							showHint(translate("Not developed yet"));
-							group.remove();
-							return true;
-						});
-						window.selectGroup(group);
-						window.setOnGroupClickListener(function(group, index) {
-							if (index == 2 && !group.isSelected()) {
-								showHint(translate("You can open this window only once"));
-								return true;
-							}
-							showHint(translate("Clicked %s group", index));
-						});
-						window.setOnItemClickListener(function(group, item, groupIndex, itemIndex) {
-							showHint(translate("Clicked %s item at group %s", [itemIndex, groupIndex]));
-							item.setIcon(["explorer", "menuConfig", "menuLoginKey"][random(0, 2)]);
-						});
-						window.show();
-					});
-				});
-				category.addItem("menuConfig", translate("Music"), function() {
-					handle(function() {
-						try {
-							let music = new Music();
-							music.setVolume(95);
-							music.resizeSource(0.8);
-							music.setIsDynamical(true);
-							music.setReceiver(Player.get());
-							music.updateVolume(function() {
-								return random(90, 100);
-							});
-							music.randomizeSource(function(music, baseSource) {
-								return "radio_" + random(0, 3) + ".mp3";
-							});
-							music.setAsCustom(function(music) {
-								var position = Player.getPosition();
-								position.z += random(9.5, 10);
-								return position;
-							});
-							music.setIsReversedSource(false);
-							music.play();
-						} catch (e) {
-							showHint(translate("%s library isn't availabled!", "Music"));
-						}
-					});
-				});
-				category.addItem("explorerSelectionSame", translate("Math"), function() {
-					handle(function() {
-						let e = Math.E,
-							ln2 = Math.LN2,
-							ln10 = Math.LN10,
-							log2e = Math.LOG2E,
-							log10e = Math.LOG10E,
-							pi = Math.PI,
-							sqrt1_2 = Math.SQRT1_2,
-							sqrt2 = Math.SQRT2;
-
-						function logMath(name) {
-							let func = Math[name],
-								logged = [];
-							for (var x = -1.1; x <= 1.1; x += 0.03)
-								logged.push(preround(x) + ": " + preround(func(preround(x))));
-							confirm("Math." + name, logged.join("\n"));
-						}
-
-						var toMath = [
-							// Returns the absolute value of a number.
-							"abs",
-							// Returns the arccosine (in radians) of a number.
-							"acos",
-							// Returns the arcsine (in radians) of a number.
-							"asin",
-							// Returns the arctangent (in radians) of a number.
-							"atan",
-							// Returns the arctangent of the quotient of its arguments.
-							// "atan2",
-							// Returns the smallest integer greater than or equal to a number.
-							"ceil",
-							// Returns the cosine of a number.
-							"cos",
-							// Returns Enumber, where number is the argument, and E is Euler's constant, the base of the natural logarithms.
-							// "exp",
-							// Returns the largest integer less than or equal to a number.
-							"floor",
-							// Returns the natural logarithm (base E) of a number.
-							// "log",
-							// Returns the greater of two numbers.
-							// "max",
-							// Returns the lesser of two numbers.
-							// "min",
-							// Returns base to the exponent power, that is, base exponent.
-							// "pow",
-							// Returns a pseudo-random number between 0 and 1.
-							// "random",
-							// Returns the value of a number rounded to the nearest integer.
-							"round",
-							// Returns the sine of a number.
-							"sin",
-							// Returns the square root of a number.
-							"sqrt",
-							// Returns the tangent of a number.
-							"tan"
-						];
-
-						for (let i in toMath) logMath(toMath[i]);
 					});
 				});
 				category.addItem("entityModuleDraw", translate("Summon"), function() {
@@ -552,8 +334,8 @@ let StartEditor = {
 					let result = WorldEdit(function() {
 						try {
 							let array = new Array();
-							for (let i in Commands) {
-								let command = Commands[i];
+							for (let item in Commands) {
+								let command = Commands[item];
 								array.push(command.name + (command.args && command.args.length > 0 ?
 									" " + command.args : "") + "\n" + command.description);
 							}
@@ -688,7 +470,10 @@ let StartEditor = {
 	}
 };
 
-function checkForAdditionalInformation(control) {
+/**
+ * TODO: Reshape to AdditionalMessage.
+ */
+const checkForAdditionalInformation = function(control) {
 	if (hasAdditionalInformation(warningMessage)) {
 		control.addMessage("menuLoginServer", translate(warningMessage), function(message) {
 			control.removeElement(message), warningMessage = null;
@@ -719,13 +504,13 @@ function checkForAdditionalInformation(control) {
 								if (renderer && renderer.length > 1) {
 									let source = renderer[0].params;
 									for (let i = 1; i < renderer.length; i++)
-										source = assign(source, renderer[i].params);
+										source = assign(renderer[i].params, source);
 									worker.Renderer.setParams([source]);
 								}
 								if (collision && collision.length > 1) {
 									let source = collision[0].params;
 									for (let i = 1; i < collision.length; i++)
-										source = assign(source, collision[i].params);
+										source = assign(collision[i].params, source);
 									worker.Collision.setParams([source]);
 								}
 								control.removeElement(message);
@@ -733,10 +518,9 @@ function checkForAdditionalInformation(control) {
 							});
 					});
 	}
-	// TODO: Add more hints
-}
+};
 
-function hasAdditionalInformation(message) {
+const hasAdditionalInformation = function(message) {
 	if (!message) {
 		return false;
 	}
@@ -744,24 +528,24 @@ function hasAdditionalInformation(message) {
 		return (checkForAdditionalInformation.already.push(message), true);
 	}
 	return false;
-}
+};
 
-function resetAdditionalInformation() {
+const resetAdditionalInformation = function() {
 	checkForAdditionalInformation.already = new Array();
-}
+};
 
 resetAdditionalInformation();
 
-function selectProjectData(result, action, single) {
+const selectProjectData = function(result, action, single) {
 	try {
 		if (!result || result.length == 0) return;
 		if (result.length == 1) {
 			action && action(single ? result[0] : result);
 			return;
 		}
-		let items = [],
-			selected = [],
-			real = [];
+		let items = new Array(),
+			selected = new Array(),
+			real = new Array();
 		result.forEach(function(element, index) {
 			if (element && element.type) {
 				switch (element.type) {
@@ -825,9 +609,9 @@ function selectProjectData(result, action, single) {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};
 
-function convertJsonBlock(string, action) {
+const convertJsonBlock = function(string, action) {
 	if (!ModelConverter) return;
 	let runned = compileData("(function() {\n" + ModelConverter + "\n" +
 		"myFunction();\nreturn {\nvalue: document.getElementById(\"frm2\").value,\n" +
@@ -872,9 +656,9 @@ function convertJsonBlock(string, action) {
 				translate("Script logging have several messages:") + "\n" + runned.logged);
 		}
 	}
-}
+};
 
-function showSupportableInfo(mod) {
+const showSupportableInfo = function(mod) {
 	try {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
@@ -887,7 +671,8 @@ function showSupportableInfo(mod) {
 		builder.setNegativeButton(translate("Remove"), function() {
 			handle(function() {
 				confirm(translate("Warning!"), translate("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.") + " " +
-					translate("Do you want to continue?"), function() {
+					translate("Do you want to continue?"),
+					function() {
 						if (mod.result == true) {
 							showHint(translate("Restart game for better stability"));
 						}
@@ -904,10 +689,10 @@ function showSupportableInfo(mod) {
 		reportError(e);
 	}
 	return false;
-}
+};
 
-function confirm(title, message, action) {
-	try {
+const confirm = function(title, message, action) {
+	handle(function() {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(title || translate("Confirmation"));
@@ -919,23 +704,18 @@ function confirm(title, message, action) {
 		} : null);
 		builder.setCancelable(false);
 		builder.create().show();
-	} catch (e) {
-		reportError(e);
-	}
-}
+	});
+};
 
-function selectFile(formats, onSelect, outside) {
-	show(Dirs.EXPORT, true);
-
-	function show(path, notRoot) {
+const selectFile = function(formats, onSelect, outside) {
+	const show = function(path, notRoot) {
 		try {
 			if (useOldExplorer) {
 				let files = Files.listFileNames(path),
 					generated = Files.listDirectoryNames(path),
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (let i in formatted) generated.push(formatted[i]);
-
+				for (let item in formatted) generated.push(formatted[item]);
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setNegativeButton(translate("Cancel"), null);
@@ -954,9 +734,7 @@ function selectFile(formats, onSelect, outside) {
 						reportError(e);
 					}
 				});
-
-				let alert = builder.create();
-				alert.show();
+				builder.create().show();
 			} else {
 				let explorer = new ExplorerWindow();
 				formats && explorer.setFilter(formats);
@@ -974,22 +752,23 @@ function selectFile(formats, onSelect, outside) {
 		} catch (e) {
 			reportError(e);
 		}
-	}
-}
-
-function saveFile(currentName, formats, onSelect, outside) {
-	let currentFormat = 0;
+	};
 	show(Dirs.EXPORT, true);
+};
 
-	function show(path, notRoot) {
+const saveFile = function(currentName, formats, onSelect, outside) {
+	let currentFormat = 0;
+	if (useOldExplorer && !Array.isArray(formats)) {
+		formats = [formats];
+	}
+	const show = function(path, notRoot) {
 		try {
 			if (useOldExplorer) {
 				let files = Files.listFileNames(path),
 					generated = Files.listDirectoryNames(path),
 					formatted = Files.checkFormats(files, formats);
 				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (let i in formatted) generated.push(formatted[i]);
-
+				for (let item in formatted) generated.push(formatted[item]);
 				let layout = new android.widget.LinearLayout(context);
 				layout.setGravity(Ui.Gravity.CENTER);
 				let edit = new android.widget.EditText(context);
@@ -1016,7 +795,6 @@ function saveFile(currentName, formats, onSelect, outside) {
 					text.setText(formats[currentFormat]);
 				});
 				layout.addView(text);
-
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
 				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
 				builder.setPositiveButton(translate("Export"), function() {
@@ -1040,9 +818,7 @@ function saveFile(currentName, formats, onSelect, outside) {
 					}
 				});
 				builder.setView(layout);
-
-				let alert = builder.create();
-				alert.show();
+				builder.create().show();
 			} else {
 				let explorer = new ExplorerWindow();
 				formats && explorer.setFilter(formats);
@@ -1063,10 +839,11 @@ function saveFile(currentName, formats, onSelect, outside) {
 		} catch (e) {
 			reportError(e);
 		}
-	}
-}
+	};
+	show(Dirs.EXPORT, true);
+};
 
-function compileData(text, type, additional) {
+const compileData = function(text, type, additional) {
 	if (type == "string") text = "\"" + text + "\"";
 	let code = "(function() { return " + text + "; })();",
 		scope = runAtScope(code, additional || {}, "compile.js");
@@ -1075,10 +852,12 @@ function compileData(text, type, additional) {
 		type == "number" ? parseInt(scope.result) :
 		type == "float" ? parseFloat(scope.result) :
 		type == "object" ? scope.result : null;
-}
+};
 
-function preround(number, fixed) {
-	// Avoids large fractions in project
+/**
+ * Avoids large fractions in project.
+ */
+const preround = function(number, fixed) {
 	typeof fixed == "undefined" && (fixed = 6);
-	return parseFloat(new Number(number).toFixed(fixed));
-}
+	return parseFloat(Number(number).toFixed(fixed));
+};

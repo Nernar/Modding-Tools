@@ -1,8 +1,7 @@
-function ProjectOldest(obj) {
+const ProjectOldest = function(obj) {
 	this.object = new Array();
 	this.isOpened = false;
 	this.currentId = -1;
-	
 	this.callAutosave = function() {
 		if (!autosave || this.isAutosaving) {
 			this.updateCurrentWorker();
@@ -30,7 +29,6 @@ function ProjectOldest(obj) {
 			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + "-" +
 			(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
 	};
-	
 	this.getByType = function(type) {
 		let obj = this.getAll(), values = new Array();
 		for (let i = 0; i < this.getCount(); i++) {
@@ -55,7 +53,6 @@ function ProjectOldest(obj) {
 	this.getCount = function() {
 		return this.getAll().length;
 	};
-	
 	this.getCurrentId = function() {
 		return this.currentId;
 	};
@@ -92,18 +89,17 @@ function ProjectOldest(obj) {
 		return content.indexOf(obj);
 	};
 	this.setCurrentlyId = function(id) {
-		this.currentId = new Number(id);
+		this.currentId = Number(id);
 	};
-	
 	obj && (this.object = obj);
-}
+};
 
-function monthToName(number) {
+const monthToName = function(number) {
 	let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
-}
+};
 
-function stringifyObject(obj, identate, action, hint, complete) {
+const stringifyObject = function(obj, identate, action, hint, complete) {
 	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
 	function recursiveHint(state, max) {
 		handle(function() {
@@ -132,18 +128,18 @@ function stringifyObject(obj, identate, action, hint, complete) {
 		hintStackableDenied = true;
 		maximumHints = 0;
 	}
-	function recursiveIndexate(obj) {
+	const recursiveIndexate = function(obj) {
 		try {
 			count++;
 			if (obj && typeof obj == "object") {
-				for (let i in obj) {
-					recursiveIndexate(obj[i]);
+				for (let item in obj) {
+					recursiveIndexate(obj[item]);
 				}
 			}
 		} catch (e) {
 			count++;
 		}
-	}
+	};
 	handleThread(function() {
 		try {
 			recursiveIndexate(obj), indexated = true;
@@ -167,13 +163,13 @@ function stringifyObject(obj, identate, action, hint, complete) {
 			done = true;
 		}
 	});
-}
+};
 
-function stringifyObjectUnsafe(obj, identate, callback) {
+const stringifyObjectUnsafe = function(obj, identate, callback) {
 	if (callback == undefined) {
 		callback = new Object();
 	}
-	function recursiveStringify(obj, tabs) {
+	const recursiveStringify = function(obj, tabs) {
 		if (callback.onUpdate) {
 			callback.onUpdate();
 		}
@@ -220,12 +216,12 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 						return "[" + array.join(",") + "]";
 					} else {
 						let array = new Array(), tabbed = false, last, count = 0;
-						for (let c in obj) {
-							last = c;
+						for (let counted in obj) {
+							last = counted;
 							count++;
 						}
-						for (let i in obj) {
-							let result = recursiveStringify(obj[i], tabs);
+						for (let item in obj) {
+							let result = recursiveStringify(obj[item], tabs);
 							if (result && result.length > 0) {
 								if (identate) {
 									if (result.indexOf("\n") != -1 || result.length > 8) {
@@ -233,14 +229,14 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 											tabbed = true;
 											tabs += "\t";
 										}
-										array.push(i + ": " + result + (i != last ? "\n" + tabs : ""));
+										array.push(item + ": " + result + (item != last ? "\n" + tabs : ""));
 									} else if (i != 0) {
-										array.push(" " + i + ": " + result);
+										array.push(" " + item + ": " + result);
 									} else {
 										array.push(result);
 									}
 								} else {
-									array.push("\"" + i + "\":" + result);
+									array.push("\"" + item + "\":" + result);
 								}
 							}
 						}
@@ -256,11 +252,11 @@ function stringifyObjectUnsafe(obj, identate, callback) {
 		} catch (e) {
 			reportError(e);
 		}
-	}
+	};
 	return recursiveStringify(obj, "");
-}
+};
 
-function readFile(path, isBytes, action) {
+const readFile = function(path, isBytes, action) {
 	try {
 		handleThread(function() {
 			try {
@@ -279,9 +275,9 @@ function readFile(path, isBytes, action) {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};
 
-function compileToProduce(string) {
+const compileToProduce = function(string) {
 	try {
 		Encyption.updateKey("nernar", "editorProject");
 		return Encyption.encryptString("" + string);
@@ -290,9 +286,9 @@ function compileToProduce(string) {
 		return e.name + "\n" + e.stack;
 	}
 	return null;
-}
+};
 
-function exportProject(object, isAutosave, path, action) {
+const exportProject = function(object, isAutosave, path, action) {
 	try {
 		stringifyObject(object, false, function(result) {
 			let file = new java.io.File("" + path);
@@ -320,9 +316,9 @@ function exportProject(object, isAutosave, path, action) {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};
 
-function decompileFromProduce(bytes) {
+const decompileFromProduce = function(bytes) {
 	try {
 		Encyption.updateKey("nernar", "editorProject");
 		return "" + Encyption.decryptAsString(bytes);
@@ -331,9 +327,9 @@ function decompileFromProduce(bytes) {
 		return e.name + "\n" + e.stack;
 	}
 	return null;
-}
+};
 
-function importProject(path, action) {
+const importProject = function(path, action) {
 	try {
 		readFile(path, true, function(bytes) {
 			let result = decompileFromProduce(bytes),
@@ -355,9 +351,9 @@ function importProject(path, action) {
 	} catch (e) {
 		reportError(e);
 	}
-}
+};
 
-let ProjectEditor = {
+const ProjectEditor = {
 	create: function() {
 		let opened = this.opened = new ProjectOldest();
 		return (opened.time = Date.now(), opened);
@@ -462,9 +458,9 @@ let ProjectEditor = {
 	}
 };
 
-function compileScript(text) {
+const compileScript = function(text) {
 	let code = "(function() {\n" + text + "\nreturn __data__;\n})();",
-		scope = runAtScope(code, getScriptScope(), "Dev Editor$import.js");
+		scope = runAtScope(code, getScriptScope(), "import.js");
 	if (!noImportedScripts) {
 		noImportedScripts = false;
 		try {
@@ -475,9 +471,9 @@ function compileScript(text) {
 		}
 	}
 	return scope.error ? (reportError(scope.error), null) : scope.result;
-}
+};
 
-function getScriptScope() {
+const getScriptScope = function() {
 	let __data__ = [];
 	let Callback = {
 		addCallback: function(name, func) {}
@@ -640,4 +636,4 @@ function getScriptScope() {
 		BlockRenderer: BlockRenderer,
 		Transition: Transition
 	};
-}
+};

@@ -43,11 +43,11 @@ let ExecutableSupport = {
 		}
 		let builder = this.getModBuilder(), name = new java.io.File(dir).getName();
 		if (!builder) {
-			throw new Error("Submodule supportable " + name + " load cancelled");
+			throw Error("Submodule supportable " + name + " load cancelled");
 		}
 		let mod = builder.buildModForDir(dir);
 		if (!mod) {
-			throw new Error("Build mod directory " + name + " failed, api disabled");
+			throw Error("Build mod directory " + name + " failed, api disabled");
 		}
 		mod.onImport();
 		this.mods[mod.getName()] = mod;
@@ -56,7 +56,7 @@ let ExecutableSupport = {
 	launchMod: function(name) {
 		let mod = this.getSupportable(name);
 		if (!mod) {
-			throw new Error("Can't launch mod " + name);
+			throw Error("Can't launch mod " + name);
 		}
 		mod.RunPreloaderScripts();
 		mod.RunLauncherScripts();
@@ -90,7 +90,7 @@ let ExecutableSupport = {
 	injectCustomEval: function(name, action) {
 		let mod = this.getSupportable(name);
 		if (!mod) {
-			throw new Error("Can't find mod " + name);
+			throw Error("Can't find mod " + name);
 		}
 		let results = new Array(), ats = this.actionToString(action);
 		for (let i = 0; i < mod.compiledModSources.size(); i++) {
@@ -119,10 +119,10 @@ let ExecutableSupport = {
 			if (file != null && file.exists()) {
 				let icon = new java.io.File(file.getPath(), "mod_icon.png");
 				if (icon != null && icon.exists()) {
-					let output = new java.io.File(Dirs.CACHE, name + ".dnr");
-					ImageFactory.encodeFile(icon, output);
-					ImageFactory.loadFromFile("cache:" + name, output);
-					return "cache:" + name;
+					let output = new java.io.File(Dirs.ASSET, "support/" + name + ".dnr");
+					REQUIRE("recompress.js")(icon, output);
+					ImageFactory.loadFromFile("support" + name, output);
+					return "support" + name;
 				}
 			}
 		} catch (e) {
@@ -139,7 +139,7 @@ let ExecutableSupport = {
 	isEnabled: function(name) {
 		let mod = this.getSupportable(name);
 		if (!mod) {
-			throw new Error("Can't find mod " + name);
+			throw Error("Can't find mod " + name);
 		}
 		return loadSupportables && mod.isEnabled;
 	},
@@ -150,7 +150,7 @@ let ExecutableSupport = {
 	}
 };
 
-function importMod(dir, action) {
+const importMod = function(dir, action) {
 	try {
 		let name = ExecutableSupport.buildDirectory(dir);
 		if (name && ExecutableSupport.isEnabled(name)) {
@@ -167,9 +167,9 @@ function importMod(dir, action) {
 		reportError(e);
 	}
 	return null;
-}
+};
 
-function isNotSupported(obj) {
+const isNotSupported = function(obj) {
 	if (obj.result == true) {
 		Logger.Log("Supportable " + obj.modName + " module works fine, has been activated", "Dev-Editor");
 	} else if (obj.result == false) {
@@ -182,4 +182,4 @@ function isNotSupported(obj) {
 		Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);
 	}
 	return obj.result != true;
-}
+};

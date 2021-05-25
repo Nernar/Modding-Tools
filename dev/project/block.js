@@ -1,4 +1,4 @@
-function BlockWorker(obj) {
+const BlockWorker = function(obj) {
 	let worker = this;
 	this.getProject = function() {
 		return {
@@ -30,9 +30,7 @@ function BlockWorker(obj) {
 				index = this.getMapAtCoords(x, y, z);
 			if (index == -1) {
 				mapped.push({ x: x, y: y, z: z });
-			} else {
-				mapped.splice(index, 1);
-			}
+			} else mapped.splice(index, 1);
 			return index == -1;
 		},
 		getParams: function() {
@@ -122,7 +120,6 @@ function BlockWorker(obj) {
 			this.params = {
 				boxes: new Array()
 			};
-			
 			// Create and removing
 			this.addBox = function(id, data) {
 				let boxes = this.getBoxes();
@@ -142,7 +139,6 @@ function BlockWorker(obj) {
 				let boxes = this.getBoxes();
 				boxes.splice(index, 1);
 			};
-			
 			// Get params and sizes
 			this.getBox = function(index) {
 				return this.getBoxes()[index];
@@ -161,7 +157,6 @@ function BlockWorker(obj) {
 					z: box.z2 - box.z1
 				};
 			};
-			
 			// Scretch and texture
 			this.scretchBox = function(index, axis, value) {
 				let box = this.getBox(index);
@@ -182,7 +177,6 @@ function BlockWorker(obj) {
 				let box = this.getBox(index);
 				box.texture[side] = [texture, data];
 			};
-			
 			// Mirror and rotate
 			this.prepareOffset = function(offset) {
 				if (!offset) {
@@ -213,7 +207,7 @@ function BlockWorker(obj) {
 				return index != -1 ? orientate : "x";
 			};
 			this.mirrorBoxTexture = function(index, orientate, side) {
-				throw new Error("Box textures mirroring not implemented yet");
+				throw Error("Box textures mirroring not implemented yet");
 			};
 			this.mirrorBox = function(index, orientate, side, offset) {
 				let box = this.getBox(index);
@@ -262,7 +256,6 @@ function BlockWorker(obj) {
 					// box.z1 = 2 * box.z2 - z2;
 				// }
 			// };
-			
 			// this.rotateBox = function(index, orientate, angle) {
 				// let box = this.getBox(index);
 				// if (angle == 0) {
@@ -342,7 +335,6 @@ function BlockWorker(obj) {
 					// }
 				// }
 			// };
-			
 			// Innersection
 			this.checkBoxesInnersection = function(index1, index2) {
 				let box1 = this.getBox(index1), box2 = this.getBox(index2);
@@ -380,12 +372,8 @@ function BlockWorker(obj) {
 			};
 			this.hasInnersection = function() {
 				let result = this.checkInnersection();
-				for (let i in result) {
-					return true;
-				}
-				return false;
+				return !isEmpty(result);
 			};
-			
 			// Model actions
 			this.moveModel = function(axis, value) {
 				for (let i = 0; i < this.getBoxCount(); i++) {
@@ -459,7 +447,6 @@ function BlockWorker(obj) {
 			this.params = {
 				boxes: new Array()
 			};
-			
 			// Create and removing
 			this.addBox = function() {
 				let boxes = this.getBoxes();
@@ -478,7 +465,6 @@ function BlockWorker(obj) {
 				let boxes = this.getBoxes();
 				boxes.splice(index, 1);
 			};
-			
 			// Get params and sizes
 			this.getBox = function(index) {
 				return this.getBoxes()[index];
@@ -497,7 +483,6 @@ function BlockWorker(obj) {
 					z: box.z2 - box.z1
 				};
 			};
-			
 			// Scretch
 			this.scretchBox = function(index, axis, value) {
 				let box = this.getBox(index);
@@ -510,8 +495,6 @@ function BlockWorker(obj) {
 				this.scretchBox(index, axis + 1, value);
 				this.scretchBox(index, axis + 2, size[axis] + value);
 			};
-			
-			
 			// Mirror and rotate
 			this.prepareOffset = function(offset) {
 				if (!offset) {
@@ -588,7 +571,6 @@ function BlockWorker(obj) {
 					// box.z1 = 2 * box.z2 - z2;
 				// }
 			// };
-			
 			// this.rotateBox = function(index, orientate, angle) {
 				// let box = this.getBox(index);
 				// if (angle == 0) {
@@ -668,7 +650,6 @@ function BlockWorker(obj) {
 					// }
 				// }
 			// };
-			
 			// Innersection
 			this.checkBoxesInnersection = function(index1, index2) {
 				let box1 = this.getBox(index1), box2 = this.getBox(index2);
@@ -706,12 +687,8 @@ function BlockWorker(obj) {
 			};
 			this.hasInnersection = function() {
 				let result = this.checkInnersection();
-				for (let i in result) {
-					return true;
-				}
-				return false;
+				return !isEmpty(result);
 			};
-			
 			// Model actions
 			this.moveModel = function(axis, value) {
 				for (let i = 0; i < this.getBoxCount(); i++) {
@@ -731,4 +708,4 @@ function BlockWorker(obj) {
 		}
 	};
 	obj && this.loadProject(obj);
-}
+};

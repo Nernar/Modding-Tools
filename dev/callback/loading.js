@@ -1,6 +1,8 @@
+/**
+ * Creates nonexistent folders, preparing resources.
+ */
 const load = function() {
 	try {
-		// Creates a nonexistent project folder.
 		MCSystem.setLoadingTip("Making Directories");
 		FileTools.assureDir(Dirs.EXPORT);
 		FileTools.assureDir(Dirs.LOGGING);
@@ -8,7 +10,6 @@ const load = function() {
 	} catch (e) {
 		reportError(e);
 	}
-	
 	try {
 		MCSystem.setLoadingTip("Loading Assets");
 		AssetFactory.loadAsset("minecraftFont", "font.ttf");
@@ -16,7 +17,6 @@ const load = function() {
 	} catch (e) {
 		reportError(e);
 	}
-	
 	try {
 		let list = Files.listFileNames(Dirs.ASSET, true);
 		let count = Files.checkFormats(list, ".dnr").length;
@@ -30,7 +30,6 @@ const load = function() {
 	} catch (e) {
 		reportError(e);
 	}
-	
 	try {
 		refreshSupportablesIcons();
 	} catch (e) {
@@ -79,8 +78,8 @@ Callback.addCallback("CoreConfigured", function(config) {
 });
 
 Callback.addCallback("PreBlocksDefined", function() {
+	// Loads all textures from the cache of engine (game + mods).
 	try {
-		// Loads all textures from the cache of engine (game + mods).
 		MCSystem.setLoadingTip("Requesting Textures");
 		let path = Dirs.RESOURCE + "/textures/terrain_texture.json";
 		if (FileTools.exists(path)) {
@@ -124,9 +123,9 @@ Callback.addCallback("PreBlocksDefined", function() {
 	} catch (e) {
 		reportError(e);
 	}
-	
+	// Loads pre-generated game textures.
 	try {
-		// Loads pre-generated game textures.
+		MCSystem.setLoadingTip("Attaching Minecraft Textures");
 		let path = Dirs.ASSET + (isHorizon ? "/blocks-12" : "/blocks-0") + ".json";
 		if (FileTools.exists(path)) {
 			let data = FileTools.readFileText(path);
@@ -138,9 +137,9 @@ Callback.addCallback("PreBlocksDefined", function() {
 	} catch (e) {
 		reportError(e);
 	}
-	
+	// Checks config of each mod for loading textures.
 	try {
-		// Checks config of each mod for loading textures.
+		MCSystem.setLoadingTip("Preparing Mods");
 		let mods = Files.listDirectories(Dirs.MOD);
 		for (let m = 0; m < mods.length; m++) {
 			let directory = mods[m].getPath() + "/";
@@ -196,26 +195,29 @@ Callback.addCallback("PreBlocksDefined", function() {
 				reportError(e);
 			}
 		}
+		LoadingTipUtils.resetEncounter();
 	} catch (e) {
 		reportError(e);
 	}
 });
 
+/**
+ * Retrying update and launch.
+ */
 const initialize = function() {
 	checkValidate(function() {
 		try {
 			MCSystem.setLoadingTip("Creating Interface");
 			if (__code__.startsWith("develop")) {
-				checkNotLocalized();
+				attachEvalButton();
 			}
-			checkOnlinable(function() {
-				checkUpdatable();
-				checkExecutable();
+			checkOnlineable(function() {
+				checkUpdateable();
+				checkExecuteable();
 			});
 		} catch (e) {
 			reportError(e);
 		}
-		
 		if (showHint.unstackLaunch) {
 			context.runOnUiThread(function() {
 				try {

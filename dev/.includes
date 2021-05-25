@@ -1,35 +1,32 @@
 header.js
+translation.js
 
+polyfill/shared.js
 polyfill/Object.js
+polyfill/FileTools.js
+polyfill/Level.js
 
-api/files.js
-api/localize.js
-# api/protect.js
-api/scope.js
+storage/explorer.js
+# storage/factory.js
+storage/converter/shared.js
+storage/converter/block.js
+
 api/shared.js
+# api/protect.js
 api/utils.js
 
-java/shared.js
-java/FileTools.js
-java/Level.js
-java/event.js
-
-network/browser.js
+# network/browser.js
 # network/connect.js
-network/local.js
-network/remote.js
+# network/local.js
+# network/remote.js
 
 interface/actor.js
 interface/motions.js
-interface/popups.js
-interface/provider.js
 interface/transforms.js
+interface/content.js
 interface/window.js
-interface/unique.js
-
-# storage/factory.js
-storage/converter.js
-storage/converter/block.js
+interface/variations.js
+interface/provider.js
 
 project/shared.js
 project/support.js
@@ -37,9 +34,11 @@ project/block.js
 project/transition.js
 project/entity.js
 
+visual/fragments/sidebar.js
+visual/frames/sidebar.js
+visual/sidebar.js
 visual/control.js
 visual/explorer.js
-visual/menu.js
 visual/project.js
 visual/snack.js
 visual/popups/shared.js
@@ -47,15 +46,14 @@ visual/popups/listing.js
 visual/popups/position.js
 visual/popups/tree.js
 
-# tools/message.js
-tools/selector.js
+tools/shared.js
 tools/block.js
-tools/transition.js
 tools/entity.js
+tools/transition.js
+tools/world.js
 tools/debug.js
 
-callback/debug.js
-# callback/server.js
-callback/logic.js
+callback/shared.js
+# callback/debug.js
 callback/support.js
 callback/loading.js

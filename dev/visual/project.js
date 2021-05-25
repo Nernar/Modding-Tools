@@ -1,4 +1,4 @@
-let ControlWindow = function() {
+const ControlWindow = function() {
 	let set = new ActorSet(),
 		slideIn = new SlideActor(),
 		slideOut = new SlideActor();
@@ -21,9 +21,36 @@ let ControlWindow = function() {
 	this.elements = new Array();
 	this.reset();
 	this.setBackground("popupBackgroundMenu");
+	
+	let scope = this;
+	if (__code__.startsWith("develop")) {
+		let category = this.addCategory(translate("Development"));
+		category.addItem("menuLoginCode", translate("Evaluate"), function() {
+			checkEvaluate();
+		});
+		category.addItem("blockModuleVariation", translate("Investigate"), function() {
+			checkEvaluate("resolveScope()");
+		});
+		category.addItem("explorerExtensionScript", translate("Launch"), function() {
+			checkEvaluate.loadEvaluate();
+		});
+		category.addItem("worldSelectionBiome", translate("Icons"), function() {
+			REQUIRE("scopes/icons.js")(function() {
+				StartEditor.menu();
+			});
+		});
+		category.addItem("worldLayer", translate("Sidebar"), function() {
+			REQUIRE("tools/sidebar.js")();
+			scope.dismiss();
+		});
+	}
 };
-ControlWindow.prototype = new UniqueWindow;
+
+ControlWindow.prototype = assign(UniqueWindow.prototype);
 ControlWindow.prototype.TYPE = "ControlWindow";
+
+ControlWindow.prototype.outside = true;
+
 ControlWindow.prototype.reset = function() {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
@@ -47,9 +74,11 @@ ControlWindow.prototype.reset = function() {
 			(Ui.Display.MATCH, Ui.Display.MATCH);
 	views.scroll.addView(views.layout, params);
 };
+
 ControlWindow.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ControlWindow.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -57,24 +86,29 @@ ControlWindow.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ControlWindow.prototype.elements = new Array();
+
 ControlWindow.prototype.addElement = function(element) {
 	this.indexOfElement(element) == -1 &&
 		this.getElements().push(element);
 	return element;
 };
+
 ControlWindow.prototype.getElementAt = function(index) {
 	return this.getElements()[index] || null;
 };
+
 ControlWindow.prototype.getElements = function(index) {
 	return this.elements;
 };
+
 ControlWindow.prototype.getElementCount = function(index) {
 	return this.getElements().length;
 };
+
 ControlWindow.prototype.indexOfElement = function(item) {
 	return this.getElements().indexOf(item);
 };
+
 ControlWindow.prototype.scrollTo = function(y) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.scroll) return this;
@@ -84,6 +118,7 @@ ControlWindow.prototype.scrollTo = function(y) {
 	views.scroll.scrollTo(0, y);
 	return this;
 };
+
 ControlWindow.prototype.scrollToElement = function(elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
@@ -94,12 +129,14 @@ ControlWindow.prototype.scrollToElement = function(elementOrIndex) {
 	this.scrollTo(content.getY());
 	return this;
 };
+
 ControlWindow.prototype.scrollDown = function() {
 	let content = this.getContent();
 	if (!content) return this;
 	this.scrollTo(content.getMeasuredHeight());
 	return this;
 };
+
 ControlWindow.prototype.removeElement = function(elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
@@ -120,19 +157,22 @@ ControlWindow.prototype.removeElement = function(elementOrIndex) {
 	this.getElements().splice(index, 1);
 	return this;
 };
-ControlWindow.prototype.outside = true;
+
 ControlWindow.prototype.isCloseableOutside = function() {
 	return this.outside;
 };
+
 ControlWindow.prototype.setCloseableOutside = function(enabled) {
 	this.outside = !!enabled;
 	return this;
 };
+
 ControlWindow.prototype.click = function() {
 	this.outside && this.dismiss();
 	this.__click && this.__click(this);
 	return this;
 };
+
 ControlWindow.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(window) {
 		try { return listener(window); }
@@ -149,6 +189,7 @@ ControlWindow.Header = function(parent) {
 	this.updateSlideProgress();
 	this.setCover("popupCover");
 };
+
 ControlWindow.Header.prototype.reset = function() {
 	let views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
@@ -177,18 +218,21 @@ ControlWindow.Header.prototype.reset = function() {
 		params.rightMargin = params.bottomMargin = Ui.getY(12);
 	views.layout.addView(views.logo, params);
 };
+
 ControlWindow.Header.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.Header.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ControlWindow.Header.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
 		== -1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-				content = this.getContent();
+		content = this.getContent();
 	if (!layout || !content) return this;
 	let actor = new BoundsActor();
 	actor.setDuration(600);
@@ -198,9 +242,11 @@ ControlWindow.Header.prototype.setWindow = function(window) {
 	this.setupScroll();
 	return this;
 };
+
 ControlWindow.Header.prototype.getCover = function() {
 	return this.cover || null;
 };
+
 ControlWindow.Header.prototype.setCover = function(src) {
 	let content = this.getContent(), slide = this.views.slide;
 	if (!content || !slide || !src) return this;
@@ -208,12 +254,15 @@ ControlWindow.Header.prototype.setCover = function(src) {
 	slide.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.Header.prototype.getMaxScroll = function() {
 	return this.maxScroll || 0;
 };
+
 ControlWindow.Header.prototype.setMaxScroll = function(y) {
 	y > 0 && (this.maxScroll = y);
 };
+
 ControlWindow.Header.prototype.setupScroll = function() {
 	let scope = this, window = this.getWindow();
 	if (!window || !window.views || !window.views.scroll) return this;
@@ -224,9 +273,11 @@ ControlWindow.Header.prototype.setupScroll = function() {
 	});
 	return this;
 };
+
 ControlWindow.Header.prototype.getSlideProgress = function() {
 	return this.progress || 0;
 };
+
 ControlWindow.Header.prototype.setSlideProgress = function(procent) {
 	if (procent < 0 || procent > 100) return this;
 	let scope = this, content = this.getContent(),
@@ -243,13 +294,16 @@ ControlWindow.Header.prototype.setSlideProgress = function(procent) {
 ControlWindow.Header.prototype.updateSlideProgress = function() {
 	this.setSlideProgress(this.progress || 0);
 };
+
 ControlWindow.Header.prototype.setSlideOffset = function(y) {
 	this.offset = y || 0;
 	this.updateSlideProgress();
 };
+
 ControlWindow.Header.prototype.getLogo = function() {
 	return this.logo || null;
 };
+
 ControlWindow.Header.prototype.setLogo = function(src) {
 	let content = this.getContent(), logo = this.views.logo;
 	if (!content || !logo) return this;
@@ -276,7 +330,9 @@ ControlWindow.ProjectHeader = function(parent) {
 	this.updateSlideProgress();
 	this.setCover("popupCover");
 };
-ControlWindow.ProjectHeader.prototype = new ControlWindow.Header;
+
+ControlWindow.ProjectHeader.prototype = assign(ControlWindow.Header.prototype);
+
 ControlWindow.ProjectHeader.prototype.__resetCWH = ControlWindow.Header.prototype.reset;
 ControlWindow.ProjectHeader.prototype.reset = function() {
 	this.__resetCWH && this.__resetCWH();
@@ -299,9 +355,11 @@ ControlWindow.ProjectHeader.prototype.reset = function() {
 	views.project.setGravity(Ui.Gravity.CENTER);
 	views.scroll.addView(views.project);
 };
+
 ControlWindow.ProjectHeader.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.background || !src) {
@@ -311,6 +369,7 @@ ControlWindow.ProjectHeader.prototype.setBackground = function(src) {
 	views.background.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !views.background) return this;
@@ -332,7 +391,7 @@ ControlWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
 		Ui.Visibility.VISIBLE : Ui.Visibility.GONE);
 	return this;
 };
-ControlWindow.ProjectHeader.prototype.categories = new Array();
+
 ControlWindow.ProjectHeader.prototype.addCategory = function(nameOrCategory, name) {
 	let category = nameOrCategory instanceof ControlWindow.ProjectHeader.Category ?
 		nameOrCategory : new ControlWindow.ProjectHeader.Category(this, nameOrCategory);
@@ -342,18 +401,23 @@ ControlWindow.ProjectHeader.prototype.addCategory = function(nameOrCategory, nam
 	this.updateSlideProgress(), this.checkNothingNeedable();
 	return category;
 };
+
 ControlWindow.ProjectHeader.prototype.getCategoryAt = function(index) {
 	return this.getCategories()[index] || null;
 };
+
 ControlWindow.ProjectHeader.prototype.getCategories = function(index) {
 	return this.categories;
 };
+
 ControlWindow.ProjectHeader.prototype.getCategoryCount = function(index) {
 	return this.getCategories().length;
 };
+
 ControlWindow.ProjectHeader.prototype.indexOfCategory = function(category) {
 	return this.getCategories().indexOf(category);
 };
+
 ControlWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	let index = categoryOrIndex instanceof ControlWindow.ProjectHeader.Category ?
 		this.indexOfCategory(categoryOrIndex) : categoryOrIndex;
@@ -392,6 +456,7 @@ ControlWindow.ProjectHeader.Category = function(parentOrName, name) {
 	}
 	this.items = new Array();
 };
+
 ControlWindow.ProjectHeader.Category.prototype.reset = function() {
 	let views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
@@ -413,12 +478,15 @@ ControlWindow.ProjectHeader.Category.prototype.reset = function() {
 	params.bottomMargin = Ui.getY(8);
 	content.addView(views.title, params);
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getParentHeader = function() {
 	return this.header || null;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header) {
 	if (!header || typeof header != "object") {
 		return this;
@@ -426,13 +494,9 @@ ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header
 	header.categories && header.categories.indexOf(this)
 		== -1 && header.categories.push(this);
 	let content = this.getContent();
-	if (!content) {
-		return this;
-	}
+	if (!content) return this;
 	let layout = header.views.project;
-	if (!layout) {
-		return this;
-	}
+	if (!layout) return this;
 	let window = header.getWindow();
 	if (window) {
 		let actor = new BoundsActor();
@@ -445,10 +509,12 @@ ControlWindow.ProjectHeader.Category.prototype.setParentHeader = function(header
 		header.checkNothingNeedable();
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.indexOf = function() {
 	let header = this.getParentHeader();
 	return header ? header.indexOfCategory(this) : -1;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
 	let views = this.views;
 	if (!views) {
@@ -456,15 +522,14 @@ ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
 	}
 	return views.title.getText();
 };
+
 ControlWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
-	if (!content || !views) {
-		return this;
-	}
+	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
-ControlWindow.ProjectHeader.Category.prototype.items = new Array();
+
 ControlWindow.ProjectHeader.Category.prototype.addItem = function(srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action) {
 	let item = srcOrItem instanceof ControlWindow.ProjectHeader.Category.Item ?
 		srcOrItem : new ControlWindow.ProjectHeader.Category.Item(this, srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action);
@@ -480,18 +545,23 @@ ControlWindow.ProjectHeader.Category.prototype.addItem = function(srcOrItem, tit
 	this.getParentHeader() && this.getParentHeader().updateSlideProgress();
 	return item;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getItemAt = function(index) {
 	return this.getItems()[index] || null;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getItems = function(index) {
 	return this.items;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.getItemCount = function(index) {
 	return this.getItems().length;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.indexOfItem = function(item) {
 	return this.getItems().indexOf(item);
 };
+
 ControlWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
 	let index = itemOrIndex instanceof ControlWindow.ProjectHeader.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
@@ -510,6 +580,7 @@ ControlWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex
 		this.getParentHeader().updateSlideProgress();
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function(listener) {
 	listener && (this.__click = function(item, index) {
 		try { return listener(item, index); }
@@ -518,6 +589,7 @@ ControlWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function
 	});
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.prototype.setOnItemHoldListener = function(listener) {
 	listener && (this.__hold = function(item, index) {
 		try { return listener(item, index); }
@@ -543,6 +615,7 @@ ControlWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, ti
 	}
 	this.setBackground("popupBackgroundMenu");
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
@@ -587,16 +660,20 @@ ControlWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	views.params.setSingleLine();
 	views.more.addView(views.params);
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.indexOf = function() {
 	let category = this.getParentCategory();
 	return category ? category.indexOfItem(this) : -1;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getParentCategory = function() {
 	return this.category || null;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(category) {
 	if (!category || typeof category != "object") return this;
 	category.items && category.items.indexOf(this)
@@ -617,9 +694,11 @@ ControlWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function
 	this.category = category;
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -627,45 +706,52 @@ ControlWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getIcon = function() {
 	return this.icon || null;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setIcon = function(src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
-	this.background = src;
+	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.getDescription = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.params.getText();
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.params.setText("" + text);
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.click = function() {
 	this.__click && this.__click(this);
 	let category = this.getParentCategory();
-	category && category.__click && category.__click
-			(this, this.indexOf());
+	category && category.__click && category.__click(this, this.indexOf());
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.hold = function() {
 	let clicked = false;
 	if (this.__hold && this.__hold(this)) {
@@ -677,6 +763,7 @@ ControlWindow.ProjectHeader.Category.Item.prototype.hold = function() {
 	}
 	return clicked;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(item) {
 		try { return listener(item); }
@@ -685,6 +772,7 @@ ControlWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = functio
 	});
 	return this;
 };
+
 ControlWindow.ProjectHeader.Category.Item.prototype.setOnHoldListener = function(listener) {
 	listener && (this.__hold = function(item) {
 		try { return listener(item); }
@@ -702,6 +790,7 @@ ControlWindow.Category = function(parentOrName, name) {
 	} else if (parentOrName) this.setTitle(parentOrName);
 	this.items = new Array();
 };
+
 ControlWindow.Category.prototype.reset = function() {
 	let views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
@@ -727,18 +816,21 @@ ControlWindow.Category.prototype.reset = function() {
 	views.layout.setColumnCount(parseInt(5 / uiScaler));
 	content.addView(views.layout);
 };
+
 ControlWindow.Category.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.Category.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ControlWindow.Category.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
 		== -1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-				content = this.getContent();
+		content = this.getContent();
 	if (!layout || !content) return this;
 	let actor = new BoundsActor();
 	actor.setDuration(400);
@@ -747,18 +839,20 @@ ControlWindow.Category.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
+
 ControlWindow.Category.prototype.getTitle = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
+
 ControlWindow.Category.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
-ControlWindow.Category.prototype.items = new Array();
+
 ControlWindow.Category.prototype.addItem = function(srcOrItem, titleOrAction, action) {
 	let item = srcOrItem instanceof ControlWindow.Category.Item ?
 		srcOrItem : new ControlWindow.Category.Item(this, srcOrItem, titleOrAction, action);
@@ -767,18 +861,23 @@ ControlWindow.Category.prototype.addItem = function(srcOrItem, titleOrAction, ac
 	this.indexOfItem(item) == -1 && this.getItems().push(item);
 	return item;
 };
+
 ControlWindow.Category.prototype.getItemAt = function(index) {
 	return this.getItems()[index] || null;
 };
+
 ControlWindow.Category.prototype.getItems = function(index) {
 	return this.items;
 };
+
 ControlWindow.Category.prototype.getItemCount = function(index) {
 	return this.getItems().length;
 };
+
 ControlWindow.Category.prototype.indexOfItem = function(item) {
 	return this.getItems().indexOf(item);
 };
+
 ControlWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	let index = itemOrIndex instanceof ControlWindow.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
@@ -795,6 +894,7 @@ ControlWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	this.getItems().splice(index, 1);
 	return this;
 };
+
 ControlWindow.Category.prototype.setOnItemClickListener = function(listener) {
 	listener && (this.__click = function(item, index) {
 		try { return listener(item, index); }
@@ -803,6 +903,7 @@ ControlWindow.Category.prototype.setOnItemClickListener = function(listener) {
 	});
 	return this;
 };
+
 ControlWindow.Category.prototype.setOnHoldItemListener = function(listener) {
 	listener && (this.__hold = function(item, index) {
 		try { return listener(item, index); }
@@ -835,6 +936,7 @@ ControlWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, a
 	}
 	this.setBackground("popupBackgroundMenu");
 };
+
 ControlWindow.Category.Item.prototype.reset = function() {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
@@ -868,16 +970,20 @@ ControlWindow.Category.Item.prototype.reset = function() {
 	params.topMargin = Ui.getY(16);
 	content.addView(views.title, params);
 };
+
 ControlWindow.Category.Item.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.Category.Item.prototype.indexOf = function() {
 	let category = this.getParentCategory();
 	return category ? category.indexOfItem(this) : -1;
 };
+
 ControlWindow.Category.Item.prototype.getParentCategory = function() {
 	return this.category || null;
 };
+
 ControlWindow.Category.Item.prototype.setParentCategory = function(category) {
 	if (!category || typeof category != "object") return this;
 	category.items && category.items.indexOf(this)
@@ -895,9 +1001,11 @@ ControlWindow.Category.Item.prototype.setParentCategory = function(category) {
 	this.category = category;
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ControlWindow.Category.Item.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -905,27 +1013,32 @@ ControlWindow.Category.Item.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.getIcon = function() {
 	return this.icon || null;
 };
+
 ControlWindow.Category.Item.prototype.setIcon = function(src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
-	this.background = src;
+	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.getTitle = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.title.getText();
 };
+
 ControlWindow.Category.Item.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.title.setText("" + text);
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.click = function() {
 	this.__click && this.__click(this);
 	let category = this.getParentCategory();
@@ -933,6 +1046,7 @@ ControlWindow.Category.Item.prototype.click = function() {
 			(this, this.indexOf());
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.hold = function() {
 	let clicked = false;
 	if (this.__hold && this.__hold(this)) {
@@ -944,6 +1058,7 @@ ControlWindow.Category.Item.prototype.hold = function() {
 	}
 	return clicked;
 };
+
 ControlWindow.Category.Item.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(item) {
 		try { return listener(item); }
@@ -952,6 +1067,7 @@ ControlWindow.Category.Item.prototype.setOnClickListener = function(listener) {
 	});
 	return this;
 };
+
 ControlWindow.Category.Item.prototype.setOnHoldListener = function(listener) {
 	listener && (this.__hold = function(item) {
 		try { return listener(item); }
@@ -973,10 +1089,11 @@ ControlWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, act
 		srcOrMessage && this.setMessage(srcOrMessage);
 		messageOrAction && this.setOnClickListener(messageOrAction);
 	}
-	if (debugAnimationsEnabled)
+	if (debugAnimationsEnabled) {
 		this.setAnimation("message", "popup/message", 20);
-	else this.setBackground("popupBackgroundMenu");
+	} else this.setBackground("popupBackgroundMenu");
 };
+
 ControlWindow.Message.prototype.reset = function() {
 	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
@@ -1007,12 +1124,15 @@ ControlWindow.Message.prototype.reset = function() {
 	params.rightMargin = Ui.getY(24);
 	content.addView(views.message, params);
 };
+
 ControlWindow.Message.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ControlWindow.Message.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ControlWindow.Message.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
@@ -1027,9 +1147,11 @@ ControlWindow.Message.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
+
 ControlWindow.Message.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ControlWindow.Message.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -1037,9 +1159,11 @@ ControlWindow.Message.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.Message.prototype.getAnimation = function() {
 	return this.drawable || null;
 };
+
 ControlWindow.Message.prototype.setAnimation = function(name, path, time) {
 	let content = this.getContent();
 	if (!content || !name) return this;
@@ -1048,31 +1172,37 @@ ControlWindow.Message.prototype.setAnimation = function(name, path, time) {
 	this.drawable && this.drawable.start && this.drawable.start();
 	return this;
 };
+
 ControlWindow.Message.prototype.getIcon = function() {
 	return this.icon || null;
 };
+
 ControlWindow.Message.prototype.setIcon = function(src) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views || !src) return this;
-	this.background = src;
+	this.icon = src;
 	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ControlWindow.Message.prototype.getMessage = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.message.getText();
 };
+
 ControlWindow.Message.prototype.setMessage = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.message.setText("" + text);
 	return this;
 };
+
 ControlWindow.Message.prototype.click = function() {
 	this.__click && this.__click(this);
 	return this;
 };
+
 ControlWindow.Message.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function(card) {
 		try { return listener(card); }

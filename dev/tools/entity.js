@@ -1,39 +1,46 @@
-function registerCustomEntity() {
-	return 0/* MobRegistry.registerEntity("__editorEntity__") */;
-}
+const registerCustomEntity = function() {
+	return -1/* MobRegistry.registerEntity("__editorEntity__")*/;
+};
 
-let TODO = registerCustomEntity();
+const TODO = registerCustomEntity();
 
-function updateEntityRender() {
-	if (!Level.isLoaded()) return;
-	/* let model = eval(model2ToScript(EntityEditor.project));
-	let texture = new Texture("mob/bonnie.png");
-	model.setTexture(texture);
-	TODO.customizeVisual({
-		getModels: function() {
-			return { "main": model };
+const updateEntityRender = function(worker) {
+	try {
+		if (!worker || !Level.isLoaded()) {
+			return false;
 		}
-	}); */
-	autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
-}
+		/* let model = eval(model2ToScript(EntityEditor.project));
+		let texture = new Texture("mob/bonnie.png");
+		model.setTexture(texture);
+		TODO.customizeVisual({
+			getModels: function() {
+				return { "main": model };
+			}
+		}); */
+		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
+	} catch (e) {
+		reportError(e);
+	}
+	return false;
+};
 
-function model2ToScript(obj) {
+const model2ToScript = function(obj) {
 	let script = "";
 	script += "let model = new EntityModel();\n";
 	script += "let render = new Render();\n";
-	for (let i in obj.elements) {
-		let part = obj.elements[i], params = {};
+	for (let item in obj.elements) {
+		let part = obj.elements[item], params = {};
 		part.offset && (params.offset = part.offset);
 		part.rotation && (params.rotation = part.rotation);
 		let bones = part.bones.slice();
-		script += "render.setPart(\"" + i + "\", " + JSON.stringify(bones, null, "\t") + ", " + JSON.stringify(params, null, "\t") + ");\n";
-		// script += "render.getPart(\"" + i + "\").setOffset(" + part.offset.x + ", " + part.offset.y + ", " + part.offset.z + ");\n";
+		script += "render.setPart(\"" + item + "\", " + JSON.stringify(bones, null, "\t") + ", " + JSON.stringify(params, null, "\t") + ");\n";
+		// script += "render.getPart(\"" + item + "\").setOffset(" + part.offset.x + ", " + part.offset.y + ", " + part.offset.z + ");\n";
 	}
 	script += "model.setRender(render);";
 	return script;
-}
+};
 
-function geometryToModel2(obj) {
+const geometryToModel2 = function(obj) {
 	let project = {
 		texture: {
 			width: obj.texturewidth,
@@ -63,10 +70,9 @@ function geometryToModel2(obj) {
 	let parents = {
 		hat: "head"
 	};
-	
 	let bones = obj.bones;
-	for (let i in bones) {
-		let bone = bones[i], parent = bone.parent ? bone.parent : bone.name;
+	for (let item in bones) {
+		let bone = bones[item], parent = bone.parent ? bone.parent : bone.name;
 		parents[parent] && (parent = parents[parent]);
 		!project.elements[bone.name] && (parents[bone.name] = parent);
 		let part = project.elements[parent];
@@ -133,15 +139,21 @@ function geometryToModel2(obj) {
 		}
 	}
 	return project;
-}
+};
 
-let EntityEditor = {
-	data: {},
+const EntityEditor = {
+	data: new Object(),
 	reset: function() {
 		this.data.worker = ProjectEditor.addEntity();
 		ProjectEditor.setOpenedState(true);
 		this.data.worker.Visual.createModel();
+		this.unselect();
+	},
+	unselect: function() {
 		this.data.group = this.data.item = -1;
+		Popups.closeIfOpened("bone_select");
+		Popups.closeIfOpened("box_select");
+		delete this.data.selected;
 	},
 	create: function() {
 		let autosaveable = !ProjectEditor.isOpened();
@@ -150,22 +162,20 @@ let EntityEditor = {
 		this.data.hasVisual = this.data.worker.Visual.getModelCount() > 0
 			&& this.data.worker.Visual.getModel(0).getAssigmentSize() > 0;
 		updateEntityRender(this.data.worker);
-		
 		let button = new ControlButton();
 		button.setIcon("menu");
 		button.setOnClickListener(function() {
 			EntityEditor.menu();
-			menu.dismiss();
+			sidebar.dismiss();
 		});
 		button.show();
-		
-		let menu = new MenuWindow();
-		let group = menu.addGroup("entity");
+		let sidebar = new SidebarWindow(),
+			group = sidebar.addGroup("entity");
 		group.addItem("entity", null);
 		group.addItem("blockModuleIdentifier", null);
 		group.addItem("entityModuleDraw", null);
 		group.addItem("entityModuleUpdate", null);
-		group = menu.addGroup("entityBoneBones");
+		group = sidebar.addGroup("entityBoneBones");
 		if (this.data.hasVisual) {
 			group.addItem("entityBoneBones", this.bone.select);
 			group.addItem("entityBoxAdd", this.bone.add);
@@ -173,7 +183,7 @@ let EntityEditor = {
 			group.addItem("entityBoneOffset", this.bone.offset);
 			group.addItem("entityBoneRotate", this.bone.rotate);
 			group.addItem("entityBoxRemove", this.bone.remove);
-			group = menu.addGroup("entityBoxBoxes");
+			group = sidebar.addGroup("entityBoxBoxes");
 			if (this.data.item >= 0) {
 				group.addItem("entityBoxBoxes", this.box.select);
 				group.addItem("entityBoxAdd", this.box.add);
@@ -183,8 +193,18 @@ let EntityEditor = {
 				group.addItem("entityBoxRemove", this.box.remove);
 			} else group.addItem("entityBoxAdd", this.box.add);
 		} else group.addItem("entityBoxAdd", this.bone.add);
-		// menu.selectGroup(0);
-		menu.show();
+		if (this.data.selected >= 0) sidebar.select(this.data.selected);
+		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
+			EntityEditor.data.selected = index;
+			updateEntityRender(EntityEditor.data.worker);
+		});
+		sidebar.setOnGroupUndockListener(function(window, group, index, previous) {
+			if (!previous) {
+				delete EntityEditor.data.selected;
+				selectMode = 0, updateEntityRender(EntityEditor.data.worker);
+			}
+		});
+		sidebar.show();
 	},
 	menu: function(view) {
 		let control = new ControlWindow();
@@ -210,8 +230,7 @@ let EntityEditor = {
 		});
 		category.addItem("menuProjectLeave", translate("Back"), function() {
 			control.dismiss();
-			Popups.closeAll();
-			// EntityEditor.unselect();
+			Popups.closeAll(), EntityEditor.unselect();
 			ProjectEditor.setOpenedState(false);
 			ProjectEditor.getProject().callAutosave();
 			checkValidate(function() {
@@ -229,7 +248,6 @@ let EntityEditor = {
 			showHint(translate("Tap block"));
 			control.dismiss();
 			selectMode = 6;
-			
 			let button = new ControlButton();
 			button.setIcon("menuModuleBack");
 			button.setOnClickListener(function() {
@@ -300,8 +318,9 @@ let EntityEditor = {
 				else if (!hasBoxes && !EntityEditor.data.item) EntityEditor.create();
 				updateEntityRender(EntityEditor.data.worker);
 			});
-			for (let i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++)
+			for (let i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++) {
 				popup.addButtonElement(EntityEditor.data.worker.Visual.getModel(0).getName(i));
+			}
 			popup.selectButton(EntityEditor.data.group);
 			popup.setSelectMode(true);
 			Popups.open(popup, "bone_select");

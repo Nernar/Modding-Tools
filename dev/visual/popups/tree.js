@@ -2,10 +2,10 @@ const TreePopup = function() {
 	this.reset();
 };
 
-TreePopup.prototype = new FocusablePopup;
+TreePopup.prototype = assign(FocusablePopup.prototype);
 TreePopup.prototype.TYPE = "TreePopup";
-TreePopup.prototype.__resetFP = FocusablePopup.prototype.reset;
 
+TreePopup.prototype.__resetFP = FocusablePopup.prototype.reset;
 TreePopup.prototype.reset = function() {
 	this.__resetFP && this.__resetFP();
 	this.views.groups = new Array();
@@ -15,7 +15,10 @@ TreePopup.prototype.reset = function() {
 
 	this.views.footer = new android.widget.LinearLayout(context);
 	this.views.footer.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-	this.views.layout.addView(this.views.footer);
+	let params = new android.widget.LinearLayout.
+		LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	params.weight = 0.1;
+	this.views.layout.addView(this.views.footer, params);
 };
 
 TreePopup.prototype.addGroup = function(name, parent) {

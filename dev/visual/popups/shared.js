@@ -1,82 +1,164 @@
-const FocusablePopup = function() {
-	let set = new ActorSet(),
-		fadeIn = new FadeActor(),
-		fadeOut = new FadeActor();
-	fadeIn.setInterpolator(new DecelerateInterpolator());
-	fadeIn.setMode(FadeActor.IN);
-	fadeIn.setDuration(400);
-	set.addActor(fadeIn);
-	fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-	fadeOut.setMode(FadeActor.OUT);
-	fadeOut.setDuration(400);
-	set.addActor(fadeOut);
-	
-	this.setEnterActor(set);
-	this.setExitActor(set);
-	
-	let place = Popups.getAvailablePlace();
-	this.setX(place.x), this.setY(place.y);
-	
-	this.reset();
+const Popups = new Object();
+
+Popups.widgets = new Array();
+
+Popups.open = function(widget, name) {
+	this.closeUnactived();
+	let opened = this.closeIfOpened(name);
+	if (!opened) {
+		let index = this.widgets.length;
+		if (index > maxWindows) {
+			this.closeFirst();
+		}
+		this.createAction(widget);
+		this.widgets.push(widget);
+		widget.name = name;
+		widget.show();
+	}
 };
 
-FocusablePopup.prototype = new ActoredWindow;
-FocusablePopup.prototype.TYPE = "FocusablePopup";
-FocusablePopup.prototype.expanded = true;
-
-FocusablePopup.prototype.reset = function() {
-	let views = this.views = new Object();
-	views.layout = new android.widget.LinearLayout(context);
-	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-	views.layout.setOrientation(Ui.Orientate.VERTICAL);
-	this.setContent(views.layout);
-	
-	views.title = new android.widget.TextView(context);
-	views.title.setPadding(Ui.getY(30), Ui.getY(18), Ui.getY(30), Ui.getY(18));
-	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-	views.title.setTextSize(Ui.getFontSize(24));
-	views.title.setGravity(Ui.Gravity.CENTER);
-	views.title.setTextColor(Ui.Color.WHITE);
-	views.title.setTypeface(typeface);
-	views.layout.addView(views.title);
-	
-	views.scroll = new android.widget.ScrollView(context);
-	params = new android.widget.LinearLayout.LayoutParams
-				(Ui.Display.MATCH, Ui.Display.WRAP);
-	views.layout.addView(views.scroll, params);
-	
-	views.content = new android.widget.LinearLayout(context);
-	views.content.setOrientation(Ui.Orientate.VERTICAL);
-	views.content.setGravity(Ui.Gravity.CENTER);
-	views.scroll.addView(views.content)
+Popups.getAvailablePlace = function(root) {
+	// return showHint("No place for open popup", Ui.Color.YELLOW);
+	return {
+		x: Ui.getY(100) + Ui.getX(Math.random() * 800),
+		y: Ui.getX(100) + Ui.getY(Math.random() * 200)
+	};
 };
 
-FocusablePopup.prototype.setTitle = function(title) {
-	this.views.title.setText(title);
+Popups.hasOpenedByName = function(name) {
+	for (let i = 0; i < this.widgets.length; i++) {
+		if (this.widgets[i].name == name) {
+			return true;
+		}
+	}
+	return false;
 };
 
-FocusablePopup.prototype.isExpanded = function() {
-	return this.expanded;
+Popups.createAction = function(widget) {
+	if (widget) {
+		let title = widget.views.title;
+		if (title) {
+			let closeable, expandable;
+			title.setOnTouchListener(function(view, event) {
+				switch (event.getAction()) {
+					case 0:
+						dx = event.getX();
+						dy = event.getY();
+						if (expandable && expandable.isActive) {
+							if (widget.expand) {
+								widget.expand();
+								// ProjectEditor.getProject().updatePopupExpanded(widget.name, widget.isExpanded());
+							}
+							expandable.destroy();
+						} else {
+							if (expandable) {
+								expandable.destroy();
+							}
+							expandable = new Action(500);
+							expandable.create().execute();
+						}
+						if (closeable) {
+							closeable.destroy();
+						}
+						closeable = new Action(750);
+						closeable.create().execute();
+						break;
+					case 1:
+						if (closeable && closeable.thread && closeable.getLeftTime() == 0) {
+							closeable.destroy();
+							Popups.closeIfOpened(widget.name);
+						} // else ProjectEditor.getProject().updatePopupLocation(widget.name, event.getRawX() - dx, event.getRawY() - dy);
+						break;
+					case 2:
+						let x = event.getX() - dx,
+							y = event.getY() - dy;
+						widget.getPopup().update(event.getRawX() - dx, event.getRawY() - dy, -1, -1);
+						if (x > 0 || y > 0) {
+							if (closeable) {
+								closeable.destroy();
+							}
+							if (expandable) {
+								expandable.destroy();
+							}
+						}
+						break;
+				}
+				return true;
+			});
+		}
+	}
 };
 
-FocusablePopup.prototype.expand = function() {
-	if (this.isExpanded()) {
-		this.minimize();
-	} else this.maximize();
+Popups.closeUnactived = function() {
+	for (let i = 0; i < this.widgets.length; i++) {
+		let widget = this.widgets[i],
+			window = widget.window;
+		if (window && widget.focusable) {
+			Popups.close(widget);
+		}
+	}
 };
 
-FocusablePopup.prototype.minimize = function() {
-	let actor = new FadeActor();
-	actor.setDuration(200);
-	this.beginDelayedActor(actor);
-	this.views.scroll.setVisibility(Ui.Visibility.GONE);
-	this.expanded = false;
+Popups.closeIfOpened = function(name) {
+	for (let i = 0; i < this.widgets.length; i++) {
+		if (this.widgets[i].name == name) {
+			return this.close(i);
+		}
+	}
+	return false;
 };
 
-FocusablePopup.prototype.maximize = function() {
-	let actor = new FadeActor();
-	actor.setDuration(400);
-	this.beginDelayedActor(actor);
-	this.views.scroll.setVisibility(Ui.Visibility.VISIBLE);
-	this.expanded = true;
+Popups.closeAllByTag = function(tag) {
+	if (!tag.endsWith("_")) {
+		tag += "_";
+	}
+	for (let i = 0; i < this.widgets.length; i++) {
+		if (this.widgets[i].name.startsWith(tag)) {
+			this.close(i--);
+		}
+	}
+};
+
+Popups.close = function(index) {
+	let widget = this.widgets[index];
+	if (widget && widget.getPopup()) {
+		widget.dismiss();
+		this.widgets.splice(index, 1);
+		return true;
+	}
+	return false;
+};
+
+Popups.closeFirst = function() {
+	this.close(0);
+};
+
+Popups.closeAll = function() {
+	while (this.widgets.length > 0) {
+		this.closeFirst();
+	}
+};
+
+Popups.updateAtName = function(name) {
+	for (let i = 0; i < this.widgets.length; i++) {
+		if (this.widgets[i].name == name) {
+			return this.update(i);
+		}
+	}
+	return false;
+};
+
+Popups.update = function(index) {
+	let widget = this.widgets[index];
+	if (widget) {
+		widget.update();
+		return true;
+	}
+	return false;
+};
+
+Popups.updateAll = function() {
+	for (let item in this.widgets) {
+		this.update(item);
+	}
 };

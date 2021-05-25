@@ -128,10 +128,7 @@ _gsdata_/
 
 # Unrealized content
 /dev/api/protect.js
-/dev/callback/server.js
 /dev/storage/factory.js
-/dev/network/connect.js
-/dev/tools/message.js
 /assets/sounds-16.txt
 /assets/studio.mcworld
 

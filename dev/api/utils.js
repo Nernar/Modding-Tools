@@ -1,7 +1,5 @@
 const convertNdb = function(obj) {
-	if (!obj) {
-		return null;
-	}
+	if (!obj) return null;
 	let worker = new BlockWorker();
 	worker.Renderer.createModel();
 	worker.Collision.createModel();
@@ -58,9 +56,7 @@ const convertNdb = function(obj) {
 };
 
 const convertNds = function(obj) {
-	if (!obj) {
-		return null;
-	}
+	if (!obj) return null;
 	let worker = new TransitionWorker();
 	worker.Animation.createAnimate();
 	let result = worker.getProject();
@@ -109,16 +105,26 @@ const convertNds = function(obj) {
 	return result;
 };
 
+const isEmpty = function(obj) {
+	for (let item in obj) {
+		return false;
+	}
+	return true;
+};
+
 const handleThread = function(action) {
 	let thread = new java.lang.Thread(function() {
 		try { action && action(); }
 		catch (e) { reportError(e); }
+		let index = handleThread.stack.indexOf(thread);
+		if (index != -1) handleThread.stack.splice(index, 1);
 	});
 	handleThread.stack.push(thread);
 	return (thread.start(), thread);
 };
 
 handleThread.stack = new Array();
+
 handleThread.clear = function() {
 	handleThread.stack.forEach(function(thread) {
 		if (thread && !thread.isInterrupted()) {
@@ -129,6 +135,9 @@ handleThread.clear = function() {
 };
 
 const MathUtils = new Object();
+
+MathUtils.RAD = 180 / Math.PI;
+
 MathUtils.mathDivider = function(number) {
 	if (number % 100000000 == 0) {
 		return Math.round(number / 1e8) + "e8";
@@ -183,12 +192,14 @@ MathUtils.mathDivider = function(number) {
 };
 
 const Base64 = new Object();
+
 Base64.encode = function(bytes) {
 	if (android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getEncoder().encode(bytes);
 	}
 	return android.util.Base64.encode(bytes, android.util.Base64.NO_WRAP);
 };
+
 Base64.decode = function(bytes) {
 	if (android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getDecoder().decode(bytes);
@@ -197,24 +208,24 @@ Base64.decode = function(bytes) {
 };
 
 const LoadingTipUtils = new Object();
+
 LoadingTipUtils.setEncounter = function(tip) {
 	this.encounter = new java.lang.String(tip);
 	this.updateCounter(0);
 };
+
 LoadingTipUtils.hasEncounter = function() {
 	return !!this.encounter;
 };
+
 LoadingTipUtils.updateCounter = function(count) {
-	if (!this.encounter) {
-		return;
-	}
+	if (!this.encounter) return;
 	this.result = this.encounter.replaceAll("%count", count);
-	MCSystem.setLoadingTip(this.result || "");
+	MCSystem.setLoadingTip(this.result || new String());
 };
+
 LoadingTipUtils.resetEncounter = function() {
 	delete this.encounter;
 	delete this.result;
-	MCSystem.setLoadingTip("");
+	MCSystem.setLoadingTip(new String());
 };
-
-Math.RAD = 180 / Math.PI;

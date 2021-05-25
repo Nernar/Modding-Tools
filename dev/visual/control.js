@@ -1,4 +1,4 @@
-let ControlButton = function() {
+const ControlButton = function() {
 	this.reset();
 	this.setBackground("popupBackgroundControl");
 	
@@ -12,8 +12,12 @@ let ControlButton = function() {
 	actor.setDuration(400);
 	this.setExitActor(actor);
 };
-ControlButton.prototype = new UniqueWindow;
+
+ControlButton.prototype = assign(UniqueWindow.prototype);
 ControlButton.prototype.TYPE = "ControlButton";
+
+ControlButton.prototype.unclose = true;
+
 ControlButton.prototype.reset = function() {
 	let scope = this, views = (this.views = {});
 	let content = new android.widget.FrameLayout(context);
@@ -35,24 +39,28 @@ ControlButton.prototype.reset = function() {
 	params = android.widget.LinearLayout.LayoutParams(Ui.getY(100), Ui.getY(100));
 	views.layout.addView(views.button, params);
 };
+
 ControlButton.prototype.setBackground = function(src) {
 	this.views && this.views.layout &&
 		this.views.layout.setBackgroundDrawable(ImageFactory.getDrawable(src));
 };
+
 ControlButton.prototype.setIcon = function(src) {
 	this.views && this.views.button &&
 		this.views.button.setImageDrawable(ImageFactory.getDrawable(src));
 };
+
 ControlButton.prototype.setOnClickListener = function(listener) {
 	listener && (this.__click = function() {
 		try { listener && listener(); }
 		catch (e) { reportError(e); }
 	});
 };
-ControlButton.prototype.unclose = true;
+
 ControlButton.prototype.isCloseableOutside = function() {
 	return this.unclose;
 };
+
 ControlButton.prototype.setCloseableOutside = function(state) {
 	this.unclose = !!state;
 };

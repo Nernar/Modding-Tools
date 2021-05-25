@@ -2,10 +2,10 @@ const ListingPopup = function() {
 	this.reset();
 };
 
-ListingPopup.prototype = new FocusablePopup;
+ListingPopup.prototype = assign(FocusablePopup.prototype);
 ListingPopup.prototype.TYPE = "ListingPopup";
-ListingPopup.prototype.__resetFP = FocusablePopup.prototype.reset;
 
+ListingPopup.prototype.__resetFP = FocusablePopup.prototype.reset;
 ListingPopup.prototype.reset = function() {
 	this.__resetFP && this.__resetFP();
 	this.views.edits = new Array();
@@ -58,13 +58,14 @@ ListingPopup.prototype.getButton = function(index) {
 	let button = this.views.buttons[index],
 		visible = true;
 	return {
+		view: button,
 		setBackground: function(texture) {
-			button.setBackgroundDrawable(ImageFactory.getDrawable(texture));
+			this.view.setBackgroundDrawable(ImageFactory.getDrawable(texture));
 			return this;
 		},
 		switchVisibility: function() {
-			if (visible) button.setVisibility(Ui.Visibility.GONE);
-			else button.setVisibility(Ui.Visibility.VISIBLE);
+			if (visible) this.view.setVisibility(Ui.Visibility.GONE);
+			else this.view.setVisibility(Ui.Visibility.VISIBLE);
 			visible = !visible;
 			return this;
 		}
@@ -95,7 +96,9 @@ ListingPopup.prototype.getEdit = function(index) {
 ListingPopup.prototype.getAllEditsValues = function() {
 	let edits = this.views.edits,
 		values = new Array();
-	for (let i in edits) values.push(this.getEdit(i).getValue());
+	for (let item in edits) {
+		values.push(this.getEdit(item).getValue());
+	}
 	return values;
 };
 

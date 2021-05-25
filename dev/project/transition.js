@@ -1,4 +1,4 @@
-function TransitionWorker(obj) {
+const TransitionWorker = function(obj) {
 	let worker = this;
 	this.getProject = function() {
 		return {
@@ -105,7 +105,6 @@ function TransitionWorker(obj) {
 			this.params = {
 				frames: new Array()
 			};
-			
 			// Create and removing
 			this.addFrame = function() {
 				let frames = this.getFrames();
@@ -125,7 +124,6 @@ function TransitionWorker(obj) {
 				let frames = this.getFrames();
 				frames.splice(index, 1);
 			};
-			
 			// Get params and sizes
 			this.getFrame = function(index) {
 				return this.getFrames()[index];
@@ -152,9 +150,10 @@ function TransitionWorker(obj) {
 				for (let i = 0; i < frames.length; i++) {
 					let frame = frames[i],
 						index = result.push([frame.x, frame.y, frame.z,
-						frame.yaw, frame.pitch, frame.duration]) - 1;
-					if (this.hasInterpolator(i))
-						result[index].interpolator = frame.interpolator;
+							frame.yaw, frame.pitch, frame.duration]) - 1;
+					if (this.hasInterpolator(i)) {
+						result[index].push(frame.interpolator);
+					}
 				}
 				return result;
 			};
@@ -162,18 +161,17 @@ function TransitionWorker(obj) {
 				let point = new Object(), frames = this.getFrames();
 				if (!excludeStarting) {
 					let starting = worker.Define.getStarting();
-					for (let i in starting) {
-						point[i] = starting[i];
+					for (let item in starting) {
+						point[item] = starting[item];
 					}
 				}
 				for (let i = 0; i < index; i++) {
-					for (let f in point) {
-						point[f] += frames[i][f];
+					for (let coord in point) {
+						point[coord] += frames[i][coord];
 					}
 				}
 				return point;
 			};
-			
 			// Move and durate
 			this.moveFrame = function(index, axis, value) {
 				let frame = this.getFrame(index);
@@ -198,7 +196,6 @@ function TransitionWorker(obj) {
 				let frame = this.getFrame(index);
 				frame.interpolator = value;
 			};
-			
 			// Scene actions
 			this.durateScene = function(value) {
 				let count = this.getFrameCount();
@@ -210,4 +207,4 @@ function TransitionWorker(obj) {
 	};
 	this.Define.resetStarting();
 	obj && this.loadProject(obj);
-}
+};

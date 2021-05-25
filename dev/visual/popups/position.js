@@ -2,10 +2,10 @@ const CoordsPopup = function() {
 	this.reset();
 };
 
-CoordsPopup.prototype = new ListingPopup;
+CoordsPopup.prototype = assign(ListingPopup.prototype);
 CoordsPopup.prototype.TYPE = "CoordsPopup";
-CoordsPopup.prototype.__resetLP = ListingPopup.prototype.reset;
 
+CoordsPopup.prototype.__resetLP = ListingPopup.prototype.reset;
 CoordsPopup.prototype.reset = function() {
 	this.__resetLP && this.__resetLP();
 	this.views.groups = new Array();
@@ -15,13 +15,14 @@ CoordsPopup.prototype.reset = function() {
 };
 
 CoordsPopup.prototype.__addButtonElementLP = ListingPopup.prototype.addButtonElement;
-
 CoordsPopup.prototype.addButtonElement = function(name, click) {
 	if (!this.__addButtonElementLP) {
 		return null;
 	}
 	let button = this.__addButtonElementLP(name, click);
 	button.setBackground("popupBackground");
+	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		(Ui.Display.MATCH, Ui.getY(84));
 	return button;
 };
 
@@ -67,6 +68,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 			item.views.root.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
 			item.views.root.setPadding(Ui.getY(12), Ui.getY(12), Ui.getY(12), Ui.getY(12));
 			views.containers[position].addView(item.views.root);
+
 			let params = new android.view.ViewGroup.LayoutParams(Ui.getY(60), Ui.getY(60));
 
 			item.views.minus = new android.widget.ImageView(context);
@@ -81,8 +83,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 					reportError(e);
 				}
 			});
-			item.views.minus.setLayoutParams(params);
-			item.views.root.addView(item.views.minus);
+			item.views.root.addView(item.views.minus, params);
 
 			item.views.mather = new android.widget.TextView(context);
 			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Ui.getY(160), -1));
@@ -129,8 +130,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 					reportError(e);
 				}
 			});
-			item.views.plus.setLayoutParams(params);
-			item.views.root.addView(item.views.plus);
+			item.views.root.addView(item.views.plus, params);
 		},
 		setOnChangeListener: function(change) {
 			this.onChange = change;
@@ -161,15 +161,17 @@ CoordsPopup.prototype.getGroup = function(position) {
 };
 
 CoordsPopup.prototype.callLongChangeForAll = function() {
-	for (let i in this.groups)
-		if (this.groups[i].onLongChange)
-			for (let f in this.groups[i].items) {
-				let item = this.groups[i].items[f],
-					group = this.groups[i];
-				item.current[0] = preround(group.onLongChange(f));
-				if (group.onChange) group.onChange(f, item.current[0]);
-				group.updateMather(f);
+	for (let index in this.groups) {
+		let group = this.groups[index];
+		if (group.onLongChange) {
+			for (let value in group.items) {
+				let item = group.items[value];
+				item.current[0] = preround(group.onLongChange(value));
+				if (group.onChange) group.onChange(value, item.current[0]);
+				group.updateMather(value);
 			}
+		}
+	}
 };
 
 CoordsPopup.prototype.setBaseMathes = function(mathes) {

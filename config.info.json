@@ -64,7 +64,7 @@
             "index": 4,
             "type": "SeekBar",
             "min": 1,
-            "max": 10
+            "max": 15
         },
         
         "interface.show_dividers": {

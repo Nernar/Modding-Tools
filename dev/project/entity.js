@@ -1,4 +1,4 @@
-function EntityWorker(obj) {
+const EntityWorker = function(obj) {
 	let worker = this;
 	this.getProject = function() {
 		return {
@@ -105,7 +105,6 @@ function EntityWorker(obj) {
 			this.params = {
 				texture: "entity/steve.png"
 			};
-			
 			this.getTexture = function() {
 				return this.params.texture;
 			};
@@ -161,7 +160,6 @@ function EntityWorker(obj) {
 				this.params = {
 					name: "bone"
 				};
-				
 				// Bone properties
 				this.getParams = function() {
 					return this.params;
@@ -192,7 +190,6 @@ function EntityWorker(obj) {
 				this.setAssigment = function(assigment) {
 					model.setAssigment(assigment, this);
 				};
-				
 				// Assigment properties
 				this.getBones = function() {
 					let bones = new Array();
@@ -230,7 +227,6 @@ function EntityWorker(obj) {
 				this.getBoxCount = function() {
 					return this.getBoxes().length;
 				};
-				
 				// Assigment manage
 				this.addBox = function() {
 					let box = new model.Box();
@@ -251,7 +247,6 @@ function EntityWorker(obj) {
 				this.removeBone = function(index) {
 					model.removeBone(this, index);
 				};
-				
 				// Bone manage
 				this.prepareRotation = function() {
 					if (!this.params.rotation) {
@@ -311,7 +306,6 @@ function EntityWorker(obj) {
 						z: offset[2]
 					};
 				};
-				
 				obj && this.setParams(obj);
 			};
 			this.Box = function(obj) {
@@ -319,7 +313,6 @@ function EntityWorker(obj) {
 					x: 0, y: 0, z: 0,
 					width: 1, height: 1, length: 1
 				};
-				
 				// Get params and sizes
 				this.getParams = function() {
 					return this.params;
@@ -371,7 +364,6 @@ function EntityWorker(obj) {
 					this.params.y = coords.y1 + (this.params.height / 2);
 					this.params.z = coords.z1 + (this.params.length / 2);
 				};
-				
 				// Assigment edit
 				this.clone = function() {
 					let parent = this.params.parent;
@@ -391,7 +383,6 @@ function EntityWorker(obj) {
 					let index = tree.indexOf(this);
 					tree.splice(index, 1);
 				};
-				
 				// Base manipulate
 				this.resize = function(axis) {
 					if (axis == "x") {
@@ -460,7 +451,6 @@ function EntityWorker(obj) {
 						y: vertex[1]
 					};
 				};
-				
 				// Mirror and rotate
 				this.mirror = function(orientate) {
 					let coords = this.getCoords();
@@ -559,10 +549,8 @@ function EntityWorker(obj) {
 					}
 					this.setCoords(coords);
 				};
-				
 				obj && this.setParams(obj);
 			};
-			
 			// Assigment manage
 			this.addBone = function(obj) {
 				if (!obj) {
@@ -612,4 +600,4 @@ function EntityWorker(obj) {
 		// TODO
 	};
 	obj && this.loadProject(obj);
-}
+};

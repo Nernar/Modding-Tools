@@ -27,7 +27,7 @@ MCSystem.setLoadingTip("Initialization Script");
 
 // Menu content settings
 let warningMessage = null;
-let maxWindows = 5;
+let maxWindows = 8;
 let saveCoords = false;
 let autosave = true;
 let autosaveInterface = false;
@@ -55,7 +55,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.4-10.05.2021-3";
+const __code__ = "develop-alpha-0.3.4-25.05.2021-0";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
@@ -105,9 +105,11 @@ reportError.prepareDebugInfo = function() {
 Ui.getFontSize = function(size) {
 	return Math.round(this.getX(size) / this.Display.DENSITY * fontScale);
 };
+
 Ui.getX = function(x) {
 	return x > 0 ? Math.round(this.Display.WIDTH / (1280 / x) * uiScaler) : x;
 };
+
 Ui.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
@@ -121,6 +123,7 @@ Network.prototype.getFormattedSize = function() {
 Network.Reader.prototype.getThread = function() {
     return this.thread || null;
 };
+
 Network.Reader.prototype.readAsync = function(post) {
     let scope = this;
     this.thread = handleThread(function() {
@@ -131,6 +134,7 @@ Network.Reader.prototype.readAsync = function(post) {
         }
     });
 };
+
 Network.Reader.prototype.assureYield = function() {
     try {
         if (!this.getThread()) {
@@ -148,6 +152,7 @@ Network.Reader.prototype.assureYield = function() {
 Network.Writer.prototype.getThread = function() {
     return this.thread || null;
 };
+
 Network.Writer.prototype.downloadAsync = function(post) {
 	let scope = this;
 	this.thread = handleThread(function() {
@@ -158,6 +163,7 @@ Network.Writer.prototype.downloadAsync = function(post) {
 		}
 	});
 };
+
 Network.Writer.prototype.assureYield = function() {
 	try {
 		if (!this.getThread()) {
@@ -172,12 +178,10 @@ Network.Writer.prototype.assureYield = function() {
 	}
 };
 
-// IMPORT("Music:1");
-// IMPORT("ModBrowser.Query:1");
 IMPORT("Transition:6");
 IMPORT("Scene:4");
 IMPORT("Action:4");
 
-function getPlayerEnt() {
+getPlayerEnt = function() {
 	return parseInt(Player.get());
-}
+};

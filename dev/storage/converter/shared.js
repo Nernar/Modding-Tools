@@ -1,4 +1,5 @@
-let ScriptConverter = new Function();
+const ScriptConverter = new Function();
+
 ScriptConverter.State = new Object();
 ScriptConverter.State.NOT_ATTACHED = 0;
 ScriptConverter.State.PREPARED = 1;
@@ -10,25 +11,29 @@ ScriptConverter.State.PARSE_FAILED = 6;
 ScriptConverter.State.THROWED = 7;
 ScriptConverter.State.UNKNOWN = 8;
 
+ScriptConverter.prototype.state = ScriptConverter.State.NOT_ATTACHED;
+
 ScriptConverter.prototype.attach = function(obj) {
 	this.state = this.validate(obj);
 	this.attached = obj;
 };
+
 ScriptConverter.prototype.getAttached = function() {
 	return this.attached;
 };
+
 ScriptConverter.prototype.validate = function(obj) {
 	try {
-		if (!this.getType) {
-			throw new Error("Can't resolve project type for ScriptConverter");
+		if (!this.TYPE) {
+			throw Error("Can't resolve project type for ScriptConverter");
 		}
-		if (!obj || !this.getType()) {
+		if (!obj || !this.TYPE) {
 			return ScriptConverter.State.ILLEGAL;
 		}
 		if (!(obj instanceof Object)) {
 			return ScriptConverter.State.PARSE_FAILED;
 		}
-		if (obj.type != this.getType()) {
+		if (obj.type != this.TYPE) {
 			return ScriptConverter.State.BAD_TYPE;
 		}
 		return ScriptConverter.State.PREPARED;
@@ -37,26 +42,32 @@ ScriptConverter.prototype.validate = function(obj) {
 		return ScriptConverter.State.UNKNOWN;
 	}
 };
+
 ScriptConverter.prototype.getLastException = function() {
 	return this.throwable || null;
 };
-ScriptConverter.prototype.state = ScriptConverter.State.NOT_ATTACHED;
+
 ScriptConverter.prototype.getState = function() {
 	return this.state;
 };
+
 ScriptConverter.prototype.canConvert = function() {
 	return this.isValid() && this.getAttached() && !this.getThread();
 };
+
 ScriptConverter.prototype.isValid = function() {
 	return this.getState() >= ScriptConverter.State.PREPARED &&
 		this.getState() <= ScriptConverter.State.VALID;
 };
+
 ScriptConverter.prototype.isConverted = function() {
 	return this.getState() == ScriptConverter.State.VALID;
 };
+
 ScriptConverter.prototype.inProcess = function() {
 	return this.getState() == ScriptConverter.State.CONVERTING;
 };
+
 ScriptConverter.prototype.assureYield = function() {
 	try {
 		if (!this.getThread()) {
@@ -70,13 +81,15 @@ ScriptConverter.prototype.assureYield = function() {
 		return false;
 	}
 };
+
 ScriptConverter.prototype.getThread = function() {
 	return this.thread || null;
 };
+
 ScriptConverter.prototype.execute = function() {
 	try {
 		if (!this.process) {
-			throw new Error("Can't find process for ScriptConverter");
+			throw Error("Can't find process for ScriptConverter");
 		}
 		if (!this.isValid() || this.inProcess()) {
 			return;
@@ -88,6 +101,7 @@ ScriptConverter.prototype.execute = function() {
 		this.state = ScriptConverter.State.THROWED;
 	}
 };
+
 ScriptConverter.prototype.executeAsync = function(post) {
 	let scope = this;
 	this.thread = handleThread(function() {
@@ -95,18 +109,19 @@ ScriptConverter.prototype.executeAsync = function(post) {
 			scope.execute();
 		}
 		delete scope.thread;
-		if (post) {
-			post(scope.getResult());
-		}
+		post && post(scope.getResult());
 	});
 };
+
 ScriptConverter.prototype.getCurrentlyReaded = function() {
 	return this.result || null;
 };
+
 ScriptConverter.prototype.getReadedCount = function() {
 	let readed = this.getCurrentlyReaded();
 	return readed ? readed.length : -1;
 };
+
 ScriptConverter.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
 	if (!readed) {
@@ -114,6 +129,7 @@ ScriptConverter.prototype.getResult = function() {
 	}
 	return readed.join("\n\n");
 };
+
 ScriptConverter.prototype.hasResult = function() {
 	return this.getState() == ScriptConverter.State.VALID && this.getCurrentlyReaded();
 };

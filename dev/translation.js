@@ -687,6 +687,9 @@ Translation.addTranslation("Script logging have several messages:", {
 Translation.addTranslation("Deleting mod folder for installation", {
 	ru: "Удаление папки мода для установки"
 });
+Translation.addTranslation("Couldn't connect to validate right now", {
+	ru: "Не удается подключиться к серверам прямо сейчас"
+});
 
 // Messages
 Translation.addTranslation("Load or create your first editor, it'll appear here.", {
@@ -728,7 +731,7 @@ Translation.addTranslation("Before key expires: %s days", {
 	ru: "До истечения срока ключа: %s дня"
 });
 Translation.addTranslation("Access denied", {
-	ru: "В доступе отказано"
+	ru: "Отказано в доступе"
 }); // DEPRECATED
 Translation.addTranslation("Checking network connection", {
 	ru: "Проверка стабильности соединения"
@@ -867,6 +870,27 @@ Translation.addTranslation("Script report", {
 Translation.addTranslation("Creating project", {
 	ru: "Создание проекта"
 });
+Translation.addTranslation("Development", {
+	ru: "Разработка"
+});
+Translation.addTranslation("Evaluate", {
+	ru: "Выполнить"
+});
+Translation.addTranslation("Launch", {
+	ru: "Запуск"
+});
+Translation.addTranslation("Icons", {
+	ru: "Ресурсы"
+});
+Translation.addTranslation("Sidebar", {
+	ru: "Навигация"
+});
+Translation.addTranslation("Log", {
+	ru: "Лог"
+});
+Translation.addTranslation("Currently log", {
+	ru: "Текущий лог"
+});
 
 // Supportables
 Translation.addTranslation("Supportables", {
@@ -963,9 +987,18 @@ Translation.addTranslation("Entity selected", {
 Translation.addTranslation("Element selector", {
 	ru: "Выбор элементов"
 });
+Translation.addTranslation("Investigate", {
+	ru: "Исследовать"
+});
+Translation.addTranslation("Investigated scope is empty or doesn't contain any value.", {
+	ru: "Исследуемый объект пуст или не содержит никаких свойств."
+});
 Translation.addTranslation("Selected %s group", {
 	ru: "Выбрана %s группа"
 }); // DEPRECATED
+Translation.addTranslation("Unselected %s group with items count %s", {
+	ru: "Закрыта %s группа с %s элементами"
+});
 Translation.addTranslation("Selected %s item", {
 	ru: "Выбран %s элемент"
 }); // DEPRECATED
@@ -1118,3 +1151,4 @@ Translation.addTranslation("Asriel", {
 });
 
 // Not localized content will be appear here
+Translation.addTranslation("That mod doesn't include any texture.", {});

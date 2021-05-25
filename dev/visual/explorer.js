@@ -1,14 +1,20 @@
-let ExplorerWindow = function() {
+const ExplorerWindow = function() {
 	this.setWidth(Ui.Display.MATCH);
 	this.setHeight(Ui.Display.MATCH);
 	this.setFocusable(true);
+	this.file = new java.io.File(__dir__);
 	this.reset();
 	this.setBackground("popupBackground");
+	this.elements = new Array();
 };
-ExplorerWindow.prototype = new UniqueWindow;
+
+ExplorerWindow.prototype = assign(UniqueWindow.prototype);
 ExplorerWindow.prototype.TYPE = "ExplorerWindow";
+
+ExplorerWindow.prototype.multiple = false;
+
 ExplorerWindow.prototype.reset = function() {
-	let scope = this, views = this.views = {};
+	let scope = this, views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
 	
@@ -34,9 +40,11 @@ ExplorerWindow.prototype.reset = function() {
 	views.files.setEmptyView(this.makeEmptyView());
 	views.layout.addView(views.files, params);
 };
+
 ExplorerWindow.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ExplorerWindow.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -44,24 +52,29 @@ ExplorerWindow.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ExplorerWindow.prototype.elements = new Array();
+
 ExplorerWindow.prototype.addElement = function(element) {
 	this.indexOfElement(element) == -1 &&
 		this.getElements().push(element);
 	return element;
 };
+
 ExplorerWindow.prototype.getElementAt = function(index) {
 	return this.getElements()[index] || null;
 };
+
 ExplorerWindow.prototype.getElements = function(index) {
 	return this.elements;
 };
+
 ExplorerWindow.prototype.getElementCount = function(index) {
 	return this.getElements().length;
 };
+
 ExplorerWindow.prototype.indexOfElement = function(item) {
 	return this.getElements().indexOf(item);
 };
+
 ExplorerWindow.prototype.removeElement = function(elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
@@ -82,7 +95,7 @@ ExplorerWindow.prototype.removeElement = function(elementOrIndex) {
 	this.getElements().splice(index, 1);
 	return this;
 };
-ExplorerWindow.prototype.file = new java.io.File(__dir__);
+
 ExplorerWindow.prototype.setPath = function(path) {
 	this.file = new java.io.File(path);
 	let dirs = Files.listDirectoryNames(path);
@@ -91,26 +104,34 @@ ExplorerWindow.prototype.setPath = function(path) {
 		files = Files.checkFormats(files, this.filter);
 	this.setItems(dirs.concat(files));
 };
+
 ExplorerWindow.prototype.setFilter = function(filter) {
+	if (!Array.isArray(filter)) filter = [filter];
 	this.filter = filter.slice();
 };
+
 ExplorerWindow.prototype.getDirectory = function() {
 	return this.file;
 };
+
 ExplorerWindow.prototype.setRootDirectory = function(path) {
 	this.root = "" + (path || Dirs.EXTERNAL);
 	(!this.root.endsWith("/")) && (this.root += "/");
 };
+
 ExplorerWindow.prototype.getRootDirectory = function() {
 	return this.root;
 };
+
 ExplorerWindow.prototype.setItems = function(array) {
 	this.adapter.setRoot(this.file.getPath());
 	this.adapter.setItems(array);
 };
+
 ExplorerWindow.prototype.setMode = function(mode) {
 	this.adapter.setMode(mode);
 };
+
 ExplorerWindow.prototype.selectItem = function(index) {
 	if (this.adapter.isDirectory(index) == true) {
 		let file = this.adapter.getFile(index);
@@ -121,29 +142,36 @@ ExplorerWindow.prototype.selectItem = function(index) {
 	this.adapter.selectItem(index);
 	return true;
 };
-ExplorerWindow.prototype.multiple = false;
+
 ExplorerWindow.prototype.isMultipleSelectable = function() {
 	return this.multiple;
 };
+
 ExplorerWindow.prototype.setMultipleSelectable = function(enabled) {
 	this.multiple = !!enabled;
 };
+
 ExplorerWindow.prototype.resetAdapter = function() {
 	this.adapter = new ExplorerAdapter();
 	this.views.files.setAdapter(this.adapter.self);
 };
+
 ExplorerWindow.prototype.getAdapter = function() {
 	return this.adapter;
 };
+
 ExplorerWindow.prototype.getApproved = function() {
 	return this.adapter.getApprovedFiles();
 };
+
 ExplorerWindow.prototype.isCanBeApproved = function() {
 	return this.adapter.isCanBeApproved() == true;
 };
+
 ExplorerWindow.prototype.checkIfCanBeApproved = function() {
 	this.__approve && this.__approve(this.getApproved());
 };
+
 ExplorerWindow.prototype.makeEmptyView = function() {
 	let layout = new android.widget.LinearLayout(context);
 	layout.setOrientation(Ui.Orientate.VERTICAL);
@@ -166,6 +194,7 @@ ExplorerWindow.prototype.makeEmptyView = function() {
 	info.setPadding(Ui.getY(20), Ui.getY(20), Ui.getY(20), Ui.getY(20));
 	return (layout.addView(info), layout);
 };
+
 ExplorerWindow.prototype.setOnApproveListener = function(listener) {
 	let scope = this;
 	listener && (this.__approve = function(files) {
@@ -174,6 +203,7 @@ ExplorerWindow.prototype.setOnApproveListener = function(listener) {
 	});
 	return this;
 };
+
 ExplorerWindow.prototype.setOnExploreListener = function(listener) {
 	let scope = this;
 	listener && (this.__explore = function(file) {
@@ -182,6 +212,7 @@ ExplorerWindow.prototype.setOnExploreListener = function(listener) {
 	});
 	return this;
 };
+
 ExplorerWindow.prototype.setOnSelectListener = function(listener) {
 	let scope = this, adapter = this.getAdapter();
 	adapter.setOnSelectListener(function(item, previous) {
@@ -193,6 +224,7 @@ ExplorerWindow.prototype.setOnSelectListener = function(listener) {
 		} 
 	});
 };
+
 ExplorerWindow.prototype.setOnUnselectListener = function(listener) {
 	let scope = this, adapter = this.getAdapter();
 	adapter.setOnUnselectListener(function(item) {
@@ -218,6 +250,7 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 	this.checkIfCanBeApproved();
 	this.setBackground("popupBackgroundControl");
 };
+
 ExplorerWindow.Approve.prototype.reset = function() {
 	let scope = this, views = this.views = {};
 	let content = new android.widget.ImageView(context);
@@ -236,12 +269,15 @@ ExplorerWindow.Approve.prototype.reset = function() {
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 	this.content = (content.setLayoutParams(params), content);
 };
+
 ExplorerWindow.Approve.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ExplorerWindow.Approve.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ExplorerWindow.Approve.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
@@ -259,9 +295,11 @@ ExplorerWindow.Approve.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
+
 ExplorerWindow.Approve.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ExplorerWindow.Approve.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -269,9 +307,11 @@ ExplorerWindow.Approve.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ExplorerWindow.Approve.prototype.getIcon = function() {
 	return this.icon || null;
 };
+
 ExplorerWindow.Approve.prototype.setIcon = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -279,11 +319,13 @@ ExplorerWindow.Approve.prototype.setIcon = function(src) {
 	content.setImageDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ExplorerWindow.Approve.prototype.approve = function() {
 	let window = this.getWindow();
 	this.__approve && this.__approve(this, window ? window.getApproved() : null);
 	return this;
 };
+
 ExplorerWindow.Approve.prototype.checkIfCanBeApproved = function() {
 	let content = this.getContent(), window = this.getWindow();
 	if (window) {
@@ -294,6 +336,7 @@ ExplorerWindow.Approve.prototype.checkIfCanBeApproved = function() {
 	content.setVisibility(window && window.isCanBeApproved() ?
 		Ui.Visibility.VISIBLE : Ui.Visibility.GONE);
 };
+
 ExplorerWindow.Approve.prototype.setOnApproveListener = function(listener) {
 	listener && (this.__approve = function(approve, files) {
 		try { listener(approve, files); }
@@ -322,6 +365,7 @@ ExplorerWindow.Path = function(parentOrAction, action) {
 	this.setBackground("popupBackground");
 	this.pathes = new Array();
 };
+
 ExplorerWindow.Path.prototype.reset = function() {
 	let scope = this, views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
@@ -346,12 +390,15 @@ ExplorerWindow.Path.prototype.reset = function() {
 			(Ui.Display.MATCH, Ui.Display.WRAP);
 	views.scroll.addView(views.layout, params);
 };
+
 ExplorerWindow.Path.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ExplorerWindow.Path.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ExplorerWindow.Path.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
@@ -373,9 +420,11 @@ ExplorerWindow.Path.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
+
 ExplorerWindow.Path.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ExplorerWindow.Path.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -383,7 +432,7 @@ ExplorerWindow.Path.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
-ExplorerWindow.Path.prototype.pathes = new Array();
+
 ExplorerWindow.Path.prototype.addPathElement = function(view, extendsArrow) {
 	if (!view) return;
 	extendsArrow = extendsArrow + "" == "undefined" ?
@@ -392,6 +441,7 @@ ExplorerWindow.Path.prototype.addPathElement = function(view, extendsArrow) {
 	view.setId(java.lang.String("path" + this.pathes.length).hashCode());
 	this.pathes.push(this.views.layout.addView(view));
 };
+
 ExplorerWindow.Path.prototype.makePathClick = function(path) {
 	let scope = this;
 	return function() {
@@ -399,6 +449,7 @@ ExplorerWindow.Path.prototype.makePathClick = function(path) {
 		file.exists() && scope.setPath(file.getPath());
 	};
 };
+
 ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 	let path = new android.widget.ImageView(context);
 	path.setImageDrawable(ImageFactory.getDrawable(src));
@@ -408,6 +459,7 @@ ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 	let params = android.widget.LinearLayout.LayoutParams(Ui.getY(60), Ui.getY(60));
 	return (path.setLayoutParams(params), this.addPathElement(path));
 };
+
 ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 	let path = new android.widget.TextView(context);
 	text + "" != "undefined" && path.setText(text);
@@ -420,6 +472,7 @@ ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 	let params = android.widget.LinearLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.MATCH);
 	return (path.setLayoutParams(params), this.addPathElement(path));
 };
+
 ExplorerWindow.Path.prototype.attachArrowToPath = function() {
 	let path = new android.widget.ImageView(context);
 	path.setImageDrawable(ImageFactory.getDrawable("explorerSelectionDivider"));
@@ -428,11 +481,13 @@ ExplorerWindow.Path.prototype.attachArrowToPath = function() {
 	let params = android.widget.LinearLayout.LayoutParams(Ui.getY(30), Ui.getY(60));
 	return (path.setLayoutParams(params), this.addPathElement(path, false));
 };
+
 ExplorerWindow.Path.prototype.setPath = function(path) {
 	let window = this.getWindow();
 	window && window.setPath(path);
 	this.updatePath();
 };
+
 ExplorerWindow.Path.prototype.updatePath = function() {
 	let views = this.views, window = this.getWindow(),
 		path = (window ? window.file.getPath() : Dirs.EXTERNAL) + "/";
@@ -449,6 +504,7 @@ ExplorerWindow.Path.prototype.updatePath = function() {
 		this.addPathText(pathDivided[i], current);
 	}
 };
+
 ExplorerWindow.Path.prototype.setOnExploreListener = function(listener) {
 	let scope = this;
 	listener && (this.__explore = function(file) {
@@ -457,6 +513,7 @@ ExplorerWindow.Path.prototype.setOnExploreListener = function(listener) {
 	});
 	return this;
 };
+
 ExplorerWindow.Path.prototype.setOnOutsideListener = function(listener) {
 	listener && (this.__outside = function(scope) {
 		try { listener(scope); }
@@ -485,6 +542,9 @@ ExplorerWindow.Rename = function(parentOrAction, action) {
 	this.setBackground("popupBackground");
 	this.formats = new Array();
 };
+
+ExplorerWindow.Rename.prototype.formatIndex = -1;
+
 ExplorerWindow.Rename.prototype.reset = function() {
 	let scope = this, views = this.views = {};
 	let content = new android.widget.RelativeLayout(context);
@@ -541,12 +601,15 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	params.setMargins(Ui.getY(8), Ui.getY(8), Ui.getY(8), Ui.getY(8));
 	content.addView(views.name, params);
 };
+
 ExplorerWindow.Rename.prototype.getContent = function() {
 	return this.content || null;
 };
+
 ExplorerWindow.Rename.prototype.getWindow = function() {
 	return this.window || null;
 };
+
 ExplorerWindow.Rename.prototype.setWindow = function(window) {
 	if (!window || typeof window != "object") return this;
 	window.elements && window.elements.indexOf(this)
@@ -568,9 +631,11 @@ ExplorerWindow.Rename.prototype.setWindow = function(window) {
 	this.window = window;
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getBackground = function() {
 	return this.background || null;
 };
+
 ExplorerWindow.Rename.prototype.setBackground = function(src) {
 	let content = this.getContent();
 	if (!content || !src) return this;
@@ -578,12 +643,14 @@ ExplorerWindow.Rename.prototype.setBackground = function(src) {
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getCurrentName = function() {
 	let name = this.views ? this.views.name ? this.views.name.
 		getText().toString() + "" : "" : "";
 	if (name.length == 0) name = translate("project");
 	return name + this.getCurrentFormat();
 };
+
 ExplorerWindow.Rename.prototype.setCurrentName = function(text) {
 	let name = this.views ? this.views.name : null;
 	if (!name || !text) return;
@@ -596,24 +663,26 @@ ExplorerWindow.Rename.prototype.setCurrentName = function(text) {
 	name.setText("" + text);
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.setName = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.name.setText("" + text);
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getCurrentFile = function() {
 	let window = this.getWindow(),
 		directory = window ? window.getDirectory() : null;
 	if (!directory) return null;
 	return new java.io.File(directory, this.getCurrentName());
 };
+
 ExplorerWindow.Rename.prototype.approve = function() {
 	this.__approve && this.__approve(this, this.getCurrentFile(), this.getCurrentName());
 	return this;
 };
-ExplorerWindow.Rename.prototype.formats = new Array();
-ExplorerWindow.Rename.prototype.formatIndex = -1;
+
 ExplorerWindow.Rename.prototype.nextFormat = function() {
 	if (!this.formats || this.formats.length == 0)
 		return;
@@ -623,6 +692,7 @@ ExplorerWindow.Rename.prototype.nextFormat = function() {
 	this.setFormat(this.formatIndex);
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.setFormat = function(indexOrFormat) {
 	let index = typeof indexOrFormat == "number" ?
 		indexOrFormat : this.formats.indexOf(indexOrFormat);
@@ -632,37 +702,44 @@ ExplorerWindow.Rename.prototype.setFormat = function(indexOrFormat) {
 	format.setText(this.formats[index]);
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getCurrentFormat = function() {
 	return this.formats[this.formatIndex];
 };
+
 ExplorerWindow.Rename.prototype.setAvailabledTypes = function(types) {
 	this.formats = types;
 	this.formatIndex = -1;
 	this.nextFormat();
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getTitle = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.approve.getText();
 };
+
 ExplorerWindow.Rename.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.approve.setText(("" + text).toUpperCase());
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.getHint = function() {
 	let views = this.views;
 	if (!views) return null;
 	return views.name.getHint();
 };
+
 ExplorerWindow.Rename.prototype.setHint = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
 	views.name.setHint("" + text);
 	return this;
 };
+
 ExplorerWindow.Rename.prototype.setOnApproveListener = function(listener) {
 	listener && (this.__approve = function(rename, file, name) {
 		try { listener(rename, file, name); }
@@ -680,11 +757,12 @@ ExplorerWindow.prototype.addRename = function(actionOrRename, action) {
 	return rename;
 };
 
-let ExplorerAdapter = function(array, root, mode) {
+const ExplorerAdapter = function(array, root, mode) {
 	array && this.setItems(array);
 	root && this.setRoot(root);
 	mode >= 0 && this.setMode(mode);
 };
+
 ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, {
 	array: new Array(),
 	approves: new Array(),
