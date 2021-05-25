@@ -127,15 +127,18 @@ _gsdata_/
 .eval/
 
 # Unrealized content
-/dev/api/protect.js
-/dev/storage/factory.js
+/dev/network/
+/dev/storage/message.js
 /assets/sounds-16.txt
 /assets/studio.mcworld
-
-# Enstablized sources
 /lib/ModBrowser.Query.js
 /lib/Process.js
 /lib/Music.js
+
+# Enstablized sources
+/dev/api/protect.js
+/dev/callback/debug.js
+/dev/storage/factory.js
 /pre/
 /java/
 /native/
