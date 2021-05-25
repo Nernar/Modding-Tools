@@ -139,52 +139,52 @@ const MathUtils = new Object();
 MathUtils.RAD = 180 / Math.PI;
 
 MathUtils.mathDivider = function(number) {
-	if (number % 100000000 == 0) {
+	if (number % 100000000 === 0) {
 		return Math.round(number / 1e8) + "e8";
 	}
-	if (number % 10000000 == 0) {
+	if (number % 10000000 === 0) {
 		return Math.round(number / 1e7) + "e7";
 	}
-	if (number % 1000000 == 0) {
+	if (number % 1000000 === 0) {
 		return Math.round(number / 1e6) + "e6";
 	}
-	if (number % 100000 == 0) {
+	if (number % 100000 === 0) {
 		return Math.round(number / 1e5) + "e5";
 	}
-	if (number % 10000 == 0) {
+	if (number % 10000 === 0) {
 		return Math.round(number / 1e4) + "e4";
 	}
-	if (number % 1000 == 0) {
+	if (number % 1000 === 0) {
 		return Math.round(number / 1e3) + "e3";
 	}
-	if (number % 100 == 0) {
+	if (number % 100 === 0) {
 		return Math.round(number / 1e2) + "e2";
 	}
-	if (number % 1 == 0) {
+	if (number % 1 === 0) {
 		return number;
 	}
-	if (number % 0.125 == 0) {
+	if (number % 0.125 === 0) {
 		return Math.round(number * 8) + "/8";
 	}
-	if (number % 0.0625 == 0) {
+	if (number % 0.0625 === 0) {
 		return Math.round(number * 16) + "/16";
 	}
-	if (number % 0.03125 == 0) {
+	if (number % 0.03125 === 0) {
 		return Math.round(number * 32) + "/32";
 	}
-	if (number % 0.015625 == 0) {
+	if (number % 0.015625 === 0) {
 		return Math.round(number * 64) + "/64";
 	}
-	if (number % 0.0078125 == 0) {
+	if (number % 0.0078125 === 0) {
 		return Math.round(number * 128) + "/128";
 	}
-	if (number % 0.00390625 == 0) {
+	if (number % 0.00390625 === 0) {
 		return Math.round(number * 256) + "/256";
 	}
-	if (number % 0.001953125 == 0) {
+	if (number % 0.001953125 === 0) {
 		return Math.round(number * 512) + "/512";
 	}
-	if (number % 0.0009765625 == 0) {
+	if (number % 0.0009765625 === 0) {
 		return Math.round(number * 1024) + "/1024";
 	}
 	Logger.Log("Non-divideable number: " + number, "Dev-Editor");

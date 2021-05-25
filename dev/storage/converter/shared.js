@@ -109,7 +109,7 @@ ScriptConverter.prototype.executeAsync = function(post) {
 			scope.execute();
 		}
 		delete scope.thread;
-		post && post(this, scope.getResult());
+		post && post(scope, scope.getResult());
 	});
 };
 

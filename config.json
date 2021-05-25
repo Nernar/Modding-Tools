@@ -10,8 +10,7 @@
   "performance":{
     "hint_stackable":false,
     "maximum_hints":50,
-    "show_processes":true,
-    "debug_animations":false
+    "show_processes":true
   },
   "autosave":{
     "enabled":true,

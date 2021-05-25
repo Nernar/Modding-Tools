@@ -1089,9 +1089,7 @@ ControlWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, act
 		srcOrMessage && this.setMessage(srcOrMessage);
 		messageOrAction && this.setOnClickListener(messageOrAction);
 	}
-	if (debugAnimationsEnabled) {
-		this.setAnimation("message", "popup/message", 20);
-	} else this.setBackground("popupBackgroundMenu");
+	this.setBackground("popupBackgroundMenu");
 };
 
 ControlWindow.Message.prototype.reset = function() {

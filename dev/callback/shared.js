@@ -73,7 +73,6 @@ const updateSettings = function() {
 		projectHeaderBackground = loadSetting("interface.header_background", "boolean");
 		maximumHints = loadSetting("performance.maximum_hints", "number", 1, 100);
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean");
-		debugAnimationsEnabled = loadSetting("performance.debug_animations", "boolean");
 		showProcesses = loadSetting("performance.show_processes", "boolean");
 		autosave = loadSetting("autosave.enabled", "boolean");
 		/* autosaveInterface */ loadSetting("autosave.with_interface", "boolean", false);
