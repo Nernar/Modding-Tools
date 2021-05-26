@@ -518,37 +518,6 @@ const checkForAdditionalInformation = function(control) {
 	if (keyExpiresSoon && random(0, 9) == 0)
 		if (hasAdditionalInformation("keyExpiresNotification"))
 			control.addMessage("menuLoginKey", translate("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities."));
-	if (ProjectEditor.getCurrentType() == "block") {
-		let worker = ProjectEditor.getProject().getCurrentWorker();
-		if (worker && (worker.Renderer.getModelCount() > 1 || worker.Collision.getModelCount() > 1))
-			if (hasAdditionalInformation("moreOneModelsWarning"))
-				control.addMessage("blockRenderMove", translate("Opened editor contains >1 models one of type. At currently moment, editor doesn't support few models.") +
-					" " + translate("Touch here to merge all models."),
-					function(message) {
-						confirm(translate("Outliner"), translate("All models will be merged into one.") +
-							" " + translate("Do you want to continue?"),
-							function() {
-								let active = Date.now(),
-									renderer = worker.Renderer.getModels(),
-									collision = worker.Collision.getModels();
-								if (renderer && renderer.length > 1) {
-									let source = renderer[0].params;
-									for (let i = 1; i < renderer.length; i++)
-										source = merge(renderer[i].params, source);
-									worker.Renderer.setParams([source]);
-								}
-								if (collision && collision.length > 1) {
-									let source = collision[0].params;
-									for (let i = 1; i < collision.length; i++)
-										source = merge(collision[i].params, source);
-									worker.Collision.setParams([source]);
-								}
-								control.removeElement(message);
-								showHint(translate("Merged") + " " +
-									translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-							});
-					});
-	}
 };
 
 const hasAdditionalInformation = function(message) {

@@ -248,6 +248,70 @@ const mapRenderBlock = function(worker) {
 	return false;
 };
 
+const mergeConvertedBlock = function(project, source, action) {
+	handleThread(function() {
+		if (source === null || source === undefined) {
+			action && action(project);
+			return;
+		}
+		if (!Array.isArray(source)) source = [source];
+		if (project === null || project === undefined) {
+			project = new Object();
+		}
+		source.forEach(function(element, index) {
+			if (element === null || element === undefined) {
+				return;
+			}
+			if (element.define !== undefined) {
+				let id = element.define.id;
+				if (id !== undefined) {
+					if (project.define === undefined) project.define = new Object();
+					let currently = project.define.id;
+					if (currently === undefined || currently.length < id.length) {
+						element.define.id = currently;
+					}
+				}
+				let data = element.define.data;
+				if (data !== undefined) {
+					if (project.define === undefined) project.define = new Object();
+					let currently = project.define.data;
+					if (currently === undefined || currently.length < data.length) {
+						element.define.data = currently;
+					}
+				}
+				let special = element.define.special;
+				if (special !== undefined) {
+					if (project.define === undefined) project.define = new Object();
+					let currently = project.define.special;
+					if (currently === undefined || currently.length < special.length) {
+						element.define.special = currently;
+					}
+				}
+				let mapped = element.define.mapped;
+				if (mapped !== undefined) {
+					if (project.define === undefined) project.define = new Object();
+					project.define.mapped = merge(project.define.mapped, mapped);
+				}
+			}
+			if (element.renderer !== undefined) {
+				let model = element.renderer[0];
+				if (model !== undefined) {
+					if (project.renderer === undefined) project.renderer = new Array();
+					project.renderer[0] = merge(project.renderer[0], model);
+				}
+			}
+			if (element.collision !== undefined) {
+				let shape = element.collision[0];
+				if (shape !== undefined) {
+					if (project.collision === undefined) project.collision = new Array();
+					project.collision[0] = merge(project.collision[0], shape);
+				}
+			}
+		});
+		action && action(project);
+	});
+};
+
 const BlockEditor = {
 	data: new Object(),
 	reset: function() {
@@ -349,13 +413,11 @@ const BlockEditor = {
 				BlockEditor.replace(file);
 			});
 		});
-		category.addItem("menuProjectImport", translate("Import"), function() {
+		category.addItem("menuProjectImport", translate("Merge"), function() {
 			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) {
-				formats.push(".json");
-			}
+			if (ModelConverter) formats.push(".json");
 			selectFile(formats, function(file) {
-				BlockEditor.add(file);
+				BlockEditor.merge(file);
 			});
 		});
 		category.addItem("menuProjectSave", translate("Export"), function() {
@@ -505,8 +567,9 @@ const BlockEditor = {
 		BlockEditor.create();
 		return true;
 	},
-	add: function(file) {
-		let name = file.getName();
+	merge: function(file) {
+		let name = file.getName(),
+			project = BlockEditor.data.worker.getProject();
 		if (name.endsWith(".dnp")) {
 			let active = Date.now();
 			importProject(file.getPath(), function(result) {
@@ -514,38 +577,36 @@ const BlockEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						let current = BlockEditor.data.worker.getProject();
-						selected.forEach(function(element, index) {
-							current = merge(current, element);
+						mergeConvertedBlock(project, selected, function(output) {
+							BlockEditor.data.worker.loadProject(output);
+							mapRenderBlock(BlockEditor.data.worker);
+							showHint(translate("Merged success") + " " +
+								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 						});
-						BlockEditor.data.worker.loadProject(current);
-						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Imported success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "block");
 				});
 			});
 		} else if (name.endsWith(".json")) {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
-				let current = BlockEditor.data.worker.getProject(),
-					assigned = merge(current, result);
-				BlockEditor.data.worker.loadProject(assigned);
-				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Converted success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				mergeConvertedBlock(project, result, function(output) {
+					BlockEditor.data.worker.loadProject(output);
+					mapRenderBlock(BlockEditor.data.worker);
+					showHint(translate("Merged success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				});
 			});
 		} else if (name.endsWith(".ndb")) {
 			let active = Date.now();
-			handle(function() {
-				let current = BlockEditor.data.worker.getProject(),
-					obj = compileData(Files.read(file)),
-					result = convertNdb(obj),
-					assigned = merge(current, result);
-				BlockEditor.data.worker.loadProject(assigned);
-				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Imported success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			handleThread(function() {
+				let obj = compileData(Files.read(file)),
+					result = convertNdb(obj);
+				mergeConvertedBlock(project, result, function(output) {
+					BlockEditor.data.worker.loadProject(output);
+					mapRenderBlock(BlockEditor.data.worker);
+					showHint(translate("Merged success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				});
 			});
 		} else if (name.endsWith(".js")) {
 			let active = Date.now();
@@ -554,14 +615,12 @@ const BlockEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						let current = BlockEditor.data.worker.getProject();
-						selected.forEach(function(element, index) {
-							current = merge(current, element);
+						mergeConvertedBlock(project, selected, function(output) {
+							BlockEditor.data.worker.loadProject(output);
+							mapRenderBlock(BlockEditor.data.worker);
+							showHint(translate("Merged success") + " " +
+								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 						});
-						BlockEditor.data.worker.loadProject(current);
-						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Converted success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "block");
 				});
 			});

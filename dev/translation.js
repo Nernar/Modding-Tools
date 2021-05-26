@@ -666,8 +666,11 @@ Translation.addTranslation("Touch here to merge all models.", {
 Translation.addTranslation("All models will be merged into one.", {
 	ru: "Все модели будут соединены в одну."
 });
-Translation.addTranslation("Merged", {
-	ru: "Соединено"
+Translation.addTranslation("Merge", {
+	ru: "Соединить"
+});
+Translation.addTranslation("Merged success", {
+	ru: "Успешно соединено"
 });
 Translation.addTranslation("Converter generated invalid script, they can't be runned.", {
 	ru: "Конвертер сгенерировал неправильный скрипт, он не может быть запущен."
