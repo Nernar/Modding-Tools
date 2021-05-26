@@ -140,7 +140,6 @@ let TransitionEditor = {
 		this.data.hasAnimate = this.data.worker.Animation.getAnimateCount() > 0 &&
 			this.data.worker.Animation.getAnimate(0).getFrameCount() > 0;
 		this.data.isStarted = !!Transition.currently;
-		drawTransitionPoints(this.data.worker);
 		let button = new ControlButton();
 		button.setIcon("menu");
 		button.setOnClickListener(function() {
@@ -180,8 +179,9 @@ let TransitionEditor = {
 			}
 		});
 		sidebar.show();
+		drawTransitionPoints(this.data.worker);
 	},
-	menu: function(view) {
+	menu: function() {
 		let control = new ControlWindow();
 		control.setOnClickListener(function() {
 			TransitionEditor.create();
@@ -232,9 +232,7 @@ let TransitionEditor = {
 		});
 		category.addItem("transitionModuleReload", translate("Reload"), function() {
 			selectMode = 0;
-			if (drawTransitionPoints(TransitionEditor.data.worker)) {
-				showHint(translate("Transition updated"));
-			} else showHint(translate("Nothing to update"));
+			TransitionEditor.reload();
 		});
 		if (TransitionEditor.data.worker.Define.getEntity() != getPlayerEnt()) {
 			let hasResetMessage = false;
@@ -259,16 +257,22 @@ let TransitionEditor = {
 		resetAdditionalInformation();
 		control.show();
 	},
-	open: function(index) {
-		let obj = ProjectEditor.getEditorById(index);
-		if (!obj) {
-			showHint(translate("Can't find opened editor at %s position", index));
+	open: function(source) {
+		if (!(source instanceof Object)) {
+			source = ProjectEditor.getEditorById(source);
+		}
+		let index = ProjectEditor.indexOf(source);
+		if (!source) {
+			showHint(translate("Can't find opened editor at %s position", source));
 			return false;
 		}
-		let worker = this.data.worker = new TransitionWorker(obj);
+		Popups.closeAll();
+		let worker = this.data.worker = new TransitionWorker(source);
+		if (index == -1) index = ProjectEditor.getCount();
 		ProjectEditor.setupEditor(index, worker);
 		ProjectEditor.setOpenedState(true);
-		TransitionEditor.unselect(), TransitionEditor.create();
+		TransitionEditor.unselect();
+		TransitionEditor.create();
 		return true;
 	},
 	merge: function(file) {
@@ -329,8 +333,7 @@ let TransitionEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						TransitionEditor.data.worker.loadProject(selected);
-						drawTransitionPoints(TransitionEditor.data.worker);
+						TransitionEditor.open(selected);
 						showHint(translate("Loaded success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "transition", true);
@@ -342,8 +345,7 @@ let TransitionEditor = {
 				let current = TransitionEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNds(obj);
-				TransitionEditor.data.worker.loadProject(result);
-				drawTransitionPoints(TransitionEditor.data.worker);
+				TransitionEditor.open(result);
 				showHint(translate("Imported success") + " " +
 					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
@@ -354,16 +356,13 @@ let TransitionEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						TransitionEditor.data.worker.loadProject(selected);
-						drawTransitionPoints(TransitionEditor.data.worker);
+						TransitionEditor.open(selected);
 						showHint(translate("Converted success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "transition", true);
 				});
 			});
 		}
-		Popups.closeAll();
-		TransitionEditor.unselect();
 	},
 	save: function(file, i) {
 		let name = (TransitionEditor.data.name = i, file.getName()),
@@ -387,13 +386,13 @@ let TransitionEditor = {
 			});
 		}
 	},
-	reload: function(view) {
+	reload: function() {
 		if (drawTransitionPoints(TransitionEditor.data.worker)) {
 			showHint(translate("Transition updated"));
 		} else showHint(translate("Nothing to update"));
 	},
 	Transition: {
-		play: function(view) {
+		play: function() {
 			if (!Level.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
@@ -406,7 +405,7 @@ let TransitionEditor = {
 			} else playTransition(TransitionEditor.data.worker),
 				TransitionEditor.create();
 		},
-		move: function(view) {
+		move: function() {
 			let point = TransitionEditor.data.worker.Define.getStarting();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
@@ -440,7 +439,7 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "transition_move");
 		},
-		rotate: function(view) {
+		rotate: function() {
 			let point = TransitionEditor.data.worker.Define.getStarting();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Rotate"));
@@ -471,7 +470,7 @@ let TransitionEditor = {
 		hasSelection: function() {
 			return TransitionEditor.data.frame >= 0;
 		},
-		select: function(view) {
+		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Frames"));
 			popup.setOnHideListener(function() {
@@ -490,7 +489,7 @@ let TransitionEditor = {
 			popup.setSelectMode(true);
 			Popups.open(popup, "frame_select");
 		},
-		add: function(view) {
+		add: function() {
 			if (TransitionEditor.data.hasAnimate) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -508,12 +507,14 @@ let TransitionEditor = {
 					showHint(translate("Frame %s added as currently", index + 1));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Copy current"), function() {
-					let last = TransitionEditor.data.frame,
-						index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
-					showHint(translate("Frame %s cloned to %s", [last + 1, index + 1]));
-					drawTransitionPoints(TransitionEditor.data.worker);
-				});
+				if (TransitionEditor.Frame.hasSelection()) {
+					popup.addButtonElement(translate("Copy current"), function() {
+						let last = TransitionEditor.data.frame,
+							index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
+						showHint(translate("Frame %s cloned to %s", [last + 1, index + 1]));
+						drawTransitionPoints(TransitionEditor.data.worker);
+					});
+				}
 				Popups.open(popup, "frame_add");
 			} else {
 				TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame();
@@ -522,7 +523,7 @@ let TransitionEditor = {
 				drawTransitionPoints(TransitionEditor.data.worker);
 			}
 		},
-		play: function(view) {
+		play: function() {
 			if (!Level.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
@@ -540,7 +541,7 @@ let TransitionEditor = {
 			} else playTransition(TransitionEditor.data.worker, selected),
 				TransitionEditor.create();
 		},
-		move: function(view) {
+		move: function() {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -582,7 +583,7 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "frame_move");
 		},
-		rotate: function(view) {
+		rotate: function() {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -615,7 +616,7 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "frame_rotate");
 		},
-		durate: function(view) {
+		durate: function() {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -633,7 +634,7 @@ let TransitionEditor = {
 			group.removeName();
 			Popups.open(popup, "frame_durate");
 		},
-		interpolator: function(view) {
+		interpolator: function() {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -675,7 +676,7 @@ let TransitionEditor = {
 				});
 		}
 	},
-	reframe: function(view) {
+	reframe: function() {
 		let define = TransitionEditor.data.worker.Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("FPS"));

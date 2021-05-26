@@ -1,98 +1,3 @@
-const ProjectOldest = function(obj) {
-	this.object = new Array();
-	this.isOpened = false;
-	this.currentId = -1;
-	this.callAutosave = function() {
-		if (!autosave || this.isAutosaving) {
-			this.updateCurrentWorker();
-			return;
-		}
-		try {
-			let scope = this;
-			this.isAutosaving = true;
-			this.updateCurrentWorker();
-			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
-				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp", function(result) {
-					delete scope.isAutosaving;
-				});
-		} catch (e) {
-			reportError(e);
-			delete scope.isAutosaving;
-		}
-	};
-	this.getProjectTime = function() {
-		let time = new Date(this.time);
-		if (!this.time) {
-			return translate("Autosave %s", random(Number.MIN_VALUE, Number.MAX_VALUE));
-		}
-		return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
-			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + "-" +
-			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + "-" +
-			(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
-	};
-	this.getByType = function(type) {
-		let obj = this.getAll(), values = new Array();
-		for (let i = 0; i < this.getCount(); i++) {
-			if (obj[i].type == type) {
-				values.push(i);
-			}
-		}
-		return values;
-	};
-	this.getBlocks = function() {
-		return this.getByType("block");
-	};
-	this.getEntities = function() {
-		return this.getByType("entity");
-	};
-	this.getTransitions = function() {
-		return this.getByType("transition");
-	};
-	this.getAll = function() {
-		return this.object;
-	};
-	this.getCount = function() {
-		return this.getAll().length;
-	};
-	this.getCurrentId = function() {
-		return this.currentId;
-	};
-	this.getCurrentObject = function() {
-		let id = this.getCurrentId(),
-			obj = this.getAll()[id];
-		if (obj) return obj;
-		delete this.worker;
-		this.currentId = -1;
-		return null;
-	};
-	this.getCurrentType = function() {
-		let object = this.getCurrentObject();
-		return object ? object.type : null;
-	};
-	this.getCurrentWorker = function() {
-		return this.worker || null;
-	};
-	this.updateCurrentWorker = function() {
-		let id = this.getCurrentId(),
-			worker = this.getCurrentWorker();
-		if (!worker || id < 0) {
-			return;
-		}
-		this.getAll()[id] = worker.getProject();
-	};
-	this.switchToWorker = function(worker) {
-		this.worker = worker;
-	};
-	this.getIdByObject = function(obj) {
-		let content = this.getAll();
-		return content.indexOf(obj);
-	};
-	this.setCurrentlyId = function(id) {
-		this.currentId = Number(id);
-	};
-	obj && (this.object = obj);
-};
-
 const monthToName = function(number) {
 	let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
@@ -333,99 +238,6 @@ const importScript = function(path, action) {
 	}
 };
 
-const ProjectEditor = {
-	create: function() {
-		let opened = this.opened = new ProjectOldest();
-		return (opened.time = Date.now(), opened);
-	},
-	addWorker: function(worker) {
-		this.setupEditor(this.opened.object.push
-			(worker.getProject()) - 1, worker);
-		return worker;
-	},
-	addBlock: function() {
-		let worker = new BlockWorker();
-		return this.addWorker(worker);
-	},
-	addEntity: function() {
-		let worker = new EntityWorker();
-		return this.addWorker(worker);
-	},
-	addTransition: function() {
-		let worker = new TransitionWorker();
-		return this.addWorker(worker);
-	},
-	getProject: function() {
-		return this.opened;
-	},
-	getEditorById: function(index) {
-		let project = this.getProject();
-		if (!project) return null;
-		let obj = project.getAll();
-		return obj[index] || null;
-	},
-	isInitialized: function() {
-		return !!this.getProject();
-	},
-	isOpened: function() {
-		let project = this.getProject();
-		if (!project) return false;
-		return project.isOpened;
-	},
-	getCount: function() {
-		let project = this.getProject();
-		if (!project) return 0;
-		return project.getCount();
-	},
-	setOpenedState: function(state) {
-		let project = this.getProject();
-		if (!project) return;
-		project.isOpened = !!state;
-	},
-	getCurrentType: function() {
-		let project = this.getProject();
-		if (!project || !project.isOpened) {
-			return "none";
-		}
-		return project.getCurrentType();
-	},
-	initializeAutosave: function() {
-		let scope = this, project = this.getProject();
-		if (project.isAutosaving) return;
-		if (!autosave || this.thread || autosavePeriod <= 0) {
-			project.updateCurrentWorker();
-			return;
-		}
-		scope.thread = handleThread(function() {
-			do {
-				Ui.sleepMilliseconds(autosavePeriod * 1000);
-				project.callAutosave();
-				while (project.isAutosaving) {
-					Ui.sleepMilliseconds(1);
-				}
-			} while (project.isOpened);
-			delete scope.thread;
-		});
-	},
-	indexOf: function(obj) {
-		let project = this.getProject();
-		if (!project) return -1;
-		return project.getAll().indexOf(obj);
-	},
-	setupEditor: function(id, worker) {
-		let project = this.getProject();
-		if (!project) return;
-		project.switchToWorker(worker);
-		project.setCurrentlyId(id);
-	},
-	popEditor: function() {
-		let project = this.getProject();
-		if (!project) return;
-		project.getAll().pop();
-		delete project.worker;
-	}
-};
-
 const compileScript = function(text) {
 	let code = "(function() { try { " + String(text) + "\n\t} catch (e) {" +
 			"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
@@ -626,4 +438,193 @@ const getScriptScope = function() {
 		BlockRenderer: BlockRenderer,
 		Transition: Transition
 	};
+};
+
+const Project = function(obj) {
+	this.object = new Array();
+	this.isOpened = false;
+	this.currentId = -1;
+	this.callAutosave = function() {
+		if (!autosave || this.isAutosaving) {
+			this.updateCurrentWorker();
+			return;
+		}
+		try {
+			let scope = this;
+			this.isAutosaving = true;
+			this.updateCurrentWorker();
+			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
+				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp", function(result) {
+					delete scope.isAutosaving;
+				});
+		} catch (e) {
+			reportError(e);
+			delete scope.isAutosaving;
+		}
+	};
+	this.getProjectTime = function() {
+		let time = new Date(this.time);
+		if (!this.time) {
+			return translate("Autosave %s", random(Number.MIN_VALUE, Number.MAX_VALUE));
+		}
+		return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
+			(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + "-" +
+			(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + "-" +
+			(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
+	};
+	this.getByType = function(type) {
+		let obj = this.getAll(), values = new Array();
+		for (let i = 0; i < this.getCount(); i++) {
+			if (obj[i].type == type) {
+				values.push(i);
+			}
+		}
+		return values;
+	};
+	this.getBlocks = function() {
+		return this.getByType("block");
+	};
+	this.getEntities = function() {
+		return this.getByType("entity");
+	};
+	this.getTransitions = function() {
+		return this.getByType("transition");
+	};
+	this.getAll = function() {
+		return this.object;
+	};
+	this.getCount = function() {
+		return this.getAll().length;
+	};
+	this.getCurrentId = function() {
+		return this.currentId;
+	};
+	this.getCurrentObject = function() {
+		let id = this.getCurrentId(),
+			obj = this.getAll()[id];
+		if (obj) return obj;
+		delete this.worker;
+		this.currentId = -1;
+		return null;
+	};
+	this.getCurrentType = function() {
+		let object = this.getCurrentObject();
+		return object ? object.type : null;
+	};
+	this.getCurrentWorker = function() {
+		return this.worker || null;
+	};
+	this.updateCurrentWorker = function() {
+		let id = this.getCurrentId(),
+			worker = this.getCurrentWorker();
+		if (!worker || id < 0) {
+			return;
+		}
+		this.getAll()[id] = worker.getProject();
+	};
+	this.switchToWorker = function(worker) {
+		this.worker = worker;
+		this.updateCurrentWorker();
+	};
+	this.getIdByObject = function(obj) {
+		let content = this.getAll();
+		return content.indexOf(obj);
+	};
+	this.setCurrentlyId = function(id) {
+		this.currentId = Number(id);
+	};
+	obj && (this.object = obj);
+};
+
+const ProjectEditor = {
+	create: function() {
+		let opened = this.opened = new Project();
+		return (opened.time = Date.now(), opened);
+	},
+	addWorker: function(worker) {
+		this.setupEditor(this.opened.object.push
+			(worker.getProject()) - 1, worker);
+		return worker;
+	},
+	addBlock: function() {
+		let worker = new BlockWorker();
+		return this.addWorker(worker);
+	},
+	addEntity: function() {
+		let worker = new EntityWorker();
+		return this.addWorker(worker);
+	},
+	addTransition: function() {
+		let worker = new TransitionWorker();
+		return this.addWorker(worker);
+	},
+	getProject: function() {
+		return this.opened;
+	},
+	getEditorById: function(index) {
+		let project = this.getProject();
+		if (!project) return null;
+		let obj = project.getAll();
+		return obj[index] || null;
+	},
+	isInitialized: function() {
+		return !!this.getProject();
+	},
+	isOpened: function() {
+		let project = this.getProject();
+		if (!project) return false;
+		return project.isOpened;
+	},
+	getCount: function() {
+		let project = this.getProject();
+		if (!project) return 0;
+		return project.getCount();
+	},
+	setOpenedState: function(state) {
+		let project = this.getProject();
+		if (!project) return;
+		project.isOpened = !!state;
+	},
+	getCurrentType: function() {
+		let project = this.getProject();
+		if (!project || !project.isOpened) {
+			return "none";
+		}
+		return project.getCurrentType();
+	},
+	initializeAutosave: function() {
+		let scope = this, project = this.getProject();
+		if (project.isAutosaving) return;
+		if (!autosave || this.thread || autosavePeriod <= 0) {
+			project.updateCurrentWorker();
+			return;
+		}
+		scope.thread = handleThread(function() {
+			do {
+				Ui.sleepMilliseconds(autosavePeriod * 1000);
+				project.callAutosave();
+				while (project.isAutosaving) {
+					Ui.sleepMilliseconds(1);
+				}
+			} while (project.isOpened);
+			delete scope.thread;
+		});
+	},
+	indexOf: function(obj) {
+		let project = this.getProject();
+		if (!project) return -1;
+		return project.getAll().indexOf(obj);
+	},
+	setupEditor: function(id, worker) {
+		let project = this.getProject();
+		if (!project) return;
+		project.setCurrentlyId(id);
+		project.switchToWorker(worker);
+	},
+	popEditor: function() {
+		let project = this.getProject();
+		if (!project) return;
+		project.getAll().pop();
+		delete project.worker;
+	}
 };

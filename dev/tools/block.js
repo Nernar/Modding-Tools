@@ -334,9 +334,7 @@ const BlockEditor = {
 	},
 	create: function() {
 		let autosaveable = !ProjectEditor.isOpened();
-		if (!this.data.worker) {
-			this.reset();
-		}
+		if (!this.data.worker) this.reset();
 		autosaveable && ProjectEditor.initializeAutosave();
 		this.data.hasRender = this.data.worker.Renderer.getModelCount() > 0 &&
 			this.data.worker.Renderer.getModel(0).getBoxCount() > 0;
@@ -398,7 +396,7 @@ const BlockEditor = {
 		sidebar.show();
 		mapRenderBlock(this.data.worker);
 	},
-	menu: function(view) {
+	menu: function() {
 		let control = new ControlWindow();
 		control.setOnClickListener(function() {
 			BlockEditor.create();
@@ -456,11 +454,7 @@ const BlockEditor = {
 		});
 		category.addItem("blockRenderReload", translate("Remap"), function() {
 			selectMode = 0;
-			if (mapRenderBlock(BlockEditor.data.worker)) {
-				showHint(translate("Render updated"));
-			} else if (!removeUnusedMappings()) {
-				showHint(translate("Nothing to update"));
-			}
+			BlockEditor.reload();
 		});
 		let hasRemoveMessage = false;
 		category.addItem("blockRenderRemove", translate("Unmap"), function() {
@@ -554,13 +548,18 @@ const BlockEditor = {
 		resetAdditionalInformation();
 		control.show();
 	},
-	open: function(index) {
-		let obj = ProjectEditor.getEditorById(index);
-		if (!obj) {
-			showHint(translate("Can't find opened editor at %s position", index));
+	open: function(source) {
+		if (!(source instanceof Object)) {
+			source = ProjectEditor.getEditorById(source);
+		}
+		let index = ProjectEditor.indexOf(source);
+		if (!source) {
+			showHint(translate("Can't find opened editor at %s position", source));
 			return false;
 		}
-		let worker = this.data.worker = new BlockWorker(obj);
+		Popups.closeAll();
+		let worker = this.data.worker = new BlockWorker(source);
+		if (index == -1) index = ProjectEditor.getCount();
 		ProjectEditor.setupEditor(index, worker);
 		ProjectEditor.setOpenedState(true);
 		BlockEditor.unselect();
@@ -635,8 +634,7 @@ const BlockEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						BlockEditor.data.worker.loadProject(selected);
-						mapRenderBlock(BlockEditor.data.worker);
+						BlockEditor.open(selected);
 						showHint(translate("Loaded success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "block", true);
@@ -645,8 +643,7 @@ const BlockEditor = {
 		} else if (name.endsWith(".json")) {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
-				BlockEditor.data.worker.loadProject(result);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockEditor.open(result);
 				showHint(translate("Converted success") + " " +
 					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
@@ -656,8 +653,7 @@ const BlockEditor = {
 				let current = BlockEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNdb(obj);
-				BlockEditor.data.worker.loadProject(result);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockEditor.open(result);
 				showHint(translate("Imported success") + " " +
 					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
@@ -668,16 +664,13 @@ const BlockEditor = {
 					active = Date.now() - active;
 					selectProjectData(result, function(selected) {
 						active = Date.now() - active;
-						BlockEditor.data.worker.loadProject(selected);
-						mapRenderBlock(BlockEditor.data.worker);
+						BlockEditor.open(selected);
 						showHint(translate("Converted success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					}, "block", true);
 				});
 			});
 		}
-		Popups.closeAll();
-		BlockEditor.unselect();
 	},
 	save: function(file, i) {
 		let name = (BlockEditor.data.name = i, file.getName()),
@@ -701,16 +694,18 @@ const BlockEditor = {
 			});
 		}
 	},
-	reload: function(view) {
+	reload: function() {
 		if (mapRenderBlock(BlockEditor.data.worker)) {
 			showHint(translate("Render updated"));
-		} else showHint(translate("Nothing to update"));
+		} else if (!removeUnusedMappings()) {
+			showHint(translate("Nothing to update"));
+		}
 	},
 	Renderer: {
 		hasSelection: function() {
 			return BlockEditor.data.renderer >= 0;
 		},
-		select: function(view) {
+		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
@@ -729,7 +724,7 @@ const BlockEditor = {
 			popup.selectButton(BlockEditor.data.renderer);
 			Popups.open(popup, "renderer_select");
 		},
-		add: function(view) {
+		add: function() {
 			if (BlockEditor.data.hasRender) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -741,12 +736,14 @@ const BlockEditor = {
 					showHint(translate("Box %s added", index + 1));
 					mapRenderBlock(BlockEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Copy current"), function() {
-					let last = BlockEditor.data.renderer,
-						index = (BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).cloneBox(last));
-					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-					mapRenderBlock(BlockEditor.data.worker);
-				});
+				if (BlockEditor.Renderer.hasSelection()) {
+					popup.addButtonElement(translate("Copy current"), function() {
+						let last = BlockEditor.data.renderer,
+							index = (BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).cloneBox(last));
+						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
+						mapRenderBlock(BlockEditor.data.worker);
+					});
+				}
 				Popups.open(popup, "renderer_add");
 			} else {
 				BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).addBox(1, 0);
@@ -755,7 +752,7 @@ const BlockEditor = {
 				mapRenderBlock(BlockEditor.data.worker);
 			}
 		},
-		resize: function(view) {
+		resize: function() {
 			if (!BlockEditor.Renderer.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -787,7 +784,7 @@ const BlockEditor = {
 			group.addItem(box.z2);
 			Popups.open(popup, "renderer_resize");
 		},
-		move: function(view) {
+		move: function() {
 			if (!BlockEditor.Renderer.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -816,7 +813,7 @@ const BlockEditor = {
 			group.addItem(box.z1);
 			Popups.open(popup, "renderer_move");
 		},
-		mirror: function(view) {
+		mirror: function() {
 			if (!BlockEditor.Renderer.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -839,7 +836,7 @@ const BlockEditor = {
 			});
 			Popups.open(popup, "renderer_mirror");
 		},
-		rotate: function(view) {
+		rotate: function() {
 			if (!BlockEditor.Renderer.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -862,7 +859,7 @@ const BlockEditor = {
 			});
 			Popups.open(popup, "renderer_rotate");
 		},
-		texture: function(view) {
+		texture: function() {
 			if (!BlockEditor.Renderer.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -925,7 +922,7 @@ const BlockEditor = {
 		hasSelection: function() {
 			return BlockEditor.data.collision >= 0;
 		},
-		select: function(view) {
+		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
@@ -944,7 +941,7 @@ const BlockEditor = {
 			popup.selectButton(BlockEditor.data.collision);
 			Popups.open(popup, "collision_select");
 		},
-		add: function(view) {
+		add: function() {
 			if (BlockEditor.data.hasCollision) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -956,12 +953,14 @@ const BlockEditor = {
 					showHint(translate("Box %s added", index + 1));
 					mapRenderBlock(BlockEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Copy current"), function() {
-					let last = BlockEditor.data.collision,
-						index = (BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).cloneBox(last));
-					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-					mapRenderBlock(BlockEditor.data.worker);
-				});
+				if (BlockEditor.Collision.hasSelection()) {
+					popup.addButtonElement(translate("Copy current"), function() {
+						let last = BlockEditor.data.collision,
+							index = (BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).cloneBox(last));
+						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
+						mapRenderBlock(BlockEditor.data.worker);
+					});
+				}
 				Popups.open(popup, "collision_add");
 			} else {
 				BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).addBox();
@@ -970,7 +969,7 @@ const BlockEditor = {
 				mapRenderBlock(BlockEditor.data.worker);
 			}
 		},
-		resize: function(view) {
+		resize: function() {
 			if (!BlockEditor.Collision.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -1002,7 +1001,7 @@ const BlockEditor = {
 			group.addItem(box.z2);
 			Popups.open(popup, "collision_resize");
 		},
-		move: function(view) {
+		move: function() {
 			if (!BlockEditor.Collision.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -1031,7 +1030,7 @@ const BlockEditor = {
 			group.addItem(box.z1);
 			Popups.open(popup, "collision_move");
 		},
-		mirror: function(view) {
+		mirror: function() {
 			if (!BlockEditor.Collision.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -1054,7 +1053,7 @@ const BlockEditor = {
 			});
 			Popups.open(popup, "collision_mirror");
 		},
-		rotate: function(view) {
+		rotate: function() {
 			if (!BlockEditor.Collision.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -1097,15 +1096,10 @@ const BlockEditor = {
 				});
 		}
 	},
-	shape: function(view) {
+	shape: function() {
 		let params = BlockEditor.data.worker.Define.params,
 			shape = params.shape = params.shape || {
-				x1: 0,
-				y1: 0,
-				z1: 0,
-				x2: 1,
-				y2: 1,
-				z2: 1
+				x1: 0, y1: 0, z1: 0, x2: 1, y2: 1, z2: 1
 			};
 		let popup = new CoordsPopup();
 		popup.setTitle(translate("Shape"));
@@ -1143,7 +1137,7 @@ const BlockEditor = {
 		group.addItem(shape.z2);
 		Popups.open(popup, "shape");
 	},
-	rename: function(view) {
+	rename: function() {
 		let define = BlockEditor.data.worker.Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Rename"));
@@ -1155,11 +1149,11 @@ const BlockEditor = {
 		}).setBackground("ground");
 		Popups.open(popup, "rename");
 	},
-	variation: function(view) {
+	variation: function() {
 		let define = BlockEditor.data.worker.Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Data"));
-		popup.addEditElement(translate("Define"), define.getDefineData() || "[[]]");
+		popup.addEditElement(translate("Define"), define.getDefineData() || "[{}]");
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues(),
 				result = compileData(values[0]);
@@ -1178,7 +1172,7 @@ const BlockEditor = {
 		}).setBackground("ground");
 		Popups.open(popup, "variation");
 	},
-	type: function(view) {
+	type: function() {
 		let define = BlockEditor.data.worker.Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Type"));

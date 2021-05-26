@@ -430,6 +430,9 @@ Translation.addTranslation("Autosave %s", {
 Translation.addTranslation("No items.", {
 	ru: "Нет файлов."
 });
+Translation.addTranslation("Path", {
+	ru: "Путь"
+});
 
 // Panels
 Translation.addTranslation("Cancel", {
@@ -988,6 +991,9 @@ Translation.addTranslation("Hit entity", {
 Translation.addTranslation("Entity selected", {
 	ru: "Существо выбрано"
 });
+Translation.addTranslation("Assigment updated", {
+	ru: "Иерархия обновлена"
+});
 
 // Selection
 Translation.addTranslation("Element selector", {
@@ -1044,7 +1050,7 @@ Translation.addTranslation("Error of execute code", {
 	ru: "Ошибка при выполнении кода"
 });
 Translation.addTranslation("Non-assigment", {
-	ru: "Не является деревом"
+	ru: "Не является иерархией"
 });
 Translation.addTranslation("Too many hints (%s)", {
 	ru: "Слишком много сообщений (%s)"
