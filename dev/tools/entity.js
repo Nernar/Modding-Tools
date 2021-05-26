@@ -25,11 +25,11 @@ const updateEntityRender = function(worker) {
 };
 
 const model2ToScript = function(obj) {
-	let script = "";
+	let script = new String();
 	script += "let model = new EntityModel();\n";
 	script += "let render = new Render();\n";
 	for (let item in obj.elements) {
-		let part = obj.elements[item], params = {};
+		let part = obj.elements[item], params = new Object();
 		part.offset && (params.offset = part.offset);
 		part.rotation && (params.rotation = part.rotation);
 		let bones = part.bones.slice();
@@ -48,22 +48,22 @@ const geometryToModel2 = function(obj) {
 		},
 		elements: {
 			body: {
-				bones: []
+				bones: new Array()
 			},
 			head: {
-				bones: []
+				bones: new Array()
 			},
 			leftArm: {
-				bones: []
+				bones: new Array()
 			},
 			rightArm: {
-				bones: []
+				bones: new Array()
 			},
 			leftLeg: {
-				bones: []
+				bones: new Array()
 			},
 			rightLeg: {
-				bones: []
+				bones: new Array()
 			}
 		}
 	};
@@ -213,18 +213,17 @@ const EntityEditor = {
 		}).addHeader();
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
-			selectFile([".dnp", ".nde", ".js", ".json"], function(file) {
-				// EntityEditor.replace(file);
-				EntityEditor.open(file);
+			selectFile([".dnp", ".js", ".json"], function(file) {
+				EntityEditor.replace(file);
 			});
 		});
 		category.addItem("menuProjectImport", translate("Import"), function() {
-			selectFile([".dnp", ".nde", ".js", ".json"], function(file) {
+			selectFile([".dnp", ".js", ".json"], function(file) {
 				EntityEditor.add(file);
 			});
-		}).setBackground("popupSelectionLocked");
+		});
 		category.addItem("menuProjectSave", translate("Export"), function() {
-			saveFile(EntityEditor.data.name, [".dnp", ".js", ".nde", ".json"], function(file, i) {
+			saveFile(EntityEditor.data.name, [".dnp", ".js", ".json"], function(file, i) {
 				EntityEditor.save(file, i);
 			});
 		});
@@ -266,37 +265,67 @@ const EntityEditor = {
 		resetAdditionalInformation();
 		control.show();
 	},
-	open: function(file) {
-		let name = file.getName();
-		if (name.endsWith(".nde")) {
-			let project = compileData(Files.read(file));
-			if (!project) return showHint(translate("Asriel"));
-			EntityEditor.reset();
-			EntityEditor.data.worker.loadProject(project);
-			updateEntityRender(EntityEditor.data.worker);
-			EntityEditor.create();
-			showHint(translate("Import done"));
-		} else if (name.endsWith(".js")) {
-			// TODO
-		} else if (name.endsWith(".json")) {
-			let project = compileData(Files.read(file)),
-				geometry = geometryToModel2(project["geometry.bonnie"]);
-			updateEntityRender(EntityEditor.data.worker);
+	open: function(index) {
+		let obj = ProjectEditor.getEditorById(index);
+		if (!obj) {
+			showHint(translate("Can't find opened editor at %s position", index));
+			return false;
 		}
+		let worker = this.data.worker = new EntityWorker(obj);
+		ProjectEditor.setupEditor(index, worker);
+		ProjectEditor.setOpenedState(true);
+		EntityEditor.unselect(), EntityEditor.create();
+		return true;
+	},
+	add: function(file) {
+		let name = file.getName();
+		if (name.endsWith(".dnp")) {
+			let active = Date.now();
+			importProject(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						let current = EntityEditor.data.worker.getProject();
+						selected.forEach(function(element, index) {
+							current = merge(current, element);
+						});
+						EntityEditor.data.worker.loadProject(current);
+						updateEntityRender(EntityEditor.data.worker);
+						showHint(translate("Imported success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				});
+			});
+		}
+	},
+	replace: function(file) {
+		let name = file.getName();
+		if (name.endsWith(".dnp")) {
+			let active = Date.now();
+			importProject(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						EntityEditor.data.worker.loadProject(selected);
+						updateEntityRender(EntityEditor.data.worker);
+						showHint(translate("Loaded success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, true);
+				});
+			});
+		}
+		Popups.closeAll();
+		EntityEditor.unselect();
 	},
 	save: function(file, i) {
-		EntityEditor.data.name = i;
-		let name = file.getName(),
+		let name = (EntityEditor.data.name = i, file.getName()),
 			project = EntityEditor.data.worker.getProject();
-		if (name.endsWith(".nde")) {
-			Files.write(file, JSON.stringify(project));
-			showHint(translate("Export done"));
-		} else if (name.endsWith(".js")) {
-			Files.write(file, model2ToScript(project));
-			showHint(translate("Export done"));
+		if (name.endsWith(".dnp")) {
+			exportProject(project, false, file.getPath());
 		}
 	},
-	project: function(view) {},
 	bone: {
 		select: function(view) {
 			let model = EntityEditor.data.worker.Visual.getModel(0);
@@ -364,7 +393,7 @@ const EntityEditor = {
 			popup.addEditElement(translate("Name"), name);
 			popup.addButtonElement(translate("Save"), function() {
 				let values = popup.getAllEditsValues();
-				model.getIndex(selected).setName(compileData(values[0], "string"));
+				model.getIndex(selected).setName(String(values[0]));
 				updateEntityRender(EntityEditor.data.worker);
 				showHint(translate("Data saved"));
 			}).setBackground("ground");

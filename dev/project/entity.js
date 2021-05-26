@@ -25,9 +25,7 @@ const EntityWorker = function(obj) {
 				index = this.getEntityIndex(entity);
 			if (index == -1) {
 				entities.push(entity);
-			} else {
-				entities.splice(index, 1);
-			}
+			} else entities.splice(index, 1);
 			return index == -1;
 		},
 		getParams: function() {
@@ -51,7 +49,7 @@ const EntityWorker = function(obj) {
 			}
 		},
 		setIdentificator: function(id) {
-			this.getParams().id = id;
+			this.getParams().id = id.length > 0 ? id : "unknown";
 		}
 	};
 	this.Event = {
@@ -61,7 +59,7 @@ const EntityWorker = function(obj) {
 		// TODO
 	};
 	this.Visual = {
-		models: [],
+		models: new Array(),
 		createModel: function() {
 			let models = this.getModels();
 			models.push(new this.Model());
@@ -84,7 +82,7 @@ const EntityWorker = function(obj) {
 			let params = new Array();
 			for (let i = 0; i < this.getModelCount(); i++) {
 				let model = this.getModel(i);
-				let editable = model.params;
+				let editable = clone(model.params);
 				editable.assigment = model.getAssigment();
 				params.push(editable);
 			}
@@ -112,9 +110,7 @@ const EntityWorker = function(obj) {
 				return this.assigment;
 			};
 			this.getAssigment = function(obj) {
-				if (!obj) {
-					obj = this;
-				}
+				if (!obj) obj = this;
 				let result = new Array();
 				let assigment = obj.assigment;
 				for (let name in assigment) {
@@ -125,9 +121,7 @@ const EntityWorker = function(obj) {
 						params.type = "bone";
 					} else if (element instanceof this.Box) {
 						params.type = "box";
-					} else {
-						continue;
-					}
+					} else continue;
 					result.push(params);
 				}
 				return result;
@@ -136,9 +130,7 @@ const EntityWorker = function(obj) {
 				this.params.texture = path;
 			};
 			this.setAssigment = function(assigment, obj) {
-				if (!obj) {
-					obj = this;
-				}
+				if (!obj) obj = this;
 				obj.assigment = new Array();
 				for (let name in assigment) {
 					let element = assigment[name];
@@ -165,7 +157,7 @@ const EntityWorker = function(obj) {
 					return this.params;
 				};
 				this.getParent = function() {
-					return this.params.parent;
+					return this.parent;
 				};
 				this.getName = function() {
 					return this.params.name;
@@ -182,10 +174,10 @@ const EntityWorker = function(obj) {
 					}
 				};
 				this.setParent = function(parent) {
-					this.params.parent = parent;
+					this.parent = parent;
 				};
 				this.setName = function(name) {
-					this.params.name = name;
+					this.params.name = name.length > 0 ? name : "unknown";
 				};
 				this.setAssigment = function(assigment) {
 					model.setAssigment(assigment, this);
@@ -318,7 +310,7 @@ const EntityWorker = function(obj) {
 					return this.params;
 				};
 				this.getParent = function() {
-					return this.params.parent;
+					return this.parent;
 				};
 				this.getSize = function() {
 					let params = this.params;
@@ -354,7 +346,7 @@ const EntityWorker = function(obj) {
 					}
 				};
 				this.setParent = function(parent) {
-					this.params.parent = parent;
+					this.parent = parent;
 				};
 				this.setCoords = function(coords) {
 					this.params.width = coords.x2 - coords.x1;
@@ -366,19 +358,15 @@ const EntityWorker = function(obj) {
 				};
 				// Assigment edit
 				this.clone = function() {
-					let parent = this.params.parent;
-					if (!parent) {
-						return -1;
-					}
+					let parent = this.parent;
+					if (!parent) return -1;
 					let tree = parent.getEditable();
 					tree.push(new model.Box(this.params));
 					return tree.length - 1;
 				};
 				this.remove = function() {
-					let parent = this.params.parent;
-					if (!parent) {
-						return;
-					}
+					let parent = this.parent;
+					if (!parent) return;
 					let tree = parent.getEditable();
 					let index = tree.indexOf(this);
 					tree.splice(index, 1);
@@ -553,17 +541,13 @@ const EntityWorker = function(obj) {
 			};
 			// Assigment manage
 			this.addBone = function(obj) {
-				if (!obj) {
-					obj = this;
-				}
+				if (!obj) obj = this;
 				let bone = new this.Bone();
 				let editable = obj.getEditable();
 				return editable.push(bone) - 1;
 			};
 			this.cloneAssigment = function(index, obj) {
-				if (!obj) {
-					obj = this;
-				}
+				if (!obj) obj = this;
 				let tree = obj.getEditable();
 				let children = tree[index];
 				if (children instanceof this.Box) {

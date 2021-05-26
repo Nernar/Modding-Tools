@@ -47,8 +47,8 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 	views.edits[index].setHintTextColor(Ui.Color.LTGRAY);
 	views.edits[index].setTextSize(Ui.getFontSize(18));
 	views.edits[index].setTextColor(Ui.Color.WHITE);
-	if (value) views.edits[index].setText("" + value);
-	if (hint) views.edits[index].setHint("" + hint);
+	if (value) views.edits[index].setText(String(value));
+	if (hint) views.edits[index].setHint(String(hint));
 	views.edits[index].setTypeface(typeface);
 	views.content.addView(views.edits[index]);
 	return this.getEdit(index);
@@ -78,7 +78,7 @@ ListingPopup.prototype.getEdit = function(index) {
 	return {
 		getValue: function() {
 			let editable = edit.getText();
-			return editable.toString() || "";
+			return String(editable.toString());
 		},
 		setBackground: function(texture) {
 			edit.setBackgroundDrawable(ImageFactory.getDrawable(texture));
@@ -105,7 +105,7 @@ ListingPopup.prototype.getAllEditsValues = function() {
 ListingPopup.prototype.selectButton = function(index) {
 	let buttons = this.views.buttons;
 	this.unselect();
-	if (index + "" != "undefined") {
+	if (index !== undefined) {
 		buttons[index] && buttons[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 		this.__select && this.__select(index);
 		this.selected = index;
@@ -115,8 +115,9 @@ ListingPopup.prototype.selectButton = function(index) {
 ListingPopup.prototype.unselect = function() {
 	let buttons = this.views.buttons,
 		selected = this.selected;
-	if (selected + "" != "undefined" && buttons[selected])
+	if (selected !== undefined && buttons[selected]) {
 		buttons[selected].setBackgroundDrawable(null);
+	}
 };
 
 ListingPopup.prototype.setOnSelectListener = function(listener) {

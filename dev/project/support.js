@@ -51,7 +51,7 @@ let ExecutableSupport = {
 		}
 		mod.onImport();
 		this.mods[mod.getName()] = mod;
-		return mod.getName();
+		return String(mod.getName());
 	},
 	launchMod: function(name) {
 		let mod = this.getSupportable(name);
@@ -68,7 +68,7 @@ let ExecutableSupport = {
 			return null;
 		}
 		try {
-			return "" + mod.getInfoProperty(property);
+			return String(mod.getInfoProperty(property));
 		} catch (e) {
 			__code__.startsWith("develop") && reportError(e);
 		}

@@ -55,7 +55,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 	}
 	let views = this.views, mathes = this.mathes;
 	return this.groups[position] = {
-		items: [],
+		items: new Array(),
 		addItem: function(current) {
 			let elements = this,
 				index = this.items.length,
@@ -153,7 +153,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 		updateMather: function(index) {
 			let item = this.items[index],
 				current = item.mathes[item.current[1]];
-			item.views.mather.setText(current == 1 ? "" + item.current[0] :
+			item.views.mather.setText(current == 1 ? String(item.current[0]) :
 				current > 0 ? preround(item.current[0] * current) + " : " + current :
 				preround(item.current[0] / current) + " * " + (-current));
 		}

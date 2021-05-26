@@ -1,4 +1,18 @@
 Callback.addCallback("CoreEngineLoaded", function(api) {
+	handle(function() {
+		let window = context.getWindow();
+		if (isHorizon) {
+			if (android.os.Build.VERSION.SDK_INT >= 30) {
+				window.setDecorFitsSystemWindows(false);
+				let controller = window.getInsetsController();
+				if (controller != null) {
+					controller.hide(android.view.WindowInsets.Type.statusBars() | android.view.WindowInsets.Type.navigationBars());
+					controller.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+				}
+			} else window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
+			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		}
+	});
 	try {
 		api.ModAPI.registerAPI("DevEditor", {
 			createAndLock: function() {
@@ -25,7 +39,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				}
 				let menu = Windows.menu || null;
 				if (menu) {
-					let source = java.lang.String.valueOf("" + menu),
+					let source = java.lang.String.valueOf(String(menu)),
 						index = source.indexOf("{");
 					if (index > -1) {
 						let injectable = "if (DevEditor.isLocked()) return;\n" +
@@ -44,7 +58,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				}
 				rover = false;
 				if (removeMenu) {
-					let source = java.lang.String.valueOf("" + removeMenu),
+					let source = java.lang.String.valueOf(String(removeMenu)),
 						index = source.indexOf("{");
 					if (index > -1) {
 						let injectable = "if (!rover) DevEditor.createAndLock();",

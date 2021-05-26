@@ -338,7 +338,7 @@ Translation.addTranslation("Select texture", {
 Translation.addTranslation("Texture changed", {
 	ru: "Текстура изменена"
 });
-Translation.addTranslation("This mod not included any texture.", {
+Translation.addTranslation("That mod doesn't include any texture.", {
 	ru: "Этот мод не содержит текстур."
 });
 
@@ -651,8 +651,8 @@ Translation.addTranslation("Indexating", {
 Translation.addTranslation("Done", {
 	ru: "Готово"
 });
-Translation.addTranslation("as %s ms", {
-	ru: "за %s мс"
+Translation.addTranslation("as %ss", {
+	ru: "за %sс"
 });
 Translation.addTranslation("It's can be changed in config", {
 	ru: "Это может быть изменено в конфиге"
@@ -689,6 +689,9 @@ Translation.addTranslation("Deleting mod folder for installation", {
 });
 Translation.addTranslation("Couldn't connect to validate right now", {
 	ru: "Не удается подключиться к серверам прямо сейчас"
+});
+Translation.addTranslation("Textures requested successfully", {
+	ru: "Запрос текстур успешно завершен"
 });
 
 // Messages
@@ -1085,6 +1088,9 @@ Translation.addTranslation("Touch here to confirm.", {
 Translation.addTranslation("Nothing loaded, may connection have been dropped", {
 	ru: "Ничего не загрузилось, возможно подключение было сброшено"
 });
+Translation.addTranslation("There's doesn't has any availabled data", {
+	ru: "Здесь нет никаких доступных данных"
+});
 
 // Deprecated
 Translation.addTranslation("Deprecated translation", {
@@ -1149,6 +1155,11 @@ Translation.addTranslation("Idiot", {
 Translation.addTranslation("Asriel", {
 	ru: "Азриэль"
 });
+Translation.addTranslation("Chara", {
+	ru: "Чара"
+});
+Translation.addTranslation("Frisk", {
+	ru: "Фриск"
+});
 
 // Not localized content will be appear here
-Translation.addTranslation("That mod doesn't include any texture.", {});

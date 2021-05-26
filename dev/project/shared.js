@@ -17,6 +17,7 @@ const ProjectOldest = function(obj) {
 				});
 		} catch (e) {
 			reportError(e);
+			delete scope.isAutosaving;
 		}
 	};
 	this.getProjectTime = function() {
@@ -59,9 +60,7 @@ const ProjectOldest = function(obj) {
 	this.getCurrentObject = function() {
 		let id = this.getCurrentId(),
 			obj = this.getAll()[id];
-		if (obj) {
-			return obj;
-		}
+		if (obj) return obj;
 		delete this.worker;
 		this.currentId = -1;
 		return null;
@@ -99,6 +98,8 @@ const monthToName = function(number) {
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
 };
 
+const STRINGIFY_TIMEOUT = 30000;
+
 const stringifyObject = function(obj, identate, action, hint, complete) {
 	let progress = 0, count = 0, indexated = false, done = false, active = Date.now();
 	function recursiveHint(state, max) {
@@ -106,30 +107,28 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 			if (indexated) {
 				showHint((hint || translate("Stringify")) + " (" + Math.floor(progress / count * 100) + "%)");
 			} else if (!indexated) {
-				showHint((hint || translate("Indexating")) + " (" + count + ")");
+				showHint(translate("Indexating") + " (" + count + ")");
 			} else if (!done) {
 				showHint(translate("Working"));
 			}
-			if (!done || progress < count) {
-				recursiveHint();
-			} else if (done) {
-				showHint((complete || translate("Done")) + " " + translate("as %s ms", active));
+			if (done) {
+				showHint((complete || translate("Done")) + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				hintStackableDenied = state;
 				maximumHints = max;
-			}
+			} else recursiveHint(state, max);
 		}, 50);
 	}
 	if (showProcesses) {
 		let window = UniqueHelper.getWindow("HintAlert");
-		if (window) {
-			window.setStackable(false);
-		}
+		if (window) window.setStackable(false);
 		recursiveHint(hintStackableDenied, maximumHints);
 		hintStackableDenied = true;
 		maximumHints = 0;
 	}
 	const recursiveIndexate = function(obj) {
 		try {
+			if (done) throw Error("Was cancelled by timeout");
 			count++;
 			if (obj && typeof obj == "object") {
 				for (let item in obj) {
@@ -142,22 +141,27 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 	};
 	handleThread(function() {
 		try {
+			handle(function() {
+				done = true;
+			}, STRINGIFY_TIMEOUT);
 			recursiveIndexate(obj), indexated = true;
-			let result = stringifyObjectUnsafe(obj, identate, {
-				onUpdate: function() {
-					progress++;
-				},
-				onPassed: function(result, type) {
-					handle(function() {
-						confirm(type, translate("Unknown or unsupported stringify type for:") + " " + result);
-					});
+			if (!done) {
+				let result = stringifyObjectUnsafe(obj, identate, {
+					onUpdate: function() {
+						if (done) throw Error("Was cancelled by timeout");
+						progress++;
+					},
+					onPassed: function(result, type) {
+						handle(function() {
+							confirm(type, translate("Unknown or unsupported stringify type for:") + " " + result);
+						});
+					}
+				});
+				if (action && result) {
+					action(result);
 				}
-			});
-			if (action && result) {
-				action(result);
-			}
-			active = Date.now() - active;
-			done = true;
+				done = true;
+			} else if (action) action();
 		} catch (e) {
 			reportError(e);
 			done = true;
@@ -166,7 +170,7 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 };
 
 const stringifyObjectUnsafe = function(obj, identate, callback) {
-	if (callback == undefined) {
+	if (callback === undefined) {
 		callback = new Object();
 	}
 	const recursiveStringify = function(obj, tabs) {
@@ -187,11 +191,11 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 					obj = obj.replaceAll("\n", "\\\\n");
 					return "\"" + obj + "\"";
 				case "number":
-					return "" + preround(obj);
+					return String(preround(obj));
 				case "boolean":
-					return "" + obj;
+					return String(obj);
 				case "object":
-					if (typeof obj.length != "undefined") {
+					if (Array.isArray(obj)) {
 						let array = new Array(), tabbed = false;
 						for (let i = 0; i < obj.length; i++) {
 							let result = recursiveStringify(obj[i], tabs);
@@ -202,15 +206,11 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 											tabbed = true;
 											tabs += "\t";
 										}
-										array.push(result + (i < obj.length ? "\n" + tabs : ""));
+										array.push(result + (i < obj.length ? "\n" + tabs : new String()));
 									} else if (i != 0) {
 										array.push(" " + result);
-									} else {
-										array.push(result);
-									}
-								} else {
-									array.push(result);
-								}
+									} else array.push(result);
+								} else array.push(result);
 							}
 						}
 						return "[" + array.join(",") + "]";
@@ -229,20 +229,16 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 											tabbed = true;
 											tabs += "\t";
 										}
-										array.push(item + ": " + result + (item != last ? "\n" + tabs : ""));
-									} else if (i != 0) {
+										array.push(item + ": " + result + (item != last ? "\n" + tabs : new String()));
+									} else if (item != 0) {
 										array.push(" " + item + ": " + result);
-									} else {
-										array.push(result);
-									}
-								} else {
-									array.push("\"" + item + "\":" + result);
-								}
+									} else array.push(result);
+								} else array.push("\"" + item + "\":" + result);
 							}
 						}
 						let joined = array.join(",");
 						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
-							(identate ? tabbed ? tabs.replace("\t", "") + "\n}" : " }" : "}");
+							(identate ? tabbed ? tabs.replace("\t", new String()) + "\n}" : " }" : "}");
 					}
 				default:
 					if (callback.onPassed) {
@@ -253,21 +249,17 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 			reportError(e);
 		}
 	};
-	return recursiveStringify(obj, "");
+	return recursiveStringify(obj, new String());
 };
 
 const readFile = function(path, isBytes, action) {
 	try {
 		handleThread(function() {
 			try {
-				let file = new java.io.File("" + path);
-				if (!file.exists()) {
-					return;
-				}
+				let file = new java.io.File(String(path));
+				if (!file.exists()) return;
 				let readed = isBytes ? Files.readBytes(file) : Files.read(file);
-				if (action) {
-					action(readed);
-				}
+				if (action) action(readed);
 			} catch (e) {
 				reportError(e);
 			}
@@ -277,21 +269,10 @@ const readFile = function(path, isBytes, action) {
 	}
 };
 
-const compileToProduce = function(string) {
-	try {
-		Encyption.updateKey("nernar", "editorProject");
-		return Encyption.encryptString("" + string);
-	} catch (e) {
-		__code__.startsWith("develop") && reportError(e);
-		return e.name + "\n" + e.stack;
-	}
-	return null;
-};
-
 const exportProject = function(object, isAutosave, path, action) {
 	try {
 		stringifyObject(object, false, function(result) {
-			let file = new java.io.File("" + path);
+			let file = new java.io.File(String(path));
 			result = compileToProduce(result);
 			file.getParentFile().mkdirs();
 			if (!isAutosave && file.exists()) {
@@ -300,16 +281,12 @@ const exportProject = function(object, isAutosave, path, action) {
 						translate("File is already created. This process will be rewrite it. Continue?"),
 						function() {
 							Files.writeBytes(file, result);
-							if (action) {
-								action(result);
-							}
+							if (action) action(result);
 						});
 				});
 			} else {
 				Files.writeBytes(file, result);
-				if (action) {
-					action(result);
-				}
+				if (action) action(result);
 			}
 		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 			isAutosave ? translate("Autosaved") : translate("Exported"));
@@ -318,25 +295,14 @@ const exportProject = function(object, isAutosave, path, action) {
 	}
 };
 
-const decompileFromProduce = function(bytes) {
-	try {
-		Encyption.updateKey("nernar", "editorProject");
-		return "" + Encyption.decryptAsString(bytes);
-	} catch (e) {
-		__code__.startsWith("develop") && reportError(e);
-		return e.name + "\n" + e.stack;
-	}
-	return null;
-};
-
 const importProject = function(path, action) {
 	try {
 		readFile(path, true, function(bytes) {
 			let result = decompileFromProduce(bytes),
 				data = compileData(result, "object");
 			if (data && !(data instanceof Error)) {
-				typeof data.length != "undefined" ?
-					action(data) : action([data]);
+				action && (data.length !== undefined ?
+					action(data) : action([data]));
 			} else {
 				handle(function() {
 				confirm(translate("Can't open file"),
@@ -346,6 +312,20 @@ const importProject = function(path, action) {
 							importProject(path, action);
 						});
 				});
+			}
+		});
+	} catch (e) {
+		reportError(e);
+	}
+};
+
+const importScript = function(path, action) {
+	try {
+		readFile(path, false, function(text) {
+			let result = compileScript(text);
+			if (result !== null) {
+				action && (result.length !== undefined ?
+					action(result) : action([result]));
 			}
 		});
 	} catch (e) {
@@ -380,9 +360,7 @@ const ProjectEditor = {
 	},
 	getEditorById: function(index) {
 		let project = this.getProject();
-		if (!project) {
-			return null;
-		}
+		if (!project) return null;
 		let obj = project.getAll();
 		return obj[index] || null;
 	},
@@ -391,23 +369,17 @@ const ProjectEditor = {
 	},
 	isOpened: function() {
 		let project = this.getProject();
-		if (!project) {
-			return false;
-		}
+		if (!project) return false;
 		return project.isOpened;
 	},
 	getCount: function() {
 		let project = this.getProject();
-		if (!project) {
-			return 0;
-		}
+		if (!project) return 0;
 		return project.getCount();
 	},
 	setOpenedState: function(state) {
 		let project = this.getProject();
-		if (!project) {
-			return;
-		}
+		if (!project) return;
 		project.isOpened = !!state;
 	},
 	getCurrentType: function() {
@@ -419,47 +391,44 @@ const ProjectEditor = {
 	},
 	initializeAutosave: function() {
 		let scope = this, project = this.getProject();
+		if (project.isAutosaving) return;
 		if (!autosave || this.thread || autosavePeriod <= 0) {
 			project.updateCurrentWorker();
 			return;
 		}
 		scope.thread = handleThread(function() {
 			do {
-				if (!project.isAutosaving) {
-					project.callAutosave();
-				}
 				Ui.sleepMilliseconds(autosavePeriod * 1000);
+				project.callAutosave();
+				while (project.isAutosaving) {
+					Ui.sleepMilliseconds(1);
+				}
 			} while (project.isOpened);
 			delete scope.thread;
 		});
 	},
 	indexOf: function(obj) {
 		let project = this.getProject();
-		if (!project) {
-			return -1;
-		}
+		if (!project) return -1;
 		return project.getAll().indexOf(obj);
 	},
 	setupEditor: function(id, worker) {
 		let project = this.getProject();
-		if (!project) {
-			return;
-		}
+		if (!project) return;
 		project.switchToWorker(worker);
 		project.setCurrentlyId(id);
 	},
 	popEditor: function() {
 		let project = this.getProject();
-		if (!project) {
-			return;
-		}
+		if (!project) return;
 		project.getAll().pop();
 		delete project.worker;
 	}
 };
 
 const compileScript = function(text) {
-	let code = "(function() {\n" + text + "\nreturn __data__;\n})();",
+	let code = "(function() { try { " + String(text) + "\n\t} catch (e) {" +
+			"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "import.js");
 	if (!noImportedScripts) {
 		noImportedScripts = false;
@@ -470,21 +439,25 @@ const compileScript = function(text) {
 			reportError(e);
 		}
 	}
-	return scope.error ? (reportError(scope.error), null) : scope.result;
+	if (scope.error) reportError(scope.error);
+	else if (scope.result && scope.result.error) {
+		reportError(scope.result.error);
+	}
+	return scope.result || null;
 };
 
 const getScriptScope = function() {
-	let __data__ = [];
+	let __data__ = new Array();
 	let Callback = {
 		addCallback: function(name, func) {}
 	};
-	let BlockID = {};
+	let BlockID = new Object();
 	let IDRegistry = {
 		fromString: function(id) {
-			return BlockID[id] || -1;
+			return BlockID[id] !== undefined ? BlockID[id] : -1;
 		},
 		genBlockID: function(name) {
-			let nid = (BlockID[name] = __data__.length);
+			let nid = BlockID[name] = __data__.length;
 			__data__[nid] = {
 				type: "block",
 				define: {
@@ -499,9 +472,7 @@ const getScriptScope = function() {
 	let Block = {
 		createBlock: function(id, data, special) {
 			let nid = IDRegistry.fromString(id);
-			if (!nid) {
-				return;
-			}
+			if (nid == -1) return;
 			data && (__data__[nid].define.data = data);
 			special && (__data__[nid].define.special = special);
 		},
@@ -527,9 +498,17 @@ const getScriptScope = function() {
 	};
 	let ICRender = {
 		Model: function() {
-			this.renderer = [];
+			this.renderer = new Array();
 			this.addEntry = function(model) {
 				model && this.renderer.push({
+					boxes: model.boxes
+				});
+			};
+		},
+		CollisionShape: function() {
+			this.shape = new Array();
+			this.addEntry = function(model) {
+				model && this.shape.push({
 					boxes: model.boxes
 				});
 			};
@@ -537,13 +516,14 @@ const getScriptScope = function() {
 	};
 	let BlockRenderer = {
 		Model: function() {
-			this.boxes = [];
+			this.boxes = new Array();
 			this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
-				this.boxes.push({
+				let index = this.boxes.push({
 					x1: x1, y1: y1, z1: z1,
-					x2: x2, y2: y2, z2: z2,
-					texture: texture, data: data
-				});
+					x2: x2, y2: y2, z2: z2
+				}) - 1;
+				if (texture !== undefined) this.boxes[index].texture = texture;
+				if (data !== undefined) this.boxes[index].texture = [[texture, data]];
 			};
 		},
 		createModel: function() {
@@ -559,9 +539,19 @@ const getScriptScope = function() {
 					renderer: render.renderer,
 					collision: new Array()
 				});
-			} else {
-				__data__[id].renderer = render.renderer;
-			}
+			} else __data__[id].renderer = render.renderer;
+		},
+		setCustomCollisionShape: function(id, meta, collision) {
+			if (!(id >= 0)) {
+				__data__.push({
+					type: "block",
+					define: {
+						id: "invalidIdentifier"
+					},
+					renderer: new Array(),
+					collision: collision.shape
+				});
+			} else __data__[id].collision = collision.shape;
 		},
 		enableCoordMapping: function(id, meta, render) {
 			this.setStaticICRender(id, meta, render);

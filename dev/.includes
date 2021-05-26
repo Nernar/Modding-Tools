@@ -10,6 +10,7 @@ storage/explorer.js
 # storage/factory.js
 storage/converter/shared.js
 storage/converter/block.js
+storage/converter/transition.js
 
 api/shared.js
 # api/protect.js

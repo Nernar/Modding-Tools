@@ -131,3 +131,7 @@ ScriptConverter.prototype.getResult = function() {
 ScriptConverter.prototype.hasResult = function() {
 	return this.isConverted() && this.getCurrentlyReaded() !== null;
 };
+
+ScriptConverter.prototype.resolvePrefix = function(suffix, obj, i) {
+	return obj.length <= 1 ? suffix : suffix + (i + 1);
+};

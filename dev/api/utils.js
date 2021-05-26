@@ -45,11 +45,9 @@ const convertNdb = function(obj) {
 			result.renderer[0].boxes[index].x2 = element[3];
 			result.renderer[0].boxes[index].y2 = element[4];
 			result.renderer[0].boxes[index].z2 = element[5];
-			if (element.length < 7) {
-				result.renderer[0].boxes[index].texture = element[6];
-			} else {
+			if (element.length == 7) {
 				result.renderer[0].boxes[index].texture = [[element[6], element[7]]];
-			}
+			} else result.renderer[0].boxes[index].texture = element[6];
 		});
 	}
 	return result;
@@ -90,13 +88,13 @@ const convertNds = function(obj) {
 					case "left":
 					case 2:
 						result.animation[0].frames[index].interpolator =
-								Transition.Interpolator.DECELERATE;
+							Transition.Interpolator.DECELERATE;
 						break;
 					case "end":
 					case "right":
 					case 3:
 						result.animation[0].frames[index].interpolator =
-								Transition.Interpolator.ACCELERATE;
+							Transition.Interpolator.ACCELERATE;
 						break;
 				}
 			}
@@ -139,6 +137,9 @@ const MathUtils = new Object();
 MathUtils.RAD = 180 / Math.PI;
 
 MathUtils.mathDivider = function(number) {
+	if (number === 0) {
+		return String(number);
+	}
 	if (number % 100000000 === 0) {
 		return Math.round(number / 1e8) + "e8";
 	}
@@ -161,7 +162,7 @@ MathUtils.mathDivider = function(number) {
 		return Math.round(number / 1e2) + "e2";
 	}
 	if (number % 1 === 0) {
-		return number;
+		return String(number);
 	}
 	if (number % 0.125 === 0) {
 		return Math.round(number * 8) + "/8";
@@ -188,7 +189,7 @@ MathUtils.mathDivider = function(number) {
 		return Math.round(number * 1024) + "/1024";
 	}
 	Logger.Log("Non-divideable number: " + number, "Dev-Editor");
-	return number;
+	return String(number);
 };
 
 const Base64 = new Object();

@@ -526,7 +526,7 @@ ControlWindow.ProjectHeader.Category.prototype.getTitle = function() {
 ControlWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.title.setText("" + text);
+	views.title.setText(String(text));
 	return this;
 };
 
@@ -728,7 +728,7 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
 ControlWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.title.setText("" + text);
+	views.title.setText(String(text));
 	return this;
 };
 
@@ -741,7 +741,7 @@ ControlWindow.ProjectHeader.Category.Item.prototype.getDescription = function() 
 ControlWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.params.setText("" + text);
+	views.params.setText(String(text));
 	return this;
 };
 
@@ -849,7 +849,7 @@ ControlWindow.Category.prototype.getTitle = function() {
 ControlWindow.Category.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.title.setText("" + text);
+	views.title.setText(String(text));
 	return this;
 };
 
@@ -1035,7 +1035,7 @@ ControlWindow.Category.Item.prototype.getTitle = function() {
 ControlWindow.Category.Item.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.title.setText("" + text);
+	views.title.setText(String(text));
 	return this;
 };
 
@@ -1192,7 +1192,7 @@ ControlWindow.Message.prototype.getMessage = function() {
 ControlWindow.Message.prototype.setMessage = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.message.setText("" + text);
+	views.message.setText(String(text));
 	return this;
 };
 

@@ -326,9 +326,7 @@ const StartEditor = {
 					if (!hintStackableDenied) {
 						showHint(InstantRunner.modName + " " + InstantRunner.version);
 						showHint(InstantRunner.author);
-					} else {
-						showHint(InstantRunner.modName + " - " + InstantRunner.author);
-					}
+					} else showHint(InstantRunner.modName + " - " + InstantRunner.author);
 				});
 				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
 					let result = WorldEdit(function() {
@@ -337,7 +335,7 @@ const StartEditor = {
 							for (let item in Commands) {
 								let command = Commands[item];
 								array.push(command.name + (command.args && command.args.length > 0 ?
-									" " + command.args : "") + "\n" + command.description);
+									" " + command.args : new String()) + "\n" + command.description);
 							}
 							return array.join("\n\n");
 						} catch (e) {
@@ -353,17 +351,13 @@ const StartEditor = {
 					if (!hintStackableDenied) {
 						showHint(WorldEdit.modName + " " + WorldEdit.version);
 						showHint(WorldEdit.author);
-					} else {
-						showHint(WorldEdit.modName + " - " + WorldEdit.author);
-					}
+					} else showHint(WorldEdit.modName + " - " + WorldEdit.author);
 				});
 				if (TPSmeter) category.addItem(TPSmeter.icon, translate("TPS Meter"), function() {
 					if (!hintStackableDenied) {
 						showHint(TPSmeter.modName + " " + TPSmeter.version);
 						showHint(TPSmeter.author);
-					} else {
-						showHint(TPSmeter.modName + " - " + TPSmeter.author);
-					}
+					} else showHint(TPSmeter.modName + " - " + TPSmeter.author);
 				});
 				checkForAdditionalInformation(control);
 			}
@@ -387,7 +381,8 @@ const StartEditor = {
 							current.getAll().push(value);
 						});
 						StartEditor.menu();
-						showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+						showHint(translate("Imported success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					});
 				});
 			});
@@ -397,7 +392,8 @@ const StartEditor = {
 				let current = ProjectEditor.getProject();
 				current.getAll().push(result);
 				StartEditor.menu();
-				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Converted success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".ndb")) {
 			let active = Date.now();
@@ -407,7 +403,8 @@ const StartEditor = {
 					result = convertNdb(obj);
 				current.getAll().push(result);
 				StartEditor.menu();
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".nds")) {
 			let active = Date.now();
@@ -417,7 +414,25 @@ const StartEditor = {
 					result = convertNds(obj);
 				current.getAll().push(result);
 				StartEditor.menu();
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						let current = ProjectEditor.getProject();
+						selected.forEach(function(value) {
+							current.getAll().push(value);
+						});
+						StartEditor.menu();
+						showHint(translate("Converted success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				});
 			});
 		}
 	},
@@ -430,7 +445,8 @@ const StartEditor = {
 					let current = ProjectEditor.create();
 					current.object = result;
 					StartEditor.menu();
-					showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
+					showHint(translate("Loaded success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				});
 			});
 		} else if (name.endsWith(".json")) {
@@ -439,7 +455,8 @@ const StartEditor = {
 				let current = ProjectEditor.create();
 				current.object = [result];
 				StartEditor.menu();
-				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Converted success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".ndb")) {
 			let active = Date.now();
@@ -448,7 +465,8 @@ const StartEditor = {
 					obj = compileData(Files.read(file));
 				current.object = [convertNdb(obj)];
 				StartEditor.menu();
-				showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Loaded success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".nds")) {
 			let active = Date.now();
@@ -457,7 +475,19 @@ const StartEditor = {
 					obj = compileData(Files.read(file));
 				current.object = [convertNds(obj)];
 				StartEditor.menu();
-				showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Loaded success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					let current = ProjectEditor.create();
+					current.object = result;
+					StartEditor.menu();
+					showHint(translate("Converted success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				});
 			});
 		}
 	},
@@ -471,7 +501,7 @@ const StartEditor = {
 };
 
 /**
- * TODO: Reshape to AdditionalMessage.
+ * TODO: Reshape to storage -> message.js -> AdditionalMessage.
  */
 const checkForAdditionalInformation = function(control) {
 	if (hasAdditionalInformation(warningMessage)) {
@@ -504,17 +534,18 @@ const checkForAdditionalInformation = function(control) {
 								if (renderer && renderer.length > 1) {
 									let source = renderer[0].params;
 									for (let i = 1; i < renderer.length; i++)
-										source = assign(renderer[i].params, source);
+										source = merge(renderer[i].params, source);
 									worker.Renderer.setParams([source]);
 								}
 								if (collision && collision.length > 1) {
 									let source = collision[0].params;
 									for (let i = 1; i < collision.length; i++)
-										source = assign(collision[i].params, source);
+										source = merge(collision[i].params, source);
 									worker.Collision.setParams([source]);
 								}
 								control.removeElement(message);
-								showHint(translate("Merged") + " " + translate("as %s ms", Date.now() - active));
+								showHint(translate("Merged") + " " +
+									translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 							});
 					});
 	}
@@ -536,18 +567,14 @@ const resetAdditionalInformation = function() {
 
 resetAdditionalInformation();
 
-const selectProjectData = function(result, action, single) {
+const selectProjectData = function(result, action, type, single) {
 	try {
 		if (!result || result.length == 0) return;
-		if (result.length == 1) {
-			action && action(single ? result[0] : result);
-			return;
-		}
 		let items = new Array(),
-			selected = new Array(),
-			real = new Array();
+			data = new Array(),
+			selected = new Array();
 		result.forEach(function(element, index) {
-			if (element && element.type) {
+			if (element && (type !== undefined ? element.type == type : true)) {
 				switch (element.type) {
 					case "block":
 						let renderers = element.renderer.length + element.collision.length;
@@ -568,15 +595,23 @@ const selectProjectData = function(result, action, single) {
 								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
 						break;
 				}
-				(!single) && selected.push(!!importAutoselect);
-				real.push(index);
+				(!single) && selected.push(importAutoselect);
+				data.push(element);
 			}
 		});
+		if (items.length == 0) {
+			showHint(translate("There's doesn't has any availabled data"));
+			return;
+		}
+		if (items.length == 1) {
+			action && action(single ? data[0] : data);
+			return;
+		}
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate("Element selector"));
 		single ? builder.setItems(items, action ? function(dialog, item) {
-			try { action(result[real[item]]); }
+			try { action(data[item]); }
 			catch (e) { reportError(e); }
 		} : null) : builder.setMultiChoiceItems(items, selected, function(dialog, item, active) {
 			try { selected[item] = active; }
@@ -585,20 +620,18 @@ const selectProjectData = function(result, action, single) {
 		builder.setNegativeButton(translate("Cancel"), null);
 		if (!single) {
 			builder.setNeutralButton(translate("All"), action ? function() {
-				try { action(result); }
+				try { action(data); }
 				catch (e) { reportError(e); }
 			} : null);
 			builder.setPositiveButton(translate("Select"), action ? function() {
 				try {
 					let value = new Array();
 					selected.forEach(function(element, index) {
-						element && value.push(result[real[index]]);
+						element && value.push(data[index]);
 					});
 					if (value.length == 0) {
-						selectProjectData(result, action);
-					} else {
-						action(value);
-					}
+						selectProjectData(data, action, type, single);
+					} else action(value);
 				} catch (e) {
 					reportError(e);
 				}
@@ -663,9 +696,9 @@ const showSupportableInfo = function(mod) {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate(mod.modName) + " " + mod.version);
-		builder.setMessage((mod.description ? translate(mod.description) + "\n" : "") +
+		builder.setMessage((mod.description ? translate(mod.description) + "\n" : new String()) +
 			translate("Developer: %s", (mod.author || translate("Unknown")) + "\n" +
-				translate("State: %s", "" + translate(mod.result == true ? "ACTIVE" :
+				translate("State: %s", translate(mod.result == true ? "ACTIVE" :
 					mod.result == false ? "OUTDATED" : mod.result instanceof Error == true ?
 					"FAILED" : !mod.result ? "DISABLED" : "UNKNOWN"))));
 		builder.setNegativeButton(translate("Remove"), function() {
@@ -676,7 +709,7 @@ const showSupportableInfo = function(mod) {
 						if (mod.result == true) {
 							showHint(translate("Restart game for better stability"));
 						}
-						eval(mod.modName.replace(" ", "") + " = null;");
+						eval(mod.modName.replace(" ", new String()) + " = null;");
 						ExecutableSupport.uninstall(mod.modName);
 						StartEditor.menu();
 					});
@@ -696,7 +729,7 @@ const confirm = function(title, message, action) {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(title || translate("Confirmation"));
-		if (message) builder.setMessage("" + message);
+		if (message) builder.setMessage(String(message));
 		builder.setNegativeButton(translate("Cancel"), null);
 		builder.setPositiveButton(translate("Yes"), action ? function() {
 			try { action && action(); }
@@ -717,7 +750,7 @@ const selectFile = function(formats, onSelect, outside) {
 				if (notRoot) generated.unshift(translate("... parent folder"));
 				for (let item in formatted) generated.push(formatted[item]);
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
-				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
+				builder.setTitle(String(path).replace(Dirs.EXTERNAL, new String()));
 				builder.setNegativeButton(translate("Cancel"), null);
 				builder.setItems(generated, function(d, i) {
 					try {
@@ -776,12 +809,6 @@ const saveFile = function(currentName, formats, onSelect, outside) {
 				edit.setHint(translate("project"));
 				edit.setTextColor(Ui.Color.WHITE);
 				edit.setHintTextColor(Ui.Color.LTGRAY);
-				edit.addTextChangedListener({
-					onTextChanged: function(text) {
-						if (text.length > 0) currentName = "" + text;
-						else currentName = translate("project");
-					}
-				});
 				edit.setBackgroundDrawable(null);
 				edit.setCursorVisible(false);
 				edit.setMaxLines(1);
@@ -790,15 +817,18 @@ const saveFile = function(currentName, formats, onSelect, outside) {
 				text.setText(formats[currentFormat]);
 				text.setTextColor(Ui.Color.WHITE);
 				text.setOnClickListener(function() {
-					if (currentFormat == formats.length - 1) currentFormat = 0;
-					else currentFormat++;
+					if (currentFormat == formats.length - 1) {
+						currentFormat = 0;
+					} else currentFormat++;
 					text.setText(formats[currentFormat]);
 				});
 				layout.addView(text);
 				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
-				builder.setTitle(("" + path).replace(Dirs.EXTERNAL, ""));
+				builder.setTitle(String(path).replace(Dirs.EXTERNAL, new String()));
 				builder.setPositiveButton(translate("Export"), function() {
-					let file = new java.io.File(path, edit.getText() + text.getText());
+					currentName = String(edit.getText().toString());
+					if (currentName.length == 0) currentName = translate("project");
+					let file = new java.io.File(path, currentName + text.getText());
 					if (onSelect) onSelect(file, currentName);
 				});
 				builder.setNegativeButton(translate("Cancel"), null);
@@ -829,7 +859,7 @@ const saveFile = function(currentName, formats, onSelect, outside) {
 				});
 				let rename = explorer.addRename();
 				rename.setAvailabledTypes(formats);
-				currentName && rename.setName(currentName);
+				currentName && rename.setCurrentName(currentName);
 				rename.setOnApproveListener(function(window, file, last) {
 					explorer.dismiss();
 					onSelect && onSelect(file, last);
@@ -846,9 +876,9 @@ const saveFile = function(currentName, formats, onSelect, outside) {
 const compileData = function(text, type, additional) {
 	if (type == "string") text = "\"" + text + "\"";
 	let code = "(function() { return " + text + "; })();",
-		scope = runAtScope(code, additional || {}, "compile.js");
+		scope = runAtScope(code, additional, "compile.js");
 	return scope.error ? scope.error : !type ? scope.result :
-		type == "string" ? ("" + scope.result) :
+		type == "string" ? String(scope.result) :
 		type == "number" ? parseInt(scope.result) :
 		type == "float" ? parseFloat(scope.result) :
 		type == "object" ? scope.result : null;

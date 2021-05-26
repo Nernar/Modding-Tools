@@ -19,7 +19,7 @@ ControlButton.prototype.TYPE = "ControlButton";
 ControlButton.prototype.unclose = true;
 
 ControlButton.prototype.reset = function() {
-	let scope = this, views = (this.views = {});
+	let scope = this, views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
 	

@@ -66,13 +66,15 @@ const BlockWorker = function(obj) {
 			}
 		},
 		setIdentificator: function(id) {
-			this.getParams().id = id;
+			this.getParams().id = id.length > 0 ? id : "unknown";
 		},
 		setDefineData: function(data) {
-			this.getParams().data = data;
+			if (data.length == 0) delete this.getParams().data;
+			else this.getParams().data = data;
 		},
 		setSpecialType: function(type) {
-			this.getParams().special = type;
+			if (data.length == 0) delete this.getParams().special;
+			else this.getParams().special = type;
 		}
 	};
 	this.Renderer = {
@@ -132,7 +134,7 @@ const BlockWorker = function(obj) {
 			};
 			this.cloneBox = function(index) {
 				let boxes = this.getBoxes();
-				boxes.push(assign(boxes[index]));
+				boxes.push(clone(boxes[index]));
 				return boxes.length - 1;
 			};
 			this.removeBox = function(index) {
@@ -458,7 +460,7 @@ const BlockWorker = function(obj) {
 			};
 			this.cloneBox = function(index) {
 				let boxes = this.getBoxes();
-				boxes.push(assign(boxes[index]));
+				boxes.push(clone(boxes[index]));
 				return boxes.length - 1;
 			};
 			this.removeBox = function(index) {

@@ -31,7 +31,7 @@ HintAlert.prototype.forever = false;
 HintAlert.prototype.time = 3000;
 
 HintAlert.prototype.reset = function() {
-	let views = (this.views = {});
+	let views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
 	this.setContent(content);
 	
@@ -139,7 +139,7 @@ HintAlert.prototype.setHintForce = function(hint) {
 	actor.setInterpolator(new OvershootInterpolator());
 	actor.setDuration(this.time / 8);
 	this.views.text.setVisibility(Ui.Visibility.INVISIBLE);
-	this.views.text.setText("" + hint);
+	this.views.text.setText(String(hint));
 	this.beginDelayedActor(actor);
 	this.views.text.setVisibility(Ui.Visibility.VISIBLE);
 };

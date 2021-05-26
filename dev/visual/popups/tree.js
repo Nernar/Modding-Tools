@@ -93,7 +93,7 @@ TreePopup.prototype.getParent = function(name) {
 };
 
 TreePopup.prototype.getParents = function(name) {
-	let parents = [];
+	let parents = new Array();
 	while ((i = this.getParent(name)))
 		(name = i) && parents.push(name);
 	return parents.reverse();
@@ -109,14 +109,14 @@ TreePopup.prototype.setTitle = function(title) {
 
 TreePopup.prototype.selectGroup = function(index) {
 	let groups = this.views.groups;
-	this.group + "" != "undefined" && groups[this.group].setBackgroundDrawable(null);
+	this.group !== undefined && groups[this.group].setBackgroundDrawable(null);
 	groups[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 	this.group = index;
 };
 
 TreePopup.prototype.selectItem = function(index) {
 	let items = this.views.items;
-	this.item + "" != "undefined" && items[this.item].setBackgroundDrawable(null);
+	this.item !== undefined && items[this.item].setBackgroundDrawable(null);
 	items[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 	this.item = index;
 };

@@ -51,7 +51,7 @@ const selectTexture = function(index, onSelect) {
 			builder.setItems(converted, function(d, i) {
 				try {
 					let adapter = alert.getListView().getAdapter(),
-						texture = ("" + adapter.getItem(i)).split(", ");
+						texture = String(adapter.getItem(i)).split(", ");
 					onSelect(texture[0], parseInt(texture[1]));
 				} catch (e) {
 					reportError(e);
@@ -516,22 +516,24 @@ const BlockEditor = {
 						active = Date.now() - active;
 						let current = BlockEditor.data.worker.getProject();
 						selected.forEach(function(element, index) {
-							current = assign(current, element);
+							current = merge(current, element);
 						});
 						BlockEditor.data.worker.loadProject(current);
 						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
-					});
+						showHint(translate("Imported success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "block");
 				});
 			});
 		} else if (name.endsWith(".json")) {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
 				let current = BlockEditor.data.worker.getProject(),
-					assigned = assign(current, result);
+					assigned = merge(current, result);
 				BlockEditor.data.worker.loadProject(assigned);
 				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Converted success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".ndb")) {
 			let active = Date.now();
@@ -539,10 +541,29 @@ const BlockEditor = {
 				let current = BlockEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNdb(obj),
-					assigned = assign(current, result);
+					assigned = merge(current, result);
 				BlockEditor.data.worker.loadProject(assigned);
 				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						let current = BlockEditor.data.worker.getProject();
+						selected.forEach(function(element, index) {
+							current = merge(current, element);
+						});
+						BlockEditor.data.worker.loadProject(current);
+						mapRenderBlock(BlockEditor.data.worker);
+						showHint(translate("Converted success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "block");
+				});
 			});
 		}
 	},
@@ -557,8 +578,9 @@ const BlockEditor = {
 						active = Date.now() - active;
 						BlockEditor.data.worker.loadProject(selected);
 						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
-					}, true);
+						showHint(translate("Loaded success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "block", true);
 				});
 			});
 		} else if (name.endsWith(".json")) {
@@ -566,7 +588,8 @@ const BlockEditor = {
 			convertJsonBlock(Files.read(file), function(result) {
 				BlockEditor.data.worker.loadProject(result);
 				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Converted success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 			});
 		} else if (name.endsWith(".ndb")) {
 			let active = Date.now();
@@ -576,7 +599,22 @@ const BlockEditor = {
 					result = convertNdb(obj);
 				BlockEditor.data.worker.loadProject(result);
 				mapRenderBlock(BlockEditor.data.worker);
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						BlockEditor.data.worker.loadProject(selected);
+						mapRenderBlock(BlockEditor.data.worker);
+						showHint(translate("Converted success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "block", true);
+				});
 			});
 		}
 		Popups.closeAll();
@@ -596,7 +634,8 @@ const BlockEditor = {
 					handle(function() {
 						if (link.hasResult()) {
 							Files.write(file, result);
-							showHint(translate("Converted success") + " " + translate("as %s ms", Date.now() - active));
+							showHint(translate("Converted success") + " " +
+								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 						} else reportError(link.getLastException());
 					});
 				});
@@ -1052,7 +1091,7 @@ const BlockEditor = {
 		popup.addEditElement(translate("ID"), define.getIdentificator());
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues();
-			define.setIdentificator(values[0]);
+			define.setIdentificator(String(values[0]));
 			showHint(translate("Data saved"));
 		}).setBackground("ground");
 		Popups.open(popup, "rename");
@@ -1061,7 +1100,7 @@ const BlockEditor = {
 		let define = BlockEditor.data.worker.Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Data"));
-		popup.addEditElement(translate("Define"), define.getDefineData() || "[]");
+		popup.addEditElement(translate("Define"), define.getDefineData() || "[[]]");
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues(),
 				result = compileData(values[0]);
@@ -1070,12 +1109,12 @@ const BlockEditor = {
 					translate("Looks like, you entered invalid array. Check it with following exception:") + "\n" + result.message +
 					"\n\n" + translate("Force save define data?"),
 					function() {
-						define.setDefineData(values[0]);
+						define.setDefineData(String(values[0]));
 						showHint(translate("Data saved"));
 					});
 				return;
 			}
-			define.setDefineData(values[0]);
+			define.setDefineData(String(values[0]));
 			showHint(translate("Data saved"));
 		}).setBackground("ground");
 		Popups.open(popup, "variation");
@@ -1093,12 +1132,12 @@ const BlockEditor = {
 					translate("Looks like, you entered invalid object. Check it with following exception:") + "\n" + result.message +
 					"\n\n" + translate("Force save special type?"),
 					function() {
-						define.setSpecialType(values[0]);
+						define.setSpecialType(String(values[0]));
 						showHint(translate("Data saved"));
 					});
 				return;
 			}
-			define.setSpecialType(values[0]);
+			define.setSpecialType(String(values[0]));
 			showHint(translate("Data saved"));
 		}).setBackground("ground");
 		Popups.open(popup, "type");

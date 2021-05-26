@@ -175,7 +175,7 @@ Files.listDirectories = function(path, explore) {
 };
 
 Files.listFileNames = function(path, explore, root) {
-	if (!("" + path).endsWith("/")) {
+	if (!String(path).endsWith("/")) {
 		path += "/";
 	}
 	let files = new Array(),
@@ -184,7 +184,7 @@ Files.listFileNames = function(path, explore, root) {
 	if (root === undefined) root = path;
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].isFile()) {
-			files.push(("" + list[i]).replace(root, ""));
+			files.push(String(list[i]).replace(root, new String()));
 		} else if (explore) {
 			files = files.concat(this.listFileNames(list[i], explore, root));
 		}
@@ -193,7 +193,7 @@ Files.listFileNames = function(path, explore, root) {
 };
 
 Files.listDirectoryNames = function(path, explore, root) {
-	if (!("" + path).endsWith("/")) {
+	if (!String(path).endsWith("/")) {
 		path += "/";
 	}
 	let directories = new Array(),
@@ -202,7 +202,7 @@ Files.listDirectoryNames = function(path, explore, root) {
 	if (root === undefined) root = path;
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].isDirectory()) {
-			directories.push(("" + list[i]).replace(root, ""));
+			directories.push(String(list[i]).replace(root, new String()));
 			if (explore) directories = directories.concat(this.listDirectoryNames(list[i], explore, root));
 		}
 	}

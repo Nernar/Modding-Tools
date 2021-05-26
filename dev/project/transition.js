@@ -45,9 +45,7 @@ const TransitionWorker = function(obj) {
 		},
 		moveStarting: function(axis, value) {
 			let starting = this.getStarting();
-			if (axis) {
-				starting[axis] = value;
-			}
+			if (axis) starting[axis] = value;
 		},
 		resetStarting: function() {
 			let starting = this.getStarting(),
@@ -117,7 +115,7 @@ const TransitionWorker = function(obj) {
 			};
 			this.cloneFrame = function(index) {
 				let frames = this.getFrames();
-				frames.push(assign(frames[index]));
+				frames.push(clone(frames[index]));
 				return frames.length - 1;
 			};
 			this.removeFrame = function(index) {

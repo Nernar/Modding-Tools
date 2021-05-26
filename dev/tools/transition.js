@@ -51,43 +51,6 @@ const stopTransition = function(worker) {
 	return false;
 };
 
-const sceneToScript = function(project) {
-	let frames = project.frames,
-		point = project.point;
-	let result = "let transition = new Transition();";
-	if (project.fps && project.fps != 60) {
-		result += "\n";
-		result += "transition.setFramesPerSecond(" + project.fps + ");";
-	}
-	if (project.entity != getPlayerEnt()) {
-		result += "\n";
-		result += "transition.withEntity(" + project.entity + ");";
-	}
-	result += "\n";
-	result += "transition.withFrom(" + point[0] + ", " + point[1] + ", " + point[2] + ", " + point[3] + ", " + point[4] + ");";
-	if (frames.length > 0) {
-		result += "\n";
-		for (let item in frames) {
-			let frame = frames[item];
-			result += "\n";
-			result += "transition.addFrame(" + frame[0] + ", " + frame[1] + ", " + frame[2] + ", " + frame[3] + ", " + frame[4] + ", " + frame[5];
-			if (frame.length > 6) result += ", Transition.Interpolator." + (frame[6] == 1 ? "ACCELERATE" : frame[6] == 2 ? "DECELERATE" : frame[6] == 3 ? "ACCELERATE_DECELERATE" : "LINEAR");
-			result += ");";
-		}
-	}
-	result += "\n\n";
-	result += "Callback.addCallback(\"LevelLoaded\", function() {";
-	if (project.entity == getPlayerEnt()) {
-		result += "\n\t";
-		result += "transition.withEntity(Player.get());";
-	}
-	result += "\n\t";
-	result += "transition.start();";
-	result += "\n";
-	result += "});";
-	return result;
-};
-
 /**
  * TODO: Add spawn particles.
  */
@@ -267,12 +230,13 @@ let TransitionEditor = {
 						active = Date.now() - active;
 						let current = TransitionEditor.data.worker.getProject();
 						selected.forEach(function(element, index) {
-							current = assign(current, element);
+							current = merge(current, element);
 						});
 						TransitionEditor.data.worker.loadProject(current);
 						drawTransitionPoints(TransitionEditor.data.worker);
-						showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
-					});
+						showHint(translate("Imported success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "transition");
 				});
 			});
 		} else if (name.endsWith(".nds")) {
@@ -281,10 +245,29 @@ let TransitionEditor = {
 				let current = TransitionEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNds(obj),
-					assigned = assign(current, result);
+					assigned = merge(current, result);
 				TransitionEditor.data.worker.loadProject(assigned);
 				drawTransitionPoints(TransitionEditor.data.worker);
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						let current = TransitionEditor.data.worker.getProject();
+						selected.forEach(function(element, index) {
+							current = merge(current, element);
+						});
+						TransitionEditor.data.worker.loadProject(current);
+						drawTransitionPoints(TransitionEditor.data.worker);
+						showHint(translate("Converted success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "transition");
+				});
 			});
 		}
 	},
@@ -299,8 +282,9 @@ let TransitionEditor = {
 						active = Date.now() - active;
 						TransitionEditor.data.worker.loadProject(selected);
 						drawTransitionPoints(TransitionEditor.data.worker);
-						showHint(translate("Loaded success") + " " + translate("as %s ms", Date.now() - active));
-					}, true);
+						showHint(translate("Loaded success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "transition", true);
 				});
 			});
 		} else if (name.endsWith(".nds")) {
@@ -311,7 +295,22 @@ let TransitionEditor = {
 					result = convertNds(obj);
 				TransitionEditor.data.worker.loadProject(result);
 				drawTransitionPoints(TransitionEditor.data.worker);
-				showHint(translate("Imported success") + " " + translate("as %s ms", Date.now() - active));
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			importScript(file.getPath(), function(result) {
+				handle(function() {
+					active = Date.now() - active;
+					selectProjectData(result, function(selected) {
+						active = Date.now() - active;
+						TransitionEditor.data.worker.loadProject(selected);
+						drawTransitionPoints(TransitionEditor.data.worker);
+						showHint(translate("Converted success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					}, "transition", true);
+				});
 			});
 		}
 		Popups.closeAll();
@@ -322,6 +321,21 @@ let TransitionEditor = {
 			project = TransitionEditor.data.worker.getProject();
 		if (name.endsWith(".dnp")) {
 			exportProject(project, false, file.getPath());
+		} else if (name.endsWith(".js")) {
+			let active = Date.now();
+			handle(function() {
+				let converter = new TransitionConverter();
+				converter.attach(project);
+				converter.executeAsync(function(link, result) {
+					handle(function() {
+						if (link.hasResult()) {
+							Files.write(file, result);
+							showHint(translate("Converted success") + " " +
+								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+						} else reportError(link.getLastException());
+					});
+				});
+			});
 		}
 	},
 	reload: function(view) {

@@ -115,7 +115,7 @@ ExplorerWindow.prototype.getDirectory = function() {
 };
 
 ExplorerWindow.prototype.setRootDirectory = function(path) {
-	this.root = "" + (path || Dirs.EXTERNAL);
+	this.root = String(path || Dirs.EXTERNAL);
 	(!this.root.endsWith("/")) && (this.root += "/");
 };
 
@@ -252,7 +252,7 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 };
 
 ExplorerWindow.Approve.prototype.reset = function() {
-	let scope = this, views = this.views = {};
+	let scope = this, views = this.views = new Object();
 	let content = new android.widget.ImageView(context);
 	content.setVisibility(Ui.Visibility.GONE);
 	content.setPadding(Ui.getY(20), Ui.getY(20), Ui.getY(20), Ui.getY(20));
@@ -367,7 +367,7 @@ ExplorerWindow.Path = function(parentOrAction, action) {
 };
 
 ExplorerWindow.Path.prototype.reset = function() {
-	let scope = this, views = this.views = {};
+	let scope = this, views = this.views = new Object();
 	let content = new android.widget.LinearLayout(context);
 	content.setId(java.lang.String("pathLayout").hashCode());
 	content.setOrientation(Ui.Orientate.VERTICAL);
@@ -435,7 +435,7 @@ ExplorerWindow.Path.prototype.setBackground = function(src) {
 
 ExplorerWindow.Path.prototype.addPathElement = function(view, extendsArrow) {
 	if (!view) return;
-	extendsArrow = extendsArrow + "" == "undefined" ?
+	extendsArrow = extendsArrow === undefined ?
 		(!!this.lastPath) : extendsArrow;
 	(this.lastPath = view, extendsArrow && this.attachArrowToPath());
 	view.setId(java.lang.String("path" + this.pathes.length).hashCode());
@@ -462,7 +462,7 @@ ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 
 ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 	let path = new android.widget.TextView(context);
-	text + "" != "undefined" && path.setText(text);
+	text !== undefined && path.setText(text);
 	typeface && path.setTypeface(typeface);
 	path.setTextColor(Ui.Color.WHITE);
 	path.setGravity(Ui.Gravity.CENTER);
@@ -495,7 +495,7 @@ ExplorerWindow.Path.prototype.updatePath = function() {
 	views.layout.removeAllViews();
 	delete this.lastPath;
 	let current = window ? window.root : Dirs.EXTERNAL + "/",
-		pathFilter = path.replace(current, ""),
+		pathFilter = path.replace(current, new String()),
 		pathDivided = pathFilter.split("/");
 	pathDivided.pop(), this.addPathIcon("explorerSelectionHome", current);
 	for (let i = 0; i < pathDivided.length; i++) {
@@ -546,7 +546,7 @@ ExplorerWindow.Rename = function(parentOrAction, action) {
 ExplorerWindow.Rename.prototype.formatIndex = -1;
 
 ExplorerWindow.Rename.prototype.reset = function() {
-	let scope = this, views = this.views = {};
+	let scope = this, views = this.views = new Object();
 	let content = new android.widget.RelativeLayout(context);
 	content.setId(java.lang.String("renameLayout").hashCode());
 	let params = android.widget.RelativeLayout.LayoutParams
@@ -645,29 +645,24 @@ ExplorerWindow.Rename.prototype.setBackground = function(src) {
 };
 
 ExplorerWindow.Rename.prototype.getCurrentName = function() {
-	let name = this.views ? this.views.name ? this.views.name.
-		getText().toString() + "" : "" : "";
+	let name = String(this.views ? this.views.name ?
+		this.views.name.getText().toString() : new String() : new String());
 	if (name.length == 0) name = translate("project");
 	return name + this.getCurrentFormat();
 };
 
 ExplorerWindow.Rename.prototype.setCurrentName = function(text) {
-	let name = this.views ? this.views.name : null;
-	if (!name || !text) return;
+	if (!text) return;
 	let format = Files.getNameExtension(text);
-	if (format) {
-		let index = text.lastIndexOf(format);
-		text = text.substring(0, index - 1);
-		this.setFormat("." + format);
-	}
-	name.setText("" + text);
+	if (format) this.setFormat("." + format);
+	this.setName(Files.getNameWithoutExtension(text))
 	return this;
 };
 
 ExplorerWindow.Rename.prototype.setName = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.name.setText("" + text);
+	views.name.setText(String(text));
 	return this;
 };
 
@@ -686,9 +681,9 @@ ExplorerWindow.Rename.prototype.approve = function() {
 ExplorerWindow.Rename.prototype.nextFormat = function() {
 	if (!this.formats || this.formats.length == 0)
 		return;
-	if (this.formatIndex > this.formats.length - 2)
+	if (this.formatIndex > this.formats.length - 2) {
 		this.formatIndex = 0;
-	else this.formatIndex++;
+	} else this.formatIndex++;
 	this.setFormat(this.formatIndex);
 	return this;
 };
@@ -723,7 +718,7 @@ ExplorerWindow.Rename.prototype.getTitle = function() {
 ExplorerWindow.Rename.prototype.setTitle = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.approve.setText(("" + text).toUpperCase());
+	views.approve.setText(String(text).toUpperCase());
 	return this;
 };
 
@@ -736,7 +731,7 @@ ExplorerWindow.Rename.prototype.getHint = function() {
 ExplorerWindow.Rename.prototype.setHint = function(text) {
 	let content = this.getContent(), views = this.views;
 	if (!content || !views) return this;
-	views.name.setHint("" + text);
+	views.name.setHint(String(text));
 	return this;
 };
 
@@ -775,7 +770,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		let item = this.array[position], file = this.getFile(position),
 		    extension = Files.getExtension(file), date = new java.util.Date(file.
 			lastModified()), format = new java.text.SimpleDateFormat(), obj = {
-			    name: extension ? item.replace("." + extension, "") : item,
+			    name: extension ? item.replace("." + extension, new String()) : item,
 			    date: (format.applyPattern("d MMM, yyyy"), format.format(date)),
 			    time: (format.applyPattern("k:mm"), format.format(date)),
 				type: Files.getExtensionType(file), isDirectory: file.isDirectory(),
@@ -807,8 +802,9 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	},
 	getApprovedFiles: function() {
 		let files = new Array(), approves = this.getApproved();
-		for (let i = 0; i < this.getApprovedCount(); i++)
+		for (let i = 0; i < this.getApprovedCount(); i++) {
 			files.push(this.getFile(approves[i]));
+		}
 		return files;
 	},
 	getView: function(position, convertView, parent) {
@@ -820,10 +816,10 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		    view.findViewById(java.lang.String("fileName")
 		        .hashCode()).setText(item.name);
 		    view.findViewById(java.lang.String("fileSize").hashCode())
-		        .setText((item.extension ? item.extension : "") + (item.extension
-			        && item.size ? " / " : "") + (item.size ? item.size : "") +
+		        .setText((item.extension ? item.extension : new String()) + (item.extension
+			        && item.size ? " / " : new String()) + (item.size ? item.size : new String()) +
 				    (item.isDirectory ? translateCounter(item.filesCount, "no files", "%s1 file",
-					"%s" + (item.filesCount % 10) + " files", "%s files", [item.filesCount]) : ""));
+					"%s" + (item.filesCount % 10) + " files", "%s files", [item.filesCount]) : new String()));
 		    view.findViewById(java.lang.String("fileDate")
 		        .hashCode()).setText(item.date);
 		    let info = view.findViewById(java.lang.String("fileInfo").hashCode());
@@ -929,12 +925,13 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	},
 	selectItem: function(position) {
 		position = parseInt(position);
-		if (this.previous + "" != "undefined") {
+		if (this.previous !== undefined) {
 			let last = this.approves.indexOf(this.previous);
-			if (last != -1 && this.choice == Ui.Choice.SINGLE)
+			if (last != -1 && this.choice == Ui.Choice.SINGLE) {
 				this.approves.splice(last, 1);
+			}
 		}
-		if (position + "" != "undefined") {
+		if (position !== undefined) {
 		    let selected = this.approves.indexOf(position);
 			if (this.choice == Ui.Choice.SINGLE) {
 			    this.__select && this.__select(position, selected);
@@ -953,8 +950,9 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	},
 	selectAll: function() {
 		this.approves = new Array();
-		for (let i = 0; i < this.getCount(); i++)
+		for (let i = 0; i < this.getCount(); i++) {
 			approves.push(this.getItemId(i));
+		}
 		this.notifyDataSetChanged();
 	},
 	unselectAll: function() {

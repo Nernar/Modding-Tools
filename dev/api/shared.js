@@ -5,10 +5,13 @@ const runAtScope = function(code, scope, name) {
 	let scriptable = org.mozilla.javascript.ScriptableObject,
 		source = name ? __name__ + "$" + name : "<no name>",
 		ctx = org.mozilla.javascript.Context.enter();
+	source = source.replace(/[^a-z0-9_\$\<\>\.\-]/gi, "$");
 	ctx.setLanguageVersion(200);
 	let standart = ctx.initStandardObjects(null, !1);
-	for (let item in scope) {
-		scriptable.putProperty(standart, "" + item, scope[item]);
+	if (scope !== undefined) {
+		for (let item in scope) {
+			scriptable.putProperty(standart, String(item), scope[item]);
+		}
 	}
 	scope = new Object();
 	try {
@@ -27,7 +30,7 @@ const REQUIRE = function(path) {
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
 				code ="(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, REQUIRE.getScope(), path.replace(/\W/g, "$"));
+				scope = runAtScope(code, REQUIRE.getScope(), path);
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);

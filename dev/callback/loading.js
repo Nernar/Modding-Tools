@@ -70,6 +70,7 @@ Callback.addCallback("CoreConfigured", function(config) {
 });
 
 Callback.addCallback("PreBlocksDefined", function() {
+	let active = Date.now();
 	handleThread(function() {
 		// Loads all textures from the cache of engine (game + mods).
 		try {
@@ -176,7 +177,12 @@ Callback.addCallback("PreBlocksDefined", function() {
 					reportError(e);
 				}
 			}
-			LoadingTipUtils.resetEncounter();
+			
+			handle(function() {
+				LoadingTipUtils.resetEncounter();
+				showHint(translate("Textures requested successfully") +
+					" " + translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
 		} catch (e) {
 			reportError(e);
 		}
