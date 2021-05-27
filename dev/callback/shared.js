@@ -138,7 +138,7 @@ let needTransitionReset = false;
 Callback.addCallback("LevelPreLoaded", function() {
 	try {
 		// Reset entity if entity isn't defined
-		if (ProjectEditor.getCurrentType() == "transition" &&
+		if (ProjectProvider.getCurrentType() == "transition" &&
 			TransitionEditor.data.worker.Define.getEntity() == -1) {
 			TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
 			needTransitionReset = true;
@@ -180,7 +180,7 @@ Callback.addCallback("EntityHurt", function(attacker, victim) {
 Callback.addCallback("tick", function() {
 	try {
 		// Mostly spawn selection particles
-		if (ProjectEditor.getCurrentType() == "transition") {
+		if (ProjectProvider.getCurrentType() == "transition") {
 			drawTransitionPoints(TransitionEditor.data.worker);
 		}
 	} catch (e) {

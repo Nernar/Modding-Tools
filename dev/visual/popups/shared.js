@@ -47,7 +47,7 @@ Popups.createAction = function(widget) {
 						if (expandable && expandable.isActive) {
 							if (widget.expand) {
 								widget.expand();
-								// ProjectEditor.getProject().updatePopupExpanded(widget.name, widget.isExpanded());
+								// ProjectProvider.getProject().updatePopupExpanded(widget.name, widget.isExpanded());
 							}
 							expandable.destroy();
 						} else {
@@ -67,7 +67,7 @@ Popups.createAction = function(widget) {
 						if (closeable && closeable.thread && closeable.getLeftTime() == 0) {
 							closeable.destroy();
 							Popups.closeIfOpened(widget.name);
-						} // else ProjectEditor.getProject().updatePopupLocation(widget.name, event.getRawX() - dx, event.getRawY() - dy);
+						} // else ProjectProvider.getProject().updatePopupLocation(widget.name, event.getRawX() - dx, event.getRawY() - dy);
 						break;
 					case 2:
 						let x = event.getX() - dx,

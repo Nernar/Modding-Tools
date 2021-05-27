@@ -238,7 +238,7 @@ const mapRenderBlock = function(worker) {
 				BlockRenderer.setCustomCollisionShape(id, meta, form);
 			}
 		}
-		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
+		autosavePeriod == 0 && ProjectProvider.getProject().callAutosave();
 		removeUnusedMappings();
 		checkMapping.current = new Array();
 		return true;
@@ -246,6 +246,53 @@ const mapRenderBlock = function(worker) {
 		reportError(e);
 	}
 	return false;
+};
+
+const convertJsonBlock = function(string, action) {
+	if (!ModelConverter) return;
+	let runned = compileData("(function() {\n" + ModelConverter + "\n" +
+		"myFunction();\nreturn {\nvalue: document.getElementById(\"frm2\").value,\n" +
+		"logged: console.logged.join(\"\\n\")\n};\n})()",
+		"object", {
+			document: {
+				elements: {
+					name: {
+						value: string
+					},
+					frm2: new Object()
+				},
+				getElementById: function(id) {
+					return this.elements[id];
+				}
+			},
+			console: {
+				logged: new Array(),
+				log: function(e) {
+					this.logged.push(e.message);
+				}
+			}
+		});
+	if (runned instanceof Error) reportError(runned);
+	else if (runned && runned.value) {
+		let compiled = compileScript(runned);
+		if (compiled && compiled[0]) {
+			action && action(compiled[0]);
+		} else {
+			confirm(translate("Compilation failed"),
+				translate("Converter generated invalid script, they can't be runned.") + " " +
+				translate("Retry compile with another converted model.") + " " +
+				translate("Save exported result?"),
+				function() {
+					saveFile(translate("converted"), [".js"], function(file) {
+						Files.write(file, runned.value);
+					});
+				});
+		}
+		if (runned.logged) {
+			confirm(translate("Script report"),
+				translate("Script logging have several messages:") + "\n" + runned.logged);
+		}
+	}
 };
 
 const mergeConvertedBlock = function(project, source, action) {
@@ -315,8 +362,8 @@ const mergeConvertedBlock = function(project, source, action) {
 const BlockEditor = {
 	data: new Object(),
 	reset: function() {
-		this.data.worker = ProjectEditor.addBlock();
-		ProjectEditor.setOpenedState(true);
+		this.data.worker = ProjectProvider.addBlock();
+		ProjectProvider.setOpenedState(true);
 		this.data.worker.Renderer.createModel();
 		this.data.worker.Collision.createModel();
 		if (!saveCoords) {
@@ -333,15 +380,15 @@ const BlockEditor = {
 		delete this.data.selected;
 	},
 	create: function() {
-		let autosaveable = !ProjectEditor.isOpened();
+		let autosaveable = !ProjectProvider.isOpened();
 		if (!this.data.worker) this.reset();
-		autosaveable && ProjectEditor.initializeAutosave();
+		autosaveable && ProjectProvider.initializeAutosave();
 		this.data.hasRender = this.data.worker.Renderer.getModelCount() > 0 &&
 			this.data.worker.Renderer.getModel(0).getBoxCount() > 0;
 		this.data.hasCollision = this.data.worker.Collision.getModelCount() > 0 &&
 			this.data.worker.Collision.getModel(0).getBoxCount() > 0;
 		let button = new ControlButton();
-		button.setIcon("menu");
+		button.setIcon("block");
 		button.setOnClickListener(function() {
 			BlockEditor.menu();
 			sidebar.dismiss();
@@ -404,9 +451,7 @@ const BlockEditor = {
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
 			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) {
-				formats.push(".json");
-			}
+			if (ModelConverter) formats.push(".json");
 			selectFile(formats, function(file) {
 				BlockEditor.replace(file);
 			});
@@ -427,11 +472,11 @@ const BlockEditor = {
 			control.dismiss();
 			Popups.closeAll();
 			BlockEditor.unselect();
-			ProjectEditor.setOpenedState(false);
-			ProjectEditor.getProject().callAutosave();
+			ProjectProvider.setOpenedState(false);
+			ProjectProvider.getProject().callAutosave();
 			checkValidate(function() {
 				delete BlockEditor.data.worker;
-				StartEditor.menu();
+				ProjectEditor.menu();
 			});
 		});
 		checkForAdditionalInformation(control);
@@ -544,24 +589,24 @@ const BlockEditor = {
 				Popups.open(collision, "innersection_collision");
 			}
 		});
-		checkForAdditionalInformation(control);
 		resetAdditionalInformation();
 		control.show();
 	},
 	open: function(source) {
 		if (!(source instanceof Object)) {
-			source = ProjectEditor.getEditorById(source);
+			source = ProjectProvider.getEditorById(source);
 		}
-		let index = ProjectEditor.indexOf(source);
+		let index = ProjectProvider.indexOf(source);
 		if (!source) {
 			showHint(translate("Can't find opened editor at %s position", source));
 			return false;
 		}
 		Popups.closeAll();
 		let worker = this.data.worker = new BlockWorker(source);
-		if (index == -1) index = ProjectEditor.getCount();
-		ProjectEditor.setupEditor(index, worker);
-		ProjectEditor.setOpenedState(true);
+		if (index == -1) index = ProjectProvider.getCount();
+		ProjectProvider.setupEditor(index, worker);
+		ProjectProvider.setOpenedState(true);
+		ControlWindow.dismissCurrently();
 		BlockEditor.unselect();
 		BlockEditor.create();
 		return true;

@@ -51,6 +51,7 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 	if (hint) views.edits[index].setHint(String(hint));
 	views.edits[index].setTypeface(typeface);
 	views.content.addView(views.edits[index]);
+	if (!this.isFocusable()) this.setFocusable(true);
 	return this.getEdit(index);
 };
 

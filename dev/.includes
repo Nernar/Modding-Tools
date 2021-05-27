@@ -8,6 +8,7 @@ polyfill/Level.js
 
 storage/explorer.js
 # storage/factory.js
+# storage/message.js
 storage/converter/shared.js
 storage/converter/block.js
 storage/converter/transition.js
@@ -15,6 +16,7 @@ storage/converter/transition.js
 api/shared.js
 # api/protect.js
 api/utils.js
+api/support.js
 
 # network/browser.js
 # network/connect.js
@@ -30,13 +32,11 @@ interface/variations.js
 interface/provider.js
 
 project/shared.js
-project/support.js
 project/block.js
 project/transition.js
 project/entity.js
 
 visual/fragments/sidebar.js
-visual/frames/sidebar.js
 visual/sidebar.js
 visual/control.js
 visual/explorer.js
@@ -48,6 +48,7 @@ visual/popups/position.js
 visual/popups/tree.js
 
 tools/shared.js
+tools/project.js
 tools/block.js
 tools/entity.js
 tools/transition.js

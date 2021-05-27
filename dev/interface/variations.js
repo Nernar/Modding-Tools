@@ -63,22 +63,22 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 
 UniqueWindow.prototype.__showUW = UniqueWindow.prototype.show;
 UniqueWindow.prototype.show = function() {
-  let window = this;
-  context.runOnUiThread(function() {
-	  if (UniqueHelper.prepareWindow(window)) {
-	  	window.__showUW && window.__showUW();
-	  }
-  });
+	let window = this;
+	context.runOnUiThread(function() {
+		if (UniqueHelper.prepareWindow(window)) {
+			window.__showUW && window.__showUW();
+		}
+	});
 };
 
 UniqueWindow.prototype.__dismissUW = UniqueWindow.prototype.dismiss;
 UniqueWindow.prototype.dismiss = function() {
-  let window = this;
-  context.runOnUiThread(function() {
-	  if (UniqueHelper.deattachWindow(window)) {
-	  	window.__dismissUW && window.__dismissUW();
-	  }
-  });
+	let window = this;
+	context.runOnUiThread(function() {
+		if (UniqueHelper.deattachWindow(window)) {
+			window.__dismissUW && window.__dismissUW();
+		}
+	});
 };
 
 const FocusablePopup = function() {
@@ -93,13 +93,13 @@ const FocusablePopup = function() {
 	fadeOut.setMode(FadeActor.OUT);
 	fadeOut.setDuration(400);
 	set.addActor(fadeOut);
-	
+
 	this.setEnterActor(set);
 	this.setExitActor(set);
-	
+
 	let place = Popups.getAvailablePlace();
 	this.setX(place.x), this.setY(place.y);
-	
+
 	this.reset();
 };
 
@@ -114,7 +114,7 @@ FocusablePopup.prototype.reset = function() {
 	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
 	views.layout.setOrientation(Ui.Orientate.VERTICAL);
 	this.setContent(views.layout);
-	
+
 	views.title = new android.widget.TextView(context);
 	views.title.setPadding(Ui.getY(30), Ui.getY(18), Ui.getY(30), Ui.getY(18));
 	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
@@ -123,16 +123,16 @@ FocusablePopup.prototype.reset = function() {
 	views.title.setTextColor(Ui.Color.WHITE);
 	views.title.setTypeface(typeface);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	params.weight = 0.1;
 	views.layout.addView(views.title, params);
-	
+
 	views.scroll = new android.widget.ScrollView(context);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
 	params.weight = 16.0;
 	views.layout.addView(views.scroll, params);
-	
+
 	views.content = new android.widget.LinearLayout(context);
 	views.content.setOrientation(Ui.Orientate.VERTICAL);
 	views.content.setGravity(Ui.Gravity.CENTER);

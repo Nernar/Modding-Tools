@@ -209,7 +209,7 @@ const initialize = function() {
 		if (showHint.unstackLaunch) {
 			context.runOnUiThread(function() {
 				try {
-					StartEditor.create();
+					ProjectEditor.create();
 					showHint.unstackLaunch();
 				} catch (e) {
 					reportError(e);

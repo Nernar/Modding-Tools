@@ -132,6 +132,14 @@ handleThread.clear = function() {
 	handleThread.stack = new Array();
 };
 
+/**
+ * Avoids large fractions in project.
+ */
+const preround = function(number, fixed) {
+	typeof fixed == "undefined" && (fixed = 6);
+	return parseFloat(Number(number).toFixed(fixed));
+};
+
 const MathUtils = new Object();
 
 MathUtils.RAD = 180 / Math.PI;

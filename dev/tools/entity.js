@@ -17,7 +17,7 @@ const updateEntityRender = function(worker) {
 				return { "main": model };
 			}
 		}); */
-		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
+		autosavePeriod == 0 && ProjectProvider.getProject().callAutosave();
 	} catch (e) {
 		reportError(e);
 	}
@@ -144,8 +144,8 @@ const geometryToModel2 = function(obj) {
 const EntityEditor = {
 	data: new Object(),
 	reset: function() {
-		this.data.worker = ProjectEditor.addEntity();
-		ProjectEditor.setOpenedState(true);
+		this.data.worker = ProjectProvider.addEntity();
+		ProjectProvider.setOpenedState(true);
 		this.data.worker.Visual.createModel();
 		this.unselect();
 	},
@@ -156,13 +156,13 @@ const EntityEditor = {
 		delete this.data.selected;
 	},
 	create: function() {
-		let autosaveable = !ProjectEditor.isOpened();
+		let autosaveable = !ProjectProvider.isOpened();
 		if (!this.data.worker) this.reset();
-		autosaveable && ProjectEditor.initializeAutosave(this.data.worker);
+		autosaveable && ProjectProvider.initializeAutosave(this.data.worker);
 		this.data.hasVisual = this.data.worker.Visual.getModelCount() > 0
 			&& this.data.worker.Visual.getModel(0).getAssigmentSize() > 0;
 		let button = new ControlButton();
-		button.setIcon("menu");
+		button.setIcon("entity");
 		button.setOnClickListener(function() {
 			EntityEditor.menu();
 			sidebar.dismiss();
@@ -230,11 +230,11 @@ const EntityEditor = {
 		category.addItem("menuProjectLeave", translate("Back"), function() {
 			control.dismiss();
 			Popups.closeAll(), EntityEditor.unselect();
-			ProjectEditor.setOpenedState(false);
-			ProjectEditor.getProject().callAutosave();
+			ProjectProvider.setOpenedState(false);
+			ProjectProvider.getProject().callAutosave();
 			checkValidate(function() {
 				delete EntityEditor.data.worker;
-				StartEditor.menu();
+				ProjectEditor.menu();
 			});
 		});
 		checkForAdditionalInformation(control);
@@ -264,18 +264,19 @@ const EntityEditor = {
 	},
 	open: function(source) {
 		if (!(source instanceof Object)) {
-			source = ProjectEditor.getEditorById(source);
+			source = ProjectProvider.getEditorById(source);
 		}
-		let index = ProjectEditor.indexOf(source);
+		let index = ProjectProvider.indexOf(source);
 		if (!source) {
 			showHint(translate("Can't find opened editor at %s position", source));
 			return false;
 		}
 		Popups.closeAll();
 		let worker = this.data.worker = new EntityWorker(source);
-		if (index == -1) index = ProjectEditor.getCount();
-		ProjectEditor.setupEditor(index, worker);
-		ProjectEditor.setOpenedState(true);
+		if (index == -1) index = ProjectProvider.getCount();
+		ProjectProvider.setupEditor(index, worker);
+		ProjectProvider.setOpenedState(true);
+		ControlWindow.dismissCurrently();
 		EntityEditor.unselect();
 		EntityEditor.create();
 		return true;

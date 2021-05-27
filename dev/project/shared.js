@@ -158,84 +158,68 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 };
 
 const readFile = function(path, isBytes, action) {
-	try {
-		handleThread(function() {
-			try {
-				let file = new java.io.File(String(path));
-				if (!file.exists()) return;
-				let readed = isBytes ? Files.readBytes(file) : Files.read(file);
-				if (action) action(readed);
-			} catch (e) {
-				reportError(e);
-			}
-		});
-	} catch (e) {
-		reportError(e);
-	}
+	handleThread(function() {
+		try {
+			let file = new java.io.File(String(path));
+			if (!file.exists()) return;
+			let readed = isBytes ? Files.readBytes(file) : Files.read(file);
+			if (action) action(readed);
+		} catch (e) {
+			reportError(e);
+		}
+	});
 };
 
 const exportProject = function(object, isAutosave, path, action) {
-	try {
-		stringifyObject(object, false, function(result) {
-			let file = new java.io.File(String(path));
-			result = compileToProduce(result);
-			file.getParentFile().mkdirs();
-			if (!isAutosave && file.exists()) {
-				handle(function() {
-					confirm(translate("File is exists"),
-						translate("File is already created. This process will be rewrite it. Continue?"),
-						function() {
-							Files.writeBytes(file, result);
-							if (action) action(result);
-						});
-				});
-			} else {
-				Files.writeBytes(file, result);
-				if (action) action(result);
-			}
-		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
-			isAutosave ? translate("Autosaved") : translate("Exported"));
-	} catch (e) {
-		reportError(e);
-	}
+	stringifyObject(object, false, function(result) {
+		let file = new java.io.File(String(path));
+		result = compileToProduce(result);
+		file.getParentFile().mkdirs();
+		if (!isAutosave && file.exists()) {
+			handle(function() {
+				confirm(translate("File is exists"),
+					translate("File is already created. This process will be rewrite it. Continue?"),
+					function() {
+						Files.writeBytes(file, result);
+						if (action) action(result);
+					});
+			});
+		} else {
+			Files.writeBytes(file, result);
+			if (action) action(result);
+		}
+	}, isAutosave ? translate("Autosaving") : translate("Exporting"),
+		isAutosave ? translate("Autosaved") : translate("Exported"));
 };
 
 const importProject = function(path, action) {
-	try {
-		readFile(path, true, function(bytes) {
-			let result = decompileFromProduce(bytes),
-				data = compileData(result, "object");
-			if (data && !(data instanceof Error)) {
-				action && (data.length !== undefined ?
-					action(data) : action([data]));
-			} else {
-				handle(function() {
+	readFile(path, true, function(bytes) {
+		let result = decompileFromProduce(bytes),
+			data = compileData(result, "object");
+		if (data && !(data instanceof Error)) {
+			action && (data.length !== undefined ?
+				action(data) : action([data]));
+		} else {
+			handle(function() {
 				confirm(translate("Can't open file"),
 					translate("Looks like, project is damaged. Check project and following exception information:") +
-						"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
-						translate("Do you want to retry?"), function() {
-							importProject(path, action);
-						});
-				});
-			}
-		});
-	} catch (e) {
-		reportError(e);
-	}
+					"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
+					translate("Do you want to retry?"), function() {
+						importProject(path, action);
+					});
+			});
+		}
+	});
 };
 
 const importScript = function(path, action) {
-	try {
-		readFile(path, false, function(text) {
-			let result = compileScript(text);
-			if (result !== null) {
-				action && (result.length !== undefined ?
-					action(result) : action([result]));
-			}
-		});
-	} catch (e) {
-		reportError(e);
-	}
+	readFile(path, false, function(text) {
+		let result = compileScript(text);
+		if (result !== null) {
+			action && (result.length !== undefined ?
+				action(result) : action([result]));
+		}
+	});
 };
 
 const compileScript = function(text) {
@@ -536,7 +520,7 @@ const Project = function(obj) {
 	obj && (this.object = obj);
 };
 
-const ProjectEditor = {
+const ProjectProvider = {
 	create: function() {
 		let opened = this.opened = new Project();
 		return (opened.time = Date.now(), opened);

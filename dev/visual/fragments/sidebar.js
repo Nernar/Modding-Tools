@@ -35,8 +35,90 @@ SidebarFragment.prototype.getItemContainer = function() {
 	return this.findViewByTag("containerItems");
 };
 
+SidebarFragment.prototype.addItem = function(view, index) {
+	let items = this.getItemContainer();
+	if (items == null) return this;
+	if (index >= 0) {
+		items.addView(view, index);
+	} else items.addView(view);
+	return this;
+};
+
+SidebarFragment.prototype.clearItems = function() {
+	let items = this.getItemContainer();
+	if (items == null) return this;
+	items.removeAllViews();
+	return this;
+};
+
+SidebarFragment.prototype.removeItem = function(view) {
+	let items = this.getItemContainer();
+	if (items == null) return this;
+	items.removeView(view);
+	return this;
+};
+
+SidebarFragment.prototype.getItemAt = function(index) {
+	let items = this.getItemContainer();
+	if (items == null) return null;
+	return items.getChildAt(index);
+};
+
+SidebarFragment.prototype.indexOfItem = function(view) {
+	let items = this.getItemContainer();
+	if (items == null) return -1;
+	return items.indexOfChild(view);
+};
+
+SidebarFragment.prototype.getItemCount = function() {
+	let items = this.getItemContainer();
+	if (items == null) return -1;
+	return items.getChildCount();
+};
+
 SidebarFragment.prototype.getTabContainer = function() {
 	return this.findViewByTag("containerTabs");
+};
+
+SidebarFragment.prototype.addTab = function(view, index) {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return this;
+	if (index >= 0) {
+		tabs.addView(view, index);
+	} else tabs.addView(view);
+	return this;
+};
+
+SidebarFragment.prototype.clearTabs = function() {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return this;
+	tabs.removeAllViews();
+	return this;
+};
+
+SidebarFragment.prototype.removeTab = function(view) {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return this;
+	tabs.removeView(view);
+	return this;
+};
+
+SidebarFragment.prototype.getTabAt = function(index) {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return null;
+	return tabs.getChildAt(index);
+};
+
+SidebarFragment.prototype.indexOfTab = function(view) {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return -1;
+	return tabs.indexOfChild(view);
+};
+
+SidebarFragment.prototype.getTabCount = function() {
+	let tabs = this.getTabContainer();
+	if (tabs == null) return -1;
+	return tabs.getChildCount();
 };
 
 SidebarFragment.Group = function() {
@@ -66,8 +148,55 @@ SidebarFragment.Group.prototype.resetContainer = function() {
 	container.addView(icon);
 };
 
+SidebarFragment.Group.prototype.getBackground = function() {
+	return this.background || null;
+};
+
+SidebarFragment.Group.prototype.setBackground = function(src) {
+	let container = this.getContainer();
+	if (container == null) return this;
+	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	this.background = src;
+	return this;
+};
+
 SidebarFragment.Group.prototype.getIconView = function() {
 	return this.findViewByTag("groupIcon");
+};
+SidebarFragment.Group.prototype.getIcon = function() {
+	return this.icon || null;
+};
+
+SidebarFragment.Group.prototype.setIcon = function(src) {
+	let icon = this.getIconView();
+	if (icon == null) return this;
+	Ui.setActorName(icon, src + "Group");
+	icon.setImageDrawable(ImageFactory.getDrawable(src));
+	this.icon = src;
+	return this;
+};
+
+SidebarFragment.Group.prototype.setOnClickListener = function(action) {
+	let container = this.getContainer(),
+		scope = this;
+	if (container == null) return this;
+	container.setOnClickListener(function() {
+		try { action && action(scope); }
+		catch (e) { reportError(e); }
+	});
+	return this;
+};
+
+SidebarFragment.Group.prototype.setOnHoldListener = function(action) {
+	let container = this.getContainer(),
+		scope = this;
+	if (container == null) return this;
+	container.setOnLongClickListener(function() {
+		try { return action && action(scope); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
 };
 
 SidebarFragment.Group.Item = function() {
@@ -83,4 +212,50 @@ SidebarFragment.Group.Item.prototype.resetContainer = function() {
 		LayoutParams(Ui.getY(81), Ui.getY(81)));
 	container.setPadding(Ui.getY(12), Ui.getY(12), Ui.getY(12), Ui.getY(12));
 	this.setContainerView(container);
+};
+
+SidebarFragment.Group.Item.prototype.getBackground = function() {
+	return this.background || null;
+};
+
+SidebarFragment.Group.Item.prototype.setBackground = function(src) {
+	let container = this.getContainer();
+	if (container == null) return this;
+	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	this.background = src;
+	return this;
+};
+
+SidebarFragment.Group.Item.prototype.getIcon = function() {
+	return this.icon || null;
+};
+
+SidebarFragment.Group.Item.prototype.setIcon = function(src) {
+	let container = this.getContainer();
+	if (container == null) return this;
+	Ui.setActorName(container, src + "Item");
+	container.setImageDrawable(ImageFactory.getDrawable(src));
+	this.icon = src;
+	return this;
+};
+
+SidebarFragment.Group.Item.prototype.setOnClickListener = function(action) {
+	let container = this.getContainer(), scope = this;
+	if (container == null) return this;
+	container.setOnClickListener(function() {
+		try { action && action(scope); }
+		catch (e) { reportError(e); }
+	});
+	return this;
+};
+
+SidebarFragment.Group.Item.prototype.setOnHoldListener = function(action) {
+	let container = this.getContainer(), scope = this;
+	if (container == null) return this;
+	container.setOnLongClickListener(function() {
+		try { return action && action(scope); }
+		catch (e) { reportError(e); }
+		return false;
+	});
+	return this;
 };

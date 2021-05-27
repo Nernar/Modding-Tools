@@ -146,7 +146,7 @@ Translation.addTranslation("Frame %s cloned to %s", {
 });
 Translation.addTranslation("%s (%s frames)", {
 	ru: "%s (%s кадров)"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame deleted", {
 	ru: "Кадр удален"
 });
@@ -155,7 +155,7 @@ Translation.addTranslation("Transition updated", {
 });
 Translation.addTranslation("Transition cleared", {
 	ru: "Переход очищен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition stopped", {
 	ru: "Переход остановлен"
 });
@@ -267,7 +267,7 @@ Translation.addTranslation("World", {
 // Scenes content
 Translation.addTranslation("Scene", {
 	ru: "Сцена"
-});
+}); // DEPRECATED
 
 // Different tools
 Translation.addTranslation("Move", {
@@ -342,6 +342,11 @@ Translation.addTranslation("That mod doesn't include any texture.", {
 	ru: "Этот мод не содержит текстур."
 });
 
+// Networking
+Translation.addTranslation("%s\/%s mods", {
+	ru: "%s\/%s модов"
+}); // DEPRECATED
+
 // Files
 Translation.addTranslation("search filter", {
 	ru: "фильтр поиска"
@@ -390,10 +395,10 @@ Translation.addTranslation("Open", {
 });
 Translation.addTranslation("Export done", {
 	ru: "Успешно экспортировано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Import done", {
 	ru: "Загрузка завершена"
-});
+}); // DEPRECATED
 Translation.addTranslation("no files", {
 	ru: "нет файлов"
 }); // DEPRECATED
@@ -435,6 +440,9 @@ Translation.addTranslation("Path", {
 });
 
 // Panels
+Translation.addTranslation("Go", {
+	ru: "Начнем"
+}); // DEPRECATED
 Translation.addTranslation("Cancel", {
 	ru: "Отмена"
 });
@@ -446,15 +454,18 @@ Translation.addTranslation("Yes", {
 });
 Translation.addTranslation("No", {
 	ru: "Нет"
-});
+}); // DEPRECATED
 Translation.addTranslation("OK", {
 	ru: "ОК"
 });
 Translation.addTranslation("Exit", {
 	ru: "Выход"
-});
+}); // DEPRECATED
 Translation.addTranslation("Send", {
 	ru: "Отправить"
+}); // DEPRECATED
+Translation.addTranslation("Eval", {
+	ru: "Запуск"
 }); // DEPRECATED
 Translation.addTranslation("Create", {
 	ru: "Создать"
@@ -473,13 +484,16 @@ Translation.addTranslation("Saving", {
 }); // DEPRECATED
 Translation.addTranslation("Clear", {
 	ru: "Очистить"
-});
+}); // DEPRECATED
 Translation.addTranslation("Deleting", {
 	ru: "Удаление"
 });
 Translation.addTranslation("Complete removal", {
 	ru: "Полное удаление"
-});
+}); // DEPRECATED
+Translation.addTranslation("Ignores", {
+	ru: "Исключения"
+}); // DEPRECATED
 Translation.addTranslation("Nothing", {
 	ru: "Ничего"
 });
@@ -491,13 +505,16 @@ Translation.addTranslation("Empty", {
 });
 Translation.addTranslation("Outliner", {
 	ru: "Планировщик"
-});
+}); // DEPRECATED
 Translation.addTranslation("Rename", {
 	ru: "Ренейм"
 });
 Translation.addTranslation("Confirmation", {
 	ru: "Подтверждение"
 });
+Translation.addTranslation("Constants", {
+	ru: "Константы"
+}); // DEPRECATED
 
 // Times
 Translation.addTranslation("Jan", {
@@ -539,7 +556,7 @@ Translation.addTranslation("Dec", {
 
 // Hints
 Translation.addTranslation("Nothing to update", {
-	ru: "Нечего обновить"
+	ru: "Нечего обновлять"
 });
 Translation.addTranslation("Nothing to remove", {
 	ru: "Нечего удалять"
@@ -547,12 +564,15 @@ Translation.addTranslation("Nothing to remove", {
 Translation.addTranslation("Nothing to check", {
 	ru: "Нечего проверять"
 });
+Translation.addTranslation("Nothing to manage", {
+	ru: "Нечего изменять"
+}); // DEPRECATED
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removing worker", {
 	ru: "Удаление редактора"
-});
+}); // DEPRECATED
 Translation.addTranslation("Worker has been removed", {
 	ru: "Редактор был удален"
 });
@@ -603,18 +623,18 @@ Translation.addTranslation("Key will be expired today, please check network conn
 });
 Translation.addTranslation("Changes will be detected and synced", {
 	ru: "Изменения найдены и синхронизированы"
-});
+}); // DEPRECATED
 Translation.addTranslation("Some (%s) changes are already has or deprecated", {
 	ru: "Некоторые (%s) изменения уже существуют или устарели"
-});
+}); // DEPRECATED
+Translation.addTranslation("Load any world firstly", {
+	ru: "Для начала загрузите любой мир"
+}); // DEPRECATED
 
 // Processes
-Translation.addTranslation("Downloading content...", {
-	ru: "Загрузка контента..."
-});
-Translation.addTranslation("Unpacking content...", {
-	ru: "Распаковка контента..."
-});
+Translation.addTranslation("Downloaded", {
+	ru: "Загружено"
+}); // DEPRECATED
 Translation.addTranslation("Imported success", {
 	ru: "Успешно импортировано"
 });
@@ -641,7 +661,7 @@ Translation.addTranslation("Autosaved", {
 });
 Translation.addTranslation("Updating", {
 	ru: "Обновление"
-});
+}); // DEPRECATED
 Translation.addTranslation("Preparing", {
 	ru: "Подготовка"
 }); // DEPRECATED
@@ -654,21 +674,29 @@ Translation.addTranslation("Indexating", {
 Translation.addTranslation("Done", {
 	ru: "Готово"
 });
+Translation.addTranslation("Success", {
+	ru: "Успешно"
+}); // DEPRECATED
 Translation.addTranslation("as %ss", {
 	ru: "за %sс"
 });
+
+// Results
+Translation.addTranslation("Investigated scope is empty or doesn't contain any value.", {
+	ru: "Исследуемый контекст пуст или не содержит никаких данных."
+}); // DEPRECATED
 Translation.addTranslation("It's can be changed in config", {
 	ru: "Это может быть изменено в конфиге"
 }); // DEPRECATED
 Translation.addTranslation("Opened editor contains >1 models one of type. At currently moment, editor doesn't support few models.", {
 	ru: "Открытый редактор содержит >1 модели одного из типов. На текущий момент, редактор не поддерживает несколько моделей."
-});
+}); // DEPRECATED
 Translation.addTranslation("Touch here to merge all models.", {
 	ru: "Нажмите здесь для соединения всех моделей."
-});
+}); // DEPRECATED
 Translation.addTranslation("All models will be merged into one.", {
 	ru: "Все модели будут соединены в одну."
-});
+}); // DEPRECATED
 Translation.addTranslation("Merge", {
 	ru: "Соединить"
 });
@@ -684,6 +712,9 @@ Translation.addTranslation("Retry compile with another converted model.", {
 Translation.addTranslation("Save exported result?", {
 	ru: "Сохранить экспортированный результат?"
 });
+Translation.addTranslation("Currently sidebar will be lost.", {
+	ru: "Текущая панель навигации будет сброшена."
+}); // DEPRECATED
 Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
 	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны."
 });
@@ -692,13 +723,16 @@ Translation.addTranslation("Script logging have several messages:", {
 });
 Translation.addTranslation("Deleting mod folder for installation", {
 	ru: "Удаление папки мода для установки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Couldn't connect to validate right now", {
 	ru: "Не удается подключиться к серверам прямо сейчас"
 });
 Translation.addTranslation("Textures requested successfully", {
 	ru: "Запрос текстур успешно завершен"
 });
+Translation.addTranslation("Hi, I'm evaluate stroke", {
+	ru: "Привет, я строка исполнения"
+}); // DEPRECATED
 
 // Messages
 Translation.addTranslation("Load or create your first editor, it'll appear here.", {
@@ -709,7 +743,7 @@ Translation.addTranslation("Use scripts from your mods to import, simply find th
 });
 Translation.addTranslation("Are you sure want to exit? Unsave data will be lost.", {
 	ru: "Вы уверены, что хотите выйти? Несохраненные данные будут потеряны."
-});
+}); // DEPRECATED
 Translation.addTranslation("Some reports not sended, modification request server connect for it send.", {
 	ru: "Есть неотправленные отчеты, модификации необходимо соединение с сервером для их отправки."
 }); // DEPRECATED
@@ -718,19 +752,19 @@ Translation.addTranslation("Update availabled, it download has started after con
 }); // DEPRECATED
 Translation.addTranslation("This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe.", {
 	ru: "Этот процесс может занять некоторое время, не выходите до его завершения. В любом случае, ваши проекты всегда в безопасности."
-});
+}); // DEPRECATED
 Translation.addTranslation("Please check network connection. Connect to collect updates, special events and prevent key deprecation.", {
-	ru: "Пожалуйста, проверьте подключение к интернету. Подключитесь для получения обновлений, специальных предложений и предотвращения устаревания ключа."
+	ru: "Пожалуйста, проверьте подключение к интернету. Подключитесь для получения обновлений и специальных предложений."
 }); // DEPRECATED
 Translation.addTranslation("Can't check update at this moment, maybe server is corrupted or disabled. Try later.", {
 	ru: "Не удалось проверить обновления на текущий момент, возможно сервер поврежден или отключен. Попробуйте позже."
 }); // DEPRECATED
 Translation.addTranslation("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities.", {
-	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету, иначе появляется риск потерять тестируемые возможности."
+	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету."
 });
 Translation.addTranslation("The administration deemed it appropriate to issue you a ban, you can contact with administration about unlocking.", {
-	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней по поводу разблокировки."
-});
+	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней."
+}); // DEPRECATED
 
 // Login
 Translation.addTranslation("Thanks for attentiveness!", {
@@ -744,10 +778,10 @@ Translation.addTranslation("Access denied", {
 }); // DEPRECATED
 Translation.addTranslation("Checking network connection", {
 	ru: "Проверка стабильности соединения"
-});
+}); // DEPRECATED
 Translation.addTranslation("Check network connection", {
 	ru: "Проверьте подключение к интернету"
-});
+}); // DEPRECATED
 Translation.addTranslation("Mod update installed, restart game for enable it.", {
 	ru: "Обновление завершено, перезапустите игру для включения мода."
 });
@@ -756,10 +790,10 @@ Translation.addTranslation("Preparing to installation", {
 }); // DEPRECATED
 Translation.addTranslation("Processing (%s\/%s bytes)", {
 	ru: "Обработка (%s\/%s байт)"
-});
+}); // DEPRECATED
 Translation.addTranslation("Updating references (%s bytes)", {
 	ru: "Обновление пакетов (%s байт)"
-});
+}); // DEPRECATED
 Translation.addTranslation("Modification will be uninstalled.", {
 	ru: "Модификация будет удалена."
 });
@@ -806,10 +840,10 @@ Translation.addTranslation("Remove", {
 });
 Translation.addTranslation("Prepare", {
 	ru: "Проверка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Install", {
 	ru: "Установка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Check", {
 	ru: "Проверить"
 }); // DEPRECATED
@@ -818,7 +852,7 @@ Translation.addTranslation("Fix", {
 }); // DEPRECATED
 Translation.addTranslation("Download", {
 	ru: "Загрузка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Editors", {
 	ru: "Редакторы"
 });
@@ -836,7 +870,7 @@ Translation.addTranslation("Reset", {
 }); // DEPRECATED
 Translation.addTranslation("Update", {
 	ru: "Обновление"
-});
+}); // DEPRECATED
 Translation.addTranslation("Player", {
 	ru: "Игрок"
 });
@@ -845,34 +879,34 @@ Translation.addTranslation("Reload", {
 });
 Translation.addTranslation("Debug", {
 	ru: "Отладка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Debug & testing", {
 	ru: "Отладка и тестирование"
 });
 Translation.addTranslation("Minify", {
 	ru: "Сжатие"
-});
+}); // DEPRECATED
 Translation.addTranslation("Fetch", {
 	ru: "Получить"
-});
+}); // DEPRECATED
 Translation.addTranslation("Tree", {
 	ru: "Дерево"
 });
 Translation.addTranslation("Sounds", {
 	ru: "Звуки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Explorer", {
 	ru: "Проводник"
-});
+}); // DEPRECATED
 Translation.addTranslation("Menu", {
 	ru: "Меню"
-});
+}); // DEPRECATED
 Translation.addTranslation("Music", {
 	ru: "Музыка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Math", {
 	ru: "Алгебра"
-});
+}); // DEPRECATED
 Translation.addTranslation("Script report", {
 	ru: "Отчет скрипта"
 });
@@ -937,19 +971,19 @@ Translation.addTranslation("State: %s", {
 });
 Translation.addTranslation("ACTIVE", {
 	ru: "АКТИВЕН"
-}); // DEPRECATED
+});
 Translation.addTranslation("OUTDATED", {
 	ru: "УСТАРЕЛ"
-}); // DEPRECATED
+});
 Translation.addTranslation("FAILED", {
 	ru: "ОШИБКА"
-}); // DEPRECATED
+});
 Translation.addTranslation("DISABLED", {
 	ru: "ОТКЛЮЧЕН"
-}); // DEPRECATED
+});
 Translation.addTranslation("UNKNOWN", {
 	ru: "НЕИЗВЕСТНО"
-}); // DEPRECATED
+});
 Translation.addTranslation("Unknown mod", {
 	ru: "Неизвестный мод"
 });
@@ -996,21 +1030,24 @@ Translation.addTranslation("Assigment updated", {
 });
 
 // Selection
+Translation.addTranslation("Item %s", {
+	ru: "Элемент %s"
+}); // DEPRECATED
+Translation.addTranslation("Group %s", {
+	ru: "Группа %s"
+}); // DEPRECATED
 Translation.addTranslation("Element selector", {
 	ru: "Выбор элементов"
 });
 Translation.addTranslation("Investigate", {
 	ru: "Исследовать"
 });
-Translation.addTranslation("Investigated scope is empty or doesn't contain any value.", {
-	ru: "Исследуемый объект пуст или не содержит никаких свойств."
-});
 Translation.addTranslation("Selected %s group", {
 	ru: "Выбрана %s группа"
 }); // DEPRECATED
 Translation.addTranslation("Unselected %s group with items count %s", {
 	ru: "Закрыта %s группа с %s элементами"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selected %s item", {
 	ru: "Выбран %s элемент"
 }); // DEPRECATED
@@ -1019,6 +1056,9 @@ Translation.addTranslation("Clicked %s group", {
 }); // DEPRECATED
 Translation.addTranslation("Clicked %s item at group %s", {
 	ru: "Нажат %s элемент в %s группе"
+}); // DEPRECATED
+Translation.addTranslation("Invert", {
+	ru: "Обратить"
 }); // DEPRECATED
 Translation.addTranslation("Nothing chosen", {
 	ru: "Ничего не выбрано"
@@ -1048,7 +1088,7 @@ Translation.addTranslation("Something went wrong", {
 });
 Translation.addTranslation("Error of execute code", {
 	ru: "Ошибка при выполнении кода"
-});
+}); // DEPRECATED
 Translation.addTranslation("Non-assigment", {
 	ru: "Не является иерархией"
 });
@@ -1075,10 +1115,10 @@ Translation.addTranslation("Looks like, you entered invalid array. Check it with
 });
 Translation.addTranslation("%s library isn't availabled!", {
 	ru: "Библиотека %s не доступна!"
-});
+}); // DEPRECATED
 Translation.addTranslation("Firstly, place correctly %s into modification", {
 	ru: "Для начала поместите корректный %s в модификацию"
-});
+}); // DEPRECATED
 Translation.addTranslation("Unknown or unsupported stringify type for:", {
 	ru: "Неизвестный или неподдерживаемый тип приведения для:"
 });
@@ -1096,12 +1136,18 @@ Translation.addTranslation("Touch here to confirm.", {
 });
 Translation.addTranslation("Nothing loaded, may connection have been dropped", {
 	ru: "Ничего не загрузилось, возможно подключение было сброшено"
-});
+}); // DEPRECATED
 Translation.addTranslation("There's doesn't has any availabled data", {
 	ru: "Здесь нет никаких доступных данных"
 });
 
 // Deprecated
+Translation.addTranslation("Downloading content...", {
+	ru: "Загрузка контента..."
+});
+Translation.addTranslation("Unpacking content...", {
+	ru: "Распаковка контента..."
+});
 Translation.addTranslation("Deprecated translation", {
 	ru: "Устаревший перевод"
 }); // DEPRECATED
@@ -1110,25 +1156,25 @@ Translation.addTranslation("Select block", {
 }); // DEPRECATED
 Translation.addTranslation("Select transition", {
 	ru: "Выберите переход"
-});
+}); // DEPRECATED
 Translation.addTranslation("Blocks are empty", {
 	ru: "Блоки не найдены"
 }); // DEPRECATED
 Translation.addTranslation("Transitions are empty", {
 	ru: "Переходы не найдены"
-});
+}); // DEPRECATED
 Translation.addTranslation("All boxes (%s) will be remove, you want to continue?", {
 	ru: "Все коробки (%s) будут удалены, вы хотите продолжить?"
 }); // DEPRECATED
 Translation.addTranslation("All frames (%s) will be remove, you want to continue?", {
 	ru: "Все кадры (%s) будут удалены, вы хотите продолжить?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Script is empty, or doesn't contain any block.", {
 	ru: "Скрипт пустой, или не содержит ни одного блока."
 }); // DEPRECATED
 Translation.addTranslation("Script is empty, or doesn't contain any transition.", {
 	ru: "Скрипт пустой, или не содержит ни одного перехода."
-});
+}); // DEPRECATED
 Translation.addTranslation("Script is empty, or doesn't contain any render.", {
 	ru: "Скрипт пустой или не содержит ни одного рендера."
 }); // DEPRECATED
@@ -1152,23 +1198,25 @@ Translation.addTranslation("Scripts are empty", {
 }); // DEPRECATED
 Translation.addTranslation("As Obj", {
 	ru: "В Obj"
-});
+}); // DEPRECATED
+
+// Development
+Translation.addTranslation("Asriel", {
+	ru: "Азриэль"
+}); // DEPRECATED
+Translation.addTranslation("Chara", {
+	ru: "Чара"
+}); // DEPRECATED
+Translation.addTranslation("Frisk", {
+	ru: "Фриск"
+}); // DEPRECATED
 
 // Non-organized content
 Translation.addTranslation("You're idiot. LMAO.", {
 	ru: "Ты идиот. LMAO."
-});
+}); // DEPRECATED
 Translation.addTranslation("Idiot", {
 	ru: "Идиот"
-});
-Translation.addTranslation("Asriel", {
-	ru: "Азриэль"
-});
-Translation.addTranslation("Chara", {
-	ru: "Чара"
-});
-Translation.addTranslation("Frisk", {
-	ru: "Фриск"
-});
+}); // DEPRECATED
 
 // Not localized content will be appear here

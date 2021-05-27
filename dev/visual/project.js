@@ -36,7 +36,7 @@ const ControlWindow = function() {
 		});
 		category.addItem("worldSelectionBiome", translate("Icons"), function() {
 			REQUIRE("scopes/icons.js")(function() {
-				StartEditor.menu();
+				ProjectEditor.menu();
 			});
 		});
 		category.addItem("worldLayer", translate("Sidebar"), function() {
@@ -1221,4 +1221,9 @@ ControlWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, action
 		srcOrMessage.setOnClickListener(action);
 	this.indexOfElement(message) == -1 && this.getElements().push(message);
 	return message;
+};
+
+ControlWindow.dismissCurrently = function() {
+	let unique = UniqueHelper.getWindow("ControlWindow");
+	if (unique !== null) unique.dismiss();
 };

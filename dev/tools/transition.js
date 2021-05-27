@@ -61,7 +61,7 @@ const drawTransitionPoints = function(worker) {
 		}
 		/* if (selectMode == 4)
 		return true; */
-		autosavePeriod == 0 && ProjectEditor.getProject().callAutosave();
+		autosavePeriod == 0 && ProjectProvider.getProject().callAutosave();
 	} catch (e) {
 		reportError(e);
 	}
@@ -123,8 +123,8 @@ const mergeConvertedTransition = function(project, source, action) {
 let TransitionEditor = {
 	data: new Object(),
 	reset: function() {
-		this.data.worker = ProjectEditor.addTransition();
-		ProjectEditor.setOpenedState(true);
+		this.data.worker = ProjectProvider.addTransition();
+		ProjectProvider.setOpenedState(true);
 		this.data.worker.Animation.createAnimate();
 		this.unselect();
 	},
@@ -134,14 +134,14 @@ let TransitionEditor = {
 		delete this.data.selected;
 	},
 	create: function() {
-		let autosaveable = !ProjectEditor.isOpened();
+		let autosaveable = !ProjectProvider.isOpened();
 		if (!this.data.worker) this.reset();
-		autosaveable && ProjectEditor.initializeAutosave(this.data.worker);
+		autosaveable && ProjectProvider.initializeAutosave(this.data.worker);
 		this.data.hasAnimate = this.data.worker.Animation.getAnimateCount() > 0 &&
 			this.data.worker.Animation.getAnimate(0).getFrameCount() > 0;
 		this.data.isStarted = !!Transition.currently;
 		let button = new ControlButton();
-		button.setIcon("menu");
+		button.setIcon("transition");
 		button.setOnClickListener(function() {
 			TransitionEditor.menu();
 			sidebar.dismiss();
@@ -205,11 +205,11 @@ let TransitionEditor = {
 		category.addItem("menuProjectLeave", translate("Back"), function() {
 			control.dismiss();
 			Popups.closeAll(), TransitionEditor.unselect();
-			ProjectEditor.setOpenedState(false);
-			ProjectEditor.getProject().callAutosave();
+			ProjectProvider.setOpenedState(false);
+			ProjectProvider.getProject().callAutosave();
 			checkValidate(function() {
 				delete TransitionEditor.data.worker;
-				StartEditor.menu();
+				ProjectEditor.menu();
 			});
 		});
 		checkForAdditionalInformation(control);
@@ -259,18 +259,19 @@ let TransitionEditor = {
 	},
 	open: function(source) {
 		if (!(source instanceof Object)) {
-			source = ProjectEditor.getEditorById(source);
+			source = ProjectProvider.getEditorById(source);
 		}
-		let index = ProjectEditor.indexOf(source);
+		let index = ProjectProvider.indexOf(source);
 		if (!source) {
 			showHint(translate("Can't find opened editor at %s position", source));
 			return false;
 		}
 		Popups.closeAll();
 		let worker = this.data.worker = new TransitionWorker(source);
-		if (index == -1) index = ProjectEditor.getCount();
-		ProjectEditor.setupEditor(index, worker);
-		ProjectEditor.setOpenedState(true);
+		if (index == -1) index = ProjectProvider.getCount();
+		ProjectProvider.setupEditor(index, worker);
+		ProjectProvider.setOpenedState(true);
+		ControlWindow.dismissCurrently();
 		TransitionEditor.unselect();
 		TransitionEditor.create();
 		return true;

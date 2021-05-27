@@ -66,7 +66,7 @@ const restart = function() {
 		return;
 	}
 	context.runOnUiThread(function() {
-		StartEditor.create();
+		ProjectEditor.create();
 		currentEnvironment = __name__;
 	});
 	isSupportEnv = false;

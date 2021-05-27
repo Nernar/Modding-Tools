@@ -8,7 +8,7 @@
     "header_background":false
   },
   "performance":{
-    "hint_stackable":false,
+    "hint_stackable":true,
     "maximum_hints":50,
     "show_processes":true
   },

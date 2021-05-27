@@ -42,7 +42,6 @@ let menuDividers = false;
 let supportSupportables = true;
 let loadSupportables = true;
 let hintStackableDenied = true;
-let alwaysIndexate = false;
 let maximumHints = 50;
 let showProcesses = true;
 let noImportedScripts = true;
@@ -54,7 +53,7 @@ let showedFocusableAnimationsHint = false;
 let importAutoselect = false;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-26.05.2021-4";
+const __code__ = "develop-alpha-0.3.5-27.05.2021-5";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
