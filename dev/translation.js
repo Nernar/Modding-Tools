@@ -167,7 +167,7 @@ Translation.addTranslation("Current all", {
 });
 Translation.addTranslation("FPS", {});
 Translation.addTranslation("%s fps", {
-	ru: "%s к./с."
+	ru: "%s к.с."
 });
 Translation.addTranslation("Frames/sec.", {
 	ru: "Кадры/сек."
@@ -448,6 +448,9 @@ Translation.addTranslation("Cancel", {
 });
 Translation.addTranslation("Back", {
 	ru: "Назад"
+});
+Translation.addTranslation("Leave", {
+	ru: "Выход"
 });
 Translation.addTranslation("Yes", {
 	ru: "Да"
@@ -757,7 +760,7 @@ Translation.addTranslation("This process may takes some time, don't leave before
 	ru: "Этот процесс может занять некоторое время, не выходите до его завершения. В любом случае, ваши проекты всегда в безопасности."
 }); // DEPRECATED
 Translation.addTranslation("Please check network connection. Connect to collect updates, special events and prevent key deprecation.", {
-	ru: "Пожалуйста, проверьте подключение к интернету. Подключитесь для получения обновлений и специальных предложений."
+	ru: "Пожалуйста, проверьте подключение к интернету. Подключитесь для получения обновлений, специальных предложений и входа."
 }); // DEPRECATED
 Translation.addTranslation("Can't check update at this moment, maybe server is corrupted or disabled. Try later.", {
 	ru: "Не удалось проверить обновления на текущий момент, возможно сервер поврежден или отключен. Попробуйте позже."
@@ -768,6 +771,9 @@ Translation.addTranslation("Key needs validation and will be expires soon. Pleas
 Translation.addTranslation("The administration deemed it appropriate to issue you a ban, you can contact with administration about unlocking.", {
 	ru: "Администрация сочла целесообразным выдать вам блокировку, если это ошибка, попытайтесь связаться с ней."
 }); // DEPRECATED
+Translation.addTranslation("Developer hasn't provided any test for that build. Please, checkout that section for next time.", {
+	ru: "Разработчик не предоставил тесты для этой сборки. Пожалуйта, проверьте эту секцию в следующий раз."
+});
 
 // Login
 Translation.addTranslation("Thanks for attentiveness!", {
@@ -918,6 +924,9 @@ Translation.addTranslation("Creating project", {
 });
 Translation.addTranslation("Development", {
 	ru: "Разработка"
+});
+Translation.addTranslation("Test", {
+	ru: "Тест"
 });
 Translation.addTranslation("Evaluate", {
 	ru: "Выполнить"
@@ -1207,46 +1216,5 @@ Translation.addTranslation("As Obj", {
 }); // DEPRECATED
 
 // Non-organized content
-Translation.addTranslation("You're idiot. LMAO.", {
-	ru: "Ты идиот. LMAO."
-}); // DEPRECATED
-Translation.addTranslation("Idiot", {
-	ru: "Идиот"
-}); // DEPRECATED
-Translation.addTranslation("Oof", {
-	ru: "Уф"
-});
-Translation.addTranslation("What's happened", {
-	ru: "Что случилось"
-});
-Translation.addTranslation("Ah", {
-	ru: "А"
-});
-Translation.addTranslation("Something wrong, it isn't", {
-	ru: "Что-то не так, разве нет"
-});
-Translation.addTranslation("I just wanted to made my promise", {
-	ru: "Я лишь хочу исполнить свое обещание"
-});
-Translation.addTranslation("to show you glowing crystals", {
-	ru: "показав тебе сияющие кристаллы"
-});
-
-// Narration movements
-Translation.addTranslation("%s softy jumps and scariest looks around.", {
-	ru: "%s легонько подпрыгивает, испуганно осматривая окружение."
-});
-Translation.addTranslation("%s rotates self head directly to %s.", {
-	ru: "%s поворачивает свою голову прямо на %s."
-});
-Translation.addTranslation("%s just laughs slightly.", {
-	ru: "%s лишь мягко посмеивается."
-});
-Translation.addTranslation("%s places hand to friend shoulder.", {
-	ru: "%s ложит руку на плечо своего друга."
-});
-Translation.addTranslation("%s starts looking to %s eyes deeper.", {
-	ru: "%s начинает смотреть в глубину глаз %s."
-});
 
 // Not localized content will be appear here

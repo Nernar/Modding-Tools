@@ -117,6 +117,7 @@ _gsdata_/
 /loader/
 
 # Resources abilities
+/.placeholder.ico
 /texts/
 /gui/
 
@@ -126,7 +127,6 @@ _gsdata_/
 /.eval/
 
 # Unrealized content
-/.script
 /dev/network/
 /dev/storage/message.js
 /assets/sounds-16.txt

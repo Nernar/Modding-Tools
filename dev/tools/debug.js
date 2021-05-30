@@ -92,3 +92,93 @@ const ConsoleViewer = {
 		Popups.open(popup, "evaluate");
 	}
 };
+
+const DebugEditor = {
+	data: new Object(),
+	create: function() {
+		try {
+			let button = new ControlButton();
+			button.setIcon("menuProjectManage");
+			button.setOnClickListener(function() {
+				DebugEditor.menu();
+			});
+			button.show();
+		} catch (e) {
+			reportError(e);
+		}
+	},
+	menu: function() {
+		try {
+			let control = new ControlWindow();
+			control.setOnClickListener(function() {
+				DebugEditor.create();
+			});
+			control.addMessage("menuProjectLeave", translate("Dev Editor") + ": " + translate("Leave"), function() {
+				ProjectEditor.menu();
+			});
+			control.addCategory(translate("Debug"));
+			this.attachTestsList(control);
+			control.show();
+		} catch (e) {
+			reportError();
+		}
+	},
+	attachTestsList: function(control) {
+		let names = Files.listFileNames(Dirs.TESTING, true),
+			formats = Files.checkFormats(names, ".dns");
+		for (let i = 0; i < formats.length; i++) {
+			let name = Files.getNameWithoutExtension(formats[i]);
+			if (name == "attach") {
+				formats.splice(i, 1);
+				REQUIRE(name + ".dns");
+				i--;
+				continue;
+			}
+			this.attachTest(name, control);
+		}
+		if (formats.length == 0) {
+			control.addMessage("menuConfig", translate("Developer hasn't provided any test for that build. Please, checkout that section for next time."));
+		}
+	},
+	attachTest: function(path, control) {
+		let information = this.fetchInformation(path);
+		control.addMessage(information.icon || "support", translate(information.title || "Test"), function() {
+			confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."), function() {
+				control.dismiss();
+				DebugEditor.requireTest(path + ".dns", information.mobility || information.counter);
+			});
+		});
+	},
+	fetchInformation: function(path) {
+		try {
+			let file = new java.io.File(Dirs.TESTING, path + ".json");
+			if (!file.exists()) throw null;
+			return compileData(Files.read(file));
+		} catch (e) {
+			if (e === null) {
+				return {
+					title: path
+				};
+			}
+		}
+		return {
+			title: path,
+			icon: "menuModuleWarning"
+		};
+	},
+	requireTest: function(path, timing) {
+		try {
+			REQUIRE(path)();
+			if (typeof timing == "number") {
+				handle(function() {
+					DebugEditor.create();
+				}, timing);
+			} else if (timing != true) {
+				DebugEditor.create();
+			}
+		} catch (e) {
+			DebugEditor.create();
+			reportError(e);
+		}
+	}
+};

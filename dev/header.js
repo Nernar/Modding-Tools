@@ -53,7 +53,7 @@ let importAutoselect = false;
 let safetyProcesses = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-29.05.2021-7";
+const __code__ = "develop-alpha-0.3.5-30.05.2021-8";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");

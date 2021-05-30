@@ -211,50 +211,46 @@ const ProjectEditor = {
 			checkForAdditionalInformation(control);
 			if (__code__.indexOf("alpha") != -1) {
 				category = control.addCategory(translate("Debug & testing"));
-				category.addItem("control", translate("Console"), function() {
-					handle(function() {
-						ConsoleViewer.show();
-					});
+				category.addItem("control", translate("Debug"), function() {
+					DebugEditor.menu();
+				});
+				category.addItem("menuLoginCode", translate("Console"), function() {
+					ConsoleViewer.show();
+					control.dismiss();
 				});
 				category.addItem("worldActionMeasure", translate("Log"), function() {
-					handle(function() {
-						LogViewer.show();
-					});
+					LogViewer.show();
 				});
 				category.addItem("menuLoginServer", translate("Tree"), function() {
-					handle(function() {
-						let popup = new TreePopup();
-						popup.setTitle(translate("Bones"));
-						popup.setOnClickListener(function(name, parents) {
-							showHint(name + ": " + parents.join(", "));
-						});
-						popup.setOnSelectListener(function(name, parents) {
-							showHint(name + ": " + parents.join(", "));
-						});
-						popup.addFooter("controlExpandCreate");
-						popup.addFooter("controlExpandEdit");
-						popup.addFooter("controlExpandRemove");
-						popup.addGroup("body");
-						popup.addItem("main", "body");
-						popup.addItem("side", "body");
-						popup.addItem("outside");
-						popup.addItem("attachment", "body");
-						popup.addItem("hat", "body");
-						popup.addGroup("chestplate", "body");
-						popup.addItem("tail", "chestplate");
-						popup.addItem("paw", "chestplate");
-						popup.addGroup("horns", "chestplate");
-						popup.addItem("box", "horns");
-						popup.addItem("container", "body");
-						Popups.open(popup, "bone_select");
+					let popup = new TreePopup();
+					popup.setTitle(translate("Bones"));
+					popup.setOnClickListener(function(name, parents) {
+						showHint(name + ": " + parents.join(", "));
 					});
+					popup.setOnSelectListener(function(name, parents) {
+						showHint(name + ": " + parents.join(", "));
+					});
+					popup.addFooter("controlExpandCreate");
+					popup.addFooter("controlExpandEdit");
+					popup.addFooter("controlExpandRemove");
+					popup.addGroup("body");
+					popup.addItem("main", "body");
+					popup.addItem("side", "body");
+					popup.addItem("outside");
+					popup.addItem("attachment", "body");
+					popup.addItem("hat", "body");
+					popup.addGroup("chestplate", "body");
+					popup.addItem("tail", "chestplate");
+					popup.addItem("paw", "chestplate");
+					popup.addGroup("horns", "chestplate");
+					popup.addItem("box", "horns");
+					popup.addItem("container", "body");
+					Popups.open(popup, "bone_select");
 				});
 				category.addItem("entityModuleDraw", translate("Summon"), function() {
-					handle(function() {
-						EntityEditor.create();
-						control.dismiss();
-						showHint(translate("This content will be availabled soon"));
-					});
+					EntityEditor.create();
+					control.dismiss();
+					showHint(translate("This content will be availabled soon"));
 				});
 				checkForAdditionalInformation(control);
 			}

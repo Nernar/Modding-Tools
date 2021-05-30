@@ -1,0 +1,5 @@
+{
+	"title": "Network: Download all modifications",
+	"icon": "explorerExtensionArchive",
+	"description": "That test fetches ModBrowser list and downloads all modifications inside /mods directory. Your task is - checkout downloaded archives with list, fetch.json file and downloaded archives."
+}

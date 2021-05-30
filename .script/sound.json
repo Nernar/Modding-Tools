@@ -1,0 +1,5 @@
+{
+	"title": "Music: Dynamical custom source",
+	"icon": "explorerExtensionAudio",
+	"description": "That test creates dynamical sound source inside nearest randomness player position. Your task is - enter world, checkout sound source and position randomize, dynamical channels and reversed zone."
+}

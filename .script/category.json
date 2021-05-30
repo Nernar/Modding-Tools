@@ -1,0 +1,6 @@
+{
+	"title": "ControlWindow: View categoried icons",
+	"icon": "explorerExtensionImage",
+	"description": "That test launches default window with attached categoried icons list fetched from modification assets. Your task is - check sorting, all icons exiting and make result what's you're thinking about that categories.",
+	"mobility": true
+}

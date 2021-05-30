@@ -328,20 +328,22 @@ showHint.unstackLaunch = function() {
  */
 const createProcess = function(hint, color) {
 	let content = null;
-	handle(function() {
-		let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-		if (window === null) {
-			window = new HintAlert();
-		}
-		window.setStackable(!hintStackableDenied);
-		if (!window.canStackedMore()) {
-			window.removeFirstStacked();
-		}
-		window.pin();
-		createProcess.processes++;
-		content = window.attachMessage(hint, color, "popupSelectionLocked");
-		if (!window.isOpened()) window.show();
-	});
+	if (!showHint.launchStacked) {
+		handle(function() {
+			let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+			if (window === null) {
+				window = new HintAlert();
+			}
+			window.setStackable(!hintStackableDenied);
+			if (!window.canStackedMore()) {
+				window.removeFirstStacked();
+			}
+			window.pin();
+			createProcess.processes++;
+			content = window.attachMessage(hint, color, "popupSelectionLocked");
+			if (!window.isOpened()) window.show();
+		});
+	}
 	return function(process, progress) {
 		createProcess.update(content, process, progress);
 	};
@@ -354,6 +356,7 @@ createProcess.update = function(content, hint, progress) {
 		progress = preround(progress * 100, 0) + 1;
 		try {
 			if (content === undefined || content === null) {
+				if (progress >= 10001) showHint(hint);
 				return;
 			}
 			let text = content.getChildAt(0);

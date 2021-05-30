@@ -1,0 +1,5 @@
+{
+	"title": "Network: Fetch modifications list",
+	"icon": "explorerExtensionJson",
+	"description": "That test fetches ModBrowser modifications list and results it. Your task is - checkout results correctly with browser."
+}

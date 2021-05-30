@@ -274,8 +274,8 @@ const getScriptScope = function() {
 		createBlock: function(id, data, special) {
 			let nid = IDRegistry.fromString(id);
 			if (nid == -1) return;
-			data && (__data__[nid].define.data = data);
-			special && (__data__[nid].define.special = special);
+			data && (__data__[nid].define.data = __stringify__(data, true));
+			special && (__data__[nid].define.special = __stringify__(special, true));
 		},
 		createSpecialType: function(params) {
 			return params;
@@ -437,6 +437,7 @@ const getScriptScope = function() {
 	};
 	return {
 		__data__: __data__,
+		__stringify__: stringifyObjectUnsafe,
 		Callback: Callback,
 		BlockID: BlockID,
 		IDRegistry: IDRegistry,

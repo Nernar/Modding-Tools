@@ -1,12 +1,12 @@
 const ListingPopup = function() {
 	FocusablePopup.call(this);
-	this.reset();
 };
 
 ListingPopup.prototype = assign(FocusablePopup.prototype);
 ListingPopup.prototype.TYPE = "ListingPopup";
 
 ListingPopup.prototype.reset = function() {
+	FocusablePopup.prototype.reset.call(this);
 	this.views.edits = new Array();
 	this.views.buttons = new Array();
 };
@@ -40,7 +40,8 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 	let views = this.views,
 		index = views.edits.length;
 	views.edits[index] = new android.widget.EditText(context);
-	views.edits[index].setInputType(android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+	views.edits[index].setInputType(android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
+		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.edits[index].setPadding(Ui.getY(18), Ui.getY(18), Ui.getY(18), Ui.getY(18));
 	views.edits[index].setHintTextColor(Ui.Color.LTGRAY);
 	views.edits[index].setTextSize(Ui.getFontSize(18));

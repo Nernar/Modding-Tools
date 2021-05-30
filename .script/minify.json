@@ -1,0 +1,5 @@
+{
+	"title": "Network: Minify script file",
+	"icon": "explorerExtensionScript",
+	"description": "That test minifies any script from your device online. Your task is - checkout minified .min.js file."
+}

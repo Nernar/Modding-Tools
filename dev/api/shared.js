@@ -5,7 +5,7 @@ const runAtScope = function(code, scope, name) {
 	let scriptable = org.mozilla.javascript.ScriptableObject,
 		source = name ? __name__ + "$" + name : "<no name>",
 		ctx = org.mozilla.javascript.Context.enter();
-	source = source.replace(/[^a-z0-9_\$\<\>\.\-]/gi, "$");
+	source = source.replace(/[^\w\$\<\>\.\-\s]/gi, "$");
 	ctx.setLanguageVersion(200);
 	let standart = ctx.initStandardObjects(null, !1);
 	if (scope !== undefined) {
@@ -25,7 +25,7 @@ const runAtScope = function(code, scope, name) {
 const REQUIRE = function(path) {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
 		MCSystem.setLoadingTip("Requiring " + path);
-		if (__code__.startsWith("develop")) {
+		if (__code__.startsWith("develop") && path.endsWith(".js")) {
 			let file = new java.io.File(Dirs.EVALUATE, path);
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
@@ -34,7 +34,7 @@ const REQUIRE = function(path) {
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
-		} else if (__code__.startsWith("testing")) {
+		} else if (__code__.indexOf("alpha") != -1) {
 			let file = new java.io.File(Dirs.TESTING, path);
 			if (!file.exists()) throw null;
 			let source = decompileFromProduce(Files.readBytes(file)),

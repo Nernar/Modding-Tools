@@ -1,12 +1,12 @@
 const TreePopup = function() {
 	FocusablePopup.call(this);
-	this.reset();
 };
 
 TreePopup.prototype = assign(FocusablePopup.prototype);
 TreePopup.prototype.TYPE = "TreePopup";
 
 TreePopup.prototype.reset = function() {
+	FocusablePopup.prototype.reset.call(this);
 	this.views.groups = new Array();
 	this.views.items = new Array();
 	this.views.footers = new Array();

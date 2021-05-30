@@ -1,0 +1,5 @@
+{
+	"title": "Explorer: Dump sound definitions",
+	"icon": "explorerExtensionText",
+	"description": "That test creates grouped Minecraft sounds list, that you may use in your commands and modifications. Your task is - place sound_definitions.json to modication directory from Minecraft and checkout result."
+}

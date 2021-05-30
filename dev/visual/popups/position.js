@@ -1,12 +1,12 @@
 const CoordsPopup = function() {
 	ListingPopup.call(this);
-	this.reset();
 };
 
 CoordsPopup.prototype = assign(ListingPopup.prototype);
 CoordsPopup.prototype.TYPE = "CoordsPopup";
 
 CoordsPopup.prototype.reset = function() {
+	ListingPopup.prototype.reset.call(this);
 	this.views.groups = new Array();
 	this.views.titles = new Array();
 	this.views.containers = new Array();
