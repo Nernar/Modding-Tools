@@ -2,7 +2,7 @@ const ActoredWindow = function() {
 	this.reset();
 };
 
-ActoredWindow.prototype = assign(FocusableWindow.prototype);
+ActoredWindow.prototype = new FocusableWindow;
 ActoredWindow.prototype.TYPE = "ActoredWindow";
 
 ActoredWindow.prototype.reset = function() {
@@ -41,7 +41,7 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 
 const UniqueWindow = new Function();
 
-UniqueWindow.prototype = assign(ActoredWindow.prototype);
+UniqueWindow.prototype = new ActoredWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";
 UniqueWindow.prototype.updatable = false;
 
@@ -62,21 +62,15 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 };
 
 UniqueWindow.prototype.show = function() {
-	let window = this;
-	context.runOnUiThread(function() {
-		if (UniqueHelper.prepareWindow(window)) {
-			ActoredWindow.prototype.show.call(window);
-		}
-	});
+	if (UniqueHelper.prepareWindow(this)) {
+		ActoredWindow.prototype.show.call(this);
+	}
 };
 
 UniqueWindow.prototype.dismiss = function() {
-	let window = this;
-	context.runOnUiThread(function() {
-		if (UniqueHelper.deattachWindow(window)) {
-			ActoredWindow.prototype.dismiss.call(window);
-		}
-	});
+	if (UniqueHelper.deattachWindow(this)) {
+		ActoredWindow.prototype.dismiss.call(this);
+	}
 };
 
 const FocusablePopup = function() {
@@ -101,7 +95,7 @@ const FocusablePopup = function() {
 	this.reset();
 };
 
-FocusablePopup.prototype = assign(ActoredWindow.prototype);
+FocusablePopup.prototype = new ActoredWindow;
 FocusablePopup.prototype.TYPE = "FocusablePopup";
 
 FocusablePopup.prototype.expanded = true;
@@ -109,31 +103,31 @@ FocusablePopup.prototype.expanded = true;
 FocusablePopup.prototype.reset = function() {
 	let views = this.views = new Object();
 	views.layout = new android.widget.LinearLayout(context);
-	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-	views.layout.setOrientation(Ui.Orientate.VERTICAL);
+	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(views.layout);
 
 	views.title = new android.widget.TextView(context);
-	views.title.setPadding(Ui.getY(30), Ui.getY(18), Ui.getY(30), Ui.getY(18));
-	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-	views.title.setTextSize(Ui.getFontSize(24));
-	views.title.setGravity(Ui.Gravity.CENTER);
-	views.title.setTextColor(Ui.Color.WHITE);
+	views.title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
+	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+	views.title.setTextSize(Interface.getFontSize(24));
+	views.title.setGravity(Interface.Gravity.CENTER);
+	views.title.setTextColor(Interface.Color.WHITE);
 	views.title.setTypeface(typeface);
 	params = new android.widget.LinearLayout.
-	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	params.weight = 0.1;
 	views.layout.addView(views.title, params);
 
 	views.scroll = new android.widget.ScrollView(context);
 	params = new android.widget.LinearLayout.
-	LayoutParams(Ui.Display.MATCH, Ui.Display.MATCH);
+	LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	params.weight = 16.0;
 	views.layout.addView(views.scroll, params);
 
 	views.content = new android.widget.LinearLayout(context);
-	views.content.setOrientation(Ui.Orientate.VERTICAL);
-	views.content.setGravity(Ui.Gravity.CENTER);
+	views.content.setOrientation(Interface.Orientate.VERTICAL);
+	views.content.setGravity(Interface.Gravity.CENTER);
 	views.scroll.addView(views.content);
 };
 
@@ -155,7 +149,7 @@ FocusablePopup.prototype.minimize = function() {
 	let actor = new FadeActor();
 	actor.setDuration(200);
 	this.beginDelayedActor(actor);
-	this.views.scroll.setVisibility(Ui.Visibility.GONE);
+	this.views.scroll.setVisibility(Interface.Visibility.GONE);
 	this.expanded = false;
 };
 
@@ -163,6 +157,6 @@ FocusablePopup.prototype.maximize = function() {
 	let actor = new FadeActor();
 	actor.setDuration(400);
 	this.beginDelayedActor(actor);
-	this.views.scroll.setVisibility(Ui.Visibility.VISIBLE);
+	this.views.scroll.setVisibility(Interface.Visibility.VISIBLE);
 	this.expanded = true;
 };

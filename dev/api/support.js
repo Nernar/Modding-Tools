@@ -1,4 +1,4 @@
-const ExecutableSupport = {
+const ExecuteableSupport = {
 	mods: new Object(),
 	getClassLoader: function() {
 		return context.getClassLoader();
@@ -8,16 +8,20 @@ const ExecutableSupport = {
 			"com.zhekasmirnov.innercore." + name.substring(22) : name;
 	},
 	newInstance: function(name, initialize) {
-		try {
+		return tryoutSafety.call(this, function() {
 			return java.lang.Class.forName(isHorizon ? this.updateClassReference(name) :
 				name, initialize || false, this.getClassLoader()).newInstance();
-		} catch (e) {
-			__code__.startsWith("develop") && reportError(e);
-		}
-		return null;
+		}, null);
 	},
 	getSupportable: function(name) {
 		return this.mods[name] || null;
+	},
+	getModList: function() {
+		let array = new Array();
+		for (let name in this.mods) {
+			array.push(this.mods[name]);
+		}
+		return array;
 	},
 	getModBuilder: function() {
 		return this.newInstance("zhekasmirnov.launcher.mod.build.ModBuilder");
@@ -26,12 +30,12 @@ const ExecutableSupport = {
 		if (!dir.endsWith("/")) {
 			dir += "/";
 		}
-		dir = isNative ? dir : Dirs.SUPPORT + "/" + dir;
+		dir = isNative ? dir : Dirs.SUPPORT + dir;
 		let file = new java.io.File(dir);
 		if (file.exists()) {
 			return dir;
 		}
-		Logger.Log("Can't find executable directory " + file.getName() + ", ignoring", "Dev-Core");
+		Logger.Log("Can't find executable directory " + file.getName() + ", ignoring", "DEV-CORE");
 		return null;
 	},
 	isModuleMissed: function() {
@@ -43,56 +47,41 @@ const ExecutableSupport = {
 		}
 		let builder = this.getModBuilder(),
 			name = new java.io.File(dir).getName();
-		if (!builder) {
-			throw Error("Submodule supportable " + name + " load cancelled");
-		}
+		if (!builder) MCSystem.throwException("Submodule supportable " + name + " load cancelled");
 		let mod = builder.buildModForDir(dir);
-		if (!mod) {
-			throw Error("Build mod directory " + name + " failed, api disabled");
-		}
+		if (!mod) MCSystem.throwException("Build mod directory " + name + " failed, api disabled");
 		mod.onImport();
 		this.mods[mod.getName()] = mod;
 		return String(mod.getName());
 	},
 	launchMod: function(name) {
 		let mod = this.getSupportable(name);
-		if (!mod) {
-			throw Error("Can't launch mod " + name);
-		}
+		if (!mod) MCSystem.throwException("Can't launch mod " + name);
 		mod.RunPreloaderScripts();
 		mod.RunLauncherScripts();
-		Logger.Log("Injected mod supportable " + name + " prepared", "Dev-Core");
+		Logger.Log("Injected mod supportable " + name + " prepared", "DEV-CORE");
 	},
 	getProperty: function(name, property) {
 		let mod = this.getSupportable(name);
-		if (!mod) {
-			return null;
-		}
-		try {
+		if (!mod) return null;
+		return tryoutSafety(function() {
 			return String(mod.getInfoProperty(property));
-		} catch (e) {
-			__code__.startsWith("develop") && reportError(e);
-		}
-		return null;
+		}, null);
 	},
 	evaluateAtExecutable: function(source, action) {
-		try {
+		return tryoutSafety(function() {
 			return source.evaluateStringInScope(action);
-		} catch (e) {
+		}, function(e) {
 			Logger.Log("Failed to run exec source " + (source ?
-				source.name : "unknown") + ", ignoring", "Dev-Core");
-			__code__.startsWith("develop") && reportError(e);
-		}
-		return null;
+				source.name : "unknown") + ", ignoring", "DEV-CORE");
+		}, null);
 	},
 	actionToString: function(action) {
 		return "(" + action + ")();";
 	},
 	injectCustomEval: function(name, action) {
 		let mod = this.getSupportable(name);
-		if (!mod) {
-			throw Error("Can't find mod " + name);
-		}
+		if (!mod) MCSystem.throwException("Can't find mod " + name);
 		let results = new Array(),
 			ats = this.actionToString(action);
 		for (let i = 0; i < mod.compiledModSources.size(); i++) {
@@ -103,16 +92,13 @@ const ExecutableSupport = {
 	},
 	buildSupportable: function(name) {
 		return function(action) {
-			try {
-				return ExecutableSupport.injectCustomEval(name, action);
-			} catch (e) {
-				__code__.startsWith("develop") && reportError(e);
-			}
-			return null;
+			return tryoutSafety(function() {
+				return ExecuteableSupport.injectCustomEval(name, action);
+			}, null);
 		};
 	},
 	getAndLoadIcon: function(name) {
-		try {
+		return tryoutSafety(function() {
 			let upper = name.substring(0, 1).toUpperCase() + name.substring(1);
 			if (ImageFactory.getCountByTag("support" + upper) > 0) {
 				return "support" + upper;
@@ -121,17 +107,12 @@ const ExecutableSupport = {
 			if (file != null && file.exists()) {
 				let icon = new java.io.File(file.getPath(), "mod_icon.png");
 				if (icon != null && icon.exists()) {
-					let output = new java.io.File(Dirs.ASSET, "support/" + name + ".dnr");
-					REQUIRE("recompress.js")(icon, output);
-					ImageFactory.loadFromFile("support" + name, output);
-					return "support" + name;
+					return ImageFactory.loadFromFile("support" + name, icon);
 				}
 			}
-		} catch (e) {
-			Logger.Log("Failed to attempt icon load for " + name, "Dev-Core");
-			__code__.startsWith("develop") && reportError(e);
-		}
-		return "support";
+		}, function(e) {
+			Logger.Log("Failed to attempt icon load for " + name, "DEV-CORE");
+		}, "support");
 	},
 	refreshIcon: function(supportable) {
 		if (supportable) {
@@ -140,48 +121,43 @@ const ExecutableSupport = {
 	},
 	isEnabled: function(name) {
 		let mod = this.getSupportable(name);
-		if (!mod) {
-			throw Error("Can't find mod " + name);
-		}
+		if (!mod) MCSystem.throwException("Can't find mod " + name);
 		return loadSupportables && mod.isEnabled;
 	},
 	uninstall: function(name) {
-		Files.deleteDir(Dirs.SUPPORT + "/" + name);
-		Logger.Log("Uninstalling " + name, "Dev-Core")
+		let mod = this.getSupportable(name);
+		if (!mod) MCSystem.throwException("Can't find mod " + name);
+		Logger.Log("Uninstalling supportable " + name, "WARNING")
+		Files.deleteRecursive(mod.dir);
 		delete this.mods[name];
 	}
 };
 
 const importMod = function(dir, action) {
-	try {
-		let name = ExecutableSupport.buildDirectory(dir);
-		if (name && ExecutableSupport.isEnabled(name)) {
-			ExecutableSupport.launchMod(name);
-			let supportable = ExecutableSupport.buildSupportable(name);
-			supportable.description = ExecutableSupport.getProperty(name, "description");
-			supportable.version = ExecutableSupport.getProperty(name, "version");
-			supportable.author = ExecutableSupport.getProperty(name, "author");
-			supportable.result = action ? ExecutableSupport.injectCustomEval(name, action)[0] : true;
+	return tryout(function() {
+		let name = ExecuteableSupport.buildDirectory(dir);
+		if (name && ExecuteableSupport.isEnabled(name)) {
+			ExecuteableSupport.launchMod(name);
+			let supportable = ExecuteableSupport.buildSupportable(name);
+			supportable.description = ExecuteableSupport.getProperty(name, "description");
+			supportable.version = ExecuteableSupport.getProperty(name, "version");
+			supportable.author = ExecuteableSupport.getProperty(name, "author");
+			supportable.result = Boolean(!action || ExecuteableSupport.injectCustomEval(name, action)[0]);
 			supportable.modName = name;
 			return supportable;
 		}
-	} catch (e) {
-		reportError(e);
-	}
-	return null;
+	}, null);
 };
 
 const isNotSupported = function(obj) {
 	if (obj.result == true) {
-		Logger.Log("Supportable " + obj.modName + " module works fine, has been activated", "Dev-Editor");
+		Logger.Log("Supportable " + obj.modName + " module works fine, has been activated", "DEV-EDITOR");
 	} else if (obj.result == false) {
-		Logger.Log(obj.modName + " supportable module outdated and will be disabled", "Dev-Editor");
-	} else if (obj.result instanceof Error && __code__.startsWith("develop")) {
+		Logger.Log(obj.modName + " supportable module outdated and will be disabled", "DEV-EDITOR");
+	} else if (obj.result.lineNumber !== undefined && __code__.startsWith("develop")) {
 		reportError(obj.result);
 	} else if (__code__.startsWith("develop")) {
 		Logger.Log("Can't resolve modification with invalid result: " + obj.result, obj.modName);
-	} else {
-		Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);
-	}
+	} else Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);
 	return obj.result != true;
 };

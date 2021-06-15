@@ -1,11 +1,11 @@
 const TransitionConverter = new Function();
 
-TransitionConverter.prototype = assign(ScriptConverter.prototype);
+TransitionConverter.prototype = new ScriptConverter;
 TransitionConverter.prototype.TYPE = "transition";
 
 TransitionConverter.prototype.process = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
-		throw Error("TransitionConverter can process only non-null Object instances");
+		MCSystem.throwException("TransitionConverter can process only non-null Object instances");
 	}
 	let result = this.result = new Array();
 	if (obj.define) {

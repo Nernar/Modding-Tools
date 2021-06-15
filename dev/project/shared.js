@@ -32,20 +32,20 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 		recursiveHint(createProcess(translate("Preparing")));
 	}
 	const recursiveIndexate = function(obj) {
-		try {
-			if (done) throw Error("Was cancelled by timeout");
+		tryout(function() {
+			if (done) MCSystem.throwException("Was cancelled by timeout");
 			count++;
 			if (obj && typeof obj == "object") {
 				for (let item in obj) {
 					recursiveIndexate(obj[item]);
 				}
 			}
-		} catch (e) {
+		}, function(e) {
 			count++;
-		}
+		});
 	};
 	handleThread(function() {
-		try {
+		tryout(function() {
 			handle(function() {
 				done = true;
 			}, STRINGIFY_TIMEOUT);
@@ -53,14 +53,12 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 			if (!done) {
 				let result = stringifyObjectUnsafe(obj, identate, {
 					onUpdate: function() {
-						if (done) throw Error("Was cancelled by timeout");
-						if (safetyProcesses) Ui.sleepMilliseconds(1);
+						if (done) MCSystem.throwException("Was cancelled by timeout");
+						if (safetyProcesses) Interface.sleepMilliseconds(1);
 						progress++;
 					},
 					onPassed: function(result, type) {
-						handle(function() {
-							confirm(type, translate("Unknown or unsupported stringify type for:") + " " + result);
-						});
+						confirm(type, translate("Unknown or unsupported stringify type for:") + " " + result);
 					}
 				});
 				if (action && result) {
@@ -68,10 +66,10 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 				}
 				done = true;
 			} else if (action) action();
-		} catch (e) {
+		}, function(e) {
 			reportError(e);
 			done = true;
-		}
+		});
 	});
 };
 
@@ -83,7 +81,7 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 		if (callback.onUpdate) {
 			callback.onUpdate();
 		}
-		try {
+		return tryout(function() {
 			if (obj === null) {
 				return "null";
 			}
@@ -154,45 +152,39 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 							callback.onPassed(obj, typeof obj);
 						}
 			}
-		} catch (e) {
-			reportError(e);
-		}
+		});
 	};
 	return recursiveStringify(obj, new String());
 };
 
 const readFile = function(path, isBytes, action) {
 	handleThread(function() {
-		try {
-			let file = new java.io.File(String(path));
-			if (!file.exists()) return;
-			let readed = isBytes ? Files.readBytes(file) : Files.read(file);
-			if (action) action(readed);
-		} catch (e) {
-			reportError(e);
-		}
+		let file = new java.io.File(String(path));
+		if (!file.exists()) return;
+		let readed = isBytes ? Files.readBytes(file) : Files.read(file);
+		if (typeof action == "function") action(readed);
 	});
 };
 
 const exportProject = function(object, isAutosave, path, action) {
 	stringifyObject(object, false, function(result) {
-			let file = new java.io.File(String(path));
-			result = compileToProduce(result);
-			file.getParentFile().mkdirs();
-			if (!isAutosave && file.exists()) {
-				handle(function() {
-					confirm(translate("File is exists"),
-						translate("File is already created. This process will be rewrite it. Continue?"),
-						function() {
-							Files.writeBytes(file, result);
-							if (action) action(result);
-						});
+		let file = new java.io.File(String(path));
+		result = compileToProduce(result);
+		file.getParentFile().mkdirs();
+		if (!isAutosave && file.exists()) {
+			confirm(translate("File is exists"),
+				translate("File is already created. This process will be rewrite it. Continue?"),
+				function() {
+					Files.writeBytes(file, result);
+					if (action) action(result);
 				});
-			} else {
+		} else {
+			handle(function() {
 				Files.writeBytes(file, result);
 				if (action) action(result);
-			}
-		}, isAutosave ? translate("Autosaving") : translate("Exporting"),
+			});
+		}
+	}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 		isAutosave ? translate("Autosaved") : translate("Exported"));
 };
 
@@ -201,18 +193,18 @@ const importProject = function(path, action) {
 		let result = decompileFromProduce(bytes),
 			data = compileData(result, "object");
 		if (data && !(data instanceof Error)) {
-			action && (data.length !== undefined ?
-				action(data) : action([data]));
-		} else {
 			handle(function() {
-				confirm(translate("Can't open file"),
-					translate("Looks like, project is damaged. Check project and following exception information:") +
-					"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
-					translate("Do you want to retry?"),
-					function() {
-						importProject(path, action);
-					});
+				action && (data.length !== undefined ?
+					action(data) : action([data]));
 			});
+		} else {
+			confirm(translate("Can't open file"),
+				translate("Looks like, project is damaged. Check project and following exception information:") +
+				"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
+				translate("Do you want to retry?"),
+				function() {
+					importProject(path, action);
+				});
 		}
 	});
 };
@@ -221,8 +213,10 @@ const importScript = function(path, action) {
 	readFile(path, false, function(text) {
 		let result = compileScript(text);
 		if (result !== null) {
-			action && (result.length !== undefined ?
-				action(result) : action([result]));
+			handle(function() {
+				action && (result.length !== undefined ?
+					action(result) : action([result]));
+			});
 		}
 	});
 };
@@ -231,14 +225,10 @@ const compileScript = function(text) {
 	let code = "(function() { try { " + String(text) + "\n\t} catch (e) {" +
 		"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "import.js");
-	if (!noImportedScripts) {
+	if (noImportedScripts) {
 		noImportedScripts = false;
-		try {
-			__config__.set("user_login.imported_script", !noImportedScripts);
-			__config__.save();
-		} catch (e) {
-			reportError(e);
-		}
+		loadSetting("user_login.imported_script", "boolean", true);
+		__config__.save();
 	}
 	if (scope.error) reportError(scope.error);
 	else if (scope.result && scope.result.error) {
@@ -457,19 +447,19 @@ const Project = function(obj) {
 			this.updateCurrentWorker();
 			return;
 		}
-		try {
+		tryout.call(this, function() {
 			let scope = this;
 			this.isAutosaving = true;
 			this.updateCurrentWorker();
 			exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
-				Dirs.AUTOSAVE + "/" + this.getProjectTime() + ".dnp",
+				Dirs.AUTOSAVE + this.getProjectTime() + ".dnp",
 				function(result) {
 					delete scope.isAutosaving;
 				});
-		} catch (e) {
+		}, function(e) {
 			reportError(e);
 			delete scope.isAutosaving;
-		}
+		});
 	};
 	this.getProjectTime = function() {
 		let time = new Date(this.time);
@@ -527,9 +517,7 @@ const Project = function(obj) {
 	this.updateCurrentWorker = function() {
 		let id = this.getCurrentId(),
 			worker = this.getCurrentWorker();
-		if (!worker || id < 0) {
-			return;
-		}
+		if (!worker || id < 0) return;
 		this.getAll()[id] = worker.getProject();
 	};
 	this.switchToWorker = function(worker) {
@@ -611,10 +599,10 @@ const ProjectProvider = {
 		}
 		scope.thread = handleThread(function() {
 			do {
-				Ui.sleepMilliseconds(autosavePeriod * 1000);
+				Interface.sleepMilliseconds(autosavePeriod * 1000);
 				project.callAutosave();
 				while (project.isAutosaving) {
-					Ui.sleepMilliseconds(1);
+					Interface.sleepMilliseconds(1);
 				}
 			} while (project.isOpened);
 			delete scope.thread;
@@ -630,11 +618,5 @@ const ProjectProvider = {
 		if (!project) return;
 		project.setCurrentlyId(id);
 		project.switchToWorker(worker);
-	},
-	popEditor: function() {
-		let project = this.getProject();
-		if (!project) return;
-		project.getAll().pop();
-		delete project.worker;
 	}
 };

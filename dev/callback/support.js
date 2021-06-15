@@ -1,7 +1,7 @@
 Callback.addCallback("CoreEngineLoaded", function(api) {
 	handle(function() {
-		let window = context.getWindow();
 		if (isHorizon) {
+			let window = context.getWindow();
 			if (android.os.Build.VERSION.SDK_INT >= 30) {
 				window.setDecorFitsSystemWindows(false);
 				let controller = window.getInsetsController();
@@ -13,7 +13,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 		}
 	});
-	try {
+	tryout(function() {
 		api.ModAPI.registerAPI("DevEditor", {
 			createAndLock: function() {
 				restart();
@@ -25,12 +25,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return !isSupportEnv;
 			}
 		});
-	} catch (e) {
-		reportError(e);
-		return;
-	}
-	try {
-		if (ExecutableSupport.isModuleMissed()) {
+		if (ExecuteableSupport.isModuleMissed()) {
 			MCSystem.setLoadingTip("Loading Supportables");
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
@@ -101,22 +96,50 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			WorldEdit = importMod("WorldEdit", function() {
 				return !!this.Commands;
 			});
-			TPSmeter = importMod("TPS meter");
 		} else supportSupportables = false;
-	} catch (e) {
-		reportError(e);
-	}
+	});
+});
+
+Callback.addCallback("CoreConfigured", function(config) {
+	tryout(function() {
+		if (!supportSupportables) {
+			Logger.Log("Supportables disabled, because it's not approved by developer", "DEV-CORE");
+		} else loadSupportables = loadSetting("supportable.enabled", "boolean");
+		if (loadSupportables) {
+			if (supportSupportables) {
+				MCSystem.setLoadingTip("Checking Supportables");
+				if (UIEditor && isNotSupported(UIEditor)) {
+					UIEditor = null;
+				}
+				if (Setting && isNotSupported(Setting)) {
+					Setting = null;
+				}
+				if (DumpCreator && isNotSupported(DumpCreator)) {
+					DumpCreator = null;
+				}
+				if (InstantRunner && isNotSupported(InstantRunner)) {
+					InstantRunner = null;
+				}
+				if (WorldEdit && isNotSupported(WorldEdit)) {
+					WorldEdit = null;
+				}
+			} else showHint(translate("Supportables isn't supported and disabled"));
+		}
+	});
 });
 
 const refreshSupportablesIcons = function() {
-	try {
-		ExecutableSupport.refreshIcon(UIEditor);
-		ExecutableSupport.refreshIcon(Setting);
-		ExecutableSupport.refreshIcon(DumpCreator);
-		ExecutableSupport.refreshIcon(InstantRunner);
-		ExecutableSupport.refreshIcon(WorldEdit);
-		ExecutableSupport.refreshIcon(TPSmeter);
-	} catch (e) {
-		reportError(e);
-	}
+	tryout(function() {
+		ExecuteableSupport.refreshIcon(UIEditor);
+		ExecuteableSupport.refreshIcon(Setting);
+		ExecuteableSupport.refreshIcon(DumpCreator);
+		ExecuteableSupport.refreshIcon(InstantRunner);
+		ExecuteableSupport.refreshIcon(WorldEdit);
+	});
+};
+
+const isAnyCustomSupportableLoaded = function() {
+	return tryoutSafety(function() {
+		return loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit) !== null;
+	}, false);
 };

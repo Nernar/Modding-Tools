@@ -7,21 +7,22 @@ polyfill/FileTools.js
 polyfill/Level.js
 
 storage/explorer.js
-# storage/factory.js
-# storage/message.js
+storage/factory.js
+storage/message.js
 storage/converter/shared.js
 storage/converter/block.js
 storage/converter/transition.js
 
 api/shared.js
-# api/protect.js
+api/object.js
+api/protect.js
 api/utils.js
 api/support.js
 
-# network/browser.js
-# network/connect.js
-# network/local.js
-# network/remote.js
+network/browser.js
+network/connect.js
+network/local.js
+network/remote.js
 
 interface/actor.js
 interface/motions.js
@@ -37,15 +38,17 @@ project/transition.js
 project/entity.js
 
 visual/fragments/sidebar.js
+visual/fragments/logotype.js
 visual/sidebar.js
 visual/control.js
 visual/explorer.js
 visual/project.js
 visual/snack.js
+visual/logotype.js
 visual/popups/shared.js
 visual/popups/listing.js
 visual/popups/position.js
-visual/popups/tree.js
+visual/popups/hieracly.js
 
 tools/shared.js
 tools/project.js
@@ -55,7 +58,14 @@ tools/transition.js
 tools/world.js
 tools/debug.js
 
+sequence/logotype.js
+sequence/snack.js
+sequence/launch.js
+sequence/project.js
+sequence/manual.js
+sequence/testing.js
+
 callback/shared.js
-# callback/debug.js
+callback/debug.js
 callback/support.js
 callback/loading.js

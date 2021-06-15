@@ -5,7 +5,7 @@ const registerCustomEntity = function() {
 const TODO = registerCustomEntity();
 
 const updateEntityRender = function(worker) {
-	try {
+	return tryout(function() {
 		if (!worker || !Level.isLoaded()) {
 			return false;
 		}
@@ -18,10 +18,7 @@ const updateEntityRender = function(worker) {
 			}
 		}); */
 		autosavePeriod == 0 && ProjectProvider.getProject().callAutosave();
-	} catch (e) {
-		reportError(e);
-	}
-	return false;
+	}, false);
 };
 
 const model2ToScript = function(obj) {
@@ -172,30 +169,81 @@ const EntityEditor = {
 		button.show();
 		let sidebar = new SidebarWindow(),
 			group = sidebar.addGroup("entity");
-		group.addItem("entity", null);
-		group.addItem("blockModuleIdentifier", this.rename);
+		group.addItem("entityDefineIdentifier", this.rename);
 		if (this.data.worker.Visual.getModelCount() > 0) {
-			group.addItem("entityModuleDraw", this.texture);
+			group.addItem("entityDefineTexture", this.texture);
 		}
-		group.addItem("entityModuleUpdate", this.reload);
-		group = sidebar.addGroup("entityBoneBones");
+		group.addItem("entityUpdate", this.reload);
+		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+			if (!EntityEditor.data.worker.Visual.getModelCount() > 0) {
+				if (itemIndex > 0) itemIndex++;
+			}
+			if (itemIndex == 0) {
+				return translate("Changes entity identifier");
+			} else if (itemIndex == 1) {
+				return translate("Set up path texture");
+			} else if (itemIndex == 2) {
+				return translate("Updates render");
+			}
+		});
+		group = sidebar.addGroup("entityBone");
+		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+			if (EntityEditor.data.hasVisual) {
+				if (itemIndex == 0) {
+					return translate("Selects currently bone");
+				} else if (itemIndex == 1) {
+					return translate("Creates and clones bones");
+				} else if (itemIndex == 2) {
+					return translate("Renames bone in tree");
+				} else if (itemIndex == 3) {
+					return translate("Changes offset between center and bone");
+				} else if (itemIndex == 4) {
+					return translate("Rotates bone around offset");
+				} else if (itemIndex == 5) {
+					return translate("Removes bone");
+				}
+			} else if (itemIndex == 0) {
+				return translate("Creates first bone");
+			}
+		});
 		if (this.data.hasVisual) {
-			group.addItem("entityBoneBones", this.Bone.select);
-			group.addItem("entityBoxAdd", this.Bone.add);
-			group.addItem("blockModuleVariation", this.Bone.rename);
+			group.addItem("entityBoneSelect", this.Bone.select);
+			group.addItem("entityBoneAdd", this.Bone.add);
+			group.addItem("entityBoneName", this.Bone.rename);
 			group.addItem("entityBoneOffset", this.Bone.offset);
 			group.addItem("entityBoneRotate", this.Bone.rotate);
-			group.addItem("entityBoxRemove", this.Bone.remove);
-			group = sidebar.addGroup("entityBoxBoxes");
-			if (this.data.item >= 0) {
-				group.addItem("entityBoxBoxes", this.Box.select);
-				group.addItem("entityBoxAdd", this.Box.add);
-				group.addItem("entityBoxMove", this.Box.move);
-				group.addItem("entityBoxResize", this.Box.resize);
-				group.addItem("entityBoxUv", this.Box.vertex);
-				group.addItem("entityBoxRemove", this.Box.remove);
-			} else group.addItem("entityBoxAdd", this.Box.add);
-		} else group.addItem("entityBoxAdd", this.Bone.add);
+			group.addItem("entityBoneRemove", this.Bone.remove);
+			if (this.Bone.hasSelection()) {
+				group = sidebar.addGroup("entityBoxSelect");
+				if (this.Box.hasSelection()) {
+					group.addItem("entityBoxSelect", this.Box.select);
+					group.addItem("entityBoxAdd", this.Box.add);
+					group.addItem("entityBoxMove", this.Box.move);
+					group.addItem("entityBoxScretch", this.Box.resize);
+					group.addItem("entityBoxUv", this.Box.vertex);
+					group.addItem("entityBoxRemove", this.Box.remove);
+				} else group.addItem("entityBoxAdd", this.Box.add);
+				group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+					if (EntityEditor.Box.hasSelection()) {
+						if (itemIndex == 0) {
+							return translate("Selects currently box");
+						} else if (itemIndex == 1) {
+							return translate("Creates or clones box");
+						} else if (itemIndex == 2) {
+							return translate("Moves box location");
+						} else if (itemIndex == 3) {
+							return translate("Scretches box sizes");
+						} else if (itemIndex == 4) {
+							return translate("Changes box location in texture");
+						} else if (itemIndex == 5) {
+							return translate("Removes box");
+						}
+					} else if (itemIndex == 0) {
+						return translate("Creates first box");
+					}
+				});
+			}
+		} else group.addItem("entityBoneAdd", this.Bone.add);
 		if (this.data.selected >= 0) sidebar.select(this.data.selected);
 		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
 			EntityEditor.data.selected = index;
@@ -207,14 +255,26 @@ const EntityEditor = {
 				selectMode = 0, updateEntityRender(EntityEditor.data.worker);
 			}
 		});
+		sidebar.setOnGroupFetchListener(function(window, group, index) {
+			if (index == 0) {
+				return translate("Entity define properties");
+			} else if (index == 1) {
+				return translate("Visual model bones");
+			} else if (index == 2) {
+				return translate("Selected bone boxes");
+			}
+		});
 		sidebar.show();
 		updateEntityRender(this.data.worker);
 	},
 	menu: function() {
+		prepareAdditionalInformation(3, 1);
 		let control = new ControlWindow();
+		attachWarningInformation(control);
 		control.setOnClickListener(function() {
 			EntityEditor.create();
 		}).addHeader();
+		attachAdditionalInformation(control);
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
 			selectFile([".dnp", ".js", ".json"], function(file) {
@@ -222,7 +282,7 @@ const EntityEditor = {
 			});
 		});
 		category.addItem("menuProjectImport", translate("Import"), function() {
-			showHint(translate("This content will be availabled soon"));
+			showHint(translate("Not developed yet"));
 		}).setBackground("popupSelectionLocked");
 		category.addItem("menuProjectSave", translate("Export"), function() {
 			saveFile(EntityEditor.data.name, [".dnp", ".js", ".json"], function(file, i) {
@@ -239,9 +299,9 @@ const EntityEditor = {
 				ProjectEditor.menu();
 			});
 		});
-		checkForAdditionalInformation(control);
+		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Entity"));
-		category.addItem("entityModuleSelect", translate("Summon"), function() {
+		category.addItem("entityDraw", translate("Summon"), function() {
 			if (!Level.isLoaded()) {
 				showHint(translate("Can't summon entity at menu"));
 				return;
@@ -250,19 +310,20 @@ const EntityEditor = {
 			control.dismiss();
 			selectMode = 6;
 			let button = new ControlButton();
-			button.setIcon("menuModuleBack");
+			button.setIcon("menuBack");
 			button.setOnClickListener(function() {
 				EntityEditor.create();
 				selectMode = 0;
 			});
 			button.show();
 		});
-		category.addItem("entityModuleUpdate", translate("Reload"), function() {
+		category.addItem("entityUpdate", translate("Reload"), function() {
 			selectMode = 0;
 			EntityEditor.reload();
 		});
-		resetAdditionalInformation();
+		attachAdditionalInformation(control);
 		control.show();
+		finishAttachAdditionalInformation();
 	},
 	open: function(source) {
 		if (typeof source != "object") {
@@ -277,10 +338,10 @@ const EntityEditor = {
 		let worker = this.data.worker = new EntityWorker(source);
 		if (index == -1) index = ProjectProvider.getCount();
 		ProjectProvider.setupEditor(index, worker);
-		ProjectProvider.setOpenedState(true);
-		ControlWindow.dismissCurrently();
 		EntityEditor.unselect();
 		EntityEditor.create();
+		ProjectProvider.setOpenedState(true);
+		ControlWindow.dismissCurrently();
 		return true;
 	},
 	replace: function(file) {
@@ -288,15 +349,13 @@ const EntityEditor = {
 		if (name.endsWith(".dnp")) {
 			let active = Date.now();
 			importProject(file.getPath(), function(result) {
-				handle(function() {
+				active = Date.now() - active;
+				selectProjectData(result, function(selected) {
 					active = Date.now() - active;
-					selectProjectData(result, function(selected) {
-						active = Date.now() - active;
-						EntityEditor.open(selected);
-						showHint(translate("Loaded success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					}, "entity", true);
-				});
+					EntityEditor.open(selected);
+					showHint(translate("Loaded success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				}, "entity", true);
 			});
 		}
 	},
@@ -328,19 +387,18 @@ const EntityEditor = {
 			// selectMode = 0;
 			// updateEntityRender(BlockEditor.data.worker);
 			// });
-			popup.setOnSelectListener(function(index) {
-				EntityEditor.data.group = index;
-				let hasBoxes = EntityEditor.data.item > 0;
-				EntityEditor.data.item = model.getIndex(index).getBoxCount() > 0 ? 0 : -1;
-				if (hasBoxes && EntityEditor.data.item == -1) EntityEditor.create();
-				else if (!hasBoxes && !EntityEditor.data.item) EntityEditor.create();
-				updateEntityRender(EntityEditor.data.worker);
-			});
 			for (let i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++) {
 				popup.addButtonElement(EntityEditor.data.worker.Visual.getModel(0).getName(i));
 			}
 			popup.selectButton(EntityEditor.data.group);
 			popup.setSelectMode(true);
+			popup.setOnSelectListener(function(index) {
+				let previous = EntityEditor.data.group;
+				EntityEditor.data.group = index;
+				EntityEditor.data.item = model.getIndex(index).getBoxCount() > 0 ? 0 : -1;
+				if (previous != index) EntityEditor.create();
+				updateEntityRender(EntityEditor.data.worker);
+			});
 			Popups.open(popup, "bone_select");
 		},
 		add: function() {
@@ -392,7 +450,7 @@ const EntityEditor = {
 				model.getIndex(selected).setName(String(values[0]));
 				updateEntityRender(EntityEditor.data.worker);
 				showHint(translate("Data saved"));
-			}).setBackground("ground");
+			}).setBackground("popup");
 			Popups.open(popup, "bone_rename");
 		},
 		offset: function() {
@@ -522,7 +580,7 @@ const EntityEditor = {
 				});
 				popup.addButtonElement(translate("Copy current"), function() {
 					let last = EntityEditor.data.item,
-						index = (EntityEditor.data.item = model.getIndex(group).cloneBox(last));
+						index = EntityEditor.data.item = model.getIndex(group).cloneBox(last);
 					showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 					updateEntityRender(EntityEditor.data.worker);
 				});
@@ -655,7 +713,7 @@ const EntityEditor = {
 			let values = popup.getAllEditsValues();
 			define.setIdentificator(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("ground");
+		}).setBackground("popup");
 		Popups.open(popup, "rename");
 	},
 	texture: function() {
@@ -667,7 +725,7 @@ const EntityEditor = {
 			let values = popup.getAllEditsValues();
 			model.setTexture(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("ground");
+		}).setBackground("popup");
 		Popups.open(popup, "texture");
 	}
 };

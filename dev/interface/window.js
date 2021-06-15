@@ -4,11 +4,18 @@ FocusableWindow.prototype.TYPE = "FocusableWindow";
 
 FocusableWindow.prototype.touchable = true;
 FocusableWindow.prototype.focusable = false;
-FocusableWindow.prototype.gravity = Ui.Gravity.NONE;
-FocusableWindow.prototype.width = Ui.Display.WRAP;
-FocusableWindow.prototype.height = Ui.Display.WRAP;
+FocusableWindow.prototype.gravity = Interface.Gravity.NONE;
+FocusableWindow.prototype.width = Interface.Display.WRAP;
+FocusableWindow.prototype.height = Interface.Display.WRAP;
 FocusableWindow.prototype.x = 0;
 FocusableWindow.prototype.y = 0;
+
+FocusableWindow.prototype.reattach = function() {
+	if (this.isOpened()) {
+		this.dismiss();
+	}
+	this.show();
+};
 
 FocusableWindow.prototype.getContent = function() {
 	if (this.content) return this.content;
@@ -27,8 +34,10 @@ FocusableWindow.prototype.getContent = function() {
 
 FocusableWindow.prototype.setContent = function(content) {
 	this.content = content;
-	if (this.isOpened()) this.update();
-	else content.setVisibility(Ui.Visibility.GONE);
+	if (this.isOpened()) this.reattach();
+	else if (content !== null) {
+		content.setVisibility(Interface.Visibility.GONE);
+	}
 };
 
 FocusableWindow.prototype.getFragment = function() {
@@ -40,8 +49,11 @@ FocusableWindow.prototype.getFragment = function() {
 
 FocusableWindow.prototype.setFragment = function(fragment) {
 	this.fragment = fragment;
-	if (this.isOpened()) this.update();
-	else fragment.getContainer().setVisibility(Ui.Visibility.GONE);
+	let content = this.getContent();
+	if (this.isOpened()) this.reattach();
+	else if (content !== null) {
+		content.setVisibility(Interface.Visibility.GONE);
+	}
 };
 
 FocusableWindow.prototype.getFrame = function() {
@@ -50,8 +62,11 @@ FocusableWindow.prototype.getFrame = function() {
 
 FocusableWindow.prototype.setFrame = function(frame) {
 	this.frame = frame;
-	if (this.isOpened()) this.update();
-	else frame.getContainer().setVisibility(Ui.Visibility.GONE);
+	let content = this.getContent();
+	if (this.isOpened()) this.reattach();
+	else if (content !== null) {
+		content.setVisibility(Interface.Visibility.GONE);
+	}
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -60,19 +75,21 @@ FocusableWindow.prototype.isTouchable = function() {
 
 FocusableWindow.prototype.setTouchable = function(touchable) {
 	this.touchable = !!touchable;
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.isFocusable = function() {
-	return this.focusable;
+	return this.getContent() && this.focusable;
 };
 
 FocusableWindow.prototype.setFocusable = function(focusable) {
 	this.focusable = !!focusable;
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.isFullscreen = function() {
-	return (this.width == Ui.Display.MATCH || this.width == Ui.Display.WIDTH) &&
-		(this.height == Ui.Display.MATCH || this.height == Ui.Display.HEIGHT);
+	return (this.width == Interface.Display.MATCH || this.width == Interface.Display.WIDTH) &&
+		(this.height == Interface.Display.MATCH || this.height == Interface.Display.HEIGHT);
 };
 
 FocusableWindow.prototype.getParams = function(flags) {
@@ -87,6 +104,7 @@ FocusableWindow.prototype.getGravity = function() {
 
 FocusableWindow.prototype.setGravity = function(gravity) {
 	this.gravity = gravity;
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.getX = function() {
@@ -99,10 +117,12 @@ FocusableWindow.prototype.getY = function() {
 
 FocusableWindow.prototype.setX = function(x) {
 	this.x = parseInt(x);
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.setY = function(y) {
 	this.y = parseInt(y);
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.getWidth = function() {
@@ -115,42 +135,40 @@ FocusableWindow.prototype.getHeight = function() {
 
 FocusableWindow.prototype.setWidth = function(width) {
 	this.width = parseInt(width);
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.setHeight = function(height) {
 	this.height = parseInt(height);
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.setOnShowListener = function(listener) {
 	this.__show = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	};
 };
 
 FocusableWindow.prototype.setOnUpdateListener = function(listener) {
 	this.__update = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	};
 };
 
 FocusableWindow.prototype.setOnHideListener = function(listener) {
 	this.__hide = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	};
 };
 
 FocusableWindow.prototype.setOnCloseListener = function(listener) {
 	this.__close = function() {
-		try { listener && listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	};
 };
 
 FocusableWindow.prototype.isOpened = function() {
-	return !!this.popupId;
+	return WindowProvider.hasOpenedPopup(this);
 };
 
 FocusableWindow.prototype.getPopup = function() {
@@ -161,30 +179,21 @@ FocusableWindow.prototype.setEnterActor = function(actor) {
 	if (this.isOpened()) {
 		WindowProvider.setEnterActor(this.popupId, actor);
 	}
-	if (actor) {
-		this.enterActor = actor;
-	}
+	this.enterActor = actor;
 };
 
 FocusableWindow.prototype.setExitActor = function(actor) {
 	if (this.isOpened()) {
 		WindowProvider.setExitActor(this.popupId, actor);
 	}
-	if (actor) {
-		this.exitActor = actor;
-	}
+	this.exitActor = actor;
 };
 
 FocusableWindow.prototype.show = function() {
-	let scope = this,
-		content = this.getContent();
-	content.post(function() {
-		WindowProvider.prepareActors(scope, scope.enterActor);
-		content.setVisibility(Ui.Visibility.VISIBLE);
-	});
-	if (!this.isOpened()) {
-		WindowProvider.openWindow(this);
-	}
+	WindowProvider.prepareActors(this, this.enterActor);
+	let content = this.getContent();
+	content && content.setVisibility(Interface.Visibility.VISIBLE);
+	if (!this.isOpened()) WindowProvider.openWindow(this);
 	this.__show && this.__show();
 };
 
@@ -195,13 +204,15 @@ FocusableWindow.prototype.update = function() {
 
 FocusableWindow.prototype.hide = function() {
 	WindowProvider.prepareActors(this, this.exitActor);
-	this.getContent().setVisibility(Ui.Visibility.GONE);
+	let content = this.getContent();
+	content && content.setVisibility(Interface.Visibility.GONE);
 	this.__hide && this.__hide();
 };
 
 FocusableWindow.prototype.dismiss = function() {
 	WindowProvider.prepareActors(this, this.exitActor);
-	this.getContent().setVisibility(Ui.Visibility.GONE);
+	let content = this.getContent();
+	content && content.setVisibility(Interface.Visibility.GONE);
 	WindowProvider.closeWindow(this);
 	this.__close && this.__close();
 };

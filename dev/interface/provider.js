@@ -23,7 +23,7 @@ WindowProvider.prepareIdentifier = function(window) {
 	if (window.popupId) {
 		return window.popupId;
 	}
-	window.popupId = Ui.makeViewId();
+	window.popupId = Interface.makeViewId();
 	return window.popupId;
 };
 
@@ -39,19 +39,23 @@ WindowProvider.getByPopupId = function(popupId) {
 };
 
 WindowProvider.openWindow = function(window) {
-	if (!window) {
-		return;
-	}
+	if (!window) return;
 	let content = window.getContent();
-	if (isHorizon && !isInstant) {
-		content.setSystemUiVisibility(5894);
-	}
 	if (!window.isFocusable()) {
 		if (this.hasOpenedPopup(window)) {
 			return;
 		}
-		let popup = new android.widget.PopupWindow(content,
-				window.getWidth(), window.getHeight()),
+		if (content) {
+			let container = new android.widget.FrameLayout(context);
+			container.addView(content);
+			content = container;
+			if (isHorizon && !isInstant) {
+				content.setSystemUiVisibility(5894);
+			}
+		}
+		let popup = content ? new android.widget.PopupWindow(content,
+				window.getWidth(), window.getHeight()) :
+				new android.widget.PopupWindow(window.getWidth(), window.getHeight()),
 			popupId = this.prepareIdentifier(window);
 		this.attached[popupId] = popup;
 		popup.setAttachedInDecor(isHorizon && !isInstant);
@@ -62,7 +66,7 @@ WindowProvider.openWindow = function(window) {
 		if (window.exitActor) {
 			this.setExitActor(popupId, window.exitActor);
 		}
-		popup.showAtLocation(Ui.getDecorView(), window.getGravity(),
+		popup.showAtLocation(Interface.getDecorView(), window.getGravity(),
 			window.getX(), window.getY());
 		return;
 	}
@@ -75,7 +79,7 @@ WindowProvider.closeWindow = function(window) {
 	if (!window.isFocusable()) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);
-		if (!popup == null) return;
+		if (popup === null) return;
 		popup.dismiss();
 		delete this.attached[popupId];
 		delete window.popupId;
@@ -87,7 +91,7 @@ WindowProvider.closeWindow = function(window) {
 WindowProvider.setEnterActor = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
-		if (popup == null) return;
+		if (popup === null) return;
 		if (actor.getActor) actor = actor.getActor();
 		popup.setEnterTransition(actor);
 	}
@@ -96,7 +100,7 @@ WindowProvider.setEnterActor = function(popupId, actor, content) {
 WindowProvider.setExitActor = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
-		if (popup == null) return;
+		if (popup === null) return;
 		if (actor.getActor) actor = actor.getActor();
 		popup.setExitTransition(actor);
 	}
@@ -105,7 +109,7 @@ WindowProvider.setExitActor = function(popupId, actor, content) {
 WindowProvider.prepareActors = function(window, actor) {
 	if (android.os.Build.VERSION.SDK_INT < 23) {
 		if (actor && window && window.beginDelayedActor) {
-			window.beginDelayedActor(window.getContent(), actor);
+			window.beginDelayedActor(actor);
 		}
 	}
 };
@@ -115,22 +119,16 @@ WindowProvider.updateWindow = function(window) {
 	if (!window.isFocusable()) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);
-		if (!popup) {
-			return;
-		}
+		if (!popup) return;
 		if (window.enterActor) {
 			this.setEnterActor(popupId, window.enterActor);
 		}
 		if (window.exitActor) {
 			this.setExitActor(popupId, window.exitActor);
 		}
+		popup.setContentView(window.getContent());
 		popup.setTouchable(window.isTouchable());
 		popup.setFocusable(window.isFocusable());
-		if (window.getContent() != popup.getContentView()) {
-			this.closeWindow(window);
-			this.openWindow(window);
-			return;
-		}
 		popup.update(window.getX(), window.getY(),
 			window.getWidth(), window.getHeight());
 		return;
@@ -174,25 +172,22 @@ UniqueHelper.prepareWindow = function(window) {
 			opened.setContent(content);
 			opened.update();
 			return false;
-		} else {
-			opened.dismiss();
-			return this.prepareWindow(window);
 		}
+		opened.dismiss();
+		return this.prepareWindow(window);
 	} else this.stackWindow(window);
 	return true;
 };
 
 UniqueHelper.deattachWindow = function(window) {
 	if (this.isAttached(window)) {
-		let opened = this.getWindow(window),
-			updatable = opened.isUpdatable();
-		this.shiftWindow(window);
-		if (window != opened) {
-			opened.dismiss();
-			return false;
-		} else return true;
+		let opened = this.getWindow(window);
+		if (window == opened) {
+			this.shiftWindow(window);
+		}
+		return true;
 	}
-	return false;
+	return window.isOpened();
 };
 
 UniqueHelper.stackWindow = function(window) {
@@ -203,4 +198,27 @@ UniqueHelper.stackWindow = function(window) {
 UniqueHelper.shiftWindow = function(window) {
 	if (!this.isAttached(window)) return;
 	delete this.opened[window.TYPE];
+};
+
+UniqueHelper.reattachWindow = function(window) {
+	if (this.isAttached(window)) {
+		window.dismiss();
+		window.show();
+		return true;
+	}
+	return false;
+};
+
+UniqueHelper.reattach = function() {
+	for (let type in this.opened) {
+		let window = this.getWindow(type);
+		this.reattachWindow(window);
+	}
+};
+
+UniqueHelper.requireDestroy = function() {
+	for (let type in this.opened) {
+		let window = this.getWindow(type);
+		window.dismiss();
+	}
 };

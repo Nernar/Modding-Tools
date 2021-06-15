@@ -1,11 +1,11 @@
 const BlockConverter = new Function();
 
-BlockConverter.prototype = assign(ScriptConverter.prototype);
+BlockConverter.prototype = new ScriptConverter;
 BlockConverter.prototype.TYPE = "block";
 
 BlockConverter.prototype.process = function(obj) {
 	if (!obj || !(obj instanceof Object)) {
-		throw Error("BlockConverter can process only non-null Object instances");
+		MCSystem.throwException("BlockConverter can process only non-null Object instances");
 	}
 	let result = this.result = new Array();
 	if (obj.define) {

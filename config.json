@@ -32,8 +32,9 @@
     "transparent_boxes":false
   },
   "user_login":{
+    "first_launch":true,
     "ignore_deprecation":false,
-    "imported_script":true,
+    "imported_script":false,
     "send_analytics":true
   },
   "supportable":{

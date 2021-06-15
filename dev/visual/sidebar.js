@@ -1,16 +1,16 @@
 const SidebarWindow = function() {
 	UniqueWindow.call(this);
-	this.setGravity(Ui.Gravity.RIGHT);
-	this.setHeight(Ui.Display.MATCH);
+	this.setGravity(Interface.Gravity.RIGHT);
+	this.setHeight(Interface.Display.MATCH);
 	this.setFragment(new SidebarFragment());
 	this.groups = new Array();
 
-	let enter = new SlideActor(Ui.Gravity.RIGHT);
+	let enter = new SlideActor(Interface.Gravity.RIGHT);
 	enter.setInterpolator(new DecelerateInterpolator());
 	enter.setDuration(400);
 	this.setEnterActor(enter);
 
-	let exit = new SlideActor(Ui.Gravity.RIGHT);
+	let exit = new SlideActor(Interface.Gravity.RIGHT);
 	exit.setInterpolator(new BounceInterpolator());
 	exit.setDuration(1000);
 	this.setExitActor(exit);
@@ -18,7 +18,7 @@ const SidebarWindow = function() {
 
 SidebarWindow.NOTHING_SELECTED = -1;
 
-SidebarWindow.prototype = assign(UniqueWindow.prototype);
+SidebarWindow.prototype = new UniqueWindow;
 SidebarWindow.prototype.TYPE = "SidebarWindow";
 
 SidebarWindow.prototype.selected = SidebarWindow.NOTHING_SELECTED;
@@ -29,7 +29,7 @@ SidebarWindow.prototype.getGroups = function(index) {
 
 SidebarWindow.prototype.addGroup = function(srcOrGroup, action) {
 	let groups = this.getGroups();
-	if (groups == null) return null;
+	if (groups === null) return null;
 	let group = srcOrGroup instanceof SidebarWindow.Group ?
 		srcOrGroup : new SidebarWindow.Group(srcOrGroup, action);
 	if (srcOrGroup instanceof SidebarWindow.Group) {
@@ -38,16 +38,16 @@ SidebarWindow.prototype.addGroup = function(srcOrGroup, action) {
 	groups.push(group);
 	group.attachToWindow(this);
 	let fragment = this.getFragment();
-	if (fragment != null) {
+	if (fragment !== null) {
 		let content = group.getContainer();
-		if (content != null) fragment.addTab(content);
+		if (content !== null) fragment.addTab(content);
 	}
 	return group;
 };
 
 SidebarWindow.prototype.removeGroup = function(groupOrIndex) {
 	let groups = this.getGroups();
-	if (groups == null) return false;
+	if (groups === null) return false;
 	let index = groupOrIndex instanceof SidebarWindow.Group ?
 		this.indexOfGroup(groupOrIndex) : groupOrIndex;
 	if (index < 0) return false;
@@ -57,28 +57,28 @@ SidebarWindow.prototype.removeGroup = function(groupOrIndex) {
 	group.deattachFromWindow();
 	groups.splice(index, 1);
 	let fragment = this.getFragment();
-	if (fragment != null) {
+	if (fragment !== null) {
 		let content = group.getContainer();
-		if (content != null) fragment.removeTab(content);
+		if (content !== null) fragment.removeTab(content);
 	}
 	return true;
 };
 
 SidebarWindow.prototype.getGroupAt = function(index) {
 	let groups = this.getGroups();
-	if (groups == null) return null;
+	if (groups === null) return null;
 	return groups[index] || null;
 };
 
 SidebarWindow.prototype.getGroupCount = function() {
 	let groups = this.getGroups();
-	if (groups == null) return -1;
+	if (groups === null) return -1;
 	return groups.length || 0;
 };
 
 SidebarWindow.prototype.indexOfGroup = function(group) {
 	let groups = this.getGroups();
-	if (groups == null) return -1;
+	if (groups === null) return -1;
 	return groups.indexOf(group);
 };
 
@@ -101,7 +101,7 @@ SidebarWindow.prototype.unselect = function(forceUpdate) {
 	if (selected < 0) return false;
 	let group = this.getSelectedGroup();
 	this.selected = SidebarWindow.NOTHING_SELECTED;
-	if (group == null) return false;
+	if (group === null) return false;
 	group.switchState(!!forceUpdate);
 	if (!forceUpdate) this.reinflateLayout();
 	return true;
@@ -112,9 +112,9 @@ SidebarWindow.prototype.select = function(groupOrIndex) {
 		this.indexOfGroup(groupOrIndex) : groupOrIndex;
 	if (index < 0) return false;
 	let selected = this.getSelected();
-	if (selected == index) return false;
+	if (selected === index) return false;
 	let group = this.getGroupAt(index);
-	if (group == null) return false;
+	if (group === null) return false;
 	if (this.isSelected()) this.unselect(true);
 	this.selected = index;
 	group.switchState(selected);
@@ -123,12 +123,25 @@ SidebarWindow.prototype.select = function(groupOrIndex) {
 };
 
 SidebarWindow.prototype.reinflateLayout = function() {
-	let fragment = this.getFragment();
-	if (this.isSelected()) {
-		if (fragment != null) {
+	let sidebar = this,
+		fragment = this.getFragment();
+	if (fragment !== null) {
+		if (this.isSelected()) {
 			let set = new ActorSet(),
-				slide = new SlideActor(Ui.Gravity.RIGHT),
+				slide = new SlideActor(Interface.Gravity.RIGHT),
 				bounds = new BoundsActor();
+			set.addListener({
+				onTransitionStart: function(transition) {
+					tryout(function() {
+						sidebar.setTouchable(false);
+					});
+				},
+				onTransitionEnd: function(transition) {
+					tryout(function() {
+						sidebar.setTouchable(true);
+					});
+				}
+			});
 			slide.setInterpolator(new AccelerateDecelerateInterpolator());
 			slide.setDuration(150);
 			set.addActor(slide);
@@ -139,15 +152,13 @@ SidebarWindow.prototype.reinflateLayout = function() {
 			let container = fragment.getItemContainer();
 			this.beginDelayedActor(container, set);
 		}
-	}
-	if (fragment != null) {
 		fragment.clearItems();
 		let group = this.getSelectedGroup();
-		if (group != null) {
+		if (group !== null) {
 			for (let i = 0; i < group.getItemCount(); i++) {
 				let item = group.getItemAt(i),
 					content = item.getContainer();
-				if (content != null) fragment.addItem(content);
+				if (content !== null) fragment.addItem(content);
 			}
 		}
 	}
@@ -156,42 +167,45 @@ SidebarWindow.prototype.reinflateLayout = function() {
 
 SidebarWindow.prototype.setOnGroupSelectListener = function(listener) {
 	this.onGroupSelect = function(window, group, index, previous, count) {
-		try { listener && listener(window, group, index, previous, count); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(window, group, index, previous, count);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.prototype.setOnGroupUndockListener = function(listener) {
 	this.onGroupUndock = function(window, group, index, previous) {
-		try { listener && listener(window, group, index, previous); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(window, group, index, previous);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.prototype.setOnGroupFetchListener = function(listener) {
 	this.onGroupFetch = function(window, group, index) {
-		try { return listener && listener(window, group, index); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener && listener(window, group, index);
+		}, null);
 	};
 	return this;
 };
 
 SidebarWindow.prototype.setOnItemSelectListener = function(listener) {
 	this.onItemSelect = function(window, group, item, groupIndex, itemIndex) {
-		try { listener && listener(window, group, item, groupIndex, itemIndex); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(window, group, item, groupIndex, itemIndex);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.prototype.setOnItemFetchListener = function(listener) {
 	this.onItemFetch = function(window, group, item, groupIndex, itemIndex) {
-		try { return listener && listener(window, group, item, groupIndex, itemIndex); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener && listener(window, group, item, groupIndex, itemIndex);
+		}, null);
 	};
 	return this;
 };
@@ -201,7 +215,7 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 	let scope = this;
 	this.setOnClickListener(function() {
 		let window = scope.getWindow();
-		if (window == null) return;
+		if (window === null) return;
 		if (scope.isSelected()) {
 			window.unselect();
 		} else window.select(scope);
@@ -209,11 +223,11 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 	this.setOnHoldListener(function() {
 		let window = scope.getWindow(),
 			hint = null;
-		if (window != null) {
+		if (window !== null) {
 			window.onGroupFetch && (hint = window.onGroupFetch(window, scope, scope.indexOf()) || hint);
 		}
 		scope.onFetch && (hint = scope.onFetch(scope, scope.indexOf()) || hint);
-		if (hint != null) showHint(hint);
+		if (hint !== null) showHint(hint);
 		return true;
 	});
 	this.items = new Array();
@@ -226,19 +240,19 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 		srcOrAction && this.setOnSelectListener(srcOrAction);
 	}
 	this.setSelectedBackground("popupSelectionSelected");
-	menuDividers && this.setUnselectedBackground("popupBackground");
+	menuDividers && this.setUnselectedBackground("popup");
 };
 
-SidebarWindow.Group.prototype = assign(SidebarFragment.Group.prototype);
+SidebarWindow.Group.prototype = new SidebarFragment.Group;
 
 SidebarWindow.Group.prototype.getWindow = function() {
 	return this.window || null;
 };
 
 SidebarWindow.Group.prototype.attachToWindow = function(window) {
-	if (!window) throw Error("Window can't be illegal or undefined state!");
+	if (!window) MCSystem.throwException("Window can't be illegal or undefined state!");
 	let attached = this.getWindow();
-	if (attached != null) throw Error("You're must deattach sidebar group firstly!");
+	if (attached != null) MCSystem.throwException("You're must deattach sidebar group firstly!");
 	let actor = new BoundsActor();
 	actor.setDuration(200);
 	window.beginDelayedActor(actor);
@@ -262,12 +276,12 @@ SidebarWindow.Group.prototype.switchState = function(previous) {
 	let window = this.getWindow();
 	if (this.isSelected()) {
 		this.onSelect && this.onSelect(this, this.indexOf(), previous, this.getItemCount());
-		if (window != null) {
+		if (window !== null) {
 			window.onGroupSelect && window.onGroupSelect(window, this, this.indexOf(), previous, this.getItemCount());
 		}
 	} else {
 		this.onUndock && this.onUndock(this, this.indexOf(), previous);
-		if (window != null) {
+		if (window !== null) {
 			window.onGroupUndock && window.onGroupUndock(window, this, this.indexOf(), previous);
 		}
 	}
@@ -277,7 +291,7 @@ SidebarWindow.Group.prototype.switchState = function(previous) {
 
 SidebarWindow.Group.prototype.isSelected = function() {
 	let window = this.getWindow();
-	if (window == null) return false;
+	if (window === null) return false;
 	return window.getSelected() == this.indexOf();
 };
 
@@ -313,7 +327,7 @@ SidebarWindow.Group.prototype.getItems = function() {
 
 SidebarWindow.Group.prototype.addItem = function(srcOrItem, action) {
 	let items = this.getItems();
-	if (items == null) return null;
+	if (items === null) return null;
 	let item = srcOrItem instanceof SidebarWindow.Group.Item ?
 		srcOrItem : new SidebarWindow.Group.Item(srcOrItem, action);
 	if (srcOrItem instanceof SidebarWindow.Group.Item) {
@@ -323,11 +337,11 @@ SidebarWindow.Group.prototype.addItem = function(srcOrItem, action) {
 	item.attachToGroup(this);
 	if (this.isSelected()) {
 		let window = this.getWindow();
-		if (window != null) {
+		if (window !== null) {
 			let fragment = window.getFragment();
-			if (fragment != null) {
+			if (fragment !== null) {
 				let content = item.getContainer();
-				if (content != null) fragment.addItem(content);
+				if (content !== null) fragment.addItem(content);
 			}
 		}
 	}
@@ -336,20 +350,20 @@ SidebarWindow.Group.prototype.addItem = function(srcOrItem, action) {
 
 SidebarWindow.Group.prototype.removeItem = function(itemOrIndex) {
 	let items = this.getItems();
-	if (items == null) return false;
+	if (items === null) return false;
 	let index = itemOrIndex instanceof SidebarWindow.Group.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
 	if (index < 0) return false;
 	let item = this.getItemAt(index);
-	if (item == null) return false;
+	if (item === null) return false;
 	item.deattachFromGroup();
 	items.splice(index, 1);
 	let window = this.getWindow();
-	if (window != null) {
+	if (window !== null) {
 		let fragment = window.getFragment();
-		if (fragment != null) {
+		if (fragment !== null) {
 			let content = item.getContainer();
-			if (content != null) fragment.removeItem(content);
+			if (content !== null) fragment.removeItem(content);
 		}
 	}
 	return true;
@@ -357,66 +371,69 @@ SidebarWindow.Group.prototype.removeItem = function(itemOrIndex) {
 
 SidebarWindow.Group.prototype.getItemAt = function(index) {
 	let items = this.getItems();
-	if (items == null) return null;
+	if (items === null) return null;
 	return items[index] || null;
 };
 
 SidebarWindow.Group.prototype.getItemCount = function() {
 	let items = this.getItems();
-	if (items == null) return -1;
+	if (items === null) return -1;
 	return items.length || 0;
 };
 
 SidebarWindow.Group.prototype.indexOfItem = function(item) {
 	let items = this.getItems();
-	if (items == null) return -1;
+	if (items === null) return -1;
 	return items.indexOf(item);
 };
 
 SidebarWindow.Group.prototype.indexOf = function() {
 	let window = this.getWindow();
-	if (window == null) return -1;
+	if (window === null) return -1;
 	return window.indexOfGroup(this);
 };
 
 SidebarWindow.Group.prototype.setOnSelectListener = function(listener) {
 	this.onSelect = function(group, index, previous, count) {
-		try { listener && listener(group, index, previous, count); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(group, index, previous, count);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnUndockListener = function(listener) {
 	this.onUndock = function(group, index, previous) {
-		try { listener && listener(group, index, previous); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(group, index, previous);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnFetchListener = function(listener) {
 	this.onFetch = function(group, index) {
-		try { return listener && listener(group, index); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener && listener(group, index);
+		}, null);
 	};
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnItemSelectListener = function(listener) {
 	this.onItemSelect = function(group, item, groupIndex, itemIndex) {
-		try { listener && listener(group, item, groupIndex, itemIndex); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			listener && listener(group, item, groupIndex, itemIndex);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnItemFetchListener = function(listener) {
 	this.onItemFetch = function(group, item, groupIndex, itemIndex) {
-		try { return listener && listener(group, item, groupIndex, itemIndex); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener && listener(group, item, groupIndex, itemIndex);
+		}, null);
 	};
 	return this;
 };
@@ -427,10 +444,10 @@ SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 	this.setOnClickListener(function() {
 		scope.onSelect && scope.onSelect(scope, scope.indexOf());
 		let group = scope.getGroup();
-		if (group != null) {
+		if (group !== null) {
 			group.onItemSelect && group.onItemSelect(group, scope, group.indexOf(), scope.indexOf());
 			let window = group.getWindow();
-			if (window != null) {
+			if (window !== null) {
 				window.onItemSelect && window.onItemSelect(window, group, scope, group.indexOf(), scope.indexOf());
 			}
 		}
@@ -438,15 +455,15 @@ SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 	this.setOnHoldListener(function() {
 		let group = scope.getGroup(),
 			hint = null;
-		if (group != null) {
+		if (group !== null) {
 			let window = group.getWindow();
-			if (window != null) {
+			if (window !== null) {
 				window.onItemFetch && (hint = window.onItemFetch(window, group, scope, group.indexOf(), scope.indexOf()) || hint);
 			}
 			group.onItemFetch && (hint = group.onItemFetch(group, scope, group.indexOf(), scope.indexOf()) || hint);
 		}
 		scope.onFetch && (hint = scope.onFetch(scope, scope.indexOf()) || hint);
-		if (hint != null) showHint(hint);
+		if (hint !== null) showHint(hint);
 		return true;
 	});
 	if (parentOrSrc instanceof SidebarWindow.Group) {
@@ -459,18 +476,18 @@ SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 	}
 };
 
-SidebarWindow.Group.Item.prototype = assign(SidebarFragment.Group.Item.prototype);
+SidebarWindow.Group.Item.prototype = new SidebarFragment.Group.Item;
 
 SidebarWindow.Group.Item.prototype.getGroup = function() {
 	return this.group || null;
 };
 
 SidebarWindow.Group.Item.prototype.attachToGroup = function(group) {
-	if (!group) throw Error("Group can't be illegal or undefined state!");
+	if (!group) MCSystem.throwException("Group can't be illegal or undefined state!");
 	let attached = this.getGroup();
-	if (attached != null) throw Error("You're must deattach sidebar item firstly!");
+	if (attached !== null) MCSystem.throwException("You're must deattach sidebar item firstly!");
 	let window = group.getWindow();
-	if (window != null) {
+	if (window !== null) {
 		let actor = new BoundsActor();
 		actor.setDuration(200);
 		window.beginDelayedActor(actor);
@@ -494,23 +511,24 @@ SidebarWindow.Group.Item.prototype.deattachFromGroup = function() {
 
 SidebarWindow.Group.Item.prototype.indexOf = function() {
 	let group = this.getGroup();
-	if (group == null) return -1;
+	if (group === null) return -1;
 	return group.indexOfItem(this);
 };
 
 SidebarWindow.Group.Item.prototype.setOnSelectListener = function(listener) {
 	this.onSelect = function(item, index) {
-		try { listener && listener(item, index); }
-		catch (e) { reportError(e); }
+		tryout(function() {
+			return listener && listener(item, index);
+		});
 	};
 	return this;
 };
 
 SidebarWindow.Group.Item.prototype.setOnFetchListener = function(listener) {
 	this.onFetch = function(item, index) {
-		try { return listener && listener(item, index); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener && listener(item, index);
+		}, null);
 	};
 	return this;
 };

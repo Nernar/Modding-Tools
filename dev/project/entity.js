@@ -222,6 +222,7 @@ const EntityWorker = function(obj) {
 				// Assigment manage
 				this.addBox = function() {
 					let box = new model.Box();
+					box.setParent(this);
 					let editable = this.getEditable();
 					return editable.push(box) - 1;
 				};
@@ -364,15 +365,17 @@ const EntityWorker = function(obj) {
 				this.clone = function() {
 					let parent = this.parent;
 					if (!parent) return -1;
-					let tree = parent.getEditable();
-					tree.push(new model.Box(this.params));
+					let tree = parent.getEditable(),
+						box = new model.Box(this.params);
+					box.setParent(parent);
+					tree.push(box);
 					return tree.length - 1;
 				};
 				this.remove = function() {
 					let parent = this.parent;
 					if (!parent) return;
-					let tree = parent.getEditable();
-					let index = tree.indexOf(this);
+					let tree = parent.getEditable(),
+						index = tree.indexOf(this);
 					tree.splice(index, 1);
 				};
 				// Base manipulate
@@ -392,20 +395,14 @@ const EntityWorker = function(obj) {
 				};
 				this.scretch = function(axis, value) {
 					let coords = this.getCoords();
-					if (axis) {
-						coords[axis] = value;
-					}
+					if (axis) coords[axis] = value;
 					this.setCoords(coords);
 				};
 				this.scale = function(axis, value) {
-					if (axis) {
-						this.params[axis] = value;
-					}
+					if (axis) this.params[axis] = value;
 				};
 				this.move = function(axis, value) {
-					if (!axis) {
-						return;
-					}
+					if (!axis) return;
 					let coords = this.getCoords(),
 						size = this.getSize();
 					coords[axis + "1"] = value;

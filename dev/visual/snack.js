@@ -1,9 +1,9 @@
 const HintAlert = function() {
-	this.setGravity(Ui.Gravity.LEFT | Ui.Gravity.BOTTOM);
-	this.setWidth(Ui.Display.MATCH);
+	this.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
+	this.setWidth(Interface.Display.MATCH);
 	this.setTouchable(false);
 
-	let actor = new SlideActor(Ui.Gravity.BOTTOM),
+	let actor = new SlideActor(Interface.Gravity.BOTTOM),
 		interpolator = new DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
 	actor.setDuration(this.time / 6);
@@ -11,7 +11,7 @@ const HintAlert = function() {
 
 	actor = new ActorSet();
 	actor.setOrdering(ActorSet.TOGETHER);
-	let slide = new SlideActor(Ui.Gravity.BOTTOM),
+	let slide = new SlideActor(Interface.Gravity.BOTTOM),
 		fade = new FadeActor(FadeActor.OUT);
 	actor.addActor(slide);
 	actor.addActor(fade);
@@ -22,7 +22,7 @@ const HintAlert = function() {
 	this.clearStack();
 };
 
-HintAlert.prototype = assign(UniqueWindow.prototype);
+HintAlert.prototype = new UniqueWindow;
 HintAlert.prototype.TYPE = "HintAlert";
 
 HintAlert.prototype.maximumHieracly = 3;
@@ -34,31 +34,31 @@ HintAlert.prototype.time = 3000;
 
 HintAlert.prototype.reset = function() {
 	let content = new android.widget.LinearLayout(context);
-	content.setGravity(Ui.Gravity.LEFT | Ui.Gravity.BOTTOM);
-	content.setOrientation(Ui.Orientate.VERTICAL);
+	content.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
+	content.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(content);
 };
 
 HintAlert.prototype.attachMessage = function(hint, color, background) {
 	if (this.canStackedMore()) {
 		let layout = new android.widget.LinearLayout(context);
-		layout.setPadding(Ui.getY(48), Ui.getY(16), Ui.getY(48), Ui.getY(16));
+		layout.setPadding(Interface.getY(48), Interface.getY(16), Interface.getY(48), Interface.getY(16));
 		layout.setBackgroundDrawable(background !== undefined ? background instanceof java.lang.Object ?
-			background : ImageFactory.getDrawable(background) : ImageFactory.getDrawable("popupBackground"));
-		layout.setOrientation(Ui.Orientate.VERTICAL);
-		layout.setGravity(Ui.Gravity.CENTER);
+			background : ImageFactory.getDrawable(background) : ImageFactory.getDrawable("popup"));
+		layout.setOrientation(Interface.Orientate.VERTICAL);
+		layout.setGravity(Interface.Gravity.CENTER);
 		let content = this.getContent(),
-			params = new android.widget.LinearLayout.LayoutParams(Ui.Display.WRAP, Ui.Display.WRAP);
-		layout.setVisibility(Ui.Visibility.GONE);
+			params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
+		layout.setVisibility(Interface.Visibility.GONE);
 		content.addView(layout, params);
 
 		let text = new android.widget.TextView(context);
-		text.setTextSize(Ui.getFontSize(22));
+		text.setTextSize(Interface.getFontSize(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
-		if (!this.inConsoleMode()) text.setGravity(Ui.Gravity.CENTER);
-		text.setTextColor(color || Ui.Color.WHITE);
+		if (!this.inConsoleMode()) text.setGravity(Interface.Gravity.CENTER);
+		text.setTextColor(color || Interface.Color.WHITE);
 		typeface && text.setTypeface(typeface);
-		text.setMinimumWidth(Ui.getY(405));
+		text.setMinimumWidth(Interface.getY(405));
 		layout.addView(text);
 
 		let actor = new ActorSet();
@@ -70,7 +70,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		actor.addActor(bounds);
 		actor.addActor(fade);
 		this.beginDelayedActor(actor);
-		layout.setVisibility(Ui.Visibility.VISIBLE);
+		layout.setVisibility(Interface.Visibility.VISIBLE);
 		return layout;
 	}
 	return null;
@@ -98,7 +98,7 @@ HintAlert.prototype.canStackedMore = function() {
 	let limit = this.getMaximumStackedLimit();
 	if (limit == -1) {
 		let height = this.getContent().getHeight();
-		if (Ui.Display.HEIGHT - height < Ui.getY(90)) {
+		if (Interface.Display.HEIGHT - height < Interface.getY(90)) {
 			limit = 0;
 		}
 	}
@@ -118,15 +118,15 @@ HintAlert.prototype.forceAddMessage = function(hint, color, force) {
 		this.flashHint(hint, color);
 	} else if (this.canStackedMore()) {
 		this.attachMessage(hint, color);
-	} else if ((!this.isPinned() && this.inConsoleMode()) || (!this.isPinned() && !this.alreadyHasHint(hint))) {
+	} else if ((!this.isPinned() && this.inConsoleMode()) || (!this.isPinned() && this.isStackable() && !this.alreadyHasHint(hint))) {
 		this.addToStack(hint, color);
 	} else if (!this.isStackable() || (this.isPinned() && this.inConsoleMode())) {
 		this.removeFirstStacked();
 		this.attachMessage(hint, color);
 	}
 	if (force || (this.hasAutoReawait() && force !== false &&
-			(this.isStackable() ? !this.hasMoreStack() : true)))
-		this.reawait();
+		(this.isStackable() ? !this.hasMoreStack() : true)))
+			this.reawait();
 };
 
 HintAlert.prototype.addMessage = function(hint, color, force) {
@@ -137,11 +137,13 @@ HintAlert.prototype.addMessage = function(hint, color, force) {
 };
 
 HintAlert.prototype.removeFirstStacked = function() {
-	let actor = new FadeActor();
-	actor.setDuration(this.time / 12);
-	this.beginDelayedActor(actor);
 	let content = this.getContent();
-	content.removeViewAt(0);
+	if (content.getChildCount() > 0) {
+		let actor = new FadeActor();
+		actor.setDuration(this.time / 12);
+		this.beginDelayedActor(actor);
+		content.removeViewAt(0);
+	}
 };
 
 HintAlert.prototype.next = function(force) {
@@ -153,9 +155,9 @@ HintAlert.prototype.next = function(force) {
 		}
 		this.forceAddMessage(message[0], message[1]);
 		return true;
-	} else if (this.getStackedCount() > 0) {
+	} else {
 		this.removeFirstStacked();
-		return true;
+		return this.getStackedCount() > 0;
 	}
 	return false;
 };
@@ -201,7 +203,7 @@ HintAlert.prototype.findStackedHint = function(hint) {
 		let view = content.getChildAt(i);
 		if (view !== null && view.getChildCount() > 0) {
 			let text = view.getChildAt(0);
-			if (text !== null && text.getText() == String(hint)) {
+			if (text !== null && (i === hint || text.getText() == String(hint))) {
 				return text;
 			}
 		}
@@ -236,16 +238,20 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	let actor = new FadeActor();
 	actor.setInterpolator(new CycleInterpolator(1.3));
 	actor.setDuration(this.time / 8);
-	view.setVisibility(Ui.Visibility.INVISIBLE);
+	view.setVisibility(Interface.Visibility.INVISIBLE);
 	this.beginDelayedActor(actor);
 	if (color !== undefined) view.setTextColor(color);
-	view.setVisibility(Ui.Visibility.VISIBLE);
+	view.setVisibility(Interface.Visibility.VISIBLE);
 	this.reawait();
 	return true;
 };
 
+HintAlert.prototype.getTime = function() {
+	return this.time !== undefined ? this.time : 3000;
+};
+
 HintAlert.prototype.setTime = function(ms) {
-	ms > 0 && (this.time = ms);
+	ms > 0 && (this.time = preround(ms, 0));
 	this.isOpened() && this.reawait();
 };
 
@@ -256,20 +262,20 @@ HintAlert.prototype.reawait = function() {
 HintAlert.prototype.show = function() {
 	let scope = this;
 	if (!this.action) {
-		this.action = handleAction(function() {
+		this.action = handleAction(function(action) {
 			handle(function() {
 				if (scope.next(true)) {
-					scope.action.isActive = true;
+					action.run();
 					return;
 				}
-				scope.action.destroy();
+				action.destroy();
 				delete scope.action;
 				scope.dismiss();
 			});
 		}, function() {
-			if (scope.forever) scope.reawait();
+			if (scope.isPinned()) scope.reawait();
 			return scope.action && scope.isAttached();
-		}, this.time);
+		}, this.getTime());
 		this.action.setOnCancelListener(function() {
 			scope.hasMoreStack() && scope.clearStack();
 			scope.action.complete();
@@ -290,7 +296,7 @@ HintAlert.prototype.dismiss = function() {
  * Some useful code; warnings and information.
  */
 const showHint = function(hint, color, reawait) {
-	if (showHint.launchStacked) {
+	if (showHint.launchStacked !== undefined) {
 		showHint.launchStacked.push({
 			hint: hint,
 			color: color,
@@ -328,7 +334,7 @@ showHint.unstackLaunch = function() {
  */
 const createProcess = function(hint, color) {
 	let content = null;
-	if (!showHint.launchStacked) {
+	if (showHint.launchStacked === undefined) {
 		handle(function() {
 			let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 			if (window === null) {
@@ -340,7 +346,7 @@ const createProcess = function(hint, color) {
 			}
 			window.pin();
 			createProcess.processes++;
-			content = window.attachMessage(hint, color, "popupSelectionLocked");
+			content = window.attachMessage(hint, color, "popupSelectionQueued");
 			if (!window.isOpened()) window.show();
 		});
 	}
@@ -354,7 +360,7 @@ createProcess.processes = 0;
 createProcess.update = function(content, hint, progress) {
 	handle(function() {
 		progress = preround(progress * 100, 0) + 1;
-		try {
+		tryoutSafety(function() {
 			if (content === undefined || content === null) {
 				if (progress >= 10001) showHint(hint);
 				return;
@@ -362,16 +368,16 @@ createProcess.update = function(content, hint, progress) {
 			let text = content.getChildAt(0);
 			if (progress < 10001) {
 				text.setText(String(hint).replace("%s", preround(progress / 100, 1) + "%"));
-				content.setBackgroundDrawable(ImageFactory.clipAndMerge("popupBackground", "popupSelectionSelected", progress));
+				content.setBackgroundDrawable(ImageFactory.clipAndMerge("popup", "popupSelectionSelected", progress));
 			} else {
 				text.setText(String(hint));
 				content.setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
 			}
-		} catch (e) {
+		}, function(e) {
 			if (progress >= 10001) {
-				showHint(hint, Ui.Color.YELLOW, true);
+				showHint(hint, Interface.Color.YELLOW, true);
 			}
-		}
+		});
 	});
 };
 

@@ -3,7 +3,7 @@ if (typeof Object.assign != "function") {
 		value: function assign(target, varArgs) {
 			"use strict";
 			if (target === null || target === undefined) {
-				throw Error("Can't convert undefined or null to object");
+				MCSystem.throwException("Can't convert undefined or null to object");
 			}
 			let to = Object(target);
 			for (let index = 1; index < arguments.length; index++) {
@@ -46,7 +46,7 @@ const merge = function(target, source) {
 	}
 	if (Array.isArray(source) && Array.isArray(target)) {
 		return target.concat(source);
-	} else if (typeof source == "object" || typeof source == "function") {
+	} else if (typeof source == "object") {
 		if (typeof target != "object") {
 			target = new Object();
 		}

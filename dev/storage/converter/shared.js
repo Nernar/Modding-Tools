@@ -23,9 +23,9 @@ ScriptConverter.prototype.getAttached = function() {
 };
 
 ScriptConverter.prototype.validate = function(obj) {
-	try {
+	tryout.call(this, function() {
 		if (!this.TYPE) {
-			throw Error("Can't resolve project type for ScriptConverter");
+			MCSystem.throwException("Can't resolve project type for ScriptConverter");
 		}
 		if (!obj || !this.TYPE) {
 			return ScriptConverter.State.ILLEGAL;
@@ -37,10 +37,10 @@ ScriptConverter.prototype.validate = function(obj) {
 			return ScriptConverter.State.BAD_TYPE;
 		}
 		return ScriptConverter.State.PREPARED;
-	} catch (throwable) {
+	}, function(throwable) {
 		this.throwable = throwable;
 		return ScriptConverter.State.UNKNOWN;
-	}
+	});
 };
 
 ScriptConverter.prototype.getLastException = function() {
@@ -69,7 +69,7 @@ ScriptConverter.prototype.inProcess = function() {
 };
 
 ScriptConverter.prototype.assureYield = function() {
-	try {
+	return tryout.call(this, function() {
 		if (!this.getThread()) {
 			return false;
 		}
@@ -77,9 +77,7 @@ ScriptConverter.prototype.assureYield = function() {
 			java.lang.Thread.yield();
 		}
 		return this.isConverted();
-	} catch (e) {
-		return false;
-	}
+	}, false);
 };
 
 ScriptConverter.prototype.getThread = function() {
@@ -87,19 +85,19 @@ ScriptConverter.prototype.getThread = function() {
 };
 
 ScriptConverter.prototype.execute = function() {
-	try {
+	tryout.call(this, function() {
 		if (!this.process) {
-			throw Error("Can't find process for ScriptConverter");
+			MCSystem.throwException("Can't find process for ScriptConverter");
 		}
 		if (!this.isValid() || this.inProcess()) {
 			return;
 		}
 		this.result = this.process(this.getAttached());
 		this.state = ScriptConverter.State.VALID;
-	} catch (throwable) {
+	}, function(throwable) {
 		this.throwable = throwable;
 		this.state = ScriptConverter.State.THROWED;
-	}
+	});
 };
 
 ScriptConverter.prototype.executeAsync = function(post) {
@@ -109,7 +107,9 @@ ScriptConverter.prototype.executeAsync = function(post) {
 			scope.execute();
 		}
 		delete scope.thread;
-		post && post(scope, scope.getResult());
+		handle(function() {
+			post && post(scope, scope.getResult());
+		});
 	});
 };
 

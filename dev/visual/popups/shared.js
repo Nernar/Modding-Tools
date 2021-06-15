@@ -17,10 +17,10 @@ Popups.open = function(widget, name) {
 };
 
 Popups.getAvailablePlace = function(root) {
-	// return showHint("No place for open popup", Ui.Color.YELLOW);
+	// return showHint("No place for open popup", Interface.Color.YELLOW);
 	return {
-		x: Ui.getY(100) + Ui.getX(Math.random() * 800),
-		y: Ui.getX(100) + Ui.getY(Math.random() * 200)
+		x: Interface.getY(100) + Interface.getX(Math.random() * 800),
+		y: Interface.getX(100) + Interface.getY(Math.random() * 200)
 	};
 };
 
@@ -43,7 +43,7 @@ Popups.createAction = function(widget) {
 					case 0:
 						dx = event.getX();
 						dy = event.getY();
-						if (expandable && expandable.isActive) {
+						if (expandable && expandable.isActive()) {
 							if (widget.expand) {
 								widget.expand();
 								// ProjectProvider.getProject().updatePopupExpanded(widget.name, widget.isExpanded());
@@ -54,16 +54,16 @@ Popups.createAction = function(widget) {
 								expandable.destroy();
 							}
 							expandable = new Action(500);
-							expandable.create().execute();
+							expandable.create().run();
 						}
 						if (closeable) {
 							closeable.destroy();
 						}
 						closeable = new Action(750);
-						closeable.create().execute();
+						closeable.create().run();
 						break;
 					case 1:
-						if (closeable && closeable.thread && closeable.getLeftTime() == 0) {
+						if (closeable && closeable.getThread() && closeable.getLeftTime() == 0) {
 							closeable.destroy();
 							Popups.closeIfOpened(widget.name);
 						} // else ProjectProvider.getProject().updatePopupLocation(widget.name, event.getRawX() - dx, event.getRawY() - dy);

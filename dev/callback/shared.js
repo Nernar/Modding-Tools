@@ -1,7 +1,7 @@
 MCSystem.setLoadingTip("Injecting Callbacks");
 
 const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
-	if (minOrIteratorOrValue == undefined) {
+	if (minOrIteratorOrValue === undefined) {
 		return value;
 	}
 	let base = value;
@@ -20,7 +20,7 @@ const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrVal
 		} else if (value > maxOrValues) {
 			value = maxOrValues;
 		}
-	} else if (value != minOrIteratorOrValue) {
+	} else if (value !== minOrIteratorOrValue) {
 		value = minOrIteratorOrValue;
 		let tech = filter;
 		filter = maxOrValues;
@@ -36,7 +36,7 @@ const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrVal
 			value = minOrIteratorOrValue;
 		}
 	}
-	if (base != value) {
+	if (base !== value) {
 		__config__.set(key, value);
 	}
 	return value;
@@ -65,7 +65,7 @@ const loadSetting = function(key, type) {
  * Update settings from config.
  */
 const updateSettings = function() {
-	try {
+	tryout(function() {
 		uiScaler = loadSetting("interface.interface_scale", "number", 0.5, 2);
 		fontScale = loadSetting("interface.font_scale", "number", 0.5, 2);
 		maxWindows = loadSetting("interface.max_windows", "number", 1, 10);
@@ -82,33 +82,24 @@ const updateSettings = function() {
 		autosaveProjectable = __config__.getBool("autosave.as_projectable");
 		/* autosaveCount */
 		loadSetting("autosave.maximum_count", "number", 1, 50);
-		CURRENTLY_SERVER_LOCATION = loadSetting("network.default_location", "number", 0, 1);
-		SERVER_HAS_SAFE_CONNECTION = loadSetting("network.safe_connection", "boolean");
-		SERVER_LOCATION_LOCKED = loadSetting("network.switch_locked", "boolean");
+		connectCurrentlyLocation = loadSetting("network.default_location", "number", 0, 1);
+		connectSafetyProtocol = loadSetting("network.safe_connection", "boolean");
+		connectLocationLocked = loadSetting("network.switch_locked", "boolean");
 		entityBoxType = loadSetting("render.use_box_sizes", "boolean");
 		drawSelection = loadSetting("render.draw_selection", "boolean");
 		injectBorder = loadSetting("render.inject_border", "boolean");
 		transparentBoxes = loadSetting("render.transparent_boxes", "boolean", function(value) {
 			return value && isHorizon;
 		});
-		if (supportSupportables) {
-			loadSupportables = loadSetting("supportable.enabled", "boolean");
-		} else {
-			Logger.Log("Supportables disabled, because it's not approved by developer", "Dev-Core");
-		}
 		ignoreKeyDeprecation = loadSetting("user_login.ignore_deprecation", "boolean");
 		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
 		/* sendAnalytics */
 		loadSetting("user_login.send_analytics", "boolean", true);
-		if (android.os.Build.VERSION.SDK_INT >= 26) {
-			useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
-		} else useOldExplorer = true;
+		useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
 		importAutoselect = loadSetting("other.import_autoselect", "boolean");
 		saveCoords = loadSetting("other.autosave_mapping", "boolean");
 		__config__.save();
-	} catch (e) {
-		reportError(e);
-	}
+	});
 };
 
 let selectMode = 0;
@@ -140,54 +131,44 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 let needTransitionReset = false;
 
 Callback.addCallback("LevelPreLoaded", function() {
-	try {
-		// Reset entity if entity isn't defined
+	tryout(function() {
+		// Reset entity if entity isn't defined.
 		if (ProjectProvider.getCurrentType() == "transition" &&
 			TransitionEditor.data.worker.Define.getEntity() == -1) {
-			TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
-			needTransitionReset = true;
-		}
-	} catch (e) {
-		reportError(e);
-	}
+				TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
+				needTransitionReset = true;
+			}
+	});
 });
 
 Callback.addCallback("LevelLoaded", function() {
-	context.runOnUiThread(function() {
-		try {
-			if (needTransitionReset) {
-				TransitionEditor.data.worker.Define.resetStarting();
-				Popups.closeAllByTag("transition");
-				needTransitionReset = false;
-			}
-		} catch (e) {
-			reportError(e);
+	handle(function() {
+		if (needTransitionReset) {
+			TransitionEditor.data.worker.Define.resetStarting();
+			Popups.closeAllByTag("transition");
+			needTransitionReset = false;
 		}
 	});
 });
 
 Callback.addCallback("EntityHurt", function(attacker, victim) {
-	context.runOnUiThread(function() {
-		try {
-			// Hit entity selection
-			if (selectMode == 2 && attacker == getPlayerEnt()) {
-				TransitionEditor.data.worker.Define.setEntity(victim);
-				showHint(translate("Entity selected"));
-				selectMode = 0, TransitionEditor.create();
-			}
-		} catch (e) {
-			reportError(e);
+	handle(function() {
+		// Hit entity selection.
+		if (selectMode == 2 && attacker == getPlayerEnt()) {
+			TransitionEditor.data.worker.Define.setEntity(victim);
+			showHint(translate("Entity selected"));
+			selectMode = 0, TransitionEditor.create();
 		}
 	});
 });
 
 Callback.addCallback("tick", function() {
-	try {
-		// Mostly spawn selection particles
-		if (ProjectProvider.getCurrentType() == "transition") {
-			drawTransitionPoints(TransitionEditor.data.worker);
+	tryout(function() {
+		// Mostly spawn selection particles.
+		if (Updatable.getSyncTime() % 5 == 0) {
+			if (ProjectProvider.getCurrentType() == "transition") {
+				drawTransitionPoints(TransitionEditor.data.worker);
+			}
 		}
-	} catch (e) {
-		reportError(e);
-	}
+	});
 });

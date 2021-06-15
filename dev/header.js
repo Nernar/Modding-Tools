@@ -1,12 +1,5 @@
 /*
-    _____               ______    _ _ _             
-   |  __ \             |  ____|  | (_) |            
-   | |  | | _____   __ | |__   __| |_| |_ ___  _ __ 
-   | |  | |/ _ \ \ / / |  __| / _` | | __/ _ \| '__|
-   | |__| |  __/\ V /  | |___| (_| | | || (_) | |   
-   |_____/ \___| \_/   |______\__,_|_|\__\___/|_|   
-                                                    
-                                                    
+
    Copyright 2018-2021 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +13,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-   
+
 */
 
 MCSystem.setLoadingTip("Initialization Script");
@@ -48,38 +41,29 @@ let noImportedScripts = true;
 let keyExpiresSoon = false;
 let ignoreKeyDeprecation = false;
 let projectHeaderBackground = false;
+let maximumAllowedBounds = 128;
 let useOldExplorer = false;
 let importAutoselect = false;
 let safetyProcesses = true;
+let transitionSideDividers = 8;
+let debugAttachBackground = false;
+let debugAttachControlTools = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-30.05.2021-8";
+const __code__ = "develop-alpha-0.3.5-16.06.2021-10";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
+let firstLaunchTutorial = __code__.indexOf("alpha") != -1;
 let typeface = android.graphics.Typeface.MONOSPACE;
 let currentEnvironment = __name__;
 let isSupportEnv = false;
 
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, TPSmeter;
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, ModelConverter;
 
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = !!this.isInstant;
-IMPORT("Retention:3");
-
-reportError.setTitle(__name__ + " " + __version__);
-reportError.setInfoMessage("An error occurred while executing modification. " +
-	"If your developing process is affected, try export all non-saved data. " +
-	"Send a screenshot of error to our group or save error in internal storage.");
-
-reportError.addDebugValue("isHorizon", isHorizon);
-reportError.addDebugValue("interfaceScale", uiScaler);
-reportError.addDebugValue("fontSizeScale", fontScale);
-reportError.addDebugValue("loadSupportables", loadSupportables);
-reportError.addDebugValue("autosaveEnabled", autosave);
-reportError.addDebugValue("moveMapping", saveCoords);
-reportError.addDebugValue("useBoxSizes", uiScaler);
-reportError.addDebugValue("drawSelection", drawSelection);
+IMPORT("Retention:4");
 
 let alreadyHasDate = false;
 reportError.setStackAction(function(err) {
@@ -101,15 +85,15 @@ reportError.prepareDebugInfo = function() {
 		" Report Log\nBuild " + __code__.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
 };
 
-Ui.getFontSize = function(size) {
+Interface.getFontSize = function(size) {
 	return Math.round(this.getX(size) / this.Display.DENSITY * fontScale);
 };
 
-Ui.getX = function(x) {
+Interface.getX = function(x) {
 	return x > 0 ? Math.round(this.Display.WIDTH / (1280 / x) * uiScaler) : x;
 };
 
-Ui.getY = function(y) {
+Interface.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
 
@@ -128,14 +112,12 @@ Network.Reader.prototype.readAsync = function(post) {
 	this.thread = handleThread(function() {
 		scope.read();
 		delete scope.thread;
-		if (post) {
-			post(scope.getResult());
-		}
+		post && post(scope.getResult());
 	});
 };
 
 Network.Reader.prototype.assureYield = function() {
-	try {
+	return tryoutSafety.call(this, function() {
 		if (!this.getThread()) {
 			return false;
 		}
@@ -143,9 +125,7 @@ Network.Reader.prototype.assureYield = function() {
 			java.lang.Thread.yield();
 		}
 		return this.getReadedCount() >= 0;
-	} catch (e) {
-		return false;
-	}
+	}, false);
 };
 
 Network.Writer.prototype.getThread = function() {
@@ -157,14 +137,12 @@ Network.Writer.prototype.downloadAsync = function(post) {
 	this.thread = handleThread(function() {
 		scope.download();
 		delete scope.thread;
-		if (post) {
-			post();
-		}
+		post && post();
 	});
 };
 
 Network.Writer.prototype.assureYield = function() {
-	try {
+	return tryoutSafety.call(this, function() {
 		if (!this.getThread()) {
 			return false;
 		}
@@ -172,14 +150,12 @@ Network.Writer.prototype.assureYield = function() {
 			java.lang.Thread.yield();
 		}
 		return this.getReadedCount() >= 0;
-	} catch (e) {
-		return false;
-	}
+	}, false);
 };
 
 IMPORT("Transition:6");
-IMPORT("Scene:4");
 IMPORT("Action:4");
+IMPORT("Sequence:1");
 
 getPlayerEnt = function() {
 	return parseInt(Player.get());

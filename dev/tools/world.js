@@ -16,12 +16,12 @@
  * 5 worldSelectionBiome Plant or Harvest
  * 6 worldActionCalculate Relief
  * 7 worldActionMeasure Scatter
- * 0 worldModuleClipboard Clipboard
+ * 0 worldClipboard Clipboard
  * 1 worldLayerClone Copy
  * 2 worldActionSqueeze Paste
  * 3 worldActionMove Cut
  * 4 worldLayerMove Containers
- * 5 entityModuleDraw Entities
- * 6 worldModuleUndo Tags
- * 7 worldModuleReset History
+ * 5 entitySelect Entities
+ * 6 worldUndo Tags
+ * 7 worldReset History
  */

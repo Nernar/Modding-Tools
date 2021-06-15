@@ -60,9 +60,9 @@ WindowActor.prototype.canRemoveViews = function() {
 
 WindowActor.prototype.setEpicenterCallback = function(listener) {
 	this.transition.setEpicenterCallback(listener ? function(transition) {
-		try { return listener(transition); }
-		catch (e) { reportError(e); }
-		return null;
+		return tryout(function() {
+			return listener(transition);
+		}, null);
 	} : null);
 };
 
@@ -77,7 +77,7 @@ WindowActor.prototype.setStartDelay = function(ms) {
 WindowActor.prototype.setInterpolator = function(interpolator) {
 	if (interpolator.getInterpolator) {
 		if (interpolator.TYPE == "none") {
-			throw Error("WindowActor can't use empty interpolator");
+			MCSystem.throwException("WindowActor can't use empty interpolator");
 		}
 		this.transition.setInterpolator(interpolator.getInterpolator());
 		this.interpolator = interpolator;
@@ -89,7 +89,7 @@ WindowActor.prototype.setInterpolator = function(interpolator) {
 WindowActor.prototype.setPathMotion = function(motion) {
 	if (motion.getPathMotion) {
 		if (motion.TYPE == "none") {
-			throw Error("Abstract class ActorPathMotion can't be reached");
+			MCSystem.throwException("Abstract class ActorPathMotion can't be reached");
 		}
 		this.transition.setPathMotion(motion.getPathMotion());
 		this.motion = motion;
@@ -101,7 +101,7 @@ WindowActor.prototype.setPathMotion = function(motion) {
 WindowActor.prototype.setPropagation = function(propagation) {
 	if (propagation.getPropagation) {
 		if (propagation.TYPE == "none") {
-			throw Error("Abstract class ActorPropagation can't be reached");
+			MCSystem.throwException("Abstract class ActorPropagation can't be reached");
 		}
 		this.transition.setPropagation(propagation.getPropagation());
 		this.propagation = propagation;
@@ -175,15 +175,13 @@ ActorScene.prototype.setContainer = function(container) {
 
 ActorScene.prototype.setEnterAction = function(listener) {
 	this.scene.setEnterAction(listener ? function() {
-		try { listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	} : null);
 };
 
 ActorScene.prototype.setExitAction = function(listener) {
 	this.scene.setExitAction(listener ? function() {
-		try { listener(); }
-		catch (e) { reportError(e); }
+		tryout(listener);
 	} : null);
 };
 
@@ -251,7 +249,7 @@ ActorManager.prototype.actorTo = function(scene) {
 
 ActorManager.beginDelayedActor = function(container, actor) {
 	if (!container) {
-		throw Error("Unable to use delayed actor on undefined");
+		MCSystem.throwException("Unable to use delayed actor on undefined");
 	}
 	if (actor && actor.getActor) {
 		actor = actor.getActor();
@@ -261,14 +259,14 @@ ActorManager.beginDelayedActor = function(container, actor) {
 
 ActorManager.endActors = function(container) {
 	if (!container) {
-		throw Error("Can't end actors without container");
+		MCSystem.throwException("Can't end actors without container");
 	}
 	android.transition.TransitionManager.endTransitions(container);
 };
 
 ActorManager.go = function(scene, actor) {
 	if (!container) {
-		throw Error("ActorManager.go can't be resolved without ActorScene");
+		MCSystem.throwException("ActorManager.go can't be resolved without ActorScene");
 	}
 	if (actor && actor.getActor) {
 		actor = actor.getActor();

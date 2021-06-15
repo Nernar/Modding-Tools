@@ -213,7 +213,7 @@ const BlockWorker = function(obj) {
 				return index != -1 ? orientate : "x";
 			};
 			this.mirrorBoxTexture = function(index, orientate, side) {
-				throw Error("Box textures mirroring not implemented yet");
+				MCSystem.throwException("Box textures mirroring not implemented yet");
 			};
 			this.mirrorBox = function(index, orientate, side, offset) {
 				let box = this.getBox(index);

@@ -11,7 +11,7 @@
 
 var context = UI.getContext(),
 	launchTime = java.lang.System.currentTimeMillis(),
-	saveLog = true, menuWidth = 0.26, typeface;
+	menuWidth = 0.26, typeface;
 
 const version = "1.0",
 	date = "18.04.2019",
@@ -684,7 +684,7 @@ function createMenu(type) {
 			seek0 = new android.widget.SeekBar(context);
 			seek0.setMax(9);
 			seek0.setProgress(alpha * 10 - 1);
-			seek0.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener(){
+			seek0.setOnSeekBarChangeListener({
 				onProgressChanged: function() {
 					alpha = 0.1 + seek0.getProgress() / 10;
 					CurrentMenuLayout.setAlpha(alpha);
@@ -935,6 +935,7 @@ function createButton() {
 				var alert = builder.create();
 				alert.show();
 			});
+			return true;
 		});
 		CurrentButtonLayout.addView(button0);
 		
@@ -1415,20 +1416,20 @@ function particle() {
 		cd = 0;
 	}
 	
-	Particles.addParticle(x1 + 0.5 + ab, y1 + 0.5, z1 + 0.5, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + ab, y1 + 0.5 + ykol, z1 + 0.5, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + ab, y1 + 0.5, z1 + 0.5 + zkol, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + ab, y1 + 0.5 + ykol, z1 + 0.5 + zkol, Native.ParticleType.flame, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + ab, y1 + 0.5, z1 + 0.5, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + ab, y1 + 0.5 + ykol, z1 + 0.5, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + ab, y1 + 0.5, z1 + 0.5 + zkol, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + ab, y1 + 0.5 + ykol, z1 + 0.5 + zkol, 0, 0, 0, 2);
 	
-	Particles.addParticle(x1 + 0.5, y1 + 0.5 + bc, z1 + 0.5, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + xkol, y1 + 0.5 + bc, z1 + 0.5, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5, y1 + 0.5 + bc, z1 + 0.5 + zkol, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + xkol, y1 + 0.5 + bc, z1 + 0.5 + zkol, Native.ParticleType.flame, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5, y1 + 0.5 + bc, z1 + 0.5, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + xkol, y1 + 0.5 + bc, z1 + 0.5, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5, y1 + 0.5 + bc, z1 + 0.5 + zkol, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + xkol, y1 + 0.5 + bc, z1 + 0.5 + zkol, 0, 0, 0, 2);
 	
-	Particles.addParticle(x1 + 0.5, y1 + 0.5, z1 + 0.5 + cd, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + xkol, y1 + 0.5, z1 + 0.5 + cd, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5, y1 + 0.5 + ykol, z1 + 0.5 + cd, Native.ParticleType.flame, 0, 0, 0, 2);
-	Particles.addParticle(x1 + 0.5 + xkol, y1 + 0.5 + ykol, z1 + 0.5 + cd, Native.ParticleType.flame, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5, y1 + 0.5, z1 + 0.5 + cd, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + xkol, y1 + 0.5, z1 + 0.5 + cd, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5, y1 + 0.5 + ykol, z1 + 0.5 + cd, 0, 0, 0, 2);
+	Particles.addParticle(Native.ParticleType.flame, x1 + 0.5 + xkol, y1 + 0.5 + ykol, z1 + 0.5 + cd, 0, 0, 0, 2);
 }
 
 function updateSettings() {

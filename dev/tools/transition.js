@@ -1,7 +1,7 @@
 const playTransition = function(worker, frame) {
-	try {
+	return tryout(function() {
 		if (Transition.isTransitioning()) {
-			showHint(translate("Transition are already transitioning"), Ui.Color.YELLOW);
+			showHint(translate("Transition are already transitioning"), Interface.Color.YELLOW);
 			return false;
 		}
 		if (TransitionEditor.data.transition) let transition = TransitionEditor.data.transition;
@@ -27,45 +27,66 @@ const playTransition = function(worker, frame) {
 		});
 		transition.start();
 		return true;
-	} catch (e) {
-		reportError(e);
-	}
-	return false;
+	}, false);
 };
 
 const stopTransition = function(worker) {
-	try {
+	return tryout(function() {
 		if (!Transition.isTransitioning()) {
-			showHint(translate("Transition are already stopped"), Ui.Color.YELLOW);
+			showHint(translate("Transition are already stopped"), Interface.Color.YELLOW);
 			return false;
 		}
 		if (!TransitionEditor.data.transition) {
-			showHint(translate("Transition isn't setted up"), Ui.Color.YELLOW);
+			showHint(translate("Transition isn't setted up"), Interface.Color.YELLOW);
 			return false;
 		}
 		TransitionEditor.data.transition.stop();
 		return true;
-	} catch (e) {
-		reportError(e);
-	}
-	return false;
+	}, false);
 };
 
-/**
- * TODO: Add spawn particles.
- */
 const drawTransitionPoints = function(worker) {
-	try {
+	return tryout(function() {
 		if (!worker || !Level.isLoaded()) {
 			return false;
 		}
-		/* if (selectMode == 4)
-		return true; */
+		if (selectMode == 4) {
+			for (let i = 0; i < worker.Animation.getAnimateCount(); i++) {
+				let animate = worker.Animation.getAnimate(i);
+				if (animate !== null) {
+					for (let f = 0; f < animate.getFrameCount(); f++) {
+						let coords = animate.getFrameCoords(f), frame = animate.getFrame(f);
+						if (Popups.hasOpenedByName("frame_select")) {
+							if (TransitionEditor.data.frame == f) {
+								Particles.addParticle(ParticleType.heart, coords.x, coords.y, coords.z, 0, 0, 0, -1);
+							} else Particles.addParticle(ParticleType.happyVillager, coords.x, coords.y, coords.z, 0, 0, 0, 0);
+						}
+						let previous = {
+							x: 0,
+							y: 0,
+							z: 0,
+							yaw: 0,
+							pitch: 0
+						};
+						let request = [frame.x / transitionSideDividers, frame.y / transitionSideDividers, frame.z / transitionSideDividers, frame.yaw / transitionSideDividers,
+							frame.pitch / transitionSideDividers, transitionSideDividers, frame.duration / transitionSideDividers, frame.interpolator];
+						for (let i = 0; i < transitionSideDividers; i++) {
+							let point = Transition.compareVectorPoint(request, i);
+							Particles.addParticle(ParticleType.flame, coords.x + previous.x, coords.y + previous.y, coords.z + previous.z,
+								(point.x + previous.x) / 20, (point.y + previous.y) / 20, (point.z + previous.z) / 20, 0);
+							previous.x += point.x;
+							previous.y += point.y;
+							previous.z += point.z;
+							previous.yaw += point.yaw;
+							previous.pitch += point.pitch;
+						}
+					}
+				}
+			}
+		}
 		autosavePeriod == 0 && ProjectProvider.getProject().callAutosave();
-	} catch (e) {
-		reportError(e);
-	}
-	return false;
+		return true;
+	}, false);
 };
 
 const mergeConvertedTransition = function(project, source, action) {
@@ -150,23 +171,62 @@ let TransitionEditor = {
 		let sidebar = new SidebarWindow(),
 			group = sidebar.addGroup("transition");
 		if (this.data.hasAnimate) {
-			group.addItem(this.data.isStarted ? "transitionModulePreview" : "transitionModulePause", this.Transition.play);
+			group.addItem(this.data.isStarted ? "transitionAnimatePlay" : "transitionAnimatePause", this.Transition.play);
 		}
-		group.addItem("transitionModuleMove", this.Transition.move);
-		group.addItem("transitionModuleRotate", this.Transition.rotate);
-		group.addItem("transitionModuleFps", this.reframe);
-		group.addItem("transitionModuleReload", this.reload);
-		group = sidebar.addGroup("transitionFrameFrames");
+		group.addItem("transitionAnimateMove", this.Transition.move);
+		group.addItem("transitionAnimateRotate", this.Transition.rotate);
+		group.addItem("transitionAnimateFps", this.reframe);
+		group.addItem("transitionUpdate", this.reload);
+		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+			if (!TransitionEditor.data.hasAnimate) {
+				itemIndex++;
+			}
+			if (itemIndex == 0) {
+				return translate("Plays or stops animate");
+			} else if (itemIndex == 1) {
+				return translate("Moves startup location");
+			} else if (itemIndex == 2) {
+				return translate("Moves startup rotation");
+			} else if (itemIndex == 3) {
+				return translate("Changes frames per second");
+			} else if (itemIndex == 4) {
+				return translate("Updates animate");
+			}
+		});
+		group = sidebar.addGroup("transitionFrameSelect");
 		if (this.data.hasAnimate) {
-			group.addItem("transitionFrameFrames", this.Frame.select);
+			group.addItem("transitionFrameSelect", this.Frame.select);
 			group.addItem("transitionFrameAdd", this.Frame.add);
-			group.addItem(this.data.isStarted ? "transitionFramePreview" : "transitionFramePause", this.Frame.play);
+			group.addItem(this.data.isStarted ? "transitionFramePlay" : "transitionFramePause", this.Frame.play);
 			group.addItem("transitionFrameMove", this.Frame.move);
 			group.addItem("transitionFrameRotate", this.Frame.rotate);
-			group.addItem("transitionFrameDuration", this.Frame.durate);
-			group.addItem("transitionFrameInterpolator", this.Frame.interpolator);
+			group.addItem("transitionFrameDurate", this.Frame.durate);
+			group.addItem("transitionFrameInterpolate", this.Frame.interpolator);
 			group.addItem("transitionFrameRemove", this.Frame.remove);
 		} else group.addItem("transitionFrameAdd", this.Frame.add);
+		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+			if (TransitionEditor.data.hasAnimate) {
+				if (itemIndex == 0) {
+					return translate("Selects currently frame");
+				} else if (itemIndex == 1) {
+					return translate("Creates and clones frames");
+				} else if (itemIndex == 2) {
+					return translate("Plays or stops frame");
+				} else if (itemIndex == 3) {
+					return translate("Moves frame location");
+				} else if (itemIndex == 4) {
+					return translate("Moves frame rotation");
+				} else if (itemIndex == 5) {
+					return translate("Changes frame duration");
+				} else if (itemIndex == 6) {
+					return translate("Set up frame velocity vector");
+				} else if (itemIndex == 7) {
+					return translate("Removes frame");
+				}
+			} else if (itemIndex == 0) {
+				return translate("Creates first frame");
+			}
+		});
 		if (this.data.selected >= 0) sidebar.select(this.data.selected);
 		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
 			TransitionEditor.data.selected = index;
@@ -175,17 +235,27 @@ let TransitionEditor = {
 		sidebar.setOnGroupUndockListener(function(window, group, index, previous) {
 			if (!previous) {
 				delete TransitionEditor.data.selected;
-				selectMode = 0, drawTransitionPoints(TransitionEditor.data.worker);
+				drawTransitionPoints(TransitionEditor.data.worker);
 			}
 		});
+		sidebar.setOnGroupFetchListener(function(window, group, index) {
+			if (index == 0) {
+				return translate("Animate define properties");
+			} else if (index == 1) {
+				return translate("Frames actions");
+			}
+		})
 		sidebar.show();
 		drawTransitionPoints(this.data.worker);
 	},
 	menu: function() {
+		prepareAdditionalInformation(3, 1);
 		let control = new ControlWindow();
+		attachWarningInformation(control);
 		control.setOnClickListener(function() {
 			TransitionEditor.create();
 		}).addHeader();
+		attachAdditionalInformation(control);
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
 			selectFile([".dnp", ".nds", ".js"], function(file) {
@@ -212,33 +282,29 @@ let TransitionEditor = {
 				ProjectEditor.menu();
 			});
 		});
-		checkForAdditionalInformation(control);
+		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Transition"));
-		category.addItem("entityModuleSelect", translate("Entity"), function() {
+		category.addItem("transitionCamera", translate("Camera"), function() {
 			if (!Level.isLoaded()) {
-				showHint(translate("Can't hit entity at menu"));
+				showHint(translate("Can't change camera at menu"));
 				return;
 			}
 			showHint(translate("Hit entity"));
 			control.dismiss();
 			selectMode = 2;
 			let button = new ControlButton();
-			button.setIcon("menuModuleBack");
+			button.setIcon("menuBack");
 			button.setOnClickListener(function() {
 				TransitionEditor.create();
 				selectMode = 0;
 			});
 			button.show();
 		});
-		category.addItem("transitionModuleReload", translate("Reload"), function() {
-			selectMode = 0;
-			TransitionEditor.reload();
-		});
 		if (TransitionEditor.data.worker.Define.getEntity() != getPlayerEnt()) {
 			let hasResetMessage = false;
-			category.addItem("menuConfigReset", translate("Player"), function() {
+			category.addItem("transitionPlayer", translate("Player"), function() {
 				if (!hasResetMessage) {
-					let message = control.addMessage("menuModuleWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
+					let message = control.addMessage("menuBoardWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
 						function() {
 							TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
 							control.dismiss(), TransitionEditor.create();
@@ -254,8 +320,29 @@ let TransitionEditor = {
 				}
 			});
 		}
-		resetAdditionalInformation();
+		category.addItem("worldSelectionRange", translate("Pathes"), function() {
+			if (!Level.isLoaded()) {
+				showHint(translate("Can't draw points in menu"));
+				return;
+			}
+			control.dismiss();
+			selectMode = 4;
+			let button = new ControlButton();
+			button.setIcon("menuBack");
+			button.setOnClickListener(function() {
+				TransitionEditor.create();
+				selectMode = 0;
+			});
+			button.show();
+			TransitionEditor.unselect();
+		});
+		category.addItem("transitionUpdate", translate("Reload"), function() {
+			selectMode = 0;
+			TransitionEditor.reload();
+		});
+		attachAdditionalInformation(control);
 		control.show();
+		finishAttachAdditionalInformation();
 	},
 	open: function(source) {
 		if (typeof source != "object") {
@@ -270,10 +357,10 @@ let TransitionEditor = {
 		let worker = this.data.worker = new TransitionWorker(source);
 		if (index == -1) index = ProjectProvider.getCount();
 		ProjectProvider.setupEditor(index, worker);
-		ProjectProvider.setOpenedState(true);
-		ControlWindow.dismissCurrently();
 		TransitionEditor.unselect();
 		TransitionEditor.create();
+		ProjectProvider.setOpenedState(true);
+		ControlWindow.dismissCurrently();
 		return true;
 	},
 	merge: function(file) {
@@ -282,22 +369,20 @@ let TransitionEditor = {
 		if (name.endsWith(".dnp")) {
 			let active = Date.now();
 			importProject(file.getPath(), function(result) {
-				handle(function() {
+				active = Date.now() - active;
+				selectProjectData(result, function(selected) {
 					active = Date.now() - active;
-					selectProjectData(result, function(selected) {
-						active = Date.now() - active;
-						mergeConvertedTransition(project, selected, function(output) {
-							TransitionEditor.data.worker.loadProject(output);
-							drawTransitionPoints(TransitionEditor.data.worker);
-							showHint(translate("Merged success") + " " +
-								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-						});
-					}, "transition");
-				});
+					mergeConvertedTransition(project, selected, function(output) {
+						TransitionEditor.data.worker.loadProject(output);
+						drawTransitionPoints(TransitionEditor.data.worker);
+						showHint(translate("Merged success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				}, "transition");
 			});
 		} else if (name.endsWith(".nds")) {
 			let active = Date.now();
-			handle(function() {
+			tryout(function() {
 				let obj = compileData(Files.read(file)),
 					result = convertNds(obj);
 				mergeConvertedTransition(project, result, function(output) {
@@ -310,18 +395,16 @@ let TransitionEditor = {
 		} else if (name.endsWith(".js")) {
 			let active = Date.now();
 			importScript(file.getPath(), function(result) {
-				handle(function() {
+				active = Date.now() - active;
+				selectProjectData(result, function(selected) {
 					active = Date.now() - active;
-					selectProjectData(result, function(selected) {
-						active = Date.now() - active;
-						mergeConvertedTransition(project, selected, function(output) {
-							TransitionEditor.data.worker.loadProject(output);
-							drawTransitionPoints(TransitionEditor.data.worker);
-							showHint(translate("Merged success") + " " +
-								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-						});
-					}, "transition");
-				});
+					mergeConvertedTransition(project, selected, function(output) {
+						TransitionEditor.data.worker.loadProject(output);
+						drawTransitionPoints(TransitionEditor.data.worker);
+						showHint(translate("Merged success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				}, "transition");
 			});
 		}
 	},
@@ -330,19 +413,17 @@ let TransitionEditor = {
 		if (name.endsWith(".dnp")) {
 			let active = Date.now();
 			importProject(file.getPath(), function(result) {
-				handle(function() {
+				active = Date.now() - active;
+				selectProjectData(result, function(selected) {
 					active = Date.now() - active;
-					selectProjectData(result, function(selected) {
-						active = Date.now() - active;
-						TransitionEditor.open(selected);
-						showHint(translate("Loaded success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					}, "transition", true);
-				});
+					TransitionEditor.open(selected);
+					showHint(translate("Loaded success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				}, "transition", true);
 			});
 		} else if (name.endsWith(".nds")) {
 			let active = Date.now();
-			handle(function() {
+			tryout(function() {
 				let current = TransitionEditor.data.worker.getProject(),
 					obj = compileData(Files.read(file)),
 					result = convertNds(obj);
@@ -353,15 +434,13 @@ let TransitionEditor = {
 		} else if (name.endsWith(".js")) {
 			let active = Date.now();
 			importScript(file.getPath(), function(result) {
-				handle(function() {
+				active = Date.now() - active;
+				selectProjectData(result, function(selected) {
 					active = Date.now() - active;
-					selectProjectData(result, function(selected) {
-						active = Date.now() - active;
-						TransitionEditor.open(selected);
-						showHint(translate("Converted success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					}, "transition", true);
-				});
+					TransitionEditor.open(selected);
+					showHint(translate("Converted success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				}, "transition", true);
 			});
 		}
 	},
@@ -371,19 +450,15 @@ let TransitionEditor = {
 		if (name.endsWith(".dnp")) {
 			exportProject(project, false, file.getPath());
 		} else if (name.endsWith(".js")) {
+			let converter = new TransitionConverter();
+			converter.attach(project);
 			let active = Date.now();
-			handle(function() {
-				let converter = new TransitionConverter();
-				converter.attach(project);
-				converter.executeAsync(function(link, result) {
-					handle(function() {
-						if (link.hasResult()) {
-							Files.write(file, result);
-							showHint(translate("Converted success") + " " +
-								translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-						} else reportError(link.getLastException());
-					});
-				});
+			converter.executeAsync(function(link, result) {
+				if (link.hasResult()) {
+					Files.write(file, result);
+					showHint(translate("Converted success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				} else reportError(link.getLastException());
 			});
 		}
 	},
@@ -474,7 +549,7 @@ let TransitionEditor = {
 		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Frames"));
-			popup.setOnHideListener(function() {
+			popup.setOnCloseListener(function() {
 				selectMode = 0;
 				drawTransitionPoints(TransitionEditor.data.worker);
 			});
@@ -502,12 +577,14 @@ let TransitionEditor = {
 					showHint(translate("Frame %s added", index + 1));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
-				popup.addButtonElement(translate("Currently"), function() {
-					let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
-					TransitionEditor.data.worker.Animation.getAnimate(0).setupFrame(index);
-					showHint(translate("Frame %s added as currently", index + 1));
-					drawTransitionPoints(TransitionEditor.data.worker);
-				});
+				if (Level.isLoaded()) {
+					popup.addButtonElement(translate("Currently"), function() {
+						let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
+						TransitionEditor.data.worker.Animation.getAnimate(0).setupFrame(index);
+						showHint(translate("Frame %s added as currently", index + 1));
+						drawTransitionPoints(TransitionEditor.data.worker);
+					});
+				}
 				if (TransitionEditor.Frame.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = TransitionEditor.data.frame,
@@ -686,7 +763,7 @@ let TransitionEditor = {
 			let values = popup.getAllEditsValues();
 			define.setFps(compileData(values[0], "number"));
 			showHint(translate("Data saved"));
-		}).setBackground("ground");
+		}).setBackground("popup");
 		Popups.open(popup, "reframe");
 	}
 };

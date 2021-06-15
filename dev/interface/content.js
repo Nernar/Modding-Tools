@@ -7,8 +7,6 @@ Fragment.prototype.getContainer = function() {
 };
 
 Fragment.prototype.setContainerView = function(view) {
-	let already = this.getContainer();
-	if (already != null) throw Error("Fragment already has container");
 	this.container = view;
 };
 
@@ -31,19 +29,7 @@ Fragment.prototype.findViewById = function(id) {
 Fragment.prototype.findViewByTag = function(tag) {
 	let container = this.getContainer();
 	if (container == null) return null;
-	let find = function(parent) {
-		for (let i = 0; i < parent.getChildCount(); i++) {
-			let child = parent.getChildAt(i);
-			if (child == null) continue;
-			if (child.getTag() == tag) return child;
-			if (child.getChildCount) {
-				let recursive = find(child);
-				if (recursive) return recursive;
-			}
-		}
-		return null;
-	};
-	return find(container);
+	return container.findViewWithTag(tag) || null;
 };
 
 Fragment.prototype.findView = function(stroke) {
@@ -60,7 +46,7 @@ Frame.prototype.getFragment = function() {
 
 Frame.prototype.setFragment = function(fragment) {
 	let already = this.getFragment();
-	if (already != null) throw Error("Frame already has fragment");
+	if (already != null) MCSystem.throwException("Frame already has fragment");
 	this.fragment = fragment;
 };
 

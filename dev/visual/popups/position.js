@@ -2,7 +2,7 @@ const CoordsPopup = function() {
 	ListingPopup.call(this);
 };
 
-CoordsPopup.prototype = assign(ListingPopup.prototype);
+CoordsPopup.prototype = new ListingPopup;
 CoordsPopup.prototype.TYPE = "CoordsPopup";
 
 CoordsPopup.prototype.reset = function() {
@@ -15,8 +15,8 @@ CoordsPopup.prototype.reset = function() {
 
 CoordsPopup.prototype.addButtonElement = function(name, click) {
 	let button = ListingPopup.prototype.addButtonElement.call(this, name, click);
-	button.setBackground("popupBackground");
-	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Ui.Display.MATCH, Ui.getY(84)));
+	button.setBackground("popup");
+	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.getY(84)));
 	return button;
 };
 
@@ -24,21 +24,21 @@ CoordsPopup.prototype.addGroup = function(name) {
 	let views = this.views,
 		index = views.groups.length;
 	views.groups[index] = new android.widget.LinearLayout(context);
-	views.groups[index].setPadding(Ui.getY(10), index == 0 ? Ui.getY(10) : 0, Ui.getY(10), Ui.getY(10));
+	views.groups[index].setPadding(Interface.getY(10), index == 0 ? Interface.getY(10) : 0, Interface.getY(10), Interface.getY(10));
 	views.content.addView(views.groups[index]);
 
 	views.titles[index] = new android.widget.TextView(context);
-	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Ui.getY(60), Ui.Display.MATCH));
-	views.titles[index].setPadding(Ui.getY(10), Ui.getY(10), Ui.getY(10), Ui.getY(10));
-	views.titles[index].setTextSize(Ui.getFontSize(32));
-	views.titles[index].setTextColor(Ui.Color.WHITE);
+	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.Display.MATCH));
+	views.titles[index].setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
+	views.titles[index].setTextSize(Interface.getFontSize(32));
+	views.titles[index].setTextColor(Interface.Color.WHITE);
 	if (name) views.titles[index].setText(name);
 	views.titles[index].setTypeface(typeface);
 	views.titles[index].setMaxLines(1);
 	views.groups[index].addView(views.titles[index]);
 
 	views.containers[index] = new android.widget.LinearLayout(context);
-	views.containers[index].setOrientation(Ui.Orientate.VERTICAL);
+	views.containers[index].setOrientation(Interface.Orientate.VERTICAL);
 	views.groups[index].addView(views.containers[index]);
 	return this.getGroup(index);
 };
@@ -60,70 +60,61 @@ CoordsPopup.prototype.getGroup = function(position) {
 					mathes: mathes || [16, 32, 64]
 				});
 			item.views.root = new android.widget.LinearLayout(context);
-			item.views.root.setBackgroundDrawable(ImageFactory.getDrawable("popupBackground"));
-			item.views.root.setPadding(Ui.getY(12), Ui.getY(12), Ui.getY(12), Ui.getY(12));
+			item.views.root.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+			item.views.root.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 			views.containers[position].addView(item.views.root);
 
-			let params = new android.view.ViewGroup.LayoutParams(Ui.getY(60), Ui.getY(60));
+			let params = new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.getY(60));
 
 			item.views.minus = new android.widget.ImageView(context);
-			item.views.minus.setImageDrawable(ImageFactory.getDrawable("controlDimensionMinus"));
+			item.views.minus.setImageDrawable(ImageFactory.getDrawable("controlAdapterMinus"));
 			item.views.minus.setOnClickListener(function(view) {
-				try {
+				tryout(function() {
 					let current = item.mathes[item.current[1]];
 					item.current[0] = preround(item.current[0] - (current > 0 ? 1 / current : current));
-					if (elements.onChange) elements.onChange(index, item.current[0]);
+					elements.onChange && elements.onChange(index, item.current[0]);
 					elements.updateMather(index);
-				} catch (e) {
-					reportError(e);
-				}
+				});
 			});
 			item.views.root.addView(item.views.minus, params);
 
 			item.views.mather = new android.widget.TextView(context);
-			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Ui.getY(160), -1));
-			item.views.mather.setPadding(Ui.getY(12), 0, Ui.getY(12), 0);
+			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(160), -1));
+			item.views.mather.setPadding(Interface.getY(12), 0, Interface.getY(12), 0);
 			item.views.mather.setOnClickListener(function(view) {
-				try {
+				tryout(function() {
 					item.current[1]++;
 					item.current[1] == item.mathes.length && (item.current[1] = 0);
 					elements.updateMather(index);
-				} catch (e) {
-					reportError(e);
-				}
+				});
 			});
 			item.views.mather.setOnLongClickListener(function(view) {
-				try {
+				return tryout(function() {
 					if (elements.onLongChange) {
 						item.current[0] = preround(elements.onLongChange(index));
-						if (elements.onChange) elements.onChange(index, item.current[0]);
+						elements.onChange && elements.onChange(index, item.current[0]);
 						elements.updateMather(index);
 						return true;
 					}
-				} catch (e) {
-					reportError(e);
-				}
-				return false;
+				}, false);
 			});
-			item.views.mather.setTextSize(Ui.getFontSize(21));
-			item.views.mather.setGravity(Ui.Gravity.CENTER);
-			item.views.mather.setTextColor(Ui.Color.WHITE);
+			item.views.mather.setTextSize(Interface.getFontSize(21));
+			item.views.mather.setGravity(Interface.Gravity.CENTER);
+			item.views.mather.setTextColor(Interface.Color.WHITE);
 			item.views.mather.setTypeface(typeface);
 			item.views.mather.setMaxLines(1);
 			item.views.root.addView(item.views.mather);
 			elements.updateMather(index);
 
 			item.views.plus = new android.widget.ImageView(context);
-			item.views.plus.setImageDrawable(ImageFactory.getDrawable("controlDimensionPlus"));
+			item.views.plus.setImageDrawable(ImageFactory.getDrawable("controlAdapterPlus"));
 			item.views.plus.setOnClickListener(function(view) {
-				try {
+				tryout(function() {
 					let current = item.mathes[item.current[1]];
 					item.current[0] = preround(item.current[0] + (current > 0 ? 1 / current : current));
 					if (elements.onChange) elements.onChange(index, item.current[0]);
 					elements.updateMather(index);
-				} catch (e) {
-					reportError(e);
-				}
+				});
 			});
 			item.views.root.addView(item.views.plus, params);
 		},

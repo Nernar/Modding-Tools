@@ -128,11 +128,8 @@ _gsdata_/
 
 # Unrealized content
 /dev/network/
-/dev/storage/message.js
 /assets/sounds-16.txt
 /assets/studio.mcworld
-/lib/ModBrowser.Query.js
-/lib/Process.js
 /lib/Music.js
 
 # Enstablized sources

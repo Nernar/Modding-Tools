@@ -14,11 +14,11 @@ const runAtScope = function(code, scope, name) {
 		}
 	}
 	scope = new Object();
-	try {
+	tryout(function() {
 		scope.result = ctx.evaluateString(standart, code, source, 0, null);
-	} catch (e) {
+	}, function(e) {
 		scope.error = e;
-	}
+	});
 	return scope;
 };
 
@@ -37,7 +37,7 @@ const REQUIRE = function(path) {
 		} else if (__code__.indexOf("alpha") != -1) {
 			let file = new java.io.File(Dirs.TESTING, path);
 			if (!file.exists()) throw null;
-			let source = decompileFromProduce(Files.readBytes(file)),
+			let source = decompileExecuteable(Files.readBytes(file)),
 				code = "(function() {\n" + source + "\n})();",
 				scope = runAtScope(code, REQUIRE.getScope(), path);
 			if (scope.error) throw scope.error;
@@ -66,19 +66,11 @@ REQUIRE.getScope = function() {
 			} else if (__code__.startsWith("testing")) {
 				this[name] = scope[name];
 			}
+		},
+		CLASS: function(path, instant) {
+			return ExecuteableSupport.newInstance(path, instant);
 		}
 	});
-};
-
-const restart = function() {
-	if (!isSupportEnv) {
-		return;
-	}
-	context.runOnUiThread(function() {
-		ProjectEditor.create();
-		currentEnvironment = __name__;
-	});
-	isSupportEnv = false;
 };
 
 const playTune = function(time, min, max, static) {
@@ -100,7 +92,7 @@ const playTune = function(time, min, max, static) {
 			let evaluate = Date.now(),
 				statable;
 			if (!static) {
-				statable = min + Math.random() * (max - min);
+				statable = random(min, max);
 			}
 			for (let i = 0; i < buffsize; i++) {
 				samples[i] = amp * Math.sin(ph);
@@ -110,7 +102,7 @@ const playTune = function(time, min, max, static) {
 			audioTrack.write(samples, 0, buffsize);
 			let left = Date.now() - evaluate;
 			if (time && left < time) {
-				Ui.sleepMilliseconds(time - left);
+				Interface.sleepMilliseconds(time - left);
 			}
 		}
 		audioTrack.stop();
@@ -120,4 +112,32 @@ const playTune = function(time, min, max, static) {
 
 const stopTune = function() {
 	delete playTune.track;
+};
+
+const requireLogotype = function() {
+	return tryoutSafety(function() {
+		if (__code__.indexOf("alpha") != -1) {
+			return "logo_alpha";
+		} else if (__code__.indexOf("beta") != -1) {
+			return "logo_beta";
+		} else if (__code__.indexOf("preview") != -1) {
+			return "logo_preview";
+		}
+	}, "logo");
+};
+
+const requireInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	if (logotype == "logo") return "logo_beta";
+	if (logotype == "logo_alpha") return "logo_preview";
+	if (logotype == "logo_beta") return "logo";
+	if (logotype == "logo_preview") return "logo_alpha";
+	Logger.Log("No inverted logotype for " + logotype, "DEV-CORE");
+};
+
+const isInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	if (logotype == "logo_alpha") return true;
+	if (logotype == "logo_beta") return true;
+	return false;
 };

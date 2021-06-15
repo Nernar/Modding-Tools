@@ -2,7 +2,7 @@ const BoundsActor = function() {
 	this.reset();
 };
 
-BoundsActor.prototype = assign(WindowActor.prototype);
+BoundsActor.prototype = new WindowActor;
 BoundsActor.prototype.TYPE = "bounds";
 
 BoundsActor.prototype.reset = function() {
@@ -29,7 +29,7 @@ const ClipBoundsActor = function() {
 	this.reset();
 };
 
-ClipBoundsActor.prototype = assign(WindowActor.prototype);
+ClipBoundsActor.prototype = new WindowActor;
 ClipBoundsActor.prototype.TYPE = "clipBounds";
 
 ClipBoundsActor.prototype.reset = function() {
@@ -40,7 +40,7 @@ const ImageTransformActor = function() {
 	this.reset();
 };
 
-ImageTransformActor.prototype = assign(WindowActor.prototype);
+ImageTransformActor.prototype = new WindowActor;
 ImageTransformActor.prototype.TYPE = "imageTransform";
 
 ImageTransformActor.prototype.reset = function() {
@@ -51,7 +51,7 @@ const ScrollActor = function() {
 	this.reset();
 };
 
-ScrollActor.prototype = assign(WindowActor.prototype);
+ScrollActor.prototype = new WindowActor;
 ScrollActor.prototype.TYPE = "scroll";
 
 ScrollActor.prototype.reset = function() {
@@ -62,7 +62,7 @@ const TransformActor = function() {
 	this.reset();
 };
 
-TransformActor.prototype = assign(WindowActor.prototype);
+TransformActor.prototype = new WindowActor;
 TransformActor.prototype.TYPE = "transform";
 
 TransformActor.prototype.reset = function() {
@@ -87,7 +87,7 @@ TransformActor.prototype.setReparentWithOverlay = function(enabled) {
 
 const VisibilityActor = new Function();
 
-VisibilityActor.prototype = assign(WindowActor.prototype);
+VisibilityActor.prototype = new WindowActor;
 
 VisibilityActor.prototype.getMode = function() {
 	return this.transition.getMode();
@@ -104,7 +104,7 @@ const SlideActor = function(side) {
 	this.reset(side);
 };
 
-SlideActor.prototype = assign(VisibilityActor.prototype);
+SlideActor.prototype = new VisibilityActor;
 SlideActor.prototype.TYPE = "slide";
 
 SlideActor.prototype.reset = function(side) {
@@ -120,7 +120,7 @@ SlideActor.prototype.getSlideEdge = function() {
 };
 
 SlideActor.prototype.setSlideEdge = function(side) {
-	this.transition.setSlideEdge(side || Ui.Gravity.NO);
+	this.transition.setSlideEdge(side || Interface.Gravity.NO);
 };
 
 SlideActor.IN = VisibilityActor.IN;
@@ -130,7 +130,7 @@ const ExplodeActor = function() {
 	this.reset();
 };
 
-ExplodeActor.prototype = assign(VisibilityActor.prototype);
+ExplodeActor.prototype = new VisibilityActor;
 ExplodeActor.prototype.TYPE = "explode";
 
 ExplodeActor.prototype.reset = function() {
@@ -144,7 +144,7 @@ const FadeActor = function(mode) {
 	this.reset(mode);
 };
 
-FadeActor.prototype = assign(VisibilityActor.prototype);
+FadeActor.prototype = new VisibilityActor;
 FadeActor.prototype.TYPE = "fade";
 
 FadeActor.prototype.reset = function(mode) {
@@ -162,7 +162,7 @@ const ActorSet = function() {
 	this.reset();
 };
 
-ActorSet.prototype = assign(WindowActor.prototype);
+ActorSet.prototype = new WindowActor;
 ActorSet.prototype.TYPE = "set";
 
 ActorSet.prototype.reset = function() {
@@ -181,7 +181,7 @@ ActorSet.getActorCount = function() {
 ActorSet.prototype.addActor = function(actor) {
 	if (actor.getActor) {
 		if (actor.TYPE == "none") {
-			throw Error("ActorSet can't use none actor");
+			MCSystem.throwException("ActorSet can't use none actor");
 		}
 		this.transition.addTransition(actor.getActor());
 	} else this.transition.addTransition(actor);
@@ -190,7 +190,7 @@ ActorSet.prototype.addActor = function(actor) {
 ActorSet.prototype.removeActor = function(actor) {
 	if (actor.getActor) {
 		if (actor.TYPE == "none") {
-			throw Error("ActorSet can't remove none actor");
+			MCSystem.throwException("ActorSet can't remove none actor");
 		}
 		this.transition.removeTransition(actor.getActor());
 	} else this.transition.removeTransition(actor);
@@ -207,7 +207,7 @@ const AutoActor = function() {
 	this.reset();
 };
 
-AutoActor.prototype = assign(ActorSet.prototype);
+AutoActor.prototype = new ActorSet;
 AutoActor.prototype.TYPE = "auto";
 
 AutoActor.prototype.reset = function() {
