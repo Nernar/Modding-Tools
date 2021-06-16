@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "enabled": {
+      "name": {
+        "en": "Enabled",
+        "ru": "Включен"
+      }
+    },
+    "getscreen": {
+      "name": {
+        "en": "Get Screen's name",
+        "ru": "Получить имя экрана"
+      }
+    }
+  }
+}

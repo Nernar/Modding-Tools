@@ -206,7 +206,7 @@ const showSupportableInfo = function(mod) {
 					if (mod.result === true) {
 						showHint(translate("Restart game for better stability"));
 					}
-					eval(mod.modName.replace(" ", new String()) + " = null;");
+					eval(mod.modName.replace(/\W/, new String()) + " = null;");
 					ExecuteableSupport.uninstall(mod.modName);
 					ProjectEditor.menu();
 				});

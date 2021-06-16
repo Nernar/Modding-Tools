@@ -59,7 +59,7 @@ let typeface = android.graphics.Typeface.MONOSPACE;
 let currentEnvironment = __name__;
 let isSupportEnv = false;
 
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, ModelConverter;
+let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, RunJSingame, ModelConverter;
 
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = !!this.isInstant;

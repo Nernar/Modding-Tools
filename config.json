@@ -29,7 +29,7 @@
     "use_box_sizes":true,
     "draw_selection":true,
     "inject_border":false,
-    "transparent_boxes":false
+    "transparent_boxes":true
   },
   "user_login":{
     "first_launch":true,

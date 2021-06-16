@@ -94,7 +94,10 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return true;
 			});
 			WorldEdit = importMod("WorldEdit", function() {
-				return !!this.Commands;
+				return this.hasOwnProperty("Commands");
+			});
+			RunJSingame = importMod("Run JS in-game", function() {
+				return MainUI && MainUI.codeWindow;
 			});
 		} else supportSupportables = false;
 	});
@@ -123,6 +126,9 @@ Callback.addCallback("CoreConfigured", function(config) {
 				if (WorldEdit && isNotSupported(WorldEdit)) {
 					WorldEdit = null;
 				}
+				if (RunJSingame && isNotSupported(RunJSingame)) {
+					RunJSingame = null;
+				}
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}
 	});
@@ -135,11 +141,12 @@ const refreshSupportablesIcons = function() {
 		ExecuteableSupport.refreshIcon(DumpCreator);
 		ExecuteableSupport.refreshIcon(InstantRunner);
 		ExecuteableSupport.refreshIcon(WorldEdit);
+		ExecuteableSupport.refreshIcon(RunJSingame);
 	});
 };
 
 const isAnyCustomSupportableLoaded = function() {
 	return tryoutSafety(function() {
-		return loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit) !== null;
+		return loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || RunJSingame) !== null;
 	}, false);
 };

@@ -348,6 +348,21 @@ const ProjectEditor = {
 					showHint(translate(WorldEdit.author));
 				} else showHint(translate(WorldEdit.modName) + " - " + translate(WorldEdit.author));
 			});
+			if (RunJSingame) category.addItem(RunJSingame.icon, translate("Run JS"), function() {
+				let result = RunJSingame(function() {
+					try {
+						MainUI.codeWindow();
+						return true;
+					} catch (e) {
+						return e;
+					}
+				});
+				if (result != true) reportError(result);
+				if (!hintStackableDenied) {
+					showHint(translate(RunJSingame.modName) + " " + translate(RunJSingame.version));
+					showHint(translate(RunJSingame.author));
+				} else showHint(translate(RunJSingame.modName) + " - " + translate(RunJSingame.author));
+			});
 			attachAdditionalInformation(control);
 		}
 		control.show();

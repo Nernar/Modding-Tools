@@ -40,12 +40,12 @@ Translation.addTranslation("WorldEdit", {});
 Translation.addTranslation("WorldEdit for InnerCore", {
 	ru: "WorldEdit для InnerCore"
 }); // DEPRECATED
-Translation.addTranslation("TPS Meter", {}); // DEPRECATED
-Translation.addTranslation("Niklolay Savenko", {
-	ru: "Никлолай Савенко"
-}); // DEPRECATED
-Translation.addTranslation("Shows your ticks per second in game", {
-	ru: "Отображает ваши такты за секунду в игре"
+Translation.addTranslation("Run JS", {
+	ru: "Запуск JS"
+});
+Translation.addTranslation("DaRealMonika", {}); // DEPRECATED
+Translation.addTranslation("This mod adds 2 new commands \"/run\" which lets you run any JavaScript code that horizon can run in mods and \"/getscreen\" which by default tells you if it's telling you the screen name or not and putting either \"enable\" or \"disable\" after it will make it get the screen name or not.", {
+	ru: "Этот мод добавляет 2 новые комманды \"/run\", дающая возможность запускать любой JavaScript код, который хорайзон может запускать в модах и \"/getscreen\", определяющий нужно ли показывать название экрана или нет, используя \"enable\" или \"disable\" определить необходимо ли это делать или нет."
 }); // DEPRECATED
 
 // Control content & actions

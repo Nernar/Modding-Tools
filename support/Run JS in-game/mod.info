@@ -1,0 +1,6 @@
+{
+  "name": "Run JS",
+  "author": "DaRealMonika",
+  "version": "1",
+  "description": "This mod adds 2 new commands \"/run\" which lets you run any JavaScript code that horizon can run in mods and \"/getscreen\" which by default tells you if it's telling you the screen name or not and putting either \"enable\" or \"disable\" after it will make it get the screen name or not."
+}
