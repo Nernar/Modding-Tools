@@ -60,7 +60,7 @@ const LaunchSequence = new LogotypeSequence({
 			let list = Files.listFileNames(Dirs.ASSET, true);
 			this.count += Files.checkFormats(list, ".dnr").length;
 			ImageFactory.loadDirectory();
-			ImageFactory.decodeAsAnimation("blockNoTextures", ["blockDefineTexture", "explorerFileCorrupted"], 1500);
+			ImageFactory.decodeAsAnimation("blockNoTextures", ["blockDefineTexture", "blockDefineWrong"], 1500);
 			index += ImageFactory.resourcesCount;
 			refreshSupportablesIcons();
 			if (__code__.startsWith("develop")) {

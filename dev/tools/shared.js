@@ -47,7 +47,7 @@ const registerAdditionalInformation = function() {
 	AdditionalMessageFactory.register("explorerExtensionScript", translate("Use scripts from your mods to import, simply find them in internal exporer."), 0.5, function() {
 		return noImportedScripts;
 	});
-	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), 0.1, function(message) {
+	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), 0.2, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://trello.com/b/wzYtpA3W/dev-editor"));
 		context.startActivity(intent);
@@ -59,7 +59,7 @@ const registerAdditionalInformation = function() {
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkSupport", translate("Enjoying development process? Let's discuss, donate and write any suggestions to our messages."), 0.1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://vk.me/nernar"));
+			android.net.Uri.parse("https://vk.com/donut/club168765348"));
 		context.startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkConnect", translate("We're in search of developers for project. You may contribute and reshare our open source code."), 0.1, function(message) {
@@ -67,9 +67,9 @@ const registerAdditionalInformation = function() {
 			android.net.Uri.parse("https://github.com/nernar/dev-editor"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), 0.25, function(message) {
+	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), 0.5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://vk.me/club168765348"));
+			android.net.Uri.parse("https://vk.me/join/mEYEiYxL7SsZcI_S6iJhg4wfU_gTgwlyTx4="));
 		context.startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), 0.25, function(message) {

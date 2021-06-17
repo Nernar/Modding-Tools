@@ -130,18 +130,20 @@ SidebarWindow.prototype.reinflateLayout = function() {
 			let set = new ActorSet(),
 				slide = new SlideActor(Interface.Gravity.RIGHT),
 				bounds = new BoundsActor();
-			set.addListener({
-				onTransitionStart: function(transition) {
-					tryout(function() {
-						sidebar.setTouchable(false);
-					});
-				},
-				onTransitionEnd: function(transition) {
-					tryout(function() {
-						sidebar.setTouchable(true);
-					});
-				}
-			});
+			if (this.isTouchable()) {
+				set.addListener({
+					onTransitionStart: function(transition) {
+						tryout(function() {
+							sidebar.setTouchable(false);
+						});
+					},
+					onTransitionEnd: function(transition) {
+						tryout(function() {
+							sidebar.setTouchable(true);
+						});
+					}
+				});
+			}
 			slide.setInterpolator(new AccelerateDecelerateInterpolator());
 			slide.setDuration(150);
 			set.addActor(slide);

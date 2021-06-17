@@ -38,7 +38,7 @@ const selectTexture = function(index, onSelect) {
 		let wrong = new android.widget.LinearLayout(context);
 		wrong.setOrientation(Interface.Orientate.VERTICAL);
 		wrong.setGravity(Interface.Gravity.CENTER);
-		wrong.setPadding(0, Interface.getY(80), 0, Interface.getY(80));
+		wrong.setPadding(0, Interface.getY(68), 0, Interface.getY(68));
 		let icon = new android.widget.ImageView(context);
 		icon.setImageDrawable(ImageFactory.getDrawable("blockNoTextures"));
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
@@ -83,9 +83,10 @@ const selectTexture = function(index, onSelect) {
 							adapter.getFilter().filter(text, {
 								onFilterComplete: function(count) {
 									tryout(function() {
-										let slide = new SlideActor(Interface.Gravity.TOP);
-										slide.setInterpolator(new DecelerateInterpolator());
-										slide.addListener({
+										let actor = count > 0 ? new FadeActor() :
+											new SlideActor(Interface.Gravity.TOP);
+										actor.setInterpolator(new DecelerateInterpolator());
+										actor.addListener({
 											onTransitionStart: function(transition) {
 												tryout(function() {
 													dialog.getListView().setVisibility(Interface.Visibility.GONE);
@@ -99,8 +100,8 @@ const selectTexture = function(index, onSelect) {
 												});
 											}
 										});
-										slide.setDuration(800);
-										slide.beginDelayedActor(layout);
+										actor.setDuration(800);
+										actor.beginDelayedActor(layout);
 										wrong.setVisibility(count > 0 ?
 											Interface.Visibility.GONE :
 											Interface.Visibility.VISIBLE);
@@ -117,7 +118,9 @@ const selectTexture = function(index, onSelect) {
 			}
 		} else builder.setView(wrong);
 		let dialog = builder.create();
-		dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.1);
+		if (mod.items.length > 0) {
+			dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.1);
+		}
 		dialog.show();
 	});
 };

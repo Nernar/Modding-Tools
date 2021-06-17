@@ -100,7 +100,7 @@ const ExecuteableSupport = {
 	getAndLoadIcon: function(name) {
 		return tryoutSafety(function() {
 			let upper = name.substring(0, 1).toUpperCase() + name.substring(1);
-			if (ImageFactory.getCountByTag("support" + upper) > 0) {
+			if (ImageFactory.isLoaded("support" + upper)) {
 				return "support" + upper;
 			}
 			let file = new java.io.File(Dirs.SUPPORT, name);

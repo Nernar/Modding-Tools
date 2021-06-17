@@ -194,12 +194,13 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			category.addItem("menuProjectSave", translate("Export"));
 			category.addItem("menuProjectManual", translate("Tutorial"));
 			category.addItem("menuProjectManage", translate("Manage"));
-			if (loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit)) {
+			if (isAnyCustomSupportableLoaded()) {
 				category = control.addCategory(translate("Supportables"));
-				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"));
 				if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"));
+				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"));
+				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"));
+				if (RunJSingame) category.addItem(RunJSingame.icon, translate("Run JS"));
 				if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"));
-				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"))
 			}
 			control.show();
 			this.currently = control;

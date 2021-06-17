@@ -50,11 +50,11 @@ let debugAttachBackground = false;
 let debugAttachControlTools = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-16.06.2021-10";
+const __code__ = "develop-alpha-0.3.5-17.06.2021-10";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
-let firstLaunchTutorial = __code__.indexOf("alpha") != -1;
+let firstLaunchTutorial = __code__.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let currentEnvironment = __name__;
 let isSupportEnv = false;

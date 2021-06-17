@@ -29,7 +29,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			MCSystem.setLoadingTip("Loading Supportables");
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
-				if (!this.Windows) {
+				if (!this.hasOwnProperty("Windows")) {
 					return false;
 				}
 				let menu = Windows.menu || null;
@@ -70,7 +70,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return true;
 			});
 			DumpCreator = importMod("Dump Creator", function() {
-				if (!this.__makeAndSaveDump__) {
+				if (!this.hasOwnProperty("__makeAndSaveDump__")) {
 					return false;
 				}
 				let originalAlert = alert;
@@ -83,7 +83,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return true;
 			});
 			InstantRunner = importMod("InstantRunner", function() {
-				if (!this.openAndroidUI || !this.container) {
+				if (!this.hasOwnProperty("openAndroidUI") || !this.hasOwnProperty("container")) {
 					return false;
 				}
 				container = new Object();
@@ -97,7 +97,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return this.hasOwnProperty("Commands");
 			});
 			RunJSingame = importMod("Run JS in-game", function() {
-				return MainUI && MainUI.codeWindow;
+				return this.hasOwnProperty("MainUI") && MainUI.codeWindow;
 			});
 		} else supportSupportables = false;
 	});
@@ -137,7 +137,6 @@ Callback.addCallback("CoreConfigured", function(config) {
 const refreshSupportablesIcons = function() {
 	tryout(function() {
 		ExecuteableSupport.refreshIcon(UIEditor);
-		ExecuteableSupport.refreshIcon(Setting);
 		ExecuteableSupport.refreshIcon(DumpCreator);
 		ExecuteableSupport.refreshIcon(InstantRunner);
 		ExecuteableSupport.refreshIcon(WorldEdit);

@@ -263,29 +263,7 @@ const ProjectEditor = {
 		}
 		if (isAnyCustomSupportableLoaded()) {
 			category = control.addCategory(translate("Supportables")).setOnHoldItemListener(function(item, index) {
-				return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit][index]);
-			});
-			if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
-				let result = DumpCreator(function() {
-					try {
-						return __makeAndSaveDump__.dumped;
-					} catch (e) {
-						return e;
-					}
-				})[0];
-				confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
-					Level.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
-					"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
-					let evaluate = DumpCreator(function() {
-						try {
-							__makeAndSaveDump__();
-							return true;
-						} catch (e) {
-							return e;
-						}
-					})[0];
-					if (evaluate != true) reportError(evaluate);
-				});
+				return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit, RunJSingame][index]);
 			});
 			if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"), function() {
 				isSupportEnv = true;
@@ -311,21 +289,6 @@ const ProjectEditor = {
 				} else showHint(translate(UIEditor.modName) + " - " + translate(UIEditor.author));
 				control.dismiss();
 			});
-			if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"), function() {
-				let result = InstantRunner(function() {
-					try {
-						openAndroidUI();
-						return true;
-					} catch (e) {
-						return e;
-					}
-				})[0];
-				if (result != true) reportError(result);
-				if (!hintStackableDenied) {
-					showHint(translate(InstantRunner.modName) + " " + translate(InstantRunner.version));
-					showHint(translate(InstantRunner.author));
-				} else showHint(translate(InstantRunner.modName) + " - " + translate(InstantRunner.author));
-			});
 			if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
 				let result = WorldEdit(function() {
 					try {
@@ -348,6 +311,28 @@ const ProjectEditor = {
 					showHint(translate(WorldEdit.author));
 				} else showHint(translate(WorldEdit.modName) + " - " + translate(WorldEdit.author));
 			});
+			if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"), function() {
+				let result = DumpCreator(function() {
+					try {
+						return __makeAndSaveDump__.dumped;
+					} catch (e) {
+						return e;
+					}
+				})[0];
+				confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
+					Level.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
+					"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
+					let evaluate = DumpCreator(function() {
+						try {
+							__makeAndSaveDump__();
+							return true;
+						} catch (e) {
+							return e;
+						}
+					})[0];
+					if (evaluate != true) reportError(evaluate);
+				});
+			});
 			if (RunJSingame) category.addItem(RunJSingame.icon, translate("Run JS"), function() {
 				let result = RunJSingame(function() {
 					try {
@@ -356,12 +341,27 @@ const ProjectEditor = {
 					} catch (e) {
 						return e;
 					}
-				});
+				})[0];
 				if (result != true) reportError(result);
 				if (!hintStackableDenied) {
 					showHint(translate(RunJSingame.modName) + " " + translate(RunJSingame.version));
 					showHint(translate(RunJSingame.author));
 				} else showHint(translate(RunJSingame.modName) + " - " + translate(RunJSingame.author));
+			});
+			if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"), function() {
+				let result = InstantRunner(function() {
+					try {
+						openAndroidUI();
+						return true;
+					} catch (e) {
+						return e;
+					}
+				})[0];
+				if (result != true) reportError(result);
+				if (!hintStackableDenied) {
+					showHint(translate(InstantRunner.modName) + " " + translate(InstantRunner.version));
+					showHint(translate(InstantRunner.author));
+				} else showHint(translate(InstantRunner.modName) + " - " + translate(InstantRunner.author));
 			});
 			attachAdditionalInformation(control);
 		}
