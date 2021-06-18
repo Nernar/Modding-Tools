@@ -994,7 +994,7 @@ ControlWindow.Category.Item.prototype.reset = function() {
 
 	views.icon = new android.widget.ImageView(context);
 	params = new android.widget.LinearLayout.
-	LayoutParams(Interface.getY(172), Interface.getY(172));
+		LayoutParams(Interface.getY(172), Interface.getY(172));
 	content.addView(views.icon, params);
 
 	views.title = new android.widget.TextView(context);
@@ -1003,7 +1003,7 @@ ControlWindow.Category.Item.prototype.reset = function() {
 	views.title.setTextColor(Interface.Color.WHITE);
 	views.title.setSingleLine();
 	params = new android.widget.LinearLayout.
-	LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
+		LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
 	params.topMargin = Interface.getY(16);
 	content.addView(views.title, params);
 };

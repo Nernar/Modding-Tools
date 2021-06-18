@@ -45,13 +45,8 @@ WindowProvider.openWindow = function(window) {
 		if (this.hasOpenedPopup(window)) {
 			return;
 		}
-		if (content) {
-			let container = new android.widget.FrameLayout(context);
-			container.addView(content);
-			content = container;
-			if (isHorizon && !isInstant) {
-				content.setSystemUiVisibility(5894);
-			}
+		if (isHorizon && !isInstant) {
+			content.setSystemUiVisibility(5894);
 		}
 		let popup = content ? new android.widget.PopupWindow(content,
 				window.getWidth(), window.getHeight()) :
