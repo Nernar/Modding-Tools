@@ -50,7 +50,7 @@ let debugAttachBackground = false;
 let debugAttachControlTools = true;
 
 // Interface and mod data
-const __code__ = "develop-alpha-0.3.5-18.06.2021-11";
+const __code__ = "develop-alpha-0.3.5-19.06.2021-11";
 const __author__ = __mod__.getInfoProperty("author");
 const __version__ = __mod__.getInfoProperty("version");
 const __description__ = __mod__.getInfoProperty("description");
