@@ -22,7 +22,7 @@ const ControlWindow = function() {
 	this.reset();
 	this.setBackground("popupControl");
 
-	if (debugAttachControlTools && __code__.startsWith("develop")) {
+	if (debugAttachControlTools && REVISION.startsWith("develop")) {
 		let category = this.addCategory(translate("Development"));
 		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
 			checkEvaluate();

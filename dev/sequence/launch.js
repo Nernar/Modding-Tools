@@ -1,7 +1,7 @@
 const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
-		if (__code__.startsWith("develop")) {
+		if (REVISION.startsWith("develop")) {
 			REQUIRE("background.js");
 			if (debugAttachBackground) {
 				attachBackground();
@@ -14,7 +14,7 @@ const LaunchSequence = new LogotypeSequence({
 			ImageFactory.loadFromAsset(background, background + ".dnr");
 			LogotypeSequence.prototype.create.call(this, value);
 		}
-		if (__code__.startsWith("develop")) {
+		if (REVISION.startsWith("develop")) {
 			REQUIRE("provider.js");
 			attachEvalButton();
 		}
@@ -38,7 +38,7 @@ const LaunchSequence = new LogotypeSequence({
 			ImageFactory.loadFromAsset(cancellation, "popup/selection/locked.dnr");
 			FileTools.assureDir(Dirs.EXPORT);
 			FileTools.assureDir(Dirs.LOGGING);
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				let background = SnackSequence.prototype.getBackground();
 				ImageFactory.loadFromAsset(background, "popup/popup.dnr");
 				let creation = SnackSequence.prototype.getCreationBackground();
@@ -49,12 +49,12 @@ const LaunchSequence = new LogotypeSequence({
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				REQUIRE("translation.js")(__dir__ + "dev/", __dir__ + "dev/translation.js").assureYield();
 			}
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				REQUIRE("recompress.js")(Dirs.IMAGE, Dirs.ASSET).assureYield();
 			}
 			let list = Files.listFileNames(Dirs.ASSET, true);
@@ -63,8 +63,12 @@ const LaunchSequence = new LogotypeSequence({
 			ImageFactory.decodeAsAnimation("blockNoTextures", ["blockDefineTexture", "blockDefineWrong"], 1500);
 			index += ImageFactory.resourcesCount;
 			refreshSupportablesIcons();
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				REQUIRE("recompile.js")(Dirs.EVALUATE + "testing/", Dirs.TESTING).assureYield();
+				if (debugIgnoreLockedBackground) {
+					ImageFactory.loadFromAsset("popupSelectionLocked", "popup/popup.dnr");
+					ImageFactory.loadFromAsset("popupSelectionQueued", "popup/popup.dnr");
+				}
 			}
 		}
 		return index;
@@ -83,7 +87,7 @@ const LaunchSequence = new LogotypeSequence({
 	},
 	cancel: function(error) {
 		let sequence = this;
-		confirm(translate(__name__) + " " + translate(__version__),
+		confirm(translate(__name__) + " " + translate(VERSION),
 			translate("Launch sequence interrupted or handled exception.") + " " +
 			translate("Do you want to retry modification launch?"), function() {
 				handle(function() {

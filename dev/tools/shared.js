@@ -111,7 +111,7 @@ const registerAdditionalInformation = function() {
 			return !loadSupportables;
 		});
 	}
-	if (__code__.startsWith("develop")) {
+	if (REVISION.startsWith("develop")) {
 		AdditionalMessageFactory.registerClickable("menuProjectManage", translate("If you're wouldn't see development panel here, it may be removed."), 1, function(message) {
 			debugAttachControlTools = !debugAttachControlTools;
 			let control = message.getWindow();
@@ -124,7 +124,7 @@ const registerAdditionalInformation = function() {
 			REQUIRE("produce.js")(function() {
 				UniqueHelper.requireDestroy();
 				WindowProvider.destroy();
-				if (__code__.startsWith("develop")) {
+				if (REVISION.startsWith("develop")) {
 					attachEvalButton();
 				}
 			});

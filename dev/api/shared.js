@@ -25,7 +25,7 @@ const runAtScope = function(code, scope, name) {
 const REQUIRE = function(path) {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
 		MCSystem.setLoadingTip("Requiring " + path);
-		if (__code__.startsWith("develop") && path.endsWith(".js")) {
+		if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 			let file = new java.io.File(Dirs.EVALUATE, path);
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
@@ -34,7 +34,7 @@ const REQUIRE = function(path) {
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
-		} else if (__code__.indexOf("alpha") != -1) {
+		} else if (REVISION.indexOf("alpha") != -1) {
 			let file = new java.io.File(Dirs.TESTING, path);
 			if (!file.exists()) throw null;
 			let source = decompileExecuteable(Files.readBytes(file)),
@@ -54,16 +54,16 @@ REQUIRE.results = new Object();
 
 REQUIRE.getScope = function() {
 	let scope = __mod__.compiledModSources.get(0).evaluateStringInScope("this");
-	return assign(__code__.indexOf("alpha") != -1 ? scope : new Object(), {
+	return assign(REVISION.indexOf("alpha") != -1 ? scope : new Object(), {
 		SHARE: function(name, obj) {
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				scope[name] = obj;
 			}
 		},
 		FIND: function(name) {
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				this[name] = scope.eval(name);
-			} else if (__code__.startsWith("testing")) {
+			} else if (REVISION.startsWith("testing")) {
 				this[name] = scope[name];
 			}
 		},
@@ -162,11 +162,11 @@ const stopTune = function() {
 
 const requireLogotype = function() {
 	return tryoutSafety(function() {
-		if (__code__.indexOf("alpha") != -1) {
+		if (REVISION.indexOf("alpha") != -1) {
 			return "logo_alpha";
-		} else if (__code__.indexOf("beta") != -1) {
+		} else if (REVISION.indexOf("beta") != -1) {
 			return "logo_beta";
-		} else if (__code__.indexOf("preview") != -1) {
+		} else if (REVISION.indexOf("preview") != -1) {
 			return "logo_preview";
 		}
 	}, "logo");

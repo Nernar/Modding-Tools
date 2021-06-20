@@ -101,14 +101,6 @@ WindowProvider.setExitActor = function(popupId, actor, content) {
 	}
 };
 
-WindowProvider.prepareActors = function(window, actor) {
-	if (android.os.Build.VERSION.SDK_INT < 23) {
-		if (actor && window && window.beginDelayedActor) {
-			window.beginDelayedActor(actor);
-		}
-	}
-};
-
 WindowProvider.updateWindow = function(window) {
 	if (!window) return;
 	if (!window.isFocusable()) {

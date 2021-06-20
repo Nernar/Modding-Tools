@@ -482,7 +482,7 @@ const BlockEditor = {
 			group.addItem("blockBoxScretch", this.Renderer.resize);
 			group.addItem("blockBoxMove", this.Renderer.move);
 			group.addItem("blockBoxMirror", this.Renderer.mirror);
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				group.addItem("blockBoxRotate", this.Renderer.rotate).setBackground("popupSelectionLocked");
 			}
 			group.addItem("blockBoxTexture", this.Renderer.texture);
@@ -490,7 +490,7 @@ const BlockEditor = {
 		} else group.addItem("blockBoxAdd", this.Renderer.add);
 		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
 			if (BlockEditor.data.hasRender) {
-				if (!__code__.startsWith("develop")) {
+				if (!REVISION.startsWith("develop")) {
 					if (itemIndex > 4) itemIndex++;
 				}
 				if (itemIndex == 0) {
@@ -521,14 +521,14 @@ const BlockEditor = {
 			group.addItem("blockBoxScretch", this.Collision.resize);
 			group.addItem("blockBoxMove", this.Collision.move);
 			group.addItem("blockBoxMirror", this.Collision.mirror);
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				group.addItem("blockBoxRotate", this.Collision.rotate).setBackground("popupSelectionLocked");
 			}
 			group.addItem("blockBoxRemove", this.Collision.remove);
 		} else group.addItem("blockBoxAdd", this.Collision.add);
 		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
 			if (BlockEditor.data.hasCollision) {
-				if (!__code__.startsWith("develop")) {
+				if (!REVISION.startsWith("develop")) {
 					if (itemIndex > 4) itemIndex++;
 				}
 				if (itemIndex == 0) {

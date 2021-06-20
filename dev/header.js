@@ -18,8 +18,7 @@
 
 MCSystem.setLoadingTip("Initialization Script");
 
-// Menu content settings
-let warningMessage = null;
+// Configurable values
 let maxWindows = 8;
 let saveCoords = false;
 let autosave = true;
@@ -48,27 +47,31 @@ let safetyProcesses = true;
 let transitionSideDividers = 8;
 let debugAttachBackground = false;
 let debugAttachControlTools = true;
+let debugIgnoreLockedBackground = true;
 
-// Interface and mod data
-const __code__ = "develop-alpha-0.3.5-19.06.2021-11";
-const __author__ = __mod__.getInfoProperty("author");
-const __version__ = __mod__.getInfoProperty("version");
-const __description__ = __mod__.getInfoProperty("description");
-let firstLaunchTutorial = __code__.startsWith("testing");
+// Currently build information
+const REVISION = "develop-alpha-0.3.5-20.06.2021-12";
+const AUTHOR = __mod__.getInfoProperty("author");
+const VERSION = __mod__.getInfoProperty("version");
+const DESCRIPTION = __mod__.getInfoProperty("description");
+
+// Definitions for default values
+let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
+let warningMessage = null;
 let currentEnvironment = __name__;
 let isSupportEnv = false;
 
 let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, RunJSingame, ModelConverter;
 
 MCSystem.setLoadingTip("Import Libraries");
-const isInstant = !!this.isInstant;
+const isInstant = Boolean(this.isInstant);
 IMPORT("Retention:4");
 
 let alreadyHasDate = false;
 reportError.setStackAction(function(err) {
 	let message = reportError.getCode(err) + ": " + reportError.getStack(err),
-		file = new java.io.File(Dirs.LOGGING, __code__ + ".log");
+		file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
 	if (!file.exists()) {
 		Files.write(file, reportError.prepareDebugInfo());
 	}
@@ -81,8 +84,8 @@ reportError.setStackAction(function(err) {
 });
 
 reportError.prepareDebugInfo = function() {
-	return __name__ + " " + __version__ + " by " + __author__ + " for " + (isHorizon ? "Horizon" : "Inner Core") +
-		" Report Log\nBuild " + __code__.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
+	return __name__ + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") +
+		" Report Log\nBuild " + REVISION.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
 };
 
 Interface.getFontSize = function(size) {
@@ -98,61 +101,6 @@ Interface.getY = function(y) {
 };
 
 IMPORT("Network:2");
-
-Network.prototype.getFormattedSize = function() {
-	return Files.prepareFormattedSize(this.getSize());
-};
-
-Network.Reader.prototype.getThread = function() {
-	return this.thread || null;
-};
-
-Network.Reader.prototype.readAsync = function(post) {
-	let scope = this;
-	this.thread = handleThread(function() {
-		scope.read();
-		delete scope.thread;
-		post && post(scope.getResult());
-	});
-};
-
-Network.Reader.prototype.assureYield = function() {
-	return tryoutSafety.call(this, function() {
-		if (!this.getThread()) {
-			return false;
-		}
-		while (this.inProcess()) {
-			java.lang.Thread.yield();
-		}
-		return this.getReadedCount() >= 0;
-	}, false);
-};
-
-Network.Writer.prototype.getThread = function() {
-	return this.thread || null;
-};
-
-Network.Writer.prototype.downloadAsync = function(post) {
-	let scope = this;
-	this.thread = handleThread(function() {
-		scope.download();
-		delete scope.thread;
-		post && post();
-	});
-};
-
-Network.Writer.prototype.assureYield = function() {
-	return tryoutSafety.call(this, function() {
-		if (!this.getThread()) {
-			return false;
-		}
-		while (this.inProcess()) {
-			java.lang.Thread.yield();
-		}
-		return this.getReadedCount() >= 0;
-	}, false);
-};
-
 IMPORT("Transition:6");
 IMPORT("Action:4");
 IMPORT("Sequence:1");

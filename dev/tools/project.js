@@ -11,8 +11,8 @@ const ProjectEditor = {
 		button.show();
 	},
 	menu: function() {
-		prepareAdditionalInformation(3 + Number(isAnyCustomSupportableLoaded()) + Number(__code__.indexOf("alpha") != -1),
-			(3 + Number(isAnyCustomSupportableLoaded()) + Number(__code__.indexOf("alpha") != -1)) * 2);
+		prepareAdditionalInformation(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1),
+			(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1)) * 2);
 		let control = new ControlWindow();
 		attachWarningInformation(control);
 		control.setOnClickListener(function() {
@@ -58,7 +58,7 @@ const ProjectEditor = {
 						return true;
 					});
 				}
-				if (__code__.indexOf("alpha") != -1) {
+				if (REVISION.indexOf("alpha") != -1) {
 					let entities = project.getEntities();
 					if (entities && entities.length > 0) {
 						let category = header.addCategory(translate("Entities"));
@@ -138,14 +138,14 @@ const ProjectEditor = {
 			control.dismiss();
 		});
 		category.addItem("entity", translate("Entity"), function() {
-			if (__code__.indexOf("alpha") != -1) {
+			if (REVISION.indexOf("alpha") != -1) {
 				EntityEditor.create();
 				control.dismiss();
 				showHint(translate("Not developed yet"));
 			} else showHint(translate("This content will be availabled soon"));
-		}).setBackground(__code__.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
+		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
 		category.addItem("animation", translate("Animation"), function() {
-			if (__code__.startsWith("develop")) {
+			if (REVISION.startsWith("develop")) {
 				AnimationWindow.create();
 				control.dismiss();
 			} else showHint(translate("This content will be availabled soon"));
@@ -201,13 +201,13 @@ const ProjectEditor = {
 			});
 		});
 		category.addItem("menuProjectManual", translate("Tutorial"), function() {
-			if (__code__.indexOf("alpha") != -1) {
-				confirm(translate(__name__) + " " + translate(__version__), translate("You're sure want to review basics tutorial?"), function() {
+			if (REVISION.indexOf("alpha") != -1) {
+				confirm(translate(__name__) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
 					TutorialSequence.ButtonInteraction.execute();
 					control.dismiss();
 				});
 			} else showHint(translate("This content will be availabled soon"));
-		}).setBackground(__code__.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
+		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
 		category.addItem("menuProjectManage", translate("Reset"), function() {
 			confirm(translate("Creating project"),
 				translate("Current project will be erased, all unsaved data will be lost.") + " " +
@@ -217,7 +217,7 @@ const ProjectEditor = {
 				});
 		});
 		attachAdditionalInformation(control);
-		if (__code__.indexOf("alpha") != -1) {
+		if (REVISION.indexOf("alpha") != -1) {
 			category = control.addCategory(translate("Debug & testing"));
 			category.addItem("menuBoardConfig", translate("Debug"), function() {
 				DebugEditor.menu();

@@ -19,7 +19,7 @@ const injectMethod = function(scope, pointer, field, denyConversion) {
 
 const tryoutSafety = function(action, report, basic) {
 	return tryout.call(this, action, function(e) {
-		__code__.startsWith("develop") && reportError(e);
+		REVISION.startsWith("develop") && reportError(e);
 		if (typeof report == "function") return report.call(this, e);
 	}, report !== undefined && typeof report != "function" ? report : basic);
 };

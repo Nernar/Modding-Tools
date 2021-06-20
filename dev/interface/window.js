@@ -190,7 +190,6 @@ FocusableWindow.prototype.setExitActor = function(actor) {
 };
 
 FocusableWindow.prototype.show = function() {
-	WindowProvider.prepareActors(this, this.enterActor);
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.VISIBLE);
 	if (!this.isOpened()) WindowProvider.openWindow(this);
@@ -203,16 +202,14 @@ FocusableWindow.prototype.update = function() {
 };
 
 FocusableWindow.prototype.hide = function() {
-	WindowProvider.prepareActors(this, this.exitActor);
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.GONE);
 	this.__hide && this.__hide();
 };
 
 FocusableWindow.prototype.dismiss = function() {
-	WindowProvider.prepareActors(this, this.exitActor);
+	WindowProvider.closeWindow(this);
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.GONE);
-	WindowProvider.closeWindow(this);
 	this.__close && this.__close();
 };
