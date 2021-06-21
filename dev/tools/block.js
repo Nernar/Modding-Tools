@@ -577,7 +577,7 @@ const BlockEditor = {
 	},
 	menu: function() {
 		prepareAdditionalInformation(3, 1);
-		let control = new ControlWindow();
+		let control = new MenuWindow();
 		attachWarningInformation(control);
 		control.setOnClickListener(function() {
 			BlockEditor.create();
@@ -739,7 +739,7 @@ const BlockEditor = {
 		BlockEditor.unselect();
 		BlockEditor.create();
 		ProjectProvider.setOpenedState(true);
-		ControlWindow.dismissCurrently();
+		MenuWindow.dismissCurrently();
 		return true;
 	},
 	merge: function(file) {

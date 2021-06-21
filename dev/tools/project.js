@@ -13,7 +13,7 @@ const ProjectEditor = {
 	menu: function() {
 		prepareAdditionalInformation(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1),
 			(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1)) * 2);
-		let control = new ControlWindow();
+		let control = new MenuWindow();
 		attachWarningInformation(control);
 		control.setOnClickListener(function() {
 			ProjectEditor.create();

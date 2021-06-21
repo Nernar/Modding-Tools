@@ -103,7 +103,7 @@ const DebugEditor = {
 	},
 	menu: function() {
 		if (DebugEditor.data.tests !== undefined) {
-			let control = new ControlWindow();
+			let control = new MenuWindow();
 			control.setOnClickListener(function() {
 				DebugEditor.create();
 			});
@@ -169,7 +169,7 @@ const DebugEditor = {
 
 const ModificationSource = {
 	selector: function() {
-		let control = new ControlWindow();
+		let control = new MenuWindow();
 		control.setOnClickListener(function() {
 			ProjectEditor.create();
 		});
@@ -242,7 +242,7 @@ const ModificationSource = {
 						ModificationSource.selector();
 					});
 				});
-				ControlWindow.dismissCurrently();
+				MenuWindow.dismissCurrently();
 			});
 		}
 	},

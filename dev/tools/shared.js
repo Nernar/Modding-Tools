@@ -2,7 +2,7 @@
  * Attaches information messages to control menus.
  * Requires [[prepareAdditionalInformation]] call
  * to provide control sizes and limit count.
- * @param {ControlWindow} control menu to attach
+ * @param {MenuWindow} control menu to attach
  * @returns {boolean} can be attached more
  */
 const attachAdditionalInformation = function(control) {

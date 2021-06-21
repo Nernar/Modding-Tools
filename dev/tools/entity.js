@@ -269,7 +269,7 @@ const EntityEditor = {
 	},
 	menu: function() {
 		prepareAdditionalInformation(3, 1);
-		let control = new ControlWindow();
+		let control = new MenuWindow();
 		attachWarningInformation(control);
 		control.setOnClickListener(function() {
 			EntityEditor.create();
@@ -341,7 +341,7 @@ const EntityEditor = {
 		EntityEditor.unselect();
 		EntityEditor.create();
 		ProjectProvider.setOpenedState(true);
-		ControlWindow.dismissCurrently();
+		MenuWindow.dismissCurrently();
 		return true;
 	},
 	replace: function(file) {

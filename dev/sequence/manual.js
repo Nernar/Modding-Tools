@@ -178,7 +178,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 	update: function(progress, index) {
 		let sequence = this;
 		if (index == 1) {
-			let control = new ControlWindow();
+			let control = new MenuWindow();
 			control.setTouchable(false);
 			control.addHeader();
 			let category = control.addCategory(translate("Editors"));
