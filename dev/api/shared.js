@@ -3,7 +3,7 @@
  */
 const runAtScope = function(code, scope, name) {
 	let scriptable = org.mozilla.javascript.ScriptableObject,
-		source = name ? __name__ + "$" + name : "<no name>",
+		source = name ? NAME + "$" + name : "<no name>",
 		ctx = org.mozilla.javascript.Context.enter();
 	source = source.replace(/[^\w\$\<\>\.\-\s]/gi, "$");
 	ctx.setLanguageVersion(200);

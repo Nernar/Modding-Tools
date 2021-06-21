@@ -146,6 +146,6 @@ const refreshSupportablesIcons = function() {
 
 const isAnyCustomSupportableLoaded = function() {
 	return tryoutSafety(function() {
-		return loadSupportables && supportSupportables && (DumpCreator || UIEditor || InstantRunner || WorldEdit || RunJSingame) !== null;
+		return loadSupportables && supportSupportables && (UIEditor || WorldEdit || DumpCreator || RunJSingame || InstantRunner) !== null;
 	}, false);
 };

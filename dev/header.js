@@ -50,7 +50,8 @@ let debugAttachControlTools = true;
 let debugIgnoreLockedBackground = true;
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.5-20.06.2021-12";
+const REVISION = "develop-alpha-0.3.5-21.06.2021-13";
+const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
@@ -62,7 +63,7 @@ let warningMessage = null;
 let currentEnvironment = __name__;
 let isSupportEnv = false;
 
-let UIEditor, Setting, DumpCreator, InstantRunner, WorldEdit, RunJSingame, ModelConverter;
+let Setting, UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner, ModelConverter;
 
 MCSystem.setLoadingTip("Import Libraries");
 const isInstant = Boolean(this.isInstant);
@@ -84,8 +85,8 @@ reportError.setStackAction(function(err) {
 });
 
 reportError.prepareDebugInfo = function() {
-	return __name__ + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") +
-		" Report Log\nBuild " + REVISION.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
+	return NAME + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") +
+		" Report Log\nREVISION " + REVISION.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
 };
 
 Interface.getFontSize = function(size) {

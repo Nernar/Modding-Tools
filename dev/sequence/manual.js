@@ -154,7 +154,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 		} else if (index == 3) {
 			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
 		} else if (index == 4) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			Interface.sleepMilliseconds(this.hint.getTime() * 1.5);
 		} else if (index == 5) {
 			Interface.sleepMilliseconds(this.hint.getTime());
 		}

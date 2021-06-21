@@ -202,7 +202,7 @@ const ProjectEditor = {
 		});
 		category.addItem("menuProjectManual", translate("Tutorial"), function() {
 			if (REVISION.indexOf("alpha") != -1) {
-				confirm(translate(__name__) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
+				confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
 					TutorialSequence.ButtonInteraction.execute();
 					control.dismiss();
 				});
@@ -263,7 +263,7 @@ const ProjectEditor = {
 		}
 		if (isAnyCustomSupportableLoaded()) {
 			category = control.addCategory(translate("Supportables")).setOnHoldItemListener(function(item, index) {
-				return showSupportableInfo([DumpCreator, UIEditor, InstantRunner, WorldEdit, RunJSingame][index]);
+				return showSupportableInfo([UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner][index]);
 			});
 			if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"), function() {
 				isSupportEnv = true;

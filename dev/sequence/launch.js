@@ -87,7 +87,7 @@ const LaunchSequence = new LogotypeSequence({
 	},
 	cancel: function(error) {
 		let sequence = this;
-		confirm(translate(__name__) + " " + translate(VERSION),
+		confirm(translate(NAME) + " " + translate(VERSION),
 			translate("Launch sequence interrupted or handled exception.") + " " +
 			translate("Do you want to retry modification launch?"), function() {
 				handle(function() {

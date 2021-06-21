@@ -537,5 +537,5 @@ SidebarWindow.Group.Item.prototype.setOnFetchListener = function(listener) {
 
 SidebarWindow.isSelected = function(group) {
 	let currently = UniqueHelper.getWindow("SidebarWindow");
-	return currently.getSelected() == group;
+	return currently && currently.getSelected() == group;
 };

@@ -9,7 +9,7 @@ const initialize = function() {
 				checkUpdateable();
 				checkExecuteable();
 			});
-			reportError.setTitle(translate(__name__) + " " + translate(VERSION));
+			reportError.setTitle(translate(NAME) + " " + translate(VERSION));
 			reportError.setInfoMessage(translate("An error occurred while executing modification.") + " " +
 				translate("If your developing process is affected, try export all non-saved data.") + " " +
 				translate("Send a screenshot of error to our group or save error in internal storage."));

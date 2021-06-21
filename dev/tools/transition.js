@@ -56,7 +56,7 @@ const drawTransitionPoints = function(worker) {
 				if (animate !== null) {
 					for (let f = 0; f < animate.getFrameCount(); f++) {
 						let coords = animate.getFrameCoords(f), frame = animate.getFrame(f);
-						if (Popups.hasOpenedByName("frame_select")) {
+						if (drawSelection && Popups.hasOpenedByName("frame_select")) {
 							if (TransitionEditor.data.frame == f) {
 								Particles.addParticle(ParticleType.heart, coords.x, coords.y, coords.z, 0, 0, 0, -1);
 							} else Particles.addParticle(ParticleType.happyVillager, coords.x, coords.y, coords.z, 0, 0, 0, 0);
@@ -553,14 +553,14 @@ let TransitionEditor = {
 				selectMode = 0;
 				drawTransitionPoints(TransitionEditor.data.worker);
 			});
+			for (let i = 0; i < TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount(); i++) {
+				popup.addButtonElement(translate("Frame %s", i + 1));
+			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 4;
 				TransitionEditor.data.frame = index;
 				drawTransitionPoints(TransitionEditor.data.worker);
 			});
-			for (let i = 0; i < TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount(); i++) {
-				popup.addButtonElement(translate("Frame %s", i + 1));
-			}
 			popup.selectButton(TransitionEditor.data.frame);
 			popup.setSelectMode(true);
 			Popups.open(popup, "frame_select");

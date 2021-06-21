@@ -38,7 +38,7 @@ const selectTexture = function(index, onSelect) {
 		let wrong = new android.widget.LinearLayout(context);
 		wrong.setOrientation(Interface.Orientate.VERTICAL);
 		wrong.setGravity(Interface.Gravity.CENTER);
-		wrong.setPadding(0, Interface.getY(68), 0, Interface.getY(68));
+		wrong.setPadding(0, Interface.getY(64), 0, Interface.getY(64));
 		let icon = new android.widget.ImageView(context);
 		icon.setImageDrawable(ImageFactory.getDrawable("blockNoTextures"));
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
@@ -120,7 +120,7 @@ const selectTexture = function(index, onSelect) {
 		let dialog = builder.create();
 		if (mod.items.length > 0) {
 			dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.1);
-		}
+		} else dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.4);
 		dialog.show();
 	});
 };
@@ -219,18 +219,18 @@ const mapRenderBlock = function(worker) {
 				let model = BlockRenderer.createModel(),
 					boxes = models[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
-					let box = (hasRenderer = true, boxes[i]);
+					let box = boxes[i];
 					if (selectMode == 3 && drawSelection) {
 						let selected = BlockEditor.data.renderer;
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							"renderer_unselect", transparentBoxes ? 1 : 0);
+							"renderer_unselect", Number(transparentBoxes));
 					} else if (selectMode == 9) {
 						let selected = BlockEditor.data.rendererInst,
 							innersection = models[m].checkBoxesInnersection(selected, i);
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							innersection ? "renderer_innersection" : "renderer_unselect", transparentBoxes ? 1 : 0);
+							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
 					} else {
 						let texture = box.texture;
 						if (texture) {
@@ -246,6 +246,7 @@ const mapRenderBlock = function(worker) {
 								box.y2, box.z2, "missing_block", 0);
 						}
 					}
+					hasRenderer = true;
 				}
 				render.addEntry(model);
 			}
@@ -256,24 +257,25 @@ const mapRenderBlock = function(worker) {
 					collision = form.addEntry(),
 					boxes = collisions[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
-					let box = (hasCollision = true, boxes[i]);
+					let box = boxes[i];
 					if (selectMode == 11 && drawSelection) {
 						let selected = BlockEditor.data.collision;
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							"renderer_unselect", transparentBoxes ? 1 : 0);
+							"renderer_unselect", Number(transparentBoxes));
 					} else if (selectMode == 10) {
 						let selected = BlockEditor.data.collisionInst,
 							innersection = collisions[m].checkBoxesInnersection(selected, i);
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							innersection ? "renderer_innersection" : "renderer_unselect", transparentBoxes ? 1 : 0);
-					} else if (SidebarWindow.isSelected(2)) {
+							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
+					} else if (BlockEditor.data.selected == 2) {
 						model.addBox(box.x1, box.y1, box.z1, box.x2,
-							box.y2, box.z2, "renderer_shape", transparentBoxes ? 1 : 0);
+							box.y2, box.z2, "renderer_shape", Number(transparentBoxes));
 					}
 					collision.addBox(box.x1, box.y1, box.z1,
 						box.x2, box.y2, box.z2);
+					hasCollision = true;
 				}
 				render.addEntry(model);
 			}
@@ -281,10 +283,10 @@ const mapRenderBlock = function(worker) {
 		if (shape && selectMode != 9 && selectMode != 10) {
 			if (selectMode == 5) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1,
-					shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
-			} else if (!hasRenderer && (!hasCollision || !SidebarWindow.isSelected(2))) {
+					shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
+			} else if (!hasRenderer && (!hasCollision || BlockEditor.data.selected != 2)) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1, shape.z1,
-					shape.x2, shape.y2, shape.z2, "renderer_shape", transparentBoxes ? 1 : 0));
+					shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
 			}
 		}
 		for (let i = 0; i < mapped.length; i++) {
@@ -874,7 +876,7 @@ const BlockEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
-			popup.setOnHideListener(function() {
+			popup.setOnCloseListener(function() {
 				selectMode = 0;
 				mapRenderBlock(BlockEditor.data.worker);
 			});
@@ -1110,7 +1112,7 @@ const BlockEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
-			popup.setOnHideListener(function() {
+			popup.setOnCloseListener(function() {
 				selectMode = 0;
 				mapRenderBlock(BlockEditor.data.worker);
 			});
@@ -1296,7 +1298,7 @@ const BlockEditor = {
 			selectMode = 5;
 			mapRenderBlock(BlockEditor.data.worker);
 		});
-		popup.setOnHideListener(function() {
+		popup.setOnCloseListener(function() {
 			selectMode = 0;
 			mapRenderBlock(BlockEditor.data.worker);
 		});

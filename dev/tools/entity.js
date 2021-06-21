@@ -1,5 +1,5 @@
 const registerCustomEntity = function() {
-	return -1 /* MobRegistry.registerEntity("__editorEntity__")*/ ;
+	return -1 /* MobRegistry.registerEntity("__editorEntity__") */;
 };
 
 const TODO = registerCustomEntity();
@@ -376,23 +376,20 @@ const EntityEditor = {
 			return EntityEditor.data.group >= 0;
 		},
 		select: function() {
-			let model = EntityEditor.data.worker.Visual.getModel(0);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Bones"));
-			// popup.setOnShowListener(function() {
-			// selectMode = 7;
-			// updateEntityRender(BlockEditor.data.worker);
-			// });
-			// popup.setOnHideListener(function() {
+			popup.setSelectMode(true);
+			// popup.setOnCloseListener(function() {
 			// selectMode = 0;
 			// updateEntityRender(BlockEditor.data.worker);
 			// });
+			let model = EntityEditor.data.worker.Visual.getModel(0);
 			for (let i = 0; i < EntityEditor.data.worker.Visual.getModel(0).getAssigmentSize(); i++) {
 				popup.addButtonElement(EntityEditor.data.worker.Visual.getModel(0).getName(i));
 			}
 			popup.selectButton(EntityEditor.data.group);
-			popup.setSelectMode(true);
 			popup.setOnSelectListener(function(index) {
+				// selectMode = 7;
 				let previous = EntityEditor.data.group;
 				EntityEditor.data.group = index;
 				EntityEditor.data.item = model.getIndex(index).getBoxCount() > 0 ? 0 : -1;
@@ -543,24 +540,21 @@ const EntityEditor = {
 		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
-			// popup.setOnShowListener(function() {
-			// selectMode = 8;
-			// updateEntityRender(EntityEditor.data.worker);
-			// });
-			// popup.setOnHideListener(function() {
+			popup.setSelectMode(true);
+			// popup.setOnCloseListener(function() {
 			// selectMode = 0;
 			// updateEntityRender(EntityEditor.data.worker);
 			// });
-			popup.setOnSelectListener(function(index) {
-				EntityEditor.data.item = index;
-				updateEntityRender(EntityEditor.data.worker);
-			});
 			let model = EntityEditor.data.worker.Visual.getModel(0);
 			for (let i = 0; i < model.getIndex(EntityEditor.data.group).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
 			}
+			popup.setOnSelectListener(function(index) {
+				// selectMode = 8;
+				EntityEditor.data.item = index;
+				updateEntityRender(EntityEditor.data.worker);
+			});
 			popup.selectButton(EntityEditor.data.item);
-			popup.setSelectMode(true);
 			Popups.open(popup, "box_select");
 		},
 		add: function() {
