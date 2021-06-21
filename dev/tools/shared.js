@@ -198,7 +198,7 @@ const showSupportableInfo = function(mod) {
 		builder.setTitle(translate(mod.modName) + " " + translate(mod.version));
 		builder.setMessage((mod.description && mod.description.length > 0 ? translate(mod.description) + "\n" : new String()) +
 			translate("Developer: %s", translate(mod.author || "Unknown")) + "\n" + translate("State: %s", translate(mod.result === true ?
-			"ACTIVE" : mod.result === false ? "OUTDATED" : mod.result.lineNumber !== undefined ? "FAILED" : !mod.result ? "DISABLED" : "UNKNOWN")));
+				"ACTIVE" : mod.result === false ? "OUTDATED" : mod.result.lineNumber !== undefined ? "FAILED" : !mod.result ? "DISABLED" : "UNKNOWN")));
 		builder.setNegativeButton(translate("Remove"), function() {
 			confirm(translate("Warning!"), translate("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.") + " " +
 				translate("Do you want to continue?"),
@@ -273,134 +273,50 @@ const select = function(title, items, action, multiple, approved) {
 	});
 };
 
-const selectFile = function(formats, onSelect, outside, directory) {
-	const show = function(path, notRoot) {
-		tryout(function() {
-			if (useOldExplorer) {
-				let files = Files.listFileNames(path),
-					generated = Files.listDirectoryNames(path),
-					formatted = Files.checkFormats(files, formats);
-				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (let item in formatted) generated.push(formatted[item]);
-				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
-				builder.setTitle(String(path).replace(Dirs.EXTERNAL, new String()));
-				builder.setNegativeButton(translate("Cancel"), null);
-				builder.setItems(generated, function(d, i) {
-					tryout(function() {
-						if (notRoot && i == 0) {
-							let file = new java.io.File(path),
-								parent = file.getParent();
-							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
-						} else {
-							let file = new java.io.File(path, generated[i]);
-							if (file.isDirectory()) show(file.getPath(), true);
-							else if (onSelect) onSelect(file);
-						}
-					});
-				});
-				builder.create().show();
-			} else {
-				let explorer = new ExplorerWindow();
-				formats && explorer.setFilter(formats);
-				let bar = explorer.addPath().setPath(path);
-				bar.setOnOutsideListener(function(bar) {
-					if (outside !== undefined) {
-						outside && outside() !== false && explorer.dismiss();
-					} else explorer.dismiss();
-				});
-				explorer.setOnSelectListener(function(popup, file) {
-					explorer.dismiss();
-					onSelect && onSelect(file);
-				});
-				explorer.show();
-			}
+const selectFile = function(availabled, action, outside, directory) {
+	handle(function() {
+		let explorer = new ExplorerWindow();
+		availabled && explorer.setFilter(availabled);
+		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
+		bar.setOnOutsideListener(function(bar) {
+			if (outside !== undefined) {
+				outside && outside() !== false && explorer.dismiss();
+			} else explorer.dismiss();
 		});
-	};
-	show(directory || Dirs.EXPORT, directory != Dirs.EXTERNAL);
+		explorer.setOnSelectListener(function(popup, file) {
+			explorer.dismiss();
+			action && action(file);
+		});
+		explorer.show();
+	});
 };
 
-const saveFile = function(currentName, formats, onSelect, outside, directory) {
-	let currentFormat = 0;
-	if (useOldExplorer && !Array.isArray(formats)) {
-		formats = [formats];
-	}
-	const show = function(path, notRoot) {
-		tryout(function() {
-			if (useOldExplorer) {
-				let files = Files.listFileNames(path),
-					generated = Files.listDirectoryNames(path),
-					formatted = Files.checkFormats(files, formats);
-				if (notRoot) generated.unshift(translate("... parent folder"));
-				for (let item in formatted) generated.push(formatted[item]);
-				let layout = new android.widget.LinearLayout(context);
-				layout.setGravity(Interface.Gravity.CENTER);
-				let edit = new android.widget.EditText(context);
-				edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
-					android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-				edit.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN);
-				currentName && edit.setText(currentName);
-				edit.setHint(translate("project"));
-				edit.setTextColor(Interface.Color.WHITE);
-				edit.setHintTextColor(Interface.Color.LTGRAY);
-				edit.setBackgroundDrawable(null);
-				edit.setCursorVisible(false);
-				edit.setMaxLines(1);
-				layout.addView(edit);
-				let text = new android.widget.TextView(context);
-				text.setText(formats[currentFormat]);
-				text.setTextColor(Interface.Color.WHITE);
-				text.setOnClickListener(function() {
-					if (currentFormat == formats.length - 1) {
-						currentFormat = 0;
-					} else currentFormat++;
-					text.setText(formats[currentFormat]);
-				});
-				layout.addView(text);
-				let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_Holo_Dialog);
-				builder.setTitle(String(path).replace(Dirs.EXTERNAL, new String()));
-				builder.setPositiveButton(translate("Export"), function() {
-					currentName = String(edit.getText().toString());
-					if (currentName.length == 0) currentName = translate("project");
-					let file = new java.io.File(path, currentName + text.getText());
-					if (onSelect) onSelect(file, currentName);
-				});
-				builder.setNegativeButton(translate("Cancel"), null);
-				builder.setItems(generated, function(d, i) {
-					tryout(function() {
-						if (notRoot && i == 0) {
-							let file = new java.io.File(path),
-								parent = file.getParent();
-							show(parent, Dirs.EXTERNAL == parent + "/" ? false : true);
-						} else {
-							let file = new java.io.File(path, generated[i]);
-							if (file.isDirectory()) show(file.getPath(), true);
-							else if (onSelect) onSelect(file, currentName);
-						}
-					});
-				});
-				builder.setView(layout);
-				builder.create().show();
-			} else {
-				let explorer = new ExplorerWindow();
-				formats && explorer.setFilter(formats);
-				let bar = explorer.addPath().setPath(path);
-				bar.setOnOutsideListener(function(bar) {
-					if (outside !== undefined) {
-						outside && outside() !== false && explorer.dismiss();
-					} else explorer.dismiss();
-				});
-				let rename = explorer.addRename();
-				formats && rename.setAvailabledTypes(formats);
-				currentName && rename.setCurrentName(currentName);
-				rename.setOnApproveListener(function(widget, file, last) {
-					explorer.dismiss();
-					onSelect && onSelect(file, last);
-				});
-				explorer.show();
-			}
+const saveFile = function(name, availabled, action, outside, directory) {
+	handle(function() {
+		let explorer = new ExplorerWindow();
+		availabled && explorer.setFilter(availabled);
+		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
+		bar.setOnOutsideListener(function(bar) {
+			if (outside !== undefined) {
+				outside && outside() !== false && explorer.dismiss();
+			} else explorer.dismiss();
 		});
-	};
-	show(directory || Dirs.EXPORT, directory != Dirs.EXTERNAL);
+		let rename = explorer.addRename();
+		availabled && rename.setAvailabledTypes(availabled);
+		name && rename.setCurrentName(name);
+		rename.setOnApproveListener(function(widget, file, last) {
+			let approve = function() {
+				explorer.dismiss();
+				action && action(file, last);
+			};
+			if (file.exists()) {
+				confirm(translate("File is exists"), translate("File is already created, that process will be rewrite it. Continue?"), function() {
+					approve();
+				});
+			} else approve();
+		});
+		explorer.show();
+	});
 };
 
 const compileData = function(text, type, additional) {

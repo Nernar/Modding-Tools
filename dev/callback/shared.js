@@ -95,7 +95,6 @@ const updateSettings = function() {
 		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
 		/* sendAnalytics */
 		loadSetting("user_login.send_analytics", "boolean", true);
-		useOldExplorer = loadSetting("other.use_old_explorer", "boolean");
 		importAutoselect = loadSetting("other.import_autoselect", "boolean");
 		saveCoords = loadSetting("other.autosave_mapping", "boolean");
 		__config__.save();

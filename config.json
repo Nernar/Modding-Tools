@@ -41,7 +41,6 @@
     "enabled":true
   },
   "other":{
-    "use_old_explorer":false,
     "import_autoselect":false,
     "autosave_mapping":false
   }

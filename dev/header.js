@@ -41,7 +41,6 @@ let keyExpiresSoon = false;
 let ignoreKeyDeprecation = false;
 let projectHeaderBackground = false;
 let maximumAllowedBounds = 128;
-let useOldExplorer = false;
 let importAutoselect = false;
 let safetyProcesses = true;
 let transitionSideDividers = 8;

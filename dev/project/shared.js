@@ -171,19 +171,10 @@ const exportProject = function(object, isAutosave, path, action) {
 		let file = new java.io.File(String(path));
 		result = compileToProduce(result);
 		file.getParentFile().mkdirs();
-		if (!isAutosave && file.exists()) {
-			confirm(translate("File is exists"),
-				translate("File is already created. This process will be rewrite it. Continue?"),
-				function() {
-					Files.writeBytes(file, result);
-					if (action) action(result);
-				});
-		} else {
-			handle(function() {
-				Files.writeBytes(file, result);
-				if (action) action(result);
-			});
-		}
+		handle(function() {
+			Files.writeBytes(file, result);
+			if (action) action(result);
+		});
 	}, isAutosave ? translate("Autosaving") : translate("Exporting"),
 		isAutosave ? translate("Autosaved") : translate("Exported"));
 };

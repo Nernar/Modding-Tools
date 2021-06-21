@@ -862,8 +862,8 @@ Translation.addTranslation("File name", {
 Translation.addTranslation("File is exists", {
 	ru: "Файл уже существует"
 });
-Translation.addTranslation("File is already created. This process will be rewrite it. Continue?", {
-	ru: "Процесс пытается перезаписать существующий файл. Вы хотите продолжить?"
+Translation.addTranslation("File is already created, that process will be rewrite it. Continue?", {
+	ru: "Процесс может перезаписать существующий файл. Вы хотите продолжить?"
 });
 Translation.addTranslation("What do you want to compile?", {
 	ru: "Что вы хотите скомпилировать?"
