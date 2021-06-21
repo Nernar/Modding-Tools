@@ -775,9 +775,6 @@ Translation.addTranslation("Explorer", {
 Translation.addTranslation("search filter", {
 	ru: "фильтр поиска"
 });
-Translation.addTranslation("... parent folder", {
-	ru: "... корневая папка"
-});
 Translation.addTranslation("%s bytes", {
 	ru: "%s байт"
 });

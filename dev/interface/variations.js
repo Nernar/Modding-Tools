@@ -39,6 +39,22 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 	return new ActorScene(rootOrContainer || content, container);
 };
 
+ActoredWindow.prototype.show = function() {
+	let enter = this.getEnterActor();
+	if (enter && this.isOpened()) {
+		this.beginDelayedActor(enter);
+	}
+	FocusableWindow.prototype.show.call(this);
+};
+
+ActoredWindow.prototype.hide = function() {
+	let exit = this.getExitActor();
+	if (exit && this.isOpened()) {
+		this.beginDelayedActor(exit);
+	}
+	FocusableWindow.prototype.hide.call(this);
+};
+
 const UniqueWindow = new Function();
 
 UniqueWindow.prototype = new ActoredWindow;

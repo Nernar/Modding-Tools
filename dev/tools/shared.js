@@ -318,14 +318,3 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		explorer.show();
 	});
 };
-
-const compileData = function(text, type, additional) {
-	if (type == "string") text = "\"" + text + "\"";
-	let code = "(function() { return " + text + "; })();",
-		scope = runAtScope(code, additional, "compile.js");
-	return scope.error ? scope.error : !type ? scope.result :
-		type == "string" ? String(scope.result) :
-		type == "number" ? parseInt(scope.result) :
-		type == "float" ? parseFloat(scope.result) :
-		type == "object" ? scope.result : null;
-};

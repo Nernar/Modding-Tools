@@ -107,12 +107,10 @@ WindowProvider.updateWindow = function(window) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);
 		if (!popup) return;
-		if (window.enterActor) {
-			this.setEnterActor(popupId, window.enterActor);
-		}
-		if (window.exitActor) {
-			this.setExitActor(popupId, window.exitActor);
-		}
+		let enter = window.getEnterActor();
+		if (enter !== null) this.setEnterActor(popupId, enter);
+		let exit = window.getExitActor();
+		if (exit !== null) this.setExitActor(popupId, exit);
 		popup.setContentView(window.getContent());
 		popup.setTouchable(window.isTouchable());
 		popup.setFocusable(window.isFocusable());

@@ -14,7 +14,7 @@ FocusableWindow.prototype.reattach = function() {
 	if (this.isOpened()) {
 		this.dismiss();
 	}
-	this.show();
+	this.attach();
 };
 
 FocusableWindow.prototype.getContent = function() {
@@ -143,28 +143,54 @@ FocusableWindow.prototype.setHeight = function(height) {
 	if (this.isOpened()) this.update();
 };
 
-FocusableWindow.prototype.setOnShowListener = function(listener) {
-	this.__show = function() {
+FocusableWindow.prototype.setOnAttachListener = function(listener) {
+	if (typeof listener != "function") {
+		return delete this.onAttach;
+	}
+	this.onAttach = function() {
 		tryout(listener);
 	};
+	return true;
+};
+
+FocusableWindow.prototype.setOnShowListener = function(listener) {
+	if (typeof listener != "function") {
+		return delete this.onShow;
+	}
+	this.onShow = function() {
+		tryout(listener);
+	};
+	return true;
 };
 
 FocusableWindow.prototype.setOnUpdateListener = function(listener) {
-	this.__update = function() {
+	if (typeof listener != "function") {
+		return delete this.onUpdate;
+	}
+	this.onUpdate = function() {
 		tryout(listener);
 	};
+	return true;
 };
 
 FocusableWindow.prototype.setOnHideListener = function(listener) {
-	this.__hide = function() {
+	if (typeof listener != "function") {
+		return delete this.onHide;
+	}
+	this.onHide = function() {
 		tryout(listener);
 	};
+	return true;
 };
 
 FocusableWindow.prototype.setOnCloseListener = function(listener) {
-	this.__close = function() {
+	if (typeof listener != "function") {
+		return delete this.onClose;
+	}
+	this.onClose = function() {
 		tryout(listener);
 	};
+	return true;
 };
 
 FocusableWindow.prototype.isOpened = function() {
@@ -175,11 +201,19 @@ FocusableWindow.prototype.getPopup = function() {
 	return WindowProvider.getByPopupId(this.popupId);
 };
 
+FocusableWindow.prototype.getEnterActor = function() {
+	return this.enterActor || null;
+};
+
 FocusableWindow.prototype.setEnterActor = function(actor) {
 	if (this.isOpened()) {
 		WindowProvider.setEnterActor(this.popupId, actor);
 	}
 	this.enterActor = actor;
+};
+
+FocusableWindow.prototype.getExitActor = function() {
+	return this.exitActor || null;
 };
 
 FocusableWindow.prototype.setExitActor = function(actor) {
@@ -189,27 +223,36 @@ FocusableWindow.prototype.setExitActor = function(actor) {
 	this.exitActor = actor;
 };
 
+FocusableWindow.prototype.attach = function() {
+	if (!this.isOpened()) {
+		WindowProvider.openWindow(this);
+		this.onAttach && this.onAttach();
+		return true;
+	}
+	return false;
+};
+
 FocusableWindow.prototype.show = function() {
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.VISIBLE);
-	if (!this.isOpened()) WindowProvider.openWindow(this);
-	this.__show && this.__show();
+	this.attach();
+	this.onShow && this.onShow();
 };
 
 FocusableWindow.prototype.update = function() {
 	WindowProvider.updateWindow(this);
-	this.__update && this.__update();
+	this.onUpdate && this.onUpdate();
 };
 
 FocusableWindow.prototype.hide = function() {
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.GONE);
-	this.__hide && this.__hide();
+	this.onHide && this.onHide();
 };
 
 FocusableWindow.prototype.dismiss = function() {
 	WindowProvider.closeWindow(this);
 	let content = this.getContent();
 	content && content.setVisibility(Interface.Visibility.GONE);
-	this.__close && this.__close();
+	this.onClose && this.onClose();
 };
