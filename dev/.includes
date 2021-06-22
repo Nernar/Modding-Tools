@@ -40,6 +40,7 @@ project/entity.js
 
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
+visual/fragments/control.js
 visual/sidebar.js
 visual/control.js
 visual/explorer.js

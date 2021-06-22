@@ -230,31 +230,15 @@ const ProjectEditor = {
 			category.addItem("worldActionMeasure", translate("Log"), function() {
 				LogViewer.show();
 			}).setBackground("popupSelectionQueued");
-			category.addItem("worldLayerMove", translate("Hieracly"), function() {
-				let popup = new HieraclyPopup();
-				popup.setTitle(translate("Bones"));
-				popup.setOnClickListener(function(name, parents) {
-					showHint(name + ": " + parents.join(", "));
+			category.addItem("explorer", translate("Explorer"), function() {
+				let explorer = new ExplorerWindow();
+				explorer.setMultipleSelectable(true);
+				let bar = explorer.addPath();
+				bar.setOnOutsideListener(function(bar) {
+					explorer.dismiss();
 				});
-				popup.setOnSelectListener(function(name, parents) {
-					showHint(name + ": " + parents.join(","));
-				});
-				popup.addFooter("controlAdd");
-				popup.addFooter("controlEdit");
-				popup.addFooter("controlRemove");
-				popup.addGroup("body");
-				popup.addItem("main", "body");
-				popup.addItem("side", "body");
-				popup.addItem("outside");
-				popup.addItem("attachment", "body");
-				popup.addItem("hat", "body");
-				popup.addGroup("chestplate", "body");
-				popup.addItem("tail", "chestplate");
-				popup.addItem("paw", "chestplate");
-				popup.addGroup("horns", "chestplate");
-				popup.addItem("box", "horns");
-				popup.addItem("container", "body");
-				Popups.open(popup, "bone_select");
+				bar.setPath(__dir__);
+				explorer.show();
 			}).setBackground("popupSelectionQueued");
 			category.addItem("support", translate("Mods"), function() {
 				ModificationSource.selector();

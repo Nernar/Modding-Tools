@@ -19,11 +19,15 @@ ScriptConverter.prototype.attach = function(obj) {
 };
 
 ScriptConverter.prototype.getAttached = function() {
-	return this.attached;
+	return this.attached || null;
+};
+
+ScriptConverter.prototype.isAttached = function() {
+	return this.getAttached() !== null;
 };
 
 ScriptConverter.prototype.validate = function(obj) {
-	tryout.call(this, function() {
+	return tryout.call(this, function() {
 		if (!this.TYPE) {
 			MCSystem.throwException("Can't resolve project type for ScriptConverter");
 		}
@@ -39,8 +43,7 @@ ScriptConverter.prototype.validate = function(obj) {
 		return ScriptConverter.State.PREPARED;
 	}, function(throwable) {
 		this.throwable = throwable;
-		return ScriptConverter.State.UNKNOWN;
-	});
+	}, ScriptConverter.State.UNKNOWN);
 };
 
 ScriptConverter.prototype.getLastException = function() {
@@ -92,8 +95,11 @@ ScriptConverter.prototype.execute = function() {
 		if (!this.isValid() || this.inProcess()) {
 			return;
 		}
-		this.result = this.process(this.getAttached());
-		this.state = ScriptConverter.State.VALID;
+		if (this.isAttached()) {
+			let attached = this.getAttached();
+			this.result = this.process(attached);
+			this.state = ScriptConverter.State.VALID;
+		} else this.state = ScriptConverter.State.NOT_ATTACHED;
 	}, function(throwable) {
 		this.throwable = throwable;
 		this.state = ScriptConverter.State.THROWED;
