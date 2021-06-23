@@ -318,3 +318,98 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		explorer.show();
 	});
 };
+
+const Tool = function(object) {
+	if (typeof object == "object") {
+		object && merge(this, object);
+	}
+	this.reset();
+};
+
+Tool.prototype.reset = function() {
+	let control = new ControlWindow();
+	this.control = control;
+};
+
+Tool.prototype.getControlWindow = function() {
+	return this.control || null;
+};
+
+Tool.prototype.attach = function() {
+	let control = this.getControlWindow();
+	control.setOrientation(this.getLogotypeOrientation());
+	control.setForegroundIcon(this.getLogotypeForegroundIcon());
+	control.setBackgroundIcon(this.getLogotypeBackgroundIcon());
+	control.setButtonIcon(this.getButtonIcon());
+	let background = this.getButtonBackground();
+	if (background !== undefined) control.setButtonBackground(background);
+	let foreground = this.getLogotypeBackground();
+	if (foreground !== undefined) control.setLogotypeBackground(foreground);
+	control.setHideableInside(this.isHideableOutside());
+	let instance = this;
+	control.setOnClickListener(function() {
+		if (typeof instance.onButtonClick == "function") {
+			instance.onButtonClick.call(instance);
+		}
+	});
+	this.control = control;
+	control.attach();
+};
+
+Tool.prototype.behold = function() {
+	let control = this.getControlWindow();
+	if (control === null) return;
+	control.transformButton();
+	control.show();
+};
+
+Tool.prototype.collapse = function() {
+	let control = this.getControlWindow();
+	if (control === null) return;
+	control.transformCollapsedButton();
+	control.show();
+};
+
+Tool.prototype.queue = function(sequence) {
+	let control = this.getControlWindow();
+	if (control === null) return;
+	control.transformLogotype();
+	if (sequence instanceof Sequence) {
+		let instance = this;
+		handleThread(function() {
+			sequence.assureYield();
+			handle(function() {
+				instance.unqueue();
+			});
+		});
+	}
+	control.show();
+};
+
+Tool.prototype.unqueue = function() {
+	this.behold();
+};
+
+Tool.prototype.getLogotypeOrientation = function() {
+	return ControlWindow.prototype.getOrientation();
+};
+
+Tool.prototype.getLogotypeForegroundIcon = function() {
+	return requireLogotype();
+};
+
+Tool.prototype.getLogotypeBackgroundIcon = function() {
+	return requireInvertedLogotype();
+};
+
+Tool.prototype.getButtonIcon = function() {
+	return this.getLogotypeForegroundIcon();
+};
+
+Tool.prototype.getButtonBackground = new Function();
+Tool.prototype.getLogotypeBackground = new Function();
+
+Tool.prototype.isHideableOutside = function() {
+	return false;
+};
+

@@ -36,7 +36,7 @@ ActoredWindow.prototype.endActors = function(container) {
 ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 	let content = this.getContent();
 	if (content == null) return null;
-	return new ActorScene(rootOrContainer || content, container);
+	return new ActorScene(container ? rootOrContainer : content, container || rootOrContainer);
 };
 
 ActoredWindow.prototype.show = function() {

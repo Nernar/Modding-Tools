@@ -102,7 +102,7 @@ Translation.addTranslation("Debug & testing", {
 });
 Translation.addTranslation("Hieracly", {
 	ru: "Иерархия"
-});
+}); // DEPRECATED
 Translation.addTranslation("Script report", {
 	ru: "Отчет скрипта"
 });

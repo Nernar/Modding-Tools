@@ -77,9 +77,7 @@ LogotypeWindow.prototype.getBackgroundIcon = function() {
 LogotypeWindow.prototype.setBackgroundIcon = function(src) {
 	if (ImageFactory.isLoaded(src)) {
 		this.backgroundIcon = src;
-		if (this.isOpened()) {
-			this.updateProgress();
-		}
+		if (this.isOpened()) this.updateProgress();
 	}
 };
 

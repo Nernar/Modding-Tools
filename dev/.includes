@@ -38,6 +38,7 @@ project/block.js
 project/transition.js
 project/entity.js
 
+visual/fragments/shared.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
 visual/fragments/control.js

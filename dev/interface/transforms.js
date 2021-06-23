@@ -18,11 +18,11 @@ BoundsActor.prototype.getResizeClip = function() {
 };
 
 BoundsActor.prototype.setReparent = function(enabled) {
-	this.transition.setReparent(!!enabled);
+	this.transition.setReparent(Boolean(enabled));
 };
 
 BoundsActor.prototype.setResizeClip = function(enabled) {
-	this.transition.setResizeClip(!!enabled);
+	this.transition.setResizeClip(Boolean(enabled));
 };
 
 const ClipBoundsActor = function() {
@@ -169,12 +169,12 @@ ActorSet.prototype.reset = function() {
 	this.transition = new android.transition.TransitionSet();
 };
 
-ActorSet.getActorAt = function(index) {
+ActorSet.prototype.getActorAt = function(index) {
 	if (index < 0) return null;
 	return this.transition.getTransitionAt(index);
 };
 
-ActorSet.getActorCount = function() {
+ActorSet.prototype.getActorCount = function() {
 	return this.transition.getTransitionCount();
 };
 
