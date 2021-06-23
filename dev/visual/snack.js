@@ -10,7 +10,6 @@ const HintAlert = function() {
 	this.setEnterActor(actor);
 
 	actor = new ActorSet();
-	actor.setOrdering(ActorSet.TOGETHER);
 	let slide = new SlideActor(Interface.Gravity.BOTTOM),
 		fade = new FadeActor(FadeActor.OUT);
 	actor.addActor(slide);

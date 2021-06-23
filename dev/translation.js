@@ -946,7 +946,7 @@ Translation.addTranslation("Warning!", {
 });
 Translation.addTranslation("Congratulations!", {
 	ru: "Поздравляем!"
-});
+}); // DEPRECATED
 Translation.addTranslation("This module are deprecated!", {
 	ru: "Этот модуль устарел!"
 }); // DEPRECATED
@@ -1161,7 +1161,7 @@ Translation.addTranslation("The administration deemed it appropriate to issue yo
 }); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Thanks for attentiveness!", {
 	ru: "Спасибо за внимательность!"
-});
+}); // DEPRECATED
 Translation.addTranslation("Before key expires: %s days", {
 	ru: "До истечения срока ключа: %s дня"
 });
@@ -1182,7 +1182,7 @@ Translation.addTranslation("Unknown exception is catched, please retry modificat
 });
 Translation.addTranslation("You're finded rare message, it's fully launching modification without testing abilities!", {
 	ru: "Вы нашли редкое сообщение, оно полностью запускает модификацию без доступа к тестированию!"
-});
+}); // DEPRECATED
 
 // Supportables
 Translation.addTranslation("Supportables", {
@@ -1502,3 +1502,9 @@ Translation.addTranslation("Do you really want to delete %s?", {
 // Not localized content will be appear here
 Translation.addTranslation(" ", {});
 Translation.addTranslation("\n", {});
+Translation.addTranslation("Couldn't create engine TPS Meter", {
+	ru: "Не удалось создать измеритель тика движка"
+});
+Translation.addTranslation("%stps", {
+	ru: "%sт\/с"
+});

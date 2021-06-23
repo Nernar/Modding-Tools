@@ -42,12 +42,14 @@ visual/fragments/shared.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
 visual/fragments/control.js
+visual/fragments/overlay.js
 visual/sidebar.js
 visual/control.js
 visual/explorer.js
 visual/project.js
 visual/snack.js
 visual/logotype.js
+visual/overlay.js
 visual/popups/shared.js
 visual/popups/listing.js
 visual/popups/position.js

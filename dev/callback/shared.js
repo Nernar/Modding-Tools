@@ -147,6 +147,17 @@ Callback.addCallback("LevelLoaded", function() {
 			Popups.closeAllByTag("transition");
 			needTransitionReset = false;
 		}
+		if (LevelProvider.isAttached()) {
+			LevelProvider.show();
+		}
+	});
+});
+
+Callback.addCallback("LevelLeft", function() {
+	handle(function() {
+		if (LevelProvider.isAttached()) {
+			LevelProvider.hide();
+		}
 	});
 });
 
@@ -161,13 +172,26 @@ Callback.addCallback("EntityHurt", function(attacker, victim) {
 	});
 });
 
+let thereIsNoTPSMeter = false;
+
+tryout.call(this, function() {
+	let TPSMeter = Packages.zhekasmirnov.launcher.api.runtime.TPSMeter;
+	this.TPSMeter = new TPSMeter(20, 1000);
+}, function(e) {
+	showHint(translate("Couldn't create engine TPS Meter"));
+	thereIsNoTPSMeter = true;
+});
+
 Callback.addCallback("tick", function() {
-	tryout(function() {
+	tryoutSafety(function() {
 		// Mostly spawn selection particles.
 		if (Updatable.getSyncTime() % 5 == 0) {
 			if (ProjectProvider.getCurrentType() == "transition") {
 				drawTransitionPoints(TransitionEditor.data.worker);
 			}
+		}
+		if (!thereIsNoTPSMeter) {
+			TPSMeter.onTick();
 		}
 	});
 });

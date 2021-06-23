@@ -46,24 +46,24 @@ ControlFragment.prototype.setBackground = function(drawable) {
 };
 
 ControlFragment.prototype.setOnClickListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
+	let container = this.getLogotypeView();
 	if (container === null) return this;
+	let instance = this;
 	container.setOnClickListener(function() {
 		tryout(function() {
-			action && action(scope);
+			action && action(instance);
 		});
 	});
 	return this;
 };
 
 ControlFragment.prototype.setOnHoldListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
+	let container = this.getLogotypeView();
 	if (container === null) return this;
+	let instance = this;
 	container.setOnLongClickListener(function() {
 		return tryout(function() {
-			return action && action(scope);
+			return action && action(instance);
 		}, false);
 	});
 	return this;
@@ -127,8 +127,6 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	layout.setGravity(Interface.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
 	Interface.setActorName(layout, "logotypeBackground");
-	layout.setMinimumWidth(Interface.Display.WIDTH);
-	layout.setMinimumHeight(Interface.Display.HEIGHT);
 	container.addView(layout);
 	
 	let logotype = new android.widget.ImageView(context);

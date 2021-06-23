@@ -262,3 +262,52 @@ const ModificationSource = {
 		} else showHint(translate("Build type %s is unsupported", translate(type)));
 	}
 };
+
+const LevelProvider = new Object();
+
+LevelProvider.attach = function() {
+	let overlay = new OverlayWindow();
+	overlay.attach();
+	this.overlay = overlay;
+};
+
+LevelProvider.getOverlayWindow = function() {
+	return this.overlay || null;
+};
+
+LevelProvider.isAttached = function() {
+	return this.getOverlayWindow() !== null;
+};
+
+LevelProvider.update = function() {
+	let overlay = this.getOverlayWindow();
+	if (overlay === null) return false;
+	if (!thereIsNoTPSMeter) {
+		let prerounded = new java.lang.Float(TPSMeter.getTps());
+		overlay.setText(translate("%stps", prerounded));
+		return true;
+	}
+	return false;
+};
+
+LevelProvider.updateRecursive = function() {
+	let instance = this;
+	handle(function() {
+		if (instance.update() && Level.isLoaded()) {
+			instance.updateRecursive();
+		}
+	}, 500);
+};
+
+LevelProvider.show = function() {
+	let overlay = this.getOverlayWindow();
+	if (overlay === null) return;
+	this.update() && overlay.show();
+	this.updateRecursive();
+};
+
+LevelProvider.hide = function() {
+	let overlay = this.getOverlayWindow();
+	if (overlay === null) return;
+	overlay.hide();
+};

@@ -99,6 +99,14 @@ ControlWindow.prototype.resetContent = function() {
 	this.behold = behold;
 	this.collapse = collapse;
 	this.queue = queue;
+	let previous = null;
+	queue.setExitAction(function() {
+		let array = instance.getButtonFragments();
+		if (array && array.length > 0) {
+			previous = array[0].getBackground();
+		}
+		instance.setButtonBackground(null);
+	});
 	let minimize = this.getCollapseActor();
 	this.setActor(behold, collapse, minimize);
 	this.setActor(collapse, behold, minimize);
@@ -107,16 +115,6 @@ ControlWindow.prototype.resetContent = function() {
 	this.setActor(behold, collapse, transform);
 	let actor = this.getTransformActor();
 	actor.addListener({
-		onTransitionStart: function() {
-			tryout(function() {
-				if (instance.isMayTouched()) {
-					UniqueWindow.prototype.setTouchable.call(instance, false);
-				}
-				instance.setWidth(Interface.Display.MATCH);
-				instance.setHeight(Interface.Display.MATCH);
-				instance.setButtonBackground(null);
-			});
-		},
 		onTransitionEnd: function() {
 			tryout(function() {
 				if (instance.isMayTouched()) {
@@ -124,7 +122,7 @@ ControlWindow.prototype.resetContent = function() {
 				}
 				instance.setWidth(Interface.Display.WRAP);
 				instance.setHeight(Interface.Display.WRAP);
-				instance.setButtonBackground("popupButton");
+				instance.setButtonBackground(previous);
 			});
 		}
 	});
@@ -334,21 +332,23 @@ ControlWindow.prototype.setTouchable = function(enabled) {
 };
 
 ControlWindow.prototype.transformButton = function() {
-	this.actorTo(this.getBeholdScene());
 	this.setEnterActor(this.getButtonEnterActor());
 	this.setExitActor(this.getButtonExitActor());
+	this.actorTo(this.getBeholdScene());
 };
 
 ControlWindow.prototype.transformCollapsedButton = function() {
-	this.actorTo(this.getCollapseScene());
 	this.setEnterActor(this.getButtonEnterActor());
 	this.setExitActor(this.getButtonExitActor());
+	this.actorTo(this.getCollapseScene());
 };
 
 ControlWindow.prototype.transformLogotype = function() {
-	this.actorTo(this.getQueueScene());
+	this.setWidth(Interface.Display.WIDTH);
+	this.setHeight(Interface.Display.HEIGHT);
 	this.setEnterActor(this.getLogotypeEnterActor());
 	this.setExitActor(this.getLogotypeExitActor());
+	this.actorTo(this.getQueueScene());
 	if (this.isMayTouched()) UniqueWindow.prototype.setTouchable.call(this, false);
 };
 

@@ -106,6 +106,10 @@ const LaunchSequence = new LogotypeSequence({
 			if (showHint.launchStacked !== undefined) {
 				showHint.unstackLaunch();
 			}
+			LevelProvider.attach();
+			if (Level.isLoaded()) {
+				LevelProvider.show();
+			}
 		});
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();
