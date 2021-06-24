@@ -4,49 +4,49 @@ MCSystem.setLoadingTip("Localizing Content");
 Translation.addTranslation("Dev Editor", {});
 Translation.addTranslation("Alpha 0.3.5", {
 	ru: "Альфа 0.3.5"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Beta 0.3.5", {
 	ru: "Бета 0.3.5"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Preview 0.3.5", {
 	ru: "Предпросмотр 0.3.5"
-}); // DEPRECATED
-Translation.addTranslation("Setting", {}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
+Translation.addTranslation("Setting", {}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("1.0-develop", {
 	ru: "1.0-отладочный"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Allows you to edit the world.", {
 	ru: "Позволяет Вам редактировать мир."
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Dumper", {
 	ru: "Дампинг"
 });
-Translation.addTranslation("Dump Creator", {}); // DEPRECATED
+Translation.addTranslation("Dump Creator", {}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Extract dump by moment.", {
 	ru: "Извлекает дамп в момент."
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("UIEditor", {});
 Translation.addTranslation("Создан Антоном Крыжановским", {
 	en: "Created by Anton Kryjanovskiy"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("open beta 1.4.7", {
 	ru: "открытая бета 1.4.7"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("UI Editor For InnerCore Interfaces", {
 	ru: "Редактор интерфейсов для InnerCore"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("IRunner", {});
 Translation.addTranslation("WorldEdit", {});
 Translation.addTranslation("WorldEdit for InnerCore", {
 	ru: "WorldEdit для InnerCore"
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("Run JS", {
 	ru: "Запуск JS"
 });
-Translation.addTranslation("DaRealMonika", {}); // DEPRECATED
+Translation.addTranslation("DaRealMonika", {}); // DEPRECATED // NO-TRANSLATE
 Translation.addTranslation("This mod adds 2 new commands \"/run\" which lets you run any JavaScript code that horizon can run in mods and \"/getscreen\" which by default tells you if it's telling you the screen name or not and putting either \"enable\" or \"disable\" after it will make it get the screen name or not.", {
 	ru: "Этот мод добавляет 2 новые комманды \"/run\", дающая возможность запускать любой JavaScript код, который хорайзон может запускать в модах и \"/getscreen\", определяющий нужно ли показывать название экрана или нет, используя \"enable\" или \"disable\" определить необходимо ли это делать или нет."
-}); // DEPRECATED
+}); // DEPRECATED // NO-TRANSLATE
 
 // Control content & actions
 Translation.addTranslation("Editor", {
@@ -612,6 +612,10 @@ Translation.addTranslation("Animation", {
 Translation.addTranslation("World", {
 	ru: "Мир"
 });
+Translation.addTranslation("Couldn't create engine TPS Meter", {
+	ru: "Не удалось создать измеритель тика движка"
+});
+Translation.addTranslation("%stps", {});
 
 // Different tools
 Translation.addTranslation("Move", {
@@ -1502,9 +1506,3 @@ Translation.addTranslation("Do you really want to delete %s?", {
 // Not localized content will be appear here
 Translation.addTranslation(" ", {});
 Translation.addTranslation("\n", {});
-Translation.addTranslation("Couldn't create engine TPS Meter", {
-	ru: "Не удалось создать измеритель тика движка"
-});
-Translation.addTranslation("%stps", {
-	ru: "%sт\/с"
-});

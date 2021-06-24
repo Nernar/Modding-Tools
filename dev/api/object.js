@@ -22,8 +22,8 @@ StringifyAdapter.prototype.stringifyNumber = function(number) {
 };
 
 StringifyAdapter.prototype.stringifyRepresent = function(simple) {
-	if (simple === undefined) return "undefined";
-	if (simple === null) return "null";
+	if (simple === undefined) return this.isValidJson() ? "undefined" : new String();
+	if (simple === null) return this.isValidJson() ? "null" : new String();
 	if (simple === false) return "false";
 	if (simple === true) return "true";
 	if (simple == null) return "null";
@@ -138,9 +138,9 @@ StringifyAdapter.prototype.stringifyValue = function(value, type) {
 			case "number":
 				return this.stringifyNumber(value);
 			case "object":
-				return "new Object()";
+				return this.isValidJson() ? "new Object()" : "{}";
 			case "array":
-				return "new Array(" + value.length + ")";
+				return this.isValidJson() ? "new Array()" : "[]";
 			case "class":
 				return "new " + value.getClass().getName() + "()";
 			case "prototype":
@@ -208,11 +208,105 @@ StringifyAdapter.prototype.rebuildRecursive = function() {
 	}, null);
 };
 
+StringifyAdapter.prototype.getTabbedSpace = function() {
+	return this.tab !== undefined ? this.tab : "\t";
+};
+
+StringifyAdapter.prototype.setTabbedSpace = function(space) {
+	this.tab = String(space);
+};
+
+StringifyAdapter.prototype.isValidJson = function() {
+	return this.valid !== undefined ? this.valid : false;
+};
+
+StringifyAdapter.prototype.setIsValidJson = function(valid) {
+	this.valid = Boolean(valid);
+};
+
+StringifyAdapter.prototype.isFormattingEnabled = function() {
+	return this.formatting !== undefined ? this.formatting : false;
+};
+
+StringifyAdapter.prototype.setFormattingEnabled = function(enabled) {
+	this.formatting = Boolean(enabled);
+};
+
+StringifyAdapter.prototype.getSpaceForLevel = function(level) {
+	let tabbed = this.getTabbedSpace(),
+		space = new String();
+	for (let i = 0; i < level; i++) {
+		space = space.concat(tabbed);
+	}
+	return space;
+};
+
+StringifyAdapter.prototype.parsePropertyName = function(name) {
+	return tryoutSafety.call(this, function() {
+		let formatting = this.isFormattingEnabled(),
+			valid = this.isValidJson();
+		if (valid) name = this.stringifyStroke(name);
+		return formatting ? name + ": " : name + ":";
+	}, function(e) {
+		// TODO
+	}, new String());
+};
+
+StringifyAdapter.prototype.parseProperty = function(name, value, level) {
+	return tryoutSafety.call(this, function() {
+		let property = this.parsePropertyName(name);
+		if (typeof value == "string") {
+			if (this.isFormattingEnabled()) {
+				let space = this.getSpaceForLevel(level);
+				return space + property + value;
+			}
+			return property + value;
+		} else if (Array.isArray(value)) {
+			value = this.parseArray(value, level);
+			if (this.isFormattingEnabled()) {
+				let space = this.getSpaceForLevel(level);
+				return space + property + value;
+			}
+			return property + value;
+		} else if (typeof value == "object") {
+			value = this.parseObject(value, level);
+			if (this.isFormattingEnabled()) {
+				let space = this.getSpaceForLevel(level);
+				return space + property + value;
+			}
+			return property + value;
+		}
+	}, function(e) {
+		// TODO
+	}, new String());
+};
+
+StringifyAdapter.prototype.parseArray = function(value, level) {
+	return tryoutSafety.call(this, function() {
+		
+	}, function(e) {
+		// TODO
+	}, new String());
+};
+
+StringifyAdapter.prototype.parseObject = function(value, level) {
+	return tryoutSafety.call(this, function() {
+		
+	}, function(e) {
+		// TODO
+	}, new String());
+};
+
+StringifyAdapter.prototype.stringifyHieracly = function(hieracly) {
+	// TODO
+};
+
 StringifyAdapter.process = function(value, callback) {
 	let adapter = new StringifyAdapter(callback);
 	adapter.indexateRecursive(value);
 	adapter.stringifyRecursive();
-	return adapter.rebuildRecursive();
+	let hieracly = adapter.rebuildRecursive();
+	return adapter.stringifyHieracly(hieracly);
 };
 
 StringifyAdapter.Entry = function(value, type, elements, types) {
@@ -260,7 +354,7 @@ StringifyAdapter.Error.RESTORE_HIERACLY_FAILED = 5;
 StringifyAdapter.Error.REBUILD_FAILED = 6;
 
 StringifyAdapter.Callback = function(object) {
-	if (object !== undefined && object !== null) {
+	if (object !== null && typeof object == "object") {
 		for (let element in object) {
 			this[element] = object[element];
 		}
@@ -279,66 +373,3 @@ StringifyAdapter.prototype.setCallback = function(callback) {
 		this.callback = callback;
 	} else this.callback = new StringifyAdapter.Callback(callback);
 };
-
-/* const stringifyObjectUnsafe = function(obj, identate, callback) {
-	const recursiveStringify = function(obj, tabs) {
-		return tryout(function() {
-			switch (typeof obj) {
-				case "object":
-					if (Array.isArray(obj)) {
-						let array = new Array(),
-							tabbed = false;
-						for (let i = 0; i < obj.length; i++) {
-							let result = recursiveStringify(obj[i], tabs);
-							if (result && result.length > 0) {
-								if (identate) {
-									if (result.indexOf("\n") != -1 || result.length > 48) {
-										if (!tabbed) {
-											tabbed = true;
-											tabs += "\t";
-										}
-										array.push(result + (i < obj.length ? "\n" + tabs : new String()));
-									} else if (i != 0) {
-										array.push(" " + result);
-									} else array.push(result);
-								} else array.push(result);
-							}
-						}
-						return "[" + array.join(",") + "]";
-					} else {
-						let array = new Array(),
-							tabbed = false,
-							last, count = 0;
-						for (let counted in obj) {
-							last = counted;
-							count++;
-						}
-						for (let item in obj) {
-							let result = recursiveStringify(obj[item], tabs);
-							if (result && result.length > 0) {
-								if (identate) {
-									if (result.indexOf("\n") != -1 || result.length > 8) {
-										if (!tabbed) {
-											tabbed = true;
-											tabs += "\t";
-										}
-										array.push(item + ": " + result + (item != last ? "\n" + tabs : new String()));
-									} else if (item != 0) {
-										array.push(" " + item + ": " + result);
-									} else array.push(result);
-								} else array.push("\"" + item + "\":" + result);
-							}
-						}
-						let joined = array.join(",");
-						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
-							(identate ? tabbed ? tabs.replace("\t", new String()) + "\n}" : " }" : "}");
-					}
-				default:
-					if (callback.onPassed) {
-						callback.onPassed(obj, typeof obj);
-					}
-			}
-		});
-	};
-	return recursiveStringify(obj, new String());
-}; */
