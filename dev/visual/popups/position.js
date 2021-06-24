@@ -1,12 +1,12 @@
 const CoordsPopup = function() {
-	ListingPopup.call(this);
+	ListingPopup.apply(this, arguments);
 };
 
 CoordsPopup.prototype = new ListingPopup;
 CoordsPopup.prototype.TYPE = "CoordsPopup";
 
 CoordsPopup.prototype.reset = function() {
-	ListingPopup.prototype.reset.call(this);
+	ListingPopup.prototype.reset.apply(this, arguments);
 	this.views.groups = new Array();
 	this.views.titles = new Array();
 	this.views.containers = new Array();
@@ -14,7 +14,7 @@ CoordsPopup.prototype.reset = function() {
 };
 
 CoordsPopup.prototype.addButtonElement = function(name, click) {
-	let button = ListingPopup.prototype.addButtonElement.call(this, name, click);
+	let button = ListingPopup.prototype.addButtonElement.apply(this, arguments);
 	button.setBackground("popup");
 	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.getY(84)));
 	return button;

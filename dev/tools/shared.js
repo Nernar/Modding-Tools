@@ -320,43 +320,56 @@ const saveFile = function(name, availabled, action, outside, directory) {
 };
 
 const Tool = function(object) {
+	this.reset();
 	if (typeof object == "object") {
 		object && merge(this, object);
 	}
-	this.reset();
 };
 
 Tool.prototype.reset = function() {
-	let control = new ControlWindow();
-	this.control = control;
+	let control = new ControlWindow(),
+		descriptor = new Object();
+	descriptor.logotypeProgress = function(tool, control) {
+		return requireLogotype();
+	};
+	descriptor.logotypeOutside = function(tool, control) {
+		return requireInvertedLogotype();
+	};
+	descriptor.logotype = function(tool, control) {
+		return this.logotypeProgress.apply(this, arguments);
+	};
+	descriptor.click = function(tool, control) {
+		if (typeof tool.onControlClick == "function") {
+			tool.onControlClick(control);
+		}
+	};
+	descriptor.hideable = false;
+	this.controlDescriptor = descriptor;
+	this.controlWindow = control;
 };
 
 Tool.prototype.getControlWindow = function() {
-	return this.control || null;
+	return this.controlWindow || null;
+};
+
+Tool.prototype.getControlDescriptor = function() {
+	return this.controlDescriptor || null;
+}
+
+Tool.prototype.descript = function() {
+	let control = this.getControlWindow();
+	if (control === null) MCSystem.throwException(null);
+	ControlWindow.parseJson.call(this, control, this.getControlDescriptor());
 };
 
 Tool.prototype.attach = function() {
 	let control = this.getControlWindow();
-	control.setOrientation(this.getLogotypeOrientation());
-	control.setForegroundIcon(this.getLogotypeForegroundIcon());
-	control.setBackgroundIcon(this.getLogotypeBackgroundIcon());
-	control.setButtonIcon(this.getButtonIcon());
-	let background = this.getButtonBackground();
-	if (background !== undefined) control.setButtonBackground(background);
-	let foreground = this.getLogotypeBackground();
-	if (foreground !== undefined) control.setLogotypeBackground(foreground);
-	control.setHideableInside(this.isHideableOutside());
-	let instance = this;
-	control.setOnClickListener(function() {
-		if (typeof instance.onButtonClick == "function") {
-			instance.onButtonClick.call(instance);
-		}
-	});
-	this.control = control;
+	if (control === null) MCSystem.throwException(null);
+	this.descript();
 	control.attach();
 };
 
-Tool.prototype.behold = function() {
+Tool.prototype.control = function() {
 	let control = this.getControlWindow();
 	if (control === null) return;
 	control.transformButton();
@@ -387,29 +400,131 @@ Tool.prototype.queue = function(sequence) {
 };
 
 Tool.prototype.unqueue = function() {
-	this.behold();
+	this.control();
 };
 
-Tool.prototype.getLogotypeOrientation = function() {
-	return ControlWindow.prototype.getOrientation();
+Tool.prototype.getRequiredResources = function() {
+	let array = new Array(),
+		control = this.getControlWindow();
+	if (control === null) return array;
+	array.push(control.getForegroundIcon());
+	array.push(control.getBackgroundIcon());
+	array.push(control.getButtonIcon());
+	array.push(control.getButtonBackground());
+	array.push(control.getLogotypeBackground());
+	return array;
 };
 
-Tool.prototype.getLogotypeForegroundIcon = function() {
-	return requireLogotype();
+const ControlTool = function(object) {
+	Tool.apply(this, arguments);
 };
 
-Tool.prototype.getLogotypeBackgroundIcon = function() {
-	return requireInvertedLogotype();
+ControlTool.prototype = new Tool;
+
+ControlTool.prototype.reset = function() {
+	Tool.prototype.reset.apply(this, arguments);
+	let click = this.controlDescriptor.click;
+	this.controlDescriptor.click = function(tool, control) {
+		click.apply(this, arguments);
+		tool.menu();
+	};
+	let menu = new MenuWindow(),
+		descriptor = new Object();
+	descriptor.click = function(tool, control) {
+		tool.control();
+	};
+	descriptor.closeable = false;
+	this.menuDescriptor = descriptor;
+	this.menuWindow = menu;
 };
 
-Tool.prototype.getButtonIcon = function() {
-	return this.getLogotypeForegroundIcon();
+ControlTool.prototype.getMenuWindow = function() {
+	return this.menuWindow || null;
 };
 
-Tool.prototype.getButtonBackground = new Function();
-Tool.prototype.getLogotypeBackground = new Function();
-
-Tool.prototype.isHideableOutside = function() {
-	return false;
+ControlTool.prototype.getMenuDescriptor = function() {
+	return this.menuDescriptor || null;
 };
 
+ControlTool.prototype.descript = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) MCSystem.throwException(null);
+	Tool.prototype.descript.apply(this, arguments);
+	MenuWindow.parseJson.call(this, menu, this.getMenuDescriptor());
+};
+
+ControlTool.prototype.attach = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) MCSystem.throwException(null);
+	Tool.prototype.attach.apply(this, arguments);
+	menu.attach();
+};
+
+ControlTool.prototype.menu = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) return;
+	let control = this.getControlWindow();
+	if (control === null) return;
+	control.hide();
+	menu.show();
+};
+
+ControlTool.prototype.control = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) return;
+	menu.hide();
+	Tool.prototype.control.apply(this, arguments);
+};
+
+ControlTool.prototype.collapse = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) return;
+	menu.hide();
+	Tool.prototype.collapse.apply(this, arguments);
+};
+
+ControlTool.prototype.queue = function(sequence) {
+	let menu = this.getMenuWindow();
+	if (menu === null) return;
+	menu.hide();
+	Tool.prototype.queue.apply(this, arguments);
+};
+
+ControlTool.prototype.getRequiredResources = function() {
+	let array = Tool.prototype.getRequiredResources.apply(this, arguments),
+		menu = this.getMenuWindow();
+	if (menu === null) return array;
+	array.push(menu.getBackground());
+	let elements = menu.getElements();
+	for (let i = 0; i < elements.length; i++) {
+		let element = elements[i];
+		if (element instanceof MenuWindow.Header) {
+			array.push(element.getCover());
+			array.push(element.getLogo());
+			if (element instanceof MenuWindow.ProjectHeader) {
+				array.push(element.getBackground());
+				let categories = element.getCategories();
+				for (let c = 0; c < categories.length; c++) {
+					let category = categories[c],
+						items = category.getItems();
+					for (let m = 0; m < items.length; m++) {
+						let item = items[m];
+						array.push(item.getBackground());
+						array.push(item.getIcon());
+					}
+				}
+			}
+		} else if (element instanceof MenuWindow.Category) {
+			let items = element.getItems();
+			for (let m = 0; m < items.length; m++) {
+				let item = items[m];
+				array.push(item.getBackground());
+				array.push(item.getIcon());
+			}
+		} else if (element instanceof MenuWindow.Message) {
+			array.push(element.getBackground());
+			array.push(element.getIcon());
+		}
+	}
+	return array;
+};

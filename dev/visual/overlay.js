@@ -1,5 +1,5 @@
 const OverlayWindow = function() {
-	UniqueWindow.call(this);
+	UniqueWindow.apply(this, arguments);
 	this.setTouchable(false);
 	this.setX(Interface.getY(140));
 	this.setFragment(new OverlayFragment());

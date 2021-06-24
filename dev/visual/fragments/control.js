@@ -1,5 +1,5 @@
 const ControlFragment = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 
@@ -70,7 +70,7 @@ ControlFragment.prototype.setOnHoldListener = function(action) {
 };
 
 ControlFragment.Button = function() {
-	ControlFragment.call(this);
+	ControlFragment.apply(this, arguments);
 };
 
 ControlFragment.Button.prototype = new ControlFragment;
@@ -98,7 +98,7 @@ ControlFragment.Button.prototype.resetContainer = function() {
 };
 
 ControlFragment.CollapsedButton = function() {
-	ControlFragment.Button.call(this);
+	ControlFragment.Button.apply(this, arguments);
 	this.setOffset(Interface.getX(50));
 };
 
@@ -111,7 +111,7 @@ ControlFragment.CollapsedButton.prototype.setOffset = function(x, y) {
 };
 
 ControlFragment.Logotype = function() {
-	ControlFragment.call(this);
+	ControlFragment.apply(this, arguments);
 };
 
 ControlFragment.Logotype.prototype = new ControlFragment;

@@ -12,7 +12,7 @@ const LaunchSequence = new LogotypeSequence({
 				background = this.getBackgroundIcon();
 			ImageFactory.loadFromAsset(foreground, foreground + ".dnr");
 			ImageFactory.loadFromAsset(background, background + ".dnr");
-			LogotypeSequence.prototype.create.call(this, value);
+			LogotypeSequence.prototype.create.apply(this, arguments);
 		}
 		if (REVISION.startsWith("develop")) {
 			REQUIRE("provider.js");
@@ -20,10 +20,10 @@ const LaunchSequence = new LogotypeSequence({
 		}
 	},
 	getExpirationTime: function() {
-		return isFirstLaunch() ? LogotypeSequence.prototype.getExpirationTime.call(this) : 0;
+		return isFirstLaunch() ? LogotypeSequence.prototype.getExpirationTime.apply(this, arguments) : 0;
 	},
 	process: function(index) {
-		index = LogotypeSequence.prototype.process.call(this, index);
+		index = LogotypeSequence.prototype.process.apply(this, arguments);
 		if (index == 1) {
 			updateSettings();
 			if (reportError.getDebugValues() === null) {
@@ -95,10 +95,10 @@ const LaunchSequence = new LogotypeSequence({
 				}, sequence.getExpirationTime() * 2);
 			});
 		if (!isFirstLaunch()) LogotypeSequence.prototype.create.call(this);
-		LogotypeSequence.prototype.cancel.call(this, error);
+		LogotypeSequence.prototype.cancel.apply(this, arguments);
 	},
 	complete: function(active) {
-		LogotypeSequence.prototype.complete.call(this, active);
+		LogotypeSequence.prototype.complete.apply(this, arguments);
 		if (firstLaunchTutorial && isFirstLaunch()) {
 			TutorialSequence.Welcome.execute();
 		} else checkValidate(function() {

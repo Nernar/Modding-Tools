@@ -1,12 +1,12 @@
 const ListingPopup = function() {
-	FocusablePopup.call(this);
+	FocusablePopup.apply(this, arguments);
 };
 
 ListingPopup.prototype = new FocusablePopup;
 ListingPopup.prototype.TYPE = "ListingPopup";
 
 ListingPopup.prototype.reset = function() {
-	FocusablePopup.prototype.reset.call(this);
+	FocusablePopup.prototype.reset.apply(this, arguments);
 	this.views.edits = new Array();
 	this.views.buttons = new Array();
 };

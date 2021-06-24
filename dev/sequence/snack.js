@@ -1,5 +1,5 @@
 const SnackSequence = function(obj) {
-	Sequence.call(this, obj);
+	Sequence.apply(this, arguments);
 };
 
 SnackSequence.prototype = new Sequence;
@@ -113,7 +113,7 @@ SnackSequence.prototype.cancel = function(error) {
 			this.getCancellationBackground(error));
 	}
 	this.handleCompletion();
-	Sequence.prototype.cancel.call(this, error);
+	Sequence.prototype.cancel.apply(this, arguments);
 };
 
 SnackSequence.prototype.handleCompletion = function() {
@@ -172,7 +172,7 @@ SnackSequence.interruptAll = function() {
 };
 
 const StackedSnackSequence = function(obj) {
-	Sequence.call(this, obj);
+	Sequence.apply(this, arguments);
 };
 
 StackedSnackSequence.prototype = new Sequence;
@@ -314,7 +314,7 @@ StackedSnackSequence.prototype.cancel = function(error) {
 		snack.show();
 	}
 	this.handleCompletion();
-	Sequence.prototype.cancel.call(this, error);
+	Sequence.prototype.cancel.apply(this, arguments);
 };
 
 StackedSnackSequence.prototype.handleCompletion = function() {

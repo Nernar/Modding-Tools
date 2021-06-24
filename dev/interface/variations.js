@@ -44,7 +44,7 @@ ActoredWindow.prototype.show = function() {
 	if (enter && this.isOpened()) {
 		this.beginDelayedActor(enter);
 	}
-	FocusableWindow.prototype.show.call(this);
+	FocusableWindow.prototype.show.apply(this, arguments);
 };
 
 ActoredWindow.prototype.hide = function() {
@@ -52,7 +52,7 @@ ActoredWindow.prototype.hide = function() {
 	if (exit && this.isOpened()) {
 		this.beginDelayedActor(exit);
 	}
-	FocusableWindow.prototype.hide.call(this);
+	FocusableWindow.prototype.hide.apply(this, arguments);
 };
 
 const UniqueWindow = new Function();
@@ -79,13 +79,13 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 
 UniqueWindow.prototype.show = function() {
 	if (UniqueHelper.prepareWindow(this)) {
-		ActoredWindow.prototype.show.call(this);
+		ActoredWindow.prototype.show.apply(this, arguments);
 	}
 };
 
 UniqueWindow.prototype.dismiss = function() {
 	if (UniqueHelper.deattachWindow(this)) {
-		ActoredWindow.prototype.dismiss.call(this);
+		ActoredWindow.prototype.dismiss.apply(this, arguments);
 	}
 };
 

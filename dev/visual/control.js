@@ -65,7 +65,7 @@ ControlButton.prototype.setCloseableOutside = function(state) {
 };
 
 const ControlWindow = function() {
-	UniqueWindow.call(this);
+	UniqueWindow.apply(this, arguments);
 	this.setFragment(new FrameFragment());
 	this.resetContent();
 };
@@ -243,10 +243,8 @@ ControlWindow.prototype.getForegroundIcon = function() {
 };
 
 ControlWindow.prototype.setForegroundIcon = function(src) {
-	if (ImageFactory.isLoaded(src)) {
-		this.foregroundIcon = src;
-		if (this.isOpened()) this.updateProgress();
-	}
+	this.foregroundIcon = src;
+	if (this.isOpened()) this.updateProgress();
 };
 
 ControlWindow.prototype.getBackgroundIcon = function() {
@@ -254,10 +252,8 @@ ControlWindow.prototype.getBackgroundIcon = function() {
 };
 
 ControlWindow.prototype.setBackgroundIcon = function(src) {
-	if (ImageFactory.isLoaded(src)) {
-		this.backgroundIcon = src;
-		if (this.isOpened()) this.updateProgress();
-	}
+	this.backgroundIcon = src;
+	if (this.isOpened()) this.updateProgress();
 };
 
 ControlWindow.prototype.updateProgress = function(force) {
@@ -287,6 +283,11 @@ ControlWindow.prototype.setButtonIcon = function(src) {
 	for (let i = 0; i < founded.length; i++) {
 		founded[i].setIcon(src);
 	}
+	this.buttonIcon = src;
+};
+
+ControlWindow.prototype.getButtonIcon = function() {
+	return this.buttonIcon || null;
 };
 
 ControlWindow.prototype.setButtonBackground = function(src) {
@@ -294,12 +295,22 @@ ControlWindow.prototype.setButtonBackground = function(src) {
 	for (let i = 0; i < founded.length; i++) {
 		founded[i].setBackground(src);
 	}
+	this.buttonBackground = src;
+};
+
+ControlWindow.prototype.getButtonBackground = function() {
+	return this.buttonBackground || null;
 };
 
 ControlWindow.prototype.setLogotypeBackground = function(src) {
 	let fragment = this.getLogotypeFragment();
 	if (fragment === null) return;
 	fragment.setBackground(src);
+	this.logotypeBackground = src;
+};
+
+ControlWindow.prototype.getLogotypeIcon = function() {
+	return this.logotypeBackground || null;
 };
 
 ControlWindow.prototype.setOnClickListener = function(action) {
@@ -328,7 +339,7 @@ ControlWindow.prototype.isMayTouched = function() {
 
 ControlWindow.prototype.setTouchable = function(enabled) {
 	this.mayTouched = Boolean(enabled);
-	UniqueWindow.prototype.setTouchable.call(this, enabled);
+	UniqueWindow.prototype.setTouchable.apply(this, arguments);
 };
 
 ControlWindow.prototype.transformButton = function() {
@@ -356,5 +367,41 @@ ControlWindow.prototype.show = function() {
 	if (this.getBackgroundIcon() !== null || this.getForegroundIcon() !== null) {
 		this.updateProgress();
 	}
-	UniqueWindow.prototype.show.call(this);
+	UniqueWindow.prototype.show.apply(this, arguments);
+};
+
+ControlWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof ControlWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new ControlWindow();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("orientation")) {
+		instanceOrJson.setOrientation(calloutOrParse(json, json.orientation, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("logotypeProgress")) {
+		instanceOrJson.setForegroundIcon(calloutOrParse(json, json.logotypeProgress, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("logotypeOutside")) {
+		instanceOrJson.setBackgroundIcon(calloutOrParse(json, json.logotypeOutside, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("logotype")) {
+		instanceOrJson.setButtonIcon(calloutOrParse(json, json.logotype, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("buttonBackground")) {
+		instanceOrJson.setOrientation(calloutOrParse(json, json.buttonBackground, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("logotypeBackground")) {
+		instanceOrJson.setOrientation(calloutOrParse(json, json.logotypeBackground, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("hideable")) {
+		instanceOrJson.setHideableInside(calloutOrParse(json, json.hideable, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
 };

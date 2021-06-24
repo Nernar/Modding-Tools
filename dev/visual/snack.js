@@ -281,14 +281,14 @@ HintAlert.prototype.show = function() {
 			scope.action.destroy();
 			delete scope.action;
 		});
-		UniqueWindow.prototype.show.call(this);
+		UniqueWindow.prototype.show.apply(this, arguments);
 	} else this.reawait();
 };
 
 HintAlert.prototype.dismiss = function() {
 	this.action && this.action.destroy();
 	delete this.action;
-	UniqueWindow.prototype.dismiss.call(this);
+	UniqueWindow.prototype.dismiss.apply(this, arguments);
 };
 
 /**

@@ -1,5 +1,5 @@
 const FrameFragment = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 

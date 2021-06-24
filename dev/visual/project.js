@@ -21,43 +21,6 @@ const MenuWindow = function() {
 	this.elements = new Array();
 	this.reset();
 	this.setBackground("popupControl");
-
-	if (debugAttachControlTools && REVISION.startsWith("develop")) {
-		let category = this.addCategory(translate("Development"));
-		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
-			checkEvaluate();
-		});
-		category.addItem("blockDefineType", translate("Check"), function() {
-			evaluateScope();
-		});
-		category.addItem("explorerExtensionScript", translate("Launch"), function() {
-			checkEvaluate.loadEvaluate();
-		});
-		category.addItem("worldShape", translate("Require"), function() {
-			let files = Files.listFileNames(Dirs.EVALUATE, true);
-			files = Files.checkFormats(files, ".js");
-			for (let i = 0; i < files.length; i++) {
-				let file = files[i];
-				if (REQUIRE.loaded.indexOf(file) != -1) {
-					if (REQUIRE.results[file] === undefined) {
-						files.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			select(translate("What's need to require?"), files, function(index, path) {
-				let output = REQUIRE(path);
-				if (typeof output == "function") {
-					output();
-				} else if (output !== undefined) {
-					showHint(output);
-				}
-			});
-		});
-		category.addItem("explorer", translate("Explorer"), function() {
-			attachAdvancedExplorer();
-		});
-	}
 };
 
 MenuWindow.prototype = new UniqueWindow;
@@ -341,6 +304,30 @@ MenuWindow.Header.prototype.setLogo = function(src) {
 	return this;
 };
 
+MenuWindow.Header.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.Header)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.Header();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("cover")) {
+		instanceOrJson.setCover(calloutOrParse(json, json.cover, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("logotype")) {
+		instanceOrJson.setLogo(calloutOrParse(json, json.logotype, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("maxScroll")) {
+		instanceOrJson.setMaxScroll(calloutOrParse(json, json.maxScroll, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("slideOffset")) {
+		instanceOrJson.setSlideOffset(calloutOrParse(json, json.slideOffset, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};
+
 MenuWindow.prototype.addHeader = function(header) {
 	let header = header instanceof MenuWindow.Header ?
 		header : new MenuWindow.Header(this);
@@ -467,6 +454,39 @@ MenuWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	this.updateSlideProgress(),
 		this.checkNothingNeedable();
 	return this;
+};
+
+MenuWindow.ProjectHeader.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.ProjectHeader)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.ProjectHeader();
+	}
+	MenuWindow.Header.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getCategoryCount() > 0) {
+		instanceOrJson.removeCategory(0);
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("categories")) {
+		let categories = calloutOrParse(json, json.categories, [this, instanceOrJson]);
+		if (categories !== null && typeof categories == "object") {
+			if (!Array.isArray(categories)) categories = [categories];
+			for (let i = 0; i < categories.length; i++) {
+				let category = calloutOrParse(categories, categories[i], [this, json, instanceOrJson]);
+				if (category !== null && typeof category == "object") {
+					category = MenuWindow.ProjectHeader.Category.parseJson(category);
+					category.setParentHeader(instanceOrJson);
+					instanceOrJson.addCategory(category);
+				}
+			}
+		}
+	}
+	return instanceOrJson;
 };
 
 MenuWindow.prototype.addProjectHeader = function(header) {
@@ -627,6 +647,44 @@ MenuWindow.ProjectHeader.Category.prototype.setOnItemHoldListener = function(lis
 		}, false);
 	};
 	return this;
+};
+
+MenuWindow.ProjectHeader.Category.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.ProjectHeader.Category)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.ProjectHeader.Category();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getItemCount() > 0) {
+		instanceOrJson.removeItem(0);
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("clickItem")) {
+		instanceOrJson.setOnItemClickListener(parseCallback(json, json.clickItem, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("holdItem")) {
+		instanceOrJson.setOnItemHoldListener(parseCallback(json, json.holdItem, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("items")) {
+		let items = calloutOrParse(json, json.items, [this, instanceOrJson]);
+		if (items !== null && typeof items == "object") {
+			if (!Array.isArray(items)) items = [items];
+			for (let i = 0; i < items.length; i++) {
+				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
+				if (item !== null && typeof item == "object") {
+					item = MenuWindow.ProjectHeader.Category.Item.parseJson(item);
+					item.setParentCategory(instanceOrJson);
+					instanceOrJson.addItem(item);
+				}
+			}
+		}
+	}
+	return instanceOrJson;
 };
 
 MenuWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, titleOrDescription, descriptionOrAction, action) {
@@ -817,6 +875,36 @@ MenuWindow.ProjectHeader.Category.Item.prototype.setOnHoldListener = function(li
 	return this;
 };
 
+MenuWindow.ProjectHeader.Category.Item.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.ProjectHeader.Category.Item)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.ProjectHeader.Category.Item();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("description")) {
+		instanceOrJson.setDescription(calloutOrParse(json, json.description, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("hold")) {
+		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};
+
 MenuWindow.Category = function(parentOrName, name) {
 	this.reset();
 	if (parentOrName instanceof MenuWindow) {
@@ -946,6 +1034,44 @@ MenuWindow.Category.prototype.setOnHoldItemListener = function(listener) {
 		}, false);
 	};
 	return this;
+};
+
+MenuWindow.Category.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.Category)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.Category();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getItemCount() > 0) {
+		instanceOrJson.removeItem(0);
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("clickItem")) {
+		instanceOrJson.setOnItemClickListener(parseCallback(json, json.clickItem, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("holdItem")) {
+		instanceOrJson.setOnItemHoldListener(parseCallback(json, json.holdItem, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("items")) {
+		let items = calloutOrParse(json, json.items, [this, instanceOrJson]);
+		if (items !== null && typeof items == "object") {
+			if (!Array.isArray(items)) items = [items];
+			for (let i = 0; i < items.length; i++) {
+				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
+				if (item !== null && typeof item == "object") {
+					item = MenuWindow.Category.Item.parseJson(item);
+					item.setParentCategory(instanceOrJson);
+					instanceOrJson.addItem(item);
+				}
+			}
+		}
+	}
+	return instanceOrJson;
 };
 
 MenuWindow.prototype.addCategory = function(nameOrCategory, name) {
@@ -1115,6 +1241,33 @@ MenuWindow.Category.Item.prototype.setOnHoldListener = function(listener) {
 	return this;
 };
 
+MenuWindow.Category.Item.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.Category.Item)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.Category.Item();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("hold")) {
+		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};
+
 MenuWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action) {
 	this.reset();
 	if (parentOrSrc instanceof MenuWindow) {
@@ -1195,19 +1348,6 @@ MenuWindow.Message.prototype.setBackground = function(src) {
 	return this;
 };
 
-MenuWindow.Message.prototype.getAnimation = function() {
-	return this.drawable || null;
-};
-
-MenuWindow.Message.prototype.setAnimation = function(name, path, time) {
-	let content = this.getContent();
-	if (!content || !name) return this;
-	this.drawable = ImageFactory.loadFileFrames(name, path, time);
-	content.setBackgroundDrawable(this.drawable);
-	this.drawable && this.drawable.start && this.drawable.start();
-	return this;
-};
-
 MenuWindow.Message.prototype.getIcon = function() {
 	return this.icon || null;
 };
@@ -1249,6 +1389,30 @@ MenuWindow.Message.prototype.setOnClickListener = function(listener) {
 	return this;
 };
 
+MenuWindow.Message.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow.Message)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow.Message();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("message")) {
+		instanceOrJson.setMessage(calloutOrParse(json, json.message, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};
+
 MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrMessage, action) {
 	let message = srcOrMessage instanceof MenuWindow.Message ?
 		srcOrMessage : new MenuWindow.Message(this, srcOrMessage, messageOrSrc, actionOrMessage);
@@ -1265,4 +1429,89 @@ MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrM
 MenuWindow.dismissCurrently = function() {
 	let unique = UniqueHelper.getWindow("MenuWindow");
 	if (unique !== null) unique.dismiss();
+};
+
+MenuWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof MenuWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new MenuWindow();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getElementCount() > 0) {
+		instanceOrJson.removeElement(0);
+	}
+	if (debugAttachControlTools && REVISION.startsWith("develop")) {
+		let category = instanceOrJson.addCategory(translate("Development"));
+		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
+			checkEvaluate();
+		});
+		category.addItem("blockDefineType", translate("Check"), function() {
+			evaluateScope();
+		});
+		category.addItem("explorerExtensionScript", translate("Launch"), function() {
+			checkEvaluate.loadEvaluate();
+		});
+		category.addItem("worldShape", translate("Require"), function() {
+			let files = Files.listFileNames(Dirs.EVALUATE, true);
+			files = Files.checkFormats(files, ".js");
+			for (let i = 0; i < files.length; i++) {
+				let file = files[i];
+				if (REQUIRE.loaded.indexOf(file) != -1) {
+					if (REQUIRE.results[file] === undefined) {
+						files.splice(i, 1);
+						i--;
+					}
+				}
+			}
+			select(translate("What's need to require?"), files, function(index, path) {
+				let output = REQUIRE(path);
+				if (typeof output == "function") {
+					output();
+				} else if (output !== undefined) {
+					showHint(output);
+				}
+			});
+		});
+		category.addItem("explorer", translate("Explorer"), function() {
+			attachAdvancedExplorer();
+		});
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("closeable")) {
+		instanceOrJson.setCloseableOutside(calloutOrParse(json, json.closeable, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("elements")) {
+		let elements = calloutOrParse(json, json.elements, [this, instanceOrJson]);
+		if (elements !== null && typeof elements == "object") {
+			if (!Array.isArray(elements)) elements = [elements];
+			for (let i = 0; i < elements.length; i++) {
+				let element = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
+				if (element !== null && typeof element == "object") {
+					if (element.type == "header") {
+						element = MenuWindow.Header.parseJson(element);
+					} else if (element.type == "projectHeader") {
+						element = MenuWindow.ProjectHeader.parseJson(element);
+					} else if (element.type == "category") {
+						element = MenuWindow.Category.parseJson(element);
+					} else if (element.type == "message") {
+						element = MenuWindow.Message.parseJson(element);
+					} else {
+						Logger.Log("MenuWindow counldn't parse " + element.type, "WARNING");
+						continue;
+					}
+					element.setWindow(instanceOrJson);
+					instanceOrJson.addElement(element);
+				}
+			}
+		}
+	}
+	return instanceOrJson;
 };

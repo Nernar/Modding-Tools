@@ -1,5 +1,5 @@
 const TutorialSequence = function(obj) {
-	Sequence.call(this, obj);
+	Sequence.apply(this, arguments);
 };
 
 TutorialSequence.prototype = new Sequence;
@@ -29,7 +29,7 @@ TutorialSequence.prototype.next = function(value, index) {
 	if (this.interaction === false) {
 		delete this.interaction;
 	}	
-	return Sequence.prototype.next.call(this, value, index);
+	return Sequence.prototype.next.apply(this, arguments);
 };
 
 TutorialSequence.prototype.process = function(index) {
@@ -114,7 +114,7 @@ TutorialSequence.Welcome = new TutorialSequence({
 		} else if (index == 2) {
 			Interface.sleepMilliseconds(this.hint.getTime() * 3);
 		}
-		return TutorialSequence.prototype.process.call(this, index);
+		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	getNextSequence: function() {
 		return TutorialSequence.ButtonInteraction;
@@ -158,7 +158,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 		} else if (index == 5) {
 			Interface.sleepMilliseconds(this.hint.getTime());
 		}
-		return TutorialSequence.prototype.process.call(this, index);
+		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	touchCorrectly: function() {
 		this.goto = 5;
@@ -166,7 +166,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 			this.currently.dismiss();
 			delete this.currently;
 		}
-		TutorialSequence.prototype.touchCorrectly.call(this);
+		TutorialSequence.prototype.touchCorrectly.apply(this, arguments);
 	},
 	getNextSequence: function() {
 		return TutorialSequence.ControlMeeting;
@@ -246,7 +246,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 		} else if (index == 7) {
 			Interface.sleepMilliseconds(this.hint.getTime());
 		}
-		return TutorialSequence.prototype.process.call(this, index);
+		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
@@ -254,7 +254,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			delete this.currently;
 			delete this.block;
 		}
-		TutorialSequence.prototype.complete.call(this);
+		TutorialSequence.prototype.complete.apply(this, arguments);
 	},
 	getNextSequence: function() {
 		return TutorialSequence.SidebarInteraction;
@@ -370,7 +370,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 		} else if (index == 7) {
 			Interface.sleepMilliseconds(this.hint.getTime());
 		}
-		return TutorialSequence.prototype.process.call(this, index);
+		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	touchCorrectly: function(process) {
 		if (process == 1) {
@@ -384,7 +384,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.currently.setOnGroupFetchListener(null);
 			this.currently.setOnItemFetchListener(null);
 		}
-		TutorialSequence.prototype.touchCorrectly.call(this);
+		TutorialSequence.prototype.touchCorrectly.apply(this, arguments);
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
@@ -394,7 +394,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			delete this.adding;
 			delete this.renderer;
 		}
-		TutorialSequence.prototype.complete.call(this);
+		TutorialSequence.prototype.complete.apply(this, arguments);
 	},
 	getNextSequence: function() {
 		return TutorialSequence.PopupInteraction;
@@ -438,10 +438,10 @@ TutorialSequence.Complete = new TutorialSequence({
 		} else if (index == 2) {
 			Interface.sleepMilliseconds(this.hint.getTime());
 		}
-		return TutorialSequence.prototype.process.call(this, index);
+		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	complete: function() {
 		LaunchSequence.complete();
-		TutorialSequence.prototype.complete.call(this);
+		TutorialSequence.prototype.complete.apply(this, arguments);
 	}
 });

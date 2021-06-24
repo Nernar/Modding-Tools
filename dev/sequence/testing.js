@@ -30,12 +30,12 @@ const FetchTestsSequence = new LogotypeSequence({
 		handle(function() {
 			ProjectEditor.menu();
 		}, this.getExpirationTime() * 2);
-		LogotypeSequence.prototype.cancel.call(this, error);
+		LogotypeSequence.prototype.cancel.apply(this, arguments);
 	},
 	complete: function(active) {
 		handle(function() {
 			DebugEditor.menu();
 		}, this.getExpirationTime());
-		LogotypeSequence.prototype.complete.call(this, active);
+		LogotypeSequence.prototype.complete.apply(this, arguments);
 	}
 });

@@ -1,5 +1,5 @@
 const SidebarWindow = function() {
-	UniqueWindow.call(this);
+	UniqueWindow.apply(this, arguments);
 	this.setGravity(Interface.Gravity.RIGHT);
 	this.setHeight(Interface.Display.MATCH);
 	this.setFragment(new SidebarFragment());
@@ -213,7 +213,7 @@ SidebarWindow.prototype.setOnItemFetchListener = function(listener) {
 };
 
 SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
-	SidebarFragment.Group.call(this);
+	SidebarFragment.Group.apply(this, arguments);
 	let scope = this;
 	this.setOnClickListener(function() {
 		let window = scope.getWindow();
@@ -441,7 +441,7 @@ SidebarWindow.Group.prototype.setOnItemFetchListener = function(listener) {
 };
 
 SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
-	SidebarFragment.Group.Item.call(this);
+	SidebarFragment.Group.Item.apply(this, arguments);
 	let scope = this;
 	this.setOnClickListener(function() {
 		scope.onSelect && scope.onSelect(scope, scope.indexOf());

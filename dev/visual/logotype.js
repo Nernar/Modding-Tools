@@ -1,5 +1,5 @@
 const LogotypeWindow = function(foreground, background) {
-	UniqueWindow.call(this);
+	UniqueWindow.apply(this, arguments);
 	this.setGravity(Interface.Gravity.CENTER);
 	this.setWidth(Interface.Display.MATCH);
 	this.setHeight(Interface.Display.MATCH);
@@ -64,10 +64,8 @@ LogotypeWindow.prototype.getForegroundIcon = function() {
 };
 
 LogotypeWindow.prototype.setForegroundIcon = function(src) {
-	if (ImageFactory.isLoaded(src)) {
-		this.foregroundIcon = src;
-		if (this.isOpened()) this.updateProgress();
-	}
+	this.foregroundIcon = src;
+	if (this.isOpened()) this.updateProgress();
 };
 
 LogotypeWindow.prototype.getBackgroundIcon = function() {
@@ -75,10 +73,8 @@ LogotypeWindow.prototype.getBackgroundIcon = function() {
 };
 
 LogotypeWindow.prototype.setBackgroundIcon = function(src) {
-	if (ImageFactory.isLoaded(src)) {
-		this.backgroundIcon = src;
-		if (this.isOpened()) this.updateProgress();
-	}
+	this.backgroundIcon = src;
+	if (this.isOpened()) this.updateProgress();
 };
 
 LogotypeWindow.prototype.updateProgress = function(force) {
@@ -107,5 +103,5 @@ LogotypeWindow.prototype.show = function() {
 	if (this.getBackgroundIcon() !== null || this.getForegroundIcon() !== null) {
 		this.updateProgress();
 	}
-	UniqueWindow.prototype.show.call(this);
+	UniqueWindow.prototype.show.apply(this, arguments);
 };

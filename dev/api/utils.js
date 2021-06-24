@@ -199,3 +199,33 @@ Base64.decode = function(bytes) {
 	}
 	return android.util.Base64.decode(bytes, android.util.Base64.NO_WRAP);
 };
+
+const calloutOrParse = function(scope, value, args) {
+	return tryout(function() {
+		if (typeof value == "function") {
+			if (args === undefined) {
+				args = new Array();
+			} else if (!Array.isArray(args)) {
+				args = [args];
+			}
+			return value.apply(scope, args);
+		}
+		return value;
+	}, null);
+};
+
+const parseCallback = function(scope, value, args) {
+	return tryout(function() {
+		if (args === undefined) {
+			args = new Array();
+		} else if (!Array.isArray(args)) {
+			args = [args];
+		}
+		if (typeof value == "function") {
+			return function() {
+				args = args.concat(arguments);
+				return value.apply(scope, args);
+			};
+		}
+	}, null);
+};

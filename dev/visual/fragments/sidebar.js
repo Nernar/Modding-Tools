@@ -1,5 +1,5 @@
 const SidebarFragment = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 
@@ -121,7 +121,7 @@ SidebarFragment.prototype.getTabCount = function() {
 };
 
 SidebarFragment.Group = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 
@@ -200,7 +200,7 @@ SidebarFragment.Group.prototype.setOnHoldListener = function(action) {
 };
 
 SidebarFragment.Group.Item = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 

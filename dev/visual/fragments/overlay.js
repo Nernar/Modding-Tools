@@ -1,5 +1,5 @@
 const OverlayFragment = function() {
-	Fragment.call(this);
+	Fragment.apply(this, arguments);
 	this.resetContainer();
 };
 

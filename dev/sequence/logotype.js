@@ -1,5 +1,5 @@
 const LogotypeSequence = function(obj) {
-	Sequence.call(this, obj);
+	Sequence.apply(this, arguments);
 };
 
 LogotypeSequence.prototype = new Sequence;
@@ -67,7 +67,7 @@ LogotypeSequence.prototype.cancel = function(error) {
 		}
 	}
 	this.handleDismiss(2);
-	Sequence.prototype.cancel.call(this, error);
+	Sequence.prototype.cancel.apply(this, arguments);
 };
 
 LogotypeSequence.prototype.handleDismiss = function(modifier) {

@@ -1,12 +1,12 @@
 const HieraclyPopup = function() {
-	FocusablePopup.call(this);
+	FocusablePopup.apply(this, arguments);
 };
 
 HieraclyPopup.prototype = new FocusablePopup;
 HieraclyPopup.prototype.TYPE = "HieraclyPopup";
 
 HieraclyPopup.prototype.reset = function() {
-	FocusablePopup.prototype.reset.call(this);
+	FocusablePopup.prototype.reset.apply(this, arguments);
 	this.views.groups = new Array();
 	this.views.items = new Array();
 	this.views.footers = new Array();
