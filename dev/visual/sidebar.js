@@ -4,6 +4,8 @@ const SidebarWindow = function() {
 	this.setHeight(Interface.Display.MATCH);
 	this.setFragment(new SidebarFragment());
 	this.groups = new Array();
+	this.setBackground("popup");
+	if (!menuDividers) this.setTabBackground("popup");
 
 	let enter = new SlideActor(Interface.Gravity.RIGHT);
 	enter.setInterpolator(new DecelerateInterpolator());
@@ -94,6 +96,22 @@ SidebarWindow.prototype.getSelectedGroup = function() {
 	let selected = this.getSelected();
 	if (selected < 0) return null;
 	return this.getGroupAt(selected);
+};
+
+SidebarWindow.prototype.setBackground = function(src) {
+	this.getFragment().setBackground(src);
+};
+
+SidebarWindow.prototype.getBackground = function() {
+	return this.getFragment().getBackground();
+};
+
+SidebarWindow.prototype.setTabBackground = function(src) {
+	this.getFragment().setTabBackground(src);
+};
+
+SidebarWindow.prototype.getTabBackground = function() {
+	return this.getFragment().getTabBackground();
 };
 
 SidebarWindow.prototype.unselect = function(forceUpdate) {
@@ -440,6 +458,61 @@ SidebarWindow.Group.prototype.setOnItemFetchListener = function(listener) {
 	return this;
 };
 
+SidebarWindow.Group.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof SidebarWindow.Group)) {
+		json = instanceOrJson;
+		instanceOrJson = new SidebarWindow.Group();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getItemCount() > 0) {
+		instanceOrJson.removeItem(0);
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("selectedBackground")) {
+		instanceOrJson.setSelectedBackground(calloutOrParse(json, json.selectedBackground, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("unselectedBackground")) {
+		instanceOrJson.setUnselectedBackground(calloutOrParse(json, json.unselectedBackground, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("select")) {
+		instanceOrJson.setOnSelectListener(parseCallback(json, json.select, this));
+	}
+	if (json.hasOwnProperty("undock")) {
+		instanceOrJson.setOnUndockListener(parseCallback(json, json.undock, this));
+	}
+	if (json.hasOwnProperty("fetch")) {
+		instanceOrJson.setOnFetchListener(parseCallback(json, json.fetch, this));
+	}
+	if (json.hasOwnProperty("selectItem")) {
+		instanceOrJson.setOnItemSelectListener(parseCallback(json, json.selectItem, this));
+	}
+	if (json.hasOwnProperty("fetchItem")) {
+		instanceOrJson.setOnItemFetchListener(parseCallback(json, json.fetchItem, this));
+	}
+	if (json.hasOwnProperty("items")) {
+		let items = calloutOrParse(json, json.items, [this, instanceOrJson]);
+		if (items !== null && typeof items == "object") {
+			if (!Array.isArray(items)) items = [items];
+			for (let i = 0; i < items.length; i++) {
+				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
+				if (item !== null && typeof item == "object") {
+					item = SidebarWindow.Group.Item.parseJson(item);
+					instanceOrJson.addItem(item);
+				}
+			}
+		}
+	}
+	return instanceOrJson;
+};
+
 SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 	SidebarFragment.Group.Item.apply(this, arguments);
 	let scope = this;
@@ -535,7 +608,83 @@ SidebarWindow.Group.Item.prototype.setOnFetchListener = function(listener) {
 	return this;
 };
 
+SidebarWindow.Group.Item.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof SidebarWindow.Group.Item)) {
+		json = instanceOrJson;
+		instanceOrJson = new SidebarWindow.Group.Item();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("select")) {
+		instanceOrJson.setOnSelectListener(parseCallback(json, json.select, this));
+	}
+	if (json.hasOwnProperty("fetch")) {
+		instanceOrJson.setOnFetchListener(parseCallback(json, json.fetch, this));
+	}
+	return instanceOrJson;
+};
+
 SidebarWindow.isSelected = function(group) {
 	let currently = UniqueHelper.getWindow("SidebarWindow");
 	return currently && currently.getSelected() == group;
+};
+
+SidebarWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof SidebarWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new SidebarWindow();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getGroupCount() > 0) {
+		instanceOrJson.removeGroup(0);
+	}
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("tabBackground")) {
+		instanceOrJson.setTabBackground(calloutOrParse(json, json.tabBackground, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("selectGroup")) {
+		instanceOrJson.setOnGroupSelectListener(parseCallback(json, json.selectGroup, this));
+	}
+	if (json.hasOwnProperty("undockGroup")) {
+		instanceOrJson.setOnGroupUndockListener(parseCallback(json, json.undockGroup, this));
+	}
+	if (json.hasOwnProperty("fetchGroup")) {
+		instanceOrJson.setOnGroupFetchListener(parseCallback(json, json.fetchGroup, this));
+	}
+	if (json.hasOwnProperty("selectItem")) {
+		instanceOrJson.setOnItemSelectListener(parseCallback(json, json.selectItem, this));
+	}
+	if (json.hasOwnProperty("fetchItem")) {
+		instanceOrJson.setOnItemFetchListener(parseCallback(json, json.fetchItem, this));
+	}
+	if (json.hasOwnProperty("groups")) {
+		let groups = calloutOrParse(json, json.groups, [this, instanceOrJson]);
+		if (groups !== null && typeof groups == "object") {
+			if (!Array.isArray(groups)) groups = [groups];
+			for (let i = 0; i < groups.length; i++) {
+				let group = calloutOrParse(groups, groups[i], [this, json, instanceOrJson]);
+				if (group !== null && typeof group == "object") {
+					group = SidebarWindow.Group.parseJson(group);
+					instanceOrJson.addGroup(group);
+				}
+			}
+		}
+	}
+	if (json.hasOwnProperty("select")) {
+		instanceOrJson.select(calloutOrParse(json, json.select, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
 };

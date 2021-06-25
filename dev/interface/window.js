@@ -34,10 +34,7 @@ FocusableWindow.prototype.getContent = function() {
 
 FocusableWindow.prototype.setContent = function(content) {
 	this.content = content;
-	if (this.isOpened()) this.reattach();
-	else if (content !== null) {
-		content.setVisibility(Interface.Visibility.GONE);
-	}
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.getFragment = function() {
@@ -50,10 +47,7 @@ FocusableWindow.prototype.getFragment = function() {
 FocusableWindow.prototype.setFragment = function(fragment) {
 	this.fragment = fragment;
 	let content = this.getContent();
-	if (this.isOpened()) this.reattach();
-	else if (content !== null) {
-		content.setVisibility(Interface.Visibility.GONE);
-	}
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.getFrame = function() {
@@ -63,10 +57,7 @@ FocusableWindow.prototype.getFrame = function() {
 FocusableWindow.prototype.setFrame = function(frame) {
 	this.frame = frame;
 	let content = this.getContent();
-	if (this.isOpened()) this.reattach();
-	else if (content !== null) {
-		content.setVisibility(Interface.Visibility.GONE);
-	}
+	if (this.isOpened()) this.update();
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -153,16 +144,6 @@ FocusableWindow.prototype.setOnAttachListener = function(listener) {
 	return true;
 };
 
-FocusableWindow.prototype.setOnShowListener = function(listener) {
-	if (typeof listener != "function") {
-		return delete this.onShow;
-	}
-	this.onShow = function() {
-		tryout(listener);
-	};
-	return true;
-};
-
 FocusableWindow.prototype.setOnUpdateListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onUpdate;
@@ -173,17 +154,7 @@ FocusableWindow.prototype.setOnUpdateListener = function(listener) {
 	return true;
 };
 
-FocusableWindow.prototype.setOnHideListener = function(listener) {
-	if (typeof listener != "function") {
-		return delete this.onHide;
-	}
-	this.onHide = function() {
-		tryout(listener);
-	};
-	return true;
-};
-
-FocusableWindow.prototype.setOnCloseListener = function(listener) {
+FocusableWindow.prototype.setOnDismissListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onClose;
 	}
@@ -232,27 +203,12 @@ FocusableWindow.prototype.attach = function() {
 	return false;
 };
 
-FocusableWindow.prototype.show = function() {
-	let content = this.getContent();
-	content && content.setVisibility(Interface.Visibility.VISIBLE);
-	this.attach();
-	this.onShow && this.onShow();
-};
-
 FocusableWindow.prototype.update = function() {
 	WindowProvider.updateWindow(this);
 	this.onUpdate && this.onUpdate();
 };
 
-FocusableWindow.prototype.hide = function() {
-	let content = this.getContent();
-	content && content.setVisibility(Interface.Visibility.GONE);
-	this.onHide && this.onHide();
-};
-
 FocusableWindow.prototype.dismiss = function() {
 	WindowProvider.closeWindow(this);
-	let content = this.getContent();
-	content && content.setVisibility(Interface.Visibility.GONE);
 	this.onClose && this.onClose();
 };

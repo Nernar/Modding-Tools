@@ -138,9 +138,9 @@ StringifyAdapter.prototype.stringifyValue = function(value, type) {
 			case "number":
 				return this.stringifyNumber(value);
 			case "object":
-				return this.isValidJson() ? "new Object()" : "{}";
+				return this.isValidJson() ? "{}" : "new Object()";
 			case "array":
-				return this.isValidJson() ? "new Array()" : "[]";
+				return this.isValidJson() ? "[]" : "new Array()";
 			case "class":
 				return "new " + value.getClass().getName() + "()";
 			case "prototype":

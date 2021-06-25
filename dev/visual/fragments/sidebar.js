@@ -7,7 +7,6 @@ SidebarFragment.prototype = new Fragment;
 
 SidebarFragment.prototype.resetContainer = function() {
 	let container = new android.widget.LinearLayout(context);
-	container.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
 	this.setContainerView(container);
 
 	let scrollItems = new android.widget.ScrollView(context);
@@ -20,7 +19,6 @@ SidebarFragment.prototype.resetContainer = function() {
 	scrollItems.addView(items);
 
 	let scrollTabs = new android.widget.ScrollView(context);
-	if (!menuDividers) scrollTabs.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
 	container.addView(scrollTabs);
 
 	let tabs = new android.widget.LinearLayout(context);
@@ -28,6 +26,18 @@ SidebarFragment.prototype.resetContainer = function() {
 	tabs.setMinimumHeight(Interface.Display.HEIGHT);
 	tabs.setTag("containerTabs");
 	scrollTabs.addView(tabs);
+};
+
+SidebarFragment.prototype.getBackground = function() {
+	return this.background || null;
+};
+
+SidebarFragment.prototype.setBackground = function(src) {
+	let container = this.getContainer();
+	if (container == null) return this;
+	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	this.background = src;
+	return this;
 };
 
 SidebarFragment.prototype.getItemContainer = function() {
@@ -77,6 +87,18 @@ SidebarFragment.prototype.getItemCount = function() {
 
 SidebarFragment.prototype.getTabContainer = function() {
 	return this.findViewByTag("containerTabs");
+};
+
+SidebarFragment.prototype.getTabBackground = function() {
+	return this.tabBackground || null;
+};
+
+SidebarFragment.prototype.setTabBackground = function(src) {
+	let container = this.getTabContainer();
+	if (container == null) return this;
+	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	this.tabBackground = src;
+	return this;
 };
 
 SidebarFragment.prototype.addTab = function(view, index) {

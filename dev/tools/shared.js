@@ -329,23 +329,30 @@ const Tool = function(object) {
 Tool.prototype.reset = function() {
 	let control = new ControlWindow(),
 		descriptor = new Object();
+	descriptor.buttonBackground = "popupButton";
 	descriptor.logotypeProgress = function(tool, control) {
-		return requireLogotype();
+		return calloutOrParse(this, this.logotype, arguments);
 	};
 	descriptor.logotypeOutside = function(tool, control) {
-		return requireInvertedLogotype();
+		let drawable = calloutOrParse(this, this.logotypeProgress, arguments);
+		return ImageFactory.getTintDrawable(drawable, Interface.Color.LTGRAY);
 	};
 	descriptor.logotype = function(tool, control) {
-		return this.logotypeProgress.apply(this, arguments);
+		return requireLogotype();
 	};
 	descriptor.click = function(tool, control) {
 		if (typeof tool.onControlClick == "function") {
-			tool.onControlClick(control);
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onControlClick.apply(tool, args);
 		}
 	};
 	descriptor.hideable = false;
 	this.controlDescriptor = descriptor;
 	this.controlWindow = control;
+};
+
+Tool.prototype.getState = function() {
+	return this.state;
 };
 
 Tool.prototype.getControlWindow = function() {
@@ -354,7 +361,7 @@ Tool.prototype.getControlWindow = function() {
 
 Tool.prototype.getControlDescriptor = function() {
 	return this.controlDescriptor || null;
-}
+};
 
 Tool.prototype.descript = function() {
 	let control = this.getControlWindow();
@@ -363,29 +370,66 @@ Tool.prototype.descript = function() {
 };
 
 Tool.prototype.attach = function() {
+	if (this.isAttached()) {
+		MCSystem.throwException("You're must deattach tool firstly!");
+	}
 	let control = this.getControlWindow();
 	if (control === null) MCSystem.throwException(null);
+	this.state = Tool.State.ATTACHED;
 	this.descript();
 	control.attach();
+};
+
+Tool.prototype.isAttached = function() {
+	return this.state != Tool.State.INACTIVE;
+};
+
+Tool.prototype.deattach = function() {
+	let control = this.getControlWindow();
+	if (control === null) MCSystem.throwException(null);
+	this.state = Tool.State.INACTIVE;
+	control.dismiss();
+};
+
+Tool.prototype.hide = function() {
+	let control = this.getControlWindow();
+	if (control === null) return;
+	this.state = Tool.State.ATTACHED;
+	control.hide();
+};
+
+Tool.prototype.isVisible = function() {
+	return this.isAttached() && this.state != Tool.State.ATTACHED;
 };
 
 Tool.prototype.control = function() {
 	let control = this.getControlWindow();
 	if (control === null) return;
+	this.state = Tool.State.FACED;
 	control.transformButton();
 	control.show();
+};
+
+Tool.prototype.isFaced = function() {
+	return this.state == Tool.State.FACED;
 };
 
 Tool.prototype.collapse = function() {
 	let control = this.getControlWindow();
 	if (control === null) return;
+	this.state = Tool.State.COLLAPSED;
 	control.transformCollapsedButton();
 	control.show();
+};
+
+Tool.prototype.isCollapsed = function() {
+	return this.state == Tool.State.COLLAPSED;
 };
 
 Tool.prototype.queue = function(sequence) {
 	let control = this.getControlWindow();
 	if (control === null) return;
+	this.state = Tool.State.QUEUED;
 	control.transformLogotype();
 	if (sequence instanceof Sequence) {
 		let instance = this;
@@ -397,6 +441,10 @@ Tool.prototype.queue = function(sequence) {
 		});
 	}
 	control.show();
+};
+
+Tool.prototype.isQueued = function() {
+	return this.state == Tool.State.QUEUED;
 };
 
 Tool.prototype.unqueue = function() {
@@ -415,6 +463,15 @@ Tool.prototype.getRequiredResources = function() {
 	return array;
 };
 
+Tool.State = new Object();
+Tool.State.INACTIVE = 0;
+Tool.State.ATTACHED = 1;
+Tool.State.FACED = 2;
+Tool.State.COLLAPSED = 3;
+Tool.State.QUEUED = 4;
+
+Tool.prototype.state = Tool.State.INACTIVE;
+
 const ControlTool = function(object) {
 	Tool.apply(this, arguments);
 };
@@ -430,7 +487,12 @@ ControlTool.prototype.reset = function() {
 	};
 	let menu = new MenuWindow(),
 		descriptor = new Object();
-	descriptor.click = function(tool, control) {
+	descriptor.background = "popupControl";
+	descriptor.click = function(tool, menu) {
+		if (typeof tool.onMenuClick == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onMenuClick.apply(tool, args);
+		}
 		tool.control();
 	};
 	descriptor.closeable = false;
@@ -460,13 +522,32 @@ ControlTool.prototype.attach = function() {
 	menu.attach();
 };
 
+ControlTool.prototype.deattach = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) MCSystem.throwException(null);
+	Tool.prototype.deattach.apply(this, arguments);
+	menu.dismiss();
+};
+
+ControlTool.prototype.hide = function() {
+	let menu = this.getMenuWindow();
+	if (menu === null) return;
+	Tool.prototype.hide.apply(this, arguments);
+	menu.hide();
+};
+
 ControlTool.prototype.menu = function() {
 	let menu = this.getMenuWindow();
 	if (menu === null) return;
 	let control = this.getControlWindow();
 	if (control === null) return;
+	this.state = ControlTool.State.CONTROLLING;
 	control.hide();
 	menu.show();
+};
+
+ControlTool.prototype.isControlling = function() {
+	return this.state == ControlTool.State.CONTROLLING;
 };
 
 ControlTool.prototype.control = function() {
@@ -528,3 +609,154 @@ ControlTool.prototype.getRequiredResources = function() {
 	}
 	return array;
 };
+
+ControlTool.State = clone(Tool.State);
+ControlTool.State.CONTROLLING = 5;
+
+const SidebarTool = function(object) {
+	ControlTool.apply(this, arguments);
+};
+
+SidebarTool.prototype = new ControlTool;
+
+SidebarTool.prototype.reset = function() {
+	ControlTool.prototype.reset.apply(this, arguments);
+	let sidebar = new SidebarWindow(),
+		descriptor = new Object();
+	descriptor.background = "popup";
+	if (!menuDividers) descriptor.tabBackground = "popup";
+	descriptor.selectGroup = function(tool, sidebar) {
+		if (typeof tool.onSelectGroup == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onSelectGroup.apply(tool, args);
+		}
+	};
+	descriptor.undockGroup = function(tool, sidebar) {
+		if (typeof tool.onUndockGroup == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onUndockGroup.apply(tool, args);
+		}
+		if (tool.isCollapsedWithoutSidebar()) {
+			tool.collapse();
+		}
+	};
+	descriptor.fetchGroup = function(tool, sidebar) {
+		if (typeof tool.onFetchGroup == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			return tool.onFetchGroup.apply(tool, args);
+		}
+	};
+	descriptor.selectItem = function(tool, sidebar) {
+		if (typeof tool.onSelectItem == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onSelectItem.apply(tool, args);
+		}
+	};
+	descriptor.fetchItem = function(tool, sidebar) {
+		if (typeof tool.onFetchItem == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			return tool.onFetchItem.apply(tool, args);
+		}
+	};
+	this.sidebarDescriptor = descriptor;
+	this.sidebarWindow = sidebar;
+};
+
+SidebarTool.prototype.getSidebarWindow = function() {
+	return this.sidebarWindow || null;
+};
+
+SidebarTool.prototype.getSidebarDescriptor = function() {
+	return this.sidebarDescriptor || null;
+};
+
+SidebarTool.prototype.descript = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) MCSystem.throwException(null);
+	ControlTool.prototype.descript.apply(this, arguments);
+	SidebarWindow.parseJson.call(this, sidebar, this.getSidebarDescriptor());
+};
+
+SidebarTool.prototype.attach = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) MCSystem.throwException(null);
+	ControlTool.prototype.attach.apply(this, arguments);
+	sidebar.attach();
+};
+
+SidebarTool.prototype.deattach = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) MCSystem.throwException(null);
+	ControlTool.prototype.deattach.apply(this, arguments);
+	sidebar.dismiss();
+};
+
+SidebarTool.prototype.hide = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return;
+	ControlTool.prototype.hide.apply(this, arguments);
+	sidebar.hide();
+};
+
+SidebarTool.prototype.menu = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return;
+	sidebar.hide();
+	ControlTool.prototype.menu.apply(this, arguments);
+};
+
+SidebarTool.prototype.control = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return;
+	sidebar.show();
+	ControlTool.prototype.control.apply(this, arguments);
+};
+
+SidebarTool.prototype.collapse = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return;
+	if (!sidebar.isSelected()) {
+		sidebar.hide();
+	}
+	ControlTool.prototype.collapse.apply(this, arguments);
+	if (sidebar.isSelected()) {
+		this.state = SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
+	}
+};
+
+SidebarTool.prototype.isCollapsedWithoutSidebar = function() {
+	return this.state == SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
+};
+
+SidebarTool.prototype.queue = function(sequence) {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return;
+	sidebar.hide();
+	ControlTool.prototype.queue.apply(this, arguments);
+};
+
+SidebarTool.prototype.getRequiredResources = function() {
+	let array = ControlTool.prototype.getRequiredResources.apply(this, arguments),
+		sidebar = this.getSidebarWindow();
+	if (sidebar === null) return array;
+	array.push(sidebar.getBackground());
+	array.push(sidebar.getTabBackground());
+	let groups = sidebar.getGroups();
+	for (let i = 0; i < groups.length; i++) {
+		let group = groups[i];
+		array.push(group.getSelectedBackground());
+		array.push(group.getUnselectedBackground());
+		array.push(group.getBackground());
+		array.push(group.getIcon());
+		let items = group.getItems();
+		for (let m = 0; m < items.length; m++) {
+			let item = items[m];
+			array.push(item.getBackground());
+			array.push(item.getIcon());
+		}
+	}
+	return array;
+};
+
+SidebarTool.State = clone(ControlTool.State);
+SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR = 6;

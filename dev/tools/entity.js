@@ -379,7 +379,7 @@ const EntityEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Bones"));
 			popup.setSelectMode(true);
-			// popup.setOnCloseListener(function() {
+			// popup.setOnDismissListener(function() {
 			// selectMode = 0;
 			// updateEntityRender(BlockEditor.data.worker);
 			// });
@@ -541,7 +541,7 @@ const EntityEditor = {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
-			// popup.setOnCloseListener(function() {
+			// popup.setOnDismissListener(function() {
 			// selectMode = 0;
 			// updateEntityRender(EntityEditor.data.worker);
 			// });

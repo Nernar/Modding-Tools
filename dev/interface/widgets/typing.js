@@ -110,7 +110,7 @@ const TypingTextView = function(scope, attrs, style) {
 			return duration;
 		},
 		setTyperToneEnabled: function(enabled) {
-			tone = Boolean(enabled);
+			tone = Boolean(enabled == true);
 		},
 		isTyperToneEnabled: function() {
 			return tone;

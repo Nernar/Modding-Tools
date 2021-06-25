@@ -1426,6 +1426,7 @@ MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrM
 	return message;
 };
 
+/* TODO: DEPRECATED, USE HIDE INSTEAD */
 MenuWindow.dismissCurrently = function() {
 	let unique = UniqueHelper.getWindow("MenuWindow");
 	if (unique !== null) unique.dismiss();

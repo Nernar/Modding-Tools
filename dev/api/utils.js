@@ -223,7 +223,7 @@ const parseCallback = function(scope, value, args) {
 		}
 		if (typeof value == "function") {
 			return function() {
-				args = args.concat(arguments);
+				args = args.concat(Array.prototype.slice.call(arguments));
 				return value.apply(scope, args);
 			};
 		}

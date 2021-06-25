@@ -549,7 +549,7 @@ let TransitionEditor = {
 		select: function() {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Frames"));
-			popup.setOnCloseListener(function() {
+			popup.setOnDismissListener(function() {
 				selectMode = 0;
 				drawTransitionPoints(TransitionEditor.data.worker);
 			});

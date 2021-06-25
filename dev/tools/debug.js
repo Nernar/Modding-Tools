@@ -83,7 +83,7 @@ const ConsoleViewer = {
 				} else showHint(String(result), Interface.Color.LTGRAY);
 			}
 		}).setBackground("popup");
-		popup.setOnCloseListener(function() {
+		popup.setOnDismissListener(function() {
 			let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 			if (snack !== null) ConsoleViewer.addEditable();
 		});

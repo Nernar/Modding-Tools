@@ -39,12 +39,35 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 	return new ActorScene(container ? rootOrContainer : content, container || rootOrContainer);
 };
 
+ActoredWindow.prototype.getHideableContent = function() {
+	let content = this.getContent();
+	if (content !== null) {
+		if (content instanceof android.view.ViewGroup) {
+			if (content.getChildCount() > 0) {
+				return content.getChildAt(0);
+			}
+		}
+	}
+	return null;
+};
+
 ActoredWindow.prototype.show = function() {
+	this.attach();
 	let enter = this.getEnterActor();
 	if (enter && this.isOpened()) {
 		this.beginDelayedActor(enter);
 	}
-	FocusableWindow.prototype.show.apply(this, arguments);
+	this.onShow && this.onShow();
+};
+
+ActoredWindow.prototype.setOnShowListener = function(listener) {
+	if (typeof listener != "function") {
+		return delete this.onShow;
+	}
+	this.onShow = function() {
+		tryout(listener);
+	};
+	return true;
 };
 
 ActoredWindow.prototype.hide = function() {
@@ -52,7 +75,18 @@ ActoredWindow.prototype.hide = function() {
 	if (exit && this.isOpened()) {
 		this.beginDelayedActor(exit);
 	}
-	FocusableWindow.prototype.hide.apply(this, arguments);
+	this.onHide && this.onHide();
+	this.dismiss();
+};
+
+ActoredWindow.prototype.setOnHideListener = function(listener) {
+	if (typeof listener != "function") {
+		return delete this.onHide;
+	}
+	this.onHide = function() {
+		tryout(listener);
+	};
+	return true;
 };
 
 const UniqueWindow = new Function();
@@ -77,9 +111,9 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 	this.updatable = !!enabled;
 };
 
-UniqueWindow.prototype.show = function() {
+UniqueWindow.prototype.attach = function() {
 	if (UniqueHelper.prepareWindow(this)) {
-		ActoredWindow.prototype.show.apply(this, arguments);
+		ActoredWindow.prototype.attach.apply(this, arguments);
 	}
 };
 

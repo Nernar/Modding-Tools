@@ -68,6 +68,7 @@ const ControlWindow = function() {
 	UniqueWindow.apply(this, arguments);
 	this.setFragment(new FrameFragment());
 	this.resetContent();
+	this.setButtonBackground("popupButton");
 };
 
 ControlWindow.prototype = new UniqueWindow;
@@ -92,7 +93,6 @@ ControlWindow.prototype.resetContent = function() {
 		instance.transformCollapsedButton();
 		return true;
 	});
-	this.setButtonBackground("popupButton");
 	let behold = this.makeScene(button.getContainer()),
 		collapse = this.makeScene(collapsed.getContainer()),
 		queue = this.makeScene(queued.getContainer());
@@ -392,10 +392,10 @@ ControlWindow.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setButtonIcon(calloutOrParse(json, json.logotype, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("buttonBackground")) {
-		instanceOrJson.setOrientation(calloutOrParse(json, json.buttonBackground, [this, instanceOrJson]));
+		instanceOrJson.setButtonBackground(calloutOrParse(json, json.buttonBackground, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("logotypeBackground")) {
-		instanceOrJson.setOrientation(calloutOrParse(json, json.logotypeBackground, [this, instanceOrJson]));
+		instanceOrJson.setLogotypeBackground(calloutOrParse(json, json.logotypeBackground, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("click")) {
 		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
