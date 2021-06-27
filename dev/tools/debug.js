@@ -267,7 +267,6 @@ const LevelProvider = new Object();
 
 LevelProvider.attach = function() {
 	let overlay = new OverlayWindow();
-	overlay.attach();
 	this.overlay = overlay;
 };
 
@@ -309,5 +308,5 @@ LevelProvider.show = function() {
 LevelProvider.hide = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
-	overlay.hide();
+	overlay.dismiss();
 };

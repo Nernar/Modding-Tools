@@ -174,8 +174,8 @@ Callback.addCallback("EntityHurt", function(attacker, victim) {
 
 let thereIsNoTPSMeter = false;
 
-tryout.call(this, function() {
-	let TPSMeter = Packages.zhekasmirnov.launcher.api.runtime.TPSMeter;
+tryoutSafety.call(this, function() {
+	let TPSMeter = findCorePackage().api.runtime.TPSMeter;
 	this.TPSMeter = new TPSMeter(20, 1000);
 }, function(e) {
 	showHint(translate("Couldn't create engine TPS Meter"));
