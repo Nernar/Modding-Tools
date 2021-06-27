@@ -49,7 +49,7 @@ let debugAttachControlTools = true;
 let debugIgnoreLockedBackground = true;
 
 // Currently build information
-const REVISION = "develop-alpha-preview-0.3.5-27.06.2021-14";
+const REVISION = "testing-beta-preview-0.3.5-27.06.2021-14";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");

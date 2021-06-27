@@ -7,7 +7,7 @@ polyfill/FileTools.js
 polyfill/Level.js
 
 storage/explorer.js
-# storage/factory.js
+storage/factory.js
 storage/message.js
 storage/converter/shared.js
 storage/converter/block.js
@@ -15,14 +15,14 @@ storage/converter/transition.js
 
 api/shared.js
 api/object.js
-# api/protect.js
+api/protect.js
 api/utils.js
 api/support.js
 
-# network/browser.js
-# network/connect.js
-# network/local.js
-# network/remote.js
+network/browser.js
+network/connect.js
+network/local.js
+network/remote.js
 
 interface/actor.js
 interface/motions.js
@@ -41,10 +41,8 @@ project/entity.js
 visual/fragments/shared.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
-visual/fragments/control.js
 visual/fragments/overlay.js
 visual/sidebar.js
-visual/control.js
 visual/explorer.js
 visual/project.js
 visual/snack.js
@@ -71,6 +69,6 @@ sequence/manual.js
 sequence/testing.js
 
 callback/shared.js
-# callback/debug.js
+callback/debug.js
 callback/support.js
 callback/loading.js
