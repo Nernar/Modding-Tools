@@ -1,22 +1,12 @@
 const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
-		if (REVISION.startsWith("develop")) {
-			REQUIRE("background.js");
-			if (debugAttachBackground) {
-				attachBackground();
-			}
-		}
 		if (isFirstLaunch()) {
 			let foreground = this.getForegroundIcon(),
 				background = this.getBackgroundIcon();
 			ImageFactory.loadFromAsset(foreground, foreground + ".dnr");
 			ImageFactory.loadFromAsset(background, background + ".dnr");
 			LogotypeSequence.prototype.create.apply(this, arguments);
-		}
-		if (REVISION.startsWith("develop")) {
-			REQUIRE("provider.js");
-			attachEvalButton();
 		}
 	},
 	getExpirationTime: function() {
@@ -38,38 +28,17 @@ const LaunchSequence = new LogotypeSequence({
 			ImageFactory.loadFromAsset(cancellation, "popup/selection/locked.dnr");
 			FileTools.assureDir(Dirs.EXPORT);
 			FileTools.assureDir(Dirs.LOGGING);
-			if (REVISION.startsWith("develop")) {
-				let background = SnackSequence.prototype.getBackground();
-				ImageFactory.loadFromAsset(background, "popup/popup.dnr");
-				let creation = SnackSequence.prototype.getCreationBackground();
-				ImageFactory.loadFromAsset(creation, "popup/selection/queued.dnr");
-				let completion = SnackSequence.prototype.getCompletionBackground();
-				ImageFactory.loadFromAsset(completion, "popup/selection/selected.dnr");
-			}
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
-			if (REVISION.startsWith("develop")) {
-				REQUIRE("translation.js")(__dir__ + "dev/", __dir__ + "dev/translation.js").assureYield();
-			}
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			if (REVISION.startsWith("develop")) {
-				REQUIRE("recompress.js")(Dirs.IMAGE, Dirs.ASSET).assureYield();
-			}
 			let list = Files.listFileNames(Dirs.ASSET, true);
 			this.count += Files.checkFormats(list, ".dnr").length;
 			ImageFactory.loadDirectory();
 			ImageFactory.decodeAsAnimation("blockNoTextures", ["blockDefineTexture", "blockDefineWrong"], 1500);
 			index += ImageFactory.resourcesCount;
 			refreshSupportablesIcons();
-			if (REVISION.startsWith("develop")) {
-				REQUIRE("recompile.js")(Dirs.EVALUATE + "testing/", Dirs.TESTING).assureYield();
-				if (debugIgnoreLockedBackground) {
-					ImageFactory.loadFromAsset("popupSelectionLocked", "popup/popup.dnr");
-					ImageFactory.loadFromAsset("popupSelectionQueued", "popup/popup.dnr");
-				}
-			}
 		}
 		return index;
 	},

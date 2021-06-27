@@ -11,8 +11,8 @@ const ProjectEditor = {
 		button.show();
 	},
 	menu: function() {
-		prepareAdditionalInformation(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1),
-			(3 + Number(isAnyCustomSupportableLoaded()) + Number(REVISION.indexOf("alpha") != -1)) * 2);
+		prepareAdditionalInformation(3 + Number(isAnyCustomSupportableLoaded()),
+			(3 + Number(isAnyCustomSupportableLoaded())) * 2);
 		let control = new MenuWindow();
 		attachWarningInformation(control);
 		control.setOnClickListener(function() {
@@ -58,43 +58,6 @@ const ProjectEditor = {
 						return true;
 					});
 				}
-				if (REVISION.indexOf("alpha") != -1) {
-					let entities = project.getEntities();
-					if (entities && entities.length > 0) {
-						let category = header.addCategory(translate("Entities"));
-						for (let i = 0; i < entities.length; i++) {
-							let entity = content[entities[i]],
-								models = entity.visual.length;
-							category.addItem("entity", entity.define.id,
-								translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-									"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
-						}
-						category.setOnItemClickListener(function(item, index) {
-							let real = entities[index],
-								entity = content[real];
-							if (EntityEditor.open(real)) {
-								content.splice(real, 1);
-								content.unshift(entity);
-								project.setCurrentlyId(0);
-								control.dismiss();
-							}
-						});
-						category.setOnItemHoldListener(function(item, index) {
-							confirm(translate("Warning!"),
-								translate("Selected worker will be removed, including all it's data.") + " " +
-								translate("Do you want to continue?"),
-								function() {
-									let position = entities[index];
-									if (position >= 0 && position < content.length) {
-										content.splice(position, 1);
-										showHint(translate("Worker has been removed"));
-									} else showHint(translate("Something went wrong"));
-									ProjectEditor.menu();
-								});
-							return true;
-						});
-					}
-				}
 				let transitions = project.getTransitions();
 				if (transitions && transitions.length > 0) {
 					let category = header.addCategory(translate("Transitions"));
@@ -138,17 +101,10 @@ const ProjectEditor = {
 			control.dismiss();
 		});
 		category.addItem("entity", translate("Entity"), function() {
-			if (REVISION.indexOf("alpha") != -1) {
-				EntityEditor.create();
-				control.dismiss();
-				showHint(translate("Not developed yet"));
-			} else showHint(translate("This content will be availabled soon"));
-		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
+			showHint(translate("This content will be availabled soon"));
+		}).setBackground("popupSelectionLocked");
 		category.addItem("animation", translate("Animation"), function() {
-			if (REVISION.startsWith("develop")) {
-				AnimationWindow.create();
-				control.dismiss();
-			} else showHint(translate("This content will be availabled soon"));
+			showHint(translate("This content will be availabled soon"));
 		}).setBackground("popupSelectionLocked");
 		category.addItem("transition", translate("Transition"), function() {
 			TransitionEditor.create();
@@ -201,13 +157,8 @@ const ProjectEditor = {
 			});
 		});
 		category.addItem("menuProjectManual", translate("Tutorial"), function() {
-			if (REVISION.indexOf("alpha") != -1) {
-				confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
-					TutorialSequence.ButtonInteraction.execute();
-					control.dismiss();
-				});
-			} else showHint(translate("This content will be availabled soon"));
-		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
+			showHint(translate("This content will be availabled soon"));
+		}).setBackground("popupSelectionLocked");
 		category.addItem("menuProjectManage", translate("Reset"), function() {
 			confirm(translate("Creating project"),
 				translate("Current project will be erased, all unsaved data will be lost.") + " " +
@@ -217,34 +168,6 @@ const ProjectEditor = {
 				});
 		});
 		attachAdditionalInformation(control);
-		if (REVISION.indexOf("alpha") != -1) {
-			category = control.addCategory(translate("Debug & testing"));
-			category.addItem("menuBoardConfig", translate("Debug"), function() {
-				DebugEditor.menu();
-				control.dismiss();
-			}).setBackground("popupSelectionQueued");
-			category.addItem("menuBoardInsert", translate("Console"), function() {
-				ConsoleViewer.show();
-				control.dismiss();
-			}).setBackground("popupSelectionQueued");
-			category.addItem("worldActionMeasure", translate("Log"), function() {
-				LogViewer.show();
-			}).setBackground("popupSelectionQueued");
-			category.addItem("explorer", translate("Explorer"), function() {
-				let explorer = new ExplorerWindow();
-				explorer.setMultipleSelectable(true);
-				let bar = explorer.addPath();
-				bar.setOnOutsideListener(function(bar) {
-					explorer.dismiss();
-				});
-				bar.setPath(__dir__);
-				explorer.show();
-			}).setBackground("popupSelectionQueued");
-			category.addItem("support", translate("Mods"), function() {
-				ModificationSource.selector();
-			}).setBackground("popupSelectionQueued");
-			attachAdditionalInformation(control);
-		}
 		if (isAnyCustomSupportableLoaded()) {
 			category = control.addCategory(translate("Supportables")).setOnHoldItemListener(function(item, index) {
 				return showSupportableInfo([UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner][index]);

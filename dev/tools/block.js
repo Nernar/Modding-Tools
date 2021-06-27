@@ -680,17 +680,12 @@ const BlockEditor = {
 			group.addItem("blockBoxScretch", this.Renderer.resize);
 			group.addItem("blockBoxMove", this.Renderer.move);
 			group.addItem("blockBoxMirror", this.Renderer.mirror);
-			if (REVISION.startsWith("develop")) {
-				group.addItem(ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED), this.Renderer.rotate);
-			}
 			group.addItem("blockBoxTexture", this.Renderer.texture);
 			group.addItem("blockBoxRemove", this.Renderer.remove);
 		} else group.addItem("blockBoxAdd", this.Renderer.add);
 		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
 			if (BlockEditor.data.hasRender) {
-				if (!REVISION.startsWith("develop")) {
-					if (itemIndex > 4) itemIndex++;
-				}
+				if (itemIndex > 4) itemIndex++;
 				if (itemIndex == 0) {
 					return translate("Selects currently box");
 				} else if (itemIndex == 1) {
@@ -719,16 +714,11 @@ const BlockEditor = {
 			group.addItem("blockBoxScretch", this.Collision.resize);
 			group.addItem("blockBoxMove", this.Collision.move);
 			group.addItem("blockBoxMirror", this.Collision.mirror);
-			if (REVISION.startsWith("develop")) {
-				group.addItem(ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED), this.Collision.rotate);
-			}
 			group.addItem("blockBoxRemove", this.Collision.remove);
 		} else group.addItem("blockBoxAdd", this.Collision.add);
 		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
 			if (BlockEditor.data.hasCollision) {
-				if (!REVISION.startsWith("develop")) {
-					if (itemIndex > 4) itemIndex++;
-				}
+				if (itemIndex > 4) itemIndex++;
 				if (itemIndex == 0) {
 					return translate("Selects currently box");
 				} else if (itemIndex == 1) {

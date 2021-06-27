@@ -1441,42 +1441,6 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 	while (instanceOrJson.getElementCount() > 0) {
 		instanceOrJson.removeElement(0);
 	}
-	if (debugAttachControlTools && REVISION.startsWith("develop")) {
-		let category = instanceOrJson.addCategory(translate("Development"));
-		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
-			checkEvaluate();
-		});
-		category.addItem("blockDefineType", translate("Check"), function() {
-			evaluateScope();
-		});
-		category.addItem("explorerExtensionScript", translate("Launch"), function() {
-			checkEvaluate.loadEvaluate();
-		});
-		category.addItem("worldShape", translate("Require"), function() {
-			let files = Files.listFileNames(Dirs.EVALUATE, true);
-			files = Files.checkFormats(files, ".js");
-			for (let i = 0; i < files.length; i++) {
-				let file = files[i];
-				if (REQUIRE.loaded.indexOf(file) != -1) {
-					if (REQUIRE.results[file] === undefined) {
-						files.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			select(translate("What's need to require?"), files, function(index, path) {
-				let output = REQUIRE(path);
-				if (typeof output == "function") {
-					output();
-				} else if (output !== undefined) {
-					showHint(output);
-				}
-			});
-		});
-		category.addItem("explorer", translate("Explorer"), function() {
-			attachAdvancedExplorer();
-		});
-	}
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
 	}
