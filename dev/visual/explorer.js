@@ -1,10 +1,11 @@
 const ExplorerWindow = function(mayWrap) {
+	UniqueWindow.apply(this, arguments);
 	this.setGravity(Interface.Gravity.CENTER);
 	this.setWidth(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
 	this.setHeight(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
 	this.setFocusable(true);
 	this.file = new java.io.File(__dir__);
-	this.reset();
+	this.resetContent();
 	this.setRootDirectory();
 	this.resetAdapter();
 	this.setBackground("popupControl");
@@ -17,7 +18,7 @@ ExplorerWindow.prototype.TYPE = "ExplorerWindow";
 ExplorerWindow.prototype.multiple = false;
 ExplorerWindow.prototype.single = false;
 
-ExplorerWindow.prototype.reset = function() {
+ExplorerWindow.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
@@ -66,7 +67,7 @@ ExplorerWindow.prototype.getBackground = function() {
 };
 
 ExplorerWindow.prototype.setBackground = function(src) {
-	let content = this.getContent();
+	let content = this.getContainer();
 	if (!content || !src) return this;
 	this.background = src;
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -137,12 +138,12 @@ ExplorerWindow.prototype.getDirectory = function() {
 };
 
 ExplorerWindow.prototype.setRootDirectory = function(path) {
-	this.root = String(path || Dirs.EXTERNAL);
-	(!this.root.endsWith("/")) && (this.root += "/");
+	this.external = String(path || Dirs.EXTERNAL);
+	(!this.external.endsWith("/")) && (this.external += "/");
 };
 
 ExplorerWindow.prototype.getRootDirectory = function() {
-	return this.root;
+	return this.external;
 };
 
 ExplorerWindow.prototype.setItems = function(array) {
@@ -518,7 +519,7 @@ ExplorerWindow.Path.prototype.updatePath = function() {
 	this.pathes = new Array();
 	views.layout.removeAllViews();
 	delete this.lastPath;
-	let current = window ? window.root : Dirs.EXTERNAL,
+	let current = window ? window.external : Dirs.EXTERNAL,
 		pathFilter = path.replace(current, new String()),
 		pathDivided = pathFilter.split("/");
 	pathDivided.pop();
@@ -785,10 +786,10 @@ ExplorerWindow.prototype.addRename = function(actionOrRename, action) {
 	return rename;
 };
 
-const ExplorerAdapter = function(array, root, mode) {
+const ExplorerAdapter = function(array, external, mode) {
 	this.resetAndClear();
 	array && this.setItems(array);
-	root && this.setRoot(root);
+	external && this.setRoot(external);
 	mode !== undefined && this.setMode(mode);
 };
 
@@ -990,8 +991,8 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	returnToBasic: function() {
 		this.basicMode !== undefined && this.setMode(this.basicMode);
 	},
-	setRoot: function(root) {
-		this.direct = root;
+	setRoot: function(external) {
+		this.direct = external;
 	},
 	setOnSelectListener: function(listener) {
 		this.__select = listener;

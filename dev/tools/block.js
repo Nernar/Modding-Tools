@@ -438,7 +438,7 @@ const BlockTool = new SidebarTool({
 						return;
 					}
 					showHint(translate("Tap block"));
-					control.dismiss();
+					control.hide();
 					selectMode = 1;
 					let button = new ControlButton();
 					button.setIcon("menuBack");
@@ -492,7 +492,7 @@ const BlockTool = new SidebarTool({
 					}
 					showHint(translate("Manually view boxes innersection"));
 					Popups.closeAll();
-					control.dismiss();
+					control.hide();
 					let button = new ControlButton();
 					button.setIcon("menuBack");
 					button.setOnClickListener(function() {
@@ -647,7 +647,7 @@ const BlockEditor = {
 		button.setIcon("block");
 		button.setOnClickListener(function() {
 			BlockEditor.menu();
-			sidebar.dismiss();
+			sidebar.hide();
 		});
 		button.show();
 		let sidebar = new SidebarWindow(),
@@ -800,7 +800,7 @@ const BlockEditor = {
 			});
 		});
 		category.addItem("menuProjectLeave", translate("Back"), function() {
-			control.dismiss();
+			control.hide();
 			Popups.closeAll();
 			BlockEditor.unselect();
 			ProjectProvider.setOpenedState(false);
@@ -818,7 +818,7 @@ const BlockEditor = {
 				return;
 			}
 			showHint(translate("Tap block"));
-			control.dismiss();
+			control.hide();
 			selectMode = 1;
 			let button = new ControlButton();
 			button.setIcon("menuBack");
@@ -864,7 +864,7 @@ const BlockEditor = {
 			}
 			showHint(translate("Manually view boxes innersection"));
 			Popups.closeAll();
-			control.dismiss();
+			control.hide();
 			let button = new ControlButton();
 			button.setIcon("menuBack");
 			button.setOnClickListener(function() {
@@ -935,7 +935,7 @@ const BlockEditor = {
 		BlockEditor.unselect();
 		BlockEditor.create();
 		ProjectProvider.setOpenedState(true);
-		MenuWindow.dismissCurrently();
+		MenuWindow.hideCurrently();
 		return true;
 	},
 	merge: function(file) {

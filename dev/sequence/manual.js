@@ -73,7 +73,7 @@ TutorialSequence.prototype.tounchIncorrecrly = function() {
 };
 
 TutorialSequence.prototype.complete = function() {
-	this.hint.dismiss();
+	this.hint.hide();
 	this.unpinAndClear();
 	delete this.hint;
 	if (!this.isOneRequired()) {
@@ -163,7 +163,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 	touchCorrectly: function() {
 		this.goto = 5;
 		if (this.currently !== undefined) {
-			this.currently.dismiss();
+			this.currently.hide();
 			delete this.currently;
 		}
 		TutorialSequence.prototype.touchCorrectly.apply(this, arguments);
@@ -250,7 +250,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
-			this.currently.dismiss();
+			this.currently.hide();
 			delete this.currently;
 			delete this.block;
 		}
@@ -388,7 +388,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
-			this.currently.dismiss();
+			this.currently.hide();
 			delete this.currently;
 			delete this.block;
 			delete this.adding;

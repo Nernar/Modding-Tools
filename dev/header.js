@@ -49,14 +49,14 @@ let debugAttachControlTools = true;
 let debugIgnoreLockedBackground = true;
 
 // Currently build information
-const REVISION = "develop-alpha-preview-0.3.5-27.06.2021-14";
+const REVISION = "develop-alpha-0.4-27.06.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
 
 // Definitions for default values
-let firstLaunchTutorial = REVISION.indexOf("alpha") != -1;
+let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let warningMessage = null;
 let currentEnvironment = __name__;

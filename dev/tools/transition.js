@@ -165,7 +165,7 @@ let TransitionEditor = {
 		button.setIcon("transition");
 		button.setOnClickListener(function() {
 			TransitionEditor.menu();
-			sidebar.dismiss();
+			sidebar.hide();
 		});
 		button.show();
 		let sidebar = new SidebarWindow(),
@@ -273,7 +273,7 @@ let TransitionEditor = {
 			});
 		});
 		category.addItem("menuProjectLeave", translate("Back"), function() {
-			control.dismiss();
+			control.hide();
 			Popups.closeAll(), TransitionEditor.unselect();
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
@@ -290,7 +290,7 @@ let TransitionEditor = {
 				return;
 			}
 			showHint(translate("Hit entity"));
-			control.dismiss();
+			control.hide();
 			selectMode = 2;
 			let button = new ControlButton();
 			button.setIcon("menuBack");
@@ -307,7 +307,7 @@ let TransitionEditor = {
 					let message = control.addMessage("menuBoardWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
 						function() {
 							TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
-							control.dismiss(), TransitionEditor.create();
+							control.hide(), TransitionEditor.create();
 						});
 					handle(function() {
 						control.scrollToElement(message);
@@ -325,7 +325,7 @@ let TransitionEditor = {
 				showHint(translate("Can't draw points in menu"));
 				return;
 			}
-			control.dismiss();
+			control.hide();
 			selectMode = 4;
 			let button = new ControlButton();
 			button.setIcon("menuBack");
@@ -360,7 +360,7 @@ let TransitionEditor = {
 		TransitionEditor.unselect();
 		TransitionEditor.create();
 		ProjectProvider.setOpenedState(true);
-		MenuWindow.dismissCurrently();
+		MenuWindow.hideCurrently();
 		return true;
 	},
 	merge: function(file) {

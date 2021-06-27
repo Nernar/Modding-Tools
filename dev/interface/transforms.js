@@ -179,7 +179,7 @@ ActorSet.prototype.getActorCount = function() {
 };
 
 ActorSet.prototype.addActor = function(actor) {
-	if (actor.getActor) {
+	if (actor instanceof WindowActor) {
 		if (actor.TYPE == "none") {
 			MCSystem.throwException("ActorSet can't use none actor");
 		}
@@ -188,7 +188,7 @@ ActorSet.prototype.addActor = function(actor) {
 };
 
 ActorSet.prototype.removeActor = function(actor) {
-	if (actor.getActor) {
+	if (actor instanceof WindowActor) {
 		if (actor.TYPE == "none") {
 			MCSystem.throwException("ActorSet can't remove none actor");
 		}

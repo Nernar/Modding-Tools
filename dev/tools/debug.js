@@ -24,7 +24,7 @@ const LogViewer = {
 		let params = new android.widget.LinearLayout.
 			LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 		params.weight = 0.1;
-		popup.getContent().addView(seek, params);
+		popup.getContainer().addView(seek, params);
 		handleThread(function() {
 			let log = java.lang.Class.forName("zhekasmirnov.launcher.api.log.ICLog", true, context.getClass().getClassLoader()),
 				filter = log.getMethod("getLogFilter").invoke(null);
@@ -131,7 +131,7 @@ const DebugEditor = {
 		if (information !== null) {
 			control.addMessage(information.icon || "support", translate(information.title || "Test"), function() {
 				confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."), function() {
-					control.dismiss();
+					control.hide();
 					DebugEditor.requireTest(path + ".dns", information.mobility || information.counter);
 				});
 			});
@@ -242,7 +242,7 @@ const ModificationSource = {
 						ModificationSource.selector();
 					});
 				});
-				MenuWindow.dismissCurrently();
+				MenuWindow.hideCurrently();
 			});
 		}
 	},
@@ -267,6 +267,7 @@ const LevelProvider = new Object();
 
 LevelProvider.attach = function() {
 	let overlay = new OverlayWindow();
+	overlay.attach();
 	this.overlay = overlay;
 };
 
@@ -308,5 +309,5 @@ LevelProvider.show = function() {
 LevelProvider.hide = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
-	overlay.dismiss();
+	overlay.hide();
 };

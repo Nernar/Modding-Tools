@@ -144,16 +144,13 @@ ActorPropagation.prototype.getPropagation = function() {
 
 const ActorScene = function(root, container) {
 	this.reset(root, container);
-	if (root && !container) {
-		this.setContainer(root);
-	}
 };
 
 ActorScene.prototype.reset = function(root, container) {
-	if (root && container) {
+	if (container !== undefined) {
 		this.scene = new android.transition.Scene(root, container);
 		this.container = container;
-	} else this.scene = new android.transition.Scene();
+	} else this.scene = new android.transition.Scene(root);
 };
 
 ActorScene.prototype.getScene = function() {
@@ -170,7 +167,11 @@ ActorScene.prototype.getContainer = function() {
 
 ActorScene.prototype.setContainer = function(container) {
 	this.container = container;
-	this.scene = this.scene.getCurrentScene(container);
+	this.scene = this.getCurrentScene(container);
+};
+
+ActorScene.prototype.getCurrentScene = function(container) {
+	return this.scene.getCurrentScene(container);
 };
 
 ActorScene.prototype.setEnterAction = function(listener) {
@@ -189,16 +190,16 @@ ActorScene.prototype.enter = function() {
 	this.scene.enter();
 };
 
-ActorScene.prototype.go = function() {
-	ActorManager.go(this.scene);
+ActorScene.prototype.go = function(actor) {
+	ActorManager.go(this.scene, actor);
 };
 
 ActorScene.prototype.exit = function() {
 	this.scene.exit();
 };
 
-ActorScene.getCurrentScene = function(container) {
-	let scene = new ActorScene();
+ActorScene.getCurrentScene = function(root, container) {
+	let scene = new ActorScene(root);
 	scene.setContainer(container);
 	return scene;
 };
@@ -213,7 +214,7 @@ ActorManager.prototype.reset = function() {
 };
 
 ActorManager.prototype.hasScene = function(scene) {
-	if (scene.getScene) scene = scene.getScene();
+	if (scene instanceof ActorScene) scene = scene.getScene();
 	return this.scenes.indexOf(scene) != -1;
 };
 
@@ -226,7 +227,7 @@ ActorManager.prototype.setActor = function(sceneFromOrTo, sceneToOrActor, actor)
 	} else if (sceneToOrActor.getScene) {
 		sceneToOrActor = sceneToOrActor.getScene();
 	}
-	if (actor.getActor) {
+	if (actor instanceof WindowActor) {
 		actor = actor.getActor();
 	}
 	if (!actor) {
@@ -239,7 +240,7 @@ ActorManager.prototype.setActor = function(sceneFromOrTo, sceneToOrActor, actor)
 };
 
 ActorManager.prototype.actorTo = function(scene) {
-	if (scene.getScene) {
+	if (scene && scene.getScene) {
 		scene = scene.getScene();
 	} else if (typeof scene == "number") {
 		scene = this.scenes[scene];
@@ -261,12 +262,17 @@ ActorManager.endActors = function(container) {
 	if (!container) {
 		MCSystem.throwException("Can't end actors without container");
 	}
-	android.transition.TransitionManager.endTransitions(container);
+	if (android.os.Build.VERSION.SDK_INT >= 23) {
+		android.transition.TransitionManager.endTransitions(container);
+	}
 };
 
 ActorManager.go = function(scene, actor) {
-	if (!container) {
+	if (!scene) {
 		MCSystem.throwException("ActorManager.go can't be resolved without ActorScene");
+	}
+	if (scene && scene.getScene) {
+		scene = scene.getScene();
 	}
 	if (actor && actor.getActor) {
 		actor = actor.getActor();

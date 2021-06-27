@@ -118,7 +118,7 @@ Popups.closeAllByTag = function(tag) {
 Popups.close = function(index) {
 	let widget = this.widgets[index];
 	if (widget) {
-		widget.dismiss();
+		widget.hide();
 		this.widgets.splice(index, 1);
 		return true;
 	}

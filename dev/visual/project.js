@@ -1,4 +1,5 @@
 const MenuWindow = function() {
+	UniqueWindow.apply(this, arguments);
 	let set = new ActorSet(),
 		slideIn = new SlideActor(),
 		slideOut = new SlideActor();
@@ -19,7 +20,7 @@ const MenuWindow = function() {
 	this.setExitActor(set);
 
 	this.elements = new Array();
-	this.reset();
+	this.resetContent();
 	this.setBackground("popupControl");
 };
 
@@ -28,7 +29,7 @@ MenuWindow.prototype.TYPE = "MenuWindow";
 
 MenuWindow.prototype.outside = true;
 
-MenuWindow.prototype.reset = function() {
+MenuWindow.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
@@ -56,7 +57,7 @@ MenuWindow.prototype.getBackground = function() {
 };
 
 MenuWindow.prototype.setBackground = function(src) {
-	let content = this.getContent();
+	let content = this.getContainer();
 	if (!content || !src) return this;
 	this.background = src;
 	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
@@ -86,7 +87,7 @@ MenuWindow.prototype.indexOfElement = function(item) {
 };
 
 MenuWindow.prototype.scrollTo = function(y, duration) {
-	let content = this.getContent(),
+	let content = this.getContainer(),
 		views = this.views;
 	if (!content || !views || !views.scroll) return this;
 	let actor = new ScrollActor();
@@ -102,7 +103,7 @@ MenuWindow.prototype.scrollToElement = function(elementOrIndex, duration) {
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
 	if (!element) return this;
-	let content = element.getContent();
+	let content = element.getContainer();
 	if (!content) return this;
 	this.scrollTo(content.getY(), duration);
 	return this;
@@ -146,7 +147,7 @@ MenuWindow.prototype.setCloseableOutside = function(enabled) {
 };
 
 MenuWindow.prototype.click = function() {
-	this.outside && this.dismiss();
+	this.outside && this.hide();
 	this.__click && this.__click(this);
 	return this;
 };
@@ -256,7 +257,7 @@ MenuWindow.Header.prototype.setupScroll = function() {
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
 	window.setOnShowListener(function() {
-		window.getContent().post(function() {
+		window.getContainer().post(function() {
 			scope.updateSlideProgress();
 		});
 	});
@@ -1426,10 +1427,9 @@ MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrM
 	return message;
 };
 
-/* TODO: DEPRECATED, USE HIDE INSTEAD */
-MenuWindow.dismissCurrently = function() {
+MenuWindow.hideCurrently = function() {
 	let unique = UniqueHelper.getWindow("MenuWindow");
-	if (unique !== null) unique.dismiss();
+	if (unique !== null) unique.hide();
 };
 
 MenuWindow.parseJson = function(instanceOrJson, json) {

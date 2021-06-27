@@ -40,7 +40,7 @@ const ProjectEditor = {
 							content.splice(real, 1);
 							content.unshift(block);
 							project.setCurrentlyId(0);
-							control.dismiss();
+							control.hide();
 						}
 					});
 					category.setOnItemHoldListener(function(item, index) {
@@ -76,7 +76,7 @@ const ProjectEditor = {
 								content.splice(real, 1);
 								content.unshift(entity);
 								project.setCurrentlyId(0);
-								control.dismiss();
+								control.hide();
 							}
 						});
 						category.setOnItemHoldListener(function(item, index) {
@@ -111,7 +111,7 @@ const ProjectEditor = {
 							content.splice(real, 1);
 							content.unshift(transition);
 							project.setCurrentlyId(0);
-							control.dismiss();
+							control.hide();
 						}
 					});
 					category.setOnItemHoldListener(function(item, index) {
@@ -135,24 +135,24 @@ const ProjectEditor = {
 		let category = control.addCategory(translate("Editors"));
 		category.addItem("block", translate("Block"), function() {
 			BlockEditor.create();
-			control.dismiss();
+			control.hide();
 		});
 		category.addItem("entity", translate("Entity"), function() {
 			if (REVISION.indexOf("alpha") != -1) {
 				EntityEditor.create();
-				control.dismiss();
+				control.hide();
 				showHint(translate("Not developed yet"));
 			} else showHint(translate("This content will be availabled soon"));
 		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
 		category.addItem("animation", translate("Animation"), function() {
 			if (REVISION.startsWith("develop")) {
 				AnimationWindow.create();
-				control.dismiss();
+				control.hide();
 			} else showHint(translate("This content will be availabled soon"));
 		}).setBackground("popupSelectionLocked");
 		category.addItem("transition", translate("Transition"), function() {
 			TransitionEditor.create();
-			control.dismiss();
+			control.hide();
 		});
 		if (loadSupportables && supportSupportables && Setting) {
 			category.addItem("world", translate("World"), function() {
@@ -173,7 +173,7 @@ const ProjectEditor = {
 						isSupportEnv = false;
 						currentEnvironment = __name__;
 						reportError(result);
-					} else control.dismiss();
+					} else control.hide();
 				} else showHint(translate("Supportable module can't be loaded at menu"));
 			}).setOnHoldListener(function(item) {
 				return showSupportableInfo(Setting);
@@ -204,7 +204,7 @@ const ProjectEditor = {
 			if (REVISION.indexOf("alpha") != -1) {
 				confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
 					TutorialSequence.ButtonInteraction.execute();
-					control.dismiss();
+					control.hide();
 				});
 			} else showHint(translate("This content will be availabled soon"));
 		}).setBackground(REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued");
@@ -221,11 +221,11 @@ const ProjectEditor = {
 			category = control.addCategory(translate("Debug & testing"));
 			category.addItem("menuBoardConfig", translate("Debug"), function() {
 				DebugEditor.menu();
-				control.dismiss();
+				control.hide();
 			}).setBackground("popupSelectionQueued");
 			category.addItem("menuBoardInsert", translate("Console"), function() {
 				ConsoleViewer.show();
-				control.dismiss();
+				control.hide();
 			}).setBackground("popupSelectionQueued");
 			category.addItem("worldActionMeasure", translate("Log"), function() {
 				LogViewer.show();
@@ -235,7 +235,7 @@ const ProjectEditor = {
 				explorer.setMultipleSelectable(true);
 				let bar = explorer.addPath();
 				bar.setOnOutsideListener(function(bar) {
-					explorer.dismiss();
+					explorer.hide();
 				});
 				bar.setPath(__dir__);
 				explorer.show();
@@ -271,7 +271,7 @@ const ProjectEditor = {
 					showHint(translate(UIEditor.modName) + " " + translate(UIEditor.version));
 					showHint(translate(UIEditor.author));
 				} else showHint(translate(UIEditor.modName) + " - " + translate(UIEditor.author));
-				control.dismiss();
+				control.hide();
 			});
 			if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"), function() {
 				let result = WorldEdit(function() {

@@ -280,11 +280,11 @@ const selectFile = function(availabled, action, outside, directory) {
 		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
-				outside && outside() !== false && explorer.dismiss();
-			} else explorer.dismiss();
+				outside && outside() !== false && explorer.hide();
+			} else explorer.hide();
 		});
 		explorer.setOnSelectListener(function(popup, file) {
-			explorer.dismiss();
+			explorer.hide();
 			action && action(file);
 		});
 		explorer.show();
@@ -298,15 +298,15 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
-				outside && outside() !== false && explorer.dismiss();
-			} else explorer.dismiss();
+				outside && outside() !== false && explorer.hide();
+			} else explorer.hide();
 		});
 		let rename = explorer.addRename();
 		availabled && rename.setAvailabledTypes(availabled);
 		name && rename.setCurrentName(name);
 		rename.setOnApproveListener(function(widget, file, last) {
 			let approve = function() {
-				explorer.dismiss();
+				explorer.hide();
 				action && action(file, last);
 			};
 			if (file.exists()) {

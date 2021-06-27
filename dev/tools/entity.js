@@ -164,7 +164,7 @@ const EntityEditor = {
 		button.setIcon("entity");
 		button.setOnClickListener(function() {
 			EntityEditor.menu();
-			sidebar.dismiss();
+			sidebar.hide();
 		});
 		button.show();
 		let sidebar = new SidebarWindow(),
@@ -290,7 +290,7 @@ const EntityEditor = {
 			});
 		});
 		category.addItem("menuProjectLeave", translate("Back"), function() {
-			control.dismiss();
+			control.hide();
 			Popups.closeAll(), EntityEditor.unselect();
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
@@ -307,7 +307,7 @@ const EntityEditor = {
 				return;
 			}
 			showHint(translate("Tap block"));
-			control.dismiss();
+			control.hide();
 			selectMode = 6;
 			let button = new ControlButton();
 			button.setIcon("menuBack");
@@ -341,7 +341,7 @@ const EntityEditor = {
 		EntityEditor.unselect();
 		EntityEditor.create();
 		ProjectProvider.setOpenedState(true);
-		MenuWindow.dismissCurrently();
+		MenuWindow.hideCurrently();
 		return true;
 	},
 	replace: function(file) {

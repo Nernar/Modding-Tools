@@ -17,7 +17,7 @@ const HintAlert = function() {
 	actor.setDuration(this.time / 6);
 	this.setExitActor(actor);
 
-	this.reset();
+	this.resetContent();
 	this.clearStack();
 };
 
@@ -31,7 +31,7 @@ HintAlert.prototype.stackable = true;
 HintAlert.prototype.forever = false;
 HintAlert.prototype.time = 3000;
 
-HintAlert.prototype.reset = function() {
+HintAlert.prototype.resetContent = function() {
 	let content = new android.widget.LinearLayout(context);
 	content.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
 	content.setOrientation(Interface.Orientate.VERTICAL);
@@ -46,7 +46,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 			background : ImageFactory.getDrawable(background) : ImageFactory.getDrawable("popup"));
 		layout.setOrientation(Interface.Orientate.VERTICAL);
 		layout.setGravity(Interface.Gravity.CENTER);
-		let content = this.getContent(),
+		let content = this.getContainer(),
 			params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
 		layout.setVisibility(Interface.Visibility.GONE);
 		content.addView(layout, params);
@@ -80,7 +80,7 @@ HintAlert.prototype.getMaximumStackedLimit = function() {
 };
 
 HintAlert.prototype.getStackedCount = function() {
-	return this.getContent().getChildCount();
+	return this.getContainer().getChildCount();
 };
 
 HintAlert.prototype.toInfinityStack = function() {
@@ -96,7 +96,7 @@ HintAlert.prototype.setMaximumStacked = function(count) {
 HintAlert.prototype.canStackedMore = function() {
 	let limit = this.getMaximumStackedLimit();
 	if (limit == -1) {
-		let height = this.getContent().getHeight();
+		let height = this.getContainer().getHeight();
 		if (Interface.Display.HEIGHT - height < Interface.getY(90)) {
 			limit = 0;
 		}
@@ -136,7 +136,7 @@ HintAlert.prototype.addMessage = function(hint, color, force) {
 };
 
 HintAlert.prototype.removeFirstStacked = function() {
-	let content = this.getContent();
+	let content = this.getContainer();
 	if (content.getChildCount() > 0) {
 		let actor = new FadeActor();
 		actor.setDuration(this.time / 12);
@@ -197,7 +197,7 @@ HintAlert.prototype.stackIndex = function(hint) {
 };
 
 HintAlert.prototype.findStackedHint = function(hint) {
-	let content = this.getContent();
+	let content = this.getContainer();
 	for (let i = 0; i < content.getChildCount(); i++) {
 		let view = content.getChildAt(i);
 		if (view !== null && view.getChildCount() > 0) {
@@ -269,7 +269,7 @@ HintAlert.prototype.show = function() {
 				}
 				action.destroy();
 				delete scope.action;
-				scope.dismiss();
+				scope.hide();
 			});
 		}, function() {
 			if (scope.isPinned()) scope.reawait();

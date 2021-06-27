@@ -1,12 +1,15 @@
 const ActoredWindow = function() {
-	this.reset();
+	FocusableWindow.apply(this, arguments);
+	this.resetWindow();
 };
 
 ActoredWindow.prototype = new FocusableWindow;
 ActoredWindow.prototype.TYPE = "ActoredWindow";
 
-ActoredWindow.prototype.reset = function() {
+ActoredWindow.prototype.resetWindow = function() {
 	this.manager = new ActorManager();
+	this.root = this.makeRoot();
+	this.nothing = this.makeRootScene();
 };
 
 ActoredWindow.prototype.hasScene = function(scene) {
@@ -17,8 +20,17 @@ ActoredWindow.prototype.setActor = function(sceneFromOrTo, sceneToOrActor, actor
 	return this.manager.setActor(sceneFromOrTo, sceneToOrActor, actor);
 };
 
-ActoredWindow.prototype.actorTo = function(scene) {
-	this.manager.actorTo(scene);
+ActoredWindow.prototype.actorTo = function(scene, actor) {
+	if (actor) {
+		ActorManager.go(scene, actor);
+	} else this.manager.actorTo(scene);
+	if (scene != this.getRootScene()) {
+		this.scene = scene;
+	} else delete this.scene;
+};
+
+ActoredWindow.prototype.getCurrentlyScene = function() {
+	return this.scene || null;
 };
 
 ActoredWindow.prototype.beginDelayedActor = function(containerOrActor, actor) {
@@ -39,7 +51,63 @@ ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
 	return new ActorScene(container ? rootOrContainer : content, container || rootOrContainer);
 };
 
-ActoredWindow.prototype.getHideableContent = function() {
+ActoredWindow.prototype.findScene = function(container) {
+	let scene = this.getRootScene();
+	if (scene == null) return null;
+	return scene.getCurrentScene(container);
+};
+
+ActoredWindow.prototype.getContent = function() {
+	return this.root || null;
+};
+
+ActoredWindow.prototype.getContainer = function() {
+	return FocusableWindow.prototype.getContent.apply(this, arguments);
+};
+
+ActoredWindow.prototype.makeContainerScene = function() {
+	let container = this.getContainer();
+	if (container === null) return container;
+	let root = this.getContent();
+	if (root === null) return root;
+	return this.makeScene(root, container);
+};
+
+ActoredWindow.prototype.getContainerScene = function() {
+	if (!this.hasContainerScene() || this.containerScene.getContainer() != this.getContainer()) {
+		this.containerScene = this.makeContainerScene();
+	}
+	return this.containerScene || null;
+};
+
+ActoredWindow.prototype.hasContainerScene = function() {
+	return Boolean(this.containerScene);
+};
+
+ActoredWindow.prototype.makeRoot = function() {
+	return new FrameFragment().getContainer();
+};
+
+ActoredWindow.prototype.makeRootScene = function() {
+	let container = this.getContent();
+	if (container === null) return container;
+	let scene = this.makeScene(this.makeRoot()),
+		instance = this;
+	scene.setEnterAction(function() {
+		instance.dismiss();
+		print("Horewer, that's worked");
+	});
+	scene.setExitAction(function() {
+		print("Exited from current scene");
+	});
+	return scene;
+};
+
+ActoredWindow.prototype.getRootScene = function() {
+	return this.nothing || null;
+};
+
+ActoredWindow.prototype.getCurrentlyContainer = function() {
 	let content = this.getContent();
 	if (content !== null) {
 		if (content instanceof android.view.ViewGroup) {
@@ -51,11 +119,23 @@ ActoredWindow.prototype.getHideableContent = function() {
 	return null;
 };
 
+ActoredWindow.prototype.getAvailabledScene = function() {
+	return this.getCurrentlyScene() || this.getContainerScene() || null;
+};
+
+ActoredWindow.prototype.setEnterActor = function(actor) {
+	this.enterActor = actor;
+};
+
 ActoredWindow.prototype.show = function() {
 	this.attach();
-	let enter = this.getEnterActor();
-	if (enter && this.isOpened()) {
-		this.beginDelayedActor(enter);
+	let availabled = this.getAvailabledScene();
+	if (availabled !== null) {
+		let enter = this.getEnterActor();
+		this.actorTo(availabled, enter);
+	}
+	if (this.isTouchable()) {
+		this.setTouchable(true);
 	}
 	this.onShow && this.onShow();
 };
@@ -70,13 +150,22 @@ ActoredWindow.prototype.setOnShowListener = function(listener) {
 	return true;
 };
 
+ActoredWindow.prototype.setExitActor = function(actor) {
+	this.exitActor = actor;
+};
+
 ActoredWindow.prototype.hide = function() {
-	let exit = this.getExitActor();
-	if (exit && this.isOpened()) {
-		this.beginDelayedActor(exit);
+	if (this.isOpened()) {
+		let availabled = this.getRootScene();
+		if (availabled !== null) {
+			let exit = this.getExitActor();
+			this.actorTo(availabled, exit);
+		} else this.dismiss();
+		let touchable = this.isTouchable();
+		this.setTouchable(false);
+		this.touchable = touchable;
+		this.onHide && this.onHide();
 	}
-	this.onHide && this.onHide();
-	this.dismiss();
 };
 
 ActoredWindow.prototype.setOnHideListener = function(listener) {
@@ -89,11 +178,13 @@ ActoredWindow.prototype.setOnHideListener = function(listener) {
 	return true;
 };
 
-const UniqueWindow = new Function();
+const UniqueWindow = function() {
+	ActoredWindow.apply(this, arguments);
+};
 
 UniqueWindow.prototype = new ActoredWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";
-UniqueWindow.prototype.updatable = false;
+UniqueWindow.prototype.updatable = true;
 
 UniqueWindow.prototype.isAttached = function() {
 	return UniqueHelper.isAttached(this);
@@ -124,6 +215,7 @@ UniqueWindow.prototype.dismiss = function() {
 };
 
 const FocusablePopup = function() {
+	ActoredWindow.apply(this, arguments);
 	let set = new ActorSet(),
 		fadeIn = new FadeActor(),
 		fadeOut = new FadeActor();

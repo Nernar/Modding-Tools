@@ -87,7 +87,7 @@ WindowProvider.setEnterActor = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
 		if (popup === null) return;
-		if (actor.getActor) actor = actor.getActor();
+		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setEnterTransition(actor);
 	}
 };
@@ -96,7 +96,7 @@ WindowProvider.setExitActor = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
 		if (popup === null) return;
-		if (actor.getActor) actor = actor.getActor();
+		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setExitTransition(actor);
 	}
 };
@@ -153,12 +153,12 @@ UniqueHelper.prepareWindow = function(window) {
 			return false;
 		}
 		if (updatable) {
-			let content = window.getContent();
+			let content = window.getContainer();
 			opened.setContent(content);
 			opened.update();
 			return false;
 		}
-		opened.dismiss();
+		opened.hide();
 		return this.prepareWindow(window);
 	} else this.stackWindow(window);
 	return true;
@@ -185,21 +185,6 @@ UniqueHelper.shiftWindow = function(window) {
 	delete this.opened[window.TYPE];
 };
 
-UniqueHelper.reattachWindow = function(window) {
-	if (this.isAttached(window)) {
-		window.dismiss();
-		window.show();
-		return true;
-	}
-	return false;
-};
-
-UniqueHelper.reattach = function() {
-	for (let type in this.opened) {
-		let window = this.getWindow(type);
-		this.reattachWindow(window);
-	}
-};
 
 UniqueHelper.requireDestroy = function() {
 	for (let type in this.opened) {

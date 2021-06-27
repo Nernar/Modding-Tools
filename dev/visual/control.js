@@ -1,5 +1,6 @@
 const ControlButton = function() {
-	this.reset();
+	UniqueWindow.apply(this, arguments);
+	this.resetContent();
 	this.setBackground("popupButton");
 
 	let actor = new FadeActor();
@@ -18,7 +19,7 @@ ControlButton.prototype.TYPE = "ControlButton";
 
 ControlButton.prototype.unclose = true;
 
-ControlButton.prototype.reset = function() {
+ControlButton.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = new Object();
 	let content = new android.widget.FrameLayout(context);
@@ -27,7 +28,7 @@ ControlButton.prototype.reset = function() {
 	views.layout = new android.widget.LinearLayout(context);
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	views.layout.setOnClickListener(function(view) {
-		scope.isCloseableOutside() && scope.dismiss();
+		scope.isCloseableOutside() && scope.hide();
 		scope.__click && scope.__click();
 	});
 	let params = android.widget.FrameLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);

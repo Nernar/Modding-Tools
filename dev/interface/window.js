@@ -209,6 +209,8 @@ FocusableWindow.prototype.update = function() {
 };
 
 FocusableWindow.prototype.dismiss = function() {
-	WindowProvider.closeWindow(this);
-	this.onClose && this.onClose();
+	if (this.isOpened()) {
+		WindowProvider.closeWindow(this);
+		this.onClose && this.onClose();
+	}
 };

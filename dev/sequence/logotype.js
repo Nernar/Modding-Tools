@@ -57,7 +57,7 @@ LogotypeSequence.prototype.update = function(progress, index) {
 LogotypeSequence.prototype.cancel = function(error) {
 	let logotype = this.getWindow();
 	if (logotype !== null) {
-		let content = logotype.getContent();
+		let content = logotype.getContainer();
 		if (content !== null) {
 			let background = this.getCancellationBackground(error);
 			if (!(background instanceof android.graphics.drawable.Drawable)) {
@@ -78,7 +78,7 @@ LogotypeSequence.prototype.handleDismiss = function(modifier) {
 	handle(function() {
 		let logotype = sequence.getWindow();
 		if (logotype !== null) {
-			logotype.dismiss();
+			logotype.hide();
 			delete sequence.window;
 		}
 	}, this.getExpirationTime() * modifier);
