@@ -42,6 +42,7 @@ visual/fragments/shared.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
 visual/fragments/overlay.js
+visual/control.js
 visual/sidebar.js
 visual/explorer.js
 visual/project.js

@@ -44,9 +44,6 @@ let maximumAllowedBounds = 128;
 let importAutoselect = false;
 let safetyProcesses = true;
 let transitionSideDividers = 8;
-let debugAttachBackground = false;
-let debugAttachControlTools = true;
-let debugIgnoreLockedBackground = true;
 
 // Currently build information
 const REVISION = "testing-beta-preview-0.3.5-27.06.2021-14";
