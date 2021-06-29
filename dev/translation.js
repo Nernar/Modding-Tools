@@ -2,14 +2,14 @@ MCSystem.setLoadingTip("Localizing Content");
 
 // Modifications information
 Translation.addTranslation("Dev Editor", {});
-Translation.addTranslation("Alpha 0.3.5", {
-	ru: "Альфа 0.3.5"
+Translation.addTranslation("Alpha 0.4", {
+	ru: "Альфа 0.4"
 }); // NO-TRANSLATE
-Translation.addTranslation("Beta 0.3.5", {
-	ru: "Бета 0.3.5"
+Translation.addTranslation("Beta 0.4", {
+	ru: "Бета 0.4"
 }); // NO-TRANSLATE
-Translation.addTranslation("Preview 0.3.5", {
-	ru: "Предпросмотр 0.3.5"
+Translation.addTranslation("Preview 0.4", {
+	ru: "Предпросмотр 0.4"
 }); // NO-TRANSLATE
 Translation.addTranslation("Setting", {}); // NO-TRANSLATE
 Translation.addTranslation("1.0-develop", {
