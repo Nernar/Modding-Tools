@@ -332,7 +332,7 @@ const convertJsonBlock = function(string, action) {
 				}
 			}
 		});
-	if (runned instanceof Error) reportError(runned);
+	if (runned instanceof Error) retraceOrReport(runned);
 	else if (runned && runned.value) {
 		let compiled = compileScript(runned);
 		if (compiled && compiled[0]) {
@@ -1052,7 +1052,7 @@ const BlockEditor = {
 						Files.write(file, result);
 						showHint(translate("Converted success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					} else reportError(link.getLastException());
+					} else retraceOrReport(link.getLastException());
 				});
 			});
 		}
@@ -1546,8 +1546,8 @@ const BlockEditor = {
 				result = compileData(values[0]);
 			if (result instanceof Error) {
 				confirm(translate("Compilation failed"),
-					translate("Looks like, you entered invalid array. Check it with following exception:") + "\n" + result.message +
-					"\n\n" + translate("Force save define data?"),
+					translate("Looks like, you entered invalid array. Check it with following exception:") +
+					" " + formatExceptionReport(result) + "\n\n" + translate("Force save define data?"),
 					function() {
 						define.setDefineData(String(values[0]));
 						showHint(translate("Data saved"));
@@ -1569,8 +1569,8 @@ const BlockEditor = {
 				result = compileData(values[0]);
 			if (result instanceof Error) {
 				confirm(translate("Compilation failed"),
-					translate("Looks like, you entered invalid object. Check it with following exception:") + "\n" + result.message +
-					"\n\n" + translate("Force save special type?"),
+					translate("Looks like, you entered invalid object. Check it with following exception:") +
+					" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),
 					function() {
 						define.setSpecialType(String(values[0]));
 						showHint(translate("Data saved"));

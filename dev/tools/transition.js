@@ -458,7 +458,7 @@ let TransitionEditor = {
 					Files.write(file, result);
 					showHint(translate("Converted success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				} else reportError(link.getLastException());
+				} else retraceOrReport(link.getLastException());
 			});
 		}
 	},

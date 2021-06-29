@@ -67,7 +67,7 @@ const stringifyObject = function(obj, identate, action, hint, complete) {
 				done = true;
 			} else if (action) action();
 		}, function(e) {
-			reportError(e);
+			retraceOrReport(e);
 			done = true;
 		});
 	});
@@ -190,6 +190,19 @@ const compileData = function(text, type, additional) {
 		type == "object" ? scope.result : null;
 };
 
+const formatExceptionReport = function(error, upper) {
+	let report = localizeError(error),
+		point = report.charAt(report.length - 1);
+	if (!/\.|\!|\?/.test(point)) report += ".";
+	let char = report.charAt(0);
+	if (upper) char = char.toUpperCase();
+	else if (upper !== null) char = char.toLowerCase();
+	if (error && typeof error == "object" && error.lineNumber !== undefined) {
+		return char + report.substring(1) + " (#" + error.lineNumber + ")";
+	}
+	return char + report.substring(1);
+};
+
 const importProject = function(path, action) {
 	readFile(path, true, function(bytes) {
 		let result = decompileFromProduce(bytes),
@@ -202,7 +215,7 @@ const importProject = function(path, action) {
 		} else {
 			confirm(translate("Can't open file"),
 				translate("Looks like, project is damaged. Check project and following exception information:") +
-				"\n" + (data ? data.name + ": " + data.message : translate("Empty project")) + "\n\n" +
+				" " + (data ? formatExceptionReport(data) : translate("empty project.")) + "\n\n" +
 				translate("Do you want to retry?"),
 				function() {
 					importProject(path, action);
@@ -232,9 +245,9 @@ const compileScript = function(text) {
 		loadSetting("user_login.imported_script", "boolean", true);
 		__config__.save();
 	}
-	if (scope.error) reportError(scope.error);
+	if (scope.error) retraceOrReport(scope.error);
 	else if (scope.result && scope.result.error) {
-		reportError(scope.result.error);
+		retraceOrReport(scope.result.error);
 	}
 	return scope.result || null;
 };
@@ -509,7 +522,7 @@ Project.prototype.callAutosave = function() {
 				delete scope.isAutosaving;
 			});
 	}, function(e) {
-		reportError(e);
+		retraceOrReport(e);
 		delete this.isAutosaving;
 	});
 };

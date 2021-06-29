@@ -12,7 +12,7 @@ const Dirs = {
 	EXPORT: __dir__ + "saves/",
 	CACHE: __dir__ + "assets/cache/",
 	AUTOSAVE: __dir__ + "saves/.autosave/",
-	LOGGING: __dir__ + "saves/.logging/",
+	LOGGING: __dir__ + ".logging/",
 	SUPPORT: __dir__ + "support/",
 	TESTING: __dir__ + ".script/",
 	EVALUATE: __dir__ + ".eval/",

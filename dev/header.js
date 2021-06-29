@@ -72,12 +72,16 @@ let alreadyHasDate = false;
 reportError.setStackAction(function(err) {
 	let message = reportError.getCode(err) + ": " + reportError.getStack(err),
 		file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
+	if (file.isDirectory()) {
+		Files.deleteRecursive(file.getPath());
+	}
+	file.getParentFile().mkdirs();
 	if (!file.exists()) {
 		Files.write(file, reportError.prepareDebugInfo());
 	}
-	if (!reportError.alreadyHasDate) {
+	if (!alreadyHasDate) {
 		Files.addText(file, "\n" + reportError.getLaunchTime());
-		reportError.alreadyHasDate = true;
+		alreadyHasDate = true;
 	}
 	Files.addText(file, "\n" + message);
 	showHint(translate("Error stack saved into internal storage"));
@@ -103,7 +107,25 @@ Interface.getY = function(y) {
 IMPORT("Network:2");
 IMPORT("Transition:6");
 IMPORT("Action:4");
+IMPORT("Stacktrace:1");
+
+reportTrace.setupPrint(function(message) {
+	message !== undefined && showHint(message);
+});
+
+const retraceOrReport = function(error) {
+	if (REVISION.startsWith("develop")) {
+		reportTrace(error);
+	} else reportError(error);
+};
+
 IMPORT("Sequence:1");
+
+Sequence.prototype.cancel = function(error) {
+	if (error && error.message != "java.lang.InterruptedException: null") {
+		if (this.isReportingEnabled()) retraceOrReport(error);
+	}
+};
 
 getPlayerEnt = function() {
 	return parseInt(Player.get());

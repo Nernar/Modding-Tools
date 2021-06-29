@@ -109,19 +109,17 @@ _gsdata_/
 
 # Build files
 /main.js
-/assets/cache/
 
 # Dev Editor sources
 /res/.source/
 /dev/.source/
-/loader/
 
 # Resources abilities
 /.placeholder.ico
-/texts/
 /gui/
 
 # Local saves
+/.logging/
 /saves/
 /.todo/
 /.eval/
@@ -130,21 +128,8 @@ _gsdata_/
 /dev/network/
 /assets/sounds-16.txt
 /assets/studio.mcworld
-/lib/Music.js
 
 # Enstablized sources
 /dev/api/protect.js
 /dev/callback/debug.js
 /dev/storage/factory.js
-/pre/
-/java/
-/native/
-
-# Engine unused
-/.github/workflows/
-/package.json
-/package-lock.json
-/jsconfig.json
-/preloader.js
-/support.js
-/example.js

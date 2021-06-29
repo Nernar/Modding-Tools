@@ -172,7 +172,7 @@ const ProjectEditor = {
 						ProjectEditor.create();
 						isSupportEnv = false;
 						currentEnvironment = __name__;
-						reportError(result);
+						retraceOrReport(result);
 					} else control.hide();
 				} else showHint(translate("Supportable module can't be loaded at menu"));
 			}).setOnHoldListener(function(item) {
@@ -264,7 +264,7 @@ const ProjectEditor = {
 					ProjectEditor.create();
 					isSupportEnv = false;
 					currentEnvironment = __name__;
-					reportError(result);
+					retraceOrReport(result);
 					return;
 				}
 				if (!hintStackableDenied) {
@@ -289,7 +289,7 @@ const ProjectEditor = {
 				})[0];
 				if (String(result) == result) {
 					confirm(translate(WorldEdit.modName) + " " + translate(WorldEdit.version), result);
-				} else if (result) reportError(result);
+				} else if (result) retraceOrReport(result);
 				if (!hintStackableDenied) {
 					showHint(translate(WorldEdit.modName) + " " + translate(WorldEdit.version));
 					showHint(translate(WorldEdit.author));
@@ -314,7 +314,7 @@ const ProjectEditor = {
 							return e;
 						}
 					})[0];
-					if (evaluate != true) reportError(evaluate);
+					if (evaluate != true) retraceOrReport(evaluate);
 				});
 			});
 			if (RunJSingame) category.addItem(RunJSingame.icon, translate("Run JS"), function() {
@@ -326,7 +326,7 @@ const ProjectEditor = {
 						return e;
 					}
 				})[0];
-				if (result != true) reportError(result);
+				if (result != true) retraceOrReport(result);
 				if (!hintStackableDenied) {
 					showHint(translate(RunJSingame.modName) + " " + translate(RunJSingame.version));
 					showHint(translate(RunJSingame.author));
@@ -341,7 +341,7 @@ const ProjectEditor = {
 						return e;
 					}
 				})[0];
-				if (result != true) reportError(result);
+				if (result != true) retraceOrReport(result);
 				if (!hintStackableDenied) {
 					showHint(translate(InstantRunner.modName) + " " + translate(InstantRunner.version));
 					showHint(translate(InstantRunner.author));

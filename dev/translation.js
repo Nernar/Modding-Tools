@@ -803,8 +803,8 @@ Translation.addTranslation("converted", {
 Translation.addTranslation("Project", {
 	ru: "Проект"
 });
-Translation.addTranslation("Empty project", {
-	ru: "Проект пуст"
+Translation.addTranslation("empty project.", {
+	ru: "проект пуст."
 });
 Translation.addTranslation("Export", {
 	ru: "Экспорт"

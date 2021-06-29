@@ -155,7 +155,7 @@ const isNotSupported = function(obj) {
 	} else if (obj.result == false) {
 		Logger.Log(obj.modName + " supportable module outdated and will be disabled", "DEV-EDITOR");
 	} else if (obj.result.lineNumber !== undefined && REVISION.startsWith("develop")) {
-		reportError(obj.result);
+		retraceOrReport(obj.result);
 	} else if (REVISION.startsWith("develop")) {
 		Logger.Log("Can't resolve modification with invalid result: " + obj.result, obj.modName);
 	} else Logger.Log("Supportable ignored for some reason, contact with developer", obj.modName);

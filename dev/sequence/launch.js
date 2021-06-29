@@ -37,7 +37,6 @@ const LaunchSequence = new LogotypeSequence({
 			let cancellation = LogotypeSequence.prototype.getCancellationBackground();
 			ImageFactory.loadFromAsset(cancellation, "popup/selection/locked.dnr");
 			FileTools.assureDir(Dirs.EXPORT);
-			FileTools.assureDir(Dirs.LOGGING);
 			if (REVISION.startsWith("develop")) {
 				let background = SnackSequence.prototype.getBackground();
 				ImageFactory.loadFromAsset(background, "popup/popup.dnr");

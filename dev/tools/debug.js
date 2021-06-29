@@ -162,7 +162,7 @@ const DebugEditor = {
 			}
 		}, function(e) {
 			DebugEditor.create();
-			reportError(e);
+			retraceOrReport(e);
 		});
 	}
 };
@@ -225,7 +225,7 @@ const ModificationSource = {
 					handle(function() {
 						if (result.reported && result.reported.length > 0) {
 							result.reported.forEach(function(element) {
-								element && reportError(element);
+								element && retraceOrReport(element);
 							});
 						}
 						if (!result.wasFailed) ModificationSource.rebuild(mod, "release");
