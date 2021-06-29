@@ -20,6 +20,12 @@ const initialize = function() {
 	});
 };
 
+tryoutSafety(function() {
+	if (REVISION.startsWith("develop")) {
+		REQUIRE("development.js");
+	}
+});
+
 if (isInstant) initialize();
 
 Callback.addCallback("PostLoaded", function() {

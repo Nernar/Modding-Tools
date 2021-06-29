@@ -111,25 +111,6 @@ const registerAdditionalInformation = function() {
 			return !loadSupportables;
 		});
 	}
-	if (REVISION.startsWith("develop")) {
-		AdditionalMessageFactory.registerClickable("menuProjectManage", translate("If you're wouldn't see development panel here, it may be removed."), 1, function(message) {
-			debugAttachControlTools = !debugAttachControlTools;
-			let control = message.getWindow();
-			control.removeElement(message);
-			control.removeElement(0);
-		}, function() {
-			return debugAttachControlTools;
-		});
-		AdditionalMessageFactory.registerClickable("explorerImport", translate("Modification is outgoing to produce? Let's compile anything that's we're developed!"), 0.5, function(message) {
-			REQUIRE("produce.js")(function() {
-				UniqueHelper.requireDestroy();
-				WindowProvider.destroy();
-				if (REVISION.startsWith("develop")) {
-					attachEvalButton();
-				}
-			});
-		});
-	}
 };
 
 /**

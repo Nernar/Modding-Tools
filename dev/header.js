@@ -44,12 +44,9 @@ let maximumAllowedBounds = 128;
 let importAutoselect = false;
 let safetyProcesses = true;
 let transitionSideDividers = 8;
-let debugAttachBackground = false;
-let debugAttachControlTools = true;
-let debugIgnoreLockedBackground = true;
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-27.06.2021-0";
+const REVISION = "develop-alpha-0.4-29.06.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -120,12 +117,6 @@ const retraceOrReport = function(error) {
 };
 
 IMPORT("Sequence:1");
-
-Sequence.prototype.cancel = function(error) {
-	if (error && error.message != "java.lang.InterruptedException: null") {
-		if (this.isReportingEnabled()) retraceOrReport(error);
-	}
-};
 
 getPlayerEnt = function() {
 	return parseInt(Player.get());
