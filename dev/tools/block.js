@@ -1237,6 +1237,7 @@ const BlockEditor = {
 					mapRenderBlock(BlockEditor.data.worker);
 					Popups.updateAtName("box_texture");
 					showHint(translate("Texture changed"));
+					edit.update();
 				});
 			});
 			popup.addButtonElement(translate("Enter array"), function() {
@@ -1244,8 +1245,15 @@ const BlockEditor = {
 					button.switchVisibility();
 				}
 			});
-			let edit = popup.addEditElement(translate("Texture"), JSON.stringify(box.texture)).
-			switchVisibility().setBackground("popup");
+			let edit = popup.addEditElement(translate("Texture")).switchVisibility();
+			edit.update = function() {
+				handleThread(function() {
+					let stringify = JSON.stringify(box.texture, false, " ");
+					handle(function() {
+						edit.setValue(stringify);
+					});
+				});
+			};
 			let button = popup.addButtonElement(translate("Save"), function() {
 				let array = compileData(popup.getEdit(0).getValue());
 				if (array.lineNumber !== undefined) {
@@ -1276,10 +1284,11 @@ const BlockEditor = {
 					mapRenderBlock(BlockEditor.data.worker);
 					showHint(translate("Textures changed"));
 				}
-			}).switchVisibility().setBackground("popup");
+			}).switchVisibility();
 			for (let i = 0; i < textures.length; i++) {
 				popup.addButtonElement(textures[i].name);
 			}
+			edit.update();
 			Popups.open(popup, "renderer_texture");
 		},
 		remove: function() {
@@ -1533,7 +1542,7 @@ const BlockEditor = {
 			let values = popup.getAllEditsValues();
 			define.setIdentificator(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "rename");
 	},
 	variation: function() {
@@ -1556,7 +1565,7 @@ const BlockEditor = {
 			}
 			define.setDefineData(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "variation");
 	},
 	type: function() {
@@ -1579,7 +1588,7 @@ const BlockEditor = {
 			}
 			define.setSpecialType(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "type");
 	}
 };

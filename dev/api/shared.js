@@ -57,7 +57,9 @@ REQUIRE.getScope = function() {
 	return assign(REVISION.indexOf("alpha") != -1 ? scope : new Object(), {
 		SHARE: function(name, obj) {
 			if (REVISION.startsWith("develop")) {
-				scope[name] = obj;
+				if (typeof name == "object") {
+					Object.defineProperties(scope, name);
+				} else scope[name] = obj;
 			}
 		},
 		FIND: function(name) {

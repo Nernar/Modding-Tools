@@ -24,7 +24,7 @@ const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
-const isInstant = this.hasOwnProperty("isInstant");
+const isInstant = Boolean(this.isInstant);
 
 // Configurable: autosave
 let autosave = true;
@@ -115,7 +115,10 @@ Interface.getY = function(y) {
 IMPORT("Network:2");
 IMPORT("Transition:6");
 IMPORT("Action:4");
-IMPORT("Stacktrace:1");
+
+if (REVISION.startsWith("develop")) {
+	IMPORT("Stacktrace:1");
+}
 
 reportTrace.setupPrint(function(message) {
 	message !== undefined && showHint(message);

@@ -90,6 +90,10 @@ ListingPopup.prototype.getEdit = function(index) {
 			let editable = edit.getText();
 			return String(editable.toString());
 		},
+		setValue: function(text) {
+			edit.setText(text);
+			return this;
+		},
 		setBackground: function(texture) {
 			edit.setBackgroundDrawable(ImageFactory.getDrawable(texture));
 			return this;

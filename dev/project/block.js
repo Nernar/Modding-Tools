@@ -124,17 +124,19 @@ const BlockWorker = function(obj) {
 			};
 			// Create and removing
 			this.addBox = function(id, data) {
+				return this.addBoxAt(0, 0, 0, 0.0625, 0.0625, 0.0625, id, data);
+			};
+			this.addBoxAt = function(x1, y1, z1, x2, y2, z2, id, data) {
 				let boxes = this.getBoxes();
-				boxes.push({
-					x1: 0,
-					y1: 0,
-					z1: 0,
-					x2: 0.0625,
-					y2: 0.0625,
-					z2: 0.0625,
+				return boxes.push({
+					x1: x1,
+					y1: y1,
+					z1: z1,
+					x2: x2,
+					y2: y2,
+					z2: z2,
 					texture: [[id, data]]
-				});
-				return boxes.length - 1;
+				}) - 1;
 			};
 			this.cloneBox = function(index) {
 				let boxes = this.getBoxes();
@@ -457,16 +459,18 @@ const BlockWorker = function(obj) {
 			};
 			// Create and removing
 			this.addBox = function() {
+				return this.addBoxAt(0, 0, 0, 0.0625, 0.0625, 0.0625);
+			};
+			this.addBoxAt = function(x1, y1, z1, x2, y2, z2) {
 				let boxes = this.getBoxes();
-				boxes.push({
-					x1: 0,
-					y1: 0,
-					z1: 0,
-					x2: 0.0625,
-					y2: 0.0625,
-					z2: 0.0625
-				});
-				return boxes.length - 1;
+				return boxes.push({
+					x1: x1,
+					y1: y1,
+					z1: z1,
+					x2: x2,
+					y2: y2,
+					z2: z2
+				}) - 1;
 			};
 			this.cloneBox = function(index) {
 				let boxes = this.getBoxes();
@@ -668,7 +672,7 @@ const BlockWorker = function(obj) {
 					box2 = this.getBox(index2);
 				if (box1.x1 < box2.x2 && box1.x2 > box2.x1 || box1.x1 > box2.x1 && box1.x2 < box2.x2) {
 					if (box1.y1 < box2.y2 && box1.y2 > box2.y1 || box1.y1 > box2.y1 && box1.y2 < box2.y2) {
-						if (box1.z1 < box2.z2 && box2.z1 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2) {
+						if (box1.z1 < box2.z2 && box1.z2 > box2.z1 || box1.z1 > box2.z1 && box1.z2 < box2.z2) {
 							return true;
 						}
 					}

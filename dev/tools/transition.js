@@ -763,7 +763,7 @@ let TransitionEditor = {
 			let values = popup.getAllEditsValues();
 			define.setFps(compileData(values[0], "number"));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "reframe");
 	}
 };

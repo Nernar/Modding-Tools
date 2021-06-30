@@ -20,7 +20,7 @@ WindowProvider.getFlagsForWindow = function(window) {
 };
 
 WindowProvider.prepareIdentifier = function(window) {
-	if (window.popupId) {
+	if (window.popupId !== undefined) {
 		return window.popupId;
 	}
 	window.popupId = Interface.makeViewId();
@@ -29,11 +29,11 @@ WindowProvider.prepareIdentifier = function(window) {
 
 WindowProvider.hasOpenedPopup = function(window) {
 	let id = window.popupId;
-	return Boolean(window.isFocusable() || this.getByPopupId(id));
+	return Boolean(id == -1 || this.getByPopupId(id));
 };
 
 WindowProvider.getByPopupId = function(popupId) {
-	if (!popupId) return null;
+	if (!popupId || popupId == -1) return null;
 	return this.attached[popupId] || null;
 };
 
@@ -64,6 +64,7 @@ WindowProvider.openWindow = function(window) {
 			window.getX(), window.getY());
 		return;
 	}
+	window.popupId = -1;
 	let flags = this.getFlagsForWindow(window);
 	this.manager.addView(content, window.getParams(flags));
 };
@@ -79,6 +80,7 @@ WindowProvider.closeWindow = function(window) {
 		delete window.popupId;
 		return;
 	}
+	delete window.popupId;
 	this.manager.removeView(window.getContent());
 };
 
@@ -117,6 +119,7 @@ WindowProvider.updateWindow = function(window) {
 			window.getWidth(), window.getHeight());
 		return;
 	}
+	if (window.popupId != -1) return;
 	let flags = this.getFlagsForWindow(window);
 	this.manager.updateViewLayout(window.getContent(), window.getParams(flags));
 };

@@ -447,7 +447,7 @@ const EntityEditor = {
 				model.getIndex(selected).setName(String(values[0]));
 				updateEntityRender(EntityEditor.data.worker);
 				showHint(translate("Data saved"));
-			}).setBackground("popup");
+			});
 			Popups.open(popup, "bone_rename");
 		},
 		offset: function() {
@@ -707,7 +707,7 @@ const EntityEditor = {
 			let values = popup.getAllEditsValues();
 			define.setIdentificator(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "rename");
 	},
 	texture: function() {
@@ -719,7 +719,7 @@ const EntityEditor = {
 			let values = popup.getAllEditsValues();
 			model.setTexture(String(values[0]));
 			showHint(translate("Data saved"));
-		}).setBackground("popup");
+		});
 		Popups.open(popup, "texture");
 	}
 };
