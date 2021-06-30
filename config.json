@@ -26,7 +26,7 @@
     "switch_locked":false
   },
   "render":{
-    "use_box_sizes":true,
+    "use_box_sizes":false,
     "draw_selection":true,
     "inject_border":false,
     "transparent_boxes":true

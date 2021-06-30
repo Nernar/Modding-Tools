@@ -29,8 +29,7 @@ WindowProvider.prepareIdentifier = function(window) {
 
 WindowProvider.hasOpenedPopup = function(window) {
 	let id = window.popupId;
-	if (!id) return false;
-	return !!this.getByPopupId(id);
+	return Boolean(window.isFocusable() || this.getByPopupId(id));
 };
 
 WindowProvider.getByPopupId = function(popupId) {
@@ -141,11 +140,15 @@ UniqueHelper.getWindow = function(window) {
 };
 
 UniqueHelper.isAttached = function(window) {
-	return !!this.getWindow(window);
+	return this.getWindow(window) == window;
+};
+
+UniqueHelper.wasTypeAttached = function(window) {
+	return Boolean(this.getWindow(window));
 };
 
 UniqueHelper.prepareWindow = function(window) {
-	if (this.isAttached(window)) {
+	if (this.wasTypeAttached(window)) {
 		let opened = this.getWindow(window),
 			updatable = opened.isUpdatable();
 		// Window are already opened
@@ -165,7 +168,7 @@ UniqueHelper.prepareWindow = function(window) {
 };
 
 UniqueHelper.deattachWindow = function(window) {
-	if (this.isAttached(window)) {
+	if (this.wasTypeAttached(window)) {
 		let opened = this.getWindow(window);
 		if (window == opened) {
 			this.shiftWindow(window);
@@ -176,12 +179,12 @@ UniqueHelper.deattachWindow = function(window) {
 };
 
 UniqueHelper.stackWindow = function(window) {
-	if (this.isAttached(window)) return;
+	if (this.wasTypeAttached(window)) return;
 	this.opened[window.TYPE] = window;
 };
 
 UniqueHelper.shiftWindow = function(window) {
-	if (!this.isAttached(window)) return;
+	if (!this.wasTypeAttached(window)) return;
 	delete this.opened[window.TYPE];
 };
 

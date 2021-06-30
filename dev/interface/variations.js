@@ -91,16 +91,7 @@ ActoredWindow.prototype.makeRoot = function() {
 ActoredWindow.prototype.makeRootScene = function() {
 	let container = this.getContent();
 	if (container === null) return container;
-	let scene = this.makeScene(this.makeRoot()),
-		instance = this;
-	scene.setEnterAction(function() {
-		instance.dismiss();
-		print("Horewer, that's worked");
-	});
-	scene.setExitAction(function() {
-		print("Exited from current scene");
-	});
-	return scene;
+	return this.makeScene(this.makeRoot());
 };
 
 ActoredWindow.prototype.getRootScene = function() {
@@ -120,7 +111,16 @@ ActoredWindow.prototype.getCurrentlyContainer = function() {
 };
 
 ActoredWindow.prototype.getAvailabledScene = function() {
-	return this.getCurrentlyScene() || this.getContainerScene() || null;
+	return this.getContainerScene() || this.getCurrentlyScene() || null;
+};
+
+ActoredWindow.prototype.update = function() {
+	if (this.isOpened()) {
+		if (this.getContainer() != this.containerScene.getContainer()) {
+			this.actorTo(this.getAvailabledScene());
+		}
+	}
+	FocusableWindow.prototype.update.apply(this, arguments);
 };
 
 ActoredWindow.prototype.setEnterActor = function(actor) {
@@ -128,7 +128,8 @@ ActoredWindow.prototype.setEnterActor = function(actor) {
 };
 
 ActoredWindow.prototype.show = function() {
-	this.attach();
+	delete this.destructing;
+	if (this.TYPE == "ActoredWindow") this.attach();
 	let availabled = this.getAvailabledScene();
 	if (availabled !== null) {
 		let enter = this.getEnterActor();
@@ -152,6 +153,23 @@ ActoredWindow.prototype.setOnShowListener = function(listener) {
 
 ActoredWindow.prototype.setExitActor = function(actor) {
 	this.exitActor = actor;
+	if (actor) {
+		let enter = this.getEnterActor();
+		if (actor == enter) {
+			MCSystem.throwException("You wouldn't use one actor for exit and enter");
+		}
+		let instance = this;
+		actor.addListener({
+			onTransitionEnd: function() {
+				tryout(function() {
+					if (instance.inDestructing()) {
+						instance.dismiss();
+						delete instance.destructing;
+					}
+				});
+			}
+		})
+	}
 };
 
 ActoredWindow.prototype.hide = function() {
@@ -160,6 +178,7 @@ ActoredWindow.prototype.hide = function() {
 		if (availabled !== null) {
 			let exit = this.getExitActor();
 			this.actorTo(availabled, exit);
+			this.destructing = true;
 		} else this.dismiss();
 		let touchable = this.isTouchable();
 		this.setTouchable(false);
@@ -176,6 +195,10 @@ ActoredWindow.prototype.setOnHideListener = function(listener) {
 		tryout(listener);
 	};
 	return true;
+};
+
+ActoredWindow.prototype.inDestructing = function() {
+	return Boolean(this.destructing);
 };
 
 const UniqueWindow = function() {
@@ -208,6 +231,13 @@ UniqueWindow.prototype.attach = function() {
 	}
 };
 
+UniqueWindow.prototype.show = function() {
+	this.attach();
+	if (UniqueHelper.isAttached(this)) {
+		ActoredWindow.prototype.show.apply(this, arguments);
+	}
+};
+
 UniqueWindow.prototype.dismiss = function() {
 	if (UniqueHelper.deattachWindow(this)) {
 		ActoredWindow.prototype.dismiss.apply(this, arguments);
@@ -216,20 +246,14 @@ UniqueWindow.prototype.dismiss = function() {
 
 const FocusablePopup = function() {
 	ActoredWindow.apply(this, arguments);
-	let set = new ActorSet(),
-		fadeIn = new FadeActor(),
+	let fadeIn = new FadeActor(),
 		fadeOut = new FadeActor();
 	fadeIn.setInterpolator(new DecelerateInterpolator());
-	fadeIn.setMode(FadeActor.IN);
 	fadeIn.setDuration(400);
-	set.addActor(fadeIn);
+	this.setEnterActor(fadeIn);
 	fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
-	fadeOut.setMode(FadeActor.OUT);
 	fadeOut.setDuration(400);
-	set.addActor(fadeOut);
-
-	this.setEnterActor(set);
-	this.setExitActor(set);
+	this.setExitActor(fadeOut);
 
 	let place = Popups.getAvailablePlace();
 	this.setX(place.x), this.setY(place.y);

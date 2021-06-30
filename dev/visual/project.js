@@ -1,23 +1,18 @@
 const MenuWindow = function() {
 	UniqueWindow.apply(this, arguments);
-	let set = new ActorSet(),
-		slideIn = new SlideActor(),
+	let slideIn = new SlideActor(),
 		slideOut = new SlideActor();
 	slideIn.setInterpolator(new DecelerateInterpolator());
 	slideIn.setSlideEdge(Interface.Gravity.TOP);
-	slideIn.setMode(SlideActor.IN);
 	slideIn.setDuration(1000);
-	set.addActor(slideIn);
+	this.setEnterActor(slideIn);
 	slideOut.setInterpolator(new AnticipateInterpolator());
 	slideOut.setSlideEdge(Interface.Gravity.TOP);
-	slideOut.setMode(SlideActor.OUT);
 	slideOut.setDuration(800);
-	set.addActor(slideOut);
+	this.setExitActor(slideOut);
 
 	this.setWidth(Interface.Display.MATCH);
 	this.setHeight(Interface.Display.MATCH);
-	this.setEnterActor(set);
-	this.setExitActor(set);
 
 	this.elements = new Array();
 	this.resetContent();

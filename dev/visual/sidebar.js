@@ -11,7 +11,7 @@ const SidebarWindow = function() {
 	enter.setInterpolator(new DecelerateInterpolator());
 	enter.setDuration(400);
 	this.setEnterActor(enter);
-
+	
 	let exit = new SlideActor(Interface.Gravity.RIGHT);
 	exit.setInterpolator(new BounceInterpolator());
 	exit.setDuration(1000);

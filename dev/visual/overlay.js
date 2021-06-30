@@ -7,6 +7,9 @@ const OverlayWindow = function() {
 	slide.setInterpolator(new DecelerateInterpolator());
 	slide.setDuration(400);
 	this.setEnterActor(slide);
+	slide = new SlideActor(Interface.Gravity.TOP);
+	slide.setInterpolator(new AccelerateInterpolator());
+	slide.setDuration(400);
 	this.setExitActor(slide);
 	this.setBackground("popup");
 };
