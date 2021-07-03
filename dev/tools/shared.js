@@ -308,8 +308,7 @@ const Tool = function(object) {
 };
 
 Tool.prototype.reset = function() {
-	let control = new ControlWindow(),
-		descriptor = new Object();
+	let descriptor = new Object();
 	descriptor.buttonBackground = "popupButton";
 	descriptor.logotypeProgress = function(tool, control) {
 		return calloutOrParse(this, this.logotype, arguments);
@@ -321,15 +320,21 @@ Tool.prototype.reset = function() {
 	descriptor.logotype = function(tool, control) {
 		return requireLogotype();
 	};
-	descriptor.click = function(tool, control) {
+	descriptor.buttonClick = function(tool, control) {
 		if (typeof tool.onControlClick == "function") {
 			let args = Array.prototype.slice.call(arguments, 1);
 			tool.onControlClick.apply(tool, args);
 		}
 	};
+	descriptor.buttonHold = function(tool, control) {
+		tool.collapse();
+		return true;
+	};
+	descriptor.collapsedClick = function(tool, control) {
+		tool.control();
+	};
 	descriptor.hideable = false;
 	this.controlDescriptor = descriptor;
-	this.controlWindow = control;
 };
 
 Tool.prototype.getState = function() {
@@ -344,21 +349,23 @@ Tool.prototype.getControlDescriptor = function() {
 	return this.controlDescriptor || null;
 };
 
-Tool.prototype.descript = function() {
+Tool.prototype.describeControl = function() {
 	let control = this.getControlWindow();
 	if (control === null) MCSystem.throwException(null);
 	ControlWindow.parseJson.call(this, control, this.getControlDescriptor());
+};
+
+Tool.prototype.describe = function() {
+	this.describeControl();
 };
 
 Tool.prototype.attach = function() {
 	if (this.isAttached()) {
 		MCSystem.throwException("You're must deattach tool firstly!");
 	}
-	let control = this.getControlWindow();
-	if (control === null) MCSystem.throwException(null);
+	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;
-	this.descript();
-	control.attach();
+	this.describe();
 };
 
 Tool.prototype.isAttached = function() {
@@ -370,6 +377,7 @@ Tool.prototype.deattach = function() {
 	if (control === null) MCSystem.throwException(null);
 	this.state = Tool.State.INACTIVE;
 	control.dismiss();
+	delete this.controlWindow;
 };
 
 Tool.prototype.hide = function() {
@@ -461,13 +469,12 @@ ControlTool.prototype = new Tool;
 
 ControlTool.prototype.reset = function() {
 	Tool.prototype.reset.apply(this, arguments);
-	let click = this.controlDescriptor.click;
-	this.controlDescriptor.click = function(tool, control) {
-		click.apply(this, arguments);
+	let buttonClick = this.controlDescriptor.buttonClick;
+	this.controlDescriptor.buttonClick = function(tool, control) {
+		buttonClick.apply(this, arguments);
 		tool.menu();
 	};
-	let menu = new MenuWindow(),
-		descriptor = new Object();
+	let descriptor = new Object();
 	descriptor.background = "popupControl";
 	descriptor.click = function(tool, menu) {
 		if (typeof tool.onMenuClick == "function") {
@@ -478,7 +485,6 @@ ControlTool.prototype.reset = function() {
 	};
 	descriptor.closeable = false;
 	this.menuDescriptor = descriptor;
-	this.menuWindow = menu;
 };
 
 ControlTool.prototype.getMenuWindow = function() {
@@ -489,18 +495,23 @@ ControlTool.prototype.getMenuDescriptor = function() {
 	return this.menuDescriptor || null;
 };
 
-ControlTool.prototype.descript = function() {
+ControlTool.prototype.describeMenu = function() {
 	let menu = this.getMenuWindow();
 	if (menu === null) MCSystem.throwException(null);
-	Tool.prototype.descript.apply(this, arguments);
 	MenuWindow.parseJson.call(this, menu, this.getMenuDescriptor());
 };
 
+ControlTool.prototype.describe = function() {
+	Tool.prototype.describe.apply(this, arguments);
+	this.describeMenu();
+};
+
 ControlTool.prototype.attach = function() {
-	let menu = this.getMenuWindow();
-	if (menu === null) MCSystem.throwException(null);
+	if (this.isAttached()) {
+		Tool.prototype.attach.apply(this, arguments);
+	}
+	this.menuWindow = new MenuWindow();
 	Tool.prototype.attach.apply(this, arguments);
-	menu.attach();
 };
 
 ControlTool.prototype.deattach = function() {
@@ -508,6 +519,7 @@ ControlTool.prototype.deattach = function() {
 	if (menu === null) MCSystem.throwException(null);
 	Tool.prototype.deattach.apply(this, arguments);
 	menu.dismiss();
+	delete this.menuWindow;
 };
 
 ControlTool.prototype.hide = function() {
@@ -602,8 +614,7 @@ SidebarTool.prototype = new ControlTool;
 
 SidebarTool.prototype.reset = function() {
 	ControlTool.prototype.reset.apply(this, arguments);
-	let sidebar = new SidebarWindow(),
-		descriptor = new Object();
+	let descriptor = new Object();
 	descriptor.background = "popup";
 	if (!menuDividers) descriptor.tabBackground = "popup";
 	descriptor.selectGroup = function(tool, sidebar) {
@@ -640,7 +651,6 @@ SidebarTool.prototype.reset = function() {
 		}
 	};
 	this.sidebarDescriptor = descriptor;
-	this.sidebarWindow = sidebar;
 };
 
 SidebarTool.prototype.getSidebarWindow = function() {
@@ -651,18 +661,30 @@ SidebarTool.prototype.getSidebarDescriptor = function() {
 	return this.sidebarDescriptor || null;
 };
 
-SidebarTool.prototype.descript = function() {
+SidebarTool.prototype.describeSidebar = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar === null) MCSystem.throwException(null);
-	ControlTool.prototype.descript.apply(this, arguments);
 	SidebarWindow.parseJson.call(this, sidebar, this.getSidebarDescriptor());
+	if (sidebar.isSelected()) sidebar.reinflateLayout();
+};
+
+SidebarTool.prototype.describe = function() {
+	ControlTool.prototype.describe.apply(this, arguments);
+	this.describeSidebar();
+};
+
+SidebarTool.prototype.getSelectedGroup = function() {
+	let sidebar = this.getSidebarWindow();
+	if (sidebar === null) return SidebarWindow.NOTHING_SELECTED;
+	return sidebar.getSelected();
 };
 
 SidebarTool.prototype.attach = function() {
-	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) MCSystem.throwException(null);
+	if (this.isAttached()) {
+		ControlTool.prototype.attach.apply(this, arguments);
+	}
+	this.sidebarWindow = new SidebarWindow();
 	ControlTool.prototype.attach.apply(this, arguments);
-	sidebar.attach();
 };
 
 SidebarTool.prototype.deattach = function() {
@@ -670,6 +692,7 @@ SidebarTool.prototype.deattach = function() {
 	if (sidebar === null) MCSystem.throwException(null);
 	ControlTool.prototype.deattach.apply(this, arguments);
 	sidebar.dismiss();
+	delete this.sidebarWindow;
 };
 
 SidebarTool.prototype.hide = function() {

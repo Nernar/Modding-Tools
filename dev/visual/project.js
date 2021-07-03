@@ -1,22 +1,22 @@
 const MenuWindow = function() {
-	UniqueWindow.apply(this, arguments);
+	let window = UniqueWindow.apply(this, arguments);
+	window.setWidth(Interface.Display.MATCH);
+	window.setHeight(Interface.Display.MATCH);
+	window.elements = new Array();
+	window.resetContent();
+	window.setBackground("popupControl");
+	
 	let slideIn = new SlideActor(),
 		slideOut = new SlideActor();
 	slideIn.setInterpolator(new DecelerateInterpolator());
 	slideIn.setSlideEdge(Interface.Gravity.TOP);
 	slideIn.setDuration(1000);
-	this.setEnterActor(slideIn);
+	window.setEnterActor(slideIn);
 	slideOut.setInterpolator(new AnticipateInterpolator());
 	slideOut.setSlideEdge(Interface.Gravity.TOP);
 	slideOut.setDuration(800);
-	this.setExitActor(slideOut);
-
-	this.setWidth(Interface.Display.MATCH);
-	this.setHeight(Interface.Display.MATCH);
-
-	this.elements = new Array();
-	this.resetContent();
-	this.setBackground("popupControl");
+	window.setExitActor(slideOut);
+	return window;
 };
 
 MenuWindow.prototype = new UniqueWindow;
@@ -98,7 +98,7 @@ MenuWindow.prototype.scrollToElement = function(elementOrIndex, duration) {
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
 	if (!element) return this;
-	let content = element.getContainer();
+	let content = element.getContent();
 	if (!content) return this;
 	this.scrollTo(content.getY(), duration);
 	return this;
@@ -475,7 +475,7 @@ MenuWindow.ProjectHeader.parseJson = function(instanceOrJson, json) {
 			for (let i = 0; i < categories.length; i++) {
 				let category = calloutOrParse(categories, categories[i], [this, json, instanceOrJson]);
 				if (category !== null && typeof category == "object") {
-					category = MenuWindow.ProjectHeader.Category.parseJson(category);
+					category = MenuWindow.ProjectHeader.Category.parseJson.call(this, category);
 					category.setParentHeader(instanceOrJson);
 					instanceOrJson.addCategory(category);
 				}
@@ -673,7 +673,7 @@ MenuWindow.ProjectHeader.Category.parseJson = function(instanceOrJson, json) {
 			for (let i = 0; i < items.length; i++) {
 				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
 				if (item !== null && typeof item == "object") {
-					item = MenuWindow.ProjectHeader.Category.Item.parseJson(item);
+					item = MenuWindow.ProjectHeader.Category.Item.parseJson.call(this, item);
 					item.setParentCategory(instanceOrJson);
 					instanceOrJson.addItem(item);
 				}
@@ -1060,7 +1060,7 @@ MenuWindow.Category.parseJson = function(instanceOrJson, json) {
 			for (let i = 0; i < items.length; i++) {
 				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
 				if (item !== null && typeof item == "object") {
-					item = MenuWindow.Category.Item.parseJson(item);
+					item = MenuWindow.Category.Item.parseJson.call(this, item);
 					item.setParentCategory(instanceOrJson);
 					instanceOrJson.addItem(item);
 				}
@@ -1456,13 +1456,13 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 				let element = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
 				if (element !== null && typeof element == "object") {
 					if (element.type == "header") {
-						element = MenuWindow.Header.parseJson(element);
+						element = MenuWindow.Header.parseJson.call(this, element);
 					} else if (element.type == "projectHeader") {
-						element = MenuWindow.ProjectHeader.parseJson(element);
+						element = MenuWindow.ProjectHeader.parseJson.call(this, element);
 					} else if (element.type == "category") {
-						element = MenuWindow.Category.parseJson(element);
+						element = MenuWindow.Category.parseJson.call(this, element);
 					} else if (element.type == "message") {
-						element = MenuWindow.Message.parseJson(element);
+						element = MenuWindow.Message.parseJson.call(this, element);
 					} else {
 						Logger.Log("MenuWindow counldn't parse " + element.type, "WARNING");
 						continue;

@@ -39,11 +39,11 @@ WindowProvider.getByPopupId = function(popupId) {
 
 WindowProvider.openWindow = function(window) {
 	if (!window) return;
+	if (this.hasOpenedPopup(window)) {
+		return;
+	}
 	let content = window.getContent();
 	if (!window.isFocusable()) {
-		if (this.hasOpenedPopup(window)) {
-			return;
-		}
 		if (isHorizon && !isInstant) {
 			content.setSystemUiVisibility(5894);
 		}
@@ -80,6 +80,7 @@ WindowProvider.closeWindow = function(window) {
 		delete window.popupId;
 		return;
 	}
+	if (window.popupId != -1) return;
 	delete window.popupId;
 	this.manager.removeView(window.getContent());
 };
@@ -136,7 +137,7 @@ const UniqueHelper = new Object();
 UniqueHelper.opened = new Object();
 
 UniqueHelper.getWindow = function(window) {
-	if (typeof window == "object") {
+	if (window instanceof FocusableWindow) {
 		window = window ? window.TYPE : null;
 	}
 	return this.opened[window] || null;
@@ -154,17 +155,20 @@ UniqueHelper.prepareWindow = function(window) {
 	if (this.wasTypeAttached(window)) {
 		let opened = this.getWindow(window),
 			updatable = opened.isUpdatable();
-		// Window are already opened
-		if (opened == window) {
-			return false;
+		if (!opened.inDestructing()) {
+			// Window are already opened
+			if (opened == window) {
+				return false;
+			}
+			if (updatable) {
+				let content = window.getContainer();
+				opened.setContent(content);
+				opened.update();
+				return false;
+			}
+			opened.hide();
 		}
-		if (updatable) {
-			let content = window.getContainer();
-			opened.setContent(content);
-			opened.update();
-			return false;
-		}
-		opened.hide();
+		this.shiftWindow(opened);
 		return this.prepareWindow(window);
 	} else this.stackWindow(window);
 	return true;

@@ -227,8 +227,9 @@ const parseCallback = function(scope, value, args) {
 		}
 		if (typeof value == "function") {
 			return function() {
-				args = args.concat(Array.prototype.slice.call(arguments));
-				return value.apply(scope, args);
+				let argArray = args.slice();
+				argArray = argArray.concat(Array.prototype.slice.call(arguments));
+				return value.apply(scope, argArray);
 			};
 		}
 	}, null);

@@ -36,11 +36,11 @@ const BlockWorker = function(obj) {
 		getParams: function() {
 			return this.params;
 		},
-		getParamCount: function() {
-			return this.getParams().length;
-		},
 		getMapped: function() {
 			return this.getParams().mapped;
+		},
+		getMappedCount: function() {
+			return this.getMapped().length;
 		},
 		getMapAtCoords: function(x, y, z) {
 			let mapped = this.getMapped();

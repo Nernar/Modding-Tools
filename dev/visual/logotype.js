@@ -1,23 +1,24 @@
 const LogotypeWindow = function(foreground, background) {
-	UniqueWindow.apply(this, arguments);
-	this.setGravity(Interface.Gravity.CENTER);
-	this.setWidth(Interface.Display.MATCH);
-	this.setHeight(Interface.Display.MATCH);
-	this.setFragment(new LogotypeFragment());
-	this.setTouchable(false);
+	let window = UniqueWindow.apply(this, arguments);
+	window.setGravity(Interface.Gravity.CENTER);
+	window.setWidth(Interface.Display.MATCH);
+	window.setHeight(Interface.Display.MATCH);
+	window.setFragment(new LogotypeFragment());
+	window.setTouchable(false);
 	
 	let enter = new FadeActor();
 	enter.setInterpolator(new DecelerateInterpolator());
 	enter.setDuration(2000);
-	this.setEnterActor(enter);
+	window.setEnterActor(enter);
 	
 	let exit = new FadeActor();
 	exit.setInterpolator(new AccelerateInterpolator());
 	exit.setDuration(500);
-	this.setExitActor(exit);
+	window.setExitActor(exit);
 	
-	if (foreground !== undefined) this.setForegroundIcon(foreground);
-	if (background !== undefined) this.setBackgroundIcon(background);
+	if (foreground !== undefined) window.setForegroundIcon(foreground);
+	if (background !== undefined) window.setBackgroundIcon(background);
+	return window;
 };
 
 LogotypeWindow.prototype = new UniqueWindow;

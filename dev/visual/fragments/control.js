@@ -64,7 +64,7 @@ ControlFragment.prototype.setOnHoldListener = function(action) {
 	container.setOnLongClickListener(function() {
 		return tryout(function() {
 			return action && action(instance);
-		}, false);
+		}) || false;
 	});
 	return this;
 };

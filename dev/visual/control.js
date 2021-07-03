@@ -1,17 +1,18 @@
 const ControlButton = function() {
-	UniqueWindow.apply(this, arguments);
-	this.resetContent();
-	this.setBackground("popupButton");
+	let window = UniqueWindow.apply(this, arguments);
+	window.resetContent();
+	window.setBackground("popupButton");
 
 	let actor = new FadeActor();
 	actor.setInterpolator(new AccelerateDecelerateInterpolator());
 	actor.setDuration(400);
-	this.setEnterActor(actor);
+	window.setEnterActor(actor);
 
 	actor = new SlideActor(Interface.Gravity.LEFT);
 	actor.setInterpolator(new AccelerateInterpolator());
 	actor.setDuration(400);
-	this.setExitActor(actor);
+	window.setExitActor(actor);
+	return window;
 };
 
 ControlButton.prototype = new UniqueWindow;
@@ -66,10 +67,11 @@ ControlButton.prototype.setCloseableOutside = function(state) {
 };
 
 const ControlWindow = function() {
-	UniqueWindow.apply(this, arguments);
-	this.setFragment(new FrameFragment());
-	this.resetContent();
-	this.setButtonBackground("popupButton");
+	let window = UniqueWindow.apply(this, arguments);
+	window.setFragment(new FrameFragment());
+	window.resetContent();
+	window.setButtonBackground("popupButton");
+	return window;
 };
 
 ControlWindow.prototype = new UniqueWindow;
@@ -84,15 +86,17 @@ ControlWindow.prototype.resetContent = function() {
 	this.queued = queued;
 	let instance = this;
 	button.setOnClickListener(function() {
-		instance.onClick && instance.onClick(instance);
+		instance.onButtonClick && instance.onButtonClick();
 		if (instance.isHideableInside()) instance.hide();
 	});
 	collapsed.setOnClickListener(function() {
-		instance.transformButton();
+		instance.onCollapsedButtonClick && instance.onCollapsedButtonClick();
 	});
 	button.setOnHoldListener(function() {
-		instance.transformCollapsedButton();
-		return true;
+		return instance.onButtonHold && instance.onButtonHold();
+	});
+	collapsed.setOnHoldListener(function() {
+		return instance.onCollapsedButtonHold && instance.onCollapsedButtonHold();
 	});
 	let behold = this.makeScene(button.getContainer()),
 		collapse = this.makeScene(collapsed.getContainer()),
@@ -100,14 +104,6 @@ ControlWindow.prototype.resetContent = function() {
 	this.behold = behold;
 	this.collapse = collapse;
 	this.queue = queue;
-	let previous = null;
-	queue.setExitAction(function() {
-		let array = instance.getButtonFragments();
-		if (array && array.length > 0) {
-			previous = array[0].getBackground();
-		}
-		instance.setButtonBackground(null);
-	});
 	let minimize = this.getCollapseActor();
 	this.setActor(behold, collapse, minimize);
 	this.setActor(collapse, behold, minimize);
@@ -123,7 +119,6 @@ ControlWindow.prototype.resetContent = function() {
 				}
 				instance.setWidth(Interface.Display.WRAP);
 				instance.setHeight(Interface.Display.WRAP);
-				instance.setButtonBackground(previous);
 			});
 		}
 	});
@@ -131,10 +126,18 @@ ControlWindow.prototype.resetContent = function() {
 	this.setActor(queue, collapse, actor);
 };
 
+ControlWindow.prototype.getButtonFragment = function() {
+	return this.button || null;
+};
+
+ControlWindow.prototype.getCollapsedButtonFragment = function() {
+	return this.collapsed || null;
+};
+
 ControlWindow.prototype.getButtonFragments = function() {
 	let array = new Array();
-	if (this.button) array.push(this.button);
-	if (this.collapsed) array.push(this.collapsed);
+	array.push(this.getButtonFragment());
+	array.push(this.getCollapsedButtonFragment());
 	return array;
 };
 
@@ -152,6 +155,18 @@ ControlWindow.prototype.getCollapseScene = function() {
 
 ControlWindow.prototype.getQueueScene = function() {
 	return this.queue || null;
+};
+
+ControlWindow.prototype.makeContainerScene = function() {
+	let fragment = this.getFragment();
+	if (fragment == this.getButtonFragment()) {
+		return this.getBeholdScene();
+	} else if (fragment == this.getCollapsedButtonFragment()) {
+		return this.getCollapseScene();
+	} else if (fragment == this.getLogotypeFragment()) {
+		return this.getQueueScene();
+	}
+	return UniqueWindow.prototype.makeContainerScene.apply(this, arguments);
 };
 
 ControlWindow.prototype.getButtonEnterActor = function() {
@@ -314,12 +329,42 @@ ControlWindow.prototype.getLogotypeIcon = function() {
 	return this.logotypeBackground || null;
 };
 
-ControlWindow.prototype.setOnClickListener = function(action) {
+ControlWindow.prototype.setOnButtonClickListener = function(action) {
 	if (typeof action != "function") {
-		return delete this.onClick;
+		return delete this.onButtonClick;
 	}
-	this.onClick = function() {
-		tryout(action);
+	this.onButtonClick = function() {
+		tryout.call(this, action);
+	};
+	return true;
+};
+
+ControlWindow.prototype.setOnCollapsedButtonClickListener = function(action) {
+	if (typeof action != "function") {
+		return delete this.onCollapsedButtonClick;
+	}
+	this.onCollapsedButtonClick = function() {
+		tryout.call(this, action);
+	};
+	return true;
+};
+
+ControlWindow.prototype.setOnButtonHoldListener = function(action) {
+	if (typeof action != "function") {
+		return delete this.onButtonHold;
+	}
+	this.onButtonHold = function() {
+		return tryout.call(this, action);
+	};
+	return true;
+};
+
+ControlWindow.prototype.setOnCollapsedButtonHoldListener = function(action) {
+	if (typeof action != "function") {
+		return delete this.onCollapsedButtonHold;
+	}
+	this.onCollapsedButtonHold = function() {
+		return tryout.call(this, action);
 	};
 	return true;
 };
@@ -346,13 +391,13 @@ ControlWindow.prototype.setTouchable = function(enabled) {
 ControlWindow.prototype.transformButton = function() {
 	this.setEnterActor(this.getButtonEnterActor());
 	this.setExitActor(this.getButtonExitActor());
-	this.actorTo(this.getBeholdScene());
+	this.setFragment(this.getButtonFragment());
 };
 
 ControlWindow.prototype.transformCollapsedButton = function() {
 	this.setEnterActor(this.getButtonEnterActor());
 	this.setExitActor(this.getButtonExitActor());
-	this.actorTo(this.getCollapseScene());
+	this.setFragment(this.getCollapsedButtonFragment());
 };
 
 ControlWindow.prototype.transformLogotype = function() {
@@ -360,7 +405,7 @@ ControlWindow.prototype.transformLogotype = function() {
 	this.setHeight(Interface.Display.HEIGHT);
 	this.setEnterActor(this.getLogotypeEnterActor());
 	this.setExitActor(this.getLogotypeExitActor());
-	this.actorTo(this.getQueueScene());
+	this.setFragment(this.getLogotypeFragment());
 	if (this.isMayTouched()) UniqueWindow.prototype.setTouchable.call(this, false);
 };
 
@@ -398,8 +443,17 @@ ControlWindow.parseJson = function(instanceOrJson, json) {
 	if (json.hasOwnProperty("logotypeBackground")) {
 		instanceOrJson.setLogotypeBackground(calloutOrParse(json, json.logotypeBackground, [this, instanceOrJson]));
 	}
-	if (json.hasOwnProperty("click")) {
-		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	if (json.hasOwnProperty("buttonClick")) {
+		instanceOrJson.setOnButtonClickListener(parseCallback(json, json.buttonClick, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("buttonHold")) {
+		instanceOrJson.setOnButtonHoldListener(parseCallback(json, json.buttonHold, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("collapsedClick")) {
+		instanceOrJson.setOnCollapsedButtonClickListener(parseCallback(json, json.collapsedClick, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("collapsedHold")) {
+		instanceOrJson.setOnCollapsedButtonHoldListener(parseCallback(json, json.collapsedHold, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("hideable")) {
 		instanceOrJson.setHideableInside(calloutOrParse(json, json.hideable, [this, instanceOrJson]));

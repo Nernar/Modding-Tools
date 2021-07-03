@@ -27,7 +27,7 @@ Translation.addTranslation("Extract dump by moment.", {
 }); // NO-TRANSLATE
 Translation.addTranslation("UIEditor", {});
 Translation.addTranslation("Создан Антоном Крыжановским", {
-	en: "Created by Anton Kryjanovskiy"
+	en: "Created by Anton Kryzhanovskiy"
 }); // NO-TRANSLATE
 Translation.addTranslation("open beta 1.4.7", {
 	ru: "открытая бета 1.4.7"
@@ -114,6 +114,9 @@ Translation.addTranslation("Evaluate", {
 });
 Translation.addTranslation("Merge", {
 	ru: "Соединить"
+});
+Translation.addTranslation("Replace", {
+	ru: "Заменить"
 });
 Translation.addTranslation("Log", {
 	ru: "Лог"
@@ -218,14 +221,17 @@ Translation.addTranslation("%s4 models", {
 Translation.addTranslation("%s models", {
 	ru: "%s моделей"
 }); // COUNTER
+Translation.addTranslation("To manipulate with in-world block visualization load any world firstly.", {
+	ru: "Для взаимодействия с отрисовкой блока загрузите любой мир."
+});
+Translation.addTranslation("There's will appear mapping section, innersection checkout and render controls.", {
+	ru: "Здесь появится секция с маппингом, проверкой слияний и настройками рендера."
+});
 Translation.addTranslation("In-section", {
 	ru: "Слияния"
 });
 Translation.addTranslation("Manually view boxes innersection", {
 	ru: "Ручной просмотр слияния коробок"
-});
-Translation.addTranslation("Can't check innersection at menu", {
-	ru: "Невозможно проверить слияния в меню"
 });
 Translation.addTranslation("Renderer", {
 	ru: "Рендер"
@@ -686,8 +692,8 @@ Translation.addTranslation("Textures requested successfully", {
 Translation.addTranslation("Textures array must be contains only arrays inside", {
 	ru: "Массив текстур должен содержать внутри только массивы"
 });
-Translation.addTranslation("Every element in textures array must have 1 or 2 length", {
-	ru: "Каждый элемент в массиве текстур должен быть из 1 или 2 элементов"
+Translation.addTranslation("Every element in textures array must have 2 length", {
+	ru: "Каждый элемент в массиве текстур должен быть из 2 элементов"
 });
 Translation.addTranslation("Every element in textures array may incudes only strings or numbers", {
 	ru: "Каждый элемент в массиве текстур может содержать только строки или числа"
@@ -699,9 +705,6 @@ Translation.addTranslation("Map", {
 });
 Translation.addTranslation("Unmap", {
 	ru: "Демаппинг"
-});
-Translation.addTranslation("Can't map render at menu", {
-	ru: "Невозможно отобразить маппинг в меню"
 });
 Translation.addTranslation("Added mapping to %s, %s, %s", {
 	ru: "Маппинг добавлен в %s, %s, %s"
@@ -915,9 +918,6 @@ Translation.addTranslation("Nothing to update", {
 Translation.addTranslation("Nothing to remove", {
 	ru: "Нечего удалять"
 });
-Translation.addTranslation("Nothing to check", {
-	ru: "Нечего проверять"
-});
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
 });
@@ -1018,6 +1018,15 @@ Translation.addTranslation("Report", {
 });
 Translation.addTranslation("as %ss", {
 	ru: "за %sс"
+});
+Translation.addTranslation("There's no availabled entry to replace", {
+	ru: "Здесь нет доступных данных для замены"
+});
+Translation.addTranslation("There's no availabled entry to merge", {
+	ru: "Здесь нет доступных данных для соединения"
+});
+Translation.addTranslation("There's no availabled entry to export", {
+	ru: "Здесь нет доступных данных для сохранения"
 });
 
 // Confirmations dialogs
@@ -1409,5 +1418,3 @@ Translation.addTranslation("This module are deprecated!", {
 // Non-organized content
 
 // Not localized content will be appear here
-Translation.addTranslation(" ", {});
-Translation.addTranslation("\n", {});

@@ -1,15 +1,16 @@
 const ExplorerWindow = function(mayWrap) {
-	UniqueWindow.apply(this, arguments);
-	this.setGravity(Interface.Gravity.CENTER);
-	this.setWidth(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
-	this.setHeight(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
-	this.setFocusable(true);
-	this.file = new java.io.File(__dir__);
-	this.resetContent();
-	this.setRootDirectory();
-	this.resetAdapter();
-	this.setBackground("popupControl");
-	this.elements = new Array();
+	let window = UniqueWindow.apply(this, arguments);
+	window.setGravity(Interface.Gravity.CENTER);
+	window.setWidth(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
+	window.setHeight(mayWrap ? Interface.Display.WRAP : Interface.Display.MATCH);
+	window.setFocusable(true);
+	window.file = new java.io.File(__dir__);
+	window.resetContent();
+	window.setRootDirectory();
+	window.resetAdapter();
+	window.setBackground("popupControl");
+	window.elements = new Array();
+	return window;
 };
 
 ExplorerWindow.prototype = new UniqueWindow;

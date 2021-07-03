@@ -1,21 +1,22 @@
 const SidebarWindow = function() {
-	UniqueWindow.apply(this, arguments);
-	this.setGravity(Interface.Gravity.RIGHT);
-	this.setHeight(Interface.Display.MATCH);
-	this.setFragment(new SidebarFragment());
-	this.groups = new Array();
-	this.setBackground("popup");
-	if (!menuDividers) this.setTabBackground("popup");
+	let window = UniqueWindow.apply(this, arguments);
+	window.setGravity(Interface.Gravity.RIGHT);
+	window.setHeight(Interface.Display.MATCH);
+	window.setFragment(new SidebarFragment());
+	window.groups = new Array();
+	window.setBackground("popup");
+	if (!menuDividers) window.setTabBackground("popup");
 
 	let enter = new SlideActor(Interface.Gravity.RIGHT);
 	enter.setInterpolator(new DecelerateInterpolator());
 	enter.setDuration(400);
-	this.setEnterActor(enter);
+	window.setEnterActor(enter);
 	
 	let exit = new SlideActor(Interface.Gravity.RIGHT);
 	exit.setInterpolator(new BounceInterpolator());
 	exit.setDuration(1000);
-	this.setExitActor(exit);
+	window.setExitActor(exit);
+	return window;
 };
 
 SidebarWindow.NOTHING_SELECTED = -1;
@@ -130,7 +131,10 @@ SidebarWindow.prototype.select = function(groupOrIndex) {
 		this.indexOfGroup(groupOrIndex) : groupOrIndex;
 	if (index < 0) return false;
 	let selected = this.getSelected();
-	if (selected === index) return false;
+	if (selected == index) {
+		this.reinflateLayout();
+		return false;
+	}
 	let group = this.getGroupAt(index);
 	if (group === null) return false;
 	if (this.isSelected()) this.unselect(true);
@@ -504,7 +508,7 @@ SidebarWindow.Group.parseJson = function(instanceOrJson, json) {
 			for (let i = 0; i < items.length; i++) {
 				let item = calloutOrParse(items, items[i], [this, json, instanceOrJson]);
 				if (item !== null && typeof item == "object") {
-					item = SidebarWindow.Group.Item.parseJson(item);
+					item = SidebarWindow.Group.Item.parseJson.call(this, item);
 					instanceOrJson.addItem(item);
 				}
 			}
@@ -677,7 +681,7 @@ SidebarWindow.parseJson = function(instanceOrJson, json) {
 			for (let i = 0; i < groups.length; i++) {
 				let group = calloutOrParse(groups, groups[i], [this, json, instanceOrJson]);
 				if (group !== null && typeof group == "object") {
-					group = SidebarWindow.Group.parseJson(group);
+					group = SidebarWindow.Group.parseJson.call(this, group);
 					instanceOrJson.addGroup(group);
 				}
 			}

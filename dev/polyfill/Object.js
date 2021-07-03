@@ -45,7 +45,7 @@ const merge = function(target, source) {
 		return target;
 	}
 	if (Array.isArray(source) && Array.isArray(target)) {
-		return target.concat(source);
+		return target.slice().concat(source);
 	} else if (typeof source == "object") {
 		if (typeof target != "object") {
 			target = new Object();

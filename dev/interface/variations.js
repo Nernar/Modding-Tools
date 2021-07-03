@@ -205,6 +205,11 @@ ActoredWindow.prototype.inDestructing = function() {
 
 const UniqueWindow = function() {
 	ActoredWindow.apply(this, arguments);
+	if (UniqueHelper.wasTypeAttached(this)) {
+		let window = UniqueHelper.getWindow(this);
+		if (!window.inDestructing()) return window;
+	}
+	return this;
 };
 
 UniqueWindow.prototype = new ActoredWindow;
@@ -259,6 +264,7 @@ const FocusablePopup = function() {
 
 	let place = Popups.getAvailablePlace();
 	this.setX(place.x), this.setY(place.y);
+	this.setGravity(Interface.Gravity.LEFT | Interface.Gravity.TOP);
 
 	this.reset();
 };
@@ -273,7 +279,6 @@ FocusablePopup.prototype.reset = function() {
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(views.layout);
 
-	let instance = this;
 	views.title = new android.widget.TextView(context);
 	views.title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
 	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
@@ -281,70 +286,10 @@ FocusablePopup.prototype.reset = function() {
 	views.title.setGravity(Interface.Gravity.CENTER);
 	views.title.setTextColor(Interface.Color.WHITE);
 	views.title.setTypeface(typeface);
-	let closeable, expandable;
+	let instance = this;
 	views.title.setOnTouchListener(function(view, event) {
 		return tryoutSafety(function() {
-			switch (event.getAction()) {
-				case 0:
-					if (instance.isMayDragged()) {
-						dx = event.getX();
-						dy = event.getY();
-					}
-					if (instance.setIsMayCollapsed() || !instance.isExpanded()) {
-						if (expandable && expandable.isActive()) {
-							if (instance.expand) {
-								instance.expand();
-								// ProjectProvider.getProject().updatePopupExpanded(instance.name, instance.isExpanded());
-							}
-							expandable.destroy();
-						} else {
-							if (expandable) {
-								expandable.destroy();
-							}
-							expandable = new Action(500);
-							expandable.create().run();
-						}
-					}
-					if (instance.isMayDismissed()) {
-						if (closeable) {
-							closeable.destroy();
-						}
-						closeable = new Action(750);
-						closeable.create().run();
-					}
-					break;
-				case 1:
-					if (instance.isMayDismissed()) {
-						if (closeable && closeable.getThread() && closeable.getLeftTime() == 0) {
-							closeable.destroy();
-							Popups.closeIfOpened(instance.name);
-						} // else ProjectProvider.getProject().updatePopupLocation(instance.name, event.getRawX() - dx, event.getRawY() - dy);
-					}
-					break;
-				case 2:
-					let x = event.getX() - dx,
-						y = event.getY() - dy;
-					if (instance.isMayDragged()) {
-						if (instance.isFocusable()) {
-							instance.setX(instance.getX() + x);
-							instance.setY(instance.getY() + y);
-						} else {
-							instance.setX(event.getRawX() - dx);
-							instance.setY(event.getRawY() - dy);
-						}
-						instance.update();
-					}
-					if (x > 0 || y > 0) {
-						if (closeable) {
-							closeable.destroy();
-						}
-						if (expandable) {
-							expandable.destroy();
-						}
-					}
-					break;
-			}
-			return true;
+			return instance.handleTouch(event);
 		}, false);
 	});
 	params = new android.widget.LinearLayout.
@@ -365,7 +310,62 @@ FocusablePopup.prototype.reset = function() {
 };
 
 FocusablePopup.prototype.handleTouch = function(event) {
-	
+	switch (event.getAction()) {
+		case 0:
+			if (this.isMayDragged()) {
+				this.dx = event.getX();
+				this.dy = event.getY();
+			}
+			if (this.isMayCollapsed() || !this.isExpanded()) {
+				if (this.expandable && this.expandable.isActive()) {
+					if (this.expand) {
+						this.expand();
+						// ProjectProvider.getProject().updatePopupExpanded(this.name, this.isExpanded());
+					}
+					this.expandable.destroy();
+				} else {
+					if (this.expandable) {
+						this.expandable.destroy();
+					}
+					this.expandable = new Action(500);
+					this.expandable.create().run();
+				}
+			}
+			if (this.isMayDismissed()) {
+				if (this.closeable) {
+					this.closeable.destroy();
+				}
+				this.closeable = new Action(750);
+				this.closeable.create().run();
+			}
+			break;
+		case 1:
+			if (this.isMayDismissed()) {
+				if (this.closeable && this.closeable.getThread() && this.closeable.getLeftTime() == 0) {
+					this.closeable.destroy();
+					Popups.closeIfOpened(this.name);
+				} // else ProjectProvider.getProject().updatePopupLocation(this.name, event.getRawX() - this.dx, event.getRawY() - this.dy);
+			}
+			break;
+		case 2:
+			let x = event.getX() - this.dx,
+				y = event.getY() - this.dy;
+			if (this.isMayDragged()) {
+				this.setX(event.getRawX() - this.dx);
+				this.setY(event.getRawY() - this.dy);
+				this.update();
+			}
+			if (x > 0 || y > 0) {
+				if (this.closeable) {
+					this.closeable.destroy();
+				}
+				if (this.expandable) {
+					this.expandable.destroy();
+				}
+			}
+			break;
+	}
+	return true;
 };
 
 FocusablePopup.prototype.setTitle = function(title) {

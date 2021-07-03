@@ -1,24 +1,26 @@
 const HintAlert = function() {
-	this.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
-	this.setWidth(Interface.Display.MATCH);
-	this.setTouchable(false);
+	let window = UniqueWindow.apply(this, arguments);
+	window.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
+	window.setWidth(Interface.Display.MATCH);
+	window.setTouchable(false);
 
 	let actor = new SlideActor(Interface.Gravity.BOTTOM),
 		interpolator = new DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
-	actor.setDuration(this.time / 6);
-	this.setEnterActor(actor);
+	actor.setDuration(window.getTime() / 6);
+	window.setEnterActor(actor);
 
 	actor = new ActorSet();
 	let slide = new SlideActor(Interface.Gravity.BOTTOM),
 		fade = new FadeActor(FadeActor.OUT);
 	actor.addActor(slide);
 	actor.addActor(fade);
-	actor.setDuration(this.time / 6);
-	this.setExitActor(actor);
+	actor.setDuration(window.getTime() / 6);
+	window.setExitActor(actor);
 
-	this.resetContent();
-	this.clearStack();
+	window.resetContent();
+	window.clearStack();
+	return window;
 };
 
 HintAlert.prototype = new UniqueWindow;
@@ -65,7 +67,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let bounds = new BoundsActor(),
 			fade = new FadeActor();
 		actor.setInterpolator(new OvershootInterpolator());
-		actor.setDuration(this.time / 8);
+		actor.setDuration(this.getTime() / 8);
 		actor.addActor(bounds);
 		actor.addActor(fade);
 		this.beginDelayedActor(actor);

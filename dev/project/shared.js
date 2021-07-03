@@ -207,7 +207,7 @@ const importProject = function(path, action) {
 	readFile(path, true, function(bytes) {
 		let result = decompileFromProduce(bytes),
 			data = compileData(result, "object");
-		if (data && !(data instanceof Error)) {
+		if (data && !(data.lineNumber === undefined)) {
 			handle(function() {
 				action && (data.length !== undefined ?
 					action(data) : action([data]));

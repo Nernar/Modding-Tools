@@ -34,7 +34,7 @@ const selectTexture = function(index, onSelect) {
 		}
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-		builder.setTitle(mod.name);
+		builder.setTitle(String(mod.name));
 		let wrong = new android.widget.LinearLayout(context);
 		wrong.setOrientation(Interface.Orientate.VERTICAL);
 		wrong.setGravity(Interface.Gravity.CENTER);
@@ -220,6 +220,7 @@ const mapRenderBlock = function(worker) {
 					boxes = models[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
 					let box = boxes[i];
+					hasRenderer = true;
 					if (selectMode == 3 && drawSelection) {
 						let selected = BlockEditor.data.renderer;
 						model.addBox(box.x1, box.y1, box.z1,
@@ -236,17 +237,23 @@ const mapRenderBlock = function(worker) {
 						if (texture) {
 							if (texture.length > 1) {
 								model.addBox(box.x1, box.y1, box.z1,
-									box.x2, box.y2, box.z2, box.texture);
-							} else {
-								model.addBox(box.x1, box.y1, box.z1, box.x2,
-									box.y2, box.z2, box.texture[0][0], box.texture[0][1]);
+									box.x2, box.y2, box.z2, texture);
+								continue;
+							} else if (texture.length == 1) {
+								texture = texture[0];
+								if (texture.length > 1) {
+									model.addBox(box.x1, box.y1, box.z1, box.x2,
+										box.y2, box.z2, texture[0], texture[1]);
+									continue;
+								} else if (texture.length == 1) {
+									model.addBox(box.x1, box.y1, box.z1, box.x2,
+										box.y2, box.z2, texture[0]);
+									continue;
+								}
 							}
-						} else {
-							model.addBox(box.x1, box.y1, box.z1, box.x2,
-								box.y2, box.z2, "missing_block", 0);
 						}
+						model.addBox(box.x1, box.y1, box.z1, box.x2, box.y2, box.z2);
 					}
-					hasRenderer = true;
 				}
 				render.addEntry(model);
 			}
@@ -258,6 +265,7 @@ const mapRenderBlock = function(worker) {
 					boxes = collisions[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
 					let box = boxes[i];
+					hasCollision = true;
 					if (selectMode == 11 && drawSelection) {
 						let selected = BlockEditor.data.collision;
 						model.addBox(box.x1, box.y1, box.z1,
@@ -269,13 +277,12 @@ const mapRenderBlock = function(worker) {
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
 							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
-					} else if (BlockEditor.data.selected == 2) {
+					} else if (BlockTool.getSelectedGroup() == 2) {
 						model.addBox(box.x1, box.y1, box.z1, box.x2,
 							box.y2, box.z2, "renderer_shape", Number(transparentBoxes));
 					}
 					collision.addBox(box.x1, box.y1, box.z1,
 						box.x2, box.y2, box.z2);
-					hasCollision = true;
 				}
 				render.addEntry(model);
 			}
@@ -284,7 +291,7 @@ const mapRenderBlock = function(worker) {
 			if (selectMode == 5) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1,
 					shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
-			} else if (!hasRenderer && (!hasCollision || BlockEditor.data.selected != 2)) {
+			} else if (!hasRenderer && (!hasCollision || BlockTool.getSelectedGroup() != 2)) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1, shape.z1,
 					shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
 			}
@@ -419,134 +426,135 @@ const mergeConvertedBlock = function(project, source, action) {
 	});
 };
 
-const BlockTool = new SidebarTool({
+const BlockTool = new EditorTool({
 	controlDescriptor: {
 		logotype: "block"
 	},
 	menuDescriptor: {
-		elements: [{
-			type: "header"
-		}, {
-			type: "category",
-			title: translate("Block"),
-			items: [{
-				icon: "blockMapping",
-				title: translate("Map"),
-				click: function() {
-					if (!Level.isLoaded()) {
-						showHint(translate("Can't map render at menu"));
-						return;
-					}
-					showHint(translate("Tap block"));
-					control.hide();
-					selectMode = 1;
-					let button = new ControlButton();
-					button.setIcon("menuBack");
-					button.setOnClickListener(function() {
-						BlockEditor.create();
-						selectMode = 0;
-					});
-					button.show();
-				}
-			}, function(tool, json, control) {
-				let hasRemoveMessage = false;
+		elements: [function(tool, control) {
+			if (Level.isLoaded()) {
 				return {
-					icon: "blockRemove",
-					title: translate("Unmap"),
-					click: function() {
-						if (!hasMappings()) {
-							showHint(translate("Nothing to remove"));
-							return;
+					type: "category",
+					title: translate("Block"),
+					items: [{
+						icon: "blockMapping",
+						title: translate("Map"),
+						click: function(tool, item) {
+							showHint(translate("Tap block"));
+							tool.hide();
+							selectMode = 1;
+							let button = new ControlButton();
+							button.setIcon("menuBack");
+							button.setOnClickListener(function() {
+								button.hide();
+								selectMode = 0;
+								BlockEditor.attach();
+							});
+							button.show();
 						}
-						if (!hasRemoveMessage) {
-							let message = control.addMessage("blockSlice", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
-								function() {
-									BlockEditor.data.worker.Define.params.mapped = new Array();
-									if (!removeMappings()) {
-										showHint(translate("Nothing to remove"));
+					}, function(tool, category) {
+						if (hasMappings()) {
+							let hasRemoveMessage = false;
+							return {
+								icon: "blockRemove",
+								title: translate("Unmap"),
+								click: function(tool, item) {
+									if (!hasRemoveMessage) {
+										let message = control.addMessage("blockSlice", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
+											function() {
+												tool.getWorker().Define.params.mapped = new Array();
+												if (!removeMappings()) {
+													showHint(translate("Nothing to remove"));
+												}
+												control.removeElement(message);
+											});
+										handle(function() {
+											control.scrollToElement(message);
+										}, 500);
+										handle(function() {
+											control.removeElement(message);
+											hasRemoveMessage = false;
+										}, 5000);
+										hasRemoveMessage = true;
 									}
-									control.removeElement(message);
-								});
-							handle(function() {
-								control.scrollToElement(message);
-							}, 500);
-							handle(function() {
-								control.removeElement(message);
-								hasRemoveMessage = false;
-							}, 5000);
-							hasRemoveMessage = true;
+								}
+							};
 						}
-					}
+					}, function(tool, category) {
+						if (BlockEditor.data.hasRender || BlockEditor.data.hasCollision) {
+							return {
+								icon: "blockInsection",
+								title: translate("In-section"),
+								click: function(tool, item) {
+									showHint(translate("Manually view boxes innersection"));
+									Popups.closeAll();
+									tool.hide();
+									let button = new ControlButton();
+									button.setIcon("menuBack");
+									button.setOnClickListener(function() {
+										Popups.closeAllByTag("innersection");
+										delete BlockEditor.data.rendererInst;
+										delete BlockEditor.data.collisionInst;
+										button.hide();
+										selectMode = 0;
+										BlockEditor.attach();
+									});
+									button.show();
+									let renderer, collision;
+									if (BlockEditor.data.hasRender) {
+										renderer = new ListingPopup();
+										renderer.setIsMayDismissed(false);
+										renderer.setTitle(translate("Renderer"));
+										renderer.setSelectMode(true);
+										renderer.setOnSelectListener(function(index) {
+											selectMode = 9;
+											BlockEditor.data.rendererInst = index;
+											mapRenderBlock(BlockTool.getWorker());
+											if (collision) collision.unselect();
+										});
+										for (let i = 0; i < BlockTool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
+											renderer.addButtonElement(translate("Box %s", i + 1));
+										}
+										renderer.selectButton(0);
+										Popups.open(renderer, "innersection_renderer");
+									}
+									if (BlockEditor.data.hasCollision) {
+										collision = new ListingPopup();
+										collision.setIsMayDismissed(false);
+										collision.setTitle(translate("Collision"));
+										collision.setSelectMode(true);
+										collision.setOnSelectListener(function(index) {
+											selectMode = 10;
+											BlockEditor.data.collisionInst = index;
+											mapRenderBlock(BlockTool.getWorker());
+											if (renderer) renderer.unselect();
+										});
+										for (let i = 0; i < BlockTool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
+											collision.addButtonElement(translate("Box %s", i + 1));
+										}
+										if (!BlockEditor.data.hasRender) {
+											collision.selectButton(0);
+										}
+										Popups.open(collision, "innersection_collision");
+									}
+								}
+							};
+						}
+					}, {
+						icon: "blockUpdate",
+						title: translate("Reload"),
+						click: function(tool, item) {
+							selectMode = 0;
+							BlockEditor.reload();
+						}
+					}]
 				};
-			}, {
-				icon: "blockInsection",
-				title: translate("In-section"),
-				click: function() {
-					if (!Level.isLoaded()) {
-						showHint(translate("Can't check innersection at menu"));
-						return;
-					}
-					if (!BlockEditor.data.hasRender && !BlockEditor.data.hasCollision) {
-						showHint(translate("Nothing to check"));
-						return;
-					}
-					showHint(translate("Manually view boxes innersection"));
-					Popups.closeAll();
-					control.hide();
-					let button = new ControlButton();
-					button.setIcon("menuBack");
-					button.setOnClickListener(function() {
-						Popups.closeAllByTag("innersection");
-						delete BlockEditor.data.rendererInst;
-						delete BlockEditor.data.collisionInst;
-						selectMode = 0;
-						BlockEditor.create();
-					});
-					button.show();
-					let renderer, collision;
-					if (BlockEditor.data.hasRender) {
-						renderer = new ListingPopup();
-						renderer.setTitle(translate("Renderer"));
-						renderer.setSelectMode(true);
-						renderer.setOnSelectListener(function(index) {
-							selectMode = 9;
-							BlockEditor.data.rendererInst = index;
-							mapRenderBlock(BlockEditor.data.worker);
-							if (collision) collision.unselect();
-						});
-						for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++) {
-							renderer.addButtonElement(translate("Box %s", i + 1));
-						}
-						renderer.selectButton(0);
-						Popups.open(renderer, "innersection_renderer");
-					}
-					if (BlockEditor.data.hasCollision) {
-						collision = new ListingPopup();
-						collision.setTitle(translate("Collision"));
-						collision.setSelectMode(true);
-						collision.setOnSelectListener(function(index) {
-							selectMode = 10;
-							BlockEditor.data.collisionInst = index;
-							mapRenderBlock(BlockEditor.data.worker);
-							if (renderer) renderer.unselect();
-						});
-						for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++) {
-							collision.addButtonElement(translate("Box %s", i + 1));
-						}
-						if (!BlockEditor.data.hasRender) {
-							collision.selectButton(0);
-						}
-						Popups.open(collision, "innersection_collision");
-					}
-				}
-			}, {
-				icon: "blockUpdate",
-				title: translate("Reload"),
-				click: function() {
-					selectMode = 0;
-					BlockEditor.reload();
-				}
-			}]
+			}
+			return {
+				type: "message",
+				icon: "blockSlice",
+				message: translate("To manipulate with in-world block visualization load any world firstly.") + " " + translate("There's will appear mapping section, innersection checkout and render controls.")
+			};
 		}]
 	},
 	sidebarDescriptor: {
@@ -557,25 +565,142 @@ const BlockTool = new SidebarTool({
 			}, {
 				icon: "blockDefineVariation"
 			}, {
-				icon: "blockDefineTexture",
-				background: "popupSelectionLocked"
+				icon: function(tool, item) {
+					return ImageFactory.getTintDrawable("blockDefineTexture", Interface.Color.RED);
+				}
 			}, {
 				icon: "blockDefineType"
 			}, {
 				icon: "blockDefineShape"
-			}, {
-				icon: "blockUpdate"
+			}, function() {
+				if (Level.isLoaded()) {
+					return {
+						icon: "blockUpdate"
+					};
+				}
 			}]
 		}, {
-			icon: "blockBoxSelect"
+			icon: "blockBoxSelect",
+			items: function(tool, group) {
+				if (BlockEditor.data.hasRender) {
+					let selector = [{
+						icon: "blockBoxSelect"
+					}, {
+						icon: "blockBoxAdd"
+					}];
+					if (BlockEditor.Renderer.hasSelection()) {
+						return selector.concat([{
+							icon: "blockBoxScretch"
+						}, {
+							icon: "blockBoxMove"
+						}, {
+							icon: "blockBoxMirror"
+						}, function(tool, group) {
+							if (REVISION.startsWith("develop")) {
+								return {
+									icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+								};
+							}
+						}, {
+							icon: "blockBoxTexture"
+						}, {
+							icon: "blockBoxRemove"
+						}]);
+					}
+					return selector;
+				}
+				return {
+					icon: "blockBoxAdd"
+				};
+			}
 		}, {
 			icon: "blockDefineShape",
-			items: {
-				icon: "blockBoxAdd"
+			items: function(tool, group) {
+				if (BlockEditor.data.hasCollision) {
+					let selector = [{
+						icon: "blockBoxSelect"
+					}, {
+						icon: "blockBoxAdd"
+					}];
+					if (BlockEditor.Collision.hasSelection()) {
+						return selector.concat([{
+							icon: "blockBoxScretch"
+						}, {
+							icon: "blockBoxMove"
+						}, {
+							icon: "blockBoxMirror"
+						}, function(tool, group) {
+							if (REVISION.startsWith("develop")) {
+								return {
+									icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+								};
+							}
+						}, {
+							icon: "blockBoxRemove"
+						}]);
+					}
+					return selector;
+				}
+				return {
+					icon: "blockBoxAdd"
+				};
 			}
 		}]
 	},
-	onGroupFetch: function(sidebar, group, index) {
+	onSelectItem: function(sidebar, group, item, groupIndex, itemIndex) {
+		let icon = item.getIcon();
+		if (groupIndex == 0) {
+			if (icon == "blockDefineIdentifier") {
+				return BlockEditor.rename();
+			} else if (icon == "blockDefineVariation") {
+				return BlockEditor.variation();
+			} else if (icon == "blockDefineTexture") {
+				// TODO
+			} else if (icon == "blockDefineType") {
+				return BlockEditor.type();
+			} else if (icon == "blockDefineShape") {
+				return BlockEditor.shape();
+			} else if (icon == "blockUpdate") {
+				return BlockEditor.reload();
+			}
+		} else if (groupIndex == 1) {
+			if (icon == "blockBoxSelect") {
+				return BlockEditor.Renderer.select();
+			} else if (icon == "blockBoxAdd") {
+				return BlockEditor.Renderer.add();
+			} else if (icon == "blockBoxScretch") {
+				return BlockEditor.Renderer.resize();
+			} else if (icon == "blockBoxMove") {
+				return BlockEditor.Renderer.move();
+			} else if (icon == "blockBoxMirror") {
+				return BlockEditor.Renderer.mirror();
+			} else if (icon == "blockBoxRotate") {
+				return BlockEditor.Renderer.rotate();
+			} else if (icon == "blockBoxTexture") {
+				return BlockEditor.Renderer.texture();
+			} else if (icon == "blockBoxRemove") {
+				return BlockEditor.Renderer.remove();
+			}
+		} else if (groupIndex == 2) {
+			if (icon == "blockBoxSelect") {
+				return BlockEditor.Collision.select();
+			} else if (icon == "blockBoxAdd") {
+				return BlockEditor.Collision.add();
+			} else if (icon == "blockBoxScretch") {
+				return BlockEditor.Collision.resize();
+			} else if (icon == "blockBoxMove") {
+				return BlockEditor.Collision.move();
+			} else if (icon == "blockBoxMirror") {
+				return BlockEditor.Collision.mirror();
+			} else if (icon == "blockBoxRotate") {
+				return BlockEditor.Collision.rotate();
+			} else if (icon == "blockBoxRemove") {
+				return BlockEditor.Collision.remove();
+			}
+		}
+		showHint(translate("Not developed yet"));
+	},
+	onFetchGroup: function(sidebar, group, index) {
 		if (index == 0) {
 			return translate("Block define properties");
 		} else if (index == 1) {
@@ -583,8 +708,9 @@ const BlockTool = new SidebarTool({
 		} else if (index == 2) {
 			return translate("Collision models");
 		}
+		return translate("Deprecated translation");
 	},
-	onItemFetch: function(sidebar, group, item, groupIndex, itemIndex) {
+	onFetchItem: function(sidebar, group, item, groupIndex, itemIndex) {
 		if (groupIndex == 0) {
 			if (itemIndex == 0) {
 				return translate("Changes block identifier");
@@ -600,93 +726,6 @@ const BlockTool = new SidebarTool({
 				return translate("Updates mapped blocks");
 			}
 		} else if (groupIndex == 1) {
-			showHint(translate("Not developed yet"));
-		}
-	},
-	onSelectGroup: function(sidebar, group, index, last, count) {
-		BlockEditor.data.selected = index;
-		mapRenderBlock(BlockEditor.data.worker);
-	},
-	onUndockGroup: function(sidebar, group, index, previous) {
-		if (!previous) {
-			delete BlockEditor.data.selected;
-			selectMode = 0, mapRenderBlock(BlockEditor.data.worker);
-		}
-	}
-});
-
-const BlockEditor = {
-	data: new Object(),
-	reset: function() {
-		this.data.worker = ProjectProvider.addBlock();
-		ProjectProvider.setOpenedState(true);
-		this.data.worker.Renderer.createModel();
-		this.data.worker.Collision.createModel();
-		if (!saveCoords) {
-			removeMappings();
-			removeUnusedMappings();
-		}
-		else this.data.worker.Define.params.mapped = copyMappings();
-		this.unselect();
-	},
-	unselect: function() {
-		this.data.renderer = this.data.collision = -1;
-		Popups.closeIfOpened("renderer_select");
-		Popups.closeIfOpened("collision_select");
-		delete this.data.selected;
-	},
-	create: function() {
-		let autosaveable = !ProjectProvider.isOpened();
-		if (!this.data.worker) this.reset();
-		autosaveable && ProjectProvider.initializeAutosave();
-		this.data.hasRender = this.data.worker.Renderer.getModelCount() > 0 &&
-			this.data.worker.Renderer.getModel(0).getBoxCount() > 0;
-		this.data.hasCollision = this.data.worker.Collision.getModelCount() > 0 &&
-			this.data.worker.Collision.getModel(0).getBoxCount() > 0;
-		let button = new ControlButton();
-		button.setIcon("block");
-		button.setOnClickListener(function() {
-			BlockEditor.menu();
-			sidebar.hide();
-		});
-		button.show();
-		let sidebar = new SidebarWindow(),
-			group = sidebar.addGroup("block");
-		group.addItem("blockDefineIdentifier", this.rename);
-		group.addItem("blockDefineVariation", this.variation);
-		group.addItem("blockDefineTexture", null).setBackground("popupSelectionLocked");
-		group.addItem("blockDefineType", this.type);
-		group.addItem("blockDefineShape", this.shape);
-		group.addItem("blockUpdate", this.reload);
-		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
-			if (itemIndex == 0) {
-				return translate("Changes block identifier");
-			} else if (itemIndex == 1) {
-				return translate("Sets block few variations");
-			} else if (itemIndex == 2) {
-				return translate("Changes variation textures");
-			} else if (itemIndex == 3) {
-				return translate("Adds special type properties");
-			} else if (itemIndex == 4) {
-				return translate("Scretches basic collision box");
-			} else if (itemIndex == 5) {
-				return translate("Updates mapped blocks");
-			}
-		});
-		group = sidebar.addGroup("blockBoxSelect");
-		if (this.data.hasRender) {
-			group.addItem("blockBoxSelect", this.Renderer.select);
-			group.addItem("blockBoxAdd", this.Renderer.add);
-			group.addItem("blockBoxScretch", this.Renderer.resize);
-			group.addItem("blockBoxMove", this.Renderer.move);
-			group.addItem("blockBoxMirror", this.Renderer.mirror);
-			if (REVISION.startsWith("develop")) {
-				group.addItem(ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED), this.Renderer.rotate);
-			}
-			group.addItem("blockBoxTexture", this.Renderer.texture);
-			group.addItem("blockBoxRemove", this.Renderer.remove);
-		} else group.addItem("blockBoxAdd", this.Renderer.add);
-		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
 			if (BlockEditor.data.hasRender) {
 				if (!REVISION.startsWith("develop")) {
 					if (itemIndex > 4) itemIndex++;
@@ -711,20 +750,7 @@ const BlockEditor = {
 			} else if (itemIndex == 0) {
 				return translate("Creates first box");
 			}
-		});
-		group = sidebar.addGroup("blockDefineShape");
-		if (this.data.hasCollision) {
-			group.addItem("blockBoxSelect", this.Collision.select);
-			group.addItem("blockBoxAdd", this.Collision.add);
-			group.addItem("blockBoxScretch", this.Collision.resize);
-			group.addItem("blockBoxMove", this.Collision.move);
-			group.addItem("blockBoxMirror", this.Collision.mirror);
-			if (REVISION.startsWith("develop")) {
-				group.addItem(ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED), this.Collision.rotate);
-			}
-			group.addItem("blockBoxRemove", this.Collision.remove);
-		} else group.addItem("blockBoxAdd", this.Collision.add);
-		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
+		} else if (groupIndex == 2) {
 			if (BlockEditor.data.hasCollision) {
 				if (!REVISION.startsWith("develop")) {
 					if (itemIndex > 4) itemIndex++;
@@ -747,220 +773,47 @@ const BlockEditor = {
 			} else if (itemIndex == 0) {
 				return translate("Creates first box");
 			}
-		});
-		if (this.data.selected >= 0) sidebar.select(this.data.selected);
-		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
-			BlockEditor.data.selected = index;
-			mapRenderBlock(BlockEditor.data.worker);
-		});
-		sidebar.setOnGroupUndockListener(function(window, group, index, previous) {
-			if (!previous) {
-				delete BlockEditor.data.selected;
-				selectMode = 0, mapRenderBlock(BlockEditor.data.worker);
-			}
-		});
-		sidebar.setOnGroupFetchListener(function(window, group, index) {
-			if (index == 0) {
-				return translate("Block define properties");
-			} else if (index == 1) {
-				return translate("Render models");
-			} else if (index == 2) {
-				return translate("Collision models");
-			}
-		});
-		sidebar.show();
-		mapRenderBlock(this.data.worker);
-	},
-	menu: function() {
-		prepareAdditionalInformation(3, 1);
-		let control = new MenuWindow();
-		attachWarningInformation(control);
-		control.setOnClickListener(function() {
-			BlockEditor.create();
-		}).addHeader();
-		attachAdditionalInformation(control);
-		let category = control.addCategory(translate("Editor"));
-		category.addItem("menuProjectLoad", translate("Open"), function() {
-			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) formats.push(".json");
-			selectFile(formats, function(file) {
-				BlockEditor.replace(file);
-			});
-		});
-		category.addItem("menuProjectImport", translate("Merge"), function() {
-			let formats = [".dnp", ".ndb", ".js"];
-			if (ModelConverter) formats.push(".json");
-			selectFile(formats, function(file) {
-				BlockEditor.merge(file);
-			});
-		});
-		category.addItem("menuProjectSave", translate("Export"), function() {
-			saveFile(BlockEditor.data.name, [".dnp", ".js"], function(file, i) {
-				BlockEditor.save(file, i);
-			});
-		});
-		category.addItem("menuProjectLeave", translate("Back"), function() {
-			control.hide();
-			Popups.closeAll();
-			BlockEditor.unselect();
-			ProjectProvider.setOpenedState(false);
-			ProjectProvider.getProject().callAutosave();
-			checkValidate(function() {
-				delete BlockEditor.data.worker;
-				ProjectEditor.menu();
-			});
-		});
-		attachAdditionalInformation(control);
-		category = control.addCategory(translate("Block"));
-		category.addItem("blockMapping", translate("Map"), function() {
-			if (!Level.isLoaded()) {
-				showHint(translate("Can't map render at menu"));
-				return;
-			}
-			showHint(translate("Tap block"));
-			control.hide();
-			selectMode = 1;
-			let button = new ControlButton();
-			button.setIcon("menuBack");
-			button.setOnClickListener(function() {
-				BlockEditor.create();
-				selectMode = 0;
-			});
-			button.show();
-		});
-		let hasRemoveMessage = false;
-		category.addItem("blockRemove", translate("Unmap"), function() {
-			if (!hasMappings()) {
-				showHint(translate("Nothing to remove"));
-				return;
-			}
-			if (!hasRemoveMessage) {
-				let message = control.addMessage("blockSlice", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
-					function() {
-						BlockEditor.data.worker.Define.params.mapped = new Array();
-						if (!removeMappings()) {
-							showHint(translate("Nothing to remove"));
-						}
-						control.removeElement(message);
-					});
-				handle(function() {
-					control.scrollToElement(message);
-				}, 500);
-				handle(function() {
-					control.removeElement(message);
-					hasRemoveMessage = false;
-				}, 5000);
-				hasRemoveMessage = true;
-			}
-		});
-		category.addItem("blockInsection", translate("In-section"), function() {
-			if (!Level.isLoaded()) {
-				showHint(translate("Can't check innersection at menu"));
-				return;
-			}
-			if (!BlockEditor.data.hasRender && !BlockEditor.data.hasCollision) {
-				showHint(translate("Nothing to check"));
-				return;
-			}
-			showHint(translate("Manually view boxes innersection"));
-			Popups.closeAll();
-			control.hide();
-			let button = new ControlButton();
-			button.setIcon("menuBack");
-			button.setOnClickListener(function() {
-				Popups.closeAllByTag("innersection");
-				delete BlockEditor.data.rendererInst;
-				delete BlockEditor.data.collisionInst;
-				selectMode = 0;
-				BlockEditor.create();
-			});
-			button.show();
-			let renderer, collision;
-			if (BlockEditor.data.hasRender) {
-				renderer = new ListingPopup();
-				renderer.setTitle(translate("Renderer"));
-				renderer.setSelectMode(true);
-				renderer.setOnSelectListener(function(index) {
-					selectMode = 9;
-					BlockEditor.data.rendererInst = index;
-					mapRenderBlock(BlockEditor.data.worker);
-					if (collision) collision.unselect();
-				});
-				for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++) {
-					renderer.addButtonElement(translate("Box %s", i + 1));
-				}
-				renderer.selectButton(0);
-				Popups.open(renderer, "innersection_renderer");
-			}
-			if (BlockEditor.data.hasCollision) {
-				collision = new ListingPopup();
-				collision.setTitle(translate("Collision"));
-				collision.setSelectMode(true);
-				collision.setOnSelectListener(function(index) {
-					selectMode = 10;
-					BlockEditor.data.collisionInst = index;
-					mapRenderBlock(BlockEditor.data.worker);
-					if (renderer) renderer.unselect();
-				});
-				for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++) {
-					collision.addButtonElement(translate("Box %s", i + 1));
-				}
-				if (!BlockEditor.data.hasRender) {
-					collision.selectButton(0);
-				}
-				Popups.open(collision, "innersection_collision");
-			}
-		});
-		category.addItem("blockUpdate", translate("Reload"), function() {
-			selectMode = 0;
-			BlockEditor.reload();
-		});
-		attachAdditionalInformation(control);
-		control.show();
-		finishAttachAdditionalInformation();
-	},
-	open: function(source) {
-		if (typeof source != "object") {
-			source = ProjectProvider.getEditorById(source);
 		}
-		let index = ProjectProvider.indexOf(source);
-		if (!source) {
-			showHint(translate("Can't find opened editor at %s position", source));
-			return false;
-		}
-		Popups.closeAll();
-		let worker = this.data.worker = new BlockWorker(source);
-		if (index == -1) index = ProjectProvider.getCount();
-		ProjectProvider.setupEditor(index, worker);
-		BlockEditor.unselect();
-		BlockEditor.create();
-		ProjectProvider.setOpenedState(true);
-		MenuWindow.hideCurrently();
-		return true;
+		return translate("Deprecated translation");
 	},
-	merge: function(file) {
+	getExtensions: function(type) {
+		let source = EditorTool.prototype.getExtensions.apply(this, arguments);
+		if (type != EditorTool.ExtensionType.EXPORT) source = source.concat([".json", ".ndb"]);
+		return source;
+	},
+	replace: function(file) {
 		let name = file.getName(),
-			project = BlockEditor.data.worker.getProject();
-		if (name.endsWith(".dnp")) {
-			let active = Date.now();
-			importProject(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					mergeConvertedBlock(project, selected, function(output) {
-						BlockEditor.data.worker.loadProject(output);
-						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Merged success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					});
-				}, "block");
-			});
-		} else if (name.endsWith(".json")) {
+			instance = this;
+		if (name.endsWith(".json")) {
 			let active = Date.now();
 			convertJsonBlock(Files.read(file), function(result) {
-				mergeConvertedBlock(project, result, function(output) {
-					BlockEditor.data.worker.loadProject(output);
-					mapRenderBlock(BlockEditor.data.worker);
+				instance.fromProject(result);
+				showHint(translate("Converted success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		} else if (name.endsWith(".ndb")) {
+			let active = Date.now();
+			tryout(function() {
+				let obj = compileData(Files.read(file)),
+					result = convertNdb(obj);
+				instance.fromProject(result);
+				showHint(translate("Imported success") + " " +
+					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+			});
+		}
+		EditorTool.prototype.replace.apply(this, arguments);
+	},
+	merge: function(file) {
+		let merger = this.getMerger();
+		if (!this.hasMerger()) MCSystem.throwException(null);
+		let name = file.getName(),
+			project = this.toProject(),
+			instance = this;
+		if (name.endsWith(".json")) {
+			let active = Date.now();
+			convertJsonBlock(Files.read(file), function(result) {
+				merger(project, result, function(output) {
+					instance.fromProject(output);
 					showHint(translate("Merged success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				});
@@ -970,95 +823,115 @@ const BlockEditor = {
 			handleThread(function() {
 				let obj = compileData(Files.read(file)),
 					result = convertNdb(obj);
-				mergeConvertedBlock(project, result, function(output) {
-					BlockEditor.data.worker.loadProject(output);
-					mapRenderBlock(BlockEditor.data.worker);
+				merger(project, result, function(output) {
+					instance.fromProject(output);
 					showHint(translate("Merged success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				});
 			});
-		} else if (name.endsWith(".js")) {
-			let active = Date.now();
-			importScript(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					mergeConvertedBlock(project, selected, function(output) {
-						BlockEditor.data.worker.loadProject(output);
-						mapRenderBlock(BlockEditor.data.worker);
-						showHint(translate("Merged success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					});
-				}, "block");
-			});
+		}
+		EditorTool.prototype.merge.apply(this, arguments);
+	},
+	getWorkerFor: function(source) {
+		if (source !== undefined) {
+			return new BlockWorker(source);
+		}
+		return ProjectProvider.addBlock();
+	},
+	leave: function() {
+		Popups.closeAll();
+		this.unselect();
+		EditorTool.prototype.leave.apply(this, arguments);
+	},
+	getMerger: function() {
+		return mergeConvertedBlock;
+	},
+	getConverter: function() {
+		return new BlockConverter();
+	},
+	hasParser: function() {
+		return true;
+	},
+	fromProject: function(source) {
+		Popups.closeAll();
+		this.unselect();
+		EditorTool.prototype.fromProject.apply(this, arguments);
+	},
+	onSelectGroup: function(sidebar, group, index, last, count) {
+		mapRenderBlock(this.getWorker());
+	},
+	onUndockGroup: function(sidebar, group, index, previous) {
+		if (!previous) {
+			selectMode = 0;
+			mapRenderBlock(this.getWorker());
 		}
 	},
-	replace: function(file) {
-		let name = file.getName();
-		if (name.endsWith(".dnp")) {
-			let active = Date.now();
-			importProject(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					BlockEditor.open(selected);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				}, "block", true);
-			});
-		} else if (name.endsWith(".json")) {
-			let active = Date.now();
-			convertJsonBlock(Files.read(file), function(result) {
-				BlockEditor.open(result);
-				showHint(translate("Converted success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		} else if (name.endsWith(".ndb")) {
-			let active = Date.now();
-			tryout(function() {
-				let current = BlockEditor.data.worker.getProject(),
-					obj = compileData(Files.read(file)),
-					result = convertNdb(obj);
-				BlockEditor.open(result);
-				showHint(translate("Imported success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		} else if (name.endsWith(".js")) {
-			let active = Date.now();
-			importScript(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					BlockEditor.open(selected);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				}, "block", true);
-				
-			});
+	unselect: function() {
+		delete BlockEditor.data.renderer;
+		Popups.closeIfOpened("renderer_select");
+		delete BlockEditor.data.collision;
+		Popups.closeIfOpened("collision_select");
+		mapRenderBlock(this.getWorker());
+	}
+});
+
+Callback.addCallback("LevelLoaded", function() {
+	handle(function() {
+		if (BlockTool.isAttached()) {
+			BlockTool.describe();
+		}
+	});
+});
+
+Callback.addCallback("LevelLeft", function() {
+	handle(function() {
+		if (BlockTool.isAttached()) {
+			BlockTool.describe();
+		}
+	});
+});
+
+const attachBlockTool = function(source) {
+	if (BlockTool.open(source)) {
+		BlockEditor.attach();
+		return true;
+	}
+	return false;
+};
+
+const BlockEditor = {
+	data: new Object(),
+	resetIfNeeded: function() {
+		let worker = BlockTool.getWorker();
+		if (worker.Renderer.getModelCount() == 0) {
+			worker.Renderer.createModel();
+		}
+		if (worker.Collision.getModelCount() == 0) {
+			worker.Collision.createModel();
+		}
+		if (worker.Define.getMappedCount() == 0) {
+			if (!saveCoords) {
+				removeMappings();
+				removeUnusedMappings();
+			} else worker.Define.params.mapped = copyMappings();
 		}
 	},
-	save: function(file, i) {
-		let name = (BlockEditor.data.name = i, file.getName()),
-			project = BlockEditor.data.worker.getProject();
-		if (name.endsWith(".dnp")) {
-			exportProject(project, false, file.getPath());
-		} else if (name.endsWith(".js")) {
-			let active = Date.now();
-			tryout(function() {
-				let converter = new BlockConverter();
-				converter.attach(project);
-				converter.executeAsync(function(link, result) {
-					if (link.hasResult()) {
-						Files.write(file, result);
-						showHint(translate("Converted success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					} else retraceOrReport(link.getLastException());
-				});
-			});
-		}
+	attach: function() {
+		let worker = BlockTool.getWorker();
+		this.resetIfNeeded();
+		this.data.hasRender = worker.Renderer.getModelCount() > 0 &&
+			worker.Renderer.getModel(0).getBoxCount() > 0;
+		this.data.hasCollision = worker.Collision.getModelCount() > 0 &&
+			worker.Collision.getModel(0).getBoxCount() > 0;
+		mapRenderBlock(worker);
+		if (!BlockTool.isAttached()) {
+			BlockTool.attach();
+		} else BlockTool.describe();
+		BlockTool.control();
 	},
 	reload: function() {
-		if (mapRenderBlock(BlockEditor.data.worker)) {
+		let worker = BlockTool.getWorker();
+		if (mapRenderBlock(worker)) {
 			showHint(translate("Render updated"));
 		} else if (!removeUnusedMappings()) {
 			showHint(translate("Nothing to update"));
@@ -1074,15 +947,17 @@ const BlockEditor = {
 			popup.setSelectMode(true);
 			popup.setOnDismissListener(function() {
 				selectMode = 0;
-				mapRenderBlock(BlockEditor.data.worker);
+				mapRenderBlock(BlockTool.getWorker());
 			});
-			for (let i = 0; i < BlockEditor.data.worker.Renderer.getModel(0).getBoxCount(); i++) {
+			for (let i = 0; i < BlockTool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
 			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 3;
+				let selected = BlockEditor.Renderer.hasSelection();
 				BlockEditor.data.renderer = index;
-				mapRenderBlock(BlockEditor.data.worker);
+				if (!selected) BlockEditor.attach();
+				else mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.selectButton(BlockEditor.data.renderer);
 			Popups.open(popup, "renderer_select");
@@ -1095,117 +970,100 @@ const BlockEditor = {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					let index = (BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).addBox(1, 0));
+					let index = (BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).addBox(1, 0));
 					showHint(translate("Box %s added", index + 1));
-					mapRenderBlock(BlockEditor.data.worker);
+					mapRenderBlock(BlockTool.getWorker());
 				});
 				if (BlockEditor.Renderer.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.renderer,
-							index = (BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).cloneBox(last));
+							index = (BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-						mapRenderBlock(BlockEditor.data.worker);
+						mapRenderBlock(BlockTool.getWorker());
 					});
 				}
 				Popups.open(popup, "renderer_add");
 			} else {
-				BlockEditor.data.renderer = BlockEditor.data.worker.Renderer.getModel(0).addBox(1, 0);
-				BlockEditor.create();
+				BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).addBox(1, 0);
+				BlockEditor.attach();
 				showHint(translate("First box added"));
-				mapRenderBlock(BlockEditor.data.worker);
 			}
 		},
 		resize: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.renderer,
-				box = BlockEditor.data.worker.Renderer.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.z1);
 			group.addItem(box.z2);
 			Popups.open(popup, "renderer_resize");
 		},
 		move: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.renderer,
-				box = BlockEditor.data.worker.Renderer.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).moveBox(selected, "x", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "x", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.x1);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).moveBox(selected, "y", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "y", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.y1);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Renderer.getModel(0).moveBox(selected, "z", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "z", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.z1);
 			Popups.open(popup, "renderer_move");
 		},
 		mirror: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.renderer,
-				box = BlockEditor.data.worker.Renderer.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtX(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtX(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.addButtonElement("Y", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.addButtonElement("Z", function() {
-				BlockEditor.data.worker.Renderer.getModel(0).mirrorBoxAtZ(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtZ(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			Popups.open(popup, "renderer_mirror");
 		},
 		rotate: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.renderer,
-				box = BlockEditor.data.worker.Renderer.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1216,25 +1074,21 @@ const BlockEditor = {
 				let values = popup.getAllEditsValues(),
 					side = compileData(values[0], "string").toLowerCase(),
 					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
-				BlockEditor.data.worker.Renderer.getModel(0).rotateBox(selected, orientate, index);
+				BlockTool.getWorker().Renderer.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
-				mapRenderBlock(BlockEditor.data.worker);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			Popups.open(popup, "renderer_rotate");
 		},
 		texture: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.renderer,
-				box = BlockEditor.data.worker.Renderer.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Texture"));
 			popup.setOnClickListener(function(index) {
 				index > 1 && selectTexture(index - 2, function(name, data) {
-					BlockEditor.data.worker.Renderer.getModel(0).textureBox(selected, name, data);
-					mapRenderBlock(BlockEditor.data.worker);
+					BlockTool.getWorker().Renderer.getModel(0).textureBox(selected, name, data);
+					mapRenderBlock(BlockTool.getWorker());
 					Popups.updateAtName("box_texture");
 					showHint(translate("Texture changed"));
 					edit.update();
@@ -1248,17 +1102,26 @@ const BlockEditor = {
 			let edit = popup.addEditElement(translate("Texture")).switchVisibility();
 			edit.update = function() {
 				handleThread(function() {
-					let stringify = JSON.stringify(box.texture, false, " ");
-					handle(function() {
-						edit.setValue(stringify);
+					if (box.texture && Array.isArray(box.texture)) {
+						let stringify = box.texture.slice().map(function(element) {
+							let texture = typeof element[0] == "string" ? "\"" + element[0] + "\"" : element[0];
+							return (texture === undefined ? "0" : texture) + (element.length > 1 ? ", " + element[1] : new String());
+						});
+						handle(function() {
+							edit.setValue(stringify.join("\n"));
+						});
+					} else handle(function() {
+						edit.setValue("0");
 					});
 				});
 			};
 			let button = popup.addButtonElement(translate("Save"), function() {
-				let array = compileData(popup.getEdit(0).getValue());
+				let array = popup.getEdit(0).getValue().split("\n");
+				array = compileData("[[" + array.join("],[") + "]]");
 				if (array.lineNumber !== undefined) {
 					confirm(translate("Compilation failed"),
-						translate("Looks like, you entered invalid array. Check it with following exception:") + "\n" + array.message);
+						translate("Looks like, you entered invalid array. Check it with following exception:") +
+						" " + formatExceptionReport(array));
 				} else if (!Array.isArray(array)) {
 					showHint(translate("That's isn't array"), Interface.Color.YELLOW);
 				} else {
@@ -1268,20 +1131,17 @@ const BlockEditor = {
 							showHint(translate("Textures array must be contains only arrays inside"), Interface.Color.YELLOW);
 							return;
 						}
-						if (texture.length == 0 || texture.length > 2) {
-							showHint(translate("Every element in textures array must have 1 or 2 length"), Interface.Color.YELLOW);
+						if (array.length > 1 && texture.length != 2) {
+							showHint(translate("Every element in textures array must have 2 length"), Interface.Color.YELLOW);
 							return;
 						}
-						for (let s = 0; s < texture.length; s++) {
-							let side = texture[s];
-							if (typeof side != "number" && typeof side != "string") {
-								showHint(translate("Every element in textures array may incudes only strings or numbers"), Interface.Color.YELLOW);
-								return;
-							}
+						if ((typeof texture[0] != "number" && typeof texture[0] != "string") || (texture.length == 2 && typeof texture[1] != "number")) {
+							showHint(translate("Every element in textures array may incudes only strings or numbers"), Interface.Color.YELLOW);
+							return;
 						}
 					}
-					BlockEditor.data.worker.Renderer.getModel(0).textureBox(selected, array);
-					mapRenderBlock(BlockEditor.data.worker);
+					BlockTool.getWorker().Renderer.getModel(0).textureBox(selected, array);
+					mapRenderBlock(BlockTool.getWorker());
 					showHint(translate("Textures changed"));
 				}
 			}).switchVisibility();
@@ -1292,18 +1152,14 @@ const BlockEditor = {
 			Popups.open(popup, "renderer_texture");
 		},
 		remove: function() {
-			if (!BlockEditor.Renderer.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					BlockEditor.data.worker.Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
+					BlockTool.getWorker().Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
 					BlockEditor.data.renderer = BlockEditor.data.renderer > 0 ? BlockEditor.data.renderer - 1 : 0;
-					if (BlockEditor.data.worker.Renderer.getModel(0).getBoxCount() == 0) {
-						BlockEditor.create();
-					} else mapRenderBlock(BlockEditor.data.worker);
+					if (BlockTool.getWorker().Renderer.getModel(0).getBoxCount() == 0) {
+						BlockEditor.attach();
+					} else mapRenderBlock(BlockTool.getWorker());
 					Popups.closeAllByTag("renderer");
 					showHint(translate("Box deleted"));
 				});
@@ -1319,15 +1175,17 @@ const BlockEditor = {
 			popup.setSelectMode(true);
 			popup.setOnDismissListener(function() {
 				selectMode = 0;
-				mapRenderBlock(BlockEditor.data.worker);
+				mapRenderBlock(BlockTool.getWorker());
 			});
-			for (let i = 0; i < BlockEditor.data.worker.Collision.getModel(0).getBoxCount(); i++) {
+			for (let i = 0; i < BlockTool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
 			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 11;
+				let selected = BlockEditor.Collision.hasSelection();
 				BlockEditor.data.collision = index;
-				mapRenderBlock(BlockEditor.data.worker);
+				if (!selected) BlockEditor.attach();
+				else mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.selectButton(BlockEditor.data.collision);
 			Popups.open(popup, "collision_select");
@@ -1340,117 +1198,100 @@ const BlockEditor = {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					let index = (BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).addBox());
+					let index = (BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).addBox());
 					showHint(translate("Box %s added", index + 1));
-					mapRenderBlock(BlockEditor.data.worker);
+					mapRenderBlock(BlockTool.getWorker());
 				});
 				if (BlockEditor.Collision.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.collision,
-							index = (BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).cloneBox(last));
+							index = (BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-						mapRenderBlock(BlockEditor.data.worker);
+						mapRenderBlock(BlockTool.getWorker());
 					});
 				}
 				Popups.open(popup, "collision_add");
 			} else {
-				BlockEditor.data.collision = BlockEditor.data.worker.Collision.getModel(0).addBox();
-				BlockEditor.create();
+				BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).addBox();
+				BlockEditor.attach();
 				showHint(translate("First box added"));
-				mapRenderBlock(BlockEditor.data.worker);
 			}
 		},
 		resize: function() {
-			if (!BlockEditor.Collision.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.collision,
-				box = BlockEditor.data.worker.Collision.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.z1);
 			group.addItem(box.z2);
 			Popups.open(popup, "collision_resize");
 		},
 		move: function() {
-			if (!BlockEditor.Collision.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.collision,
-				box = BlockEditor.data.worker.Collision.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).moveBox(selected, "x", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "x", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.x1);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).moveBox(selected, "y", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "y", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.y1);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockEditor.data.worker.Collision.getModel(0).moveBox(selected, "z", value);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "z", value);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			group.addItem(box.z1);
 			Popups.open(popup, "collision_move");
 		},
 		mirror: function() {
-			if (!BlockEditor.Collision.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.collision,
-				box = BlockEditor.data.worker.Collision.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtX(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtX(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.addButtonElement("Y", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			popup.addButtonElement("Z", function() {
-				BlockEditor.data.worker.Collision.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockEditor.data.worker);
+				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			Popups.open(popup, "collision_mirror");
 		},
 		rotate: function() {
-			if (!BlockEditor.Collision.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			let selected = BlockEditor.data.collision,
-				box = BlockEditor.data.worker.Collision.getModel(0).getBox(selected);
+				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1461,34 +1302,28 @@ const BlockEditor = {
 				let values = popup.getAllEditsValues(),
 					side = compileData(values[0], "string").toLowerCase(),
 					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
-				BlockEditor.data.worker.Collision.getModel(0).rotateBox(selected, orientate, index);
+				BlockTool.getWorker().Collision.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
-				mapRenderBlock(BlockEditor.data.worker);
+				mapRenderBlock(BlockTool.getWorker());
 			});
 			Popups.open(popup, "collision_rotate");
 		},
 		remove: function() {
-			if (!BlockEditor.Collision.hasSelection()) {
-				showHint(translate("Nothing chosen"));
-				return;
-			}
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					BlockEditor.data.worker.Collision.getModel(0).removeBox(BlockEditor.data.collision);
+					BlockTool.getWorker().Collision.getModel(0).removeBox(BlockEditor.data.collision);
 					BlockEditor.data.collision = BlockEditor.data.collision > 0 ? BlockEditor.data.collision - 1 : 0;
-					if (BlockEditor.data.worker.Collision.getModel(0).getBoxCount() == 0) {
-						BlockEditor.create();
-					} else {
-						mapRenderBlock(BlockEditor.data.worker);
-					}
+					if (BlockTool.getWorker().Collision.getModel(0).getBoxCount() == 0) {
+						BlockEditor.attach();
+					} else mapRenderBlock(BlockTool.getWorker());
 					Popups.closeAllByTag("collision");
 					showHint(translate("Box deleted"));
 				});
 		}
 	},
 	shape: function() {
-		let params = BlockEditor.data.worker.Define.params,
+		let params = BlockTool.getWorker().Define.params,
 			shape = params.shape = params.shape || {
 				x1: 0,
 				y1: 0,
@@ -1501,17 +1336,17 @@ const BlockEditor = {
 		popup.setTitle(translate("Shape"));
 		popup.setOnShowListener(function() {
 			selectMode = 5;
-			mapRenderBlock(BlockEditor.data.worker);
+			mapRenderBlock(BlockTool.getWorker());
 		});
 		popup.setOnDismissListener(function() {
 			selectMode = 0;
-			mapRenderBlock(BlockEditor.data.worker);
+			mapRenderBlock(BlockTool.getWorker());
 		});
 		let group = popup.addGroup("x");
 		group.setOnChangeListener(function(index, value) {
 			shape["x" + (index + 1)] = value;
 			selectMode = 5;
-			mapRenderBlock(BlockEditor.data.worker);
+			mapRenderBlock(BlockTool.getWorker());
 		});
 		group.addItem(shape.x1);
 		group.addItem(shape.x2);
@@ -1519,7 +1354,7 @@ const BlockEditor = {
 		group.setOnChangeListener(function(index, value) {
 			shape["y" + (index + 1)] = value;
 			selectMode = 5;
-			mapRenderBlock(BlockEditor.data.worker);
+			mapRenderBlock(BlockTool.getWorker());
 		});
 		group.addItem(shape.y1);
 		group.addItem(shape.y2);
@@ -1527,14 +1362,14 @@ const BlockEditor = {
 		group.setOnChangeListener(function(index, value) {
 			shape["z" + (index + 1)] = value;
 			selectMode = 5;
-			mapRenderBlock(BlockEditor.data.worker);
+			mapRenderBlock(BlockTool.getWorker());
 		});
 		group.addItem(shape.z1);
 		group.addItem(shape.z2);
 		Popups.open(popup, "shape");
 	},
 	rename: function() {
-		let define = BlockEditor.data.worker.Define;
+		let define = BlockTool.getWorker().Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Rename"));
 		popup.addEditElement(translate("ID"), define.getIdentificator());
@@ -1546,14 +1381,14 @@ const BlockEditor = {
 		Popups.open(popup, "rename");
 	},
 	variation: function() {
-		let define = BlockEditor.data.worker.Define;
+		let define = BlockTool.getWorker().Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Data"));
 		popup.addEditElement(translate("Define"), define.getDefineData() || "[{}]");
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues(),
 				result = compileData(values[0]);
-			if (result instanceof Error) {
+			if (result.lineNumber !== undefined) {
 				confirm(translate("Compilation failed"),
 					translate("Looks like, you entered invalid array. Check it with following exception:") +
 					" " + formatExceptionReport(result) + "\n\n" + translate("Force save define data?"),
@@ -1569,14 +1404,14 @@ const BlockEditor = {
 		Popups.open(popup, "variation");
 	},
 	type: function() {
-		let define = BlockEditor.data.worker.Define;
+		let define = BlockTool.getWorker().Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Type"));
 		popup.addEditElement(translate("Special"), define.getSpecialType() || "{}");
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues(),
 				result = compileData(values[0]);
-			if (result instanceof Error) {
+			if (result.lineNumber !== undefined) {
 				confirm(translate("Compilation failed"),
 					translate("Looks like, you entered invalid object. Check it with following exception:") +
 					" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),

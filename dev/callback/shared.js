@@ -112,9 +112,10 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 			let render = new ICRender.Model();
 			render.addEntry(new BlockRenderer.Model(block.id, block.data));
 			BlockRenderer.enableCoordMapping(block.id, block.data, render);
-			BlockEditor.data.worker.Define.addMapping(coords.x, coords.y, coords.z);
+			BlockTool.getWorker().Define.addMapping(coords.x, coords.y, coords.z);
 			selectMode = 0;
-			BlockEditor.create();
+			UniqueHelper.getWindow("ControlButton").hide();
+			BlockEditor.attach();
 		} else if (selectMode == 6) {
 			// Entity summon by tapping.
 			let position = coords.relative;

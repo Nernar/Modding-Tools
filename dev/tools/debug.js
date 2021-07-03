@@ -283,8 +283,9 @@ LevelProvider.update = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return false;
 	if (!thereIsNoTPSMeter) {
-		let prerounded = new java.lang.Float(TPSMeter.getTps());
-		overlay.setText(translate("%stps", prerounded));
+		let tps = preround(TPSMeter.getTps(), 1);
+		tps = new java.lang.Float(tps); // 20.0
+		overlay.setText(translate("%stps", tps));
 		return true;
 	}
 	return false;
