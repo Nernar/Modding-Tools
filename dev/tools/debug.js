@@ -267,7 +267,6 @@ const LevelProvider = new Object();
 
 LevelProvider.attach = function() {
 	let overlay = new OverlayWindow();
-	overlay.attach();
 	this.overlay = overlay;
 };
 
@@ -279,12 +278,18 @@ LevelProvider.isAttached = function() {
 	return this.getOverlayWindow() !== null;
 };
 
+LevelProvider.getFormattedTps = function() {
+	let tps = preround(TPSMeter.getTps(), 1);
+	if (tps < 0.1) return "<0.1";
+	if (tps >= 1000) return "999.9";
+	return new java.lang.Float(tps);
+};
+
 LevelProvider.update = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return false;
 	if (!thereIsNoTPSMeter) {
-		let tps = preround(TPSMeter.getTps(), 1);
-		tps = new java.lang.Float(tps); // 20.0
+		let tps = this.getFormattedTps(); // 20.0
 		overlay.setText(translate("%stps", tps));
 		return true;
 	}

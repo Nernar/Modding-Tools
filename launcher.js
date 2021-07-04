@@ -11,7 +11,7 @@ function launchModification(additionalScope) {
 		ConfigureMultiplayer({
 			name: "auto",
 			version: "auto",
-			isClientOnly: false
+			isClientOnly: true
 		});
 	} catch (e) {
 		launchModification({

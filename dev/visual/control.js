@@ -325,7 +325,7 @@ ControlWindow.prototype.setLogotypeBackground = function(src) {
 	this.logotypeBackground = src;
 };
 
-ControlWindow.prototype.getLogotypeIcon = function() {
+ControlWindow.prototype.getLogotypeBackground = function() {
 	return this.logotypeBackground || null;
 };
 

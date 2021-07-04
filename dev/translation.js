@@ -917,7 +917,7 @@ Translation.addTranslation("Nothing to update", {
 });
 Translation.addTranslation("Nothing to remove", {
 	ru: "Нечего удалять"
-});
+}); // DEPRECATED
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
 });
@@ -1418,3 +1418,5 @@ Translation.addTranslation("This module are deprecated!", {
 // Non-organized content
 
 // Not localized content will be appear here
+Translation.addTranslation(" ", {});
+Translation.addTranslation("\n", {});

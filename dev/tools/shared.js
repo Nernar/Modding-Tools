@@ -469,11 +469,6 @@ ControlTool.prototype = new Tool;
 
 ControlTool.prototype.reset = function() {
 	Tool.prototype.reset.apply(this, arguments);
-	let buttonClick = this.controlDescriptor.buttonClick;
-	this.controlDescriptor.buttonClick = function(tool, control) {
-		buttonClick.apply(this, arguments);
-		tool.menu();
-	};
 	let descriptor = new Object();
 	descriptor.background = "popupControl";
 	descriptor.click = function(tool, menu) {
@@ -481,7 +476,6 @@ ControlTool.prototype.reset = function() {
 			let args = Array.prototype.slice.call(arguments, 1);
 			tool.onMenuClick.apply(tool, args);
 		}
-		tool.control();
 	};
 	descriptor.closeable = false;
 	this.menuDescriptor = descriptor;
@@ -541,6 +535,14 @@ ControlTool.prototype.menu = function() {
 
 ControlTool.prototype.isControlling = function() {
 	return this.state == ControlTool.State.CONTROLLING;
+};
+
+ControlTool.prototype.onControlClick = function(control) {
+	this.menu();
+};
+
+ControlTool.prototype.onMenuClick = function(menu) {
+	this.control();
 };
 
 ControlTool.prototype.control = function() {

@@ -36,12 +36,12 @@ const ProjectEditor = {
 					category.setOnItemClickListener(function(item, index) {
 						let real = blocks[index],
 							block = content[real];
-						if (attachBlockTool(real)) {
+						attachBlockTool(real, function(tool) {
 							content.splice(real, 1);
 							content.unshift(block);
 							project.setCurrentlyId(0);
-							control.hide();
-						}
+						});
+						control.hide();
 					});
 					category.setOnItemHoldListener(function(item, index) {
 						confirm(translate("Warning!"),
@@ -134,9 +134,8 @@ const ProjectEditor = {
 		attachAdditionalInformation(control);
 		let category = control.addCategory(translate("Editors"));
 		category.addItem("block", translate("Block"), function() {
-			if (attachBlockTool()) {
-				control.hide();
-			}
+			attachBlockTool();
+			control.hide();
 		});
 		category.addItem("entity", translate("Entity"), function() {
 			if (REVISION.indexOf("alpha") != -1) {
@@ -599,13 +598,13 @@ EditorTool.prototype.open = function(source) {
 	if (source === undefined) index--;
 	if (index == -1) return false;
 	ProjectProvider.setupEditor(index, worker);
-	this.attach();
+	if (!this.isAttached()) this.attach();
 	ProjectProvider.setOpenedState(true);
 	ProjectProvider.initializeAutosave();
 	return true;
 };
 
-EditorTool.prototype.select = function(where, multiple, post) {
+EditorTool.prototype.selectData = function(where, multiple, post) {
 	selectProjectData(where, function(selected) {
 		typeof post == "function" && post(selected);
 	}, this.getProjectType(), !multiple);
@@ -618,7 +617,7 @@ EditorTool.prototype.replace = function(file) {
 		let active = Date.now();
 		importProject(file.getPath(), function(result) {
 			active = Date.now() - active;
-			instance.select(result, false, function(selected) {
+			instance.selectData(result, false, function(selected) {
 				active = Date.now() - active;
 				instance.fromProject(selected);
 				showHint(translate("Loaded success") + " " +
@@ -630,7 +629,7 @@ EditorTool.prototype.replace = function(file) {
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
 			active = Date.now() - active;
-			instance.select(result, false, function(selected) {
+			instance.selectData(result, false, function(selected) {
 				active = Date.now() - active;
 				instance.fromProject(selected);
 				showHint(translate("Converted success") + " " +
@@ -650,7 +649,7 @@ EditorTool.prototype.merge = function(file) {
 		let active = Date.now();
 		importProject(file.getPath(), function(result) {
 			active = Date.now() - active;
-			instance.select(result, true, function(selected) {
+			instance.selectData(result, true, function(selected) {
 				active = Date.now() - active;
 				merger(project, selected, function(output) {
 					instance.fromProject(output);
@@ -664,7 +663,7 @@ EditorTool.prototype.merge = function(file) {
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
 			active = Date.now() - active;
-			instance.select(result, true, function(selected) {
+			instance.selectData(result, true, function(selected) {
 				active = Date.now() - active;
 				merger(project, selected, function(output) {
 					instance.fromProject(output);
@@ -706,6 +705,7 @@ EditorTool.prototype.leave = function() {
 	checkValidate(function() {
 		delete instance.worker;
 		ProjectEditor.menu();
+		instance.unselect(true);
 	});
 };
 
@@ -737,7 +737,12 @@ EditorTool.prototype.fromProject = function(source) {
 	let worker = this.getWorker();
 	if (!worker) MCSystem.throwException(null);
 	worker.loadProject(source);
+	this.unselect(true);
 	this.describe();
+};
+
+EditorTool.prototype.unselect = function(force) {
+	if (force) Popups.closeAll();
 };
 
 EditorTool.ExtensionType = new Object();

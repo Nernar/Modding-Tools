@@ -202,9 +202,10 @@ const removeMappings = function() {
 
 const CUSTOM_BLOCKS_ID_OFFSET = 8192;
 
-const mapRenderBlock = function(worker) {
+const mapRenderBlock = function(tool) {
 	return tryout(function() {
-		if (!worker || !Level.isLoaded()) {
+		let worker = tool.getWorker();
+		if (!Level.isLoaded()) {
 			return false;
 		}
 		let render = new ICRender.Model(),
@@ -247,7 +248,7 @@ const mapRenderBlock = function(worker) {
 									continue;
 								} else if (texture.length == 1) {
 									model.addBox(box.x1, box.y1, box.z1, box.x2,
-										box.y2, box.z2, texture[0]);
+										box.y2, box.z2, texture[0], 0);
 									continue;
 								}
 							}
@@ -277,7 +278,7 @@ const mapRenderBlock = function(worker) {
 						model.addBox(box.x1, box.y1, box.z1,
 							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
 							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
-					} else if (BlockTool.getSelectedGroup() == 2) {
+					} else if (tool.getSelectedGroup() == 2) {
 						model.addBox(box.x1, box.y1, box.z1, box.x2,
 							box.y2, box.z2, "renderer_shape", Number(transparentBoxes));
 					}
@@ -291,7 +292,7 @@ const mapRenderBlock = function(worker) {
 			if (selectMode == 5) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1,
 					shape.z1, shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
-			} else if (!hasRenderer && (!hasCollision || BlockTool.getSelectedGroup() != 2)) {
+			} else if (!hasRenderer && (!hasCollision || tool.getSelectedGroup() != 2)) {
 				render.addEntry(new BlockRenderer.Model(shape.x1, shape.y1, shape.z1,
 					shape.x2, shape.y2, shape.z2, "renderer_shape", Number(transparentBoxes)));
 			}
@@ -312,7 +313,7 @@ const mapRenderBlock = function(worker) {
 		removeUnusedMappings();
 		checkMapping.current = new Array();
 		return true;
-	}, false);
+	}) || false;
 };
 
 const convertJsonBlock = function(string, action) {
@@ -426,483 +427,485 @@ const mergeConvertedBlock = function(project, source, action) {
 	});
 };
 
-const BlockTool = new EditorTool({
-	controlDescriptor: {
-		logotype: "block"
-	},
-	menuDescriptor: {
-		elements: [function(tool, control) {
-			if (Level.isLoaded()) {
-				return {
-					type: "category",
-					title: translate("Block"),
-					items: [{
-						icon: "blockMapping",
-						title: translate("Map"),
-						click: function(tool, item) {
-							showHint(translate("Tap block"));
-							tool.hide();
-							selectMode = 1;
-							let button = new ControlButton();
-							button.setIcon("menuBack");
-							button.setOnClickListener(function() {
-								button.hide();
-								selectMode = 0;
-								BlockEditor.attach();
-							});
-							button.show();
-						}
-					}, function(tool, category) {
-						if (hasMappings()) {
-							let hasRemoveMessage = false;
-							return {
-								icon: "blockRemove",
-								title: translate("Unmap"),
-								click: function(tool, item) {
-									if (!hasRemoveMessage) {
-										let message = control.addMessage("blockSlice", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
-											function() {
-												tool.getWorker().Define.params.mapped = new Array();
-												if (!removeMappings()) {
-													showHint(translate("Nothing to remove"));
-												}
-												control.removeElement(message);
-											});
-										handle(function() {
-											control.scrollToElement(message);
-										}, 500);
-										handle(function() {
-											control.removeElement(message);
-											hasRemoveMessage = false;
-										}, 5000);
-										hasRemoveMessage = true;
-									}
-								}
-							};
-						}
-					}, function(tool, category) {
-						if (BlockEditor.data.hasRender || BlockEditor.data.hasCollision) {
-							return {
-								icon: "blockInsection",
-								title: translate("In-section"),
-								click: function(tool, item) {
-									showHint(translate("Manually view boxes innersection"));
-									Popups.closeAll();
-									tool.hide();
-									let button = new ControlButton();
-									button.setIcon("menuBack");
-									button.setOnClickListener(function() {
-										Popups.closeAllByTag("innersection");
-										delete BlockEditor.data.rendererInst;
-										delete BlockEditor.data.collisionInst;
-										button.hide();
-										selectMode = 0;
-										BlockEditor.attach();
-									});
-									button.show();
-									let renderer, collision;
-									if (BlockEditor.data.hasRender) {
-										renderer = new ListingPopup();
-										renderer.setIsMayDismissed(false);
-										renderer.setTitle(translate("Renderer"));
-										renderer.setSelectMode(true);
-										renderer.setOnSelectListener(function(index) {
-											selectMode = 9;
-											BlockEditor.data.rendererInst = index;
-											mapRenderBlock(BlockTool.getWorker());
-											if (collision) collision.unselect();
-										});
-										for (let i = 0; i < BlockTool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
-											renderer.addButtonElement(translate("Box %s", i + 1));
-										}
-										renderer.selectButton(0);
-										Popups.open(renderer, "innersection_renderer");
-									}
-									if (BlockEditor.data.hasCollision) {
-										collision = new ListingPopup();
-										collision.setIsMayDismissed(false);
-										collision.setTitle(translate("Collision"));
-										collision.setSelectMode(true);
-										collision.setOnSelectListener(function(index) {
-											selectMode = 10;
-											BlockEditor.data.collisionInst = index;
-											mapRenderBlock(BlockTool.getWorker());
-											if (renderer) renderer.unselect();
-										});
-										for (let i = 0; i < BlockTool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
-											collision.addButtonElement(translate("Box %s", i + 1));
-										}
-										if (!BlockEditor.data.hasRender) {
-											collision.selectButton(0);
-										}
-										Popups.open(collision, "innersection_collision");
-									}
-								}
-							};
-						}
-					}, {
-						icon: "blockUpdate",
-						title: translate("Reload"),
-						click: function(tool, item) {
-							selectMode = 0;
-							BlockEditor.reload();
-						}
-					}]
-				};
-			}
-			return {
-				type: "message",
-				icon: "blockSlice",
-				message: translate("To manipulate with in-world block visualization load any world firstly.") + " " + translate("There's will appear mapping section, innersection checkout and render controls.")
-			};
-		}]
-	},
-	sidebarDescriptor: {
-		groups: [{
-			icon: "block",
-			items: [{
-				icon: "blockDefineIdentifier"
-			}, {
-				icon: "blockDefineVariation"
-			}, {
-				icon: function(tool, item) {
-					return ImageFactory.getTintDrawable("blockDefineTexture", Interface.Color.RED);
-				}
-			}, {
-				icon: "blockDefineType"
-			}, {
-				icon: "blockDefineShape"
-			}, function() {
-				if (Level.isLoaded()) {
-					return {
-						icon: "blockUpdate"
-					};
-				}
-			}]
-		}, {
-			icon: "blockBoxSelect",
-			items: function(tool, group) {
-				if (BlockEditor.data.hasRender) {
-					let selector = [{
-						icon: "blockBoxSelect"
-					}, {
-						icon: "blockBoxAdd"
-					}];
-					if (BlockEditor.Renderer.hasSelection()) {
-						return selector.concat([{
-							icon: "blockBoxScretch"
-						}, {
-							icon: "blockBoxMove"
-						}, {
-							icon: "blockBoxMirror"
-						}, function(tool, group) {
-							if (REVISION.startsWith("develop")) {
-								return {
-									icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
-								};
-							}
-						}, {
-							icon: "blockBoxTexture"
-						}, {
-							icon: "blockBoxRemove"
-						}]);
-					}
-					return selector;
-				}
-				return {
-					icon: "blockBoxAdd"
-				};
-			}
-		}, {
-			icon: "blockDefineShape",
-			items: function(tool, group) {
-				if (BlockEditor.data.hasCollision) {
-					let selector = [{
-						icon: "blockBoxSelect"
-					}, {
-						icon: "blockBoxAdd"
-					}];
-					if (BlockEditor.Collision.hasSelection()) {
-						return selector.concat([{
-							icon: "blockBoxScretch"
-						}, {
-							icon: "blockBoxMove"
-						}, {
-							icon: "blockBoxMirror"
-						}, function(tool, group) {
-							if (REVISION.startsWith("develop")) {
-								return {
-									icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
-								};
-							}
-						}, {
-							icon: "blockBoxRemove"
-						}]);
-					}
-					return selector;
-				}
-				return {
-					icon: "blockBoxAdd"
-				};
-			}
-		}]
-	},
-	onSelectItem: function(sidebar, group, item, groupIndex, itemIndex) {
-		let icon = item.getIcon();
-		if (groupIndex == 0) {
-			if (icon == "blockDefineIdentifier") {
-				return BlockEditor.rename();
-			} else if (icon == "blockDefineVariation") {
-				return BlockEditor.variation();
-			} else if (icon == "blockDefineTexture") {
-				// TODO
-			} else if (icon == "blockDefineType") {
-				return BlockEditor.type();
-			} else if (icon == "blockDefineShape") {
-				return BlockEditor.shape();
-			} else if (icon == "blockUpdate") {
-				return BlockEditor.reload();
-			}
-		} else if (groupIndex == 1) {
-			if (icon == "blockBoxSelect") {
-				return BlockEditor.Renderer.select();
-			} else if (icon == "blockBoxAdd") {
-				return BlockEditor.Renderer.add();
-			} else if (icon == "blockBoxScretch") {
-				return BlockEditor.Renderer.resize();
-			} else if (icon == "blockBoxMove") {
-				return BlockEditor.Renderer.move();
-			} else if (icon == "blockBoxMirror") {
-				return BlockEditor.Renderer.mirror();
-			} else if (icon == "blockBoxRotate") {
-				return BlockEditor.Renderer.rotate();
-			} else if (icon == "blockBoxTexture") {
-				return BlockEditor.Renderer.texture();
-			} else if (icon == "blockBoxRemove") {
-				return BlockEditor.Renderer.remove();
-			}
-		} else if (groupIndex == 2) {
-			if (icon == "blockBoxSelect") {
-				return BlockEditor.Collision.select();
-			} else if (icon == "blockBoxAdd") {
-				return BlockEditor.Collision.add();
-			} else if (icon == "blockBoxScretch") {
-				return BlockEditor.Collision.resize();
-			} else if (icon == "blockBoxMove") {
-				return BlockEditor.Collision.move();
-			} else if (icon == "blockBoxMirror") {
-				return BlockEditor.Collision.mirror();
-			} else if (icon == "blockBoxRotate") {
-				return BlockEditor.Collision.rotate();
-			} else if (icon == "blockBoxRemove") {
-				return BlockEditor.Collision.remove();
-			}
-		}
-		showHint(translate("Not developed yet"));
-	},
-	onFetchGroup: function(sidebar, group, index) {
-		if (index == 0) {
-			return translate("Block define properties");
-		} else if (index == 1) {
-			return translate("Render models");
-		} else if (index == 2) {
-			return translate("Collision models");
-		}
-		return translate("Deprecated translation");
-	},
-	onFetchItem: function(sidebar, group, item, groupIndex, itemIndex) {
-		if (groupIndex == 0) {
-			if (itemIndex == 0) {
-				return translate("Changes block identifier");
-			} else if (itemIndex == 1) {
-				return translate("Sets block few variations");
-			} else if (itemIndex == 2) {
-				return translate("Changes variation textures");
-			} else if (itemIndex == 3) {
-				return translate("Adds special type properties");
-			} else if (itemIndex == 4) {
-				return translate("Scretches basic collision box");
-			} else if (itemIndex == 5) {
-				return translate("Updates mapped blocks");
-			}
-		} else if (groupIndex == 1) {
-			if (BlockEditor.data.hasRender) {
-				if (!REVISION.startsWith("develop")) {
-					if (itemIndex > 4) itemIndex++;
-				}
-				if (itemIndex == 0) {
-					return translate("Selects currently box");
-				} else if (itemIndex == 1) {
-					return translate("Creates or clones box");
-				} else if (itemIndex == 2) {
-					return translate("Scretches box sizes");
-				} else if (itemIndex == 3) {
-					return translate("Moves box location");
-				} else if (itemIndex == 4) {
-					return translate("Mirrors box belong side");
-				} else if (itemIndex == 5) {
-					return translate("Rotates box into specified angle");
-				} else if (itemIndex == 6) {
-					return translate("Changes box texture");
-				} else if (itemIndex == 7) {
-					return translate("Removes box");
-				}
-			} else if (itemIndex == 0) {
-				return translate("Creates first box");
-			}
-		} else if (groupIndex == 2) {
-			if (BlockEditor.data.hasCollision) {
-				if (!REVISION.startsWith("develop")) {
-					if (itemIndex > 4) itemIndex++;
-				}
-				if (itemIndex == 0) {
-					return translate("Selects currently box");
-				} else if (itemIndex == 1) {
-					return translate("Creates or clones box");
-				} else if (itemIndex == 2) {
-					return translate("Scretches box sizes");
-				} else if (itemIndex == 3) {
-					return translate("Moves box location");
-				} else if (itemIndex == 4) {
-					return translate("Mirrors box belong side");
-				} else if (itemIndex == 5) {
-					return translate("Rotates box into specified angle");
-				} else if (itemIndex == 6) {
-					return translate("Removes box");
-				}
-			} else if (itemIndex == 0) {
-				return translate("Creates first box");
-			}
-		}
-		return translate("Deprecated translation");
-	},
-	getExtensions: function(type) {
-		let source = EditorTool.prototype.getExtensions.apply(this, arguments);
-		if (type != EditorTool.ExtensionType.EXPORT) source = source.concat([".json", ".ndb"]);
-		return source;
-	},
-	replace: function(file) {
-		let name = file.getName(),
-			instance = this;
-		if (name.endsWith(".json")) {
-			let active = Date.now();
-			convertJsonBlock(Files.read(file), function(result) {
-				instance.fromProject(result);
-				showHint(translate("Converted success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		} else if (name.endsWith(".ndb")) {
-			let active = Date.now();
-			tryout(function() {
-				let obj = compileData(Files.read(file)),
-					result = convertNdb(obj);
-				instance.fromProject(result);
-				showHint(translate("Imported success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		}
-		EditorTool.prototype.replace.apply(this, arguments);
-	},
-	merge: function(file) {
-		let merger = this.getMerger();
-		if (!this.hasMerger()) MCSystem.throwException(null);
-		let name = file.getName(),
-			project = this.toProject(),
-			instance = this;
-		if (name.endsWith(".json")) {
-			let active = Date.now();
-			convertJsonBlock(Files.read(file), function(result) {
-				merger(project, result, function(output) {
-					instance.fromProject(output);
-					showHint(translate("Merged success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			});
-		} else if (name.endsWith(".ndb")) {
-			let active = Date.now();
-			handleThread(function() {
-				let obj = compileData(Files.read(file)),
-					result = convertNdb(obj);
-				merger(project, result, function(output) {
-					instance.fromProject(output);
-					showHint(translate("Merged success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			});
-		}
-		EditorTool.prototype.merge.apply(this, arguments);
-	},
-	getWorkerFor: function(source) {
-		if (source !== undefined) {
-			return new BlockWorker(source);
-		}
-		return ProjectProvider.addBlock();
-	},
-	leave: function() {
-		Popups.closeAll();
-		this.unselect();
-		EditorTool.prototype.leave.apply(this, arguments);
-	},
-	getMerger: function() {
-		return mergeConvertedBlock;
-	},
-	getConverter: function() {
-		return new BlockConverter();
-	},
-	hasParser: function() {
-		return true;
-	},
-	fromProject: function(source) {
-		Popups.closeAll();
-		this.unselect();
-		EditorTool.prototype.fromProject.apply(this, arguments);
-	},
-	onSelectGroup: function(sidebar, group, index, last, count) {
-		mapRenderBlock(this.getWorker());
-	},
-	onUndockGroup: function(sidebar, group, index, previous) {
-		if (!previous) {
-			selectMode = 0;
-			mapRenderBlock(this.getWorker());
-		}
-	},
-	unselect: function() {
-		delete BlockEditor.data.renderer;
-		Popups.closeIfOpened("renderer_select");
-		delete BlockEditor.data.collision;
-		Popups.closeIfOpened("collision_select");
-		mapRenderBlock(this.getWorker());
-	}
-});
+let BlockTool = null;
 
 Callback.addCallback("LevelLoaded", function() {
-	handle(function() {
-		if (BlockTool.isAttached()) {
+	if (BlockTool && BlockTool.isAttached()) {
+		handle(function() {
 			BlockTool.describe();
-		}
-	});
+		});
+	}
 });
 
 Callback.addCallback("LevelLeft", function() {
-	handle(function() {
-		if (BlockTool.isAttached()) {
+	if (BlockTool && BlockTool.isAttached()) {
+		handle(function() {
 			BlockTool.describe();
-		}
-	});
+		});
+	}
 });
 
-const attachBlockTool = function(source) {
-	if (BlockTool.open(source)) {
-		BlockEditor.attach();
-		return true;
+Callback.addCallback("ItemUse", function(coords, item, block) {
+	if (BlockTool && selectMode == 1) {
+		handleThread(function() {
+			let render = new ICRender.Model(),
+				model = new BlockRenderer.Model(block.id, block.data);
+			render.addEntry(model);
+			BlockRenderer.enableCoordMapping(block.id, block.data, render);
+			let worker = BlockTool.getWorker();
+			worker.Define.addMapping(coords.x, coords.y, coords.z);
+			handle(function() {
+				if (mapRenderBlock(BlockTool)) {
+					BlockTool.describeMenu();
+				}
+			});
+		});
 	}
-	return false;
+});
+
+const attachBlockTool = function(source, post) {
+	let tool = new EditorTool({
+		controlDescriptor: {
+			logotype: function(tool, control) {
+				if (selectMode == 1 || selectMode == 9 || selectMode == 10) {
+					return "blockSlice";
+				}
+				return "block";
+			},
+			collapsedClick: function(tool, control) {
+				if (selectMode == 1 || selectMode == 9 || selectMode == 10) {
+					let previous = selectMode;
+					selectMode = 0;
+					if (previous != 1) {
+						Popups.closeAllByTag("innersection");
+						delete BlockEditor.data.rendererInst;
+						delete BlockEditor.data.collisionInst;
+						mapRenderBlock(tool);
+					}
+					tool.describeControl();
+					tool.control();
+					return;
+				}
+				EditorTool.prototype.controlDescriptor.collapsedClick.apply(this, arguments);
+			}
+		},
+		menuDescriptor: {
+			elements: [function(tool, json, menu) {
+				if (Level.isLoaded()) {
+					return {
+						type: "category",
+						title: translate("Block"),
+						items: [{
+							icon: "blockMapping",
+							title: translate("Map"),
+							click: function(tool, item) {
+								showHint(translate("Tap block"));
+								selectMode = 1;
+								tool.describeControl();
+								tool.collapse();
+							}
+						}, function(tool, category) {
+							if (hasMappings()) {
+								let hasRemoveMessage = false;
+								return {
+									icon: "blockRemove",
+									title: translate("Unmap"),
+									click: function(tool, item) {
+										if (!hasRemoveMessage) {
+											let message = menu.addMessage("blockSlice", translate("All mappings will be removed.") + " " + translate("Touch here to confirm."),
+												function() {
+													let worker = tool.getWorker();
+													worker.Define.params.mapped = new Array();
+													mapRenderBlock(tool);
+													tool.describeMenu();
+													delete message;
+												});
+											handle(function() {
+												if (message !== undefined) {
+													menu.scrollToElement(message);
+												}
+											}, 500);
+											handle(function() {
+												if (message !== undefined) {
+													menu.removeElement(message);
+												}
+												hasRemoveMessage = false;
+											}, 5000);
+											hasRemoveMessage = true;
+										}
+									}
+								};
+							}
+						}, function(tool, category) {
+							if (BlockEditor.data.hasRender || BlockEditor.data.hasCollision) {
+								return {
+									icon: "blockInsection",
+									title: translate("In-section"),
+									click: function(tool, item) {
+										showHint(translate("Manually view boxes innersection"));
+										Popups.closeAll();
+										BlockEditor.innersection();
+										tool.describeControl();
+										tool.collapse();
+									}
+								};
+							}
+						}, {
+							icon: "blockUpdate",
+							title: translate("Reload"),
+							click: function(tool, item) {
+								if (selectMode != 0) {
+									selectMode = 0;
+									tool.describe();
+								}
+								BlockEditor.reload();
+							}
+						}]
+					};
+				}
+				return {
+					type: "message",
+					icon: "blockSlice",
+					message: translate("To manipulate with in-world block visualization load any world firstly.") + " " + translate("There's will appear mapping section, innersection checkout and render controls.")
+				};
+			}]
+		},
+		sidebarDescriptor: {
+			groups: [{
+				icon: "block",
+				items: [{
+					icon: "blockDefineIdentifier"
+				}, {
+					icon: "blockDefineVariation"
+				}, {
+					icon: function(tool, item) {
+						return ImageFactory.getTintDrawable("blockDefineTexture", Interface.Color.RED);
+					}
+				}, {
+					icon: "blockDefineType"
+				}, {
+					icon: "blockDefineShape"
+				}, function() {
+					if (Level.isLoaded()) {
+						return {
+							icon: "blockUpdate"
+						};
+					}
+				}]
+			}, {
+				icon: "blockBoxSelect",
+				items: function(tool, group) {
+					if (BlockEditor.data.hasRender) {
+						let selector = [{
+							icon: "blockBoxSelect"
+						}, {
+							icon: "blockBoxAdd"
+						}];
+						if (BlockEditor.Renderer.hasSelection()) {
+							return selector.concat([{
+								icon: "blockBoxScretch"
+							}, {
+								icon: "blockBoxMove"
+							}, {
+								icon: "blockBoxMirror"
+							}, function(tool, group) {
+								if (REVISION.startsWith("develop")) {
+									return {
+										icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+									};
+								}
+							}, {
+								icon: "blockBoxTexture"
+							}, {
+								icon: "blockBoxRemove"
+							}]);
+						}
+						return selector;
+					}
+					return {
+						icon: "blockBoxAdd"
+					};
+				}
+			}, {
+				icon: "blockDefineShape",
+				items: function(tool, group) {
+					if (BlockEditor.data.hasCollision) {
+						let selector = [{
+							icon: "blockBoxSelect"
+						}, {
+							icon: "blockBoxAdd"
+						}];
+						if (BlockEditor.Collision.hasSelection()) {
+							return selector.concat([{
+								icon: "blockBoxScretch"
+							}, {
+								icon: "blockBoxMove"
+							}, {
+								icon: "blockBoxMirror"
+							}, function(tool, group) {
+								if (REVISION.startsWith("develop")) {
+									return {
+										icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+									};
+								}
+							}, {
+								icon: "blockBoxRemove"
+							}]);
+						}
+						return selector;
+					}
+					return {
+						icon: "blockBoxAdd"
+					};
+				}
+			}]
+		},
+		onSelectItem: function(sidebar, group, item, groupIndex, itemIndex) {
+			let icon = item.getIcon();
+			if (groupIndex == 0) {
+				if (icon == "blockDefineIdentifier") {
+					return BlockEditor.rename(this);
+				} else if (icon == "blockDefineVariation") {
+					return BlockEditor.variation(this);
+				} else if (icon == "blockDefineTexture") {
+					// TODO
+				} else if (icon == "blockDefineType") {
+					return BlockEditor.type(this);
+				} else if (icon == "blockDefineShape") {
+					return BlockEditor.shape(this);
+				} else if (icon == "blockUpdate") {
+					return BlockEditor.reload(this);
+				}
+			} else if (groupIndex == 1) {
+				if (icon == "blockBoxSelect") {
+					return BlockEditor.Renderer.select(this);
+				} else if (icon == "blockBoxAdd") {
+					return BlockEditor.Renderer.add(this);
+				} else if (icon == "blockBoxScretch") {
+					return BlockEditor.Renderer.resize(this);
+				} else if (icon == "blockBoxMove") {
+					return BlockEditor.Renderer.move(this);
+				} else if (icon == "blockBoxMirror") {
+					return BlockEditor.Renderer.mirror(this);
+				} else if (icon == "blockBoxRotate") {
+					return BlockEditor.Renderer.rotate(this);
+				} else if (icon == "blockBoxTexture") {
+					return BlockEditor.Renderer.texture(this);
+				} else if (icon == "blockBoxRemove") {
+					return BlockEditor.Renderer.remove(this);
+				}
+			} else if (groupIndex == 2) {
+				if (icon == "blockBoxSelect") {
+					return BlockEditor.Collision.select(this);
+				} else if (icon == "blockBoxAdd") {
+					return BlockEditor.Collision.add(this);
+				} else if (icon == "blockBoxScretch") {
+					return BlockEditor.Collision.resize(this);
+				} else if (icon == "blockBoxMove") {
+					return BlockEditor.Collision.move(this);
+				} else if (icon == "blockBoxMirror") {
+					return BlockEditor.Collision.mirror(this);
+				} else if (icon == "blockBoxRotate") {
+					return BlockEditor.Collision.rotate(this);
+				} else if (icon == "blockBoxRemove") {
+					return BlockEditor.Collision.remove(this);
+				}
+			}
+			showHint(translate("Not developed yet"));
+		},
+		onFetchGroup: function(sidebar, group, index) {
+			if (index == 0) {
+				return translate("Block define properties");
+			} else if (index == 1) {
+				return translate("Render models");
+			} else if (index == 2) {
+				return translate("Collision models");
+			}
+			return translate("Deprecated translation");
+		},
+		onFetchItem: function(sidebar, group, item, groupIndex, itemIndex) {
+			if (groupIndex == 0) {
+				if (itemIndex == 0) {
+					return translate("Changes block identifier");
+				} else if (itemIndex == 1) {
+					return translate("Sets block few variations");
+				} else if (itemIndex == 2) {
+					return translate("Changes variation textures");
+				} else if (itemIndex == 3) {
+					return translate("Adds special type properties");
+				} else if (itemIndex == 4) {
+					return translate("Scretches basic collision box");
+				} else if (itemIndex == 5) {
+					return translate("Updates mapped blocks");
+				}
+			} else if (groupIndex == 1) {
+				if (BlockEditor.data.hasRender) {
+					if (!REVISION.startsWith("develop")) {
+						if (itemIndex > 4) itemIndex++;
+					}
+					if (itemIndex == 0) {
+						return translate("Selects currently box");
+					} else if (itemIndex == 1) {
+						return translate("Creates or clones box");
+					} else if (itemIndex == 2) {
+						return translate("Scretches box sizes");
+					} else if (itemIndex == 3) {
+						return translate("Moves box location");
+					} else if (itemIndex == 4) {
+						return translate("Mirrors box belong side");
+					} else if (itemIndex == 5) {
+						return translate("Rotates box into specified angle");
+					} else if (itemIndex == 6) {
+						return translate("Changes box texture");
+					} else if (itemIndex == 7) {
+						return translate("Removes box");
+					}
+				} else if (itemIndex == 0) {
+					return translate("Creates first box");
+				}
+			} else if (groupIndex == 2) {
+				if (BlockEditor.data.hasCollision) {
+					if (!REVISION.startsWith("develop")) {
+						if (itemIndex > 4) itemIndex++;
+					}
+					if (itemIndex == 0) {
+						return translate("Selects currently box");
+					} else if (itemIndex == 1) {
+						return translate("Creates or clones box");
+					} else if (itemIndex == 2) {
+						return translate("Scretches box sizes");
+					} else if (itemIndex == 3) {
+						return translate("Moves box location");
+					} else if (itemIndex == 4) {
+						return translate("Mirrors box belong side");
+					} else if (itemIndex == 5) {
+						return translate("Rotates box into specified angle");
+					} else if (itemIndex == 6) {
+						return translate("Removes box");
+					}
+				} else if (itemIndex == 0) {
+					return translate("Creates first box");
+				}
+			}
+			return translate("Deprecated translation");
+		},
+		onSelectGroup: function(sidebar, group, index, last, count) {
+			mapRenderBlock(this);
+		},
+		onUndockGroup: function(sidebar, group, index, previous) {
+			if (!previous) {
+				selectMode = 0;
+				mapRenderBlock(this);
+			}
+		},
+		getExtensions: function(type) {
+			let source = EditorTool.prototype.getExtensions.apply(this, arguments);
+			if (type != EditorTool.ExtensionType.EXPORT) source = source.concat([".json", ".ndb"]);
+			return source;
+		},
+		replace: function(file) {
+			let name = file.getName(),
+				instance = this;
+			if (name.endsWith(".json")) {
+				let active = Date.now();
+				convertJsonBlock(Files.read(file), function(result) {
+					instance.fromProject(result);
+					showHint(translate("Converted success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				});
+			} else if (name.endsWith(".ndb")) {
+				let active = Date.now();
+				tryout(function() {
+					let obj = compileData(Files.read(file)),
+						result = convertNdb(obj);
+					instance.fromProject(result);
+					showHint(translate("Imported success") + " " +
+						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+				});
+			}
+			EditorTool.prototype.replace.apply(this, arguments);
+		},
+		merge: function(file) {
+			let merger = this.getMerger();
+			if (!this.hasMerger()) MCSystem.throwException(null);
+			let name = file.getName(),
+				project = this.toProject(),
+				instance = this;
+			if (name.endsWith(".json")) {
+				let active = Date.now();
+				convertJsonBlock(Files.read(file), function(result) {
+					merger(project, result, function(output) {
+						instance.fromProject(output);
+						showHint(translate("Merged success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				});
+			} else if (name.endsWith(".ndb")) {
+				let active = Date.now();
+				handleThread(function() {
+					let obj = compileData(Files.read(file)),
+						result = convertNdb(obj);
+					merger(project, result, function(output) {
+						instance.fromProject(output);
+						showHint(translate("Merged success") + " " +
+							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
+					});
+				});
+			}
+			EditorTool.prototype.merge.apply(this, arguments);
+		},
+		getWorkerFor: function(source) {
+			if (source !== undefined) {
+				return new BlockWorker(source);
+			}
+			return ProjectProvider.addBlock();
+		},
+		getMerger: function() {
+			return mergeConvertedBlock;
+		},
+		getConverter: function() {
+			return new BlockConverter();
+		},
+		hasParser: function() {
+			return true;
+		},
+		unselect: function(force) {
+			delete BlockEditor.data.renderer;
+			Popups.closeIfOpened("renderer_select");
+			delete BlockEditor.data.collision;
+			Popups.closeIfOpened("collision_select");
+			mapRenderBlock(this);
+			EditorTool.prototype.unselect.apply(this, arguments);
+		}
+	});
+	tool.attach();
+	checkValidate(function() {
+		tool.queue();
+		handleThread(function() {
+			let accepted = tool.open(source);
+			if (accepted) {
+				loadResources(tool.getRequiredResources());
+			}
+			handle(function() {
+				if (accepted) {
+					tryout(function() {
+						post && post(tool);
+						BlockEditor.attach(tool);
+						accepted = false;
+					});
+				}
+				if (accepted) {
+					tool.leave();
+				}
+			});
+		});
+	});
 };
 
 const BlockEditor = {
 	data: new Object(),
-	resetIfNeeded: function() {
-		let worker = BlockTool.getWorker();
+	resetIfNeeded: function(tool) {
+		let worker = tool.getWorker();
 		if (worker.Renderer.getModelCount() == 0) {
 			worker.Renderer.createModel();
 		}
@@ -916,53 +919,198 @@ const BlockEditor = {
 			} else worker.Define.params.mapped = copyMappings();
 		}
 	},
-	attach: function() {
-		let worker = BlockTool.getWorker();
-		this.resetIfNeeded();
+	attach: function(tool) {
+		let worker = tool.getWorker();
+		this.resetIfNeeded(tool);
 		this.data.hasRender = worker.Renderer.getModelCount() > 0 &&
 			worker.Renderer.getModel(0).getBoxCount() > 0;
 		this.data.hasCollision = worker.Collision.getModelCount() > 0 &&
 			worker.Collision.getModel(0).getBoxCount() > 0;
-		mapRenderBlock(worker);
-		if (!BlockTool.isAttached()) {
-			BlockTool.attach();
-		} else BlockTool.describe();
-		BlockTool.control();
+		mapRenderBlock(tool);
+		if (!tool.isAttached()) {
+			tool.attach();
+		}
+		BlockTool = tool;
+		tool.describe();
+		tool.control();
 	},
-	reload: function() {
-		let worker = BlockTool.getWorker();
-		if (mapRenderBlock(worker)) {
+	reload: function(tool) {
+		let worker = tool.getWorker();
+		if (mapRenderBlock(tool)) {
 			showHint(translate("Render updated"));
 		} else if (!removeUnusedMappings()) {
 			showHint(translate("Nothing to update"));
 		}
 	},
+	innersection: function(tool) {
+		let renderer, collision;
+		if (this.data.hasRender) {
+			renderer = new ListingPopup();
+			renderer.setIsMayDismissed(false);
+			renderer.setTitle(translate("Renderer"));
+			renderer.setSelectMode(true);
+			renderer.setOnSelectListener(function(index) {
+				selectMode = 9;
+				BlockEditor.data.rendererInst = index;
+				mapRenderBlock(tool);
+				if (collision) collision.unselect();
+			});
+			for (let i = 0; i < tool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
+				renderer.addButtonElement(translate("Box %s", i + 1));
+			}
+			renderer.selectButton(0);
+			Popups.open(renderer, "innersection_renderer");
+		}
+		if (this.data.hasCollision) {
+			collision = new ListingPopup();
+			collision.setIsMayDismissed(false);
+			collision.setTitle(translate("Collision"));
+			collision.setSelectMode(true);
+			collision.setOnSelectListener(function(index) {
+				selectMode = 10;
+				BlockEditor.data.collisionInst = index;
+				mapRenderBlock(tool);
+				if (renderer) renderer.unselect();
+			});
+			for (let i = 0; i < tool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
+				collision.addButtonElement(translate("Box %s", i + 1));
+			}
+			if (!this.data.hasRender) {
+				collision.selectButton(0);
+			}
+			Popups.open(collision, "innersection_collision");
+		}
+	},
+	shape: function(tool) {
+		let params = tool.getWorker().Define.params,
+			shape = params.shape = params.shape || {
+				x1: 0,
+				y1: 0,
+				z1: 0,
+				x2: 1,
+				y2: 1,
+				z2: 1
+			};
+		let popup = new CoordsPopup();
+		popup.setTitle(translate("Shape"));
+		popup.setOnShowListener(function() {
+			selectMode = 5;
+			mapRenderBlock(tool);
+		});
+		popup.setOnDismissListener(function() {
+			selectMode = 0;
+			mapRenderBlock(tool);
+		});
+		let group = popup.addGroup("x");
+		group.setOnChangeListener(function(index, value) {
+			shape["x" + (index + 1)] = value;
+			selectMode = 5;
+			mapRenderBlock(tool);
+		});
+		group.addItem(shape.x1);
+		group.addItem(shape.x2);
+		group = popup.addGroup("y");
+		group.setOnChangeListener(function(index, value) {
+			shape["y" + (index + 1)] = value;
+			selectMode = 5;
+			mapRenderBlock(tool);
+		});
+		group.addItem(shape.y1);
+		group.addItem(shape.y2);
+		group = popup.addGroup("z");
+		group.setOnChangeListener(function(index, value) {
+			shape["z" + (index + 1)] = value;
+			selectMode = 5;
+			mapRenderBlock(tool);
+		});
+		group.addItem(shape.z1);
+		group.addItem(shape.z2);
+		Popups.open(popup, "shape");
+	},
+	rename: function(tool) {
+		let define = tool.getWorker().Define;
+		let popup = new ListingPopup();
+		popup.setTitle(translate("Rename"));
+		popup.addEditElement(translate("ID"), define.getIdentificator());
+		popup.addButtonElement(translate("Save"), function() {
+			let values = popup.getAllEditsValues();
+			define.setIdentificator(String(values[0]));
+			showHint(translate("Data saved"));
+		});
+		Popups.open(popup, "rename");
+	},
+	variation: function(tool) {
+		let define = tool.getWorker().Define;
+		let popup = new ListingPopup();
+		popup.setTitle(translate("Data"));
+		popup.addEditElement(translate("Define"), define.getDefineData() || "[{}]");
+		popup.addButtonElement(translate("Save"), function() {
+			let values = popup.getAllEditsValues(),
+				result = compileData(values[0]);
+			if (result.lineNumber !== undefined) {
+				confirm(translate("Compilation failed"),
+					translate("Looks like, you entered invalid array. Check it with following exception:") +
+					" " + formatExceptionReport(result) + "\n\n" + translate("Force save define data?"),
+					function() {
+						define.setDefineData(String(values[0]));
+						showHint(translate("Data saved"));
+					});
+				return;
+			}
+			define.setDefineData(String(values[0]));
+			showHint(translate("Data saved"));
+		});
+		Popups.open(popup, "variation");
+	},
+	type: function(tool) {
+		let define = tool.getWorker().Define;
+		let popup = new ListingPopup();
+		popup.setTitle(translate("Type"));
+		popup.addEditElement(translate("Special"), define.getSpecialType() || "{}");
+		popup.addButtonElement(translate("Save"), function() {
+			let values = popup.getAllEditsValues(),
+				result = compileData(values[0]);
+			if (result.lineNumber !== undefined) {
+				confirm(translate("Compilation failed"),
+					translate("Looks like, you entered invalid object. Check it with following exception:") +
+					" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),
+					function() {
+						define.setSpecialType(String(values[0]));
+						showHint(translate("Data saved"));
+					});
+				return;
+			}
+			define.setSpecialType(String(values[0]));
+			showHint(translate("Data saved"));
+		});
+		Popups.open(popup, "type");
+	},
 	Renderer: {
-		hasSelection: function() {
+		hasSelection: function(tool) {
 			return BlockEditor.data.renderer >= 0;
 		},
-		select: function() {
+		select: function(tool) {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
 			popup.setOnDismissListener(function() {
 				selectMode = 0;
-				mapRenderBlock(BlockTool.getWorker());
+				mapRenderBlock(tool);
 			});
-			for (let i = 0; i < BlockTool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
+			for (let i = 0; i < tool.getWorker().Renderer.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
 			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 3;
 				let selected = BlockEditor.Renderer.hasSelection();
 				BlockEditor.data.renderer = index;
-				if (!selected) BlockEditor.attach();
-				else mapRenderBlock(BlockTool.getWorker());
+				if (!selected) tool.describeSidebar();
+				mapRenderBlock(tool);
 			});
 			popup.selectButton(BlockEditor.data.renderer);
 			Popups.open(popup, "renderer_select");
 		},
-		add: function() {
+		add: function(tool) {
 			if (BlockEditor.data.hasRender) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -970,100 +1118,102 @@ const BlockEditor = {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					let index = (BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).addBox(1, 0));
+					let selected = BlockEditor.Renderer.hasSelection(),
+						index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).addBox(1, 0));
+					if (!selected) tool.describeSidebar();
 					showHint(translate("Box %s added", index + 1));
-					mapRenderBlock(BlockTool.getWorker());
+					mapRenderBlock(tool);
 				});
 				if (BlockEditor.Renderer.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.renderer,
-							index = (BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).cloneBox(last));
+							index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-						mapRenderBlock(BlockTool.getWorker());
+						mapRenderBlock(tool);
 					});
 				}
 				Popups.open(popup, "renderer_add");
 			} else {
-				BlockEditor.data.renderer = BlockTool.getWorker().Renderer.getModel(0).addBox(1, 0);
-				BlockEditor.attach();
+				BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).addBox(1, 0);
+				BlockEditor.attach(tool);
 				showHint(translate("First box added"));
 			}
 		},
-		resize: function() {
+		resize: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
+				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
 			group.addItem(box.z2);
 			Popups.open(popup, "renderer_resize");
 		},
-		move: function() {
+		move: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
+				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "x", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).moveBox(selected, "x", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "y", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).moveBox(selected, "y", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Renderer.getModel(0).moveBox(selected, "z", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).moveBox(selected, "z", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
 			Popups.open(popup, "renderer_move");
 		},
-		mirror: function() {
+		mirror: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
+				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtX(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).mirrorBoxAtX(selected);
+				mapRenderBlock(tool);
 			});
 			popup.addButtonElement("Y", function() {
-				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(tool);
 			});
 			popup.addButtonElement("Z", function() {
-				BlockTool.getWorker().Renderer.getModel(0).mirrorBoxAtZ(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Renderer.getModel(0).mirrorBoxAtZ(selected);
+				mapRenderBlock(tool);
 			});
 			Popups.open(popup, "renderer_mirror");
 		},
-		rotate: function() {
+		rotate: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
+				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1074,21 +1224,21 @@ const BlockEditor = {
 				let values = popup.getAllEditsValues(),
 					side = compileData(values[0], "string").toLowerCase(),
 					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
-				BlockTool.getWorker().Renderer.getModel(0).rotateBox(selected, orientate, index);
+				tool.getWorker().Renderer.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
-				mapRenderBlock(BlockTool.getWorker());
+				mapRenderBlock(tool);
 			});
 			Popups.open(popup, "renderer_rotate");
 		},
-		texture: function() {
+		texture: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = BlockTool.getWorker().Renderer.getModel(0).getBox(selected);
+				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Texture"));
 			popup.setOnClickListener(function(index) {
 				index > 1 && selectTexture(index - 2, function(name, data) {
-					BlockTool.getWorker().Renderer.getModel(0).textureBox(selected, name, data);
-					mapRenderBlock(BlockTool.getWorker());
+					tool.getWorker().Renderer.getModel(0).textureBox(selected, name, data);
+					mapRenderBlock(tool);
 					Popups.updateAtName("box_texture");
 					showHint(translate("Texture changed"));
 					edit.update();
@@ -1131,7 +1281,7 @@ const BlockEditor = {
 							showHint(translate("Textures array must be contains only arrays inside"), Interface.Color.YELLOW);
 							return;
 						}
-						if (array.length > 1 && texture.length != 2) {
+						if (texture.length != 2) {
 							showHint(translate("Every element in textures array must have 2 length"), Interface.Color.YELLOW);
 							return;
 						}
@@ -1140,9 +1290,10 @@ const BlockEditor = {
 							return;
 						}
 					}
-					BlockTool.getWorker().Renderer.getModel(0).textureBox(selected, array);
-					mapRenderBlock(BlockTool.getWorker());
+					tool.getWorker().Renderer.getModel(0).textureBox(selected, array);
+					mapRenderBlock(tool);
 					showHint(translate("Textures changed"));
+					edit.update();
 				}
 			}).switchVisibility();
 			for (let i = 0; i < textures.length; i++) {
@@ -1151,46 +1302,48 @@ const BlockEditor = {
 			edit.update();
 			Popups.open(popup, "renderer_texture");
 		},
-		remove: function() {
+		remove: function(tool) {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					BlockTool.getWorker().Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
+					let worker = tool.getWorker();
+					worker.Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
 					BlockEditor.data.renderer = BlockEditor.data.renderer > 0 ? BlockEditor.data.renderer - 1 : 0;
-					if (BlockTool.getWorker().Renderer.getModel(0).getBoxCount() == 0) {
-						BlockEditor.attach();
-					} else mapRenderBlock(BlockTool.getWorker());
+					if (worker.Renderer.getModel(0).getBoxCount() == 0) {
+						BlockEditor.attach(tool);
+					}
 					Popups.closeAllByTag("renderer");
 					showHint(translate("Box deleted"));
+					mapRenderBlock(tool);
 				});
 		}
 	},
 	Collision: {
-		hasSelection: function() {
+		hasSelection: function(tool) {
 			return BlockEditor.data.collision >= 0;
 		},
-		select: function() {
+		select: function(tool) {
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Boxes"));
 			popup.setSelectMode(true);
 			popup.setOnDismissListener(function() {
 				selectMode = 0;
-				mapRenderBlock(BlockTool.getWorker());
+				mapRenderBlock(tool);
 			});
-			for (let i = 0; i < BlockTool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
+			for (let i = 0; i < tool.getWorker().Collision.getModel(0).getBoxCount(); i++) {
 				popup.addButtonElement(translate("Box %s", i + 1));
 			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 11;
 				let selected = BlockEditor.Collision.hasSelection();
 				BlockEditor.data.collision = index;
-				if (!selected) BlockEditor.attach();
-				else mapRenderBlock(BlockTool.getWorker());
+				if (!selected) tool.describeSidebar();
+				mapRenderBlock(tool);
 			});
 			popup.selectButton(BlockEditor.data.collision);
 			Popups.open(popup, "collision_select");
 		},
-		add: function() {
+		add: function(tool) {
 			if (BlockEditor.data.hasCollision) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -1198,100 +1351,102 @@ const BlockEditor = {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					let index = (BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).addBox());
+					let selected = BlockEditor.Collision.hasSelection(),
+						index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).addBox());
+					if (!selected) tool.describeSidebar();
 					showHint(translate("Box %s added", index + 1));
-					mapRenderBlock(BlockTool.getWorker());
+					mapRenderBlock(tool);
 				});
 				if (BlockEditor.Collision.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.collision,
-							index = (BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).cloneBox(last));
+							index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
-						mapRenderBlock(BlockTool.getWorker());
+						mapRenderBlock(tool);
 					});
 				}
 				Popups.open(popup, "collision_add");
 			} else {
-				BlockEditor.data.collision = BlockTool.getWorker().Collision.getModel(0).addBox();
-				BlockEditor.attach();
+				BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).addBox();
+				BlockEditor.attach(tool);
 				showHint(translate("First box added"));
 			}
 		},
-		resize: function() {
+		resize: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
+				box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
 			group.addItem(box.z2);
 			Popups.open(popup, "collision_resize");
 		},
-		move: function() {
+		move: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
+				box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "x", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).moveBox(selected, "x", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "y", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).moveBox(selected, "y", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				BlockTool.getWorker().Collision.getModel(0).moveBox(selected, "z", value);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).moveBox(selected, "z", value);
+				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
 			Popups.open(popup, "collision_move");
 		},
-		mirror: function() {
+		mirror: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
+				box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
-				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtX(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).mirrorBoxAtX(selected);
+				mapRenderBlock(tool);
 			});
 			popup.addButtonElement("Y", function() {
-				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(tool);
 			});
 			popup.addButtonElement("Z", function() {
-				BlockTool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
-				mapRenderBlock(BlockTool.getWorker());
+				tool.getWorker().Collision.getModel(0).mirrorBoxAtY(selected);
+				mapRenderBlock(tool);
 			});
 			Popups.open(popup, "collision_mirror");
 		},
-		rotate: function() {
+		rotate: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = BlockTool.getWorker().Collision.getModel(0).getBox(selected);
+				box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1302,128 +1457,26 @@ const BlockEditor = {
 				let values = popup.getAllEditsValues(),
 					side = compileData(values[0], "string").toLowerCase(),
 					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
-				BlockTool.getWorker().Collision.getModel(0).rotateBox(selected, orientate, index);
+				tool.getWorker().Collision.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
-				mapRenderBlock(BlockTool.getWorker());
+				mapRenderBlock(tool);
 			});
 			Popups.open(popup, "collision_rotate");
 		},
-		remove: function() {
+		remove: function(tool) {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this box?"),
 				function() {
-					BlockTool.getWorker().Collision.getModel(0).removeBox(BlockEditor.data.collision);
+					let worker = tool.getWorker();
+					worker.Collision.getModel(0).removeBox(BlockEditor.data.collision);
 					BlockEditor.data.collision = BlockEditor.data.collision > 0 ? BlockEditor.data.collision - 1 : 0;
-					if (BlockTool.getWorker().Collision.getModel(0).getBoxCount() == 0) {
-						BlockEditor.attach();
-					} else mapRenderBlock(BlockTool.getWorker());
+					if (worker.Collision.getModel(0).getBoxCount() == 0) {
+						BlockEditor.attach(tool);
+					}
 					Popups.closeAllByTag("collision");
 					showHint(translate("Box deleted"));
+					mapRenderBlock(tool);
 				});
 		}
-	},
-	shape: function() {
-		let params = BlockTool.getWorker().Define.params,
-			shape = params.shape = params.shape || {
-				x1: 0,
-				y1: 0,
-				z1: 0,
-				x2: 1,
-				y2: 1,
-				z2: 1
-			};
-		let popup = new CoordsPopup();
-		popup.setTitle(translate("Shape"));
-		popup.setOnShowListener(function() {
-			selectMode = 5;
-			mapRenderBlock(BlockTool.getWorker());
-		});
-		popup.setOnDismissListener(function() {
-			selectMode = 0;
-			mapRenderBlock(BlockTool.getWorker());
-		});
-		let group = popup.addGroup("x");
-		group.setOnChangeListener(function(index, value) {
-			shape["x" + (index + 1)] = value;
-			selectMode = 5;
-			mapRenderBlock(BlockTool.getWorker());
-		});
-		group.addItem(shape.x1);
-		group.addItem(shape.x2);
-		group = popup.addGroup("y");
-		group.setOnChangeListener(function(index, value) {
-			shape["y" + (index + 1)] = value;
-			selectMode = 5;
-			mapRenderBlock(BlockTool.getWorker());
-		});
-		group.addItem(shape.y1);
-		group.addItem(shape.y2);
-		group = popup.addGroup("z");
-		group.setOnChangeListener(function(index, value) {
-			shape["z" + (index + 1)] = value;
-			selectMode = 5;
-			mapRenderBlock(BlockTool.getWorker());
-		});
-		group.addItem(shape.z1);
-		group.addItem(shape.z2);
-		Popups.open(popup, "shape");
-	},
-	rename: function() {
-		let define = BlockTool.getWorker().Define;
-		let popup = new ListingPopup();
-		popup.setTitle(translate("Rename"));
-		popup.addEditElement(translate("ID"), define.getIdentificator());
-		popup.addButtonElement(translate("Save"), function() {
-			let values = popup.getAllEditsValues();
-			define.setIdentificator(String(values[0]));
-			showHint(translate("Data saved"));
-		});
-		Popups.open(popup, "rename");
-	},
-	variation: function() {
-		let define = BlockTool.getWorker().Define;
-		let popup = new ListingPopup();
-		popup.setTitle(translate("Data"));
-		popup.addEditElement(translate("Define"), define.getDefineData() || "[{}]");
-		popup.addButtonElement(translate("Save"), function() {
-			let values = popup.getAllEditsValues(),
-				result = compileData(values[0]);
-			if (result.lineNumber !== undefined) {
-				confirm(translate("Compilation failed"),
-					translate("Looks like, you entered invalid array. Check it with following exception:") +
-					" " + formatExceptionReport(result) + "\n\n" + translate("Force save define data?"),
-					function() {
-						define.setDefineData(String(values[0]));
-						showHint(translate("Data saved"));
-					});
-				return;
-			}
-			define.setDefineData(String(values[0]));
-			showHint(translate("Data saved"));
-		});
-		Popups.open(popup, "variation");
-	},
-	type: function() {
-		let define = BlockTool.getWorker().Define;
-		let popup = new ListingPopup();
-		popup.setTitle(translate("Type"));
-		popup.addEditElement(translate("Special"), define.getSpecialType() || "{}");
-		popup.addButtonElement(translate("Save"), function() {
-			let values = popup.getAllEditsValues(),
-				result = compileData(values[0]);
-			if (result.lineNumber !== undefined) {
-				confirm(translate("Compilation failed"),
-					translate("Looks like, you entered invalid object. Check it with following exception:") +
-					" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),
-					function() {
-						define.setSpecialType(String(values[0]));
-						showHint(translate("Data saved"));
-					});
-				return;
-			}
-			define.setSpecialType(String(values[0]));
-			showHint(translate("Data saved"));
-		});
-		Popups.open(popup, "type");
 	}
 };
