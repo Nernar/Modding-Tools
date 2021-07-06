@@ -883,9 +883,6 @@ const attachBlockTool = function(source, post) {
 		tool.queue();
 		handleThread(function() {
 			let accepted = tool.open(source);
-			if (accepted) {
-				loadResources(tool.getRequiredResources());
-			}
 			handle(function() {
 				if (accepted) {
 					tryout(function() {

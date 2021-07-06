@@ -1,10 +1,10 @@
-function launchModification(additionalScope) {
+const launchModification = function(additionalScope) {
 	if (additionalScope !== undefined) {
 		__mod__.RunMod(additionalScope);
 		return;
 	}
 	Launch();
-}
+};
 
 (function() {
 	try {

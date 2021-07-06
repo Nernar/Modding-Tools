@@ -262,10 +262,10 @@ const selectFile = function(availabled, action, outside, directory) {
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.hide();
-			} else explorer.hide();
+			} else explorer.dismiss();
 		});
 		explorer.setOnSelectListener(function(popup, file) {
-			explorer.hide();
+			explorer.dismiss();
 			action && action(file);
 		});
 		explorer.show();
@@ -280,14 +280,14 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.hide();
-			} else explorer.hide();
+			} else explorer.dismiss();
 		});
 		let rename = explorer.addRename();
 		availabled && rename.setAvailabledTypes(availabled);
 		name && rename.setCurrentName(name);
 		rename.setOnApproveListener(function(widget, file, last) {
 			let approve = function() {
-				explorer.hide();
+				explorer.dismiss();
 				action && action(file, last);
 			};
 			if (file.exists()) {
@@ -440,18 +440,6 @@ Tool.prototype.unqueue = function() {
 	this.control();
 };
 
-Tool.prototype.getRequiredResources = function() {
-	let array = new Array(),
-		control = this.getControlWindow();
-	if (control === null) return array;
-	array.push(control.getForegroundIcon());
-	array.push(control.getBackgroundIcon());
-	array.push(control.getButtonIcon());
-	array.push(control.getButtonBackground());
-	array.push(control.getLogotypeBackground());
-	return array;
-};
-
 Tool.State = new Object();
 Tool.State.INACTIVE = 0;
 Tool.State.ATTACHED = 1;
@@ -564,45 +552,6 @@ ControlTool.prototype.queue = function(sequence) {
 	if (menu === null) return;
 	menu.hide();
 	Tool.prototype.queue.apply(this, arguments);
-};
-
-ControlTool.prototype.getRequiredResources = function() {
-	let array = Tool.prototype.getRequiredResources.apply(this, arguments),
-		menu = this.getMenuWindow();
-	if (menu === null) return array;
-	array.push(menu.getBackground());
-	let elements = menu.getElements();
-	for (let i = 0; i < elements.length; i++) {
-		let element = elements[i];
-		if (element instanceof MenuWindow.Header) {
-			array.push(element.getCover());
-			array.push(element.getLogo());
-			if (element instanceof MenuWindow.ProjectHeader) {
-				array.push(element.getBackground());
-				let categories = element.getCategories();
-				for (let c = 0; c < categories.length; c++) {
-					let category = categories[c],
-						items = category.getItems();
-					for (let m = 0; m < items.length; m++) {
-						let item = items[m];
-						array.push(item.getBackground());
-						array.push(item.getIcon());
-					}
-				}
-			}
-		} else if (element instanceof MenuWindow.Category) {
-			let items = element.getItems();
-			for (let m = 0; m < items.length; m++) {
-				let item = items[m];
-				array.push(item.getBackground());
-				array.push(item.getIcon());
-			}
-		} else if (element instanceof MenuWindow.Message) {
-			array.push(element.getBackground());
-			array.push(element.getIcon());
-		}
-	}
-	return array;
 };
 
 ControlTool.State = clone(Tool.State);
@@ -739,29 +688,6 @@ SidebarTool.prototype.queue = function(sequence) {
 	if (sidebar === null) return;
 	sidebar.hide();
 	ControlTool.prototype.queue.apply(this, arguments);
-};
-
-SidebarTool.prototype.getRequiredResources = function() {
-	let array = ControlTool.prototype.getRequiredResources.apply(this, arguments),
-		sidebar = this.getSidebarWindow();
-	if (sidebar === null) return array;
-	array.push(sidebar.getBackground());
-	array.push(sidebar.getTabBackground());
-	let groups = sidebar.getGroups();
-	for (let i = 0; i < groups.length; i++) {
-		let group = groups[i];
-		array.push(group.getSelectedBackground());
-		array.push(group.getUnselectedBackground());
-		array.push(group.getBackground());
-		array.push(group.getIcon());
-		let items = group.getItems();
-		for (let m = 0; m < items.length; m++) {
-			let item = items[m];
-			array.push(item.getBackground());
-			array.push(item.getIcon());
-		}
-	}
-	return array;
 };
 
 SidebarTool.State = clone(ControlTool.State);

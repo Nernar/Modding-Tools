@@ -854,8 +854,8 @@ Translation.addTranslation("File is exists", {
 Translation.addTranslation("File is already created, that process will be rewrite it. Continue?", {
 	ru: "Процесс может перезаписать существующий файл. Вы хотите продолжить?"
 });
-Translation.addTranslation("What do you want to compile?", {
-	ru: "Что вы хотите скомпилировать?"
+Translation.addTranslation("Which modification will be changed?", {
+	ru: "Какая модификация должна быть изменена?"
 });
 Translation.addTranslation("Or maybe checkout supportables", {
 	ru: "Или можно проверить модули"
@@ -1001,6 +1001,9 @@ Translation.addTranslation("Indexating", {
 Translation.addTranslation("Compilation", {
 	ru: "Компиляция"
 });
+Translation.addTranslation("Decompilation", {
+	ru: "Декомпиляция"
+});
 Translation.addTranslation("Done", {
 	ru: "Готово"
 });
@@ -1062,6 +1065,12 @@ Translation.addTranslation("Do you want to retry modification launch?", {
 });
 Translation.addTranslation("Modification will be dexed and switched to release type.", {
 	ru: "Модификация будет одексирована и перейдет к релизному типу сборки."
+});
+Translation.addTranslation("Modification currently was compiled into dexes.", {
+	ru: "Модификация сейчас скомпилирована и одексирована."
+});
+Translation.addTranslation("If you're developer, it may be decompiled.", {
+	ru: "Если вы разработчик, она может быть декомпилирована."
 });
 Translation.addTranslation("Modification successfully compiled.", {
 	ru: "Модификация успешно скомпилирована."

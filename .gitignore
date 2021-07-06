@@ -116,6 +116,7 @@ _gsdata_/
 
 # Resources abilities
 /.placeholder.ico
+/assets/cache/
 /gui/
 
 # Local saves
@@ -132,4 +133,3 @@ _gsdata_/
 # Enstablized sources
 /dev/api/protect.js
 /dev/callback/debug.js
-/dev/storage/factory.js

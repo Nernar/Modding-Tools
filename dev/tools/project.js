@@ -235,7 +235,7 @@ const ProjectEditor = {
 				explorer.setMultipleSelectable(true);
 				let bar = explorer.addPath();
 				bar.setOnOutsideListener(function(bar) {
-					explorer.hide();
+					explorer.dismiss();
 				});
 				bar.setPath(__dir__);
 				explorer.show();

@@ -182,11 +182,11 @@ const ModificationSource = {
 		control.show();
 	},
 	attachSources: function(control) {
-		let loader = ExecuteableSupport.newInstance("zhekasmirnov.launcher.mod.build.ModLoader");
+		let loader = findCorePackage().mod.build.ModLoader;
 		if (loader == null) return false;
 		let modsList = loader.instance.modsList;
 		if (modsList.size() == 0) return false;
-		control.addCategory(translate("What do you want to compile?"));
+		control.addCategory(translate("Which modification will be changed?"));
 		for (let i = 0; i < modsList.size(); i++) {
 			let mod = modsList.get(i);
 			this.attachSource(control, mod);
@@ -204,19 +204,29 @@ const ModificationSource = {
 		return true;
 	},
 	attachSource: function(control, mod) {
-		let count = mod.getAllExecutables().size(),
-			type = mod.getBuildType().toString();
-		control.addMessage("worldSelectionLimit" + (count > 0 ? count > 5 ? count > 10 ? count > 15 ? "Infinity" : "Maximal" : "Normal" : "Minimal" : "Custom"), translate(mod.getName()) +
-			"\n" + translateCounter(count, "no sources", "%s1 source", "%s" + (count % 10) + " sources", "%s sources", [count]) + " / " + translate(type),
-			function() {
+		let type = mod.getBuildType().toString(),
+			dir = new java.io.File(mod.dir).getName(),
+			version = mod.getInfoProperty("version") || "1.0",
+			icon = (ImageFactory.isLoaded("support" + mod.getName()) ? "support" + mod.getName() :
+				ImageFactory.loadFromFile("cache", mod.dir + "mod_icon.png")) || "support";
+		control.addMessage(icon, translate(mod.getName()) + " " + translate(version) +
+			"\n/" + dir + " / " + translate(type), function() {
 				ModificationSource.rebuild(mod, type);
 			});
 	},
 	rebuild: function(mod, type) {
 		if (type == "release") {
-			confirm(translate("Switch build type"), translate("Do you want to switch modification build type in build.config?"), function() {
-				ModificationSource.switchBuild(mod, mod.getBuildType().toString());
-				ModificationSource.selector();
+			confirm(translate("Decompilation"), translate("Modification currently was compiled into dexes.") + " " + translate("If you're developer, it may be decompiled.") + " " + translate("Do you want to continue?"), function() {
+				LogViewer.show();
+				handleThread(function() {
+					ModificationSource.requireDecompilerAsync(mod);
+					handle(function() {
+						ModificationSource.confirmSwitchBuild(mod);
+						ModificationSource.selector();
+						Popups.closeIfOpened("innercore_log");
+					});
+				});
+				MenuWindow.hideCurrently();
 			});
 		} else if (type == "develop") {
 			confirm(translate("Compilation"), translate("Modification will be dexed and switched to release type.") + " " + translate("Do you want to continue?"), function() {
@@ -228,7 +238,7 @@ const ModificationSource = {
 								element && retraceOrReport(element);
 							});
 						}
-						if (!result.wasFailed) ModificationSource.rebuild(mod, "release");
+						if (!result.wasFailed) ModificationSource.confirmSwitchBuild(mod);
 						confirm(translate(result.name) + " " + translate(result.version), (result.wasFailed ?
 								translate("Something went wrong during compilation process.") + " " + translate("Checkout reports below to see more details.") :
 								translate("Modification successfully compiled.") + " " + translate("You can switch build type in next window.")) + " " +
@@ -250,6 +260,16 @@ const ModificationSource = {
 		let dexer = REQUIRE("redexer.dns")(mod);
 		if (yields !== false) dexer.assureYield();
 		return dexer.toResult();
+	},
+	requireDecompilerAsync: function(mod, yields) {
+		let formatter = REQUIRE("decompiler.dns")(mod);
+		if (yields !== false) formatter.assureYield();
+	},
+	confirmSwitchBuild: function(mod) {
+		confirm(translate("Switch build type"), translate("Do you want to switch modification build type in build.config?"), function() {
+			ModificationSource.switchBuild(mod, mod.getBuildType().toString());
+			ModificationSource.selector();
+		});
 	},
 	switchBuild: function(mod, type) {
 		if (type === undefined) {
