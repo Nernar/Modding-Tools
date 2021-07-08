@@ -32,6 +32,7 @@ const LaunchSequence = new LogotypeSequence({
 			typeface = AssetFactory.createFont("minecraft");
 			registerAdditionalInformation();
 		} else if (index == 3) {
+			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 			let list = Files.listFileNames(Dirs.ASSET, true);
 			this.count += Files.checkFormats(list, ".dnr").length;
 			ImageFactory.loadDirectory();

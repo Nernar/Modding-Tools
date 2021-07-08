@@ -7,6 +7,12 @@ polyfill/FileTools.js
 polyfill/Level.js
 
 storage/drawable/shared.js
+storage/drawable/color.js
+storage/drawable/bitmap.js
+storage/drawable/clip.js
+storage/drawable/layer.js
+storage/drawable/animation.js
+storage/drawable/parser.js
 storage/explorer.js
 storage/factory.js
 storage/message.js
