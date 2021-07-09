@@ -14,7 +14,7 @@ HieraclyPopup.prototype.reset = function() {
 
 	this.views.footer = new android.widget.LinearLayout(context);
 	this.views.footer.setGravity(Interface.Gravity.CENTER | Interface.Gravity.LEFT);
-	this.views.footer.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+	new BitmapDrawable("popup").attachAsBackground(this.views.footer);
 	let params = new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	params.weight = 0.1;
@@ -38,7 +38,7 @@ HieraclyPopup.prototype.addGroup = function(name, parent) {
 
 	let image = new android.widget.ImageView(context);
 	image.setLayoutParams(android.widget.RelativeLayout.LayoutParams(Interface.getY(30), Interface.getY(30)));
-	image.setImageDrawable(ImageFactory.getDrawable("controlAdapterOpened"));
+	new BitmapDrawable("controlAdapterOpened").attachAsImage(image);
 	views.groups[index].addView(image);
 
 	let text = new android.widget.TextView(context);
@@ -80,7 +80,10 @@ HieraclyPopup.prototype.addFooter = function(src, click) {
 	let index = views.footers.push(view = new android.widget.ImageView(context)) - 1;
 	views.footers[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Interface.getY(60), Interface.getY(60)));
 	views.footers[index].setPadding(Interface.getY(9), Interface.getY(9), Interface.getY(9), Interface.getY(9));
-	views.footers[index].setImageDrawable(ImageFactory.getDrawable(src));
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(views.footers[index]);
 	click && views.footers[index].setOnClickListener(click);
 	views.footer.addView(views.footers[index]);
 };
@@ -113,7 +116,7 @@ HieraclyPopup.prototype.getHieraclyCount = function(name) {
 HieraclyPopup.prototype.selectGroup = function(index) {
 	let groups = this.views.groups;
 	this.group !== undefined && groups[this.group].setBackgroundDrawable(null);
-	groups[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
+	new BitmapDrawable("popupSelectionSelected").attachAsBackground(groups[index]);
 	this.group = index;
 };
 
@@ -123,7 +126,7 @@ HieraclyPopup.prototype.selectItem = function(index) {
 	if (previous !== undefined && items[previous]) {
 		items[previous].setBackgroundDrawable(null);
 	}
-	items[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
+	new BitmapDrawable("popupSelectionSelected").attachAsBackground(items[index]);
 	this.item = index;
 };
 

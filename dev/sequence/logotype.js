@@ -60,10 +60,10 @@ LogotypeSequence.prototype.cancel = function(error) {
 		let content = logotype.getContainer();
 		if (content !== null) {
 			let background = this.getCancellationBackground(error);
-			if (!(background instanceof android.graphics.drawable.Drawable)) {
-				background = ImageFactory.getDrawable(background);
+			if (!(background instanceof Drawable)) {
+				background = Drawable.parseJson.call(this, background);
 			}
-			content.setBackgroundDrawable(background);
+			background.attachAsBackground(content);
 		}
 	}
 	this.handleDismiss(2);

@@ -1,13 +1,10 @@
 const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
-		if (isFirstLaunch()) {
-			let foreground = this.getForegroundIcon(),
-				background = this.getBackgroundIcon();
-			ImageFactory.loadFromAsset(foreground, foreground + ".dnr");
-			ImageFactory.loadFromAsset(background, background + ".dnr");
+		// if (isFirstLaunch()) {
+			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, false);
 			LogotypeSequence.prototype.create.apply(this, arguments);
-		}
+		// }
 	},
 	getExpirationTime: function() {
 		return isFirstLaunch() ? LogotypeSequence.prototype.getExpirationTime.apply(this, arguments) : 0;
@@ -24,35 +21,23 @@ const LaunchSequence = new LogotypeSequence({
 				reportError.addDebugValue("autosaveEnabled", autosave);
 				reportError.addDebugValue("moveMapping", saveCoords);
 			}
-			let cancellation = LogotypeSequence.prototype.getCancellationBackground();
-			ImageFactory.loadFromAsset(cancellation, "popup/selection/locked.dnr");
+			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 			FileTools.assureDir(Dirs.EXPORT);
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
-			let list = Files.listFileNames(Dirs.ASSET, true);
-			this.count += Files.checkFormats(list, ".dnr").length;
-			ImageFactory.loadDirectory();
-			ImageFactory.decodeAsAnimation("blockNoTextures", ["blockDefineTexture", "blockDefineWrong"], 1500);
-			index += ImageFactory.resourcesCount;
+			// let logotype = this.getWindow(),
+				// mapped = BitmapDrawableFactory.findMappedByTag("*"),
+				// animation = AnimationDrawable.parseJson.call(this, mapped);
+			// animation.setDefaultDuration(5);
+			// logotype.setIcon(animation);
+			// "blockNoTextures": ["blockDefineTexture", "blockDefineWrong"], 1500
+			// while (animation.isProcessing()) java.lang.Thread.yield();
 			refreshSupportablesIcons();
 		}
 		return index;
-	},
-	tick: function() {
-		if (this.index >= 2) {
-			let index = 2 + ImageFactory.resourcesCount;
-			if (index > this.index) {
-				this.require(index);
-			}
-		}
-	},
-	update: function(progress, index) {
-		progress = this.count == 3 ? index / 4 * 100 : progress / 2 + 50;
-		LogotypeSequence.prototype.update.call(this, progress, index);
 	},
 	cancel: function(error) {
 		let sequence = this;

@@ -57,10 +57,10 @@ FrameFragment.prototype.getBackground = function() {
 FrameFragment.prototype.setBackground = function(drawable) {
 	let container = this.getContainer();
 	if (container === null) return this;
-	if (!(drawable instanceof android.graphics.drawable.Drawable)) {
-		drawable = ImageFactory.getDrawable(drawable);
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
 	}
-	container.setBackgroundDrawable(drawable);
+	drawable.attachAsBackground(container);
 	this.background = drawable;
 	return this;
 };

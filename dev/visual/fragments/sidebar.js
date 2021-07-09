@@ -35,7 +35,10 @@ SidebarFragment.prototype.getBackground = function() {
 SidebarFragment.prototype.setBackground = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
-	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(container);
 	this.background = src;
 	return this;
 };
@@ -96,7 +99,10 @@ SidebarFragment.prototype.getTabBackground = function() {
 SidebarFragment.prototype.setTabBackground = function(src) {
 	let container = this.getTabContainer();
 	if (container == null) return this;
-	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(container);
 	this.tabBackground = src;
 	return this;
 };
@@ -175,7 +181,10 @@ SidebarFragment.Group.prototype.getBackground = function() {
 SidebarFragment.Group.prototype.setBackground = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
-	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(container);
 	this.background = src;
 	return this;
 };
@@ -191,8 +200,13 @@ SidebarFragment.Group.prototype.getIcon = function() {
 SidebarFragment.Group.prototype.setIcon = function(src) {
 	let icon = this.getIconView();
 	if (icon == null) return this;
-	Interface.setActorName(icon, src + "Group");
-	icon.setImageDrawable(ImageFactory.getDrawable(src));
+	if (src !== null && typeof src == "object") {
+		Interface.setActorName(icon, src.bitmap + "Group");
+	} else Interface.setActorName(icon, src + "Group");
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(icon);
 	this.icon = src;
 	return this;
 };
@@ -242,7 +256,10 @@ SidebarFragment.Group.Item.prototype.getBackground = function() {
 SidebarFragment.Group.Item.prototype.setBackground = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
-	container.setBackgroundDrawable(ImageFactory.getDrawable(src));
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(container);
 	this.background = src;
 	return this;
 };
@@ -254,8 +271,13 @@ SidebarFragment.Group.Item.prototype.getIcon = function() {
 SidebarFragment.Group.Item.prototype.setIcon = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
-	Interface.setActorName(container, src + "Item");
-	container.setImageDrawable(ImageFactory.getDrawable(src));
+	if (src !== null && typeof src == "object") {
+		Interface.setActorName(container, src.bitmap + "Item");
+	} else Interface.setActorName(container, src + "Item");
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(container);
 	this.icon = src;
 	return this;
 };

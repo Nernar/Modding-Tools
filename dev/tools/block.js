@@ -39,8 +39,10 @@ const selectTexture = function(index, onSelect) {
 		wrong.setOrientation(Interface.Orientate.VERTICAL);
 		wrong.setGravity(Interface.Gravity.CENTER);
 		wrong.setPadding(0, Interface.getY(64), 0, Interface.getY(64));
-		let icon = new android.widget.ImageView(context);
-		icon.setImageDrawable(ImageFactory.getDrawable("blockNoTextures"));
+		let icon = new android.widget.ImageView(context),
+			drawable = new AnimationDrawable(["blockDefineTexture", "blockDefineWrong"]);
+		drawable.setDefaultDuration(1500);
+		drawable.attachAsImage(icon);
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 		wrong.addView(icon, params);
 		let info = new android.widget.TextView(context);
@@ -578,8 +580,9 @@ const attachBlockTool = function(source, post) {
 				}, {
 					icon: "blockDefineVariation"
 				}, {
-					icon: function(tool, item) {
-						return ImageFactory.getTintDrawable("blockDefineTexture", Interface.Color.RED);
+					icon: {
+						bitmap: "blockDefineTexture",
+						tint: Interface.Color.RED
 					}
 				}, {
 					icon: "blockDefineType"
@@ -611,7 +614,10 @@ const attachBlockTool = function(source, post) {
 							}, function(tool, group) {
 								if (REVISION.startsWith("develop")) {
 									return {
-										icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+										icon: {
+											bitmap: "blockBoxRotate",
+											tint: Interface.Color.RED
+										}
 									};
 								}
 							}, {
@@ -645,7 +651,10 @@ const attachBlockTool = function(source, post) {
 							}, function(tool, group) {
 								if (REVISION.startsWith("develop")) {
 									return {
-										icon: ImageFactory.getTintDrawable("blockBoxRotate", Interface.Color.RED)
+										icon: {
+											bitmap: "blockBoxRotate",
+											tint: Interface.Color.RED
+										}
 									};
 								}
 							}, {

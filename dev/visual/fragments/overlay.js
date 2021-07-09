@@ -49,10 +49,10 @@ OverlayFragment.prototype.getBackground = function() {
 OverlayFragment.prototype.setBackground = function(drawable) {
 	let background = this.getInformationView();
 	if (background === null) return this;
-	if (!(drawable instanceof android.graphics.drawable.Drawable)) {
-		drawable = ImageFactory.getDrawable(drawable);
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
 	}
-	background.setBackgroundDrawable(drawable);
+	drawable.attachAsBackground(background);
 	this.background = drawable;
 	return this;
 };

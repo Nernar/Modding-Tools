@@ -19,7 +19,7 @@
 MCSystem.setLoadingTip("Initialization Script");
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-06.07.2021-0";
+const REVISION = "develop-alpha-0.4-09.07.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -56,7 +56,8 @@ let supportSupportables = true;
 let loadSupportables = true;
 
 // Configurable: explorer
-let maximumAllowedBounds = 128;
+let maximumThumbnailBounds = 96;
+let maximumAllowedBounds = 1920;
 let importAutoselect = false;
 
 // Different values

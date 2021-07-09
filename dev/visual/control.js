@@ -42,14 +42,30 @@ ControlButton.prototype.resetContent = function() {
 	views.layout.addView(views.button, params);
 };
 
-ControlButton.prototype.setBackground = function(src) {
-	this.views && this.views.layout &&
-		this.views.layout.setBackgroundDrawable(ImageFactory.getDrawable(src));
+ControlButton.prototype.setBackground = function(drawable) {
+	let layout = this.views.layout;
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
+	}
+	drawable.attachAsBackground(layout);
+	this.background = drawable;
 };
 
-ControlButton.prototype.setIcon = function(src) {
-	this.views && this.views.button &&
-		this.views.button.setImageDrawable(ImageFactory.getDrawable(src));
+ControlButton.prototype.getBackground = function() {
+	return this.background || null;
+};
+
+ControlButton.prototype.setIcon = function(drawable) {
+	let button = this.views.button;
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
+	}
+	drawable.attachAsImage(button);
+	this.icon = drawable;
+};
+
+ControlButton.prototype.getIcon = function() {
+	return this.icon || null;
 };
 
 ControlButton.prototype.setOnClickListener = function(listener) {

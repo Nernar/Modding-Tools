@@ -31,7 +31,9 @@ LogotypeFragment.prototype.getIcon = function() {
 LogotypeFragment.prototype.setIcon = function(drawable) {
 	let logotype = this.getLogotypeView();
 	if (logotype == null) return this;
-	logotype.setImageDrawable(drawable);
+	if (!(drawable instanceof Drawable)) {
+		logotype.setImageDrawable(drawable);
+	} else drawable.attachAsImage(logotype);
 	this.drawable = drawable;
 	return this;
 };

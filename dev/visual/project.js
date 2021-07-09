@@ -53,9 +53,11 @@ MenuWindow.prototype.getBackground = function() {
 
 MenuWindow.prototype.setBackground = function(src) {
 	let content = this.getContainer();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -226,9 +228,11 @@ MenuWindow.Header.prototype.getCover = function() {
 MenuWindow.Header.prototype.setCover = function(src) {
 	let content = this.getContent(),
 		slide = this.views.slide;
-	if (!content || !slide || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(slide);
 	this.cover = src;
-	slide.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -294,9 +298,11 @@ MenuWindow.Header.prototype.getLogo = function() {
 MenuWindow.Header.prototype.setLogo = function(src) {
 	let content = this.getContent(),
 		logo = this.views.logo;
-	if (!content || !logo) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(logo);
 	this.logo = src;
-	logo.setImageDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -375,11 +381,11 @@ MenuWindow.ProjectHeader.prototype.getBackground = function() {
 MenuWindow.ProjectHeader.prototype.setBackground = function(src) {
 	let content = this.getContent(),
 		views = this.views;
-	if (!content || !views || !views.background || !src) {
-		return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
 	}
+	src.attachAsBackground(views.background);
 	this.background = src;
-	views.background.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -787,9 +793,11 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getBackground = function() {
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -800,9 +808,11 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getIcon = function() {
 MenuWindow.ProjectHeader.Category.Item.prototype.setIcon = function(src) {
 	let content = this.getContent(),
 		views = this.views;
-	if (!content || !views || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(views.icon);
 	this.icon = src;
-	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -1167,9 +1177,11 @@ MenuWindow.Category.Item.prototype.getBackground = function() {
 
 MenuWindow.Category.Item.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -1180,9 +1192,11 @@ MenuWindow.Category.Item.prototype.getIcon = function() {
 MenuWindow.Category.Item.prototype.setIcon = function(src) {
 	let content = this.getContent(),
 		views = this.views;
-	if (!content || !views || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(views.icon);
 	this.icon = src;
-	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -1338,9 +1352,11 @@ MenuWindow.Message.prototype.getBackground = function() {
 
 MenuWindow.Message.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -1351,9 +1367,11 @@ MenuWindow.Message.prototype.getIcon = function() {
 MenuWindow.Message.prototype.setIcon = function(src) {
 	let content = this.getContent(),
 		views = this.views;
-	if (!content || !views || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(views.icon);
 	this.icon = src;
-	views.icon.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 

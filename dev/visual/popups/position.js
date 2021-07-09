@@ -60,14 +60,14 @@ CoordsPopup.prototype.getGroup = function(position) {
 					mathes: mathes || [16, 32, 64]
 				});
 			item.views.root = new android.widget.LinearLayout(context);
-			item.views.root.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+			new BitmapDrawable("popup").attachAsBackground(item.views.root);
 			item.views.root.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 			views.containers[position].addView(item.views.root);
 
 			let params = new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.getY(60));
 
 			item.views.minus = new android.widget.ImageView(context);
-			item.views.minus.setImageDrawable(ImageFactory.getDrawable("controlAdapterMinus"));
+			new BitmapDrawable("controlAdapterMinus").attachAsImage(item.views.minus);
 			item.views.minus.setOnClickListener(function(view) {
 				tryout(function() {
 					let current = item.mathes[item.current[1]];
@@ -107,7 +107,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 			elements.updateMather(index);
 
 			item.views.plus = new android.widget.ImageView(context);
-			item.views.plus.setImageDrawable(ImageFactory.getDrawable("controlAdapterPlus"));
+			new BitmapDrawable("controlAdapterPlus").attachAsImage(item.views.plus);
 			item.views.plus.setOnClickListener(function(view) {
 				tryout(function() {
 					let current = item.mathes[item.current[1]];

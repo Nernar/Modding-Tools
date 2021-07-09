@@ -82,6 +82,12 @@ LayerDrawable.parseJson = function(instanceOrJson, json) {
 	}
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
+		if (Array.isArray(json)) {
+			for (let i = 0; i < json.length; i++) {
+				let layer = calloutOrParse(json, json[i], [this, instanceOrJson]);
+				instanceOrJson.addLayer(Drawable.parseJson.call(this, layer));
+			}
+		}
 		return instanceOrJson;
 	}
 	if (json.hasOwnProperty("layers")) {

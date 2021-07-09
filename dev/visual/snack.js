@@ -44,8 +44,16 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 	if (this.canStackedMore()) {
 		let layout = new android.widget.LinearLayout(context);
 		layout.setPadding(Interface.getY(48), Interface.getY(16), Interface.getY(48), Interface.getY(16));
-		layout.setBackgroundDrawable(background !== undefined ? background instanceof java.lang.Object ?
-			background : ImageFactory.getDrawable(background) : ImageFactory.getDrawable("popup"));
+		background = tryout(function() {
+			if (background !== undefined) {
+				if (!(background instanceof Drawable)) {
+					background = Drawable.parseJson.call(this, background);
+				}
+				background.setCorruptedThumbnail("popup");
+			}
+			return new BitmapDrawable("popup");
+		});
+		if (background) background.attachAsBackground(layout);
 		layout.setOrientation(Interface.Orientate.VERTICAL);
 		layout.setGravity(Interface.Gravity.CENTER);
 		let content = this.getContainer(),
@@ -372,7 +380,7 @@ createProcess.update = function(content, hint, progress) {
 				content.setBackgroundDrawable(ImageFactory.clipAndMerge("popup", "popupSelectionSelected", progress));
 			} else {
 				text.setText(String(hint));
-				content.setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
+				new BitmapDrawable("popupSelectionSelected").attachAsBackground(content);
 			}
 		}, function(e) {
 			if (progress >= 10001) {

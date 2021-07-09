@@ -49,7 +49,7 @@ ExplorerWindow.prototype.resetContent = function() {
 	views.layout.addView(views.empty, params);
 	
 	views.icon = new android.widget.ImageView(context);
-	views.icon.setImageDrawable(ImageFactory.getDrawable("explorerFolder"));
+	new BitmapDrawable("explorerFolder").attachAsImage(views.icon);
 	params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 	views.empty.addView(views.icon, params);
 	
@@ -69,9 +69,11 @@ ExplorerWindow.prototype.getBackground = function() {
 
 ExplorerWindow.prototype.setBackground = function(src) {
 	let content = this.getContainer();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -325,9 +327,11 @@ ExplorerWindow.Approve.prototype.getBackground = function() {
 
 ExplorerWindow.Approve.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -337,9 +341,11 @@ ExplorerWindow.Approve.prototype.getIcon = function() {
 
 ExplorerWindow.Approve.prototype.setIcon = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(content);
 	this.icon = src;
-	content.setImageDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -452,9 +458,11 @@ ExplorerWindow.Path.prototype.getBackground = function() {
 
 ExplorerWindow.Path.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -477,7 +485,7 @@ ExplorerWindow.Path.prototype.makePathClick = function(path) {
 
 ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 	let path = new android.widget.ImageView(context);
-	path.setImageDrawable(ImageFactory.getDrawable(src));
+	new BitmapDrawable(src).attachAsImage(path);
 	path.setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
 	path.setScaleType(Interface.Scale.CENTER_CROP);
 	path.setOnClickListener(this.makePathClick(file));
@@ -500,7 +508,7 @@ ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 
 ExplorerWindow.Path.prototype.attachArrowToPath = function() {
 	let path = new android.widget.ImageView(context);
-	path.setImageDrawable(ImageFactory.getDrawable("controlAdapterDivider"));
+	new BitmapDrawable("controlAdapterDivider").attachAsImage(path);
 	path.setPadding(Interface.getY(10), Interface.getY(20), Interface.getY(10), Interface.getY(20));
 	path.setScaleType(Interface.Scale.CENTER_CROP);
 	let params = android.widget.LinearLayout.LayoutParams(Interface.getY(30), Interface.getY(60));
@@ -667,9 +675,11 @@ ExplorerWindow.Rename.prototype.getBackground = function() {
 
 ExplorerWindow.Rename.prototype.setBackground = function(src) {
 	let content = this.getContent();
-	if (!content || !src) return this;
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsBackground(content);
 	this.background = src;
-	content.setBackgroundDrawable(ImageFactory.getDrawable(src));
 	return this;
 };
 
@@ -857,45 +867,49 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		return files;
 	},
 	getView: function(position, convertView, parent) {
-		let holder;
-		if (convertView == null) {
-			convertView = this.makeItemLayout();
-			holder = new Object();
-			holder.name = convertView.findViewWithTag("fileName");
-			holder.bound = convertView.findViewWithTag("fileSize");
-			holder.date = convertView.findViewWithTag("fileDate");
-			holder.property = convertView.findViewWithTag("fileInfo");
-			holder.icon = convertView.findViewWithTag("fileIcon");
-			convertView.setTag(holder);
-		} else holder = convertView.getTag();
+		let holder = tryout.call(this, function() {
+			if (convertView == null) {
+				let tag = new Object();
+				convertView = this.makeItemLayout();
+				tag.name = convertView.findViewWithTag("fileName");
+				tag.bound = convertView.findViewWithTag("fileSize");
+				tag.date = convertView.findViewWithTag("fileDate");
+				tag.property = convertView.findViewWithTag("fileInfo");
+				tag.icon = convertView.findViewWithTag("fileIcon");
+				tag.drawable = new BitmapDrawable();
+				tag.drawable.setCorruptedThumbnail("explorerFileCorrupted");
+				tag.drawable.attachAsImage(tag.icon);
+				convertView.setTag(tag);
+			}
+			return convertView.getTag();
+		});
 		let item = this.getItem(position);
 		tryout.call(this, function() {
-			convertView.setBackgroundDrawable(item.isApproved ?
-				ImageFactory.getDrawable("popupSelectionSelected") : null);
+			(item.isApproved ? new BitmapDrawable("popupSelectionSelected") : new Drawable()).attachAsBackground(convertView);
 			holder.name.setText(item.name);
 			holder.bound.setText((item.extension ? item.extension : new String()) +
 				(item.extension && item.size ? " / " : new String()) + (item.size ? item.size : new String()) +
 				(item.isDirectory && item.filesCount !== undefined ? translateCounter(item.filesCount, "no files",
 				"%s1 file", "%s" + (item.filesCount % 10) + " files", "%s files") : new String()));
+			holder.drawable.setOptions();
 			holder.date.setText(item.date);
 			if (item.type == "image") {
-				let size = ImageFactory.checkSize(item.file);
-				if (size !== null) {
-					if (size[0] + size[1] == -2) {
-						holder.property.setText(item.time);
-						holder.icon.setImageDrawable(ImageFactory.getDrawable("explorerFileCorrupted"));
-						return;
-					}
-					holder.property.setText(size.join("x") + " / " + item.time);
-					if (size[0] <= maximumAllowedBounds && size[1] <= maximumAllowedBounds) {
-						holder.icon.setImageDrawable(ImageFactory.getDrawable
-							(ImageFactory.loadFromFile("cache", item.file) || "explorerFileCorrupted"));
-						return;
-					}
+				let size = Files.prepareBounds(item.file);
+				if (size[0] + size[1] == -2) {
+					holder.property.setText(item.time);
+					holder.drawable.setBitmap("explorerFileCorrupted");
+					return;
+				}
+				holder.property.setText(size.join("x") + " / " + item.time);
+				if (size[0] <= maximumAllowedBounds && size[1] <= maximumAllowedBounds) {
+					let options = Files.getThumbnailOptions(maximumThumbnailBounds, size);
+					holder.drawable.setOptions(options);
+					holder.drawable.setBitmap(item.file);
+					return;
 				}
 			} else holder.property.setText(item.time);
-			holder.icon.setImageDrawable(ImageFactory.getDrawable(item.isDirectory ? "explorerFolder" :
-				item.type != "none" ? "explorerExtension" + item.type.charAt(0).toUpperCase() + item.type.substring(1) : "explorerFile"));
+			holder.drawable.setBitmap(item.isDirectory ? "explorerFolder" : item.type != "none" ?
+				"explorerExtension" + item.type.charAt(0).toUpperCase() + item.type.substring(1) : "explorerFile");
 		});
 		return convertView;
 	},

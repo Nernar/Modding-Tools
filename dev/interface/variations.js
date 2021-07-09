@@ -275,13 +275,13 @@ FocusablePopup.prototype.TYPE = "FocusablePopup";
 FocusablePopup.prototype.reset = function() {
 	let views = this.views = new Object();
 	views.layout = new android.widget.LinearLayout(context);
-	views.layout.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+	new BitmapDrawable("popup").attachAsBackground(views.layout);
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(views.layout);
 
 	views.title = new android.widget.TextView(context);
 	views.title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
-	views.title.setBackgroundDrawable(ImageFactory.getDrawable("popup"));
+	new BitmapDrawable("popup").attachAsBackground(views.title);
 	views.title.setTextSize(Interface.getFontSize(24));
 	views.title.setGravity(Interface.Gravity.CENTER);
 	views.title.setTextColor(Interface.Color.WHITE);

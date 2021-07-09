@@ -35,7 +35,7 @@ AnimationDrawable.prototype.describe = function(where) {
 			drawable = drawable.toDrawable();
 		}
 		let duration = frame.getDuration();
-		if (duration > 0) duration = basic;
+		if (!(duration > 0)) duration = basic;
 		where.addFrame(drawable, duration);
 	}
 	if (this.isStoppingWhenCompleted()) this.stop();
@@ -230,6 +230,14 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 	}
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
+		if (Array.isArray(json)) {
+			for (let i = 0; i < json.length; i++) {
+				let frame = calloutOrParse(json, json[i], [this, instanceOrJson]);
+				instanceOrJson.addFrame(Drawable.parseJson.call(this, frame));
+			}
+		} else if (typeof json == "number") {
+			instanceOrJson.setDefaultDuration(json);
+		}
 		return instanceOrJson;
 	}
 	if (json.hasOwnProperty("frames")) {

@@ -207,8 +207,8 @@ const ModificationSource = {
 		let type = mod.getBuildType().toString(),
 			dir = new java.io.File(mod.dir).getName(),
 			version = mod.getInfoProperty("version") || "1.0",
-			icon = (ImageFactory.isLoaded("support" + mod.getName()) ? "support" + mod.getName() :
-				ImageFactory.loadFromFile("cache", mod.dir + "mod_icon.png")) || "support";
+			key = BitmapDrawableFactory.generateKeyFor("support/" + mod.getName(), false),
+			icon = (BitmapDrawableFactory.isMapped(key) ? key : mod.dir + "mod_icon.png");
 		control.addMessage(icon, translate(mod.getName()) + " " + translate(version) +
 			"\n/" + dir + " / " + translate(type), function() {
 				ModificationSource.rebuild(mod, type);

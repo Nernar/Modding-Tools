@@ -315,7 +315,10 @@ Tool.prototype.reset = function() {
 	};
 	descriptor.logotypeOutside = function(tool, control) {
 		let drawable = calloutOrParse(this, this.logotypeProgress, arguments);
-		return ImageFactory.getTintDrawable(drawable, Interface.Color.LTGRAY);
+		return {
+			bitmap: drawable,
+			tint: Interface.Color.LTGRAY
+		};
 	};
 	descriptor.logotype = function(tool, control) {
 		return requireLogotype();

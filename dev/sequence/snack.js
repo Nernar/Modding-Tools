@@ -93,10 +93,10 @@ SnackSequence.prototype.setHintAndBackground = function(hint, background) {
 	if (content === null) return false;
 	let text = content.getChildAt(0);
 	text.setText(String(hint));
-	if (!(background instanceof android.graphics.drawable.Drawable)) {
-		background = ImageFactory.getDrawable(background);
+	if (!(background instanceof Drawable)) {
+		background = Drawable.parseJson.call(this, background);
 	}
-	content.setBackgroundDrawable(background);
+	background.attachAsBackground(content);
 	return true;
 };
 

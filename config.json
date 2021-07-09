@@ -29,10 +29,10 @@
     "use_box_sizes":false,
     "draw_selection":true,
     "inject_border":false,
-    "transparent_boxes":true
+    "transparent_boxes":false
   },
   "user_login":{
-    "first_launch":true,
+    "first_launch":false,
     "ignore_deprecation":false,
     "imported_script":false,
     "send_analytics":true

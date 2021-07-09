@@ -146,7 +146,7 @@ Drawable.parseJson = function(instanceOrJson, json) {
 		return instanceOrJson;
 	}
 	if (Array.isArray(json)) {
-		return new LayerDrawable(json);
+		return LayerDrawable.parseJson.call(this, json);
 	}
 	if (instanceOrJson instanceof BitmapDrawable) {
 		instanceOrJson = BitmapDrawable.parseJson.call(this, instanceOrJson, json);

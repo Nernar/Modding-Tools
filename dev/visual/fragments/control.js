@@ -22,10 +22,10 @@ ControlFragment.prototype.getIcon = function() {
 ControlFragment.prototype.setIcon = function(drawable) {
 	let logotype = this.getLogotypeView();
 	if (logotype == null) return this;
-	if (!(drawable instanceof android.graphics.drawable.Drawable)) {
-		drawable = ImageFactory.getDrawable(drawable);
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
 	}
-	logotype.setImageDrawable(drawable);
+	drawable.attachAsImage(logotype);
 	this.drawable = drawable;
 	return this;
 };
@@ -37,10 +37,10 @@ ControlFragment.prototype.getBackground = function() {
 ControlFragment.prototype.setBackground = function(drawable) {
 	let background = this.getBackgroundView();
 	if (background === null) return this;
-	if (!(drawable instanceof android.graphics.drawable.Drawable)) {
-		drawable = ImageFactory.getDrawable(drawable);
+	if (!(drawable instanceof Drawable)) {
+		drawable = Drawable.parseJson.call(this, drawable);
 	}
-	background.setBackgroundDrawable(drawable);
+	drawable.attachAsBackground(background);
 	this.background = drawable;
 	return this;
 };

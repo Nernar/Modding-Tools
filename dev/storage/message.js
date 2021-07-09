@@ -1,5 +1,5 @@
 const AdditionalMessage = function(src, message, chance, condition) {
-	if (src !== undefined) this.setIcon(src, true);
+	if (src !== undefined) this.setIcon(src);
 	if (message !== undefined) this.setMessage(message);
 	if (chance !== undefined) this.setChance(chance);
 	if (condition !== undefined) this.setCondition(condition);
@@ -32,18 +32,8 @@ AdditionalMessage.prototype.getIcon = function() {
 	return this.src || null;
 };
 
-AdditionalMessage.prototype.getBitmap = function() {
-	return ImageFactory.getBitmap(this.getIcon());
-};
-
-AdditionalMessage.prototype.getDrawable = function() {
-	return ImageFactory.getDrawable(this.getIcon());
-};
-
-AdditionalMessage.prototype.setIcon = function(src, force) {
-	if (force || ImageFactory.isLoaded(src)) {
-		this.src = src;
-	}
+AdditionalMessage.prototype.setIcon = function(src) {
+	this.src = src;
 };
 
 AdditionalMessage.prototype.getChance = function() {

@@ -12,7 +12,14 @@ HashedDrawableMap.isBackgroundAttachedToView = function(view) {
 };
 
 HashedDrawableMap.isAttachedToView = function(view) {
-	return this.attachedViews.hasOwnProperty(view);
+	if (this.attachedViews.hasOwnProperty(view)) {
+		if (view && view.isAttachedToWindow) {
+			return view.isAttachedToWindow();
+		}
+		// That's not view, right?
+		return true;
+	}
+	return false;
 };
 
 HashedDrawableMap.getDrawableAttachedToViewAsImage = function(view) {
@@ -21,6 +28,13 @@ HashedDrawableMap.getDrawableAttachedToViewAsImage = function(view) {
 
 HashedDrawableMap.getDrawableAttachedToViewAsBackground = function(view) {
 	return this.attachedAsBackground[view] || null;
+};
+
+HashedDrawableMap.getDrawablesAttachedToView = function(view) {
+	let image = this.getDrawableAttachedToViewAsImage(view),
+		background = this.getDrawableAttachedToViewAsBackground(view);
+	if (image != background) return [image, background];
+	return [image];
 };
 
 HashedDrawableMap.getAttachedViewsInMap = function(map, drawable) {
@@ -43,6 +57,11 @@ HashedDrawableMap.getAsImageAttachedViews = function(drawable) {
 
 HashedDrawableMap.getAsBackgroundAttachedViews = function(drawable) {
 	return this.getAttachedViewsInMap(this.attachedAsBackground, drawable);
+};
+
+HashedDrawableMap.getAttachedViews = function(drawable) {
+	return this.getAsImageAttachedViews(drawable).concat
+		(this.getAsBackgroundAttachedViews(drawable));
 };
 
 HashedDrawableMap.attachInMap = function(map, view, drawable) {
@@ -90,11 +109,18 @@ HashedDrawableMap.deattachAsBackground = function(view) {
 const Drawable = new Function();
 
 Drawable.prototype.isAttachedAsImage = function(view) {
+	if (!view) return HashedDrawableMap.getAsImageAttachedViews(this).length > 0;
 	return HashedDrawableMap.getDrawableAttachedToViewAsImage(view) == this;
 };
 
 Drawable.prototype.isAttachedAsBackground = function(view) {
+	if (!view) return HashedDrawableMap.getAsBackgroundAttachedViews(this).length > 0;
 	return HashedDrawableMap.getDrawableAttachedToViewAsBackground(view) == this;
+};
+
+Drawable.prototype.isAttached = function(view) {
+	if (!view) return HashedDrawableMap.getAttachedViews(this).length > 0;
+	return HashedDrawableMap.getDrawablesAttachedToView(view).indexOf(this) != -1;
 };
 
 Drawable.prototype.toDrawable = function() {
@@ -164,18 +190,18 @@ Drawable.prototype.reattachAsImage = function(view) {
 	if (view && view.setImageDrawable !== undefined) {
 		return this.attachAsImage(view, true);
 	}
-	let attached = HashedDrawableMap.getAsImageAttachedViews();
+	let attached = HashedDrawableMap.getAsImageAttachedViews(this);
 	for (let i = 0; i < attached.length; i++) {
 		this.attachAsImage(attached[i], true);
 	}
 	return attached.length > 0;
 };
 
-Drawable.prototype.reattachAsBackground = function() {
+Drawable.prototype.reattachAsBackground = function(view) {
 	if (view && view.setBackgroundDrawable !== undefined) {
 		return this.attachAsBackground(view, true);
 	}
-	let attached = HashedDrawableMap.getAsBackgroundAttachedViews();
+	let attached = HashedDrawableMap.getAsBackgroundAttachedViews(this);
 	for (let i = 0; i < attached.length; i++) {
 		this.attachAsBackground(attached[i], true);
 	}
@@ -205,8 +231,11 @@ CachedDrawable.prototype.cacheWhenCreate = false;
 CachedDrawable.prototype.toDrawable = function() {
 	if (!this.isProcessed()) {
 		tryout.call(this, function() {
-			this.source = this.process();
-			this.describe(this.source);
+			let drawable = this.process();
+			if (!this.isProcessed()) {
+				this.describe(drawable);
+				this.source = drawable;
+			}
 		}, function(e) {
 			Logger.Log("Failed to process drawable: " + e, "DEV-CORE");
 		});
@@ -265,10 +294,18 @@ ScheduledDrawable.prototype = new CachedDrawable;
 ScheduledDrawable.prototype.toDrawable = function() {
 	let self = this;
 	if (!this.isProcessed() && !this.isProcessing()) {
-		this.thread = handleThread(function() {
-			CachedDrawable.prototype.toDrawable.call(self);
-			self.requestReattach();
-			delete self.thread;
+		let thread = this.thread = handleThread(function() {
+			if (self.getThread() == thread) {
+				CachedDrawable.prototype.toDrawable.call(self);
+			}
+			if (self.getThread() == thread) {
+				handle(function() {
+					if (self.isProcessed()) {
+						self.requestReattach();
+					}
+				});
+				delete self.thread;
+			}
 		});
 	}
 	return this.source || null;
@@ -280,6 +317,14 @@ ScheduledDrawable.prototype.getThread = function() {
 
 ScheduledDrawable.prototype.isProcessing = function() {
 	return this.thread !== undefined;
+};
+
+ScheduledDrawable.prototype.invalidate = function() {
+	if (this.isProcessing()) {
+		this.getThread().interrupt();
+		delete this.thread;
+	}
+	CachedDrawable.prototype.invalidate.apply(this, arguments);
 };
 
 ScheduledDrawable.prototype.toString = function() {

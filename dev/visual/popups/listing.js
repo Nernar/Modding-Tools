@@ -70,8 +70,15 @@ ListingPopup.prototype.getButton = function(index) {
 	return {
 		view: button,
 		setBackground: function(texture) {
-			this.view.setBackgroundDrawable(ImageFactory.getDrawable(texture));
+			if (!(texture instanceof Drawable)) {
+				texture = Drawable.parseJson.call(this, texture);
+			}
+			texture.attachAsBackground(this.view);
+			this.background = texture;
 			return this;
+		},
+		getBackground: function() {
+			return this.background || null;
 		},
 		switchVisibility: function() {
 			if (visible) this.view.setVisibility(Interface.Visibility.GONE);
@@ -95,8 +102,15 @@ ListingPopup.prototype.getEdit = function(index) {
 			return this;
 		},
 		setBackground: function(texture) {
-			edit.setBackgroundDrawable(ImageFactory.getDrawable(texture));
+			if (!(texture instanceof Drawable)) {
+				texture = Drawable.parseJson.call(this, texture);
+			}
+			texture.attachAsBackground(edit);
+			this.background = texture;
 			return this;
+		},
+		getBackground: function() {
+			return this.background || null;
 		},
 		switchVisibility: function() {
 			if (visible) edit.setVisibility(Interface.Visibility.GONE);
@@ -120,7 +134,7 @@ ListingPopup.prototype.selectButton = function(index) {
 	let buttons = this.views.buttons;
 	this.unselect();
 	if (index !== undefined) {
-		buttons[index] && buttons[index].setBackgroundDrawable(ImageFactory.getDrawable("popupSelectionSelected"));
+		buttons[index] && new BitmapDrawable("popupSelectionSelected").attachAsBackground(buttons[index]);
 		this.__select && this.__select(index);
 		this.selected = index;
 	} else delete this.selected;

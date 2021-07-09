@@ -99,24 +99,24 @@ const ExecuteableSupport = {
 	},
 	getAndLoadIcon: function(name) {
 		return tryoutSafety(function() {
-			let upper = name.substring(0, 1).toUpperCase() + name.substring(1);
-			if (ImageFactory.isLoaded("support" + upper)) {
-				return "support" + upper;
+			let key = BitmapDrawableFactory.generateKeyFor("support/" + name, false);
+			if (BitmapDrawableFactory.isMapped(key)) {
+				return key;
 			}
 			let file = new java.io.File(Dirs.SUPPORT, name);
 			if (file != null && file.exists()) {
 				let icon = new java.io.File(file.getPath(), "mod_icon.png");
 				if (icon != null && icon.exists()) {
-					return ImageFactory.loadFromFile("support" + name, icon);
+					return BitmapDrawableFactory.mapAs(key, icon);
 				}
 			}
 		}, function(e) {
 			Logger.Log("Failed to attempt icon load for " + name, "DEV-CORE");
-		}, "support");
+		}) || "support";
 	},
 	refreshIcon: function(supportable) {
 		if (supportable) {
-			supportable.icon = this.getAndLoadIcon(supportable.modName);
+			supportable.icon = this.getAndLoadIcon(supportable.directory);
 		}
 	},
 	isEnabled: function(name) {
@@ -143,6 +143,7 @@ const importMod = function(dir, action) {
 			supportable.version = ExecuteableSupport.getProperty(name, "version");
 			supportable.author = ExecuteableSupport.getProperty(name, "author");
 			supportable.result = Boolean(!action || ExecuteableSupport.injectCustomEval(name, action)[0]);
+			supportable.directory = dir;
 			supportable.modName = name;
 			return supportable;
 		}

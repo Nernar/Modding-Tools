@@ -133,6 +133,21 @@ Files.getExtensionType = function(file) {
 		name == "icon" ? "image" : "unknown" : "none";
 };
 
+Files.ExtensionType = new Object();
+Files.ExtensionType.FOLDER = "folder";
+Files.ExtensionType.ARCHIVE = "archive";
+Files.ExtensionType.JSON = "json";
+Files.ExtensionType.TEXT = "text";
+Files.ExtensionType.ORDER = "order";
+Files.ExtensionType.SCRIPT = "script";
+Files.ExtensionType.PROJECT = "project";
+Files.ExtensionType.FONT = "font";
+Files.ExtensionType.IMAGE = "image";
+Files.ExtensionType.VIDEO = "video";
+Files.ExtensionType.AUDIO = "audio";
+Files.ExtensionType.UNKNOWN = "unknown";
+Files.ExtensionType.NONE = "none";
+
 /**
  * Used to display dimensions in explorer.
  */
@@ -147,6 +162,27 @@ Files.prepareFormattedSize = function(size) {
 		size < 1024 * 1024 * 1024 ? translate("%s MB", formatSize(size / (1024 * 1024))) :
 		size < 1024 * 1024 * 1024 * 1024 ? translate("%s GB", formatSize(size / (1024 * 1024 * 1024))) :
 		translate("%s TB", formatSize(size / (1024 * 1024 * 1024 * 1024)));
+};
+
+Files.prepareBounds = function(file) {
+	let options = BitmapFactory.getBoundsDecodeOptions();
+	BitmapFactory.decodeFile(file, options);
+	return [options.outWidth, options.outHeight];
+};
+
+Files.getThumbnailOptions = function(required, real, file) {
+	let options = BitmapFactory.getPotatoOptions();
+	if ((real instanceof java.io.File) || typeof real == "string") {
+		file = real;
+		delete real;
+	}
+	if (typeof real != "number") {
+		if (!Array.isArray(real)) real = this.prepareBounds(file);
+		real = Math.max(real[0], real[1]);
+	}
+	if (required === undefined) required = maximumThumbnailBounds;
+	options.inSampleSize = Math.floor(real / required) + Number(real % required > 0);
+	return options;
 };
 
 Files.listFiles = function(path, explore) {
