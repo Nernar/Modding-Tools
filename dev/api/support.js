@@ -39,7 +39,7 @@ const ExecuteableSupport = {
 		return null;
 	},
 	isModuleMissed: function() {
-		return !isInstant && this.getModBuilder();
+		return this.getModBuilder();
 	},
 	buildDirectory: function(dir, isNative) {
 		if (!(dir = this.checkDirectory(dir, isNative))) {

@@ -1,4 +1,4 @@
-MCSystem.setLoadingTip("Injecting Callbacks");
+MCSystem.setLoadingTip(NAME + ": Injecting Callbacks");
 
 const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
 	if (minOrIteratorOrValue === undefined) {

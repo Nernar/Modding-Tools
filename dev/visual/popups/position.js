@@ -27,7 +27,7 @@ CoordsPopup.prototype.addGroup = function(name) {
 	views.groups[index].setPadding(Interface.getY(10), index == 0 ? Interface.getY(10) : 0, Interface.getY(10), Interface.getY(10));
 	views.content.addView(views.groups[index]);
 
-	views.titles[index] = new android.widget.TextView(context);
+	views.titles[index] = new findEditorPackage().widget.ToneTypingTextView(context);
 	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.Display.MATCH));
 	views.titles[index].setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
 	views.titles[index].setTextSize(Interface.getFontSize(32));
@@ -78,7 +78,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 			});
 			item.views.root.addView(item.views.minus, params);
 
-			item.views.mather = new android.widget.TextView(context);
+			item.views.mather = new findEditorPackage().widget.ToneTypingTextView(context);
 			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(160), -1));
 			item.views.mather.setPadding(Interface.getY(12), 0, Interface.getY(12), 0);
 			item.views.mather.setOnClickListener(function(view) {

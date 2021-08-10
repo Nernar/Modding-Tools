@@ -1,4 +1,4 @@
-MCSystem.setLoadingTip("Preparing APIs");
+MCSystem.setLoadingTip(NAME + ": Preparing APIs");
 
 const Dirs = {
 	EXTERNAL: android.os.Environment.getExternalStorageDirectory(),

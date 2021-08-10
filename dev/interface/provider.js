@@ -3,11 +3,20 @@ const WindowProvider = new Object();
 WindowProvider.BASE_WINDOW_FLAGS = isHorizon ? 256 : 0;
 
 WindowProvider.attached = new Object();
-WindowProvider.manager = context.getSystemService("window");
+
+Object.defineProperty(WindowProvider, "manager", {
+	get: function() {
+		return context.getSystemService("window");
+	},
+	enumerable: true,
+	configurable: false
+});
 
 WindowProvider.getFlagsForWindow = function(window) {
 	let flags = isInstant ? 0 : this.BASE_WINDOW_FLAGS;
-	if (!window) return flags;
+	if (!window) {
+		return flags;
+	}
 	if (!window.isTouchable()) {
 		flags |= 16;
 	} else if (!window.isFullscreen()) {
@@ -38,14 +47,17 @@ WindowProvider.getByPopupId = function(popupId) {
 };
 
 WindowProvider.openWindow = function(window) {
-	if (!window) return;
 	if (this.hasOpenedPopup(window)) {
 		return;
 	}
 	let content = window.getContent();
 	if (!window.isFocusable()) {
-		if (isHorizon && !isInstant) {
-			content.setSystemUiVisibility(5894);
+		if (content) {
+			if (isInstant) {
+				content.setFitsSystemWindows(true);
+			} else if (isHorizon) {
+				content.setSystemUiVisibility(5894);
+			}
 		}
 		let popup = content ? new android.widget.PopupWindow(content,
 				window.getWidth(), window.getHeight()) :
@@ -70,7 +82,6 @@ WindowProvider.openWindow = function(window) {
 };
 
 WindowProvider.closeWindow = function(window) {
-	if (!window) return;
 	if (!window.isFocusable()) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);
@@ -104,7 +115,6 @@ WindowProvider.setExitActor = function(popupId, actor, content) {
 };
 
 WindowProvider.updateWindow = function(window) {
-	if (!window) return;
 	if (!window.isFocusable()) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);

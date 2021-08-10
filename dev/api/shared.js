@@ -24,7 +24,7 @@ const runAtScope = function(code, scope, name) {
 
 const REQUIRE = function(path) {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
-		MCSystem.setLoadingTip("Requiring " + path);
+		MCSystem.setLoadingTip(NAME + ": Requiring " + path);
 		if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 			let file = new java.io.File(Dirs.EVALUATE, path);
 			if (!file.exists()) throw null;
@@ -44,7 +44,7 @@ const REQUIRE = function(path) {
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
 		}
-		MCSystem.setLoadingTip(new String());
+		MCSystem.setLoadingTip(NAME);
 	}
 	return REQUIRE.results[path];
 };

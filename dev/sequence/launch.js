@@ -147,13 +147,13 @@ const FetchAdditionalSequence = new SnackSequence({
 						let resource = resources[i];
 						if (resource && resource.resourceType == "resource") {
 							let res = directory + resource.path + "terrain-atlas";
-							if (!FileTools.exists(res)) return;
+							if (!FileTools.exists(res)) continue;
 							let files = Files.listFileNames(res, true);
 							files = Files.checkFormats(files, [".png", ".tga"]);
 							for (let t = 0; t < files.length; t++) {
 								let name = files[t];
 								if (!name || name.length == 0) {
-									return;
+									continue;
 								}
 								name = Files.getNameWithoutExtension(name);
 								let begin = name.indexOf(resource.path);

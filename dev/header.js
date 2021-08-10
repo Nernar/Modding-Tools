@@ -16,15 +16,13 @@
 
 */
 
-MCSystem.setLoadingTip("Initialization Script");
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-09.07.2021-0";
+const REVISION = "develop-alpha-0.4-10.08.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
-const isInstant = Boolean(this.isInstant);
 
 // Configurable: autosave
 let autosave = true;
@@ -73,7 +71,19 @@ let Setting, UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner, Model
 let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 
-MCSystem.setLoadingTip("Import Libraries");
+if (this.isInstant === undefined) {
+	this.isInstant = false;
+}
+
+Object.defineProperty(this, "context", {
+	get: function() {
+		return Interface.getContext();
+	},
+	enumerable: true,
+	configurable: false
+});
+
+MCSystem.setLoadingTip(NAME + ": Resolving");
 
 IMPORT("Retention:4");
 
@@ -128,7 +138,9 @@ reportTrace.setupPrint(function(message) {
 const retraceOrReport = function(error) {
 	if (REVISION.startsWith("develop")) {
 		reportTrace(error);
-	} else reportError(error);
+	} else {
+		reportError(error);
+	}
 };
 
 IMPORT("Sequence:1");

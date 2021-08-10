@@ -26,7 +26,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			}
 		});
 		if (ExecuteableSupport.isModuleMissed()) {
-			MCSystem.setLoadingTip("Loading Supportables");
+			MCSystem.setLoadingTip(NAME + ": Loading Supportables");
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
 				if (!this.hasOwnProperty("Windows")) {
@@ -110,7 +110,7 @@ Callback.addCallback("CoreConfigured", function(config) {
 		} else loadSupportables = loadSetting("supportable.enabled", "boolean");
 		if (loadSupportables) {
 			if (supportSupportables) {
-				MCSystem.setLoadingTip("Checking Supportables");
+				MCSystem.setLoadingTip(NAME + ": Checking Supportables");
 				if (UIEditor && isNotSupported(UIEditor)) {
 					UIEditor = null;
 				}
@@ -146,6 +146,6 @@ const refreshSupportablesIcons = function() {
 
 const isAnyCustomSupportableLoaded = function() {
 	return tryoutSafety(function() {
-		return loadSupportables && supportSupportables && (UIEditor || WorldEdit || DumpCreator || RunJSingame || InstantRunner) !== null;
+		return loadSupportables && supportSupportables && Boolean(UIEditor || WorldEdit || DumpCreator || RunJSingame || InstantRunner);
 	}, false);
 };

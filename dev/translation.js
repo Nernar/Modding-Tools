@@ -1,4 +1,4 @@
-MCSystem.setLoadingTip("Localizing Content");
+MCSystem.setLoadingTip(NAME + ": Localizing");
 
 // Modifications information
 Translation.addTranslation("Dev Editor", {});

@@ -5,7 +5,7 @@ const LogViewer = {
 		popup.setTitle(translate("Currently log"));
 		let horizontal = new android.widget.HorizontalScrollView(context);
 		popup.views.content.addView(horizontal);
-		let text = new android.widget.TextView(context);
+		let text = new findEditorPackage().widget.ToneTypingTextView(context);
 		text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 		text.setTextSize(Interface.getFontSize(12));
 		text.setTextColor(Interface.Color.WHITE);
@@ -181,11 +181,31 @@ const ModificationSource = {
 		}
 		control.show();
 	},
+	findModList: function() {
+		return tryout(function() {
+			let loader = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
+			if (loader == null) MCSystem.throwException(null);
+			let mods = loader.getSingleton().getAllMods();
+			if (mods == null) MCSystem.throwException(null);
+			let sorted = new java.util.ArrayList();
+			for (let i = 0; i < mods.size(); i++) {
+				let mod = mods.get(i);
+				if (mod instanceof com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
+					sorted.add(mod.getLegacyModInstance());
+				}
+			}
+			return sorted;
+		}, function(e) {
+			let loader = findCorePackage().mod.build.ModLoader;
+			if (loader == null) return null;
+			return loader.instance.modsList;
+		});
+	},
 	attachSources: function(control) {
-		let loader = findCorePackage().mod.build.ModLoader;
-		if (loader == null) return false;
-		let modsList = loader.instance.modsList;
-		if (modsList.size() == 0) return false;
+		let modsList = this.findModList();
+		if (modsList == null || modsList.size() == 0) {
+			return false;
+		}
 		control.addCategory(translate("Which modification will be changed?"));
 		for (let i = 0; i < modsList.size(); i++) {
 			let mod = modsList.get(i);

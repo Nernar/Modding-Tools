@@ -19,6 +19,7 @@ const addTexture = function(index, name, data) {
 };
 
 const isBlockTextureLoaded = function(name, data) {
+	if (isInstant) return name !== null && data >= 0;
 	let valid = isBlockTextureLoaded.isValid(name, data);
 	return valid !== null ? Boolean(valid) : true;
 };
@@ -40,12 +41,12 @@ const selectTexture = function(index, onSelect) {
 		wrong.setGravity(Interface.Gravity.CENTER);
 		wrong.setPadding(0, Interface.getY(64), 0, Interface.getY(64));
 		let icon = new android.widget.ImageView(context),
-			drawable = new AnimationDrawable(["blockDefineTexture", "blockDefineWrong"]);
+			drawable = AnimationDrawable.parseJson(["blockDefineTexture", "blockDefineWrong"]);
 		drawable.setDefaultDuration(1500);
 		drawable.attachAsImage(icon);
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 		wrong.addView(icon, params);
-		let info = new android.widget.TextView(context);
+		let info = new findEditorPackage().widget.ToneTypingTextView(context);
 		typeface && info.setTypeface(typeface);
 		info.setText(translate("Void itself."));
 		info.setGravity(Interface.Gravity.CENTER);
@@ -670,54 +671,67 @@ const attachBlockTool = function(source, post) {
 			}]
 		},
 		onSelectItem: function(sidebar, group, item, groupIndex, itemIndex) {
-			let icon = item.getIcon();
 			if (groupIndex == 0) {
-				if (icon == "blockDefineIdentifier") {
+				if (itemIndex == 0) {
 					return BlockEditor.rename(this);
-				} else if (icon == "blockDefineVariation") {
+				} else if (itemIndex == 1) {
 					return BlockEditor.variation(this);
-				} else if (icon == "blockDefineTexture") {
-					// TODO
-				} else if (icon == "blockDefineType") {
+				} else if (itemIndex == 2) {
+					// TODO: Interact with block textures
+				} else if (itemIndex == 3) {
 					return BlockEditor.type(this);
-				} else if (icon == "blockDefineShape") {
+				} else if (itemIndex == 4) {
 					return BlockEditor.shape(this);
-				} else if (icon == "blockUpdate") {
+				} else if (itemIndex == 5) {
 					return BlockEditor.reload(this);
 				}
 			} else if (groupIndex == 1) {
-				if (icon == "blockBoxSelect") {
-					return BlockEditor.Renderer.select(this);
-				} else if (icon == "blockBoxAdd") {
+				if (BlockEditor.data.hasRender) {
+					if (!REVISION.startsWith("develop")) {
+						if (itemIndex > 4) itemIndex++;
+					}
+					if (itemIndex == 0) {
+						return BlockEditor.Renderer.select(this);
+					} else if (itemIndex == 1) {
+						return BlockEditor.Renderer.add(this);
+					} else if (itemIndex == 2) {
+						return BlockEditor.Renderer.resize(this);
+					} else if (itemIndex == 3) {
+						return BlockEditor.Renderer.move(this);
+					} else if (itemIndex == 4) {
+						return BlockEditor.Renderer.mirror(this);
+					} else if (itemIndex == 5) {
+						return BlockEditor.Renderer.rotate(this);
+					} else if (itemIndex == 6) {
+						return BlockEditor.Renderer.texture(this);
+					} else if (itemIndex == 7) {
+						return BlockEditor.Renderer.remove(this);
+					}
+				} else if (itemIndex == 0) {
 					return BlockEditor.Renderer.add(this);
-				} else if (icon == "blockBoxScretch") {
-					return BlockEditor.Renderer.resize(this);
-				} else if (icon == "blockBoxMove") {
-					return BlockEditor.Renderer.move(this);
-				} else if (icon == "blockBoxMirror") {
-					return BlockEditor.Renderer.mirror(this);
-				} else if (icon == "blockBoxRotate") {
-					return BlockEditor.Renderer.rotate(this);
-				} else if (icon == "blockBoxTexture") {
-					return BlockEditor.Renderer.texture(this);
-				} else if (icon == "blockBoxRemove") {
-					return BlockEditor.Renderer.remove(this);
 				}
 			} else if (groupIndex == 2) {
-				if (icon == "blockBoxSelect") {
-					return BlockEditor.Collision.select(this);
-				} else if (icon == "blockBoxAdd") {
+				if (BlockEditor.data.hasCollision) {
+					if (!REVISION.startsWith("develop")) {
+						if (itemIndex > 4) itemIndex++;
+					}
+					if (itemIndex == 0) {
+						return BlockEditor.Collision.select(this);
+					} else if (itemIndex == 1) {
+						return BlockEditor.Collision.add(this);
+					} else if (itemIndex == 2) {
+						return BlockEditor.Collision.resize(this);
+					} else if (itemIndex == 3) {
+						return BlockEditor.Collision.move(this);
+					} else if (itemIndex == 4) {
+						return BlockEditor.Collision.mirror(this);
+					} else if (itemIndex == 5) {
+						return BlockEditor.Collision.rotate(this);
+					} else if (itemIndex == 6) {
+						return BlockEditor.Collision.remove(this);
+					}
+				} else if (itemIndex == 0) {
 					return BlockEditor.Collision.add(this);
-				} else if (icon == "blockBoxScretch") {
-					return BlockEditor.Collision.resize(this);
-				} else if (icon == "blockBoxMove") {
-					return BlockEditor.Collision.move(this);
-				} else if (icon == "blockBoxMirror") {
-					return BlockEditor.Collision.mirror(this);
-				} else if (icon == "blockBoxRotate") {
-					return BlockEditor.Collision.rotate(this);
-				} else if (icon == "blockBoxRemove") {
-					return BlockEditor.Collision.remove(this);
 				}
 			}
 			showHint(translate("Not developed yet"));

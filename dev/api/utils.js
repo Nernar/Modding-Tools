@@ -1,7 +1,3 @@
-const findCorePackage = function() {
-	return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
-};
-
 const convertNdb = function(obj) {
 	if (!obj) return null;
 	let worker = new BlockWorker();

@@ -9,8 +9,6 @@ const launchModification = function(additionalScope) {
 (function() {
 	try {
 		ConfigureMultiplayer({
-			name: "auto",
-			version: "auto",
 			isClientOnly: true
 		});
 	} catch (e) {

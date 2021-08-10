@@ -4,7 +4,7 @@
 const initialize = function() {
 	tryout(function() {
 		tryout(function() {
-			MCSystem.setLoadingTip("Launch Dev Editor");
+			MCSystem.setLoadingTip(NAME + ": Starting");
 			checkOnlineable(function() {
 				checkUpdateable();
 				checkExecuteable();
