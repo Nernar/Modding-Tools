@@ -109,7 +109,7 @@ _gsdata_/
 
 # Build files
 /main.js
-/java/build/
+/java/bin/
 /java/.build/classes/
 
 # Dev Editor sources
@@ -133,6 +133,5 @@ _gsdata_/
 /assets/studio.mcworld
 
 # Enstablized sources
-/java/
 /dev/api/protect.js
 /dev/callback/debug.js

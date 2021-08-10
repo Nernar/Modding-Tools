@@ -38,7 +38,6 @@ interface/content.js
 interface/window.js
 interface/variations.js
 interface/provider.js
-interface/widgets/typing.js
 
 project/shared.js
 project/block.js

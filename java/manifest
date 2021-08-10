@@ -1,0 +1,12 @@
+{
+	"source-dirs": [
+		"src"
+	],
+	"library-dirs": [
+		"lib"
+	],
+	"options": [
+		"-cp",
+		"/mnt/sdcard/games/horizon/2.1.0b71-android.jar"
+	]
+}
