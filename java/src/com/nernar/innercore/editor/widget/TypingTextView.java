@@ -59,7 +59,7 @@ public class TypingTextView extends AppCompatTextView {
 		return handler;
 	}
 	
-	public void setOnTypingListener(OnTypingListener callback) {
+	public void setOnTypingListener(@Nullable OnTypingListener callback) {
 		listener = callback;
 	}
 	
@@ -116,7 +116,7 @@ public class TypingTextView extends AppCompatTextView {
 			return;
 		}
 		handler.removeMessages(0x767);
-		if (mTypingText == null) {
+		if (mTypingText == null || mTypingText.length() == 0) {
 			return;
 		}
 		Message invalidate = Message.obtain();

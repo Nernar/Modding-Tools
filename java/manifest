@@ -1,6 +1,7 @@
 {
 	"source-dirs": [
-		"src"
+		"src",
+		"gen"
 	],
 	"library-dirs": [
 		"lib"
