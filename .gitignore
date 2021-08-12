@@ -108,13 +108,14 @@ dist
 _gsdata_/
 
 # Build files
-/main.js
 /java/bin/
 /java/.build/classes/
+/script/main.js
+/script/runtime.js
 
 # Dev Editor sources
-/res/.source/
-/dev/.source/
+/resource/.source/
+/script/.source/
 
 # Resources abilities
 /.placeholder.ico
@@ -122,16 +123,16 @@ _gsdata_/
 /gui/
 
 # Local saves
+/projects/
 /.logging/
-/saves/
 /.todo/
 /.eval/
 
 # Unrealized content
-/dev/network/
+/script/main/network/
 /assets/sounds-16.txt
 /assets/studio.mcworld
 
-# Enstablized sources
-/dev/api/protect.js
-/dev/callback/debug.js
+# Enstablized source
+/script/main/api/protect.js
+/script/main/callback/debug.js

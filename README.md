@@ -56,7 +56,7 @@ render.addEntry(model);
 
 Control menu opens in front of itself main available items. *You can directly import part of code, and modification itself recognizes supported parts of project.* At same time, script will be converted into one project — this will allow storing information more conveniently.
 
-Default export folder located in `Dev Editor/saves` folder. All projects are saved here and from here they're loaded, this folder changes in file explorer of game.
+Default export folder located in `Dev Editor/projects` folder. All projects are saved here and from here they're loaded, this folder changes in file explorer of game.
 
 Interface divided into types — there're coordinate windows, selection of elements, project trees and others. Modeling access availabled only *in-world*, as many of capabilities are only available from within.
 

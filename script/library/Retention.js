@@ -134,7 +134,7 @@ EXPORT("handleThread", handleThread);
 let random = function(min, max) {
 	max == undefined && (max = min - 1, min = 0);
 	return Math.floor(Math.random() * (max - min + 1) + min);
-}
+};
 
 EXPORT("random", random);
 
@@ -144,7 +144,7 @@ EXPORT("random", random);
  */
 let getTime = function() {
 	return Date.now() - launchTime;
-}
+};
 
 EXPORT("getTime", getTime);
 
