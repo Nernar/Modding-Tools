@@ -66,8 +66,8 @@ const loadSetting = function(key, type) {
  */
 const updateSettings = function() {
 	tryout(function() {
-		uiScaler = loadSetting("interface.interface_scale", "number", 0.75, 1.5);
-		fontScale = loadSetting("interface.font_scale", "number", 0.75, 1.5);
+		uiScaler = loadSetting("interface.interface_scale", "number", .75, 1.5);
+		fontScale = loadSetting("interface.font_scale", "number", .75, 1.5);
 		maxWindows = loadSetting("interface.max_windows", "number", 1, 15);
 		menuDividers = loadSetting("interface.show_dividers", "boolean");
 		projectHeaderBackground = loadSetting("interface.header_background", "boolean");

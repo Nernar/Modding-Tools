@@ -5,7 +5,7 @@ const LogViewer = {
 		popup.setTitle(translate("Currently log"));
 		let horizontal = new android.widget.HorizontalScrollView(context);
 		popup.views.content.addView(horizontal);
-		let text = new findEditorPackage().widget.ToneTypingTextView(context);
+		let text = new findAssertionPackage().android.widget.ToneTypingTextView(context);
 		text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 		text.setTextSize(Interface.getFontSize(12));
 		text.setTextColor(Interface.Color.WHITE);
@@ -23,7 +23,7 @@ const LogViewer = {
 		});
 		let params = new android.widget.LinearLayout.
 			LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-		params.weight = 0.1;
+		params.weight = .1;
 		popup.getContainer().addView(seek, params);
 		handleThread(function() {
 			let log = java.lang.Class.forName("zhekasmirnov.launcher.api.log.ICLog", true, context.getClass().getClassLoader()),
@@ -320,8 +320,8 @@ LevelProvider.isAttached = function() {
 
 LevelProvider.getFormattedTps = function() {
 	let tps = preround(TPSMeter.getTps(), 1);
-	if (tps < 0.1) return "<0.1";
-	if (tps >= 1000) return "999.9";
+	if (tps < .1) return "<.1";
+	if (tps >= 1000) return "0.0";
 	return new java.lang.Float(tps);
 };
 

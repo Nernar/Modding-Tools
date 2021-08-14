@@ -1,18 +1,18 @@
 @echo off
 set ADBDir="D:\Projects\Dev-Editor\adb\adb.exe"
 set ModPathPC="D:\Projects\Dev-Editor"
-set PushJSPath="D:\Projects\Dev-Editor\dev"
-set PushAssetsPath="D:\Projects\Dev-Editor\res"
+set PushJSPath="D:\Projects\Dev-Editor\script"
+set PushAssetsPath="D:\Projects\Dev-Editor\resource"
 set ModPathDevice="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor"
-set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/dev"
-set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/res"
-set DeviceMainJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/main.js"
+set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/script"
+set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/resource"
+set DeviceMainJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/script/main.js"
 set DeviceAutoLaunchFile="/mnt/sdcard/games/horizon/.flag_auto_launch"
 cls & title ADB Mod Pusher/Puller & @Color 0F
 
 set EmulatorAddress=127.0.0.1:62001
-set lastUpdate=13.09.2020 17:10
-set version=2.0 beta
+set lastUpdate=13.08.2021 02:12
+set version=2.0.1 beta
 
 :: Used for reset resources & reconnect
 :: (use pusher.bat reload)
@@ -228,19 +228,19 @@ if not [%2] == [] (
 
 rem cls
 if /i %pulling%==1 (
-    %ADBDir% pull %DeviceJSDir% %ModPathPC%
+    %ADBDir% pull %DeviceJSDir% %PushJSPath%
     exit 0
 )
 if /i %pulling%==sources (
-    %ADBDir% pull %DeviceJSDir% %ModPathPC%
+    %ADBDir% pull %DeviceJSDir% %PushJSPath%
     exit 0
 )
 if /i %pulling%==2 (
-    %ADBDir% pull %DeviceAssetsDir% %ModPathPC%
+    %ADBDir% pull %DeviceAssetsDir% %PushAssetsPath%
     exit 0
 )
 if /i %pulling%==assets (
-    %ADBDir% pull %DeviceAssetsDir% %ModPathPC%
+    %ADBDir% pull %DeviceAssetsDir% %PushAssetsPath%
     exit 0
 )
 if /i %pulling%==3 (
@@ -252,11 +252,11 @@ if %pulling%==all (
     exit 0
 )
 if /i %pulling%==4 (
-    %ADBDir% pull %DeviceMainJSDir% %ModPathPC%
+    %ADBDir% pull %DeviceMainJSDir% %PushJSPath%
     exit 0
 )
 if %pulling%==build (
-    %ADBDir% pull %DeviceMainJSDir% %ModPathPC%
+    %ADBDir% pull %DeviceMainJSDir% %PushJSPath%
     exit 0
 )
 echo.Can't find your selected option

@@ -15,7 +15,7 @@ Object.defineProperties(GLOBAL, {
 	},
 	ACTOR: {
 		get: function() {
-			return new PlayerActor(PLAYER);
+			return new PlayerActor(GLOBAL.PLAYER);
 		},
 		enumerable: true,
 		configurable: false
@@ -24,37 +24,37 @@ Object.defineProperties(GLOBAL, {
 	/** MANAGEMENT */
 	IMMOBILE: {
 		get: function() {
-			return Entity.isImmobile(PLAYER);
+			return Entity.isImmobile(GLOBAL.PLAYER);
 		},
 		set: function(value) {
-			Entity.setImmobile(PLAYER, value);
+			Entity.setImmobile(GLOBAL.PLAYER, value);
 		},
 		enumerable: true,
 		configurable: false
 	},
 	SNEAKING: {
 		get: function() {
-			return ACTOR.isSneaking();
+			return GLOBAL.ACTOR.isSneaking();
 		},
 		set: function(value) {
-			ACTOR.setSneaking(value);
+			GLOBAL.ACTOR.setSneaking(value);
 		},
 		enumerable: true,
 		configurable: false
 	},
 	SLOT: {
 		get: function() {
-			return ACTOR.getSelectedSlot();
+			return GLOBAL.ACTOR.getSelectedSlot();
 		},
 		set: function(value) {
-			ACTOR.setSelectedSlot(value);
+			GLOBAL.ACTOR.setSelectedSlot(value);
 		},
 		enumerable: true,
 		configurable: false
 	},
 	GAME_MODE: {
 		get: function() {
-			return ACTOR.getGameMode();
+			return GLOBAL.ACTOR.getGameMode();
 		},
 		set: function(value) {
 			Level.setGameMode(value);

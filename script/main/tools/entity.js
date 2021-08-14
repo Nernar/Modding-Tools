@@ -114,7 +114,7 @@ const geometryToModel2 = function(obj) {
 					box.origin[2] -= -2;
 					break;
 				case "leftLeg":
-					box.origin[0] -= -0.1;
+					box.origin[0] -= -.1;
 					box.origin[2] -= -2;
 					break;
 			}

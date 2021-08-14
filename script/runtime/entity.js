@@ -22,7 +22,7 @@ Object.defineProperties(GLOBAL, {
 	},
 	SOMEONE: {
 		get: function() {
-			let entities = ENTITIES;
+			let entities = GLOBAL.ENTITIES;
 			return entities[random(entities.length)];
 		},
 		enumerable: true,
@@ -206,7 +206,7 @@ const defineEntitySomewhereAround = function(o, key, entity) {
 	key = key && key.length > 0 ? key + "_" : new String();
 	Object.defineProperty(o, key + "NEAREST", {
 		get: function() {
-			return findNearestEntityInRange(ENTITIES, o[entity]);
+			return findNearestEntityInRange(GLOBAL.ENTITIES, o[entity]);
 		},
 		enumerable: true,
 		configurable: false

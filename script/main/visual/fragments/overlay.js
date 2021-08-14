@@ -9,7 +9,7 @@ OverlayFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(context);
 	this.setContainerView(container);
 	
-	let text = new findEditorPackage().widget.ToneTypingTextView(context);
+	let text = new findAssertionPackage().android.widget.ToneTypingTextView(context);
 	text.setTextSize(Interface.getFontSize(22));
 	text.setGravity(Interface.Gravity.CENTER);
 	text.setTextColor(Interface.Color.WHITE);

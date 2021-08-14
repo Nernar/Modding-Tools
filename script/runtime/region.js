@@ -1,4 +1,4 @@
-const findBlockInAround = function(region, x, y, z, axis) {
+const findBlockAround = function(region, x, y, z, axis) {
 	let avoid = [[-1, 0], [0, -1], [1, 0], [0, 1]];
 	for (let i = 0; i < avoid.length; i++) {
 		let dx = x + avoid[i][0], dz = z + avoid[i][1];
@@ -102,6 +102,7 @@ const defineRangeAroundLocation = function(o, key, region, dx, dy, dz) {
 		enumerable: true,
 		configurable: false
 	});
+	defineBlockInRegion(o, key + "STEP", region, dx, "STEP_Y", dz);
 	Object.defineProperty(o, key + "OVER_Y", {
 		get: function() {
 			return o[dy] + 2;
@@ -109,23 +110,25 @@ const defineRangeAroundLocation = function(o, key, region, dx, dy, dz) {
 		enumerable: true,
 		configurable: false
 	});
+	defineBlockInRegion(o, key + "OVER", region, dx, "OVER_Y", dz);
 	Object.defineProperty(o, key + "AROUND_X", {
 		get: function() {
-			return findBlockInAround(o[region], o[dx], o[dy], o[dz], 0);
+			return findBlockAround(o[region], o[dx], o[dy], o[dz], 0);
 		},
 		enumerable: true,
 		configurable: false
 	});
 	Object.defineProperty(o, key + "AROUND_Z", {
 		get: function() {
-			return findBlockInAround(o[region], o[dx], o[dy], o[dz], 2);
+			return findBlockAround(o[region], o[dx], o[dy], o[dz], 2);
 		},
 		enumerable: true,
 		configurable: false
 	});
+	defineBlockInRegion(o, key + "AROUND", region, key + "AROUND_X", dy, key + "AROUND_Z");
 	Object.defineProperty(o, key + "BEHIND_X", {
 		get: function() {
-			return findBlockInAround(o[region], o[dx], o[dy], o[dz], 0);
+			return findBlockAround(o[region], o[dx], o[dy], o[dz], 0);
 		},
 		enumerable: true,
 		configurable: false
@@ -139,18 +142,15 @@ const defineRangeAroundLocation = function(o, key, region, dx, dy, dz) {
 	});
 	Object.defineProperty(o, key + "BEHIND_Z", {
 		get: function() {
-			return findBlockInAround(o[region], o[dx], o[dy], o[dz], 2);
+			return findBlockAround(o[region], o[dx], o[dy], o[dz], 2);
 		},
 		enumerable: true,
 		configurable: false
 	});
-	defineBlockInRegion(o, key + "STEP", region, dx, "STEP_Y", dz);
-	defineBlockInRegion(o, key + "OVER", region, dx, "OVER_Y", dz);
-	defineBlockInRegion(o, key + "AROUND", region, key + "AROUND_X", dy, key + "AROUND_Z");
 	defineBlockInRegion(o, key + "BEHIND", region, key + "BEHIND_X", key + "BEHIND_Y", key + "BEHIND_Z");
 };
 
-const defineRangeAroundEntity = function(o, key, entity) {
+const defineRangeAroundEntity = function(o, key, entity, excludeExtra) {
 	key = key && key.length > 0 ? key + "_" : new String();
 	Object.defineProperty(o, key + "REGION", {
 		get: function() {
@@ -179,5 +179,7 @@ const defineRangeAroundEntity = function(o, key, entity) {
 		enumerable: true,
 		configurable: false
 	});
-	defineRangeAroundLocation(o, arguments[1], key + "REGION", key + "X", key + "Y", key + "Z");
+	if (!excludeExtra) {
+		defineRangeAroundLocation(o, arguments[1], key + "REGION", key + "X", key + "Y", key + "Z");
+	}
 };

@@ -162,7 +162,7 @@ SidebarFragment.Group.prototype.resetContainer = function() {
 	let params = new android.widget.LinearLayout.
 	LayoutParams(Interface.Display.WRAP, Interface.Display.MATCH);
 	if (menuDividers) params.topMargin = Interface.getY(2);
-	params.weight = 1.0;
+	params.weight = 1.;
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 

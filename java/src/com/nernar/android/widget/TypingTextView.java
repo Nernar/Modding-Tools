@@ -15,7 +15,7 @@
    limitations under the License.
 
 */
-package com.nernar.innercore.editor.widget;
+package com.nernar.android.widget;
 
 import android.content.*;
 import android.os.*;

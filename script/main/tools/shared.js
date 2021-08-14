@@ -35,44 +35,44 @@ const finishAttachAdditionalInformation = function() {
 
 const registerAdditionalInformation = function() {
 	if (AdditionalMessageFactory.getRegisteredCount() > 0) AdditionalMessageFactory.resetAll();
-	AdditionalMessageFactory.register("blockDefineType", translate("Modification still in development state, so something may not work properly."), 0.2);
-	AdditionalMessageFactory.register("block", translate("Create custom variations, renders, shapes and collisions in-game with block editor."), 0.2);
+	AdditionalMessageFactory.register("blockDefineType", translate("Modification still in development state, so something may not work properly."), .2);
+	AdditionalMessageFactory.register("block", translate("Create custom variations, renders, shapes and collisions in-game with block editor."), .2);
 	AdditionalMessageFactory.register("entity", translate("Add or load self render, visualize it and create custom intellect pathes in-game with entity editor."), 0);
 	AdditionalMessageFactory.register("animation", translate("Transform custom shapes, visualize your own render and just draw it in-game with animation editor."), 0);
-	AdditionalMessageFactory.register("transition", translate("Record wonderful video or make quest-modded map in-game with transition editor."), 0.2);
-	AdditionalMessageFactory.register("world", translate("Manipulate with world regions, fill, replace and save your buildings with world editor."), 0.2);
-	AdditionalMessageFactory.register("explorerExtensionProject", translate("Load or create your first editor, it'll appear here."), 0.75, function() {
+	AdditionalMessageFactory.register("transition", translate("Record wonderful video or make quest-modded map in-game with transition editor."), .2);
+	AdditionalMessageFactory.register("world", translate("Manipulate with world regions, fill, replace and save your buildings with world editor."), .2);
+	AdditionalMessageFactory.register("explorerExtensionProject", translate("Load or create your first editor, it'll appear here."), .75, function() {
 		return ProjectProvider.getCount() == 0;
 	});
-	AdditionalMessageFactory.register("explorerExtensionScript", translate("Use scripts from your mods to import, simply find them in internal exporer."), 0.5, function() {
+	AdditionalMessageFactory.register("explorerExtensionScript", translate("Use scripts from your mods to import, simply find them in internal exporer."), .5, function() {
 		return noImportedScripts;
 	});
-	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), 0.2, function(message) {
+	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), .2, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://trello.com/b/wzYtpA3W/dev-editor"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("menuNetworkUser", translate("Want to follow modification updates? Checkout out VK community and starts to be part of it!"), 0.15, function(message) {
+	AdditionalMessageFactory.registerClickable("menuNetworkUser", translate("Want to follow modification updates? Checkout out VK community and starts to be part of it!"), .15, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.com/club168765348"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("menuNetworkSupport", translate("Enjoying development process? Let's discuss, donate and write any suggestions to our messages."), 0.1, function(message) {
+	AdditionalMessageFactory.registerClickable("menuNetworkSupport", translate("Enjoying development process? Let's discuss, donate and write any suggestions to our messages."), .1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.com/donut/club168765348"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("menuNetworkConnect", translate("We're in search of developers for project. You may contribute and reshare our open source code."), 0.1, function(message) {
+	AdditionalMessageFactory.registerClickable("menuNetworkConnect", translate("We're in search of developers for project. You may contribute and reshare our open source code."), .1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://github.com/nernar/dev-editor"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), 0.5, function(message) {
+	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.me/join/mEYEiYxL7SsZcI_S6iJhg4wfU_gTgwlyTx4="));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), 0.25, function(message) {
+	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), .25, function(message) {
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean", false);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
@@ -81,7 +81,7 @@ const registerAdditionalInformation = function() {
 	}, function() {
 		return !hintStackableDenied;
 	});
-	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Don't want to lost any information from messages? Try allow hints sequences."), 0.25, function(message) {
+	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Don't want to lost any information from messages? Try allow hints sequences."), .25, function(message) {
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean", true);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
@@ -90,18 +90,18 @@ const registerAdditionalInformation = function() {
 	}, function() {
 		return hintStackableDenied;
 	});
-	AdditionalMessageFactory.registerClickable("explorerSelectionWhole", translate("Have troubles with interface scales? Try to reset it with default sizes."), 0.5, function(message) {
-		uiScaler = loadSetting("interface.interface_scale", "number", 1.0, 1.0);
-		fontScale = loadSetting("interface.font_scale", "number", 1.0, 1.0);
+	AdditionalMessageFactory.registerClickable("explorerSelectionWhole", translate("Have troubles with interface scales? Try to reset it with default sizes."), .5, function(message) {
+		uiScaler = loadSetting("interface.interface_scale", "number", 1., 1.);
+		fontScale = loadSetting("interface.font_scale", "number", 1., 1.);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
 		control.removeElement(message);
 		__config__.save();
 	}, function() {
-		return uiScaler != 1.0 || fontScale != 1.0;
+		return uiScaler != 1. || fontScale != 1.;
 	});
 	if (supportSupportables) {
-		AdditionalMessageFactory.registerClickable("support", translate("Want more? Enable supportables to resolve another developer modifications experience!"), 0.5, function(message) {
+		AdditionalMessageFactory.registerClickable("support", translate("Want more? Enable supportables to resolve another developer modifications experience!"), .5, function(message) {
 			loadSupportables = loadSetting("supportable.enabled", "boolean", true);
 			showHint(translate("Supportables will be enabled with next launch"));
 			let control = message.getWindow();

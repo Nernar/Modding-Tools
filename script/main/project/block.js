@@ -124,7 +124,7 @@ const BlockWorker = function(obj) {
 			};
 			// Create and removing
 			this.addBox = function(id, data) {
-				return this.addBoxAt(0, 0, 0, 0.0625, 0.0625, 0.0625, id, data);
+				return this.addBoxAt(0, 0, 0, .0625, .0625, .0625, id, data);
 			};
 			this.addBoxAt = function(x1, y1, z1, x2, y2, z2, id, data) {
 				let boxes = this.getBoxes();
@@ -459,7 +459,7 @@ const BlockWorker = function(obj) {
 			};
 			// Create and removing
 			this.addBox = function() {
-				return this.addBoxAt(0, 0, 0, 0.0625, 0.0625, 0.0625);
+				return this.addBoxAt(0, 0, 0, .0625, .0625, .0625);
 			};
 			this.addBoxAt = function(x1, y1, z1, x2, y2, z2) {
 				let boxes = this.getBoxes();

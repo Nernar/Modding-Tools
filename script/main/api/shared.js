@@ -86,7 +86,7 @@ const playTuneDirectly = function() {
 	let samples = java.lang.reflect.Array.newInstance(java.lang.Short.TYPE, buffsize),
 		amp = 10000,
 		twopi = 8. * Math.atan(1.),
-		ph = 0.0;
+		ph = .0;
 	audioTrack.play();
 	return {
 		track: audioTrack,

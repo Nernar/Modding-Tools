@@ -153,7 +153,7 @@ AdditionalMessageFactory.randomize = function(limit) {
 	let randomized = new Array();
 	if (limit === undefined) limit = -1;
 	registered = registered.sort(function(a, b) {
-		return 0.5 - Math.random();
+		return .5 - Math.random();
 	});
 	for (let i = 0; i < registered.length; i++) {
 		let message = registered[i];
@@ -216,7 +216,7 @@ AdditionalMessageFactory.Session.prototype.queue = function() {
 		values.push(indexed[index]);
 	}
 	values = values.sort(function(a, b) {
-		return 0.5 - Math.random();
+		return .5 - Math.random();
 	});
 	for (let i = 0; i < values.length; i++) {
 		indexed[i + 1] = values[i];

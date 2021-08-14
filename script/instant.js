@@ -1,1 +1,3 @@
-__mod__.RunLauncherScripts();
+__mod__.RunMod({
+	Instant: this
+});

@@ -15,7 +15,7 @@
    limitations under the License.
 
 */
-package com.nernar.innercore.editor.widget;
+package com.nernar.android.widget;
 
 import android.content.*;
 import android.media.*;
@@ -77,7 +77,7 @@ public class ToneTypingTextView extends TypingTextView {
 		return mToneGenerator;
 	}
 	
-	public final int getDefaultTone() {
+	public final int getTypingTone() {
 		return mDefaultTone;
 	}
 	
@@ -88,7 +88,7 @@ public class ToneTypingTextView extends TypingTextView {
 		mDefaultTone = tone;
 	}
 	
-	public final int getDefaultToneDuration() {
+	public final int getTypingToneDuration() {
 		return mDefaultToneDuration;
 	}
 	
@@ -121,8 +121,8 @@ public class ToneTypingTextView extends TypingTextView {
 	}
 	
 	protected boolean toneCharacter(char sub) {
-		int tone = getDefaultTone();
-		int duration = getDefaultToneDuration();
+		int tone = getTypingTone();
+		int duration = getTypingToneDuration();
 		if (observer != null) {
 			tone = observer.onResolveCharacterTone(tone, sub);
 			duration = observer.onResolveCharacterToneDuration(duration, sub);

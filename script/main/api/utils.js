@@ -150,34 +150,34 @@ MathUtils.mathDivider = function(number) {
 	if (number % 1 === 0) {
 		return String(number);
 	}
-	if (number % 0.5 === 0) {
+	if (number % .5 === 0) {
 		return Math.round(number * 2) + "/2";
 	}
-	if (number % 0.25 === 0) {
+	if (number % .25 === 0) {
 		return Math.round(number * 4) + "/4";
 	}
-	if (number % 0.125 === 0) {
+	if (number % .125 === 0) {
 		return Math.round(number * 8) + "/8";
 	}
-	if (number % 0.0625 === 0) {
+	if (number % .0625 === 0) {
 		return Math.round(number * 16) + "/16";
 	}
-	if (number % 0.03125 === 0) {
+	if (number % .03125 === 0) {
 		return Math.round(number * 32) + "/32";
 	}
-	if (number % 0.015625 === 0) {
+	if (number % .015625 === 0) {
 		return Math.round(number * 64) + "/64";
 	}
-	if (number % 0.0078125 === 0) {
+	if (number % .0078125 === 0) {
 		return Math.round(number * 128) + "/128";
 	}
-	if (number % 0.00390625 === 0) {
+	if (number % .00390625 === 0) {
 		return Math.round(number * 256) + "/256";
 	}
-	if (number % 0.001953125 === 0) {
+	if (number % .001953125 === 0) {
 		return Math.round(number * 512) + "/512";
 	}
-	if (number % 0.0009765625 === 0) {
+	if (number % .0009765625 === 0) {
 		return Math.round(number * 1024) + "/1024";
 	}
 	Logger.Log("Non-divideable number: " + number, "DEV-EDITOR");

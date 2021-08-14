@@ -15,7 +15,7 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 	let views = this.views,
 		elements = this,
 		index = views.buttons.length;
-	views.buttons[index] = new findEditorPackage().widget.ToneTypingTextView(context);
+	views.buttons[index] = new findAssertionPackage().android.widget.ToneTypingTextView(context);
 	views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Interface.getY(300), Interface.getY(84)));
 	views.buttons[index].setPadding(Interface.getY(30), 0, Interface.getY(30), 0);
 	views.buttons[index].setOnClickListener(function(view) {

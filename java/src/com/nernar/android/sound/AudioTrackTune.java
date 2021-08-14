@@ -15,17 +15,17 @@
    limitations under the License.
 
 */
-package com.nernar.innercore.editor.sound;
+package com.nernar.android.sound;
 
 import android.media.*;
 
-public class Tune {
+public class AudioTrackTune {
 	
 	private final int mBufferSize;
 	private final AudioTrack mTrack;
 	private final int mSampleRateInHz;
 	
-	public Tune(int sampleRateInHz, int channelOut, int encoding, int streamType, int mode) {
+	public AudioTrackTune(int sampleRateInHz, int channelOut, int encoding, int streamType, int mode) {
 		mBufferSize = AudioTrack.getMinBufferSize(sampleRateInHz,
 												  channelOut, encoding);
 		mTrack = new AudioTrack(streamType, sampleRateInHz,
@@ -117,8 +117,8 @@ public class Tune {
 			mSampleRateInHz = hz;
 		}
 		
-		public Tune create() {
-			return new Tune(mSampleRateInHz, mOut, mEncoding, mStream, mMode);
+		public AudioTrackTune create() {
+			return new AudioTrackTune(mSampleRateInHz, mOut, mEncoding, mStream, mMode);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class Tune {
 		private final int mSampleRateInHz;
 		private final short[] mBuffer;
 		
-		public Tone(Tune parent) {
+		public Tone(AudioTrackTune parent) {
 			this(parent != null ? parent.getBufferSize() : 0, parent != null ? parent.getSampleRateInHz() : 0);
 		}
 		

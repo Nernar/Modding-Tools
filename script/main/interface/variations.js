@@ -279,7 +279,7 @@ FocusablePopup.prototype.reset = function() {
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(views.layout);
 
-	views.title = new findEditorPackage().widget.ToneTypingTextView(context);
+	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
 	views.title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
 	new BitmapDrawable("popup").attachAsBackground(views.title);
 	views.title.setTextSize(Interface.getFontSize(24));
@@ -294,13 +294,13 @@ FocusablePopup.prototype.reset = function() {
 	});
 	params = new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-	params.weight = 0.1;
+	params.weight = .1;
 	views.layout.addView(views.title, params);
 
 	views.scroll = new android.widget.ScrollView(context);
 	params = new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-	params.weight = 16.0;
+	params.weight = 16.;
 	views.layout.addView(views.scroll, params);
 
 	views.content = new android.widget.LinearLayout(context);

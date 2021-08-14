@@ -15,7 +15,7 @@
    limitations under the License.
 
 */
-package com.nernar.innercore.editor.text;
+package com.nernar.android.text;
 
 import android.graphics.*;
 import android.text.style.*;

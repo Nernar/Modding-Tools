@@ -46,7 +46,7 @@ const selectTexture = function(index, onSelect) {
 		drawable.attachAsImage(icon);
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 		wrong.addView(icon, params);
-		let info = new findEditorPackage().widget.ToneTypingTextView(context);
+		let info = new findAssertionPackage().android.widget.ToneTypingTextView(context);
 		typeface && info.setTypeface(typeface);
 		info.setText(translate("Void itself."));
 		info.setGravity(Interface.Gravity.CENTER);

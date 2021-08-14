@@ -16,6 +16,15 @@
 
 */
 
-const GLOBAL = this;
+if (typeof this.GLOBAL != "object") {
+	var GLOBAL = this;
+}
+
+const requireGlobal = function(key) {
+	if (key !== undefined) {
+		return GLOBAL[key];
+	}
+	return GLOBAL;
+};
 
 IMPORT("Retention:4");
