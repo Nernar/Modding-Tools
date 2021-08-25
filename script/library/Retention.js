@@ -18,7 +18,7 @@
 
 LIBRARY({
 	name: "Retention",
-	version: 4,
+	version: 5,
 	shared: false,
 	api: "AdaptedScript"
 });
@@ -32,13 +32,11 @@ let code = parseInt(version.toString()[0]);
 let isHorizon = code >= 2;
 EXPORT("isHorizon", isHorizon);
 
-Object.defineProperty(this, "context", {
-	get: function() {
-		return UI.getContext();
-	},
-	enumerable: true,
-	configurable: false
-});
+let getContext = function() {
+	return UI.getContext();
+};
+
+EXPORT("getContext", getContext);
 
 /**
  * Tries to just call action or returns
@@ -46,7 +44,7 @@ Object.defineProperty(this, "context", {
  * @param {function} action action
  * @param {function} [report] action when error
  * @param {any} [basic] default value
- * @returns {any} action result or default
+ * @returns {any} action result or nothing
  */
 let tryout = function(action, report, basic) {
 	try {
@@ -70,20 +68,65 @@ let tryout = function(action, report, basic) {
 EXPORT("tryout", tryout);
 
 /**
+ * Tries to just call action or always returns
+ * [[basic]] value. Equivalent to try-catch.
+ * @param {function} action action
+ * @param {function} [report] action when error
+ * @param {any} [basic] default value
+ * @returns {any} action result or default
+ */
+let require = function(action, report, basic) {
+	let result = tryout(action, report);
+	if (basic === undefined) basic = report;
+	return result !== undefined ? result : basic;
+};
+
+EXPORT("require", require);
+
+/**
  * Delays the action in the interface
  * thread for the required time.
  * @param {function} action action
  * @param {number} [time] expectation
+ * @param {function} [report] action when error
  */
-let handle = function(action, time) {
-	context.runOnUiThread(function() {
+let handle = function(action, time, report) {
+	getContext().runOnUiThread(function() {
 		new android.os.Handler().postDelayed(function() {
-			if (action !== undefined) tryout(action);
+			if (action !== undefined) tryout(action, report);
 		}, time >= 0 ? time : 0);
 	});
 };
 
 EXPORT("handle", handle);
+
+/**
+ * @async
+ * Delays the action in the interface and
+ * async waiting it in current thread.
+ * @param {function} action action
+ * @param {function} [report] action when error
+ * @param {any} [basic] default value
+ * @returns {any} action result or default
+ */
+let acquire = function(action, report, basic) {
+	let completed = false;
+	getContext().runOnUiThread(function() {
+		if (action !== undefined) {
+			let value = tryout(action, report);
+			if (value !== undefined) {
+				basic = value;
+			}
+		}
+		completed = true;
+	});
+	while (!completed) {
+		java.lang.Thread.yield();
+	}
+	return basic;
+};
+
+EXPORT("acquire", acquire);
 
 /**
  * Processes some action, that can be
@@ -280,7 +323,7 @@ let Interface = {
 Interface.Gravity.parse = function(str) {
 	for (let item in this) {
 		if (typeof this[item] == "number") {
-			eval(item + " = this[i]");
+			eval(item + " = this[item]");
 		}
 	}
 	return eval(str.toUpperCase());
@@ -290,15 +333,11 @@ Interface.Color.parse = function(str) {
 	return android.graphics.Color.parseColor(str);
 };
 
-Interface.getContext = function() {
-	return context;
-};
-
 Interface.updateDisplay = function() {
-	let display = context.getWindowManager().getDefaultDisplay();
+	let display = getContext().getWindowManager().getDefaultDisplay();
 	this.Display.WIDTH = display.getWidth();
 	this.Display.HEIGHT = display.getHeight();
-	let metrics = context.getResources().getDisplayMetrics();
+	let metrics = getContext().getResources().getDisplayMetrics();
 	this.Display.DENSITY = metrics.density;
 };
 
@@ -321,7 +360,7 @@ Interface.getY = function(y) {
 };
 
 Interface.getDecorView = function() {
-	return context.getWindow().getDecorView();
+	return getContext().getWindow().getDecorView();
 };
 
 Interface.getEmptyDrawable = function() {
@@ -339,7 +378,7 @@ Interface.setActorName = function(view, name) {
  */
 Interface.vibrate = function(time) {
 	let service = android.content.Context.VIBRATOR_SERVICE;
-	context.getSystemService(service).vibrate(time);
+	getContext().getSystemService(service).vibrate(time);
 };
 
 Interface.getViewRect = function(view) {
@@ -365,10 +404,7 @@ Interface.sleepMilliseconds = function(ms) {
 };
 
 Interface.getInnerCoreVersion = function() {
-	return {
-		name: version,
-		code: code
-	};
+	return { name: version, code: code };
 };
 
 EXPORT("Interface", Interface);
@@ -408,26 +444,26 @@ let reportError = function(err) {
 		}
 		return;
 	} else reportError.isReporting = true;
-	context.runOnUiThread(function() {
-		let builder = new android.app.AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+	getContext().runOnUiThread(function() {
+		let builder = new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 		builder.setTitle(reportError.title || translate("Oh nose everything broke"));
 		builder.setCancelable(false);
-
+		
 		reportError.__report && reportError.__report(err);
-
+		
 		let result = new Array(),
 			message = reportError.message;
 		message && result.push(message + "<br/>");
 		result.push("<font color=\"#CCCC33\"><b>" + err.name + "</b>");
 		result.push(err.stack ? err.message : err.message + "</font>");
 		err.stack && result.push(new java.lang.String(err.stack).replaceAll("\n", "<br/>") + "</font>");
-
+		
 		let values = reportError.getDebugValues();
 		if (values != null) {
 			result.push(translate("Development debug values"));
 			result.push(values + "<br/>");
 		}
-
+		
 		builder.setMessage(android.text.Html.fromHtml(result.join("<br/>")));
 		builder.setPositiveButton(translate("Understand"), null);
 		builder.setNeutralButton(translate("Leave"), function() {
@@ -436,7 +472,7 @@ let reportError = function(err) {
 		builder.setNegativeButton(reportError.getCode(err), function() {
 			reportError.__stack && reportError.__stack(err);
 		});
-
+		
 		let dialog = builder.create();
 		dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.5, Interface.Display.HEIGHT / 1.2);
 		dialog.setOnDismissListener(function() {
@@ -448,6 +484,8 @@ let reportError = function(err) {
 		dialog.show();
 	});
 };
+
+reportError.stack = new Array();
 
 reportError.setTitle = function(title) {
 	title && (this.title = title);
@@ -473,23 +511,24 @@ reportError.setReportAction = function(action) {
 	};
 };
 
-reportError.stack = new Array();
-
 reportError.values = new Array();
 
 reportError.addDebugValue = function(name, value) {
-	this.values.push({
-		name: name,
-		value: value
-	});
+	this.values.push([name, value]);
+};
+
+reportError.formCollectedValues = function() {
+	let collected = new Array();
+	for (let index = 0; index < this.values.length; index++) {
+		let value = this.values[index];
+		result.push(value[0] + " = " + value[1] + ";");
+	}
+	return collected;
 };
 
 reportError.getDebugValues = function() {
 	let result = new Array();
-	for (let index = 0; index < this.values.length; index++) {
-		let value = this.values[index];
-		result.push(value.name + " = " + value.value + ";");
-	}
+	result.concat(this.formCollectedValues());
 	return result.length > 0 ? "<font face=\"monospace\">" + result.join("<br/>") + "</font>" : null;
 };
 

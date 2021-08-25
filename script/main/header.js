@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-14.08.2021-0";
+const REVISION = "develop-alpha-0.4-25.08.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -84,7 +84,7 @@ Object.defineProperty(this, "context", {
 
 MCSystem.setLoadingTip(NAME + ": Resolving");
 
-IMPORT("Retention:4");
+IMPORT("Retention:5");
 
 const prepareDebugInfo = function() {
 	return NAME + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") +
@@ -127,7 +127,7 @@ IMPORT("Transition:6");
 IMPORT("Action:4");
 
 if (REVISION.startsWith("develop")) {
-	IMPORT("Stacktrace:1");
+	IMPORT("Stacktrace:2");
 }
 
 reportTrace.setupPrint(function(message) {

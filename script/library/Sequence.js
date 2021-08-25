@@ -21,10 +21,10 @@ LIBRARY({
 	version: 1,
 	shared: true,
 	api: "AdaptedScript",
-	dependencies: ["Retention:4"]
+	dependencies: ["Retention:5"]
 });
 
-IMPORT("Retention:4");
+IMPORT("Retention:5");
 
 /**
  * @constructor

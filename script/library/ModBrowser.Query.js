@@ -24,7 +24,7 @@ LIBRARY({
 	dependencies: ["Network:2"]
 });
 
-IMPORT("Retention:4");
+IMPORT("Retention:5");
 IMPORT("Network:2");
 
 let ModBrowser = new Object();

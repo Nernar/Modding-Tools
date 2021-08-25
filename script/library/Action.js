@@ -21,10 +21,10 @@ LIBRARY({
 	version: 4,
 	shared: true,
 	api: "AdaptedScript",
-	dependencies: ["Retention:3"]
+	dependencies: ["Retention:5"]
 });
 
-IMPORT("Retention:3");
+IMPORT("Retention:5");
 
 /**
  * Allows you to create timers that will constantly
@@ -186,23 +186,30 @@ Action.prototype.create = function() {
 };
 
 Action.prototype.condition = function(currently) {
-	return tryout.call(this, function() {
-		if (this.onCondition === undefined) return true;
-		return this.onCondition(this, currently, this.getAwait());
+	return require.call(this, function() {
+		if (this.onCondition !== undefined) {
+			return this.onCondition(this, currently, this.getAwait());
+		}
+		return true;
 	}, false);
 };
 
 Action.prototype.tick = function(currently) {
-	return tryout.call(this, function() {
-		if (this.onTick === undefined) return ++currently;
-		return this.onTick(this, currently);
+	return require.call(this, function() {
+		if (this.onTick !== undefined) {
+			return this.onTick(this, currently);
+		}
 	}, ++currently);
 };
 
 Action.prototype.run = function() {
+	if (this.getThread() === null) {
+		this.create();
+	} else {
+		this.count = this.real = 0;
+	}
 	this.active = true;
 	Logger.Log("Action[" + this.id + "] started at " + getTime() + " ms", "DEBUG");
-	this.count = this.real = 0;
 	this.onRun && this.onRun(this);
 };
 

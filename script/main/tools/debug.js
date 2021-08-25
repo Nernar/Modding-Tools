@@ -190,7 +190,7 @@ const ModificationSource = {
 			let sorted = new java.util.ArrayList();
 			for (let i = 0; i < mods.size(); i++) {
 				let mod = mods.get(i);
-				if (mod instanceof com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
+				if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
 					sorted.add(mod.getLegacyModInstance());
 				}
 			}
@@ -277,7 +277,7 @@ const ModificationSource = {
 		}
 	},
 	requireDexerAsync: function(mod, yields) {
-		let dexer = REQUIRE("redexer.dns")(mod);
+		let dexer = REQUIRE("compiler.dns")(mod);
 		if (yields !== false) dexer.assureYield();
 		return dexer.toResult();
 	},
@@ -320,8 +320,7 @@ LevelProvider.isAttached = function() {
 
 LevelProvider.getFormattedTps = function() {
 	let tps = preround(TPSMeter.getTps(), 1);
-	if (tps < .1) return "<.1";
-	if (tps >= 1000) return "0.0";
+	if (tps < .1 || tps >= 1000) return "0.0";
 	return new java.lang.Float(tps);
 };
 
@@ -348,12 +347,136 @@ LevelProvider.updateRecursive = function() {
 LevelProvider.show = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
-	this.update() && overlay.show();
-	this.updateRecursive();
+	if (this.update()) {
+		overlay.show();
+		this.updateRecursive();
+	}
 };
 
 LevelProvider.hide = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
 	overlay.hide();
+};
+
+const RuntimeCodeEvaluate = new Object();
+
+RuntimeCodeEvaluate.setupNewContext = function() {
+	let somewhere = this.somewhere = new Object();
+	runCustomSource("runtime.js", {
+		GLOBAL: somewhere
+	});
+	if (isEmpty(somewhere)) {
+		MCSystem.throwException("Runtime couldn't be resolved");
+	}
+	return somewhere;
+};
+
+RuntimeCodeEvaluate.getContextOrSetupIfNeeded = function() {
+	if (this.somewhere !== undefined) {
+		return this.somewhere;
+	}
+	return this.setupNewContext();
+};
+
+RuntimeCodeEvaluate.showSpecifiedDialog = function(source) {
+	let edit = new android.widget.EditText(context);
+	edit.setHint(translate("Hi, I'm evaluate stroke"));
+	source === undefined && (source = RuntimeCodeEvaluate.lastCode);
+	if (source !== undefined) edit.setText(String(source));
+	edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
+		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
+		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+	edit.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
+		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+	edit.setTypeface(android.graphics.Typeface.MONOSPACE);
+	edit.setTextSize(Interface.getFontSize(27));
+	edit.setHorizontalScrollBarEnabled(true);
+	edit.setHorizontallyScrolling(true);
+	edit.setSingleLine(false);
+	edit.setMinLines(3);
+	
+	let dialog = new android.app.AlertDialog.Builder(context,
+		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+	dialog.setTitle(translate(NAME) + " " + translate(VERSION));
+	dialog.setPositiveButton(translate("Evaluate"), function() {
+		tryout(function() {
+			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
+			eval(RuntimeCodeEvaluate.lastCode);
+		});
+	});
+	dialog.setNeutralButton(translate("Export"), function() {
+		tryout(function() {
+			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
+			RuntimeCodeEvaluate.exportEvaluate();
+		});
+	});
+	dialog.setNegativeButton(translate("Cancel"), null);
+	dialog.setCancelable(false).setView(edit);
+	let something = dialog.create();
+	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.WRAP);
+	something.show();
+	let title = something.findViewById(android.R.id.title);
+	title.setOnClickListener(function(view) {
+		tryout(function() {
+			
+		});
+	});
+};
+
+RuntimeCodeEvaluate.exportEvaluate = function() {
+	saveFile(undefined, ".js", function(file) {
+		Files.write(file, RuntimeCodeEvaluate.lastCode);
+	}, undefined, Dirs.EVALUATE);
+};
+
+RuntimeCodeEvaluate.loadEvaluate = function() {
+	selectFile(".js", function(file) {
+		checkEvaluate(Files.read(file));
+	}, undefined, Dirs.EVALUATE);
+};
+
+RuntimeCodeEvaluate.resolveSpecifiedTypeSources = function(modification, type) {
+	let sources = modification[type];
+	if (sources.size() > 0) {
+		let source = new Array();
+		for (let w = 0; w < sources.size(); w++) {
+			source.push(sources.get(w));
+		}
+		return source;
+	}
+	return null;
+};
+
+RuntimeCodeEvaluate.putSpecifiedTypeSources = function(modification, someone, type, name) {
+	return require(function() {
+		let specified = this.resolveSpecifiedTypeSources(modification, type);
+		return specified && (someone[name] = specified) != null;
+	}, new Function(), false);
+};
+
+RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification) {
+	let someone = new Object();
+	this.putSpecifiedTypeSources(modification, someone, "compiledModSources", "modification");
+	this.putSpecifiedTypeSources(modification, someone, "compiledLauncherScripts", "launcher");
+	this.putSpecifiedTypeSources(modification, someone, "compiledLibs", "library");
+	this.putSpecifiedTypeSources(modification, someone, "compiledPreloaderScripts", "preloader");
+	this.putSpecifiedTypeSources(modification, someone, "compiledInstantScripts", "instant");
+	if (isEmpty(someone)) {
+		return null;
+	}
+	someone.modification = modification;
+	return someone;
+};
+
+RuntimeCodeEvaluate.resolveAvailabledExecutables = function(callback) {
+	let sources = ModificationSource.findModList(),
+		modByName = new Array();
+	for (let i = 0; i < sources.length; i++) {
+		let modification = sources[i];
+		callback && callback(i + 1, sources.length);
+		let someone = this.resolveSpecifiedModificationSources(modification);
+		someone && modByName.push(someone);
+	}
+	return modByName;
 };
