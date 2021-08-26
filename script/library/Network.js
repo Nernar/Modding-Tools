@@ -169,7 +169,7 @@ Network.prototype.getLength = function() {
  * @returns {boolean} has connection
  */
 Network.isOnline = function() {
-	let service = Interface.getContext().getSystemService("connectivity");
+	let service = getContext().getSystemService("connectivity");
 	if (service === null) {
 		return false;
 	}

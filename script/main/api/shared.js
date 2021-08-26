@@ -1,25 +1,29 @@
 /**
  * Runs code in a separate data stream.
+ * @param {string} code something to evaluate
+ * @param {Object} [scope] fo resolve
+ * @param {string} [name] of script
+ * @returns evaluate [[result]] or [[error]]
  */
 const runAtScope = function(code, scope, name) {
-	let scriptable = org.mozilla.javascript.ScriptableObject,
-		source = name ? NAME + "$" + name : "<no name>",
-		ctx = org.mozilla.javascript.Context.enter();
+	let source = name ? NAME + "$" + name : "<no name>",
+		executable = __mod__.compiledModSources.get(0);
 	source = source.replace(/[^\w\$\<\>\.\-\s]/gi, "$");
-	ctx.setLanguageVersion(200);
-	let standart = ctx.initStandardObjects(null, !1);
-	if (scope !== undefined) {
-		for (let item in scope) {
-			scriptable.putProperty(standart, String(item), scope[item]);
-		}
+	if (scope == null || typeof scope != "object") {
+		scope = executable.parentContext.newObject(executable.getScope());
 	}
-	scope = new Object();
-	tryout(function() {
-		scope.result = ctx.evaluateString(standart, code, source, 0, null);
+	return tryout(function() {
+		return {
+			source: source,
+			scope: scope,
+			context: executable.parentContext,
+			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
+		};
 	}, function(e) {
-		scope.error = e;
+		return {
+			error: e
+		};
 	});
-	return scope;
 };
 
 const REQUIRE = function(path) {
@@ -30,7 +34,7 @@ const REQUIRE = function(path) {
 			if (!file.exists()) throw null;
 			let source = Files.read(file).toString(),
 				code = "(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, REQUIRE.getScope(), path);
+				scope = runAtScope(code, REQUIRE.getScope(path), path);
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
@@ -39,7 +43,7 @@ const REQUIRE = function(path) {
 			if (!file.exists()) throw null;
 			let source = decompileExecuteable(Files.readBytes(file)),
 				code = "(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, REQUIRE.getScope(), path);
+				scope = runAtScope(code, REQUIRE.getScope(path), path);
 			if (scope.error) throw scope.error;
 			REQUIRE.results[path] = scope.result;
 			REQUIRE.loaded.push(path);
@@ -52,9 +56,9 @@ const REQUIRE = function(path) {
 REQUIRE.loaded = new Array();
 REQUIRE.results = new Object();
 
-REQUIRE.getScope = function() {
+REQUIRE.getScope = function(name) {
 	let scope = __mod__.compiledModSources.get(0).evaluateStringInScope("this");
-	return assign(REVISION.indexOf("alpha") != -1 ? scope : new Object(), {
+	return assign(/* REVISION.indexOf("alpha") != -1 ? scope : */ new Object(), {
 		SHARE: function(name, obj) {
 			if (REVISION.startsWith("develop")) {
 				if (typeof name == "object") {
@@ -71,6 +75,9 @@ REQUIRE.getScope = function() {
 		},
 		CLASS: function(path, instant) {
 			return ExecuteableSupport.newInstance(path, instant);
+		},
+		log: function(message) {
+			Logger.Log(message, name);
 		}
 	});
 };

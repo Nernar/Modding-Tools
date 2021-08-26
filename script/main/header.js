@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-25.08.2021-0";
+const REVISION = "develop-alpha-0.4-26.08.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -76,7 +76,7 @@ if (this.isInstant === undefined) {
 
 Object.defineProperty(this, "context", {
 	get: function() {
-		return Interface.getContext();
+		return getContext();
 	},
 	enumerable: true,
 	configurable: false
