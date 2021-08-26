@@ -41,7 +41,7 @@ HieraclyPopup.prototype.addGroup = function(name, parent) {
 	new BitmapDrawable("controlAdapterOpened").attachAsImage(image);
 	views.groups[index].addView(image);
 
-	let text = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	let text = new android.widget.TextView(context);
 	text.setPadding(Interface.getY(15), 0, 0, 0);
 	text.setTextSize(Interface.getFontSize(20));
 	text.setTextColor(Interface.Color.WHITE);
@@ -65,7 +65,7 @@ HieraclyPopup.prototype.addItem = function(name, parent) {
 	views.items[index].setTag(parent);
 	views.content.addView(views.items[index]);
 
-	let text = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	let text = new android.widget.TextView(context);
 	text.setPadding(Interface.getY(15), 0, 0, 0);
 	text.setTextSize(Interface.getFontSize(20));
 	text.setTextColor(Interface.Color.WHITE);

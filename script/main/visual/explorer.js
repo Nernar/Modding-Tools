@@ -53,7 +53,7 @@ ExplorerWindow.prototype.resetContent = function() {
 	params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 	views.empty.addView(views.icon, params);
 	
-	views.info = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.info = new android.widget.TextView(context);
 	typeface && views.info.setTypeface(typeface);
 	views.info.setText(translate("Void itself."));
 	views.info.setGravity(Interface.Gravity.CENTER);
@@ -494,7 +494,7 @@ ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 };
 
 ExplorerWindow.Path.prototype.addPathText = function(text, file) {
-	let path = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	let path = new android.widget.TextView(context);
 	text !== undefined && path.setText(text);
 	typeface && path.setTypeface(typeface);
 	path.setTextColor(Interface.Color.WHITE);
@@ -593,7 +593,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	content.setLayoutParams(params);
 	this.content = content;
 
-	views.approve = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.approve = new android.widget.TextView(context);
 	typeface && views.approve.setTypeface(typeface);
 	views.approve.setSingleLine();
 	views.approve.setTextColor(isInvertedLogotype() ? Interface.Color.WHITE : Interface.Color.GREEN);
@@ -609,7 +609,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	params.leftMargin = Interface.getY(24);
 	content.addView(views.approve, params);
 
-	views.format = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.format = new android.widget.TextView(context);
 	typeface && views.format.setTypeface(typeface);
 	views.format.setSingleLine();
 	views.format.setTextColor(Interface.Color.WHITE);
@@ -950,7 +950,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		layout.addView(additional, params);
 
-		let date = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+		let date = new android.widget.TextView(context);
 		typeface && date.setTypeface(typeface);
 		date.setGravity(Interface.Gravity.RIGHT);
 		date.setTextSize(Interface.getFontSize(21));
@@ -958,7 +958,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		date.setTag("fileDate");
 		additional.addView(date);
 
-		let info = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+		let info = new android.widget.TextView(context);
 		typeface && info.setTypeface(typeface);
 		info.setGravity(Interface.Gravity.RIGHT);
 		info.setTextSize(Interface.getFontSize(21));
@@ -977,7 +977,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		uniqal.post(function() { uniqal.requestLayout(); });
 		layout.addView(uniqal, params);
 
-		let name = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+		let name = new android.widget.TextView(context);
 		typeface && name.setTypeface(typeface);
 		name.setTextSize(Interface.getFontSize(22.5));
 		name.setTextColor(Interface.Color.WHITE);
@@ -985,7 +985,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		name.setMaxLines(3);
 		uniqal.addView(name);
 
-		let size = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+		let size = new android.widget.TextView(context);
 		typeface && size.setTypeface(typeface);
 		size.setTextSize(Interface.getFontSize(21));
 		size.setTextColor(Interface.Color.LTGRAY);

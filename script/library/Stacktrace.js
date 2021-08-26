@@ -854,7 +854,7 @@ reportTrace.processStack = function(resolved) {
 		(resolved.where ? " (" + resolved.where + ")" : new String()) + " " + Translation.translate("at line") + " " + where);
 	let sources = findRelatedSources(resolved.source, resolved.file),
 		processed = reportTrace.processSources(sources, resolved, where);
-	if (processed !== null) {
+	if (processed !== null && processed.length > 0) {
 		strokes[0] = "<br/>" + strokes[0];
 		strokes = strokes.concat(processed);
 	}

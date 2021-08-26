@@ -5,7 +5,7 @@ const LogViewer = {
 		popup.setTitle(translate("Currently log"));
 		let horizontal = new android.widget.HorizontalScrollView(context);
 		popup.views.content.addView(horizontal);
-		let text = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+		let text = new android.widget.TextView(context);
 		text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 		text.setTextSize(Interface.getFontSize(12));
 		text.setTextColor(Interface.Color.WHITE);

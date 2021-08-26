@@ -279,7 +279,7 @@ FocusablePopup.prototype.reset = function() {
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(views.layout);
 
-	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.title = new android.widget.TextView(context);
 	views.title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
 	new BitmapDrawable("popup").attachAsBackground(views.title);
 	views.title.setTextSize(Interface.getFontSize(24));

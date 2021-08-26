@@ -58,28 +58,20 @@ REQUIRE.results = new Object();
 
 REQUIRE.getScope = function(name) {
 	let scope = __mod__.compiledModSources.get(0).evaluateStringInScope("this");
-	return assign(/* REVISION.indexOf("alpha") != -1 ? scope : */ new Object(), {
+	return {
 		SHARE: function(name, obj) {
 			if (REVISION.startsWith("develop")) {
 				if (typeof name == "object") {
 					Object.defineProperties(scope, name);
-				} else scope[name] = obj;
+				} else {
+					scope[name] = obj;
+				}
 			}
-		},
-		FIND: function(name) {
-			if (REVISION.startsWith("develop")) {
-				this[name] = scope.eval(name);
-			} else if (REVISION.startsWith("testing")) {
-				this[name] = scope[name];
-			}
-		},
-		CLASS: function(path, instant) {
-			return ExecuteableSupport.newInstance(path, instant);
 		},
 		log: function(message) {
 			Logger.Log(message, name);
 		}
-	});
+	};
 };
 
 const playTuneDirectly = function() {

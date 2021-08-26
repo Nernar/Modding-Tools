@@ -21,7 +21,6 @@ storage/converter/block.js
 storage/converter/transition.js
 
 api/shared.js
-api/object.js
 api/protect.js
 api/utils.js
 api/support.js

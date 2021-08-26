@@ -520,7 +520,7 @@ MenuWindow.ProjectHeader.Category.prototype.reset = function() {
 	content.setLayoutParams(params);
 	this.content = content;
 
-	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Interface.getFontSize(26));
 	views.title.setTextColor(Interface.Color.LTGRAY);
@@ -736,14 +736,14 @@ MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	params.leftMargin = Interface.getY(24);
 	content.addView(views.more, params);
 
-	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Interface.getFontSize(23));
 	views.title.setTextColor(Interface.Color.WHITE);
 	views.title.setSingleLine();
 	views.more.addView(views.title);
 
-	views.params = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.params = new android.widget.TextView(context);
 	typeface && views.params.setTypeface(typeface);
 	views.params.setPadding(0, Interface.getY(4), 0, 0);
 	views.params.setTextSize(Interface.getFontSize(21));
@@ -930,7 +930,7 @@ MenuWindow.Category.prototype.reset = function() {
 	content.setLayoutParams(params);
 	this.content = content;
 
-	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Interface.getFontSize(30));
 	views.title.setTextColor(Interface.Color.LTGRAY);
@@ -1129,7 +1129,7 @@ MenuWindow.Category.Item.prototype.reset = function() {
 		LayoutParams(Interface.getY(172), Interface.getY(172));
 	content.addView(views.icon, params);
 
-	views.title = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.title = new android.widget.TextView(context);
 	typeface && views.title.setTypeface(typeface);
 	views.title.setTextSize(Interface.getFontSize(27));
 	views.title.setTextColor(Interface.Color.WHITE);
@@ -1312,7 +1312,7 @@ MenuWindow.Message.prototype.reset = function() {
 		params.rightMargin = params.bottomMargin = Interface.getY(12);
 	content.addView(views.icon, params);
 	
-	views.message = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	views.message = new android.widget.TextView(context);
 	typeface && views.message.setTypeface(typeface);
 	views.message.setTextSize(Interface.getFontSize(25));
 	views.message.setTextColor(Interface.Color.WHITE);
