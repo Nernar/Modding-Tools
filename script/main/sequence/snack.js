@@ -309,6 +309,7 @@ StackedSnackSequence.prototype.change = function(message, color) {
 StackedSnackSequence.prototype.cancel = function(error) {
 	let snack = this.getSnackWindow();
 	if (snack !== null) {
+		this.update(this.index / this.count * 100, this.index);
 		snack.attachMessage(this.getCancellationHint(error),
 			this.getCancellationColor(error), this.getCancellationBackground(error));
 		snack.show();
@@ -334,6 +335,7 @@ StackedSnackSequence.prototype.handleCompletion = function() {
 StackedSnackSequence.prototype.complete = function(active) {
 	let snack = this.getSnackWindow();
 	if (snack !== null) {
+		this.update(100, this.count);
 		if (!snack.canStackedMore()) {
 			snack.removeFirstStacked();
 		}
@@ -398,7 +400,7 @@ AsyncSnackSequence.prototype.getCompletionHint = function(active) {
 };
 
 AsyncSnackSequence.prototype.getCompletionBackground = function(active) {
-	return "popupSelectionSelected";
+	return this.foreground;
 };
 
 AsyncSnackSequence.prototype.getMessage = function() {
@@ -476,7 +478,7 @@ AsyncSnackSequence.prototype.complete = function(active) {
 	this.handleCompletion();
 };
 
-AsyncSnackSequence.access = function(who, where) {
+AsyncSnackSequence.access = function(where, who) {
 	let sequence = new AsyncSnackSequence(who);
 	sequence.message = translate("Working");
 	sequence.startupMessage = translate("Preparing");
@@ -494,6 +496,7 @@ AsyncSnackSequence.access = function(who, where) {
 AsyncSnackSequence.initScriptable = function(sequence, who) {
 	return {
 		TARGET: who,
+		INSTANCE: AsyncSnackSequence,
 		getSequence: function() {
 			return sequence;
 		},
@@ -549,6 +552,9 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 		setSynchronizeTime: function(ms) {
 			sequence.setSynchronizeTime(ms);
 		},
+		prepare: function(message, color) {
+			sequence.setHintAndBackground(message, color);
+		},
 		encount: function(count) {
 			sequence.setFixedCount(count);
 		},
@@ -558,6 +564,242 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 		seek: function(message, addition) {
 			sequence.message = message;
 			sequence.shrink(addition);
+		},
+		shrink: function(addition) {
+			sequence.shrink(addition);
+		}
+	};
+};
+
+const AsyncStackedSnackSequence = function(obj) {
+	Sequence.apply(this, arguments);
+};
+
+AsyncStackedSnackSequence.prototype = new AsyncSnackSequence;
+AsyncStackedSnackSequence.prototype.maximumStacked = 7;
+AsyncStackedSnackSequence.prototype.interruptColor = Interface.Color.RED;
+AsyncStackedSnackSequence.prototype.creationColor = Interface.Color.WHITE;
+AsyncStackedSnackSequence.prototype.completionColor = Interface.Color.WHITE;
+
+AsyncStackedSnackSequence.prototype.getProgressionBackground = function(progress, index) {
+	if (progress >= 100) {
+		return this.background;
+	} else if (this.count !== undefined) {
+		let level = preround(progress * 100, 0) + 1;
+		return ImageFactory.clipAndMerge(this.background, this.foreground, level);
+	} else {
+		return this.queueBackground;
+	}
+};
+
+AsyncStackedSnackSequence.prototype.getProgressionHint = function(message, progress, index) {
+	return message + " (" + preround(progress, 1) + "%)";
+};
+
+AsyncStackedSnackSequence.prototype.getSnackWindow = function() {
+	return this.snack || null;
+};
+
+AsyncStackedSnackSequence.prototype.getStack = function() {
+	return this.stack || null;
+};
+
+AsyncStackedSnackSequence.prototype.create = function(value, active) {
+	if (this.isRequiredProgress()) {
+		let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+		if (snack === null) snack = new HintAlert();
+		snack.setMaximumStacked(this.maximumStacked);
+		snack.setConsoleMode(true);
+		snack.pin();
+		if (!snack.canStackedMore()) {
+			snack.removeFirstStacked();
+		}
+		this.widget = snack.attachMessage(this.creationMessage,
+			this.creationColor, this.queueBackground);
+		snack.show();
+		this.snack = snack;
+		SnackSequence.addProcess(this);
+	}
+	this.stack = new Array();
+};
+
+AsyncStackedSnackSequence.prototype.update = function(progress, index) {
+	let snack = this.getSnackWindow();
+	if (snack !== null) {
+		let stack = this.getStack();
+		for (let i = 0; i < stack.length; i++) {
+			let element = stack[i];
+			if (!snack.canStackedMore()) {
+				snack.removeFirstStacked();
+			}
+			this.widget = snack.attachMessage(this.getProgressionHint(element.message, progress, index),
+				element.color, this.getProgressionBackground(progress, index));
+			stack.splice(i, 1);
+			i--;
+		}
+		snack.show();
+	}
+};
+
+AsyncStackedSnackSequence.prototype.change = function(message, color) {
+	let stack = this.getStack();
+	if (stack !== null) {
+		stack.push({
+			message: message !== undefined ? message : this.message,
+			color: color !== undefined ? color : this.color
+		});
+		this.updated = true;
+	}
+};
+
+AsyncStackedSnackSequence.prototype.cancel = function(error) {
+	let snack = this.getSnackWindow();
+	if (snack !== null) {
+		this.update(this.index / this.count * 100, this.index);
+		this.widget = snack.attachMessage(this.getCancellationHint(error),
+			this.interruptColor, this.getCancellationBackground(error));
+		snack.show();
+	}
+	this.handleCompletion();
+	Sequence.prototype.cancel.apply(this, arguments);
+};
+
+AsyncStackedSnackSequence.prototype.handleCompletion = function() {
+	let snack = this.getSnackWindow();
+	if (snack !== null) {
+		snack.setMaximumStacked(HintAlert.prototype.maximumHieracly);
+		snack.setConsoleMode(HintAlert.prototype.consoleMode);
+		SnackSequence.removeProcess(this);
+		if (!SnackSequence.hasMoreProcesses()) {
+			snack.unpin();
+		}
+		delete this.snack;
+	}
+	delete this.widget;
+	delete this.stack;
+};
+
+AsyncStackedSnackSequence.prototype.complete = function(active) {
+	let snack = this.getSnackWindow();
+	if (snack !== null) {
+		this.update(100, this.count);
+		if (!snack.canStackedMore()) {
+			snack.removeFirstStacked();
+		}
+		this.widget = snack.attachMessage(this.getCompletionHint(active),
+			this.completionColor, this.getCompletionBackground(active));
+		snack.show();
+	}
+	this.handleCompletion();
+};
+
+AsyncStackedSnackSequence.prototype.require = function(index, count) {
+	if (index !== undefined) {
+		this.index = index;
+	}
+	if (count !== undefined) {
+		this.count = count;
+	}
+};
+
+AsyncStackedSnackSequence.prototype.shrink = function(addition) {
+	if (addition !== undefined) {
+		this.count += addition;
+	}
+};
+
+AsyncStackedSnackSequence.access = function(where, who) {
+	let sequence = new AsyncStackedSnackSequence(who);
+	sequence.message = translate("Working");
+	sequence.startupMessage = translate("Preparing");
+	sequence.completionMessage = translate("Completed");
+	sequence.queueMessage = translate("Interrupted");
+	sequence.interruptMessage = translate("Something happened");
+	sequence.process = function(next, entry, index) {
+		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry);
+		UNWRAP("sequence/" + where, scriptable);
+		return sequence.getFixedCount();
+	};
+	return sequence;
+};
+
+AsyncStackedSnackSequence.initScriptable = function(sequence, who) {
+	return {
+		TARGET: who,
+		INSTANCE: AsyncStackedSnackSequence,
+		getSequence: function() {
+			return sequence;
+		},
+		sleep: function(ms) {
+			Interface.sleepMilliseconds(ms);
+		},
+		setStartupMessage: function(message) {
+			sequence.startupMessage = message;
+		},
+		setCompletionMessage: function(message) {
+			sequence.completionMessage = message;
+		},
+		setQueueMessage: function(message) {
+			sequence.queueMessage = message;
+		},
+		setInterruptMessage: function(message) {
+			sequence.interruptMessage = message;
+		},
+		setMessage: function(message) {
+			sequence.message = message;
+		},
+		setQueueBackground: function(background) {
+			sequence.queueBackground = background;
+		},
+		setInterruptBackground: function(background) {
+			sequence.interruptBackground = background;
+		},
+		setForeground: function(background) {
+			sequence.foreground = background;
+		},
+		setBackground: function(background) {
+			sequence.background = background;
+		},
+		setProgressBackground: function(background, foreground) {
+			background !== undefined && this.setBackground(background);
+			foreground !== undefined && this.setForeground(foreground);
+		},
+		setColor: function(color) {
+			sequence.color = color;
+		},
+		setCreationColor: function(color) {
+			sequence.creationColor = color;
+		},
+		setInterruptColor: function(color) {
+			sequence.interruptColor = color;
+		},
+		setCompletionColor: function(color) {
+			sequence.completionColor = color;
+		},
+		setPriority: function(priority) {
+			sequence.setPriority(priority);
+		},
+		setReportingEnabled: function(enabled) {
+			sequence.setReportingEnabled(enabled);
+		},
+		setSynchronizeTime: function(ms) {
+			sequence.setSynchronizeTime(ms);
+		},
+		prepare: function(message, color) {
+			sequence.setHintAndBackground(message, color);
+		},
+		encount: function(count) {
+			sequence.setFixedCount(count);
+		},
+		require: function(index, count) {
+			sequence.require(index, count);
+		},
+		seek: function(message, addition, color) {
+			sequence.shrink(addition);
+			sequence.change(message, color);
+		},
+		change: function(message, color) {
+			sequence.change(message, color);
 		},
 		shrink: function(addition) {
 			sequence.shrink(addition);
