@@ -486,18 +486,16 @@ AsyncSnackSequence.access = function(who, where) {
 	sequence.process = function(next, entry, index) {
 		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry);
 		UNWRAP("sequence/" + where, scriptable);
-		return ++index;
+		return sequence.getFixedCount();
 	};
 	return sequence;
 };
 
 AsyncSnackSequence.initScriptable = function(sequence, who) {
 	return {
+		TARGET: who,
 		getSequence: function() {
 			return sequence;
-		},
-		getTarget: function() {
-			return who;
 		},
 		sleep: function(ms) {
 			Interface.sleepMilliseconds(ms);
@@ -551,11 +549,15 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 		setSynchronizeTime: function(ms) {
 			sequence.setSynchronizeTime(ms);
 		},
-		setFixedCount: function(count) {
+		encount: function(count) {
 			sequence.setFixedCount(count);
 		},
 		require: function(index, count) {
 			sequence.require(index, count);
+		},
+		seek: function(message, addition) {
+			sequence.message = message;
+			sequence.shrink(addition);
 		},
 		shrink: function(addition) {
 			sequence.shrink(addition);
