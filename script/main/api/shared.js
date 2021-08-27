@@ -26,38 +26,33 @@ const runAtScope = function(code, scope, name) {
 	});
 };
 
-const REQUIRE = function(path) {
-	if (REQUIRE.loaded.indexOf(path) == -1) {
-		MCSystem.setLoadingTip(NAME + ": Requiring " + path);
-		if (REVISION.startsWith("develop") && path.endsWith(".js")) {
-			let file = new java.io.File(Dirs.EVALUATE, path);
-			if (!file.exists()) throw null;
-			let source = Files.read(file).toString(),
-				code = "(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, REQUIRE.getScope(path), path);
-			if (scope.error) throw scope.error;
-			REQUIRE.results[path] = scope.result;
-			REQUIRE.loaded.push(path);
-		} else if (REVISION.indexOf("alpha") != -1) {
-			let file = new java.io.File(Dirs.TESTING, path);
-			if (!file.exists()) throw null;
-			let source = decompileExecuteable(Files.readBytes(file)),
-				code = "(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, REQUIRE.getScope(path), path);
-			if (scope.error) throw scope.error;
-			REQUIRE.results[path] = scope.result;
-			REQUIRE.loaded.push(path);
-		}
-		MCSystem.setLoadingTip(NAME);
+const UNWRAP = function(path, scope) {
+	let who = UNWRAP.initScriptable(path);
+	if (scope !== undefined && scope !== null) {
+		who = assign(who, scope);
 	}
-	return REQUIRE.results[path];
+	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
+		let file = new java.io.File(Dirs.ADAPTED, path);
+		if (!file.exists()) throw null;
+		let source = Files.read(file).toString(),
+			code = "(function() {\n" + source + "\n})();",
+			scope = runAtScope(code, who, path);
+		if (scope.error) throw scope.error;
+		return scope.result;
+	} else if (REVISION.indexOf("alpha") != -1) {
+		let file = new java.io.File(Dirs.TESTING, path);
+		if (!file.exists()) throw null;
+		let source = decompileExecuteable(Files.readBytes(file)),
+			code = "(function() {\n" + source + "\n})();",
+			scope = runAtScope(code, who, path);
+		if (scope.error) throw scope.error;
+		return scope.result;
+	}
+	return null;
 };
 
-REQUIRE.loaded = new Array();
-REQUIRE.results = new Object();
-
-REQUIRE.getScope = function(name) {
-	let scope = __mod__.compiledModSources.get(0).evaluateStringInScope("this");
+UNWRAP.initScriptable = function(name) {
+	let scope = __mod__.compiledModSources.get(0).getScope();
 	return {
 		SHARE: function(name, obj) {
 			if (REVISION.startsWith("develop")) {
@@ -70,9 +65,23 @@ REQUIRE.getScope = function(name) {
 		},
 		log: function(message) {
 			Logger.Log(message, name);
-		}
+		},
+		__path__: name
 	};
 };
+
+const REQUIRE = function(path, scope) {
+	if (REQUIRE.loaded.indexOf(path) == -1) {
+		MCSystem.setLoadingTip(NAME + ": Requiring " + path);
+		REQUIRE.results[path] = UNWRAP(path, scope);
+		REQUIRE.loaded.push(path);
+		MCSystem.setLoadingTip(NAME);
+	}
+	return REQUIRE.results[path];
+};
+
+REQUIRE.loaded = new Array();
+REQUIRE.results = new Object();
 
 const playTuneDirectly = function() {
 	let buffsize = android.media.AudioTrack.getMinBufferSize(4000,

@@ -358,3 +358,207 @@ StackedSnackSequence.prototype.shrink = function(addition) {
 		this.count += addition;
 	}
 };
+
+const AsyncSnackSequence = function(who) {
+	Sequence.apply(this, arguments);
+};
+
+AsyncSnackSequence.prototype = new Sequence;
+AsyncSnackSequence.prototype.color = Interface.Color.WHITE;
+AsyncSnackSequence.prototype.background = "popup";
+AsyncSnackSequence.prototype.foreground = "popupSelectionSelected";
+AsyncSnackSequence.prototype.queueBackground = "popupSelectionQueued";
+AsyncSnackSequence.prototype.interruptBackground = "popupSelectionLocked";
+
+AsyncSnackSequence.prototype.getProgressionHint = function(progress, index) {
+	return this.message + " (" + preround(progress, 1) + "%)";
+};
+
+AsyncSnackSequence.prototype.getProgressionBackground = function(progress, index) {
+	let level = preround(progress * 100, 0) + 1;
+	return ImageFactory.clipAndMerge(this.background, this.foreground, level);
+};
+
+AsyncSnackSequence.prototype.getCancellationHint = function(error) {
+	if (error && error.message == "java.lang.InterruptedException: null") {
+		return this.queueMessage;
+	}
+	return this.interruptMessage;
+};
+
+AsyncSnackSequence.prototype.getCancellationBackground = function(error) {
+	if (error && error.message == "java.lang.InterruptedException: null") {
+		return this.queueBackground;
+	}
+	return this.interruptBackground;
+};
+
+AsyncSnackSequence.prototype.getCompletionHint = function(active) {
+	return this.completionMessage + " " + translate("as %ss", preround(active / 1000, 1));
+};
+
+AsyncSnackSequence.prototype.getCompletionBackground = function(active) {
+	return "popupSelectionSelected";
+};
+
+AsyncSnackSequence.prototype.getMessage = function() {
+	return this.widget !== undefined ? this.widget : null;
+};
+
+AsyncSnackSequence.prototype.isRequiredProgress = function() {
+	return showProcesses && this.requiresProgress !== false &&
+		(showHint.launchStacked === undefined || this.requiresProgress === true);
+};
+
+AsyncSnackSequence.prototype.setIsRequiredProgress = function(requires) {
+	this.requiresProgress = new Boolean(requires);
+};
+
+AsyncSnackSequence.prototype.create = function(value, active) {
+	if (this.isRequiredProgress()) {
+		let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+		if (snack === null) snack = new HintAlert();
+		snack.setStackable(!hintStackableDenied);
+		if (!snack.canStackedMore()) {
+			snack.removeFirstStacked();
+		}
+		snack.pin();
+		SnackSequence.addProcess(this);
+		this.widget = snack.attachMessage(this.startupMessage, this.color, this.queueBackground);
+		if (!snack.isOpened()) snack.show();
+	}
+};
+
+AsyncSnackSequence.prototype.setHintAndBackground = function(hint, background) {
+	let content = this.getMessage();
+	if (content === null) return false;
+	let text = content.getChildAt(0);
+	text.setText(new String(hint));
+	if (!(background instanceof Drawable)) {
+		background = Drawable.parseJson.call(this, background);
+	}
+	background.attachAsBackground(content);
+	return true;
+};
+
+AsyncSnackSequence.prototype.update = function(progress, index) {
+	if (this.getMessage() !== null) {
+		this.setHintAndBackground(this.getProgressionHint(progress, index),
+			this.getProgressionBackground(progress, index));
+	}
+};
+
+AsyncSnackSequence.prototype.cancel = function(error) {
+	if (this.getMessage() !== null) {
+		this.setHintAndBackground(this.getCancellationHint(error),
+			this.getCancellationBackground(error));
+	}
+	this.handleCompletion();
+	Sequence.prototype.cancel.apply(this, arguments);
+};
+
+AsyncSnackSequence.prototype.handleCompletion = function() {
+	SnackSequence.removeProcess(this);
+	if (!SnackSequence.hasMoreProcesses()) {
+		let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+		snack !== null && snack.unpin();
+	}
+	delete this.widget;
+};
+
+AsyncSnackSequence.prototype.complete = function(active) {
+	if (this.getMessage() !== null) {
+		this.setHintAndBackground(this.getCompletionHint(active),
+			this.getCompletionBackground(active));
+	} else {
+		showHint(this.getCompletionHint(active));
+	}
+	this.handleCompletion();
+};
+
+AsyncSnackSequence.access = function(who, where) {
+	let sequence = new AsyncSnackSequence(who);
+	sequence.message = translate("Working");
+	sequence.startupMessage = translate("Preparing");
+	sequence.completionMessage = translate("Completed");
+	sequence.queueMessage = translate("Interrupted");
+	sequence.interruptMessage = translate("Something happened");
+	sequence.process = function(next, entry, index) {
+		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry);
+		UNWRAP("sequence/" + where, scriptable);
+		return ++index;
+	};
+	return sequence;
+};
+
+AsyncSnackSequence.initScriptable = function(sequence, who) {
+	return {
+		getSequence: function() {
+			return sequence;
+		},
+		getTarget: function() {
+			return who;
+		},
+		sleep: function(ms) {
+			Interface.sleepMilliseconds(ms);
+		},
+		setStartupMessage: function(message) {
+			sequence.startupMessage = message;
+			sequence.require();
+		},
+		setCompletionMessage: function(message) {
+			sequence.completionMessage = message;
+			sequence.require();
+		},
+		setQueueMessage: function(message) {
+			sequence.queueMessage = message;
+			sequence.require();
+		},
+		setInterruptMessage: function(message) {
+			sequence.interruptMessage = message;
+			sequence.require();
+		},
+		setMessage: function(message) {
+			sequence.message = message;
+			sequence.require();
+		},
+		setQueueBackground: function(background) {
+			sequence.queueBackground = background;
+			sequence.require();
+		},
+		setInterruptBackground: function(background) {
+			sequence.interruptBackground = background;
+			sequence.require();
+		},
+		setForeground: function(background) {
+			sequence.foreground = background;
+			sequence.require();
+		},
+		setBackground: function(background) {
+			sequence.background = background;
+			sequence.require();
+		},
+		setProgressBackground: function(background, foreground) {
+			background !== undefined && this.setBackground(background);
+			foreground !== undefined && this.setForeground(foreground);
+		},
+		setPriority: function(priority) {
+			sequence.setPriority(priority);
+		},
+		setReportingEnabled: function(enabled) {
+			sequence.setReportingEnabled(enabled);
+		},
+		setSynchronizeTime: function(ms) {
+			sequence.setSynchronizeTime(ms);
+		},
+		setFixedCount: function(count) {
+			sequence.setFixedCount(count);
+		},
+		require: function(index, count) {
+			sequence.require(index, count);
+		},
+		shrink: function(addition) {
+			sequence.shrink(addition);
+		}
+	};
+};
