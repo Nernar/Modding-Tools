@@ -15,6 +15,10 @@ const recursiveRefresh = function(result, file, key) {
 	}
 };
 
+Translation.addTranslation("Refreshed", {
+	ru: "Перезагружено"
+});
+
 const refreshCategoriedIcons = function() {
 	refreshCategoriedIcons.currently = new Object();
 	let file = new java.io.File(Dirs.ASSET);
@@ -36,11 +40,12 @@ const refreshCategoriedIcons = function() {
 			refreshCategoriedIcons.currently[name] = category;
 		}
 	}
+	showHint(translate("Refreshed"));
 };
 
 refreshCategoriedIcons();
 
-const attachCategoriedIcons = function(control) {
+const attachCategoriedIcons = function(control, action) {
 	if (isEmpty(refreshCategoriedIcons.currently)) {
 		MCSystem.throwException("At least one category must be defined");
 	}
@@ -53,19 +58,22 @@ const attachCategoriedIcons = function(control) {
 		let name = categories[c], items = refreshCategoriedIcons.currently[name];
 		if (name != "$") control.addCategory(name);
 		for (let i = 0; i < items.length; i++) {
-			control.addMessage(items[i], items[i]);
+			control.addMessage(items[i], items[i], action);
 		}
 	}
 };
 
-return function() {
+SHARE("refreshCategoriedIcons", refreshCategoriedIcons);
+SHARE("attachCategoriedIcons", attachCategoriedIcons);
+
+return function(action) {
 	handle(function() {
 		let control = new MenuWindow();
 		control.setOnClickListener(function() {
-			DebugEditor.create();
+			action ? action() : ProjectEditor.create();
 		});
 		control.addHeader().setLogo("supportDumpCreator");
-		attachCategoriedIcons(control);
+		attachCategoriedIcons(control, action);
 		control.show();
 	});
 };
