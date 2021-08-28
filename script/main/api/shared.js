@@ -26,14 +26,24 @@ const runAtScope = function(code, scope, name) {
 	});
 };
 
+const findWrappedScript = function(path) {
+	let file = new java.io.File(Dirs.ADAPTED, path);
+	if (file.exists()) return file;
+	file = new java.io.File(Dirs.EVALUATE, path);
+	if (file.exists()) return file;
+	return null;
+};
+
 const UNWRAP = function(path, scope) {
 	let who = UNWRAP.initScriptable(path);
 	if (scope !== undefined && scope !== null) {
 		who = assign(who, scope);
 	}
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
-		let file = new java.io.File(Dirs.ADAPTED, path);
-		if (!file.exists()) throw null;
+		let file = findWrappedScript(path);
+		if (file == null) {
+			MCSystem.throwException("Script " + path + " doesn't exists");
+		}
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
@@ -41,7 +51,9 @@ const UNWRAP = function(path, scope) {
 		return scope.result;
 	} else if (REVISION.indexOf("alpha") != -1) {
 		let file = new java.io.File(Dirs.TESTING, path);
-		if (!file.exists()) throw null;
+		if (!file.exists()) {
+			MCSystem.throwException("Script " + path + " doesn't exists");
+		}
 		let source = decompileExecuteable(Files.readBytes(file)),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
