@@ -413,7 +413,7 @@ AsyncSnackSequence.prototype.isRequiredProgress = function() {
 };
 
 AsyncSnackSequence.prototype.setIsRequiredProgress = function(requires) {
-	this.requiresProgress = new Boolean(requires);
+	this.requiresProgress = Boolean(requires);
 };
 
 AsyncSnackSequence.prototype.create = function(value, active) {
@@ -435,7 +435,7 @@ AsyncSnackSequence.prototype.setHintAndBackground = function(hint, background) {
 	let content = this.getMessage();
 	if (content === null) return false;
 	let text = content.getChildAt(0);
-	text.setText(new String(hint));
+	text.setText(String(hint));
 	if (!(background instanceof Drawable)) {
 		background = Drawable.parseJson.call(this, background);
 	}

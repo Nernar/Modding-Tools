@@ -17,7 +17,7 @@ const resolveReadable = function(type) {
 
 const resolvePrefix = function(count, prefix) {
 	return tryout(function() {
-		return count > 1 ? String(translate(prefix, count)) : new String();
+		return count > 1 ? String(translate(prefix, count)) : String();
 	}, function(e) {
 		return e.name;
 	});

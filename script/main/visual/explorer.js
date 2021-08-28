@@ -529,7 +529,7 @@ ExplorerWindow.Path.prototype.updatePath = function() {
 	views.layout.removeAllViews();
 	delete this.lastPath;
 	let current = window ? window.external : Dirs.EXTERNAL,
-		pathFilter = path.replace(current, new String()),
+		pathFilter = path.replace(current, String()),
 		pathDivided = pathFilter.split("/");
 	pathDivided.pop();
 	this.addPathIcon("controlAdapterHome", current);
@@ -685,7 +685,7 @@ ExplorerWindow.Rename.prototype.setBackground = function(src) {
 
 ExplorerWindow.Rename.prototype.getCurrentName = function() {
 	let name = String(this.views ? this.views.name ?
-		this.views.name.getText().toString() : new String() : new String());
+		this.views.name.getText().toString() : String() : String());
 	if (name.length == 0) name = translate("project");
 	return name + this.getCurrentFormat();
 };
@@ -887,10 +887,10 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		tryout.call(this, function() {
 			(item.isApproved ? new BitmapDrawable("popupSelectionSelected") : new Drawable()).attachAsBackground(convertView);
 			holder.name.setText(item.name);
-			holder.bound.setText((item.extension ? item.extension : new String()) +
-				(item.extension && item.size ? " / " : new String()) + (item.size ? item.size : new String()) +
+			holder.bound.setText((item.extension ? item.extension : String()) +
+				(item.extension && item.size ? " / " : String()) + (item.size ? item.size : String()) +
 				(item.isDirectory && item.filesCount !== undefined ? translateCounter(item.filesCount, "no files",
-				"%s1 file", "%s" + (item.filesCount % 10) + " files", "%s files") : new String()));
+				"%s1 file", "%s" + (item.filesCount % 10) + " files", "%s files") : String()));
 			holder.drawable.setOptions();
 			holder.date.setText(item.date);
 			if (item.type == "image") {

@@ -55,7 +55,7 @@ BlockConverter.prototype.buildDefine = function(obj) {
 	}
 	result[result.length - 1] += ");";
 	if (define.shape) {
-		if (result.length > 0) result.push(new String());
+		if (result.length > 0) result.push(String());
 		result.push("Block.setShape(BlockID." + this.getIdentifier(obj) + ", " + this.buildBox(define.shape) + ");");
 	}
 	return result.length > 0 ? result.join("\n") : null;
@@ -71,7 +71,7 @@ BlockConverter.prototype.buildRenderer = function(obj) {
 	for (let i = 0; i < renderer.length; i++) {
 		let model = renderer[i];
 		if (!model) continue;
-		if (i > 0) result.push(new String());
+		if (i > 0) result.push(String());
 		result.push("let " + this.resolvePrefix("renderer", renderer, i) + " = new ICRender.Model();");
 		result.push("BlockRenderer.setStaticICRender(BlockID." + this.getIdentifier(obj) + ", " +
 			(renderer.length == 1 ? "-1" : i) + ", " + this.resolvePrefix("renderer", renderer, i) + ");");
@@ -93,7 +93,7 @@ BlockConverter.prototype.buildCollision = function(obj) {
 	for (let i = 0; i < collision.length; i++) {
 		let model = collision[i];
 		if (!model) continue;
-		if (i > 0) result.push(new String());
+		if (i > 0) result.push(String());
 		result.push("let " + this.resolvePrefix("collision", collision, i) + " = new ICRender.CollisionShape();");
 		result.push("BlockRenderer.setCustomCollisionShape(BlockID." + this.getIdentifier(obj) + ", " +
 			(collision.length == 1 ? "-1" : i) + ", " + this.resolvePrefix("collision", collision, i) + ");");
@@ -127,7 +127,7 @@ BlockConverter.prototype.buildBox = function(box) {
 		if (box.texture.length == 1) {
 			return MathUtils.mathDivider(box.x1) + ", " + MathUtils.mathDivider(box.y1) + ", " + MathUtils.mathDivider(box.z1) + ", " +
 				MathUtils.mathDivider(box.x2) + ", " + MathUtils.mathDivider(box.y2) + ", " + MathUtils.mathDivider(box.z2) + ", " +
-				(typeof box.texture[0][0] != "number" ? "\"" + box.texture[0][0] + "\"" : box.texture[0][0]) + (box.texture[0][1] !== undefined ? ", " + box.texture[0][1] : new String());
+				(typeof box.texture[0][0] != "number" ? "\"" + box.texture[0][0] + "\"" : box.texture[0][0]) + (box.texture[0][1] !== undefined ? ", " + box.texture[0][1] : String());
 		}
 	}
 	return MathUtils.mathDivider(box.x1) + ", " + MathUtils.mathDivider(box.y1) + ", " + MathUtils.mathDivider(box.z1) + ", " +

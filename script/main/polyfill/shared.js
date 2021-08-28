@@ -1,27 +1,3 @@
-const findCorePackage = function() {
-	return tryout(function() {
-		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
-	}, function(e) {
-		MCSystem.throwException("Could not find engine package, please referr developer");
-	}, null);
-};
-
-const findAssertionPackage = function() {
-	return tryout(function() {
-		return Packages.com.nernar;
-	}, function(e) {
-		MCSystem.throwException("Could not find assertion package, please referr developer");
-	}, null);
-};
-
-const findEditorPackage = function() {
-	return tryout(function() {
-		return findAssertionPackage().innercore.editor;
-	}, function(e) {
-		MCSystem.throwException("Could not find modification package, please referr developer");
-	}, null);
-};
-
 const requireClass = function(pointer) {
 	return tryout(function() {
 		return eval("findCorePackage()." + pointer);

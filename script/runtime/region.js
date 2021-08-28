@@ -21,7 +21,7 @@ Object.defineProperties(GLOBAL, {
 });
 
 const defineBlockInRegion = function(o, key, region, dx, dy, dz) {
-	key = key && key.length > 0 ? key + "_" : new String();
+	key = key && key.length > 0 ? key + "_" : String();
 	Object.defineProperty(o, key + "ID", {
 		get: function() {
 			return o[region].getBlockId(o[dx], o[dy], o[dz]);
@@ -94,7 +94,7 @@ const defineBlockInRegion = function(o, key, region, dx, dy, dz) {
 };
 
 const defineRangeAroundLocation = function(o, key, region, dx, dy, dz) {
-	key = key && key.length > 0 ? key + "_" : new String();
+	key = key && key.length > 0 ? key + "_" : String();
 	Object.defineProperty(o, key + "STEP_Y", {
 		get: function() {
 			return o[dy] - 1;
@@ -151,7 +151,7 @@ const defineRangeAroundLocation = function(o, key, region, dx, dy, dz) {
 };
 
 const defineRangeAroundEntity = function(o, key, entity, excludeExtra) {
-	key = key && key.length > 0 ? key + "_" : new String();
+	key = key && key.length > 0 ? key + "_" : String();
 	Object.defineProperty(o, key + "REGION", {
 		get: function() {
 			return BlockSource.getDefaultForActor(o[entity]);

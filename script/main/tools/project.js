@@ -280,7 +280,7 @@ const ProjectEditor = {
 						for (let item in Commands) {
 							let command = Commands[item];
 							array.push(command.name + (command.args && command.args.length > 0 ? " " +
-								command.args : new String()) + "\n" + Translation.translate(command.description));
+								command.args : String()) + "\n" + Translation.translate(command.description));
 						}
 						return array.join("\n\n");
 					} catch (e) {

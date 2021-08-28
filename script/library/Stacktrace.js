@@ -408,7 +408,7 @@ let getModName = function(id) {
 			return String(source.getName());
 		}
 	}
-	return new String();
+	return String();
 };
 
 let findAvailabledMods = function(name) {
@@ -713,7 +713,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 					continue;
 				}
 				if (additional.length < 2) {
-					additional.push(new String());
+					additional.push(String());
 				}
 				additional.push(retraced[i]);
 			}
@@ -721,7 +721,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 			if (additional.length > 0) {
 				attached.push(additional.join("<br/>"));
 			}
-			let marked = new String();
+			let marked = String();
 			marked += new Date(launchTime).toLocaleString();
 			if (date > 0) {
 				marked += "<br/>" + new Date(launchTime + date).toLocaleString();
@@ -746,7 +746,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 			return !completed;
 		},
 		toResult: function() {
-			return formatted !== undefined ? formatted.toString() : new String();
+			return formatted !== undefined ? formatted.toString() : String();
 		},
 		cancel: function() {
 			if (update !== undefined) {
@@ -850,8 +850,8 @@ reportTrace.processSources = function(related, resolved, where) {
 reportTrace.processStack = function(resolved) {
 	let strokes = new Array(),
 		where = Number(resolved.line) + 1;
-	strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : new String()) + resolved.file +
-		(resolved.where ? " (" + resolved.where + ")" : new String()) + " " + Translation.translate("at line") + " " + where);
+	strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : String()) + resolved.file +
+		(resolved.where ? " (" + resolved.where + ")" : String()) + " " + Translation.translate("at line") + " " + where);
 	let sources = findRelatedSources(resolved.source, resolved.file),
 		processed = reportTrace.processSources(sources, resolved, where);
 	if (processed !== null && processed.length > 0) {

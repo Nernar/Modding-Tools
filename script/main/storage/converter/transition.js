@@ -74,7 +74,7 @@ TransitionConverter.prototype.buildAnimation = function(obj) {
 	for (let i = 0; i < animation.length; i++) {
 		let animate = animation[i];
 		if (!animate) continue;
-		if (i > 0) result.push(new String());
+		if (i > 0) result.push(String());
 		let frames = this.buildAnimate(animate.frames);
 		if (frames) result.push(frames);
 	}
@@ -105,8 +105,8 @@ TransitionConverter.prototype.resolveInterpolator = function(number) {
 
 TransitionConverter.prototype.buildFrame = function(frame) {
 	return MathUtils.mathDivider(frame.x) + ", " + MathUtils.mathDivider(frame.y) + ", " + MathUtils.mathDivider(frame.z) +
-		(frame.yaw !== undefined ? ", " + MathUtils.mathDivider(frame.yaw) : new String()) +
-		(frame.pitch !== undefined ? ", " + MathUtils.mathDivider(frame.pitch) : new String()) +
-		(frame.duration !== undefined ? ", " + frame.duration : new String()) +
-		(frame.interpolator !== undefined ? ", " + this.resolveInterpolator(frame.interpolator) : new String());
+		(frame.yaw !== undefined ? ", " + MathUtils.mathDivider(frame.yaw) : String()) +
+		(frame.pitch !== undefined ? ", " + MathUtils.mathDivider(frame.pitch) : String()) +
+		(frame.duration !== undefined ? ", " + frame.duration : String()) +
+		(frame.interpolator !== undefined ? ", " + this.resolveInterpolator(frame.interpolator) : String());
 };

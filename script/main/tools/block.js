@@ -1275,7 +1275,7 @@ const BlockEditor = {
 					if (box.texture && Array.isArray(box.texture)) {
 						let stringify = box.texture.slice().map(function(element) {
 							let texture = typeof element[0] == "string" ? "\"" + element[0] + "\"" : element[0];
-							return (texture === undefined ? "0" : texture) + (element.length > 1 ? ", " + element[1] : new String());
+							return (texture === undefined ? "0" : texture) + (element.length > 1 ? ", " + element[1] : String());
 						});
 						handle(function() {
 							edit.setValue(stringify.join("\n"));

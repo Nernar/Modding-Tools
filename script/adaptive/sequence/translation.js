@@ -9,7 +9,7 @@ let target = (function(path) {
 		files = Files.checkFormats(files, ".js");
 		let uncounted = new Array();
 		for (let i = 0; i < files.length; i++) {
-			let currently = new String(files[i]);
+			let currently = String(files[i]);
 			uncounted.push(new java.io.File(path, currently));
 		}
 		return uncounted;
@@ -50,7 +50,7 @@ const locateArgumentEnd = function(source) {
 
 const fetchLocatedStroke = function(located, source) {
 	let index = locateStroke(source);
-	if (index < 0) return new String();
+	if (index < 0) return String();
 	let stroke = source.slice(0, index);
 	if (stroke.length > 0) located.push(stroke);
 	return source.substring(index + 1);
@@ -72,7 +72,7 @@ const fetchStrokesInsideBracket = function(located, source) {
 		if (less != -1) {
 			return source.substring(less + 1);
 		}
-		return new String();
+		return String();
 	}
 };
 
@@ -92,7 +92,7 @@ const fetchStrokesInsideArgument = function(located, source) {
 		if (less != -1) {
 			return source.substring(less + 1);
 		}
-		return new String();
+		return String();
 	}
 };
 

@@ -22,7 +22,7 @@ const updateEntityRender = function(worker) {
 };
 
 const model2ToScript = function(obj) {
-	let script = new String();
+	let script = String();
 	script += "let model = new EntityModel();\n";
 	script += "let render = new Render();\n";
 	for (let item in obj.elements) {

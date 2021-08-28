@@ -48,7 +48,7 @@ Unicode.codeToString = function(code) {
 };
 
 Unicode.pointsToString = function(points) {
-	let string = new String();
+	let string = String();
 	for (let i = 0; i < points.length; i++) {
 		string += this.codeToString(points[i]);
 	}

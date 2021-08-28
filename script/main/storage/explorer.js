@@ -219,14 +219,14 @@ Files.listFileNames = function(path, explore, root) {
 	let files = new Array(),
 		file = new java.io.File(path);
 	if (root === undefined) root = path;
-	if (file.isFile()) return [String(path).replace(root, new String())];
+	if (file.isFile()) return [String(path).replace(root, String())];
 	if (!String(root).endsWith("/") && String(root).length > 0) {
 		root += "/";
 	}
 	let list = file.listFiles() || new Array();
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].isFile()) {
-			files.push(String(list[i]).replace(root, new String()));
+			files.push(String(list[i]).replace(root, String()));
 		} else if (explore) {
 			files = files.concat(this.listFileNames(list[i], explore, root));
 		}
@@ -245,7 +245,7 @@ Files.listDirectoryNames = function(path, explore, root) {
 	}
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].isDirectory()) {
-			directories.push(String(list[i]).replace(root, new String()));
+			directories.push(String(list[i]).replace(root, String()));
 			if (explore) directories = directories.concat(this.listDirectoryNames(list[i], explore, root));
 		}
 	}
@@ -384,7 +384,7 @@ Files.shrinkPathes = function(source, element) {
 	if (element instanceof java.io.File) {
 		element = element.getPath();
 	}
-	return String(element).replace(String(source), new String());
+	return String(element).replace(String(source), String());
 };
 
 Files.copyRecursive = function(path, output, explore, includeDirectories) {
@@ -526,8 +526,8 @@ const Options = new Object();
 Options.getValue = function(key) {
 	let file = new java.io.File(Dirs.OPTION),
 		reader = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file))),
-		line = new String(),
-		result = new String();
+		line = String(),
+		result = String();
 	while ((line = reader.readLine()) != null) {
 		if (line.split(":")[0] == key) {
 			result = line.split(":")[1];

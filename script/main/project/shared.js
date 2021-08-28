@@ -111,7 +111,7 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 											tabbed = true;
 											tabs += "\t";
 										}
-										array.push(result + (i < obj.length ? "\n" + tabs : new String()));
+										array.push(result + (i < obj.length ? "\n" + tabs : String()));
 									} else if (i != 0) {
 										array.push(" " + result);
 									} else array.push(result);
@@ -136,7 +136,7 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 											tabbed = true;
 											tabs += "\t";
 										}
-										array.push(item + ": " + result + (item != last ? "\n" + tabs : new String()));
+										array.push(item + ": " + result + (item != last ? "\n" + tabs : String()));
 									} else if (item != 0) {
 										array.push(" " + item + ": " + result);
 									} else array.push(result);
@@ -145,7 +145,7 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 						}
 						let joined = array.join(",");
 						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
-							(identate ? tabbed ? tabs.replace("\t", new String()) + "\n}" : " }" : "}");
+							(identate ? tabbed ? tabs.replace("\t", String()) + "\n}" : " }" : "}");
 					}
 					default:
 						if (callback.onPassed) {
@@ -154,7 +154,7 @@ const stringifyObjectUnsafe = function(obj, identate, callback) {
 			}
 		});
 	};
-	return recursiveStringify(obj, new String());
+	return recursiveStringify(obj, String());
 };
 
 const readFile = function(path, isBytes, action) {

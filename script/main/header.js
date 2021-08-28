@@ -122,17 +122,37 @@ Interface.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
 
-IMPORT("Network:2");
-IMPORT("Transition:6");
-IMPORT("Action:4");
+const findCorePackage = function() {
+	return tryout(function() {
+		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
+	}, function(e) {
+		MCSystem.throwException("Could not find engine package, please referr developer");
+	}, null);
+};
+
+const findAssertionPackage = function() {
+	return tryout(function() {
+		return Packages.com.nernar;
+	}, function(e) {
+		MCSystem.throwException("Could not find assertion package, please referr developer");
+	}, null);
+};
+
+const findEditorPackage = function() {
+	return tryout(function() {
+		return findAssertionPackage().innercore.editor;
+	}, function(e) {
+		MCSystem.throwException("Could not find modification package, please referr developer");
+	}, null);
+};
 
 if (REVISION.startsWith("develop")) {
 	IMPORT("Stacktrace:2");
+	
+	reportTrace.setupPrint(function(message) {
+		message !== undefined && showHint(message);
+	});
 }
-
-reportTrace.setupPrint(function(message) {
-	message !== undefined && showHint(message);
-});
 
 const retraceOrReport = function(error) {
 	if (REVISION.startsWith("develop")) {
@@ -142,6 +162,22 @@ const retraceOrReport = function(error) {
 	}
 };
 
+tryout(function() {
+	let $ = new JavaImporter();
+	$.importPackage(findCorePackage().mod.build);
+	$.importPackage(findCorePackage().mod.executable.library);
+	let dependency = new $.LibraryDependency("Retention");
+	dependency.setParentMod(__mod__);
+	let library = $.LibraryRegistry.resolveDependency(dependency);
+	if (!library.isLoaded()) {
+		MCSystem.throwException("Without Retention Dev Editor may not working");
+	}
+	library.getScope().reportError = reportTrace;
+});
+
+IMPORT("Network:2");
+IMPORT("Transition:6");
+IMPORT("Action:4");
 IMPORT("Sequence:1");
 
 getPlayerEnt = function() {

@@ -9,7 +9,7 @@ let target = (function(path) {
 		files = Files.checkFormats(files, ".png");
 		let uncounted = new Array();
 		for (let i = 0; i < files.length; i++) {
-			let currently = new String(files[i]);
+			let currently = String(files[i]);
 			uncounted.push(new java.io.File(path, currently));
 		}
 		return uncounted;

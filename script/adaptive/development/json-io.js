@@ -11,11 +11,11 @@ JsonIo.Object = $.JsonObject;
 const shouldReturnPrimitive = function(value) {
 	switch (typeof value) {
 		case "number":
-			return new Number(value);
+			return Number(value);
 		case "boolean":
-			return new Boolean(value);
+			return Boolean(value);
 		case "string":
-			return new String(value);
+			return String(value);
 	}
 	return $.ScriptRuntime.toObject(this, value);
 };

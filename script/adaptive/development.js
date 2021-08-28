@@ -1,64 +1,3 @@
-tryout = function(action, report, basic) {
-	try {
-		if (typeof action == "function") {
-			return action.call(this);
-		}
-	} catch (e) {
-		if (typeof report == "function") {
-			let result = report.call(this, e);
-			if (result !== undefined) return result;
-		} else {
-			retraceOrReport(e);
-			if (typeof report !== "undefined") {
-				return report;
-			}
-		}
-	}
-	return basic;
-};
-
-handle = function(action, time) {
-	context.runOnUiThread(function() {
-		new android.os.Handler().postDelayed(function() {
-			if (action !== undefined) tryout(action);
-		}, time >= 0 ? time : 0);
-	});
-};
-
-handleThread = function(action, priority) {
-	let thread = new java.lang.Thread(function() {
-		if (action !== undefined) tryout(action);
-		let index = handleThread.stack.indexOf(thread);
-		if (index != -1) handleThread.stack.splice(index, 1);
-	});
-	handleThread.stack.push(thread);
-	if (priority !== undefined) {
-		thread.setPriority(priority);
-	}
-	return (thread.start(), thread);
-};
-
-handleThread.MIN_PRIORITY = java.lang.Thread.MIN_PRIORITY;
-handleThread.NORM_PRIORITY = java.lang.Thread.NORM_PRIORITY;
-handleThread.MAX_PRIORITY = java.lang.Thread.MAX_PRIORITY;
-
-handleThread.stack = new Array();
-
-handleThread.interruptAll = function() {
-	handleThread.stack.forEach(function(thread) {
-		if (thread && !thread.isInterrupted()) {
-			thread.interrupt();
-		}
-	});
-	handleThread.stack = new Array();
-};
-
-Sequence.prototype.cancel = function(error) {
-	if (error && error.message != "java.lang.InterruptedException: null") {
-		if (this.isReportingEnabled()) retraceOrReport(error);
-	}
-};
-
 Translation.addTranslation("Development", {
 	ru: "Разработка"
 });
@@ -171,7 +110,9 @@ LaunchSequence.process = function(index) {
 				});
 			});
 		});
-		AsyncSnackSequence.access("translation.js", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
+		if (!isInstant) {
+			AsyncSnackSequence.access("translation.js", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
+		}
 	} else if (index == 3) {
 		AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.TESTING]).assureYield();
 		AsyncSnackSequence.access("script.js", [Dirs.ADAPTIVE + "testing/", Dirs.TESTING]).assureYield();

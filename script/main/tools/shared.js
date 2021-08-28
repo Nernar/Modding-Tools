@@ -177,7 +177,7 @@ const showSupportableInfo = function(mod) {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate(mod.modName) + " " + translate(mod.version));
-		builder.setMessage((mod.description && mod.description.length > 0 ? translate(mod.description) + "\n" : new String()) +
+		builder.setMessage((mod.description && mod.description.length > 0 ? translate(mod.description) + "\n" : String()) +
 			translate("Developer: %s", translate(mod.author || "Unknown")) + "\n" + translate("State: %s", translate(mod.result === true ?
 				"ACTIVE" : mod.result === false ? "OUTDATED" : mod.result.lineNumber !== undefined ? "FAILED" : !mod.result ? "DISABLED" : "UNKNOWN")));
 		builder.setNegativeButton(translate("Remove"), function() {
@@ -187,7 +187,7 @@ const showSupportableInfo = function(mod) {
 					if (mod.result === true) {
 						showHint(translate("Restart game for better stability"));
 					}
-					eval(mod.modName.replace(/\W/, new String()) + " = null;");
+					eval(mod.modName.replace(/\W/, String()) + " = null;");
 					ExecuteableSupport.uninstall(mod.modName);
 					ProjectEditor.menu();
 				});

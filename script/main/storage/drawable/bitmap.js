@@ -71,7 +71,7 @@ BitmapDrawableFactory.generateKeyFor = function(path, root) {
 		previous = next;
 	} while (splited.length > 0);
 	if (key !== undefined) {
-		return key.replace(/\W/g, new String());
+		return key.replace(/\W/g, String());
 	}
 	MCSystem.throwException("Invalid path passed to BitmapDrawableFactory");
 };

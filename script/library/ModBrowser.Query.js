@@ -45,7 +45,7 @@ ModBrowser.Query.prototype.formatQuery = function() {
 	let result = new Array();
 	for (let item in query) {
 		let value = query[item];
-		result.push(item + (value ? "=" + value : new String()));
+		result.push(item + (value ? "=" + value : String()));
 	}
 	return result.length > 0 ? result.join(",") : null;
 };
