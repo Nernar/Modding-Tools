@@ -216,8 +216,8 @@ for (let i = 0; i < target.length; i++) {
 	let readable = Files.shrinkPathes(TARGET[0], target[i].getPath());
 	seek(readable, 1);
 	let result = Files.read(target[i]),
-		previous = getAlreadyTranslatedStrokes(source),
-		next = getTranslateableStrokes(source);
+		previous = getAlreadyTranslatedStrokes(result),
+		next = getTranslateableStrokes(result);
 	older = older.concat(previous);
 	current = current.concat(next);
 }
@@ -250,7 +250,7 @@ for (let i = 0; i < target.length; i++) {
 	let readable = Files.shrinkPathes(TARGET[0], target[i].getPath());
 	seek(readable, 1);
 	let result = Files.read(target[i]),
-		workout = updateDeprecationsWarning(source, deprecated);
+		workout = updateDeprecationsWarning(result, deprecated);
 	if (workout.addition > 0 || workout.removed > 0) {
 		Files.write(element, workout.source);
 		deprecation += workout.addition + workout.removed;

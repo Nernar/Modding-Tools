@@ -277,13 +277,18 @@ const ModificationSource = {
 		}
 	},
 	requireDexerAsync: function(mod, yields) {
-		let dexer = REQUIRE("compiler.dns")(mod);
+		let dexer = AsyncStackedSnackSequence.access("compiler.js", mod, function(who) {
+			yields = who;
+		});
 		if (yields !== false) dexer.assureYield();
-		return dexer.toResult();
+		return yields;
 	},
 	requireDecompilerAsync: function(mod, yields) {
-		let formatter = REQUIRE("decompiler.dns")(mod);
+		let formatter = AsyncSnackSequence.access("decompiler.js", mod, function(who) {
+			yields = who;
+		});
 		if (yields !== false) formatter.assureYield();
+		return yields;
 	},
 	confirmSwitchBuild: function(mod) {
 		confirm(translate("Switch build type"), translate("Do you want to switch modification build type in build.config?"), function() {

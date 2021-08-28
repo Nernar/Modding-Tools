@@ -478,18 +478,20 @@ AsyncSnackSequence.prototype.complete = function(active) {
 	this.handleCompletion();
 };
 
-AsyncSnackSequence.access = function(where, who) {
-	let sequence = new AsyncSnackSequence(who);
+AsyncSnackSequence.access = function(where, who, post) {
+	let sequence = new AsyncSnackSequence();
 	sequence.message = translate("Working");
 	sequence.startupMessage = translate("Preparing");
 	sequence.completionMessage = translate("Completed");
 	sequence.queueMessage = translate("Interrupted");
 	sequence.interruptMessage = translate("Something happened");
 	sequence.process = function(next, entry, index) {
-		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry);
-		UNWRAP("sequence/" + where, scriptable);
+		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry),
+			wrapped = UNWRAP("sequence/" + where, scriptable);
+		post && post(wrapped, sequence.getFixedCount());
 		return sequence.getFixedCount();
 	};
+	sequence.execute(who);
 	return sequence;
 };
 
@@ -708,18 +710,20 @@ AsyncStackedSnackSequence.prototype.shrink = function(addition) {
 	}
 };
 
-AsyncStackedSnackSequence.access = function(where, who) {
-	let sequence = new AsyncStackedSnackSequence(who);
+AsyncStackedSnackSequence.access = function(where, who, post) {
+	let sequence = new AsyncStackedSnackSequence();
 	sequence.message = translate("Working");
 	sequence.startupMessage = translate("Preparing");
 	sequence.completionMessage = translate("Completed");
 	sequence.queueMessage = translate("Interrupted");
 	sequence.interruptMessage = translate("Something happened");
 	sequence.process = function(next, entry, index) {
-		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry);
-		UNWRAP("sequence/" + where, scriptable);
+		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry),
+			wrapped = UNWRAP("sequence/" + where, scriptable);
+		post && post(wrapped, sequence.getFixedCount());
 		return sequence.getFixedCount();
 	};
+	sequence.execute(who);
 	return sequence;
 };
 

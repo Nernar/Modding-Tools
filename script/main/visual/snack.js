@@ -61,7 +61,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		layout.setVisibility(Interface.Visibility.GONE);
 		content.addView(layout, params);
 
-		let text = new findAssertionPackage().android.widget.TypingTextView(context);
+		let text = new android.widget.TextView(context);
 		text.setTextSize(Interface.getFontSize(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
 		if (!this.inConsoleMode()) text.setGravity(Interface.Gravity.CENTER);

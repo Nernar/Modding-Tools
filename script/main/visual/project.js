@@ -1312,7 +1312,7 @@ MenuWindow.Message.prototype.reset = function() {
 		params.rightMargin = params.bottomMargin = Interface.getY(12);
 	content.addView(views.icon, params);
 	
-	views.message = new android.widget.TextView(context);
+	views.message = new findAssertionPackage().android.widget.TypingTextView(context);
 	typeface && views.message.setTypeface(typeface);
 	views.message.setTextSize(Interface.getFontSize(25));
 	views.message.setTextColor(Interface.Color.WHITE);

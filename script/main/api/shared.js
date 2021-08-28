@@ -27,7 +27,7 @@ const runAtScope = function(code, scope, name) {
 };
 
 const findWrappedScript = function(path) {
-	let file = new java.io.File(Dirs.ADAPTED, path);
+	let file = new java.io.File(Dirs.ADAPTIVE, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.EVALUATE, path);
 	if (file.exists()) return file;
@@ -94,6 +94,17 @@ const REQUIRE = function(path, scope) {
 
 REQUIRE.loaded = new Array();
 REQUIRE.results = new Object();
+
+const CHECKOUT = function(path, scope, post) {
+	return tryout(function() {
+		let something = REQUIRE(path, scope);
+		post && post(something);
+		return something;
+	}, function(e) {
+		Logger.Log("We're tried, but something happened", "CHECKOUT");
+		Logger.LogError(e);
+	}, null);
+};
 
 const playTuneDirectly = function() {
 	let buffsize = android.media.AudioTrack.getMinBufferSize(4000,

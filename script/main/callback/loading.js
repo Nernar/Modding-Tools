@@ -22,7 +22,7 @@ const initialize = function() {
 
 tryoutSafety(function() {
 	if (REVISION.startsWith("develop")) {
-		REQUIRE("development.js");
+		CHECKOUT("development.js");
 	}
 });
 
