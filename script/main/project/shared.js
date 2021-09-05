@@ -228,9 +228,8 @@ const importScript = function(path, action) {
 	readFile(path, false, function(text) {
 		let result = compileScript(text);
 		if (result !== null) {
-			handle(function() {
-				action && (result.length !== undefined ?
-					action(result) : action([result]));
+			action && handle(function() {
+				action(result);
 			});
 		}
 	});
@@ -255,9 +254,6 @@ const compileScript = function(text) {
 const getScriptScope = function() {
 	let scope = {
 		__data__: new Array(),
-		__stringify__: function(who, identate, callback) {
-			return stringifyObjectUnsafe.apply(this, arguments);
-		},
 		Callback: {
 			addCallback: function(name, func) {
 				try {
@@ -270,11 +266,11 @@ const getScriptScope = function() {
 		BlockID: new Object(),
 		IDRegistry: {
 			fromString: function(id) {
-				return BlockID[id] !== undefined ? BlockID[id] : -1;
+				return scope.BlockID[id] !== undefined ? scope.BlockID[id] : -1;
 			},
 			genBlockID: function(name) {
-				let nid = BlockID[name] = __data__.length;
-				__data__[nid] = {
+				let nid = scope.BlockID[name] = scope.__data__.length;
+				scope.__data__[nid] = {
 					type: "block",
 					define: {
 						id: name
@@ -287,16 +283,16 @@ const getScriptScope = function() {
 		},
 		Block: {
 			createBlock: function(id, data, special) {
-				let nid = IDRegistry.fromString(id);
+				let nid = scope.IDRegistry.fromString(id);
 				if (nid == -1) return;
-				data && (__data__[nid].define.data = __stringify__(data, true));
-				special && (__data__[nid].define.special = __stringify__(special, true));
+				data && (scope.__data__[nid].define.data = stringifyObjectUnsafe(data, true));
+				special && (scope.__data__[nid].define.special = stringifyObjectUnsafe(special, true));
 			},
 			createSpecialType: function(params) {
 				return params;
 			},
 			setShape: function(id, x1, y1, z1, x2, y2, z2) {
-				__data__[id].define.shape = {
+				scope.__data__[id].define.shape = {
 					x1: x1,
 					y1: y1,
 					z1: z1,
@@ -306,7 +302,7 @@ const getScriptScope = function() {
 				};
 			},
 			setBlockShape: function(id, pos1, pos2) {
-				__data__[id].define.shape = {
+				scope.__data__[id].define.shape = {
 					x1: pos1.x,
 					y1: pos1.y,
 					z1: pos1.z,
@@ -328,7 +324,7 @@ const getScriptScope = function() {
 			CollisionShape: function() {
 				this.shape = new Array();
 				this.addEntry = function() {
-					let entry = new BlockRenderer.Collision();
+					let entry = new scope.BlockRenderer.Collision();
 					this.shape.push({
 						boxes: entry.boxes
 					});
@@ -370,7 +366,7 @@ const getScriptScope = function() {
 			},
 			setStaticICRender: function(id, meta, render) {
 				if (!(id >= 0)) {
-					__data__.push({
+					scope.__data__.push({
 						type: "block",
 						define: {
 							id: "invalidIdentifier"
@@ -378,11 +374,11 @@ const getScriptScope = function() {
 						renderer: render.renderer,
 						collision: new Array()
 					});
-				} else __data__[id].renderer = render.renderer;
+				} else scope.__data__[id].renderer = render.renderer;
 			},
 			setCustomCollisionShape: function(id, meta, collision) {
 				if (!(id >= 0)) {
-					__data__.push({
+					scope.__data__.push({
 						type: "block",
 						define: {
 							id: "invalidIdentifier"
@@ -390,14 +386,14 @@ const getScriptScope = function() {
 						renderer: new Array(),
 						collision: collision.shape
 					});
-				} else __data__[id].collision = collision.shape;
+				} else scope.__data__[id].collision = collision.shape;
 			},
 			enableCoordMapping: function(id, meta, render) {
 				this.setStaticICRender(id, meta, render);
 			}
 		},
 		Transition: function(obj) {
-			this.__data__ = (__data__[__data__.length] = {
+			this.__data__ = (scope.__data__[scope.__data__.length] = {
 				type: "transition",
 				define: {
 					starting: new Object()

@@ -164,9 +164,13 @@ const selectProjectData = function(result, action, type, single) {
 		}
 		select(translate("Element selector"), items, function(selected, items) {
 			let value = new Array();
-			selected.forEach(function(element, index) {
-				element && value.push(data[index]);
-			});
+			if (typeof selected == "object") {
+				selected.forEach(function(element, index) {
+					element && value.push(data[index]);
+				});
+			} else if (selected >= 0) {
+				value.push(data[selected]);
+			}
 			action && action(value);
 		}, !single, selected);
 	});
