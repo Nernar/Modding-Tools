@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-28.08.2021-0";
+const REVISION = "develop-alpha-0.4-05.09.2021-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -126,7 +126,7 @@ const findCorePackage = function() {
 	return tryout(function() {
 		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 	}, function(e) {
-		MCSystem.throwException("Could not find engine package, please referr developer");
+		MCSystem.throwException("Couldn't find engine package, please referr developer");
 	}, null);
 };
 
@@ -134,7 +134,7 @@ const findAssertionPackage = function() {
 	return tryout(function() {
 		return Packages.com.nernar;
 	}, function(e) {
-		MCSystem.throwException("Could not find assertion package, please referr developer");
+		MCSystem.throwException("Couldn't find assertion package, please referr developer");
 	}, null);
 };
 
@@ -142,7 +142,7 @@ const findEditorPackage = function() {
 	return tryout(function() {
 		return findAssertionPackage().innercore.editor;
 	}, function(e) {
-		MCSystem.throwException("Could not find modification package, please referr developer");
+		MCSystem.throwException("Couldn't find modification package, please referr developer");
 	}, null);
 };
 
@@ -163,10 +163,8 @@ const retraceOrReport = function(error) {
 };
 
 tryout(function() {
-	let $ = new JavaImporter();
-	$.importPackage(findCorePackage().mod.build);
-	$.importPackage(findCorePackage().mod.executable.library);
-	let dependency = new $.LibraryDependency("Retention");
+	let $ = new JavaImporter(findCorePackage().mod.executable.library),
+		dependency = new $.LibraryDependency("Retention");
 	dependency.setParentMod(__mod__);
 	let library = $.LibraryRegistry.resolveDependency(dependency);
 	if (!library.isLoaded()) {

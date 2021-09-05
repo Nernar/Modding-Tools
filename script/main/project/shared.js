@@ -253,204 +253,216 @@ const compileScript = function(text) {
 };
 
 const getScriptScope = function() {
-	let __data__ = new Array();
-	let Callback = {
-		addCallback: function(name, func) {}
-	};
-	let BlockID = new Object();
-	let IDRegistry = {
-		fromString: function(id) {
-			return BlockID[id] !== undefined ? BlockID[id] : -1;
+	let scope = {
+		__data__: new Array(),
+		__stringify__: function(who, identate, callback) {
+			return stringifyObjectUnsafe.apply(this, arguments);
 		},
-		genBlockID: function(name) {
-			let nid = BlockID[name] = __data__.length;
-			__data__[nid] = {
-				type: "block",
-				define: {
-					id: name
-				},
-				renderer: new Array(),
-				collision: new Array()
-			};
-			return nid;
-		}
-	};
-	let Block = {
-		createBlock: function(id, data, special) {
-			let nid = IDRegistry.fromString(id);
-			if (nid == -1) return;
-			data && (__data__[nid].define.data = __stringify__(data, true));
-			special && (__data__[nid].define.special = __stringify__(special, true));
+		Callback: {
+			addCallback: function(name, func) {
+				try {
+					func();
+				} catch (e) {
+					// Something may happened
+				}
+			}
 		},
-		createSpecialType: function(params) {
-			return params;
+		BlockID: new Object(),
+		IDRegistry: {
+			fromString: function(id) {
+				return BlockID[id] !== undefined ? BlockID[id] : -1;
+			},
+			genBlockID: function(name) {
+				let nid = BlockID[name] = __data__.length;
+				__data__[nid] = {
+					type: "block",
+					define: {
+						id: name
+					},
+					renderer: new Array(),
+					collision: new Array()
+				};
+				return nid;
+			}
 		},
-		setShape: function(id, x1, y1, z1, x2, y2, z2) {
-			__data__[id].collision.push({
-				boxes: [{
+		Block: {
+			createBlock: function(id, data, special) {
+				let nid = IDRegistry.fromString(id);
+				if (nid == -1) return;
+				data && (__data__[nid].define.data = __stringify__(data, true));
+				special && (__data__[nid].define.special = __stringify__(special, true));
+			},
+			createSpecialType: function(params) {
+				return params;
+			},
+			setShape: function(id, x1, y1, z1, x2, y2, z2) {
+				__data__[id].define.shape = {
 					x1: x1,
 					y1: y1,
 					z1: z1,
 					x2: x2,
 					y2: y2,
 					z2: z2
-				}]
-			});
-		},
-		setBlockShape: function(id, pos1, pos2) {
-			__data__[id].collision.push({
-				boxes: [{
+				};
+			},
+			setBlockShape: function(id, pos1, pos2) {
+				__data__[id].define.shape = {
 					x1: pos1.x,
 					y1: pos1.y,
 					z1: pos1.z,
 					x2: pos2.x,
 					y2: pos2.y,
 					z2: pos2.z
+				};
+			}
+		},
+		ICRender: {
+			Model: function() {
+				this.renderer = new Array();
+				this.addEntry = function(model) {
+					model && this.renderer.push({
+						boxes: model.boxes
+					});
+				};
+			},
+			CollisionShape: function() {
+				this.shape = new Array();
+				this.addEntry = function() {
+					let entry = new BlockRenderer.Collision();
+					this.shape.push({
+						boxes: entry.boxes
+					});
+					return entry;
+				};
+			}
+		},
+		BlockRenderer: {
+			Model: function() {
+				this.boxes = new Array();
+				this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
+					let index = this.boxes.push({
+						x1: x1,
+						y1: y1,
+						z1: z1,
+						x2: x2,
+						y2: y2,
+						z2: z2
+					}) - 1;
+					if (texture !== undefined) this.boxes[index].texture = texture;
+					if (data !== undefined) this.boxes[index].texture = [[texture, data]];
+				};
+			},
+			Collision: function() {
+				this.boxes = new Array();
+				this.addBox = function(x1, y1, z1, x2, y2, z2) {
+					this.boxes.push({
+						x1: x1,
+						y1: y1,
+						z1: z1,
+						x2: x2,
+						y2: y2,
+						z2: z2
+					});
+				};
+			},
+			createModel: function() {
+				return new this.Model();
+			},
+			setStaticICRender: function(id, meta, render) {
+				if (!(id >= 0)) {
+					__data__.push({
+						type: "block",
+						define: {
+							id: "invalidIdentifier"
+						},
+						renderer: render.renderer,
+						collision: new Array()
+					});
+				} else __data__[id].renderer = render.renderer;
+			},
+			setCustomCollisionShape: function(id, meta, collision) {
+				if (!(id >= 0)) {
+					__data__.push({
+						type: "block",
+						define: {
+							id: "invalidIdentifier"
+						},
+						renderer: new Array(),
+						collision: collision.shape
+					});
+				} else __data__[id].collision = collision.shape;
+			},
+			enableCoordMapping: function(id, meta, render) {
+				this.setStaticICRender(id, meta, render);
+			}
+		},
+		Transition: function(obj) {
+			this.__data__ = (__data__[__data__.length] = {
+				type: "transition",
+				define: {
+					starting: new Object()
+				},
+				animation: [{
+					frames: new Array()
 				}]
 			});
-		}
-	};
-	let ICRender = {
-		Model: function() {
-			this.renderer = new Array();
-			this.addEntry = function(model) {
-				model && this.renderer.push({
-					boxes: model.boxes
-				});
-			};
-		},
-		CollisionShape: function() {
-			this.shape = new Array();
-			this.addEntry = function(model) {
-				model && this.shape.push({
-					boxes: model.boxes
-				});
-			};
-		}
-	};
-	let BlockRenderer = {
-		Model: function() {
-			this.boxes = new Array();
-			this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
-				let index = this.boxes.push({
-					x1: x1,
-					y1: y1,
-					z1: z1,
-					x2: x2,
-					y2: y2,
-					z2: z2
+			this.__compareVectorPoint = function(index, request) {};
+			this.addFrame = function(x, y, z, yaw, pitch, duration, interpolator) {
+				let index = this.__data__.animation[0].frames.push({
+					x: x,
+					y: y,
+					z: z,
+					yaw: yaw,
+					pitch: pitch,
+					duration: duration || 1 / (this.__data__.define.fps || 60)
 				}) - 1;
-				if (texture !== undefined) this.boxes[index].texture = texture;
-				if (data !== undefined) this.boxes[index].texture = [[texture, data]];
+				if (typeof interpolator != "undefined")
+					this.__data__.animation[0].frames[index].interpolator = interpolator;
 			};
-		},
-		createModel: function() {
-			return new this.Model();
-		},
-		setStaticICRender: function(id, meta, render) {
-			if (!(id >= 0)) {
-				__data__.push({
-					type: "block",
-					define: {
-						id: "invalidIdentifier"
-					},
-					renderer: render.renderer,
-					collision: new Array()
-				});
-			} else __data__[id].renderer = render.renderer;
-		},
-		setCustomCollisionShape: function(id, meta, collision) {
-			if (!(id >= 0)) {
-				__data__.push({
-					type: "block",
-					define: {
-						id: "invalidIdentifier"
-					},
-					renderer: new Array(),
-					collision: collision.shape
-				});
-			} else __data__[id].collision = collision.shape;
-		},
-		enableCoordMapping: function(id, meta, render) {
-			this.setStaticICRender(id, meta, render);
-		}
-	};
-	let Transition = function(obj) {
-		this.__data__ = (__data__[__data__.length] = {
-			type: "transition",
-			define: {
-				starting: new Object()
-			},
-			animation: [{
-				frames: new Array()
-			}]
-		});
-		this.__compareVectorPoint = function(index, request) {};
-		this.addFrame = function(x, y, z, yaw, pitch, duration, interpolator) {
-			let index = this.__data__.animation[0].frames.push({
-				x: x,
-				y: y,
-				z: z,
-				yaw: yaw,
-				pitch: pitch,
-				duration: duration || 1 / (this.__data__.define.fps || 60)
-			}) - 1;
-			if (typeof interpolator != "undefined")
-				this.__data__.animation[0].frames[index].interpolator = interpolator;
-		};
-		this.addPoint = function(x, y, z, yaw, pitch) {};
-		this.getRelativePoint = function() {};
-		this.setPoint = function(x, y, z, yaw, pitch) {};
-		this.setFramesPerSecond = function(limit) {
-			this.__data__.define.fps = limit;
-		};
-		this.start = function() {};
-		this.stop = function() {};
-		this.isStarted = function() {};
-		this.withFrom = function(x, y, z, yaw, pitch) {
-			this.__data__.define.starting = {
-				x: x,
-				y: y,
-				z: z,
-				yaw: yaw,
-				pitch: pitch
+			this.addPoint = function(x, y, z, yaw, pitch) {};
+			this.getRelativePoint = function() {};
+			this.setPoint = function(x, y, z, yaw, pitch) {};
+			this.setFramesPerSecond = function(limit) {
+				this.__data__.define.fps = limit;
 			};
-		};
-		this.withEntity = function(entity) {
-			this.__data__.define.entity = entity;
-		};
-		this.withOnStartListener = function(listener) {};
-		this.withOnFrameListener = function(listener) {};
-		this.withOnFinishListener = function(listener) {};
-		this.withFrames = function(frames) {
-			for (let i = 0; i < frames.length; i++) {
-				this.addFrame(frames[i].x, frames[i].y, frames[i].z,
-					frames[i].yaw, frames[i].pitch,
-					frames[i].duration, frames[i].vector);
+			this.start = function() {};
+			this.stop = function() {};
+			this.isStarted = function() {};
+			this.withFrom = function(x, y, z, yaw, pitch) {
+				this.__data__.define.starting = {
+					x: x,
+					y: y,
+					z: z,
+					yaw: yaw,
+					pitch: pitch
+				};
+			};
+			this.withEntity = function(entity) {
+				this.__data__.define.entity = entity;
+			};
+			this.withOnStartListener = function(listener) {};
+			this.withOnFrameListener = function(listener) {};
+			this.withOnFinishListener = function(listener) {};
+			this.withFrames = function(frames) {
+				for (let i = 0; i < frames.length; i++) {
+					this.addFrame(frames[i].x, frames[i].y, frames[i].z,
+						frames[i].yaw, frames[i].pitch,
+						frames[i].duration, frames[i].vector);
+				}
+			};
+			if (obj) {
+				typeof obj == "object" && this.withFrames(obj);
+				typeof obj == "number" && this.withEntity(obj);
 			}
-		};
-		if (obj) {
-			typeof obj == "object" && this.withFrames(obj);
-			typeof obj == "number" && this.withEntity(obj);
 		}
 	};
-	Transition.Interpolator = {
+	scope.Transition.Interpolator = {
 		LINEAR: 0,
 		ACCELERATE: 1,
 		DECELERATE: 2,
 		ACCELERATE_DECELERATE: 3
 	};
-	return {
-		__data__: __data__,
-		__stringify__: stringifyObjectUnsafe,
-		Callback: Callback,
-		BlockID: BlockID,
-		IDRegistry: IDRegistry,
-		Block: Block,
-		ICRender: ICRender,
-		BlockRenderer: BlockRenderer,
-		Transition: Transition
-	};
+	return scope;
 };
 
 const Project = function(obj) {

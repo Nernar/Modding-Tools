@@ -1282,7 +1282,7 @@ Translation.addTranslation("Checkout reports below to see more details.", {
 	ru: "Просмотрите отчеты за этим окном для уточнения деталей."
 });
 
-// Tutorial sequence
+// Deprecated tutorial sequence
 Translation.addTranslation("Howdy and welcome to Dev Editor!", {
 	ru: "Приветствую и добро пожаловать в Dev Editor!"
 });
