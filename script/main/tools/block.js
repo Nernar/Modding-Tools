@@ -208,7 +208,7 @@ const CUSTOM_BLOCKS_ID_OFFSET = 8192;
 const mapRenderBlock = function(tool) {
 	return tryout(function() {
 		let worker = tool.getWorker();
-		if (!Level.isLoaded()) {
+		if (worker == null || !Level.isLoaded()) {
 			return false;
 		}
 		let render = new ICRender.Model(),
@@ -823,7 +823,9 @@ const attachBlockTool = function(source, post) {
 		},
 		getExtensions: function(type) {
 			let source = EditorTool.prototype.getExtensions.apply(this, arguments);
-			if (type != EditorTool.ExtensionType.EXPORT) source = source.concat([".json", ".ndb"]);
+			if (type != EditorTool.ExtensionType.EXPORT) {
+				source = source.concat([".json", ".ndb", ".deb"]);
+			}
 			return source;
 		},
 		replace: function(file) {
@@ -836,7 +838,7 @@ const attachBlockTool = function(source, post) {
 					showHint(translate("Converted success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				});
-			} else if (name.endsWith(".ndb")) {
+			} else if (name.endsWith(".ndb") || name.endsWith(".deb")) {
 				let active = Date.now();
 				tryout(function() {
 					let obj = compileData(Files.read(file)),
@@ -863,7 +865,7 @@ const attachBlockTool = function(source, post) {
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					});
 				});
-			} else if (name.endsWith(".ndb")) {
+			} else if (name.endsWith(".ndb") || name.endsWith(".deb")) {
 				let active = Date.now();
 				handleThread(function() {
 					let obj = compileData(Files.read(file)),

@@ -4,7 +4,7 @@
 		"gen"
 	],
 	"library-dirs": [
-		"lib"
+		"libs"
 	],
 	"options": [
 		"-cp",
