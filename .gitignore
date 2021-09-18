@@ -52,12 +52,9 @@ _gsdata_/
 # Environment files
 /java/bin/
 /java/.build/classes/
-/script/main.js
-/script/runtime.js
 
 # Dev Editor sources
 /assets/.sources/
-/script/.sources/
 
 # Resources abilities
 .placeholder.ico
@@ -69,10 +66,5 @@ _gsdata_/
 /.eval/
 
 # Unrealized content
-/script/main/network/
 /assets/sounds-16.txt
 /assets/studio.mcworld
-
-# Enstablized source
-/script/main/api/protect.js
-/script/main/callback/debug.js
