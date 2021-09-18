@@ -258,12 +258,12 @@ let TransitionEditor = {
 		attachAdditionalInformation(control);
 		let category = control.addCategory(translate("Editor"));
 		category.addItem("menuProjectLoad", translate("Open"), function() {
-			selectFile([".dnp", ".nds", ".js"], function(file) {
+			selectFile([".dnp", ".nds", ".dea", ".js"], function(file) {
 				TransitionEditor.replace(file);
 			});
 		});
 		category.addItem("menuProjectImport", translate("Merge"), function() {
-			selectFile([".dnp", ".nds", ".js"], function(file) {
+			selectFile([".dnp", ".nds", ".dea", ".js"], function(file) {
 				TransitionEditor.merge(file);
 			});
 		});
@@ -380,7 +380,7 @@ let TransitionEditor = {
 					});
 				}, "transition");
 			});
-		} else if (name.endsWith(".nds")) {
+		} else if (name.endsWith(".nds") || name.endsWith(".dea")) {
 			let active = Date.now();
 			tryout(function() {
 				let obj = compileData(Files.read(file)),
@@ -421,7 +421,7 @@ let TransitionEditor = {
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				}, "transition", true);
 			});
-		} else if (name.endsWith(".nds")) {
+		} else if (name.endsWith(".nds") || name.endsWith(".dea")) {
 			let active = Date.now();
 			tryout(function() {
 				let current = TransitionEditor.data.worker.getProject(),
