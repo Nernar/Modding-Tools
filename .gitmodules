@@ -1,0 +1,3 @@
+[submodule "assets/converterlib"]
+	path = assets/converterlib
+	url = git@github.com:ToxesFoxes/ModelConverter.git

@@ -78,7 +78,7 @@ const FetchAdditionalSequence = new SnackSequence({
 	count: 4,
 	process: function(index) {
 		if (index == 1) {
-			let file = new java.io.File(Dirs.SUPPORT, "ModelConverter/src/index.js");
+			let file = new java.io.File(Dirs.ASSET, "converterlib/src/index.js");
 			if (file.exists() && file.length() > 0) {
 				ModelConverter = FileTools.readFileText(file.getPath());
 			}
