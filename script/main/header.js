@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2018-2021 Nernar (github.com/nernar)
+   Copyright 2018-2022 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-21.10.2021-0";
+const REVISION = "develop-alpha-0.3.6-20.02.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");

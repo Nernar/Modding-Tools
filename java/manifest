@@ -9,5 +9,15 @@
 	"options": [
 		"-cp",
 		"/mnt/sdcard/games/horizon/2.1.0b71-android.jar"
+	],
+	"shared": {
+		"name": "nteditor",
+		"include": [
+			"jni/includes"
+		]
+	},
+	"depends": [
+		"innercore",
+		"nativejs"
 	]
 }
