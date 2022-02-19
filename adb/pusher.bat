@@ -1,12 +1,12 @@
 @echo off
-set ADBDir="D:\Projects\Dev-Editor\adb\adb.exe"
-set ModPathPC="D:\Projects\Dev-Editor"
-set PushJSPath="D:\Projects\Dev-Editor\script"
-set PushAssetsPath="D:\Projects\Dev-Editor\resource"
-set ModPathDevice="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor"
-set DeviceJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/script"
-set DeviceAssetsDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/resource"
-set DeviceMainJSDir="/mnt/sdcard/Android/data/io.spck/files/Dev-Editor/script/main.js"
+set ADBDir="adb.exe"
+set ModPathPC=".\"
+set PushJSPath=".\script"
+set PushAssetsPath=".\resource"
+set ModPathDevice="/mnt/sdcard/games/horizon/packs/Inner_Core_Test/innercore/mods/Dev Editor"
+set DeviceJSDir="/mnt/sdcard/games/horizon/packs/Inner_Core_Test/innercore/mods/Dev Editor/script"
+set DeviceAssetsDir="/mnt/sdcard/games/horizon/packs/Inner_Core_Test/innercore/mods/Dev Editor/resource"
+set DeviceMainJSDir="/mnt/sdcard/games/horizon/packs/Inner_Core_Test/innercore/mods/Dev Editor/script/main.js"
 set DeviceAutoLaunchFile="/mnt/sdcard/games/horizon/.flag_auto_launch"
 cls & title ADB Mod Pusher/Puller & @Color 0F
 
