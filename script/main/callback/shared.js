@@ -82,9 +82,6 @@ const updateSettings = function() {
 		autosaveProjectable = __config__.getBool("autosave.as_projectable");
 		/* autosaveCount */
 		loadSetting("autosave.maximum_count", "number", 0, 50);
-		connectCurrentlyLocation = loadSetting("network.default_location", "number", 0, 1);
-		connectSafetyProtocol = loadSetting("network.safe_connection", "boolean");
-		connectLocationLocked = loadSetting("network.switch_locked", "boolean");
 		/* entityBoxType */
 		loadSetting("render.use_box_sizes", "boolean", false);
 		drawSelection = loadSetting("render.draw_selection", "boolean");

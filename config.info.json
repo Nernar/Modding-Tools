@@ -232,56 +232,6 @@
 			"max": 50
 		},
 
-		"network": {
-			"name": {
-				"en": "Networking",
-				"ru": "Подключения"
-			},
-
-			"index": 16,
-			"collapsible": false
-		},
-
-		"network.default_location": {
-			"name": {
-				"en": "Default Location",
-				"ru": "Стандартная локация"
-			},
-			"description": {
-				"en": "Responsible for default connection location, may influence on requests speed",
-				"ru": "Отвечает за стандартную локацию для подключения, может влиять на скорость запросов"
-			},
-
-			"index": 17,
-			"type": "SeekBar",
-			"min": 0,
-			"max": 1
-		},
-
-		"network.safe_connection": {
-			"name": {
-				"en": "Safe Protocol",
-				"ru": "Безопасный протокол"
-			},
-			"description": {
-				"en": "Makes connecting to server safe, all connections pass through HTTPS connections",
-				"ru": "Делает подключение к серверу безопасным, все подключения проходят через HTTPS соединения"
-			},
-			"index": 18
-		},
-
-		"network.switch_locked": {
-			"name": {
-				"en": "Switch Locked",
-				"ru": "Изменения запрещены"
-			},
-			"description": {
-				"en": "Prohibits switching between locations and connections protocols, can increase speed of work, but not advocated to use if you don't know what you doing",
-				"ru": "Запрещает переключения между локациями и протоколами соединений, может увеличить скорость работы, но не советуется использовать, если вы не знаете что делаете"
-			},
-			"index": 19
-		},
-
 		"render": {
 			"name": {
 				"en": "Render",

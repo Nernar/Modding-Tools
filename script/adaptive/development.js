@@ -71,8 +71,9 @@ LaunchSequence.create = function() {
 		}
 	});
 	this.__create.apply(this, arguments);
-	CHECKOUT("provider.js");
-	attachEvalButton();
+	CHECKOUT("provider.js", null, function(who) {
+		attachEvalButton();
+	});
 };
 
 Translation.addTranslation("If you're wouldn't see development panel here, it may be removed.", {
@@ -106,7 +107,9 @@ LaunchSequence.process = function(index) {
 				REQUIRE("produce.js")(function() {
 					UniqueHelper.requireDestroy();
 					WindowProvider.destroy();
-					attachEvalButton();
+					CHECKOUT("provider.js", null, function(who) {
+						attachEvalButton();
+					});
 				});
 			});
 		});

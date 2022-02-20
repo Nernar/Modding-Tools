@@ -294,10 +294,8 @@ const EntityEditor = {
 			Popups.closeAll(), EntityEditor.unselect();
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
-			checkValidate(function() {
-				delete EntityEditor.data.worker;
-				ProjectEditor.menu();
-			});
+			delete EntityEditor.data.worker;
+			ProjectEditor.menu();
 		});
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Entity"));

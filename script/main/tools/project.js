@@ -702,11 +702,9 @@ EditorTool.prototype.leave = function() {
 	ProjectProvider.setOpenedState(false);
 	this.getProject().callAutosave();
 	let instance = this;
-	checkValidate(function() {
-		delete instance.worker;
-		ProjectEditor.menu();
-		instance.unselect(true);
-	});
+	delete instance.worker;
+	ProjectEditor.menu();
+	instance.unselect(true);
 };
 
 EditorTool.prototype.getProject = function() {

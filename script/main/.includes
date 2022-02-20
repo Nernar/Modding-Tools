@@ -26,8 +26,6 @@ api/utils.js
 api/support.js
 
 network/browser.js
-network/connect.js
-network/local.js
 network/remote.js
 
 interface/actor.js

@@ -277,10 +277,8 @@ let TransitionEditor = {
 			Popups.closeAll(), TransitionEditor.unselect();
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
-			checkValidate(function() {
-				delete TransitionEditor.data.worker;
-				ProjectEditor.menu();
-			});
+			delete TransitionEditor.data.worker;
+			ProjectEditor.menu();
 		});
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Transition"));

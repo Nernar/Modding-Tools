@@ -20,11 +20,6 @@
     "as_projectable":true,
     "maximum_count":20
   },
-  "network":{
-    "default_location":0,
-    "safe_connection":true,
-    "switch_locked":false
-  },
   "render":{
     "use_box_sizes":false,
     "draw_selection":true,

@@ -50,8 +50,6 @@ typings/
 _gsdata_/
 
 # Environment files
-/java/bin/
-/java/.build/classes/
 /script/main.js
 /script/runtime.js
 
@@ -69,7 +67,6 @@ _gsdata_/
 /.eval/
 
 # Unrealized content
-/script/main/network/
 /assets/sounds-16.txt
 /assets/studio.mcworld
 

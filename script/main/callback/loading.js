@@ -5,10 +5,6 @@ const initialize = function() {
 	tryout(function() {
 		tryout(function() {
 			MCSystem.setLoadingTip(NAME + ": Starting");
-			checkOnlineable(function() {
-				checkUpdateable();
-				checkExecuteable();
-			});
 			reportError.setTitle(translate(NAME) + " " + translate(VERSION));
 			reportError.setInfoMessage(translate("An error occurred while executing modification.") + " " +
 				translate("If your developing process is affected, try export all non-saved data.") + " " +

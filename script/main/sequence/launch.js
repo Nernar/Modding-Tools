@@ -55,7 +55,10 @@ const LaunchSequence = new LogotypeSequence({
 		LogotypeSequence.prototype.complete.apply(this, arguments);
 		if (firstLaunchTutorial && isFirstLaunch()) {
 			TutorialSequence.Welcome.execute();
-		} else checkValidate(function() {
+		} else {
+			tryoutSafety(function() {
+				prepareEnvironmentIfNeeded();
+			});
 			ProjectEditor.create();
 			if (showHint.launchStacked !== undefined) {
 				showHint.unstackLaunch();
@@ -64,7 +67,7 @@ const LaunchSequence = new LogotypeSequence({
 			if (Level.isLoaded()) {
 				LevelProvider.show();
 			}
-		});
+		}
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();
 		if (textures.length <= 1) {

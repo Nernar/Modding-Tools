@@ -1,23 +1,5 @@
 {
-	"source-dirs": [
-		"src",
-		"gen"
-	],
-	"library-dirs": [
-		"libs"
-	],
-	"options": [
-		"-cp",
-		"/mnt/sdcard/games/horizon/2.1.0b71-android.jar"
-	],
-	"shared": {
-		"name": "nteditor",
-		"include": [
-			"jni/includes"
-		]
-	},
-	"depends": [
-		"innercore",
-		"nativejs"
-	]
+	"source-dirs": [],
+	"library-dirs": [],
+	"options": []
 }

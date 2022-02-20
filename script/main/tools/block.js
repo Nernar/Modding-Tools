@@ -904,22 +904,20 @@ const attachBlockTool = function(source, post) {
 		}
 	});
 	tool.attach();
-	checkValidate(function() {
-		tool.queue();
-		handleThread(function() {
-			let accepted = tool.open(source);
-			handle(function() {
-				if (accepted) {
-					tryout(function() {
-						post && post(tool);
-						BlockEditor.attach(tool);
-						accepted = false;
-					});
-				}
-				if (accepted) {
-					tool.leave();
-				}
-			});
+	tool.queue();
+	handleThread(function() {
+		let accepted = tool.open(source);
+		handle(function() {
+			if (accepted) {
+				tryout(function() {
+					post && post(tool);
+					BlockEditor.attach(tool);
+					accepted = false;
+				});
+			}
+			if (accepted) {
+				tool.leave();
+			}
 		});
 	});
 };

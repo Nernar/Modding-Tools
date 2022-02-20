@@ -936,9 +936,6 @@ Translation.addTranslation("Error stack saved into internal storage", {
 Translation.addTranslation("Supportable module can't be loaded at menu", {
 	ru: "Модуль не может быть загружен в меню"
 });
-Translation.addTranslation("Key will be expired today, please check network connection", {
-	ru: "Ключ устареет сегодня, проверьте подключение к интернету"
-});
 Translation.addTranslation("Option successfully changed", {
 	ru: "Настройка успешно изменена"
 });
@@ -1054,9 +1051,6 @@ Translation.addTranslation("Current project will be erased, all unsaved data wil
 Translation.addTranslation("Script logging have several messages:", {
 	ru: "Отладка скрипта записала несколько сообщений:"
 });
-Translation.addTranslation("Couldn't connect to validate right now", {
-	ru: "Не удается подключиться к серверам прямо сейчас"
-});
 Translation.addTranslation("Launch sequence interrupted or handled exception.", {
 	ru: "Цепочка запуска прервалась или привела к ошибке."
 });
@@ -1088,9 +1082,6 @@ Translation.addTranslation("Use scripts from your mods to import, simply find th
 });
 Translation.addTranslation("This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe.", {
 	ru: "Этот процесс может занять некоторое время, не выходите до его завершения. В любом случае, ваши проекты всегда в безопасности."
-});
-Translation.addTranslation("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities.", {
-	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету."
 });
 Translation.addTranslation("Modification still in development state, so something may not work properly.", {
 	ru: "Модификация все еще находится в разработке, так что что-то может работать неправильно."
@@ -1162,9 +1153,6 @@ Translation.addTranslation("To complete modification installation connect to any
 });
 Translation.addTranslation("You can't use this modification without access for testing abilities. Contact with developer, it's may takes result.", {
 	ru: "Вы не можете использовать эту модификацию без доступа к тестированию. Свяжитесь с разработчиком, это может дать результат."
-});
-Translation.addTranslation("Previous user key is deprecated, you should to connect any network for check your abilities. Anyway, your projects is always safe.", {
-	ru: "Прошлый ключ устарел, Вы должны подключится к любой сети для проверки причастности к тестированию. В любом случае, Ваши проекты всегда в безопасности."
 });
 Translation.addTranslation("Unknown exception is catched, please retry modification installation or try later.", {
 	ru: "Произошла неизвестная ошибка, пожалуйста повторите попытку установки или повторите позже."
@@ -1404,6 +1392,18 @@ Translation.addTranslation("Are you sure want to exit? Unsave data will be lost.
 }); // DEPRECATED
 Translation.addTranslation("Some reports not sended, modification request server connect for it send.", {
 	ru: "Есть неотправленные отчеты, модификации необходимо соединение с сервером для их отправки."
+}); // DEPRECATED
+Translation.addTranslation("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities.", {
+	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету."
+}); // DEPRECATED
+Translation.addTranslation("Key will be expired today, please check network connection", {
+	ru: "Ключ устареет сегодня, проверьте подключение к интернету"
+}); // DEPRECATED
+Translation.addTranslation("Previous user key is deprecated, you should to connect any network for check your abilities. Anyway, your projects is always safe.", {
+	ru: "Прошлый ключ устарел, Вы должны подключится к любой сети для проверки причастности к тестированию. В любом случае, Ваши проекты всегда в безопасности."
+}); // DEPRECATED
+Translation.addTranslation("Couldn't connect to validate right now", {
+	ru: "Не удается подключиться к серверам прямо сейчас"
 }); // DEPRECATED
 Translation.addTranslation("Render rotated at %s angle", {
 	ru: "Модель повернута на %s градусов"
