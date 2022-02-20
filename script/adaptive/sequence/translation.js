@@ -252,7 +252,7 @@ for (let i = 0; i < target.length; i++) {
 	let result = Files.read(target[i]),
 		workout = updateDeprecationsWarning(result, deprecated);
 	if (workout.addition > 0 || workout.removed > 0) {
-		Files.write(element, workout.source);
+		Files.write(target[i], workout.source);
 		deprecation += workout.addition + workout.removed;
 	}
 }

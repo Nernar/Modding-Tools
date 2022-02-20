@@ -1395,16 +1395,16 @@ Translation.addTranslation("Some reports not sended, modification request server
 }); // DEPRECATED
 Translation.addTranslation("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities.", {
 	ru: "Ключу необходимо обновление или он устареет в ближайшее время. Пожалуйста, проверьте подключение к интернету."
-}); // DEPRECATED
+}); // NO-TRANSLATE
 Translation.addTranslation("Key will be expired today, please check network connection", {
 	ru: "Ключ устареет сегодня, проверьте подключение к интернету"
-}); // DEPRECATED
+}); // NO-TRANSLATE
 Translation.addTranslation("Previous user key is deprecated, you should to connect any network for check your abilities. Anyway, your projects is always safe.", {
 	ru: "Прошлый ключ устарел, Вы должны подключится к любой сети для проверки причастности к тестированию. В любом случае, Ваши проекты всегда в безопасности."
-}); // DEPRECATED
+}); // NO-TRANSLATE
 Translation.addTranslation("Couldn't connect to validate right now", {
 	ru: "Не удается подключиться к серверам прямо сейчас"
-}); // DEPRECATED
+}); // NO-TRANSLATE
 Translation.addTranslation("Render rotated at %s angle", {
 	ru: "Модель повернута на %s градусов"
 }); // DEPRECATED
