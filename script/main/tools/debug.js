@@ -214,14 +214,15 @@ const ModificationSource = {
 		return true;
 	},
 	attachSupportables: function(control) {
-		let supportables = ExecuteableSupport.getModList();
+		/* let supportables = ExecuteableSupport.getModList();
 		if (supportables.length == 0) return false;
 		control.addCategory(translate("Or maybe checkout supportables"));
 		for (let i = 0; i < supportables.length; i++) {
 			let mod = supportables[i];
 			this.attachSource(control, mod);
 		}
-		return true;
+		return true; */
+		return false;
 	},
 	attachSource: function(control, mod) {
 		let type = mod.getBuildType().toString(),

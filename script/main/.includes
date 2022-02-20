@@ -23,7 +23,6 @@ storage/converter/transition.js
 api/shared.js
 api/protect.js
 api/utils.js
-api/support.js
 
 network/browser.js
 network/remote.js

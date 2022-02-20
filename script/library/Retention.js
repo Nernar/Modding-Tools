@@ -438,12 +438,19 @@ let reportError = function(err) {
 		return;
 	}
 	err.date = Date.now();
+	if (reportError.stack === undefined) {
+		getContext().runOnUiThread(function() {
+			throw err;
+		});
+		return;
+	}
 	if (reportError.isReporting) {
 		if (reportError.stack.length < 16) {
 			reportError.stack.push(err);
 		}
 		return;
-	} else reportError.isReporting = true;
+	}
+	reportError.isReporting = true;
 	getContext().runOnUiThread(function() {
 		let builder = new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 		builder.setTitle(reportError.title || translate("Oh nose everything broke"));

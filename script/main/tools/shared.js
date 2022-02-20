@@ -192,7 +192,7 @@ const showSupportableInfo = function(mod) {
 						showHint(translate("Restart game for better stability"));
 					}
 					eval(mod.modName.replace(/\W/, String()) + " = null;");
-					ExecuteableSupport.uninstall(mod.modName);
+					// ExecuteableSupport.uninstall(mod.modName);
 					ProjectEditor.menu();
 				});
 		});

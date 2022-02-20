@@ -35,7 +35,7 @@ const LaunchSequence = new LogotypeSequence({
 			// logotype.setIcon(animation);
 			// "blockNoTextures": ["blockDefineTexture", "blockDefineWrong"], 1500
 			// while (animation.isProcessing()) java.lang.Thread.yield();
-			refreshSupportablesIcons();
+			// refreshSupportablesIcons();
 		}
 		return index;
 	},

@@ -40,13 +40,13 @@ Translation.addTranslation("Can't update build config", {
 
 seek(translate("Merging .backup with modification"), 1);
 copyAndClearOrThrow(Dirs.BACKUP, __dir__, true, false, true);
-let builder = ExecuteableSupport.getModBuilder();
+/* let builder = ExecuteableSupport.getModBuilder();
 if (builder !== null) {
 	__mod__.buildConfig = builder.loadBuildConfigForDir(__dir__);
 	__mod__.setBuildType("develop");
-} else {
+} else { */
 	seek(translate("Can't update build config"), Interface.Color.YELLOW);
-}
+// }
 
 Translation.addTranslation("Restored backup", {
 	ru: "Резервная копия восстановлена"

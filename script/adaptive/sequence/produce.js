@@ -118,7 +118,7 @@ Translation.addTranslation("Supportables was compiled", {
 });
 
 if (supportSupportables) {
-	let supportables = ExecuteableSupport.getModList();
+	/* let supportables = ExecuteableSupport.getModList();
 	if (supportables.length > 0) {
 		seek(translate("Copying original supportables"), 1);
 		copyOrThrow(Dirs.SUPPORT, Dirs.BACKUP + "support/", true, false, true);
@@ -144,9 +144,9 @@ if (supportSupportables) {
 			}
 		}
 		seek(translate("Supportables was compiled"), 1);
-	} else {
+	} else { */
 		shrink(3);
-	} 
+	// }
 } else {
 	shrink(3);
 }

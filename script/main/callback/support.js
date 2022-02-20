@@ -25,7 +25,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return !isSupportEnv;
 			}
 		});
-		if (ExecuteableSupport.isModuleMissed()) {
+		/* if (ExecuteableSupport.isModuleMissed()) {
 			MCSystem.setLoadingTip(NAME + ": Loading Supportables");
 			UIEditor = importMod("UIEditor", function() {
 				let DevEditor = ModAPI.requireAPI("DevEditor");
@@ -99,7 +99,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			RunJSingame = importMod("Run JS in-game", function() {
 				return this.hasOwnProperty("MainUI") && MainUI.codeWindow;
 			});
-		} else supportSupportables = false;
+		} else supportSupportables = false; */
 	});
 });
 
@@ -111,7 +111,7 @@ Callback.addCallback("CoreConfigured", function(config) {
 		if (loadSupportables) {
 			if (supportSupportables) {
 				MCSystem.setLoadingTip(NAME + ": Checking Supportables");
-				if (UIEditor && isNotSupported(UIEditor)) {
+				/* if (UIEditor && isNotSupported(UIEditor)) {
 					UIEditor = null;
 				}
 				if (Setting && isNotSupported(Setting)) {
@@ -128,20 +128,20 @@ Callback.addCallback("CoreConfigured", function(config) {
 				}
 				if (RunJSingame && isNotSupported(RunJSingame)) {
 					RunJSingame = null;
-				}
+				} */
 			} else showHint(translate("Supportables isn't supported and disabled"));
 		}
 	});
 });
 
 const refreshSupportablesIcons = function() {
-	tryout(function() {
+	/* tryout(function() {
 		ExecuteableSupport.refreshIcon(UIEditor);
 		ExecuteableSupport.refreshIcon(DumpCreator);
 		ExecuteableSupport.refreshIcon(InstantRunner);
 		ExecuteableSupport.refreshIcon(WorldEdit);
 		ExecuteableSupport.refreshIcon(RunJSingame);
-	});
+	}); */
 };
 
 const isAnyCustomSupportableLoaded = function() {
