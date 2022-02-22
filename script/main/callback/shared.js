@@ -124,10 +124,10 @@ Callback.addCallback("LevelPreLoaded", function() {
 	tryout(function() {
 		// Reset entity if entity isn't defined.
 		if (ProjectProvider.getCurrentType() == "transition" &&
-			TransitionEditor.data.worker.Define.getEntity() == -1) {
-				TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
-				needTransitionReset = true;
-			}
+				TransitionEditor.data.worker.Define.getEntity() == -1) {
+			TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
+			needTransitionReset = true;
+		}
 	});
 });
 

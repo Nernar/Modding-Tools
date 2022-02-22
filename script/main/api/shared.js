@@ -101,8 +101,7 @@ const CHECKOUT = function(path, scope, post) {
 		post && post(something);
 		return something;
 	}, function(e) {
-		Logger.Log("We're tried, but something happened", "CHECKOUT");
-		Logger.LogError(e);
+		Logger.Log(e, "CHECKOUT");
 	}, null);
 };
 

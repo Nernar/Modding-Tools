@@ -423,11 +423,13 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source) {
 	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.WRAP);
 	something.show();
 	let title = something.findViewById(android.R.id.title);
-	title.setOnClickListener(function(view) {
-		tryout(function() {
-			
+	if (title != null) {
+		title.setOnClickListener(function(view) {
+			tryout(function() {
+				
+			});
 		});
-	});
+	}
 };
 
 RuntimeCodeEvaluate.exportEvaluate = function() {
@@ -438,7 +440,8 @@ RuntimeCodeEvaluate.exportEvaluate = function() {
 
 RuntimeCodeEvaluate.loadEvaluate = function() {
 	selectFile(".js", function(file) {
-		checkEvaluate(Files.read(file));
+		RuntimeCodeEvaluate.lastCode = Files.read(file);
+		RuntimeCodeEvaluate.showSpecifiedDialog();
 	}, undefined, Dirs.EVALUATE);
 };
 

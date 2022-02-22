@@ -32,6 +32,10 @@ ControlButton.prototype.resetContent = function() {
 		scope.isCloseableOutside() && scope.hide();
 		scope.__click && scope.__click();
 	});
+	views.layout.setOnLongClickListener(function(view) {
+		RuntimeCodeEvaluate.showSpecifiedDialog();
+		return true;
+	});
 	let params = android.widget.FrameLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
 	params.setMargins(Interface.getY(20), Interface.getY(20), 0, 0);
 	content.addView(views.layout, params);
