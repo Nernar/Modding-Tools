@@ -172,26 +172,26 @@ FocusableWindow.prototype.getPopup = function() {
 	return WindowProvider.getByPopupId(this.popupId);
 };
 
-FocusableWindow.prototype.getEnterActor = function() {
-	return this.enterActor || null;
+FocusableWindow.prototype.getEnterTransition = function() {
+	return this.enterTransition || null;
 };
 
-FocusableWindow.prototype.setEnterActor = function(actor) {
+FocusableWindow.prototype.setEnterTransition = function(actor) {
 	if (this.isOpened()) {
-		WindowProvider.setEnterActor(this.popupId, actor);
+		WindowProvider.setEnterTransition(this.popupId, actor);
 	}
-	this.enterActor = actor;
+	this.enterTransition = actor;
 };
 
-FocusableWindow.prototype.getExitActor = function() {
-	return this.exitActor || null;
+FocusableWindow.prototype.getExitTransition = function() {
+	return this.exitTransition || null;
 };
 
-FocusableWindow.prototype.setExitActor = function(actor) {
+FocusableWindow.prototype.setExitTransition = function(actor) {
 	if (this.isOpened()) {
-		WindowProvider.setExitActor(this.popupId, actor);
+		WindowProvider.setExitTransition(this.popupId, actor);
 	}
-	this.exitActor = actor;
+	this.exitTransition = actor;
 };
 
 FocusableWindow.prototype.attach = function() {

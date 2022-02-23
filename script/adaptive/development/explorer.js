@@ -426,13 +426,13 @@ ToolbarFragment.prototype.actorIfMay = function(actor) {
 	let container = this.getContainer();
 	container = container.getParent();
 	if (container == null) return false;
-	ActorManager.beginDelayedActor(container, actor);
+	android.transition.TransitionManager.beginDelayedTransition(container, actor);
 	return true;
 };
 
 ToolbarFragment.prototype.hide = function() {
 	let view = this.getContainer(),
-		actor = new SlideActor(Interface.Gravity.TOP);
+		actor = new android.transition.Slide(Interface.Gravity.TOP);
 	actor.setDuration(750);
 	this.actorIfMay(actor);
 	view.setVisibility(Interface.Visibility.GONE);
@@ -440,7 +440,7 @@ ToolbarFragment.prototype.hide = function() {
 
 ToolbarFragment.prototype.show = function() {
 	let view = this.getContainer(),
-		actor = new SlideActor(Interface.Gravity.TOP);
+		actor = new android.transition.Slide(Interface.Gravity.TOP);
 	actor.setDuration(750);
 	this.actorIfMay(actor);
 	view.setVisibility(Interface.Visibility.VISIBLE);

@@ -86,9 +86,9 @@ const selectTexture = function(index, onSelect) {
 							adapter.getFilter().filter(text, {
 								onFilterComplete: function(count) {
 									tryout(function() {
-										let actor = count > 0 ? new FadeActor() :
-											new SlideActor(Interface.Gravity.TOP);
-										actor.setInterpolator(new DecelerateInterpolator());
+										let actor = count > 0 ? new android.transition.Fade() :
+											new android.transition.Slide(Interface.Gravity.TOP);
+										actor.setInterpolator(new android.view.animation.DecelerateInterpolator());
 										actor.addListener({
 											onTransitionStart: function(transition) {
 												tryout(function() {
@@ -104,7 +104,7 @@ const selectTexture = function(index, onSelect) {
 											}
 										});
 										actor.setDuration(800);
-										actor.beginDelayedActor(layout);
+										actor.beginDelayedTransition(layout);
 										wrong.setVisibility(count > 0 ?
 											Interface.Visibility.GONE :
 											Interface.Visibility.VISIBLE);

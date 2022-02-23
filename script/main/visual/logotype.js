@@ -6,15 +6,15 @@ const LogotypeWindow = function(foreground, background) {
 	window.setFragment(new LogotypeFragment());
 	window.setTouchable(false);
 	
-	let enter = new FadeActor();
-	enter.setInterpolator(new DecelerateInterpolator());
+	let enter = new android.transition.Fade();
+	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	enter.setDuration(2000);
-	window.setEnterActor(enter);
+	window.setEnterTransition(enter);
 	
-	let exit = new FadeActor();
-	exit.setInterpolator(new AccelerateInterpolator());
+	let exit = new android.transition.Fade();
+	exit.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	exit.setDuration(500);
-	window.setExitActor(exit);
+	window.setExitTransition(exit);
 	
 	if (foreground !== undefined) window.setForegroundIcon(foreground);
 	if (background !== undefined) window.setBackgroundIcon(background);

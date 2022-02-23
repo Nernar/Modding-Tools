@@ -1,71 +1,76 @@
-const ActoredWindow = function() {
+const TransitionWindow = function() {
 	FocusableWindow.apply(this, arguments);
 	this.resetWindow();
 };
 
-ActoredWindow.prototype = new FocusableWindow;
-ActoredWindow.prototype.TYPE = "ActoredWindow";
+TransitionWindow.prototype = new FocusableWindow;
+TransitionWindow.prototype.TYPE = "TransitionWindow";
 
-ActoredWindow.prototype.resetWindow = function() {
-	this.manager = new ActorManager();
+TransitionWindow.prototype.resetWindow = function() {
+	this.manager = new android.transition.TransitionManager();
 	this.root = this.makeRoot();
 	this.nothing = this.makeRootScene();
 };
 
-ActoredWindow.prototype.hasScene = function(scene) {
+TransitionWindow.prototype.hasScene = function(scene) {
 	return this.manager.hasScene(scene);
 };
 
-ActoredWindow.prototype.setActor = function(sceneFromOrTo, sceneToOrActor, actor) {
-	return this.manager.setActor(sceneFromOrTo, sceneToOrActor, actor);
+TransitionWindow.prototype.setTransition = function(sceneFromOrTo, sceneToOrTransition, actor) {
+	return this.manager.setTransition(sceneFromOrTo, sceneToOrTransition, actor);
 };
 
-ActoredWindow.prototype.actorTo = function(scene, actor) {
+TransitionWindow.prototype.transitionTo = function(scene, actor) {
 	if (actor) {
-		ActorManager.go(scene, actor);
-	} else this.manager.actorTo(scene);
+		android.transition.TransitionManager.go(scene, actor);
+	} else this.manager.transitionTo(scene);
 	if (scene != this.getRootScene()) {
 		this.scene = scene;
 	} else delete this.scene;
 };
 
-ActoredWindow.prototype.getCurrentlyScene = function() {
+TransitionWindow.prototype.getCurrentlyScene = function() {
 	return this.scene || null;
 };
 
-ActoredWindow.prototype.beginDelayedActor = function(containerOrActor, actor) {
+TransitionWindow.prototype.beginDelayedTransition = function(containerOrTransition, actor) {
 	let content = this.getContent();
 	if (content == null) return;
-	ActorManager.beginDelayedActor(actor ? containerOrActor : content, actor || containerOrActor);
+	android.transition.TransitionManager.beginDelayedTransition(actor ? containerOrTransition : content, actor || containerOrTransition);
 };
 
-ActoredWindow.prototype.endActors = function(container) {
-	let content = this.getContent();
-	if (content == null) return;
-	ActorManager.endActors(container || content);
+TransitionWindow.prototype.endTransitions = function(container) {
+	if (android.os.Build.VERSION.SDK_INT >= 23) {
+		let content = this.getContent();
+		if (content == null) return;
+		android.transition.TransitionManager.endTransitions(container || content);
+	}
 };
 
-ActoredWindow.prototype.makeScene = function(rootOrContainer, container) {
+TransitionWindow.prototype.makeScene = function(rootOrContainer, container) {
 	let content = this.getContent();
 	if (content == null) return null;
-	return new ActorScene(container ? rootOrContainer : content, container || rootOrContainer);
+	return new android.transition.Scene(container ? rootOrContainer : content, container || rootOrContainer);
 };
 
-ActoredWindow.prototype.findScene = function(container) {
-	let scene = this.getRootScene();
-	if (scene == null) return null;
-	return scene.getCurrentScene(container);
+TransitionWindow.prototype.findScene = function(container) {
+	if (android.os.Build.VERSION.SDK_INT >= 29) {
+		let scene = this.getRootScene();
+		if (scene == null) return null;
+		return scene.getCurrentScene(container);
+	}
+	return null;
 };
 
-ActoredWindow.prototype.getContent = function() {
+TransitionWindow.prototype.getContent = function() {
 	return this.root || null;
 };
 
-ActoredWindow.prototype.getContainer = function() {
+TransitionWindow.prototype.getContainer = function() {
 	return FocusableWindow.prototype.getContent.apply(this, arguments);
 };
 
-ActoredWindow.prototype.makeContainerScene = function() {
+TransitionWindow.prototype.makeContainerScene = function() {
 	let container = this.getContainer();
 	if (container === null) return container;
 	let root = this.getContent();
@@ -73,32 +78,38 @@ ActoredWindow.prototype.makeContainerScene = function() {
 	return this.makeScene(root, container);
 };
 
-ActoredWindow.prototype.getContainerScene = function() {
-	if (!this.hasContainerScene() || this.containerScene.getContainer() != this.getContainer()) {
+TransitionWindow.prototype.getContainerScene = function() {
+	let container = this.getContainer();
+	if (!this.hasContainerScene() || this.getContainerOfScene() != container) {
 		this.containerScene = this.makeContainerScene();
+		this.containerOfScene = container;
 	}
 	return this.containerScene || null;
 };
 
-ActoredWindow.prototype.hasContainerScene = function() {
+TransitionWindow.prototype.getContainerOfScene = function() {
+	return this.containerOfScene || null;
+};
+
+TransitionWindow.prototype.hasContainerScene = function() {
 	return Boolean(this.containerScene);
 };
 
-ActoredWindow.prototype.makeRoot = function() {
+TransitionWindow.prototype.makeRoot = function() {
 	return new FrameFragment().getContainer();
 };
 
-ActoredWindow.prototype.makeRootScene = function() {
+TransitionWindow.prototype.makeRootScene = function() {
 	let container = this.getContent();
 	if (container === null) return container;
 	return this.makeScene(this.makeRoot());
 };
 
-ActoredWindow.prototype.getRootScene = function() {
+TransitionWindow.prototype.getRootScene = function() {
 	return this.nothing || null;
 };
 
-ActoredWindow.prototype.getCurrentlyContainer = function() {
+TransitionWindow.prototype.getCurrentlyContainer = function() {
 	let content = this.getContent();
 	if (content !== null) {
 		if (content instanceof android.view.ViewGroup) {
@@ -110,32 +121,32 @@ ActoredWindow.prototype.getCurrentlyContainer = function() {
 	return null;
 };
 
-ActoredWindow.prototype.getAvailabledScene = function() {
+TransitionWindow.prototype.getAvailabledScene = function() {
 	return this.getContainerScene() || this.getCurrentlyScene() || null;
 };
 
-ActoredWindow.prototype.update = function() {
+TransitionWindow.prototype.update = function() {
 	if (!this.inDestructing() && this.isOpened()) {
 		if (this.containerScene !== undefined) {
-			if (this.getContainer() != this.containerScene.getContainer()) {
-				this.actorTo(this.getAvailabledScene());
+			if (this.getContainer() != this.getContainerOfScene()) {
+				this.transitionTo(this.getAvailabledScene());
 			}
 		}
 	}
 	FocusableWindow.prototype.update.apply(this, arguments);
 };
 
-ActoredWindow.prototype.setEnterActor = function(actor) {
-	this.enterActor = actor;
+TransitionWindow.prototype.setEnterTransition = function(actor) {
+	this.enterTransition = actor;
 };
 
-ActoredWindow.prototype.show = function(force) {
+TransitionWindow.prototype.show = function(force) {
 	delete this.destructing;
 	if (!force) this.attach();
 	let availabled = this.getAvailabledScene();
 	if (availabled !== null) {
-		let enter = this.getEnterActor();
-		this.actorTo(availabled, enter);
+		let enter = this.getEnterTransition();
+		this.transitionTo(availabled, enter);
 	}
 	if (this.isTouchable()) {
 		this.setTouchable(true);
@@ -143,7 +154,7 @@ ActoredWindow.prototype.show = function(force) {
 	this.onShow && this.onShow();
 };
 
-ActoredWindow.prototype.setOnShowListener = function(listener) {
+TransitionWindow.prototype.setOnShowListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onShow;
 	}
@@ -153,10 +164,10 @@ ActoredWindow.prototype.setOnShowListener = function(listener) {
 	return true;
 };
 
-ActoredWindow.prototype.setExitActor = function(actor) {
-	this.exitActor = actor;
+TransitionWindow.prototype.setExitTransition = function(actor) {
+	this.exitTransition = actor;
 	if (actor) {
-		let enter = this.getEnterActor();
+		let enter = this.getEnterTransition();
 		if (actor == enter) {
 			MCSystem.throwException("You wouldn't use one actor for exit and enter");
 		}
@@ -174,12 +185,12 @@ ActoredWindow.prototype.setExitActor = function(actor) {
 	}
 };
 
-ActoredWindow.prototype.hide = function() {
+TransitionWindow.prototype.hide = function() {
 	if (this.isOpened()) {
 		let availabled = this.getRootScene();
 		if (availabled !== null) {
-			let exit = this.getExitActor();
-			this.actorTo(availabled, exit);
+			let exit = this.getExitTransition();
+			this.transitionTo(availabled, exit);
 			this.destructing = true;
 		} else this.dismiss();
 		let touchable = this.isTouchable();
@@ -189,7 +200,7 @@ ActoredWindow.prototype.hide = function() {
 	}
 };
 
-ActoredWindow.prototype.setOnHideListener = function(listener) {
+TransitionWindow.prototype.setOnHideListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onHide;
 	}
@@ -199,12 +210,12 @@ ActoredWindow.prototype.setOnHideListener = function(listener) {
 	return true;
 };
 
-ActoredWindow.prototype.inDestructing = function() {
+TransitionWindow.prototype.inDestructing = function() {
 	return Boolean(this.destructing);
 };
 
 const UniqueWindow = function() {
-	ActoredWindow.apply(this, arguments);
+	TransitionWindow.apply(this, arguments);
 	if (UniqueHelper.wasTypeAttached(this)) {
 		let window = UniqueHelper.getWindow(this);
 		if (!window.inDestructing()) return window;
@@ -212,7 +223,7 @@ const UniqueWindow = function() {
 	return this;
 };
 
-UniqueWindow.prototype = new ActoredWindow;
+UniqueWindow.prototype = new TransitionWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";
 UniqueWindow.prototype.updatable = true;
 
@@ -234,33 +245,33 @@ UniqueWindow.prototype.setIsUpdatable = function(enabled) {
 
 UniqueWindow.prototype.attach = function() {
 	if (UniqueHelper.prepareWindow(this)) {
-		ActoredWindow.prototype.attach.apply(this, arguments);
+		TransitionWindow.prototype.attach.apply(this, arguments);
 	}
 };
 
 UniqueWindow.prototype.show = function() {
 	this.attach();
 	if (UniqueHelper.isAttached(this)) {
-		ActoredWindow.prototype.show.call(this, true);
+		TransitionWindow.prototype.show.call(this, true);
 	}
 };
 
 UniqueWindow.prototype.dismiss = function() {
 	if (UniqueHelper.deattachWindow(this)) {
-		ActoredWindow.prototype.dismiss.apply(this, arguments);
+		TransitionWindow.prototype.dismiss.apply(this, arguments);
 	}
 };
 
 const FocusablePopup = function() {
-	ActoredWindow.apply(this, arguments);
-	let fadeIn = new FadeActor(),
-		fadeOut = new FadeActor();
-	fadeIn.setInterpolator(new DecelerateInterpolator());
+	TransitionWindow.apply(this, arguments);
+	let fadeIn = new android.transition.Fade(),
+		fadeOut = new android.transition.Fade();
+	fadeIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	fadeIn.setDuration(400);
-	this.setEnterActor(fadeIn);
-	fadeOut.setInterpolator(new AccelerateDecelerateInterpolator());
+	this.setEnterTransition(fadeIn);
+	fadeOut.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	fadeOut.setDuration(400);
-	this.setExitActor(fadeOut);
+	this.setExitTransition(fadeOut);
 
 	let place = Popups.getAvailablePlace();
 	this.setX(place.x), this.setY(place.y);
@@ -269,7 +280,7 @@ const FocusablePopup = function() {
 	this.reset();
 };
 
-FocusablePopup.prototype = new ActoredWindow;
+FocusablePopup.prototype = new TransitionWindow;
 FocusablePopup.prototype.TYPE = "FocusablePopup";
 
 FocusablePopup.prototype.reset = function() {
@@ -385,17 +396,17 @@ FocusablePopup.prototype.expand = function() {
 };
 
 FocusablePopup.prototype.minimize = function() {
-	let actor = new FadeActor();
+	let actor = new android.transition.Fade();
 	actor.setDuration(200);
-	this.beginDelayedActor(actor);
+	this.beginDelayedTransition(actor);
 	this.views.scroll.setVisibility(Interface.Visibility.GONE);
 	this.expanded = false;
 };
 
 FocusablePopup.prototype.maximize = function() {
-	let actor = new FadeActor();
+	let actor = new android.transition.Fade();
 	actor.setDuration(400);
-	this.beginDelayedActor(actor);
+	this.beginDelayedTransition(actor);
 	this.views.scroll.setVisibility(Interface.Visibility.VISIBLE);
 	this.expanded = true;
 };

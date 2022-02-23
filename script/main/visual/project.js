@@ -6,16 +6,16 @@ const MenuWindow = function() {
 	window.resetContent();
 	window.setBackground("popupControl");
 	
-	let slideIn = new SlideActor(),
-		slideOut = new SlideActor();
-	slideIn.setInterpolator(new DecelerateInterpolator());
+	let slideIn = new android.transition.Slide(),
+		slideOut = new android.transition.Slide();
+	slideIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	slideIn.setSlideEdge(Interface.Gravity.TOP);
 	slideIn.setDuration(1000);
-	window.setEnterActor(slideIn);
-	slideOut.setInterpolator(new AnticipateInterpolator());
+	window.setEnterTransition(slideIn);
+	slideOut.setInterpolator(new android.view.animation.AnticipateInterpolator());
 	slideOut.setSlideEdge(Interface.Gravity.TOP);
 	slideOut.setDuration(800);
-	window.setExitActor(slideOut);
+	window.setExitTransition(slideOut);
 	return window;
 };
 
@@ -87,10 +87,10 @@ MenuWindow.prototype.scrollTo = function(y, duration) {
 	let content = this.getContainer(),
 		views = this.views;
 	if (!content || !views || !views.scroll) return this;
-	let actor = new ScrollActor();
-	actor.setInterpolator(new AccelerateDecelerateInterpolator());
+	let actor = new android.transition.ChangeScroll();
+	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	if (duration !== undefined) actor.setDuration(duration);
-	this.beginDelayedActor(actor);
+	this.beginDelayedTransition(actor);
 	views.scroll.scrollTo(views.scroll.getScrollX(), y);
 	return this;
 };
@@ -120,15 +120,15 @@ MenuWindow.prototype.removeElement = function(elementOrIndex) {
 	if (!element) return this;
 	let content = element.getContent();
 	if (!content) return this;
-	let set = new ActorSet(),
-		fade = new FadeActor(),
-		bounds = new BoundsActor();
-	bounds.setInterpolator(new AccelerateInterpolator());
+	let set = new android.transition.TransitionSet(),
+		fade = new android.transition.Fade(),
+		bounds = new android.transition.ChangeBounds();
+	bounds.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	bounds.setDuration(400);
-	set.addActor(bounds);
+	set.addTransition(bounds);
 	fade.setDuration(200);
-	set.addActor(fade);
-	this.beginDelayedActor(set);
+	set.addTransition(fade);
+	this.beginDelayedTransition(set);
 	this.views.layout.removeView(content);
 	this.getElements().splice(index, 1);
 	return this;
@@ -212,9 +212,9 @@ MenuWindow.Header.prototype.setWindow = function(window) {
 	let layout = window.views ? window.views.layout : null,
 		content = this.getContent();
 	if (!layout || !content) return this;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(600);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	layout.addView(content);
 	this.window = window;
 	this.setupScroll();
@@ -395,15 +395,15 @@ MenuWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
 	if (!content || !views || !views.background) return this;
 	let window = this.getWindow();
 	if (window) {
-		let set = new ActorSet(),
-			bounds = new BoundsActor(),
-			fade = new FadeActor();
-		set.setInterpolator(new AccelerateDecelerateInterpolator());
+		let set = new android.transition.TransitionSet(),
+			bounds = new android.transition.ChangeBounds(),
+			fade = new android.transition.Fade();
+		set.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 		bounds.setDuration(1000);
-		set.addActor(bounds);
+		set.addTransition(bounds);
 		fade.setDuration(400);
-		set.addActor(fade);
-		window.beginDelayedActor(set);
+		set.addTransition(fade);
+		window.beginDelayedTransition(set);
 	}
 	let few = this.getCategoryCount() > 0;
 	this.setSlideOffset(few ? -Interface.getY(40) : 0);
@@ -447,9 +447,9 @@ MenuWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(200);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	layout.removeView(content);
 	this.getCategories().splice(index, 1);
@@ -551,9 +551,9 @@ MenuWindow.ProjectHeader.Category.prototype.setParentHeader = function(header) {
 	if (!layout) return this;
 	let window = header.getWindow();
 	if (window) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(400);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	layout.addView(content);
 	this.header = header;
@@ -622,9 +622,9 @@ MenuWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(200);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	layout.removeView(content);
 	this.getItems().splice(index, 1);
@@ -776,9 +776,9 @@ MenuWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(ca
 	if (header) {
 		let window = header.getWindow();
 		if (window) {
-			let actor = new BoundsActor();
+			let actor = new android.transition.ChangeBounds();
 			actor.setDuration(400);
-			window.beginDelayedActor(actor);
+			window.beginDelayedTransition(actor);
 		}
 		header.updateSlideProgress();
 	}
@@ -959,9 +959,9 @@ MenuWindow.Category.prototype.setWindow = function(window) {
 	let layout = window.views ? window.views.layout : null,
 		content = this.getContent();
 	if (!layout || !content) return this;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(400);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	layout.addView(content);
 	this.window = window;
 	return this;
@@ -1015,9 +1015,9 @@ MenuWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(200);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	layout.removeView(content);
 	this.getItems().splice(index, 1);
@@ -1162,9 +1162,9 @@ MenuWindow.Category.Item.prototype.setParentCategory = function(category) {
 	if (!layout || !content) return this;
 	let window = category.getWindow();
 	if (window) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(600);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	layout.addView(content);
 	this.category = category;
@@ -1338,9 +1338,9 @@ MenuWindow.Message.prototype.setWindow = function(window) {
 	let layout = window.views ? window.views.layout : null,
 		content = this.getContent();
 	if (!layout || !content) return this;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(400);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	layout.addView(content);
 	this.window = window;
 	return this;

@@ -61,12 +61,12 @@ const NarrationWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setWidth(Interface.Display.MATCH);
 	window.setHeight(Interface.Display.MATCH);
-	let fade = new FadeActor();
+	let fade = new android.transition.Fade();
 	fade.setDuration(400);
-	window.setEnterActor(fade);
-	fade = new FadeActor();
+	window.setEnterTransition(fade);
+	fade = new android.transition.Fade();
 	fade.setDuration(800);
-	window.setExitActor(fade);
+	window.setExitTransition(fade);
 	window.setFragment(new NarrationFragment());
 	window.fields = new Array();
 	let fragment = window.getFragment();

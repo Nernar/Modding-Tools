@@ -106,15 +106,15 @@ ExplorerWindow.prototype.removeElement = function(elementOrIndex) {
 	if (!element) return this;
 	let content = element.getContent();
 	if (!content) return this;
-	let set = new ActorSet(),
-		fade = new FadeActor(),
-		bounds = new BoundsActor();
-	bounds.setInterpolator(new AccelerateInterpolator());
+	let set = new android.transition.TransitionSet(),
+		fade = new android.transition.Fade(),
+		bounds = new android.transition.ChangeBounds();
+	bounds.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	bounds.setDuration(400);
-	set.addActor(bounds);
+	set.addTransition(bounds);
 	fade.setDuration(200);
-	set.addActor(fade);
-	this.beginDelayedActor(set);
+	set.addTransition(fade);
+	this.beginDelayedTransition(set);
 	this.views.layout.removeView(content);
 	this.getElements().splice(index, 1);
 	return this;
@@ -152,9 +152,9 @@ ExplorerWindow.prototype.getRootDirectory = function() {
 ExplorerWindow.prototype.setItems = function(array) {
 	this.adapter.setRoot(this.file.getPath());
 	this.adapter.setItems(array);
-	let fade = new FadeActor();
+	let fade = new android.transition.Fade();
 	fade.setDuration(400);
-	this.beginDelayedActor(fade);
+	this.beginDelayedTransition(fade);
 	if (array.length == 0) {
 		this.views.files.setVisibility(Interface.Visibility.GONE);
 		this.views.empty.setVisibility(Interface.Visibility.VISIBLE);
@@ -306,9 +306,9 @@ ExplorerWindow.Approve.prototype.setWindow = function(window) {
 		content = this.getContent(),
 		scope = this;
 	if (!layout || !content) return this;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(600);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	let params = new android.widget.RelativeLayout.LayoutParams(Interface.getY(120), Interface.getY(120));
 	params.setMargins(Interface.getY(40), Interface.getY(40), Interface.getY(40), Interface.getY(40));
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -359,9 +359,9 @@ ExplorerWindow.Approve.prototype.checkIfCanBeApproved = function() {
 	let content = this.getContent(),
 		window = this.getWindow();
 	if (window) {
-		let actor = new FadeActor();
+		let actor = new android.transition.Fade();
 		actor.setDuration(400);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	content.setVisibility(window && window.isCanBeApproved() ?
 		Interface.Visibility.VISIBLE : Interface.Visibility.GONE);
@@ -438,9 +438,9 @@ ExplorerWindow.Path.prototype.setWindow = function(window) {
 		files = window.views ? window.views.files : null,
 		scope = this;
 	if (!layout || !content || !files) return this;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(600);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	let params = files.getLayoutParams();
 	params.addRule(android.widget.RelativeLayout.BELOW, content.getId());
 	layout.addView(content, 0);
@@ -656,9 +656,9 @@ ExplorerWindow.Rename.prototype.setWindow = function(window) {
 		window.views.files : null,
 		scope = this;
 	if (!layout || !content || !files) return this;
-	let actor = new FadeActor();
+	let actor = new android.transition.Fade();
 	actor.setDuration(400);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	let params = files.getLayoutParams();
 	params.addRule(android.widget.RelativeLayout.ABOVE, content.getId());
 	layout.addView(content, 0);

@@ -3,15 +3,15 @@ const ControlButton = function() {
 	window.resetContent();
 	window.setBackground("popupButton");
 
-	let actor = new FadeActor();
-	actor.setInterpolator(new AccelerateDecelerateInterpolator());
+	let actor = new android.transition.Fade();
+	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	actor.setDuration(400);
-	window.setEnterActor(actor);
+	window.setEnterTransition(actor);
 
-	actor = new SlideActor(Interface.Gravity.LEFT);
-	actor.setInterpolator(new AccelerateInterpolator());
+	actor = new android.transition.Slide(Interface.Gravity.LEFT);
+	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	actor.setDuration(400);
-	window.setExitActor(actor);
+	window.setExitTransition(actor);
 	return window;
 };
 
@@ -124,13 +124,13 @@ ControlWindow.prototype.resetContent = function() {
 	this.behold = behold;
 	this.collapse = collapse;
 	this.queue = queue;
-	let minimize = this.getCollapseActor();
-	this.setActor(behold, collapse, minimize);
-	this.setActor(collapse, behold, minimize);
-	let transform = this.getTransformActor();
-	this.setActor(behold, queue, transform);
-	this.setActor(behold, collapse, transform);
-	let actor = this.getTransformActor();
+	let minimize = this.getCollapseTransition();
+	this.setTransition(behold, collapse, minimize);
+	this.setTransition(collapse, behold, minimize);
+	let transform = this.getTransformTransition();
+	this.setTransition(behold, queue, transform);
+	this.setTransition(behold, collapse, transform);
+	let actor = this.getTransformTransition();
 	actor.addListener({
 		onTransitionEnd: function() {
 			tryout(function() {
@@ -142,8 +142,8 @@ ControlWindow.prototype.resetContent = function() {
 			});
 		}
 	});
-	this.setActor(queue, behold, actor);
-	this.setActor(queue, collapse, actor);
+	this.setTransition(queue, behold, actor);
+	this.setTransition(queue, collapse, actor);
 };
 
 ControlWindow.prototype.getButtonFragment = function() {
@@ -189,50 +189,50 @@ ControlWindow.prototype.makeContainerScene = function() {
 	return UniqueWindow.prototype.makeContainerScene.apply(this, arguments);
 };
 
-ControlWindow.prototype.getButtonEnterActor = function() {
-	let actor = new FadeActor();
-	actor.setInterpolator(new AccelerateDecelerateInterpolator());
+ControlWindow.prototype.getButtonEnterTransition = function() {
+	let actor = new android.transition.Fade();
+	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	actor.setDuration(400);
 	return actor;
 };
 
-ControlWindow.prototype.getButtonExitActor = function() {
-	let actor = new SlideActor(Interface.Gravity.LEFT);
-	actor.setInterpolator(new AccelerateInterpolator());
+ControlWindow.prototype.getButtonExitTransition = function() {
+	let actor = new android.transition.Slide(Interface.Gravity.LEFT);
+	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	actor.setDuration(400);
 	return actor;
 };
 
-ControlWindow.prototype.getLogotypeEnterActor = function() {
-	let actor = new FadeActor();
-	actor.setInterpolator(new DecelerateInterpolator());
+ControlWindow.prototype.getLogotypeEnterTransition = function() {
+	let actor = new android.transition.Fade();
+	actor.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	actor.setDuration(2000);
 	return actor;
 };
 
-ControlWindow.prototype.getLogotypeExitActor = function() {
-	let actor = new FadeActor();
-	actor.setInterpolator(new AccelerateInterpolator());
+ControlWindow.prototype.getLogotypeExitTransition = function() {
+	let actor = new android.transition.Fade();
+	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	actor.setDuration(500);
 	return actor;
 };
 
-ControlWindow.prototype.getTransformActor = function() {
-	let actor = new ActorSet(),
-		bounds = new BoundsActor();
-	bounds.setInterpolator(new AccelerateDecelerateInterpolator());
+ControlWindow.prototype.getTransformTransition = function() {
+	let actor = new android.transition.TransitionSet(),
+		bounds = new android.transition.ChangeBounds();
+	bounds.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	bounds.setDuration(1000);
-	actor.addActor(bounds);
-	let transform = new TransformActor();
-	transform.setInterpolator(new AccelerateDecelerateInterpolator());
+	actor.addTransition(bounds);
+	let transform = new android.transition.ChangeTransform();
+	transform.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	transform.setDuration(1000);
-	actor.addActor(transform);
+	actor.addTransition(transform);
 	return actor;
 };
 
-ControlWindow.prototype.getCollapseActor = function() {
-	let actor = new TransformActor();
-	actor.setInterpolator(new AccelerateDecelerateInterpolator());
+ControlWindow.prototype.getCollapseTransition = function() {
+	let actor = new android.transition.ChangeTransform();
+	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	actor.setDuration(600);
 	return actor;
 };
@@ -409,22 +409,22 @@ ControlWindow.prototype.setTouchable = function(enabled) {
 };
 
 ControlWindow.prototype.transformButton = function() {
-	this.setEnterActor(this.getButtonEnterActor());
-	this.setExitActor(this.getButtonExitActor());
+	this.setEnterTransition(this.getButtonEnterTransition());
+	this.setExitTransition(this.getButtonExitTransition());
 	this.setFragment(this.getButtonFragment());
 };
 
 ControlWindow.prototype.transformCollapsedButton = function() {
-	this.setEnterActor(this.getButtonEnterActor());
-	this.setExitActor(this.getButtonExitActor());
+	this.setEnterTransition(this.getButtonEnterTransition());
+	this.setExitTransition(this.getButtonExitTransition());
 	this.setFragment(this.getCollapsedButtonFragment());
 };
 
 ControlWindow.prototype.transformLogotype = function() {
 	this.setWidth(Interface.Display.WIDTH);
 	this.setHeight(Interface.Display.HEIGHT);
-	this.setEnterActor(this.getLogotypeEnterActor());
-	this.setExitActor(this.getLogotypeExitActor());
+	this.setEnterTransition(this.getLogotypeEnterTransition());
+	this.setExitTransition(this.getLogotypeExitTransition());
 	this.setFragment(this.getLogotypeFragment());
 	if (this.isMayTouched()) UniqueWindow.prototype.setTouchable.call(this, false);
 };

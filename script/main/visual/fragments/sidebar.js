@@ -201,8 +201,8 @@ SidebarFragment.Group.prototype.setIcon = function(src) {
 	let icon = this.getIconView();
 	if (icon == null) return this;
 	if (src !== null && typeof src == "object") {
-		Interface.setActorName(icon, src.bitmap + "Group");
-	} else Interface.setActorName(icon, src + "Group");
+		Interface.setTransitionName(icon, src.bitmap + "Group");
+	} else Interface.setTransitionName(icon, src + "Group");
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}
@@ -272,8 +272,8 @@ SidebarFragment.Group.Item.prototype.setIcon = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
 	if (src !== null && typeof src == "object") {
-		Interface.setActorName(container, src.bitmap + "Item");
-	} else Interface.setActorName(container, src + "Item");
+		Interface.setTransitionName(container, src.bitmap + "Item");
+	} else Interface.setTransitionName(container, src + "Item");
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}

@@ -4,19 +4,19 @@ const HintAlert = function() {
 	window.setWidth(Interface.Display.MATCH);
 	window.setTouchable(false);
 
-	let actor = new SlideActor(Interface.Gravity.BOTTOM),
-		interpolator = new DecelerateInterpolator();
+	let actor = new android.transition.Slide(Interface.Gravity.BOTTOM),
+		interpolator = new android.view.animation.DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
 	actor.setDuration(window.getTime() / 6);
-	window.setEnterActor(actor);
+	window.setEnterTransition(actor);
 
-	actor = new ActorSet();
-	let slide = new SlideActor(Interface.Gravity.BOTTOM),
-		fade = new FadeActor(FadeActor.OUT);
-	actor.addActor(slide);
-	actor.addActor(fade);
+	actor = new android.transition.TransitionSet();
+	let slide = new android.transition.Slide(Interface.Gravity.BOTTOM),
+		fade = new android.transition.Fade(android.transition.Visibility.MODE_OUT);
+	actor.addTransition(slide);
+	actor.addTransition(fade);
 	actor.setDuration(window.getTime() / 6);
-	window.setExitActor(actor);
+	window.setExitTransition(actor);
 
 	window.resetContent();
 	window.clearStack();
@@ -70,15 +70,15 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		text.setMinimumWidth(Interface.getY(405));
 		layout.addView(text);
 
-		let actor = new ActorSet();
-		actor.setOrdering(ActorSet.TOGETHER);
-		let bounds = new BoundsActor(),
-			fade = new FadeActor();
-		actor.setInterpolator(new OvershootInterpolator());
+		let actor = new android.transition.TransitionSet();
+		actor.setOrdering(android.transition.TransitionSet.ORDERING_TOGETHER);
+		let bounds = new android.transition.ChangeBounds(),
+			fade = new android.transition.Fade();
+		actor.setInterpolator(new android.view.animation.OvershootInterpolator());
 		actor.setDuration(this.getTime() / 8);
-		actor.addActor(bounds);
-		actor.addActor(fade);
-		this.beginDelayedActor(actor);
+		actor.addTransition(bounds);
+		actor.addTransition(fade);
+		this.beginDelayedTransition(actor);
 		layout.setVisibility(Interface.Visibility.VISIBLE);
 		return layout;
 	}
@@ -148,9 +148,9 @@ HintAlert.prototype.addMessage = function(hint, color, force) {
 HintAlert.prototype.removeFirstStacked = function() {
 	let content = this.getContainer();
 	if (content.getChildCount() > 0) {
-		let actor = new FadeActor();
+		let actor = new android.transition.Fade();
 		actor.setDuration(this.time / 12);
-		this.beginDelayedActor(actor);
+		this.beginDelayedTransition(actor);
 		content.removeViewAt(0);
 	}
 };
@@ -244,11 +244,11 @@ HintAlert.prototype.setAutoReawait = function(enabled) {
 HintAlert.prototype.flashHint = function(hint, color) {
 	let view = this.findStackedHint(hint);
 	if (view === null) return false;
-	let actor = new FadeActor();
-	actor.setInterpolator(new CycleInterpolator(1.3));
+	let actor = new android.transition.Fade();
+	actor.setInterpolator(new android.view.animation.CycleInterpolator(1.3));
 	actor.setDuration(this.time / 8);
 	view.setVisibility(Interface.Visibility.INVISIBLE);
-	this.beginDelayedActor(actor);
+	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
 	view.setVisibility(Interface.Visibility.VISIBLE);
 	this.reawait();

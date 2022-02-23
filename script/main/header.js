@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-22.02.2022-0";
+const REVISION = "develop-alpha-0.3.6-24.02.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");

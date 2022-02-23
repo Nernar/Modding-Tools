@@ -7,15 +7,15 @@ const SidebarWindow = function() {
 	window.setBackground("popup");
 	if (!menuDividers) window.setTabBackground("popup");
 
-	let enter = new SlideActor(Interface.Gravity.RIGHT);
-	enter.setInterpolator(new DecelerateInterpolator());
+	let enter = new android.transition.Slide(Interface.Gravity.RIGHT);
+	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	enter.setDuration(400);
-	window.setEnterActor(enter);
+	window.setEnterTransition(enter);
 	
-	let exit = new SlideActor(Interface.Gravity.RIGHT);
-	exit.setInterpolator(new BounceInterpolator());
+	let exit = new android.transition.Slide(Interface.Gravity.RIGHT);
+	exit.setInterpolator(new android.view.animation.BounceInterpolator());
 	exit.setDuration(1000);
-	window.setExitActor(exit);
+	window.setExitTransition(exit);
 	return window;
 };
 
@@ -149,9 +149,9 @@ SidebarWindow.prototype.reinflateLayout = function() {
 		fragment = this.getFragment();
 	if (fragment !== null) {
 		if (this.isSelected()) {
-			let set = new ActorSet(),
-				slide = new SlideActor(Interface.Gravity.RIGHT),
-				bounds = new BoundsActor();
+			let set = new android.transition.TransitionSet(),
+				slide = new android.transition.Slide(Interface.Gravity.RIGHT),
+				bounds = new android.transition.ChangeBounds();
 			if (this.isTouchable()) {
 				set.addListener({
 					onTransitionStart: function(transition) {
@@ -166,15 +166,15 @@ SidebarWindow.prototype.reinflateLayout = function() {
 					}
 				});
 			}
-			slide.setInterpolator(new AccelerateDecelerateInterpolator());
+			slide.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 			slide.setDuration(150);
-			set.addActor(slide);
+			set.addTransition(slide);
 			bounds.setStartDelay(25);
 			bounds.setDuration(100);
-			bounds.setInterpolator(new AnticipateInterpolator());
-			set.addActor(bounds);
+			bounds.setInterpolator(new android.view.animation.AnticipateInterpolator());
+			set.addTransition(bounds);
 			let container = fragment.getItemContainer();
-			this.beginDelayedActor(container, set);
+			this.beginDelayedTransition(container, set);
 		}
 		fragment.clearItems();
 		let group = this.getSelectedGroup();
@@ -277,9 +277,9 @@ SidebarWindow.Group.prototype.attachToWindow = function(window) {
 	if (!window) MCSystem.throwException("Window can't be illegal or undefined state!");
 	let attached = this.getWindow();
 	if (attached != null) MCSystem.throwException("You're must deattach sidebar group firstly!");
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(200);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	this.window = window;
 	this.updateBackground();
 	return true;
@@ -288,9 +288,9 @@ SidebarWindow.Group.prototype.attachToWindow = function(window) {
 SidebarWindow.Group.prototype.deattachFromWindow = function() {
 	let window = this.getWindow();
 	if (window == null) return false;
-	let actor = new BoundsActor();
+	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(500);
-	window.beginDelayedActor(actor);
+	window.beginDelayedTransition(actor);
 	delete this.window;
 	this.updateBackground();
 	return true;
@@ -567,9 +567,9 @@ SidebarWindow.Group.Item.prototype.attachToGroup = function(group) {
 	if (attached !== null) MCSystem.throwException("You're must deattach sidebar item firstly!");
 	let window = group.getWindow();
 	if (window !== null) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(200);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	this.group = group;
 	return true;
@@ -580,9 +580,9 @@ SidebarWindow.Group.Item.prototype.deattachFromGroup = function() {
 	if (group == null) return false;
 	let window = group.getWindow();
 	if (window != null) {
-		let actor = new BoundsActor();
+		let actor = new android.transition.ChangeBounds();
 		actor.setDuration(350);
-		window.beginDelayedActor(actor);
+		window.beginDelayedTransition(actor);
 	}
 	delete this.group;
 	return true;

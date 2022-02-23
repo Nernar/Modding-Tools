@@ -82,7 +82,7 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	let layout = new android.widget.LinearLayout(context);
 	layout.setOrientation(Interface.Orientate.VERTICAL);
 	layout.setTag("logotypeBackground");
-	Interface.setActorName(layout, "logotypeBackground");
+	Interface.setTransitionName(layout, "logotypeBackground");
 	let params = android.widget.FrameLayout.LayoutParams
 		(Interface.Display.WRAP, Interface.Display.WRAP);
 	params.setMargins(Interface.getY(20), Interface.getY(20), 0, 0);
@@ -91,7 +91,7 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	let button = new android.widget.ImageView(context);
 	button.setPadding(Interface.getY(15), Interface.getY(15), Interface.getY(15), Interface.getY(15));
 	button.setTag("logotypeForeground");
-	Interface.setActorName(button, "logotypeForeground");
+	Interface.setTransitionName(button, "logotypeForeground");
 	params = android.widget.LinearLayout.LayoutParams
 		(Interface.getY(100), Interface.getY(100));
 	layout.addView(button, params);
@@ -126,12 +126,12 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	let layout = new android.widget.LinearLayout(context);
 	layout.setGravity(Interface.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
-	Interface.setActorName(layout, "logotypeBackground");
+	Interface.setTransitionName(layout, "logotypeBackground");
 	container.addView(layout);
 	
 	let logotype = new android.widget.ImageView(context);
 	logotype.setTag("logotypeForeground");
-	Interface.setActorName(logotype, "logotypeForeground");
+	Interface.setTransitionName(logotype, "logotypeForeground");
 	params = new android.widget.LinearLayout.LayoutParams
 		(Interface.getY(320), Interface.getY(320));
 	layout.addView(logotype, params);

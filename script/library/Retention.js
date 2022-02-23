@@ -367,7 +367,7 @@ Interface.getEmptyDrawable = function() {
 	return new android.graphics.drawable.ColorDrawable();
 };
 
-Interface.setActorName = function(view, name) {
+Interface.setTransitionName = function(view, name) {
 	android.support.v4.view.ViewCompat.setTransitionName(view, String(name));
 };
 

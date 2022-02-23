@@ -27,9 +27,6 @@ api/utils.js
 network/browser.js
 network/remote.js
 
-interface/actor.js
-interface/motions.js
-interface/transforms.js
 interface/content.js
 interface/window.js
 interface/variations.js

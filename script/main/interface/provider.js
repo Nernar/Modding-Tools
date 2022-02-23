@@ -66,11 +66,11 @@ WindowProvider.openWindow = function(window) {
 		this.attached[popupId] = popup;
 		popup.setAttachedInDecor(isHorizon && !isInstant);
 		popup.setTouchable(window.isTouchable());
-		if (window.enterActor) {
-			this.setEnterActor(popupId, window.enterActor);
+		if (window.enterTransition) {
+			this.setEnterTransition(popupId, window.enterTransition);
 		}
-		if (window.exitActor) {
-			this.setExitActor(popupId, window.exitActor);
+		if (window.exitTransition) {
+			this.setExitTransition(popupId, window.exitTransition);
 		}
 		popup.showAtLocation(Interface.getDecorView(), window.getGravity(),
 			window.getX(), window.getY());
@@ -96,20 +96,18 @@ WindowProvider.closeWindow = function(window) {
 	this.manager.removeView(window.getContent());
 };
 
-WindowProvider.setEnterActor = function(popupId, actor, content) {
+WindowProvider.setEnterTransition = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
 		if (popup === null) return;
-		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setEnterTransition(actor);
 	}
 };
 
-WindowProvider.setExitActor = function(popupId, actor, content) {
+WindowProvider.setExitTransition = function(popupId, actor, content) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let popup = this.getByPopupId(popupId);
 		if (popup === null) return;
-		if (actor instanceof WindowActor) actor = actor.getActor();
 		popup.setExitTransition(actor);
 	}
 };
@@ -119,10 +117,10 @@ WindowProvider.updateWindow = function(window) {
 		let popupId = window.popupId,
 			popup = this.getByPopupId(popupId);
 		if (!popup) return;
-		let enter = window.getEnterActor();
-		if (enter !== null) this.setEnterActor(popupId, enter);
-		let exit = window.getExitActor();
-		if (exit !== null) this.setExitActor(popupId, exit);
+		let enter = window.getEnterTransition();
+		if (enter !== null) this.setEnterTransition(popupId, enter);
+		let exit = window.getExitTransition();
+		if (exit !== null) this.setExitTransition(popupId, exit);
 		popup.setContentView(window.getContent());
 		popup.setTouchable(window.isTouchable());
 		popup.setFocusable(window.isFocusable());
