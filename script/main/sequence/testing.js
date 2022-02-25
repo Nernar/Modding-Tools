@@ -28,7 +28,7 @@ const FetchTestsSequence = new LogotypeSequence({
 	},
 	cancel: function(error) {
 		handle(function() {
-			ProjectEditor.menu();
+			waitUntilEditorLaunched();
 		}, this.getExpirationTime() * 2);
 		LogotypeSequence.prototype.cancel.apply(this, arguments);
 	},

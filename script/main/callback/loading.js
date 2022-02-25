@@ -36,8 +36,9 @@ const restart = function() {
 		return;
 	}
 	handle(function() {
-		ProjectEditor.create();
-		currentEnvironment = __name__;
+		waitUntilEditorLaunched(function() {
+			currentEnvironment = __name__;
+		});
 	});
 	isSupportEnv = false;
 };

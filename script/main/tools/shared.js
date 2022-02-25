@@ -193,7 +193,7 @@ const showSupportableInfo = function(mod) {
 					}
 					eval(mod.modName.replace(/\W/, String()) + " = null;");
 					// ExecuteableSupport.uninstall(mod.modName);
-					ProjectEditor.menu();
+					PROJECT_TOOL.describe();
 				});
 		});
 		builder.setPositiveButton(translate("OK"), null);

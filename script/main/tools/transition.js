@@ -278,7 +278,7 @@ let TransitionEditor = {
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
 			delete TransitionEditor.data.worker;
-			ProjectEditor.menu();
+			waitUntilEditorLaunched();
 		});
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Transition"));

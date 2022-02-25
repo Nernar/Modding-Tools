@@ -59,14 +59,15 @@ const LaunchSequence = new LogotypeSequence({
 			tryoutSafety(function() {
 				prepareEnvironmentIfNeeded();
 			});
-			ProjectEditor.create();
-			if (showHint.launchStacked !== undefined) {
-				showHint.unstackLaunch();
-			}
-			LevelProvider.attach();
-			if (Level.isLoaded()) {
-				LevelProvider.show();
-			}
+			waitUntilEditorLaunched(function() {
+				if (showHint.launchStacked !== undefined) {
+					showHint.unstackLaunch();
+				}
+				LevelProvider.attach();
+				if (Level.isLoaded()) {
+					LevelProvider.show();
+				}
+			});
 		}
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();

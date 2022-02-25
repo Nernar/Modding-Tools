@@ -21,7 +21,7 @@ const addTexture = function(index, name, data) {
 const isBlockTextureLoaded = function(name, data) {
 	if (isInstant) return name !== null && data >= 0;
 	let valid = isBlockTextureLoaded.isValid(name, data);
-	return valid !== null ? Boolean(valid) : true;
+	return valid !== null ? Boolean(valid): true;
 };
 
 isBlockTextureLoaded.isValid = requireMethod("mod.resource.ResourcePackManager", "isValidBlockTexture");
@@ -41,7 +41,7 @@ const selectTexture = function(index, onSelect) {
 		wrong.setGravity(Interface.Gravity.CENTER);
 		wrong.setPadding(0, Interface.getY(64), 0, Interface.getY(64));
 		let icon = new android.widget.ImageView(context),
-			drawable = AnimationDrawable.parseJson(["blockDefineTexture", "blockDefineWrong"]);
+		drawable = AnimationDrawable.parseJson(["blockDefineTexture", "blockDefineWrong"]);
 		drawable.setDefaultDuration(1500);
 		drawable.attachAsImage(icon);
 		params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
@@ -62,7 +62,7 @@ const selectTexture = function(index, onSelect) {
 			builder.setItems(converted, function(d, i) {
 				tryout(function() {
 					let adapter = dialog.getListView().getAdapter(),
-						texture = String(adapter.getItem(i)).split(", ");
+					texture = String(adapter.getItem(i)).split(", ");
 					onSelect && onSelect(texture[0], parseInt(texture[1]));
 				});
 			});
@@ -86,8 +86,8 @@ const selectTexture = function(index, onSelect) {
 							adapter.getFilter().filter(text, {
 								onFilterComplete: function(count) {
 									tryout(function() {
-										let actor = count > 0 ? new android.transition.Fade() :
-											new android.transition.Slide(Interface.Gravity.TOP);
+										let actor = count > 0 ? new android.transition.Fade():
+										new android.transition.Slide(Interface.Gravity.TOP);
 										actor.setInterpolator(new android.view.animation.DecelerateInterpolator());
 										actor.addListener({
 											onTransitionStart: function(transition) {
@@ -98,7 +98,7 @@ const selectTexture = function(index, onSelect) {
 											onTransitionEnd: function(transition) {
 												tryout(function() {
 													dialog.getListView().setVisibility(count > 0 ?
-														Interface.Visibility.VISIBLE :
+														Interface.Visibility.VISIBLE:
 														Interface.Visibility.GONE);
 												});
 											}
@@ -106,7 +106,7 @@ const selectTexture = function(index, onSelect) {
 										actor.setDuration(800);
 										actor.beginDelayedTransition(layout);
 										wrong.setVisibility(count > 0 ?
-											Interface.Visibility.GONE :
+											Interface.Visibility.GONE:
 											Interface.Visibility.VISIBLE);
 									});
 								}
@@ -130,7 +130,7 @@ const selectTexture = function(index, onSelect) {
 
 const checkMapping = function(x, y, z, render) {
 	let exists = false,
-		saved = getSavedMappings();
+	saved = getSavedMappings();
 	for (let i = 0; i < saved.length; i++) {
 		let map = saved[i];
 		if (map.x == x && map.y == y && map.z == z) {
@@ -139,9 +139,13 @@ const checkMapping = function(x, y, z, render) {
 		}
 	}
 	BlockRenderer.mapAtCoords(x, y, z, render);
-	getCurrentMappings().push({ x: x, y: y, z: z });
+	getCurrentMappings().push({
+		x: x, y: y, z: z
+	});
 	if (!exists) {
-		saved.push({ x: x, y: y, z: z });
+		saved.push({
+			x: x, y: y, z: z
+		});
 		showHint(translate("Added mapping to %s, %s, %s", [x, y, z]));
 	}
 };
@@ -167,11 +171,11 @@ const hasMappings = function() {
 
 const removeUnusedMappings = function() {
 	let current = getCurrentMappings(),
-		saved = getSavedMappings(),
-		hasOne = false;
+	saved = getSavedMappings(),
+	hasOne = false;
 	for (let i = 0; i < saved.length; i++) {
 		let exists = false,
-			map = saved[i];
+		map = saved[i];
 		for (let c = 0; c < current.length; c++) {
 			let item = current[c];
 			if (map.x == item.x && map.y == item.y && map.z == item.z) {
@@ -181,7 +185,9 @@ const removeUnusedMappings = function() {
 		}
 		if (!exists) {
 			BlockRenderer.unmapAtCoords(map.x, map.y, map.z);
-			saved.splice(i, 1), current.splice(i, 1), (i--, hasOne = true);
+			saved.splice(i, 1),
+			current.splice(i, 1),
+			(i--, hasOne = true);
 			showHint(translate("Removed mapping from %s, %s, %s", [map.x, map.y, map.z]));
 		}
 	}
@@ -190,11 +196,12 @@ const removeUnusedMappings = function() {
 
 const removeMappings = function() {
 	let saved = getSavedMappings(),
-		count = 0;
+	count = 0;
 	for (let i = 0; i < saved.length; i++) {
 		let map = saved[i];
 		BlockRenderer.unmapAtCoords(map.x, map.y, map.z);
-		saved.splice(i, 1), (i--, count++);
+		saved.splice(i, 1),
+		(i--, count++);
 	}
 	checkMapping.current = new Array();
 	if (count > 0) {
@@ -212,30 +219,30 @@ const mapRenderBlock = function(tool) {
 			return false;
 		}
 		let render = new ICRender.Model(),
-			form = new ICRender.CollisionShape(),
-			mapped = worker.Define.getMapped(),
-			models = worker.Renderer.getModels(),
-			collisions = worker.Collision.getModels(),
-			shape = worker.Define.params.shape,
-			hasRenderer = hasCollision = false;
+		form = new ICRender.CollisionShape(),
+		mapped = worker.Define.getMapped(),
+		models = worker.Renderer.getModels(),
+		collisions = worker.Collision.getModels(),
+		shape = worker.Define.params.shape,
+		hasRenderer = hasCollision = false;
 		if (models.length > 0 && selectMode != 10) {
 			for (let m = 0; m < models.length; m++) {
 				let model = BlockRenderer.createModel(),
-					boxes = models[m].getBoxes();
+				boxes = models[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
 					let box = boxes[i];
 					hasRenderer = true;
 					if (selectMode == 3 && drawSelection) {
 						let selected = BlockEditor.data.renderer;
 						model.addBox(box.x1, box.y1, box.z1,
-							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
+							box.x2, box.y2, box.z2, i == selected ? "renderer_select":
 							"renderer_unselect", Number(transparentBoxes));
 					} else if (selectMode == 9) {
 						let selected = BlockEditor.data.rendererInst,
-							innersection = models[m].checkBoxesInnersection(selected, i);
+						innersection = models[m].checkBoxesInnersection(selected, i);
 						model.addBox(box.x1, box.y1, box.z1,
-							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
+							box.x2, box.y2, box.z2, i == selected ? "renderer_select":
+							innersection ? "renderer_innersection": "renderer_unselect", Number(transparentBoxes));
 					} else {
 						let texture = box.texture;
 						if (texture) {
@@ -265,22 +272,22 @@ const mapRenderBlock = function(tool) {
 		if (collisions.length > 0 && selectMode != 9) {
 			for (let m = 0; m < collisions.length; m++) {
 				let model = BlockRenderer.createModel(),
-					collision = form.addEntry(),
-					boxes = collisions[m].getBoxes();
+				collision = form.addEntry(),
+				boxes = collisions[m].getBoxes();
 				for (let i = 0; i < boxes.length; i++) {
 					let box = boxes[i];
 					hasCollision = true;
 					if (selectMode == 11 && drawSelection) {
 						let selected = BlockEditor.data.collision;
 						model.addBox(box.x1, box.y1, box.z1,
-							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
+							box.x2, box.y2, box.z2, i == selected ? "renderer_select":
 							"renderer_unselect", Number(transparentBoxes));
 					} else if (selectMode == 10) {
 						let selected = BlockEditor.data.collisionInst,
-							innersection = collisions[m].checkBoxesInnersection(selected, i);
+						innersection = collisions[m].checkBoxesInnersection(selected, i);
 						model.addBox(box.x1, box.y1, box.z1,
-							box.x2, box.y2, box.z2, i == selected ? "renderer_select" :
-							innersection ? "renderer_innersection" : "renderer_unselect", Number(transparentBoxes));
+							box.x2, box.y2, box.z2, i == selected ? "renderer_select":
+							innersection ? "renderer_innersection": "renderer_unselect", Number(transparentBoxes));
 					} else if (tool.getSelectedGroup() == 2) {
 						model.addBox(box.x1, box.y1, box.z1, box.x2,
 							box.y2, box.z2, "renderer_shape", Number(transparentBoxes));
@@ -302,9 +309,9 @@ const mapRenderBlock = function(tool) {
 		}
 		for (let i = 0; i < mapped.length; i++) {
 			let map = mapped[i],
-				x = map.x,
-				y = map.y,
-				z = map.z;
+			x = map.x,
+			y = map.y,
+			z = map.z;
 			checkMapping(x, y, z, render);
 			let id = Level.getTile(x, y, z);
 			if (id >= CUSTOM_BLOCKS_ID_OFFSET) {
@@ -430,44 +437,42 @@ const mergeConvertedBlock = function(project, source, action) {
 	});
 };
 
-let BlockTool = null;
-
 Callback.addCallback("LevelLoaded", function() {
-	if (BlockTool && BlockTool.isAttached()) {
+	if (BLOCK_TOOL && BLOCK_TOOL.isAttached()) {
 		handle(function() {
-			BlockTool.describe();
+			BLOCK_TOOL.describe();
 		});
 	}
 });
 
 Callback.addCallback("LevelLeft", function() {
-	if (BlockTool && BlockTool.isAttached()) {
+	if (BLOCK_TOOL && BLOCK_TOOL.isAttached()) {
 		handle(function() {
-			BlockTool.describe();
+			BLOCK_TOOL.describe();
 		});
 	}
 });
 
 Callback.addCallback("ItemUse", function(coords, item, block) {
-	if (BlockTool && selectMode == 1) {
+	if (BLOCK_TOOL && selectMode == 1) {
 		handleThread(function() {
 			let render = new ICRender.Model(),
-				model = new BlockRenderer.Model(block.id, block.data);
+			model = new BlockRenderer.Model(block.id, block.data);
 			render.addEntry(model);
 			BlockRenderer.enableCoordMapping(block.id, block.data, render);
-			let worker = BlockTool.getWorker();
+			let worker = BLOCK_TOOL.getWorker();
 			worker.Define.addMapping(coords.x, coords.y, coords.z);
 			handle(function() {
-				if (mapRenderBlock(BlockTool)) {
-					BlockTool.describeMenu();
+				if (mapRenderBlock(BLOCK_TOOL)) {
+					BLOCK_TOOL.describeMenu();
 				}
 			});
 		});
 	}
 });
 
-const attachBlockTool = function(source, post) {
-	let tool = new EditorTool({
+const BLOCK_TOOL = (function() {
+	return new EditorTool({
 		controlDescriptor: {
 			logotype: function(tool, control) {
 				if (selectMode == 1 || selectMode == 9 || selectMode == 10) {
@@ -842,7 +847,7 @@ const attachBlockTool = function(source, post) {
 				let active = Date.now();
 				tryout(function() {
 					let obj = compileData(Files.read(file)),
-						result = convertNdb(obj);
+					result = convertNdb(obj);
 					instance.fromProject(result);
 					showHint(translate("Imported success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
@@ -869,7 +874,7 @@ const attachBlockTool = function(source, post) {
 				let active = Date.now();
 				handleThread(function() {
 					let obj = compileData(Files.read(file)),
-						result = convertNdb(obj);
+					result = convertNdb(obj);
 					merger(project, result, function(output) {
 						instance.fromProject(output);
 						showHint(translate("Merged success") + " " +
@@ -903,20 +908,23 @@ const attachBlockTool = function(source, post) {
 			EditorTool.prototype.unselect.apply(this, arguments);
 		}
 	});
-	tool.attach();
-	tool.queue();
+})();
+
+const attachBlockTool = function(source, post) {
+	BLOCK_TOOL.attach();
+	BLOCK_TOOL.queue();
 	handleThread(function() {
-		let accepted = tool.open(source);
+		let accepted = BLOCK_TOOL.open(source);
 		handle(function() {
 			if (accepted) {
 				tryout(function() {
-					post && post(tool);
-					BlockEditor.attach(tool);
+					post && post(BLOCK_TOOL);
+					BlockEditor.attach(BLOCK_TOOL);
 					accepted = false;
 				});
 			}
 			if (accepted) {
-				tool.leave();
+				BLOCK_TOOL.leave();
 			}
 		});
 	});
@@ -943,14 +951,13 @@ const BlockEditor = {
 		let worker = tool.getWorker();
 		this.resetIfNeeded(tool);
 		this.data.hasRender = worker.Renderer.getModelCount() > 0 &&
-			worker.Renderer.getModel(0).getBoxCount() > 0;
+		worker.Renderer.getModel(0).getBoxCount() > 0;
 		this.data.hasCollision = worker.Collision.getModelCount() > 0 &&
-			worker.Collision.getModel(0).getBoxCount() > 0;
+		worker.Collision.getModel(0).getBoxCount() > 0;
 		mapRenderBlock(tool);
 		if (!tool.isAttached()) {
 			tool.attach();
 		}
-		BlockTool = tool;
 		tool.describe();
 		tool.control();
 	},
@@ -963,7 +970,8 @@ const BlockEditor = {
 		}
 	},
 	innersection: function(tool) {
-		let renderer, collision;
+		let renderer,
+		collision;
 		if (this.data.hasRender) {
 			renderer = new ListingPopup();
 			renderer.setIsMayDismissed(false);
@@ -1003,14 +1011,14 @@ const BlockEditor = {
 	},
 	shape: function(tool) {
 		let params = tool.getWorker().Define.params,
-			shape = params.shape = params.shape || {
-				x1: 0,
-				y1: 0,
-				z1: 0,
-				x2: 1,
-				y2: 1,
-				z2: 1
-			};
+		shape = params.shape = params.shape || {
+			x1: 0,
+			y1: 0,
+			z1: 0,
+			x2: 1,
+			y2: 1,
+			z2: 1
+		};
 		let popup = new CoordsPopup();
 		popup.setTitle(translate("Shape"));
 		popup.setOnShowListener(function() {
@@ -1066,7 +1074,7 @@ const BlockEditor = {
 		popup.addEditElement(translate("Define"), define.getDefineData() || "[{}]");
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues(),
-				result = compileData(values[0]);
+			result = compileData(values[0]);
 			if (result.lineNumber !== undefined) {
 				confirm(translate("Compilation failed"),
 					translate("Looks like, you entered invalid array. Check it with following exception:") +
@@ -1080,30 +1088,34 @@ const BlockEditor = {
 			define.setDefineData(String(values[0]));
 			showHint(translate("Data saved"));
 		});
-		Popups.open(popup, "variation");
+		Popups.open(popup,
+			"variation");
 	},
 	type: function(tool) {
 		let define = tool.getWorker().Define;
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Type"));
-		popup.addEditElement(translate("Special"), define.getSpecialType() || "{}");
-		popup.addButtonElement(translate("Save"), function() {
-			let values = popup.getAllEditsValues(),
+		popup.addEditElement(translate("Special"),
+			define.getSpecialType() || "{}");
+		popup.addButtonElement(translate("Save"),
+			function() {
+				let values = popup.getAllEditsValues(),
 				result = compileData(values[0]);
-			if (result.lineNumber !== undefined) {
-				confirm(translate("Compilation failed"),
-					translate("Looks like, you entered invalid object. Check it with following exception:") +
-					" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),
-					function() {
-						define.setSpecialType(String(values[0]));
-						showHint(translate("Data saved"));
-					});
-				return;
-			}
-			define.setSpecialType(String(values[0]));
-			showHint(translate("Data saved"));
-		});
-		Popups.open(popup, "type");
+				if (result.lineNumber !== undefined) {
+					confirm(translate("Compilation failed"),
+						translate("Looks like, you entered invalid object. Check it with following exception:") +
+						" " + formatExceptionReport(result) + "\n\n" + translate("Force save special type?"),
+						function() {
+							define.setSpecialType(String(values[0]));
+							showHint(translate("Data saved"));
+						});
+					return;
+				}
+				define.setSpecialType(String(values[0]));
+				showHint(translate("Data saved"));
+			});
+		Popups.open(popup,
+			"type");
 	},
 	Renderer: {
 		hasSelection: function(tool) {
@@ -1128,7 +1140,8 @@ const BlockEditor = {
 				mapRenderBlock(tool);
 			});
 			popup.selectButton(BlockEditor.data.renderer);
-			Popups.open(popup, "renderer_select");
+			Popups.open(popup,
+				"renderer_select");
 		},
 		add: function(tool) {
 			if (BlockEditor.data.hasRender) {
@@ -1139,7 +1152,7 @@ const BlockEditor = {
 				});
 				popup.addButtonElement(translate("New of"), function() {
 					let selected = BlockEditor.Renderer.hasSelection(),
-						index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).addBox(1, 0));
+					index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).addBox(1, 0));
 					if (!selected) tool.describeSidebar();
 					showHint(translate("Box %s added", index + 1));
 					mapRenderBlock(tool);
@@ -1147,7 +1160,7 @@ const BlockEditor = {
 				if (BlockEditor.Renderer.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.renderer,
-							index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).cloneBox(last));
+						index = (BlockEditor.data.renderer = tool.getWorker().Renderer.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 						mapRenderBlock(tool);
 					});
@@ -1161,26 +1174,26 @@ const BlockEditor = {
 		},
 		resize: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
+			box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "x1": "x2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "y1": "y2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				tool.getWorker().Renderer.getModel(0).scretchBox(selected, index == 0 ? "z1": "z2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
@@ -1189,7 +1202,7 @@ const BlockEditor = {
 		},
 		move: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
+			box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
@@ -1214,7 +1227,7 @@ const BlockEditor = {
 		},
 		mirror: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
+			box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
@@ -1233,7 +1246,7 @@ const BlockEditor = {
 		},
 		rotate: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
+			box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1242,8 +1255,8 @@ const BlockEditor = {
 			popup.addButtonElement(translate("At %s angle", 270));
 			popup.setOnClickListener(function(index) {
 				let values = popup.getAllEditsValues(),
-					side = compileData(values[0], "string").toLowerCase(),
-					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
+				side = compileData(values[0], "string").toLowerCase(),
+				orientate = side == "z" ? 2: side == "y" ? 1: 0;
 				tool.getWorker().Renderer.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
 				mapRenderBlock(tool);
@@ -1252,7 +1265,7 @@ const BlockEditor = {
 		},
 		texture: function(tool) {
 			let selected = BlockEditor.data.renderer,
-				box = tool.getWorker().Renderer.getModel(0).getBox(selected);
+			box = tool.getWorker().Renderer.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Texture"));
 			popup.setOnClickListener(function(index) {
@@ -1274,48 +1287,49 @@ const BlockEditor = {
 				handleThread(function() {
 					if (box.texture && Array.isArray(box.texture)) {
 						let stringify = box.texture.slice().map(function(element) {
-							let texture = typeof element[0] == "string" ? "\"" + element[0] + "\"" : element[0];
-							return (texture === undefined ? "0" : texture) + (element.length > 1 ? ", " + element[1] : String());
+							let texture = typeof element[0] == "string" ? "\"" + element[0] + "\"": element[0];
+							return (texture === undefined ? "0": texture) + (element.length > 1 ? ", " + element[1]: String());
 						});
 						handle(function() {
 							edit.setValue(stringify.join("\n"));
 						});
 					} else handle(function() {
-						edit.setValue("0");
-					});
+							edit.setValue("0");
+						});
 				});
 			};
-			let button = popup.addButtonElement(translate("Save"), function() {
-				let array = popup.getEdit(0).getValue().split("\n");
-				array = compileData("[[" + array.join("],[") + "]]");
-				if (array.lineNumber !== undefined) {
-					confirm(translate("Compilation failed"),
-						translate("Looks like, you entered invalid array. Check it with following exception:") +
-						" " + formatExceptionReport(array));
-				} else if (!Array.isArray(array)) {
-					showHint(translate("That's isn't array"), Interface.Color.YELLOW);
-				} else {
-					for (let i = 0; i < array.length; i++) {
-						let texture = array[i];
-						if (!Array.isArray(texture)) {
-							showHint(translate("Textures array must be contains only arrays inside"), Interface.Color.YELLOW);
-							return;
+			let button = popup.addButtonElement(translate("Save"),
+				function() {
+					let array = popup.getEdit(0).getValue().split("\n");
+					array = compileData("[[" + array.join("],[") + "]]");
+					if (array.lineNumber !== undefined) {
+						confirm(translate("Compilation failed"),
+							translate("Looks like, you entered invalid array. Check it with following exception:") +
+							" " + formatExceptionReport(array));
+					} else if (!Array.isArray(array)) {
+						showHint(translate("That's isn't array"), Interface.Color.YELLOW);
+					} else {
+						for (let i = 0; i < array.length; i++) {
+							let texture = array[i];
+							if (!Array.isArray(texture)) {
+								showHint(translate("Textures array must be contains only arrays inside"), Interface.Color.YELLOW);
+								return;
+							}
+							if (texture.length != 2) {
+								showHint(translate("Every element in textures array must have 2 length"), Interface.Color.YELLOW);
+								return;
+							}
+							if ((typeof texture[0] != "number" && typeof texture[0] != "string") || (texture.length == 2 && typeof texture[1] != "number")) {
+								showHint(translate("Every element in textures array may incudes only strings or numbers"), Interface.Color.YELLOW);
+								return;
+							}
 						}
-						if (texture.length != 2) {
-							showHint(translate("Every element in textures array must have 2 length"), Interface.Color.YELLOW);
-							return;
-						}
-						if ((typeof texture[0] != "number" && typeof texture[0] != "string") || (texture.length == 2 && typeof texture[1] != "number")) {
-							showHint(translate("Every element in textures array may incudes only strings or numbers"), Interface.Color.YELLOW);
-							return;
-						}
+						tool.getWorker().Renderer.getModel(0).textureBox(selected, array);
+						mapRenderBlock(tool);
+						showHint(translate("Textures changed"));
+						edit.update();
 					}
-					tool.getWorker().Renderer.getModel(0).textureBox(selected, array);
-					mapRenderBlock(tool);
-					showHint(translate("Textures changed"));
-					edit.update();
-				}
-			}).switchVisibility();
+				}).switchVisibility();
 			for (let i = 0; i < textures.length; i++) {
 				popup.addButtonElement(textures[i].name);
 			}
@@ -1328,7 +1342,7 @@ const BlockEditor = {
 				function() {
 					let worker = tool.getWorker();
 					worker.Renderer.getModel(0).removeBox(BlockEditor.data.renderer);
-					BlockEditor.data.renderer = BlockEditor.data.renderer > 0 ? BlockEditor.data.renderer - 1 : 0;
+					BlockEditor.data.renderer = BlockEditor.data.renderer > 0 ? BlockEditor.data.renderer - 1: 0;
 					if (worker.Renderer.getModel(0).getBoxCount() == 0) {
 						BlockEditor.attach(tool);
 					}
@@ -1361,7 +1375,8 @@ const BlockEditor = {
 				mapRenderBlock(tool);
 			});
 			popup.selectButton(BlockEditor.data.collision);
-			Popups.open(popup, "collision_select");
+			Popups.open(popup,
+				"collision_select");
 		},
 		add: function(tool) {
 			if (BlockEditor.data.hasCollision) {
@@ -1372,7 +1387,7 @@ const BlockEditor = {
 				});
 				popup.addButtonElement(translate("New of"), function() {
 					let selected = BlockEditor.Collision.hasSelection(),
-						index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).addBox());
+					index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).addBox());
 					if (!selected) tool.describeSidebar();
 					showHint(translate("Box %s added", index + 1));
 					mapRenderBlock(tool);
@@ -1380,7 +1395,7 @@ const BlockEditor = {
 				if (BlockEditor.Collision.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = BlockEditor.data.collision,
-							index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).cloneBox(last));
+						index = (BlockEditor.data.collision = tool.getWorker().Collision.getModel(0).cloneBox(last));
 						showHint(translate("Box %s cloned to %s", [last + 1, index + 1]));
 						mapRenderBlock(tool);
 					});
@@ -1394,26 +1409,26 @@ const BlockEditor = {
 		},
 		resize: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = tool.getWorker().Collision.getModel(0).getBox(selected);
+			box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Scretch"));
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "x1" : "x2", value);
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "x1": "x2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.x1);
 			group.addItem(box.x2);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "y1" : "y2", value);
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "y1": "y2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.y1);
 			group.addItem(box.y2);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "z1" : "z2", value);
+				tool.getWorker().Collision.getModel(0).scretchBox(selected, index == 0 ? "z1": "z2", value);
 				mapRenderBlock(tool);
 			});
 			group.addItem(box.z1);
@@ -1422,7 +1437,7 @@ const BlockEditor = {
 		},
 		move: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = tool.getWorker().Collision.getModel(0).getBox(selected);
+			box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			let group = popup.addGroup("x");
@@ -1447,7 +1462,7 @@ const BlockEditor = {
 		},
 		mirror: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = tool.getWorker().Collision.getModel(0).getBox(selected);
+			box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Mirror"));
 			popup.addButtonElement("X", function() {
@@ -1466,7 +1481,7 @@ const BlockEditor = {
 		},
 		rotate: function(tool) {
 			let selected = BlockEditor.data.collision,
-				box = tool.getWorker().Collision.getModel(0).getBox(selected);
+			box = tool.getWorker().Collision.getModel(0).getBox(selected);
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.addEditElement(translate("Side"), "X");
@@ -1475,8 +1490,8 @@ const BlockEditor = {
 			popup.addButtonElement(translate("At %s angle", 270));
 			popup.setOnClickListener(function(index) {
 				let values = popup.getAllEditsValues(),
-					side = compileData(values[0], "string").toLowerCase(),
-					orientate = side == "z" ? 2 : side == "y" ? 1 : 0;
+				side = compileData(values[0], "string").toLowerCase(),
+				orientate = side == "z" ? 2: side == "y" ? 1: 0;
 				tool.getWorker().Collision.getModel(0).rotateBox(selected, orientate, index);
 				showHint(translate("Box rotated at %s angle", (index + 1) * 90));
 				mapRenderBlock(tool);
@@ -1489,7 +1504,7 @@ const BlockEditor = {
 				function() {
 					let worker = tool.getWorker();
 					worker.Collision.getModel(0).removeBox(BlockEditor.data.collision);
-					BlockEditor.data.collision = BlockEditor.data.collision > 0 ? BlockEditor.data.collision - 1 : 0;
+					BlockEditor.data.collision = BlockEditor.data.collision > 0 ? BlockEditor.data.collision - 1: 0;
 					if (worker.Collision.getModel(0).getBoxCount() == 0) {
 						BlockEditor.attach(tool);
 					}

@@ -52,7 +52,7 @@ const ConsoleViewer = {
 		button.setOnClickListener(function() {
 			let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 			if (snack !== null) snack.dismiss();
-			ProjectEditor.create();
+			waitUntilEditorLaunched();
 			Popups.closeIfOpened("evaluate");
 		});
 		button.show();
@@ -108,7 +108,7 @@ const DebugEditor = {
 				DebugEditor.create();
 			});
 			control.addMessage("menuProjectLeave", translate("Dev Editor") + ": " + translate("Leave"), function() {
-				ProjectEditor.menu();
+				waitUntilEditorLaunched();
 			});
 			control.addCategory(translate("Debug"));
 			this.attachTestsList(control);
@@ -171,7 +171,7 @@ const ModificationSource = {
 	selector: function() {
 		let control = new MenuWindow();
 		control.setOnClickListener(function() {
-			ProjectEditor.create();
+			waitUntilEditorLaunched();
 		});
 		if (!this.attachSources(control)) {
 			control.addMessage("worldSelectionRange", translate("There's we can't find any modification. Please, consider developer about that cause."));
