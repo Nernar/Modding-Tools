@@ -36,7 +36,7 @@ const restart = function() {
 		return;
 	}
 	handle(function() {
-		waitUntilEditorLaunched(function() {
+		attachProjectTool(undefined, function() {
 			currentEnvironment = __name__;
 		});
 	});

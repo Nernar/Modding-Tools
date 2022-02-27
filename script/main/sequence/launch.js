@@ -59,7 +59,7 @@ const LaunchSequence = new LogotypeSequence({
 			tryoutSafety(function() {
 				prepareEnvironmentIfNeeded();
 			});
-			waitUntilEditorLaunched(function() {
+			attachProjectTool(undefined, function() {
 				if (showHint.launchStacked !== undefined) {
 					showHint.unstackLaunch();
 				}

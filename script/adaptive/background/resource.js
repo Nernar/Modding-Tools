@@ -70,7 +70,7 @@ return function(action) {
 	handle(function() {
 		let control = new MenuWindow();
 		control.setOnClickListener(function() {
-			action ? action() : waitUntilEditorLaunched();
+			action ? action() : attachProjectTool();
 		});
 		control.addHeader().setLogo("supportDumpCreator");
 		attachCategoriedIcons(control, action);

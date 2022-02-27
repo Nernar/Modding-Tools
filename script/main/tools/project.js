@@ -699,7 +699,8 @@ const attachProjectTool = function(source, post) {
 			if (accepted) {
 				tryout(function() {
 					post && post(PROJECT_TOOL);
-					describeProjectTool();
+					ProjectProvider.setOpenedState(false);
+					PROJECT_TOOL.control();
 					accepted = false;
 				});
 			}
@@ -708,16 +709,6 @@ const attachProjectTool = function(source, post) {
 			}
 		});
 	});
-};
-
-const waitUntilEditorLaunched = function(post) {
-	return attachProjectTool(undefined, post);
-};
-
-const describeProjectTool = function() {
-	PROJECT_TOOL.describe();
-	PROJECT_TOOL.control();
-	ProjectProvider.setOpenedState(false);
 };
 
 const EditorTool = function() {
@@ -944,7 +935,7 @@ EditorTool.prototype.leave = function() {
 	this.deattach();
 	let instance = this;
 	delete instance.worker;
-	waitUntilEditorLaunched(function(tool) {
+	attachProjectTool(undefined, function(tool) {
 		this.getProject().callAutosave();
 		instance.unselect(true);
 	});

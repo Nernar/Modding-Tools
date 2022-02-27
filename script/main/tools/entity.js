@@ -295,7 +295,7 @@ const EntityEditor = {
 			ProjectProvider.setOpenedState(false);
 			ProjectProvider.getProject().callAutosave();
 			delete EntityEditor.data.worker;
-			waitUntilEditorLaunched();
+			attachProjectTool();
 		});
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Entity"));

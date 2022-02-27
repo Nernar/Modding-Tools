@@ -177,6 +177,7 @@ IMPORT("Network:2");
 IMPORT("Transition:6");
 IMPORT("Action:4");
 IMPORT("Sequence:1");
+IMPORT("Drawable:1");
 
 getPlayerEnt = function() {
 	return Number(Player.get());
