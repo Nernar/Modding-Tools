@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-27.02.2022-0";
+const REVISION = "develop-alpha-0.3.6-28.02.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -132,7 +132,7 @@ const findCorePackage = function() {
 
 const findAssertionPackage = function() {
 	return tryout(function() {
-		return Packages.com.nernar;
+		return Packages.io.nernar;
 	}, function(e) {
 		MCSystem.throwException("Couldn't find assertion package, please referr developer");
 	}, null);

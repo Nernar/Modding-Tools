@@ -387,7 +387,7 @@ return function() {
 	narration.addField(Monster, translateCode(1640602775) + "?");
 	narration.addField(Chara, translateCode(1823643522, Human.getLocalizedName()));
 	narration.addField(Human, translateCode(-753049471) + "...");
-	narration.addField(Chara, translateCode(1214760478, [Human.getLocalizedName(), Monster.getLocalizedName()]));
+	narration.addField(Chara, translateCode(1214760478, [Human.getLocalizedName(), translateCode(2050569)]));
 	narration.addField(Human, "... " + translateCode(-845363641) + ".");
 	narration.addField(Narrator, "...");
 	narration.addField(Author, translateCode(-214916102) + ": " + translateCode(2480147) + " 1, " + translateCode(-1891298259) + " 7");

@@ -1,0 +1,15 @@
+{
+	"source-dirs": [],
+	"library-dirs": [],
+	"options": [],
+	"shared": {
+		"name": "nteditor",
+		"include": [
+			"jni/includes"
+		]
+	},
+	"depends": [
+		"innercore",
+		"nativejs"
+	]
+}

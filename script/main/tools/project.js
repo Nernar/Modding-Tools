@@ -71,7 +71,7 @@ ProjectTool.prototype.reset = function() {
 				if (REVISION.indexOf("alpha") != -1) {
 					confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
 						TutorialSequence.ButtonInteraction.execute();
-						tool.leave();
+						tool.deattach();
 					});
 				} else showHint(translate("This content will be availabled soon"));
 			}
@@ -232,7 +232,7 @@ const PROJECT_TOOL = (function() {
 			title: translate("Block"),
 			click: function(tool, item) {
 				attachBlockTool(function(next) {
-					tool.leave();
+					tool.deattach();
 				});
 			}
 		}, {
@@ -244,7 +244,7 @@ const PROJECT_TOOL = (function() {
 			click: function(tool, item) {
 				if (REVISION.indexOf("alpha") != -1) {
 					EntityEditor.create();
-					tool.leave();
+					tool.deattach();
 					showHint(translate("Not developed yet"));
 				} else showHint(translate("This content will be availabled soon"));
 			}
@@ -255,7 +255,7 @@ const PROJECT_TOOL = (function() {
 			click: function(tool, item) {
 				if (REVISION.startsWith("develop")) {
 					AnimationWindow.create();
-					tool.leave();
+					tool.deattach();
 				} else showHint(translate("This content will be availabled soon"));
 			}
 		}, {
@@ -263,7 +263,7 @@ const PROJECT_TOOL = (function() {
 			title: translate("Transition"),
 			click: function(tool, item) {
 				TransitionEditor.create();
-				tool.leave();
+				tool.deattach();
 			}
 		}, function(tool) {
 			if (supportSupportables) {
@@ -289,7 +289,7 @@ const PROJECT_TOOL = (function() {
 									isSupportEnv = false;
 									currentEnvironment = __name__;
 									retraceOrReport(result);
-								} else tool.leave();
+								} else tool.deattach();
 							} else showHint(translate("Supportable module can't be loaded at menu"));
 						}
 					},
@@ -316,7 +316,7 @@ const PROJECT_TOOL = (function() {
 									content.splice(real, 1);
 									content.unshift(block);
 									project.setCurrentlyId(0);
-									tool.leave();
+									tool.deattach();
 								});
 							},
 							holdItem: function(tool, item, index) {
@@ -357,7 +357,7 @@ const PROJECT_TOOL = (function() {
 										content.splice(real, 1);
 										content.unshift(entity);
 										project.setCurrentlyId(0);
-										tool.leave();
+										tool.deattach();
 									}
 								},
 								holdItem: function(tool, item, index) {
@@ -398,7 +398,7 @@ const PROJECT_TOOL = (function() {
 									content.splice(real, 1);
 									content.unshift(transition);
 									project.setCurrentlyId(0);
-									tool.leave();
+									tool.deattach();
 								}
 							},
 							holdItem: function(tool, item, index) {
@@ -442,14 +442,14 @@ const PROJECT_TOOL = (function() {
 							title: translate("Tests"),
 							click: function(tool, item) {
 								DebugEditor.menu();
-								tool.leave();
+								tool.deattach();
 							}
 						}, {
 							icon: "menuBoardInsert",
 							title: translate("Console"),
 							click: function(tool, item) {
 								ConsoleViewer.show();
-								tool.leave();
+								tool.deattach();
 							}
 						}, {
 							icon: "worldActionMeasure",
@@ -462,7 +462,7 @@ const PROJECT_TOOL = (function() {
 							title: translate("Mods"),
 							click: function(tool, item) {
 								ModificationSource.selector();
-								tool.leave();
+								tool.deattach();
 							}
 						}, {
 							icon: "explorer",
@@ -514,7 +514,7 @@ const PROJECT_TOOL = (function() {
 											showHint(translate(UIEditor.modName) + " " + translate(UIEditor.version));
 											showHint(translate(UIEditor.author));
 										} else showHint(translate(UIEditor.modName) + " - " + translate(UIEditor.author));
-										tool.leave();
+										tool.deattach();
 									}
 								};
 							}
@@ -773,7 +773,7 @@ EditorTool.prototype.reset = function() {
 			icon: "menuProjectLeave",
 			title: translate("Back"),
 			click: function(tool, item) {
-				tool.leave();
+				tool.deattach();
 			}
 		}]
 	}];

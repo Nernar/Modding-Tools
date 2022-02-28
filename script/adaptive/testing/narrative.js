@@ -28,7 +28,7 @@ return function() {
 	showHint(translateCode(1970600048) + ": " + translateCode(1640602775) + "?");
 	showHint(translateCode(1823643522, translateCode(68147221)));
 	showHint(translateCode(68147221) + ": " + translateCode(-753049471) + "...");
-	showHint(translateCode(1214760478, [translateCode(68147221), translateCode(1970600048)]));
+	showHint(translateCode(1214760478, [translateCode(68147221), translateCode(2050569)]));
 	showHint(translateCode(68147221) + ": ... " + translateCode(-845363641) + ".");
 	showHint("...", Interface.Color.RED);
 	showHint(translateCode(-214916102) + ": " + translateCode(2480147) + " 1, " + translateCode(-1891298259) + " 7", Interface.Color.GREEN);

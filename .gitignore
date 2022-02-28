@@ -63,6 +63,12 @@ _gsdata_/
 /gui/
 
 # Local development
+/executable/build/
+/executable/bin/*
+!/executable/bin/manifest
+!/executable/bin/classes.dex
+!/executable/bin/classes[0-9]*.dex
+/executable/build/
 /projects/
 /.eval/
 

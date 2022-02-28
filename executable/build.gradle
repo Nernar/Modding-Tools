@@ -1,0 +1,12 @@
+apply plugin: "com.android.library"
+
+android {
+    defaultConfig {
+        applicationId "io.nernar.innercore.editor"
+        minSdkVersion 19
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+}

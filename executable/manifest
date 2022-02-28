@@ -1,0 +1,23 @@
+{
+	"source-dirs": [
+		"src",
+		"gen"
+	],
+	"library-dirs": [
+		"libs"
+	],
+	"options": [
+		"-cp",
+		"/mnt/sdcard/games/horizon/libs/2.3.0b112.jar"
+	],
+	"shared": {
+		"name": "nteditor",
+		"include": [
+			"jni/includes"
+		]
+	},
+	"depends": [
+		"innercore",
+		"nativejs"
+	]
+}
