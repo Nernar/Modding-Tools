@@ -1,7 +1,9 @@
 MCSystem.setLoadingTip(NAME + ": Localizing");
 
 // Modifications information
-Translation.addTranslation("Dev Editor", {});
+Translation.addTranslation("Modding Tools", {
+	ru: "Средства для моддинга"
+});
 Translation.addTranslation("Alpha 0.4", {
 	ru: "Альфа 0.4"
 }); // NO-TRANSLATE
@@ -52,21 +54,6 @@ Translation.addTranslation("This mod adds 2 new commands \"/run\" which lets you
 Translation.addTranslation("Editor", {
 	ru: "Редактор"
 });
-Translation.addTranslation("Actions", {
-	ru: "Действия"
-});
-Translation.addTranslation("Retry", {
-	ru: "Повторить"
-});
-Translation.addTranslation("Contact", {
-	ru: "Написать"
-});
-Translation.addTranslation("Buy", {
-	ru: "Купить"
-});
-Translation.addTranslation("Ignore", {
-	ru: "Скрыть"
-});
 Translation.addTranslation("Remove", {
 	ru: "Удалить"
 });
@@ -90,6 +77,9 @@ Translation.addTranslation("Reload", {
 });
 Translation.addTranslation("Tutorial", {
 	ru: "Обучение"
+});
+Translation.addTranslation("Tests", {
+	ru: "Тесты"
 });
 Translation.addTranslation("Mods", {
 	ru: "Моды"
@@ -1144,19 +1134,19 @@ Translation.addTranslation("The administration deemed it appropriate to issue yo
 }); // NO-TRANSLATE
 Translation.addTranslation("Before key expires: %s days", {
 	ru: "До истечения срока ключа: %s дня"
-});
+}); // DEPRECATED
 Translation.addTranslation("Modification will be uninstalled.", {
 	ru: "Модификация будет удалена."
-});
+}); // DEPRECATED
 Translation.addTranslation("To complete modification installation connect to any network, at current moment mod deactivated it's abilities to develop content.", {
 	ru: "Для завершения установки модификации, подключитесь к любой сети. На данный момент мод отключил свои средства для разработки."
-});
+}); // DEPRECATED
 Translation.addTranslation("You can't use this modification without access for testing abilities. Contact with developer, it's may takes result.", {
 	ru: "Вы не можете использовать эту модификацию без доступа к тестированию. Свяжитесь с разработчиком, это может дать результат."
-});
+}); // DEPRECATED
 Translation.addTranslation("Unknown exception is catched, please retry modification installation or try later.", {
 	ru: "Произошла неизвестная ошибка, пожалуйста повторите попытку установки или повторите позже."
-});
+}); // DEPRECATED
 
 // Supportables
 Translation.addTranslation("Supportables", {
@@ -1271,8 +1261,8 @@ Translation.addTranslation("Checkout reports below to see more details.", {
 });
 
 // Deprecated tutorial sequence
-Translation.addTranslation("Howdy and welcome to Dev Editor!", {
-	ru: "Приветствую и добро пожаловать в Dev Editor!"
+Translation.addTranslation("Howdy and welcome to Modding Tools!", {
+	ru: "Приветствую и добро пожаловать в средства для моддинга!"
 });
 Translation.addTranslation("Tool from developers to developers.", {
 	ru: "Инструмент от разработчиков разработчикам."
@@ -1304,8 +1294,8 @@ Translation.addTranslation("You may create, remove, load and export them.", {
 Translation.addTranslation("Horewer, it's not all exiting abilities.", {
 	ru: "Однако, это не все существующие возможности."
 });
-Translation.addTranslation("Dev Editor handles content inside projects.", {
-	ru: "Dev Editor обрабатывает контент внутри проектов."
+Translation.addTranslation("Modding Tools handles content inside projects.", {
+	ru: "Средства для моддинга обрабатывают контент внутри проектов."
 });
 Translation.addTranslation("Project filled with created editors.", {
 	ru: "Проекты наполнены созданными редакторами."
@@ -1422,6 +1412,21 @@ Translation.addTranslation("Congratulations!", {
 }); // DEPRECATED
 Translation.addTranslation("This module are deprecated!", {
 	ru: "Этот модуль устарел!"
+}); // DEPRECATED
+Translation.addTranslation("Actions", {
+	ru: "Действия"
+}); // DEPRECATED
+Translation.addTranslation("Retry", {
+	ru: "Повторить"
+}); // DEPRECATED
+Translation.addTranslation("Contact", {
+	ru: "Написать"
+}); // DEPRECATED
+Translation.addTranslation("Buy", {
+	ru: "Купить"
+}); // DEPRECATED
+Translation.addTranslation("Ignore", {
+	ru: "Скрыть"
 }); // DEPRECATED
 
 // Non-organized content

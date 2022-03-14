@@ -17,11 +17,14 @@
 */
 package io.nernar.android.sound;
 
-import android.content.*;
-import android.content.res.*;
-import android.media.*;
-import java.io.*;
-import java.util.*;
+import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import java.io.FileDescriptor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SoundPoolSequence {
 	

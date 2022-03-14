@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-28.02.2022-0";
+const REVISION = "develop-alpha-0.3.6-18.03.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -168,7 +168,7 @@ tryout(function() {
 	dependency.setParentMod(__mod__);
 	let library = $.LibraryRegistry.resolveDependency(dependency);
 	if (!library.isLoaded()) {
-		MCSystem.throwException("Without Retention Dev Editor may not working");
+		MCSystem.throwException("Without Retention Modding Tools may not working");
 	}
 	library.getScope().reportError = reportTrace;
 });

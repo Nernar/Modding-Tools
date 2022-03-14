@@ -17,11 +17,11 @@
 */
 package io.nernar.android.widget;
 
-import android.content.*;
-import android.media.*;
-import android.support.annotation.*;
-import android.util.*;
-import io.nernar.android.sound.*;
+import android.content.Context;
+import android.media.SoundPool;
+import android.support.annotation.NonNull;
+import android.util.AttributeSet;
+import io.nernar.android.sound.SoundPoolSequence;
 
 public class SoundTypingTextView extends TypingTextView {
 	

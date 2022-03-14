@@ -46,7 +46,7 @@ const loadClassNameFromDex = function(file) {
 };
 
 const findRhinoClassLoader = function() {
-	return getClass(com.faendir.rhino_android.AndroidContextFactory).getClassLoader();
+	return com.faendir.rhino_android.AndroidContextFactory.global.getClass().getClassLoader();
 };
 
 const instantiateRhinoScript = function(name) {
@@ -133,9 +133,9 @@ const simplifyScriptName = function(name) {
 let context = $.Compiler.assureContextForCurrentThread();
 let compiledSources = TARGET.createCompiledSources();
 // There's no another way to access JSONObject without parsing
-let sourceList = sources.getClass().getDeclaredField("sourceList");
+let sourceList = compiledSources.getClass().getDeclaredField("sourceList");
 sourceList.setAccessible(true);
-sourceList = list.get(sources);
+sourceList = sourceList.get(compiledSources);
 let buildConfig = TARGET.buildConfig;
 
 // Iterates source names in .dex/ modification dir

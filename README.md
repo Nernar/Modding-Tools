@@ -1,4 +1,4 @@
-# Dev Editor
+# Modding Tools
 
 [![Alpha 0.3.5](https://img.shields.io/badge/version-0.3.5-green.svg)](https://icmods.mineprogramming.org/mod?id=614)
 [![Support](https://img.shields.io/github/repo-size/nernar/dev-editor)](https://vk.com/nteditor)
@@ -28,7 +28,7 @@ It will be possible to take part in development: source code is published here, 
 
 For a start, just enter to any world. In upper left part of screen (it may differ depending on version), only *one button* will appear — it's enough to open extensive possibilities of mod. For example, let's create a render from scratch, just add a block with a render to your project (modification or script). Let's open designer in ourselves a bit, create textures and simulate something new.
 
-You can also add an existing render to your project, just open any script of your modification via import. For example, you can create a *.js* file in `Dev Editor` folder and use following code to add a nightstand:
+You can also add an existing render to your project, just open any script of your modification via import. For example, you can create a *.js* file in `Modding Tools` folder and use following code to add a nightstand:
 
 ```js
 let render = new ICRender.Model();
@@ -56,7 +56,7 @@ render.addEntry(model);
 
 Control menu opens in front of itself main available items. *You can directly import part of code, and modification itself recognizes supported parts of project.* At same time, script will be converted into one project — this will allow storing information more conveniently.
 
-Default export folder located in `Dev Editor/projects` folder. All projects are saved here and from here they're loaded, this folder changes in file explorer of game.
+Default export folder located in `Modding Tools/projects` folder. All projects are saved here and from here they're loaded, this folder changes in file explorer of game.
 
 Interface divided into types — there're coordinate windows, selection of elements, project trees and others. Modeling access availabled only *in-world*, as many of capabilities are only available from within.
 

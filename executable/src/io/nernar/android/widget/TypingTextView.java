@@ -17,12 +17,15 @@
 */
 package io.nernar.android.widget;
 
-import android.content.*;
-import android.os.*;
-import android.support.annotation.*;
-import android.support.v7.widget.*;
-import android.text.*;
-import android.util.*;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
+import android.text.Editable;
+import android.util.AttributeSet;
 
 public class TypingTextView extends AppCompatTextView {
 	

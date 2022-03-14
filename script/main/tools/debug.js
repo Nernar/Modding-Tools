@@ -107,7 +107,7 @@ const DebugEditor = {
 			control.setOnClickListener(function() {
 				DebugEditor.create();
 			});
-			control.addMessage("menuProjectLeave", translate("Dev Editor") + ": " + translate("Leave"), function() {
+			control.addMessage("menuProjectLeave", translate("Modding Tools") + ": " + translate("Leave"), function() {
 				attachProjectTool();
 			});
 			control.addCategory(translate("Debug"));

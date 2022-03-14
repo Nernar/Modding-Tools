@@ -69,7 +69,7 @@ const registerAdditionalInformation = function() {
 	});
 	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://vk.me/join/mEYEiYxL7SsZcI_S6iJhg4wfU_gTgwlyTx4="));
+			android.net.Uri.parse("https://vk.me/join/AJQ1d98l9x_XZG7T1qjlEBEf="));
 		context.startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), .25, function(message) {

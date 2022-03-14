@@ -441,15 +441,15 @@ const PROJECT_TOOL = (function() {
 							icon: "menuBoardConfig",
 							title: translate("Tests"),
 							click: function(tool, item) {
-								DebugEditor.menu();
 								tool.deattach();
+								DebugEditor.menu();
 							}
 						}, {
 							icon: "menuBoardInsert",
 							title: translate("Console"),
 							click: function(tool, item) {
-								ConsoleViewer.show();
 								tool.deattach();
+								ConsoleViewer.show();
 							}
 						}, {
 							icon: "worldActionMeasure",
@@ -461,8 +461,8 @@ const PROJECT_TOOL = (function() {
 							icon: "support",
 							title: translate("Mods"),
 							click: function(tool, item) {
-								ModificationSource.selector();
 								tool.deattach();
+								ModificationSource.selector();
 							}
 						}, {
 							icon: "explorer",

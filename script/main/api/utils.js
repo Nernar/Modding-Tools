@@ -180,7 +180,7 @@ MathUtils.mathDivider = function(number) {
 	if (number % .0009765625 === 0) {
 		return Math.round(number * 1024) + "/1024";
 	}
-	Logger.Log("Non-divideable number: " + number, "DEV-EDITOR");
+	Logger.Log("Non-divideable number: " + number, "MODDING-TOOLS");
 	return String(number);
 };
 

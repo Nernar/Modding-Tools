@@ -17,9 +17,10 @@
 */
 package io.nernar.android.text;
 
-import android.graphics.*;
-import android.text.style.*;
-import android.view.*;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.text.style.ReplacementSpan;
+import android.view.View;
 
 public class DraggingSpan extends ReplacementSpan {
 	
