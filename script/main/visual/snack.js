@@ -49,7 +49,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 				if (!(background instanceof Drawable)) {
 					background = Drawable.parseJson.call(this, background);
 				}
-				background.setCorruptedThumbnail("popup");
+				// background.setCorruptedThumbnail("popup");
 			}
 			return new BitmapDrawable("popup");
 		});

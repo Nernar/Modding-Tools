@@ -30,14 +30,29 @@ Object.defineProperty(BrowserWorker.prototype, "getVersion", {
 	},
 	enumerable: true
 });
+Object.defineProperty(BrowserWorker.prototype, "catchLastAvailabledId", {
+	value: function(language) {
+		let query = new ModBrowser.Query.List();
+		query.setIsHorizon(isHorizon);
+		query.setLanguage(language || Translation.getLanguage());
+		query.setSort(ModBrowser.Query.Sort.NEW);
+		query.setLimit(1);
+		let callback = this.callback;
+		query.setCallback(callback);
+		query.read();
+		let json = query.getJSON();
+		return json[0].id;
+	},
+	enumerable: true
+});
 Object.defineProperty(BrowserWorker.prototype, "fetchList", {
-	value: function(limit, force) {
+	value: function(limit, language, force) {
 		if (!force && this.mods) {
 			return this.mods;
 		}
 		let query = new ModBrowser.Query.List();
 		query.setIsHorizon(isHorizon);
-		query.setLanguage(Translation.getLanguage());
+		query.setLanguage(language || Translation.getLanguage());
 		let callback = this.callback;
 		query.setCallback(callback);
 		let mods = this.mods = new Array();
@@ -62,13 +77,13 @@ Object.defineProperty(BrowserWorker.prototype, "fetchList", {
 	enumerable: true
 });
 Object.defineProperty(BrowserWorker.prototype, "getDescription", {
-	value: function(id) {
+	value: function(id, language) {
 		if (id == undefined || id == null) {
 			return null;
 		}
 		let query = new ModBrowser.Query.Description();
-		query.setLanguage(Translation.getLanguage());
-		query.setCommentLimit(Number.MAX_VALUE);
+		query.setLanguage(language || Translation.getLanguage());
+		query.setCommentLimit(999);
 		query.setIsHorizon(isHorizon);
 		query.setId(id);
 		return query.getJSON();
@@ -85,7 +100,7 @@ Object.defineProperty(BrowserWorker.prototype, "download", {
 		}
 		let downloader = ModBrowser.getDownloader(id, isHorizon);
 		downloader.setCallback(this.callback);
-		downloader.setPath(file + "/archive.icmod");
+		downloader.setPath(file + ".icmod");
 		downloader.download();
 	},
 	enumerable: true

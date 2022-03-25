@@ -3,8 +3,6 @@ translation.js
 
 polyfill/shared.js
 polyfill/Object.js
-polyfill/FileTools.js
-polyfill/Level.js
 
 storage/explorer.js
 storage/factory.js

@@ -36,23 +36,27 @@ report.stack = new Array();
 report.dangerous = false;
 
 let collected = new Array();
-let buildConfig = mod.buildConfig;
+let buildConfig = TARGET.buildConfig;
 
-let name = mod.getName();
-let version = mod.getInfoProperty("version");
+let name = TARGET.getName();
+let version = TARGET.getInfoProperty("version");
 prepare(translate(name) + " " + translate(version));
 
-let sources = buildConfig.getAllSourcesToCompile(),
-	count = Number(sources.size());
+let sources = tryout(function() {
+	return buildConfig.getAllSourcesToCompile(true)
+}, function() {
+	return buildConfig.getAllSourcesToCompile();
+});
 
 Translation.addTranslation("Preparing %s", {
 	ru: "Подготавливается %s"
 });
 
+let count = Number(sources.size());
 seek(translate("Preparing %s", translateCounter(count, "nothing",
 	"%s1 source", "%s" + (count % 10) + " sources", "%s sources", [count])));
 
-let container = mod.createCompiledSources();
+let container = TARGET.createCompiledSources();
 container.reset();
 
 Translation.addTranslation("Source %s", {
@@ -94,19 +98,18 @@ while (targeted.hasNext()) {
 		files = null;
 	if (buildableDir != null) {
 		files = tryout(function() {
-			let file = new java.io.File(mod.dir, buildableDir.dir);
+			let file = new java.io.File(TARGET.dir, buildableDir.dir);
 			return $.BuildHelper.readIncludesFile(file);
 		}, function(e) {
 			report(translate("Something wrong with .includes"), e);
 		}, files);
 	}
 	if (files == null) {
-		let file = new java.io.File(mod.dir + source.path);
+		let file = new java.io.File(TARGET.dir + source.path);
 		files = new java.util.ArrayList();
 		files.add(file);
 	}
 	shrink(files.size());
-	let container = this.getOutputContainer();
 	for (let i = 1; i <= files.size(); i++) {
 		let file = files.get(i - 1);
 		seek(translate("Compiling %s", file.getName() + resolvePrefix(files.size(), " (" + i + "/%s)")), 1);
@@ -123,7 +126,7 @@ while (targeted.hasNext()) {
 		}, function(e) {
 			report(translate("Couldn't found source"), e, true);
 		});
-		require(index + i);
+		require(++getSequence().index);
 	}
 }
 

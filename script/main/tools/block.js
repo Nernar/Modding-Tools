@@ -346,13 +346,13 @@ const convertJsonBlock = function(string, action) {
 			console: {
 				logged: new Array(),
 				log: function(e) {
-					this.logged.push(e.message);
+					this.logged.push(e);
 				}
 			}
 		});
 	if (runned instanceof Error) retraceOrReport(runned);
 	else if (runned && runned.value) {
-		let compiled = compileScript(runned);
+		let compiled = compileScript(runned.value);
 		if (compiled && compiled[0]) {
 			action && action(compiled[0]);
 		} else {

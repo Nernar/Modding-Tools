@@ -459,7 +459,7 @@ Files.compareRecursive = function(input, target, explore, simpleCompare, include
 			changes.push(output);
 			continue;
 		}
-		let file = new java.io.File(input, left[i])
+		let file = new java.io.File(input, right[i])
 		if (!this.compare(output, file, simpleCompare)) {
 			changes.push(output);
 		}

@@ -93,6 +93,7 @@ ScriptConverter.prototype.execute = function() {
 			MCSystem.throwException("Can't find process for ScriptConverter");
 		}
 		if (!this.isValid() || this.inProcess()) {
+			Logger.Log("ScriptConverter not validated required object", "WARNING");
 			return;
 		}
 		if (this.isAttached()) {

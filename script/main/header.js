@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-18.03.2022-0";
+const REVISION = "develop-alpha-0.3.6-24.03.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -152,6 +152,10 @@ if (REVISION.startsWith("develop")) {
 	reportTrace.setupPrint(function(message) {
 		message !== undefined && showHint(message);
 	});
+	
+	if (isInstant) {
+		reportTrace.reloadModifications();
+	}
 }
 
 const retraceOrReport = function(error) {

@@ -236,7 +236,7 @@ const importScript = function(path, action) {
 };
 
 const compileScript = function(text) {
-	let code = "(function() { try { " + String(text) + "\n\t} catch (e) {" +
+	let code = "(function() { try { " + text + "\n\t} catch (e) {" +
 		"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
 		scope = runAtScope(code, getScriptScope(), "import.js");
 	if (noImportedScripts) {

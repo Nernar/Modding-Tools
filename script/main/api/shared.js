@@ -20,6 +20,7 @@ const runAtScope = function(code, scope, name) {
 			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
 		};
 	}, function(e) {
+		Logger.Log(code, "RUN");
 		return {
 			error: e
 		};
