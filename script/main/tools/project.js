@@ -272,7 +272,7 @@ const PROJECT_TOOL = (function() {
 					title: translate("World"),
 					click: function(tool, item) {
 						if (loadSupportables && Setting) {
-							if (Level.isLoaded()) {
+							if (LevelInfo.isLoaded()) {
 								isSupportEnv = true;
 								currentEnvironment = Setting.modName;
 								let result = Setting(function() {
@@ -561,7 +561,7 @@ const PROJECT_TOOL = (function() {
 											}
 										})[0];
 										confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
-											Level.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
+											LevelInfo.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
 											"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
 											let evaluate = DumpCreator(function() {
 												try {

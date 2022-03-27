@@ -25,7 +25,7 @@ import io.nernar.android.sound.SoundPoolSequence;
 
 public class SoundTypingTextView extends TypingTextView {
 	
-	private Sound mDefaultSound = new Sound(-1, 1.f, 1.f, 1, 0, 1.f);
+	private Sound mDefaultSound = new Sound(0, 1.f, 1.f, 1, 0, 1.f);
 	private SoundPoolSequence mSoundSequence;
 	private OnResolveSoundObserver observer;
 	private boolean mStopWhenDetach = true;

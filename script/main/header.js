@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-24.03.2022-0";
+const REVISION = "develop-alpha-0.3.6-27.03.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -186,3 +186,6 @@ IMPORT("Drawable:1");
 getPlayerEnt = function() {
 	return Number(Player.get());
 };
+
+const TYPING_SOUND_SEQUENCE = new Packages.io.nernar.android.sound.SoundPoolSequence();
+TYPING_SOUND_SEQUENCE.load(__dir__ + "assets/snd_typing.wav", 1);

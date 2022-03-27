@@ -31,4 +31,4 @@ const tryoutSafety = function(action, report, basic) {
 };
 
 let FileTools = findCorePackage().utils.FileTools;
-let Level = findCorePackage().api.runtime.LevelInfo;
+let LevelInfo = findCorePackage().api.runtime.LevelInfo;

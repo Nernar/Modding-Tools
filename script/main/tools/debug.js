@@ -344,7 +344,7 @@ LevelProvider.update = function() {
 LevelProvider.updateRecursive = function() {
 	let instance = this;
 	handle(function() {
-		if (instance.update() && Level.isLoaded()) {
+		if (instance.update() && LevelInfo.isLoaded()) {
 			instance.updateRecursive();
 		}
 	}, 500);

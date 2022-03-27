@@ -47,7 +47,7 @@ const stopTransition = function(worker) {
 
 const drawTransitionPoints = function(worker) {
 	return tryout(function() {
-		if (!worker || !Level.isLoaded()) {
+		if (!worker || !LevelInfo.isLoaded()) {
 			return false;
 		}
 		if (selectMode == 4) {
@@ -283,7 +283,7 @@ let TransitionEditor = {
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Transition"));
 		category.addItem("transitionCamera", translate("Camera"), function() {
-			if (!Level.isLoaded()) {
+			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't change camera at menu"));
 				return;
 			}
@@ -319,7 +319,7 @@ let TransitionEditor = {
 			});
 		}
 		category.addItem("worldSelectionRange", translate("Pathes"), function() {
-			if (!Level.isLoaded()) {
+			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't draw points in menu"));
 				return;
 			}
@@ -467,7 +467,7 @@ let TransitionEditor = {
 	},
 	Transition: {
 		play: function() {
-			if (!Level.isLoaded()) {
+			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
 			}
@@ -575,7 +575,7 @@ let TransitionEditor = {
 					showHint(translate("Frame %s added", index + 1));
 					drawTransitionPoints(TransitionEditor.data.worker);
 				});
-				if (Level.isLoaded()) {
+				if (LevelInfo.isLoaded()) {
 					popup.addButtonElement(translate("Currently"), function() {
 						let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
 						TransitionEditor.data.worker.Animation.getAnimate(0).setupFrame(index);
@@ -600,7 +600,7 @@ let TransitionEditor = {
 			}
 		},
 		play: function() {
-			if (!Level.isLoaded()) {
+			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
 			}

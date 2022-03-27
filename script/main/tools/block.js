@@ -215,7 +215,7 @@ const CUSTOM_BLOCKS_ID_OFFSET = 8192;
 const mapRenderBlock = function(tool) {
 	return tryout(function() {
 		let worker = tool.getWorker();
-		if (worker == null || !Level.isLoaded()) {
+		if (worker == null || !LevelInfo.isLoaded()) {
 			return false;
 		}
 		let render = new ICRender.Model(),
@@ -499,7 +499,7 @@ const BLOCK_TOOL = (function() {
 		},
 		menuDescriptor: {
 			elements: [function(tool, json, menu) {
-				if (Level.isLoaded()) {
+				if (LevelInfo.isLoaded()) {
 					return {
 						type: "category",
 						title: translate("Block"),
@@ -595,7 +595,7 @@ const BLOCK_TOOL = (function() {
 				}, {
 					icon: "blockDefineShape"
 				}, function() {
-					if (Level.isLoaded()) {
+					if (LevelInfo.isLoaded()) {
 						return {
 							icon: "blockUpdate"
 						};

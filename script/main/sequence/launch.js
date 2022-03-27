@@ -64,7 +64,7 @@ const LaunchSequence = new LogotypeSequence({
 					showHint.unstackLaunch();
 				}
 				LevelProvider.attach();
-				if (Level.isLoaded()) {
+				if (LevelInfo.isLoaded()) {
 					LevelProvider.show();
 				}
 			});

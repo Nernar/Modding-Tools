@@ -6,7 +6,7 @@ const TODO = registerCustomEntity();
 
 const updateEntityRender = function(worker) {
 	return tryout(function() {
-		if (!worker || !Level.isLoaded()) {
+		if (!worker || !LevelInfo.isLoaded()) {
 			return false;
 		}
 		/* let model = eval(model2ToScript(EntityEditor.project));
@@ -300,7 +300,7 @@ const EntityEditor = {
 		attachAdditionalInformation(control);
 		category = control.addCategory(translate("Entity"));
 		category.addItem("entityDraw", translate("Summon"), function() {
-			if (!Level.isLoaded()) {
+			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't summon entity at menu"));
 				return;
 			}

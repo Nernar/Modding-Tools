@@ -15,9 +15,6 @@ api/shared.js
 api/protect.js
 api/utils.js
 
-network/browser.js
-network/remote.js
-
 interface/content.js
 interface/window.js
 interface/variations.js
