@@ -46,12 +46,6 @@ Translation.addTranslation("HintAlert: Create custom process", {
 Translation.addTranslation("That test creates unnatural process and indicates it. Your task is - checkout performance.show_processes, process indicate, added test hint and unpinning.", {
 	ru: "Этот тест создает фантомный процесс и отображает его. Ваша задача - проверить performance.show_processes, индикацию процесса, добавление тестовой подсказки и открепление."
 });
-Translation.addTranslation("Music: Dynamical custom source", {
-	ru: "Music: Добавление динамического источника"
-});
-Translation.addTranslation("That test creates dynamical sound source inside nearest randomness player position. Your task is - enter world, checkout sound source and position randomize, dynamical channels and reversed zone.", {
-	ru: "Этот тест создает динамический источник звука внутри ближайшей случайной позиции игрока. Ваша задача - войти в мир, проверить источник звука и его положение, динамические каналы и реверсивную зону."
-});
 Translation.addTranslation("NarrationWindow: Simple typing usage", {
 	ru: "NarrationWindow: Простое использование печати"
 });

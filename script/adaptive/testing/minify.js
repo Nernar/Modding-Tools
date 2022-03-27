@@ -1,16 +1,35 @@
 const minifySource = function(text, callback) {
-	if (text !== null && text !== undefined) {
-		text = encodeURI(text).replace(/%5B/g, "[").replace(/%5D/g, "]");
-	}
 	handleThread(function() {
-		let reader = new Network.Reader("https://javascript-minifier.com/raw?input=" + text);
+		let data = new java.lang.StringBuilder();
+		data.append(java.net.URLEncoder.encode("input", "UTF-8"));
+		data.append("=");
+		data.append(java.net.URLEncoder.encode(text, "UTF-8"));
+		let bytes = data.toString().getBytes("UTF-8");
+		
+		let reader = new Network.Reader("https://www.toptal.com/developers/javascript-minifier/raw");
 		reader.setCallback({
 			onComplete: function(reader) {
 				showHint(translate("Completed"));
 			}
 		});
-		let result = reader.read();
-		callback && callback(result);
+		
+		let connection = reader.getConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		connection.setRequestProperty("charset", "utf-8");
+		connection.setRequestProperty("Content-Length", String(bytes.length));
+		
+		let sendScript = new java.io.DataOutputStream(connection.getOutputStream());
+		sendScript.write(bytes);
+		
+		let code = connection.getResponseCode();
+		if (code == 200) {
+			let result = reader.read();
+			callback && callback(result);
+			return;
+		}
+		print(code);
 	});
 };
 

@@ -87,7 +87,12 @@ Network.prototype.setCallback = function(callback) {
  * @returns {Object|null} java stream
  */
 Network.prototype.getStream = function() {
-	return this.url ? this.url.openStream() : null;
+	return tryout.call(this, function() {
+		return this.url ? this.url.openStream() : null;
+	}, function(e) {
+		let connection = this.getConnection();
+		return connection ? connection.getInputStream() : null;
+	});
 };
 
 /**
