@@ -16,17 +16,11 @@ Translation.addTranslation("Explorer: Dump sound definitions", {
 Translation.addTranslation("That test creates grouped Minecraft sounds list, that you may use in your commands and modifications. Your task is - place sound_definitions.json to modication directory from Minecraft and checkout result.", {
 	ru: "Этот тест создает группированный список звуков Майнкрафта, которые Вы можете использовать в своих командах и модификациях. Ваша задача - поместить sound_definitions.json из Майнкрафта в папку модификации и проверить результат."
 });
-Translation.addTranslation("Network: Fetch modifications list", {
-	ru: "Network: Получение списка модицикаций"
-});
-Translation.addTranslation("That test fetches ModBrowser modifications list and results it. Your task is - checkout results correctly with browser.", {
-	ru: "Этот тест получает список модификаций браузера и отображает его. Ваша задача - проверить правильность результата с браузером."
-});
 Translation.addTranslation("Network: Download all modifications", {
 	ru: "Network: Загрузка всех модификаций"
 });
-Translation.addTranslation("That test fetches ModBrowser list and downloads all modifications inside /mods directory. Your task is - checkout downloaded archives with list, fetch.json file and downloaded archives.", {
-	ru: "Этот тест получает список браузера и загружает все модицикации в /mods архивами. Ваша задача - проверить загруженные архивы со списком, fetch.json и содержимое архивов."
+Translation.addTranslation("That test fetches ModBrowser list and downloads all modifications inside /modbrowser directory. Your task is - checkout downloaded archives with list, list.txt file and downloaded archives.", {
+	ru: "Этот тест получает список браузера и загружает все модицикации в /modbrowser архивами. Ваша задача - проверить загруженные архивы со списком, list.txt и содержимое архивов."
 });
 Translation.addTranslation("Context: Finish Minecraft", {
 	ru: "Context: Завершение Майнкрафта"
