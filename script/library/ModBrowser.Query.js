@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2020-2021 Nernar (github.com/nernar)
+   Copyright 2020-2022 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -45,9 +45,10 @@ ModBrowser.Query.prototype.formatQuery = function() {
 	let result = new Array();
 	for (let item in query) {
 		let value = query[item];
-		result.push(item + (value ? "=" + value : String()));
+		result.push(item + (value !== null && value !== undefined
+			? "=" + value : String()));
 	}
-	return result.length > 0 ? result.join(",") : null;
+	return result.length > 0 ? result.join("&") : null;
 };
 
 ModBrowser.Query.prototype.setAddress = function(address) {
@@ -63,9 +64,7 @@ ModBrowser.Query.prototype.setAddressRelative = function(page) {
 ModBrowser.Query.prototype.setIsHorizon = function(value) {
 	let query = this.getQuery();
 	if (query) {
-		if (value === undefined) {
-			query.horizon = null;
-		} else if (value == true) {
+		if (value === undefined || value == true) {
 			query.horizon = null;
 		} else delete query.horizon;
 	}
