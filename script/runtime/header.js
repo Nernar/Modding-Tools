@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2021 Nernar (github.com/nernar)
+   Copyright 2021-2022 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -27,4 +27,4 @@ const requireGlobal = function(key) {
 	return GLOBAL;
 };
 
-IMPORT("Retention:4");
+IMPORT("Retention:5");

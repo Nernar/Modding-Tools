@@ -80,7 +80,7 @@ Translation.addTranslation("Compiling resources and scripts", {
 seek(translate("Compiling resources and scripts"), 1);
 INSTANCE.access("resource.js", [Dirs.IMAGE, Dirs.ASSET]).assureYield();
 INSTANCE.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.TESTING]).assureYield();
-copyAndClearOrThrow(Dirs.IMAGE, Dirs.BACKUP + "gui/", true, false, true);
+copyAndClearOrThrow(Dirs.IMAGE, Dirs.BACKUP + "textures/", true, false, true);
 copyAndClearOrThrow(Dirs.EVALUATE, Dirs.BACKUP + ".eval/", true, false, true);
 
 Translation.addTranslation("Checking %s scripts requireable", {

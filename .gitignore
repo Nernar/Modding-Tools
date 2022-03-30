@@ -4,7 +4,7 @@
 # Resources abilities
 .placeholder.ico
 /assets/cache/
-/gui/
+/textures/
 
 # Local development
 /projects/
