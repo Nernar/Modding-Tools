@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-27.03.2022-0";
+const REVISION = "develop-alpha-0.3.6-03.04.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -185,6 +185,12 @@ IMPORT("Drawable:1");
 
 getPlayerEnt = function() {
 	return Number(Player.get());
+};
+
+const isFirstLaunch = function() {
+	return tryoutSafety(function() {
+		return loadSetting("user_login.first_launch", "boolean");
+	}, false);
 };
 
 const TYPING_SOUND_SEQUENCE = new Packages.io.nernar.android.sound.SoundPoolSequence();

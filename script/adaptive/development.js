@@ -89,7 +89,9 @@ let debugIgnoreLockedBackground = true;
 
 LaunchSequence.process = function(index) {
 	if (index == 3) {
-		AsyncSnackSequence.access("resource.js", [Dirs.IMAGE, Dirs.ASSET]).assureYield();
+		if (FileTools.exists(Dirs.IMAGE)) {
+			AsyncSnackSequence.access("resource.js", [Dirs.IMAGE, Dirs.ASSET]).assureYield();
+		}
 		BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 	}
 	let process = this.__process.apply(this, arguments);
@@ -117,8 +119,14 @@ LaunchSequence.process = function(index) {
 			AsyncSnackSequence.access("translation.js", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
 		}
 	} else if (index == 3) {
-		AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.TESTING]).assureYield();
-		AsyncSnackSequence.access("script.js", [Dirs.ADAPTIVE + "testing/", Dirs.TESTING]).assureYield();
+		tryoutSafety(function() {
+			if (FileTools.exists(Dirs.EVALUATE + "testing/")) {
+				AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.TESTING]).assureYield();
+			}
+			if (FileTools.exists(Dirs.ADAPTIVE + "testing/")) {
+				AsyncSnackSequence.access("script.js", [Dirs.ADAPTIVE + "testing/", Dirs.TESTING]).assureYield();
+			}
+		});
 		if (debugIgnoreLockedBackground) {
 			let popup = BitmapDrawableFactory.getMappedFileByKey("popup");
 			BitmapDrawableFactory.mapAs("popupSelectionLocked", popup);

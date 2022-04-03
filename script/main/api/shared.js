@@ -55,11 +55,13 @@ const UNWRAP = function(path, scope) {
 		if (!file.exists()) {
 			MCSystem.throwException("Script " + path + " doesn't exists");
 		}
-		let source = decompileExecuteable(Files.readBytes(file)),
-			code = "(function() {\n" + source + "\n})();",
-			scope = runAtScope(code, who, path);
-		if (scope.error) throw scope.error;
-		return scope.result;
+		return tryoutSafety(function() {
+			let source = decompileExecuteable(Files.readBytes(file)),
+				code = "(function() {\n" + source + "\n})();",
+				scope = runAtScope(code, who, path);
+			if (scope.error) throw scope.error;
+			return scope.result;
+		}, null);
 	}
 	return null;
 };
