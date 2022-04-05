@@ -7,7 +7,7 @@ const Dirs = {
 	WORLD: isHorizon ? __packdir__ + "worlds/" : "/games/com.mojang/innercoreWorlds/",
 	OPTION: isHorizon ? "/games/horizon/minecraftpe/options.txt" : "/games/com.mojang/minecraftpe/options.txt",
 	RESOURCE: isHorizon ? __packdir__ + "assets/resource_packs/vanilla" : "/games/com.mojang/resource_packs/innercore-resources/",
-	IMAGE: __dir__ + "gui/",
+	IMAGE: __dir__ + "textures/",
 	ASSET: __dir__ + "assets/",
 	EXPORT: __dir__ + "projects/",
 	CACHE: __dir__ + "assets/cache/",

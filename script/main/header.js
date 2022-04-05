@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-03.04.2022-0";
+const REVISION = "develop-alpha-0.3.6-04.04.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -192,6 +192,3 @@ const isFirstLaunch = function() {
 		return loadSetting("user_login.first_launch", "boolean");
 	}, false);
 };
-
-const TYPING_SOUND_SEQUENCE = new Packages.io.nernar.android.sound.SoundPoolSequence();
-TYPING_SOUND_SEQUENCE.load(__dir__ + "assets/snd_typing.wav", 1);

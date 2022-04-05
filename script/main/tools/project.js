@@ -76,8 +76,8 @@ ProjectTool.prototype.reset = function() {
 				} else showHint(translate("This content will be availabled soon"));
 			}
 		}, {
-			icon: "menuProjectManage",
-			title: translate("Reset").toUpperCase(),
+			icon: "menuProjectStar",
+			title: translate("Reset"),
 			click: function(tool, item) {
 				confirm(translate("Creating project"),
 					translate("Current project will be erased, all unsaved data will be lost.") + " " +

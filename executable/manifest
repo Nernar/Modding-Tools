@@ -1,23 +1,12 @@
 {
 	"source-dirs": [
-		"src",
-		"gen"
+		"src"
 	],
 	"library-dirs": [
 		"libs"
 	],
 	"options": [
 		"-cp",
-		"/storage/emulated/0/games/horizon/includes/2.3.0b112.jar"
-	],
-	"shared": {
-		"name": "nteditor",
-		"include": [
-			"jni/includes"
-		]
-	},
-	"depends": [
-		"innercore",
-		"nativejs"
+		"/storage/emulated/0/games/horizon/includes/2.3.0b113.jar"
 	]
 }

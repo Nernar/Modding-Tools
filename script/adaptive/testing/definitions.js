@@ -15,7 +15,15 @@ return function() {
 		let currently = json[item];
 		if (typeof currently != "object") continue;
 		let category = currently.category;
-		if (categories.indexOf(category) == -1) {
+		if (category === undefined) {
+			if (result.length == 0) {
+				result.push(item);
+				continue;
+			}
+			result[0] += ", " + item;
+			continue;
+		}
+		if (categories[category] === undefined) {
 			categories[category] = new Array();
 		}
 		categories[category].push(item);
@@ -23,6 +31,7 @@ return function() {
 	for (let category in categories) {
 		result.push(category + ": " + categories[category].join(", "));
 	}
+	
 	let output = new java.io.File(__dir__, file.getName().replace(".json", ".txt"));
-	Files.write(output, result.join(";\n\n"));
+	Files.write(output, result.join("\n\n"));
 };
