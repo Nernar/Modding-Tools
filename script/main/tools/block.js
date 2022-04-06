@@ -124,6 +124,11 @@ const selectTexture = function(index, onSelect) {
 		if (mod.items.length > 0) {
 			dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.1);
 		} else dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.4, Interface.Display.HEIGHT / 1.4);
+		dialog.setOnShowListener(function(di) {
+			tryout(function() {
+				drawable.start();
+			});
+		});
 		dialog.show();
 	});
 };

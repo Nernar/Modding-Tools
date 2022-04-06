@@ -30,28 +30,30 @@ ImageFactory.getDrawable = function(key) {
 
 ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	if (!(foreground instanceof android.graphics.drawable.Drawable)) {
-		foreground = this.getDrawable(foreground);
+		foreground = Drawable.parseJson(foreground);
 	}
 	if (!(background instanceof android.graphics.drawable.Drawable)) {
-		background = this.getDrawable(background);
+		background = Drawable.parseJson(background);
 	}
 	if (background === null && foreground == null) {
 		return null;
 	}
 	if (orientate === undefined) orientate = 1;
 	if (foreground !== null) {
-		foreground = new android.graphics.drawable.ClipDrawable(foreground,
-			orientate == 1 ? Interface.Gravity.LEFT : Interface.Gravity.BOTTOM, orientate);
-		foreground.setLevel(preround(level, 0) || 1);
+		foreground = new ClipDrawable(foreground,
+			orientate == 1 ? Interface.Gravity.LEFT : Interface.Gravity.BOTTOM,
+			orientate || 0);
+		DrawableFactory.setLevel(foreground.toDrawableInThread(), preround(level, 0) || 1);
 		if (background === null) return foreground;
 	}
 	if (background !== null) {
-		background = new android.graphics.drawable.ClipDrawable(background,
-			orientate == 1 ? Interface.Gravity.RIGHT : Interface.Gravity.TOP, orientate);
-		background.setLevel(preround(10001 - level, 0) || 10000);
+		background = new ClipDrawable(background,
+			orientate == 1 ? Interface.Gravity.RIGHT : Interface.Gravity.TOP,
+			orientate || 0);
+		DrawableFactory.setLevel(background.toDrawableInThread(), preround(10001 - level, 0) || 10000);
 		if (foreground === null) return background;
 	}
-	return new android.graphics.drawable.LayerDrawable([background, foreground]);
+	return LayerDrawable.parseJson([background, foreground]);
 };
 
 const AssetFactory = new Object();
@@ -78,13 +80,14 @@ LayerDrawable.parseJson = function(instanceOrJson, json) {
 		instanceOrJson = new LayerDrawable();
 	}
 	json = calloutOrParse(this, json, instanceOrJson);
-	if (json === null || typeof json != "object") {
-		if (Array.isArray(json)) {
-			for (let i = 0; i < json.length; i++) {
-				let layer = calloutOrParse(json, json[i], [this, instanceOrJson]);
-				instanceOrJson.addLayer(Drawable.parseJson.call(this, layer));
-			}
+	if (Array.isArray(json)) {
+		for (let i = 0; i < json.length; i++) {
+			let layer = calloutOrParse(json, json[i], [this, instanceOrJson]);
+			instanceOrJson.addLayer(Drawable.parseJson.call(this, layer));
 		}
+		return instanceOrJson;
+	}
+	if (json === null || typeof json != "object") {
 		return instanceOrJson;
 	}
 	if (json.hasOwnProperty("layers")) {
@@ -183,13 +186,15 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 		instanceOrJson = new AnimationDrawable();
 	}
 	json = calloutOrParse(this, json, instanceOrJson);
+	if (Array.isArray(json)) {
+		for (let i = 0; i < json.length; i++) {
+			let frame = calloutOrParse(json, json[i], [this, instanceOrJson]);
+			instanceOrJson.addFrame(Drawable.parseJson.call(this, frame));
+		}
+		return instanceOrJson;
+	}
 	if (json === null || typeof json != "object") {
-		if (Array.isArray(json)) {
-			for (let i = 0; i < json.length; i++) {
-				let frame = calloutOrParse(json, json[i], [this, instanceOrJson]);
-				instanceOrJson.addFrame(Drawable.parseJson.call(this, frame));
-			}
-		} else if (typeof json == "number") {
+		if (typeof json == "number") {
 			instanceOrJson.setDefaultDuration(json);
 		}
 		return instanceOrJson;

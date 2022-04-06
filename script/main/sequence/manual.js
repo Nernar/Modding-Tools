@@ -102,7 +102,7 @@ TutorialSequence.Welcome = new TutorialSequence({
 	count: 2,
 	update: function(progress, index) {
 		if (index == 1) {
-			this.hint.addMessage(translate("Howdy and welcome to Modding Tools!"));
+			this.hint.addMessage(translate("Howdy and welcome to Dev Editor!"));
 			this.hint.addMessage(translate("Tool from developers to developers."));
 			this.hint.addMessage(translate("Let's see, what's we're prepared here."));
 			this.hint.show();
@@ -210,7 +210,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			this.hint.addMessage(translate("Editors section exists for adding workers."));
 			this.hint.addMessage(translate("You may create, remove, load and export them."));
 			this.hint.addMessage(translate("Horewer, it's not all exiting abilities."));
-			this.hint.addMessage(translate("Modding Tools handles content inside projects."));
+			this.hint.addMessage(translate("Dev Editor handles content inside projects."));
 			this.hint.addMessage(translate("Project filled with created editors."));
 			if (!this.isOneRequired()) {
 				this.hint.addMessage(translate("And editor is adding by us for this time."));

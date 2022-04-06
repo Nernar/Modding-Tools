@@ -17,19 +17,18 @@ Translation.addTranslation("Check", {
 MenuWindow.__parseJson = MenuWindow.parseJson;
 
 let debugAttachControlTools = true;
-
 MenuWindow.parseJson = function() {
 	let instanceOrJson = MenuWindow.__parseJson.apply(this, arguments);
 	if (debugAttachControlTools && REVISION.startsWith("develop")) {
 		let category = instanceOrJson.addCategory(translate("Development"));
 		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
-			checkEvaluate();
+			RuntimeCodeEvaluate.showSpecifiedDialog();
 		});
 		category.addItem("blockDefineType", translate("Check"), function() {
 			evaluateScope();
 		});
 		category.addItem("explorerExtensionScript", translate("Launch"), function() {
-			checkEvaluate.loadEvaluate();
+			RuntimeCodeEvaluate.loadEvaluate();
 		});
 		category.addItem("worldShape", translate("Require"), function() {
 			let files = Files.listFileNames(Dirs.EVALUATE, true),

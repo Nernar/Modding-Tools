@@ -28,14 +28,7 @@ const LaunchSequence = new LogotypeSequence({
 			typeface = AssetFactory.createFont("minecraft");
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			// let logotype = this.getWindow(),
-				// mapped = BitmapDrawableFactory.findMappedByTag("*"),
-				// animation = AnimationDrawable.parseJson.call(this, mapped);
-			// animation.setDefaultDuration(5);
-			// logotype.setIcon(animation);
-			// "blockNoTextures": ["blockDefineTexture", "blockDefineWrong"], 1500
-			// while (animation.isProcessing()) java.lang.Thread.yield();
-			// refreshSupportablesIcons();
+			refreshSupportablesIcons();
 		}
 		return index;
 	},
@@ -86,7 +79,7 @@ const FetchAdditionalSequence = new SnackSequence({
 			if (file.exists() && file.length() > 0) {
 				ModelConverter = FileTools.readFileText(file.getPath());
 			}
-		} else if (index == 2) {
+		} else if (!isHorizon && index == 2) {
 			let path = Dirs.RESOURCE + "textures/terrain_texture.json";
 			if (FileTools.exists(path)) {
 				let text = FileTools.readFileText(path);
@@ -119,13 +112,21 @@ const FetchAdditionalSequence = new SnackSequence({
 				}
 			}
 		} else if (index == 3) {
-			let path = Dirs.ASSET + (isHorizon ? "blocks-12" : "blocks-0") + ".json";
+			let file = tryout(function() {
+				let version = Packages.com.zhekasmirnov.apparatus.minecraft.version.MinecraftVersions.getCurrent();
+				return "blocks_" + version.getCode();
+			}, function(e) {
+				return isHorizon ? "blocks_12" : "blocks_0";
+			});
+			let path = Dirs.ASSET + file + ".json";
 			if (FileTools.exists(path)) {
 				let data = FileTools.readFileText(path);
 				if (data && (data = compileData(data, "object"))) {
 					let index = addTextureMod(translate("Minecraft"));
 					textures[index].items = data;
 				}
+			} else {
+				Logger.Log("File " + file + " doesn't seems to be created, vanilla atlas skipped", "DEV-CORE");
 			}
 		} else if (index == 4) {
 			let mods = Files.listDirectories(Dirs.MOD);

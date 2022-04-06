@@ -1,17 +1,15 @@
 MCSystem.setLoadingTip(NAME + ": Localizing");
 
 // Modifications information
-Translation.addTranslation("Modding Tools", {
-	ru: "Средства для моддинга"
-});
-Translation.addTranslation("Alpha 0.4", {
-	ru: "Альфа 0.4"
+Translation.addTranslation("Dev Editor", {});
+Translation.addTranslation("Alpha 0.3.6", {
+	ru: "Альфа 0.3.6"
 }); // NO-TRANSLATE
-Translation.addTranslation("Beta 0.4", {
-	ru: "Бета 0.4"
+Translation.addTranslation("Beta 0.3.6", {
+	ru: "Бета 0.3.6"
 }); // NO-TRANSLATE
-Translation.addTranslation("Preview 0.4", {
-	ru: "Предпросмотр 0.4"
+Translation.addTranslation("Preview 0.3.6", {
+	ru: "Предпросмотр 0.3.6"
 }); // NO-TRANSLATE
 Translation.addTranslation("Setting", {}); // NO-TRANSLATE
 Translation.addTranslation("1.0-develop", {
@@ -1261,8 +1259,8 @@ Translation.addTranslation("Checkout reports below to see more details.", {
 });
 
 // Deprecated tutorial sequence
-Translation.addTranslation("Howdy and welcome to Modding Tools!", {
-	ru: "Приветствую и добро пожаловать в средства для моддинга!"
+Translation.addTranslation("Howdy and welcome to Dev Editor!", {
+	ru: "Приветствую и добро пожаловать в Dev Editor!"
 });
 Translation.addTranslation("Tool from developers to developers.", {
 	ru: "Инструмент от разработчиков разработчикам."
@@ -1294,8 +1292,8 @@ Translation.addTranslation("You may create, remove, load and export them.", {
 Translation.addTranslation("Horewer, it's not all exiting abilities.", {
 	ru: "Однако, это не все существующие возможности."
 });
-Translation.addTranslation("Modding Tools handles content inside projects.", {
-	ru: "Средства для моддинга обрабатывают контент внутри проектов."
+Translation.addTranslation("Dev Editor handles content inside projects.", {
+	ru: "Dev Editor обрабатывает контент внутри проектов."
 });
 Translation.addTranslation("Project filled with created editors.", {
 	ru: "Проекты наполнены созданными редакторами."
@@ -1432,5 +1430,3 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
-Translation.addTranslation(" ", {});
-Translation.addTranslation("\n", {});

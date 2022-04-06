@@ -83,8 +83,8 @@ LogotypeWindow.prototype.updateProgress = function(force) {
 	if (fragment === null) return false;
 	let drawable = ImageFactory.clipAndMerge(this.getBackgroundIcon(), this.getForegroundIcon(), this.getLevel(), this.getOrientation());
 	fragment.setIcon(drawable);
-	if (drawable instanceof android.graphics.drawable.ClipDrawable) {
-		if (!force) return this.updateLevel();
+	if (drawable && !force) {
+		return this.updateLevel();
 	}
 	return true;
 };

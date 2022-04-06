@@ -64,9 +64,7 @@ copyAndClearOrThrow(Dirs.EXPORT, Dirs.BACKUP + "projects/", true, true, true);
 copyAndClearOrThrow(Dirs.TESTING, Dirs.BACKUP + "script/testing/", true, true, true);
 copyAndClearOrThrow(Dirs.TODO, Dirs.BACKUP + ".todo/", true, false, true);
 copyAndClearOrThrow(__dir__ + ".preview/", Dirs.BACKUP + ".preview/", true, false, true);
-copyAndClearOrThrow(__dir__ + "typings/", Dirs.BACKUP + "typings/", true, false, true);
 copyAndClearOrThrow(__dir__ + ".gitignore", Dirs.BACKUP + ".gitignore", false, false, false);
-copyAndClearOrThrow(__dir__ + ".placeholder.ico", Dirs.BACKUP + ".placeholder.ico", false, false, false);
 copyAndClearOrThrow(__dir__ + "LICENSE", Dirs.BACKUP + "LICENSE", false, false, false);
 copyAndClearOrThrow(__dir__ + "README.md", Dirs.BACKUP + "README.md", false, false, false);
 copyAndClearOrThrow(__dir__ + "README-ru.md", Dirs.BACKUP + "README-ru.md", false, false, false);
@@ -196,8 +194,9 @@ for (let c = 0; c < build.compile.length; c++) {
 for (let b = 0; b < build.buildDirs.length; b++) {
 	copyAndClearOrThrow(__dir__ + build.buildDirs[b], Dirs.BACKUP + build.buildDirs[b], true, false, true);
 }
-copyOrThrow(Dirs.BACKUP + "assets/blocks-0.json", Dirs.ASSET + "blocks-0.json");
-copyOrThrow(Dirs.BACKUP + "assets/blocks-12.json", Dirs.ASSET + "blocks-12.json");
+copyOrThrow(Dirs.BACKUP + "assets/blocks_0.json", Dirs.ASSET + "blocks_0.json");
+copyOrThrow(Dirs.BACKUP + "assets/blocks_12.json", Dirs.ASSET + "blocks_12.json");
+copyOrThrow(Dirs.BACKUP + "assets/blocks_16.json", Dirs.ASSET + "blocks_12.json");
 let files = Files.listFileNames(Dirs.BACKUP + "script/testing/", true);
 files = Files.checkFormats(files, ".json");
 for (let i = 0; i < files.length; i++) {

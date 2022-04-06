@@ -377,7 +377,8 @@ createProcess.update = function(content, hint, progress) {
 			let text = content.getChildAt(0);
 			if (progress < 10001) {
 				text.setText(String(hint).replace("%s", preround(progress / 100, 1) + "%"));
-				content.setBackgroundDrawable(ImageFactory.clipAndMerge("popup", "popupSelectionSelected", progress));
+				let drawable = ImageFactory.clipAndMerge("popup", "popupSelectionSelected", progress);
+				if (drawable) drawable.attachAsBackground(content);
 			} else {
 				text.setText(String(hint));
 				new BitmapDrawable("popupSelectionSelected").attachAsBackground(content);

@@ -265,11 +265,11 @@ CachedDrawable.prototype.toDrawable = function() {
 		tryout.call(this, function() {
 			let drawable = this.process();
 			if (!this.isProcessed()) {
-				this.describe(drawable);
+				if (drawable) this.describe(drawable);
 				this.source = drawable;
 			}
 		}, function(e) {
-			Logger.Log("Failed to process drawable: " + e, "DEV-CORE");
+			Logger.Log("Failed to process drawable: " + e, "Drawable");
 		});
 	}
 	return this.source || null;
@@ -330,7 +330,7 @@ ScheduledDrawable.prototype.toDrawable = function() {
 	if (!this.isProcessed() && !this.isProcessing()) {
 		let thread = this.thread = handleThread(function() {
 			if (self.getThread() == thread) {
-				CachedDrawable.prototype.toDrawable.call(self);
+				self.toDrawableInThread();
 			}
 			if (self.getThread() == thread) {
 				handle(function() {
@@ -343,6 +343,10 @@ ScheduledDrawable.prototype.toDrawable = function() {
 		});
 	}
 	return this.source || null;
+};
+
+ScheduledDrawable.prototype.toDrawableInThread = function() {
+	return CachedDrawable.prototype.toDrawable.call(this);
 };
 
 ScheduledDrawable.prototype.getThread = function() {
@@ -860,6 +864,9 @@ BitmapDrawable.prototype.process = function() {
 		}
 		this.wrapped = bitmap;
 	}
+	if (bitmap == null) {
+		return null;
+	}
 	return new android.graphics.drawable.BitmapDrawable(bitmap);
 };
 
@@ -1079,7 +1086,7 @@ AnimationDrawable.prototype.setDefaultDuration = function(duration) {
 };
 
 AnimationDrawable.prototype.isStartingWhenProcess = function() {
-	return this.starting !== undefined ? this.starting : true;
+	return this.starting !== undefined ? this.starting : false;
 };
 
 AnimationDrawable.prototype.setIsStartingWhenProcess = function(enabled) {

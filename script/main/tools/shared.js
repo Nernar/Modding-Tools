@@ -335,7 +335,6 @@ Tool.prototype.reset = function() {
 	};
 	descriptor.buttonHold = function(tool, control) {
 		tool.collapse();
-		RuntimeCodeEvaluate.showSpecifiedDialog();
 		return true;
 	};
 	descriptor.collapsedClick = function(tool, control) {

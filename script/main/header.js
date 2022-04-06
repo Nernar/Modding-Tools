@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-04.04.2022-0";
+const REVISION = "develop-alpha-0.3.6-06.04.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -110,6 +110,10 @@ reportError.setStackAction(function(err) {
 	showHint(translate("Error stack saved into internal storage"));
 });
 
+reportError.setReportAction(function(err) {
+	Logger.Log(reportError.getCode(err) + ": " + err, "DEV-CORE");
+});
+
 Interface.getFontSize = function(size) {
 	return Math.round(this.getX(size) / this.Display.DENSITY * fontScale);
 };
@@ -172,7 +176,7 @@ tryout(function() {
 	dependency.setParentMod(__mod__);
 	let library = $.LibraryRegistry.resolveDependency(dependency);
 	if (!library.isLoaded()) {
-		MCSystem.throwException("Without Retention Modding Tools may not working");
+		MCSystem.throwException("Without Retention Dev Editor may not working");
 	}
 	library.getScope().reportError = reportTrace;
 });

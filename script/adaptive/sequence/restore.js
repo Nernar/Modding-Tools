@@ -45,7 +45,7 @@ if (builder !== null) {
 	__mod__.buildConfig = builder.loadBuildConfigForDir(__dir__);
 	__mod__.setBuildType("develop");
 } else { */
-	seek(translate("Can't update build config"), Interface.Color.YELLOW);
+	seek(translate("Can't update build config"), 0, Interface.Color.YELLOW);
 // }
 
 Translation.addTranslation("Restored backup", {

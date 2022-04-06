@@ -691,7 +691,9 @@ const PROJECT_TOOL = (function() {
 })();
 
 const attachProjectTool = function(source, post) {
-	PROJECT_TOOL.attach();
+	if (!PROJECT_TOOL.isAttached()) {
+		PROJECT_TOOL.attach();
+	}
 	PROJECT_TOOL.queue();
 	handleThread(function() {
 		let accepted = PROJECT_TOOL.open(source);
@@ -773,7 +775,7 @@ EditorTool.prototype.reset = function() {
 			icon: "menuProjectLeave",
 			title: translate("Back"),
 			click: function(tool, item) {
-				tool.deattach();
+				tool.leave();
 			}
 		}]
 	}];
@@ -936,7 +938,7 @@ EditorTool.prototype.leave = function() {
 	let instance = this;
 	delete instance.worker;
 	attachProjectTool(undefined, function(tool) {
-		this.getProject().callAutosave();
+		tool.toProject().callAutosave();
 		instance.unselect(true);
 	});
 };
