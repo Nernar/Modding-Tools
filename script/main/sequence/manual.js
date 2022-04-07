@@ -9,7 +9,7 @@ TutorialSequence.prototype.create = function() {
 	snack.setStackable(true);
 	snack.setConsoleMode(true);
 	snack.setMaximumStacked(5);
-	snack.setTime(4000);
+	snack.setTime(1750);
 	this.hint = snack;
 };
 
@@ -126,11 +126,12 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 	update: function(progress, index) {
 		let sequence = this;
 		if (index == 1) {
-			let button = new ControlButton();
-			button.setCloseableOutside(false);
-			button.setIcon("menu");
-			button.show();
-			this.currently = button;
+			let control = new ControlWindow();
+			control.setHideableInside(false);
+			control.setButtonIcon("menu");
+			control.transformButton();
+			control.show();
+			this.currently = control;
 		} else if (index == 2) {
 			this.hint.addMessage(translate("That button is key to start process."));
 			this.hint.addMessage(translate("It's contains many tools inside."));
@@ -139,7 +140,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 			} else this.hint.addMessage(translate("You must click it to open control menu."));
 			this.hint.show();
 		} else if (index == 3) {
-			this.currently.setOnClickListener(function() {
+			this.currently.setOnButtonClickListener(function() {
 				sequence.touchCorrectly();
 			});
 		} else if (index == 4) {
@@ -262,7 +263,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 });
 
 TutorialSequence.SidebarInteraction = new TutorialSequence({
-	count: 7,
+	count: 13,
 	update: function(progress, index) {
 		let sequence = this;
 		if (index == 1) {
@@ -317,11 +318,6 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.collision.setOnClickListener(function() {
 				sequence.tounchIncorrecrly();
 			});
-		} else if (index == 8) {
-			this.requireInteract();
-		} else if (index == 9) {
-			this.unpinAndClear();
-		
 		// Hold tutorial starts here.
 		} else if (index == 8) {
 			this.hint.addMessage(translate("You may have a logical question:"));
@@ -369,6 +365,12 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			Interface.sleepMilliseconds(this.hint.getTime() * 1.5);
 		} else if (index == 7) {
 			Interface.sleepMilliseconds(this.hint.getTime());
+		} else if (index == 8) {
+			Interface.sleepMilliseconds(this.hint.getTime() * 4);
+		} else if (index == 9) {
+			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+		} else if (index == 11 || index == 12) {
+			Interface.sleepMilliseconds(this.hint.getTime() * 2);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},

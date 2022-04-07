@@ -62,7 +62,7 @@ return function() {
 	handle(function() {
 		let control = new MenuWindow();
 		control.setOnClickListener(function() {
-			DebugEditor.create();
+			attachDebugTestTool();
 		});
 		control.addHeader().setLogo("supportDumpCreator");
 		attachCategoriedIcons(control);

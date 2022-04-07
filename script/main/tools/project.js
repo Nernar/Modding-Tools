@@ -243,9 +243,10 @@ const PROJECT_TOOL = (function() {
 			},
 			click: function(tool, item) {
 				if (REVISION.indexOf("alpha") != -1) {
-					EntityEditor.create();
-					tool.deattach();
-					showHint(translate("Not developed yet"));
+					attachEntityTool(function(next) {
+						tool.deattach();
+						showHint(translate("Not developed yet"));
+					});
 				} else showHint(translate("This content will be availabled soon"));
 			}
 		}, {
@@ -254,16 +255,16 @@ const PROJECT_TOOL = (function() {
 			background: "popupSelectionLocked",
 			click: function(tool, item) {
 				if (REVISION.startsWith("develop")) {
-					AnimationWindow.create();
-					tool.deattach();
+					showHint(translate("Not developed yet"));
 				} else showHint(translate("This content will be availabled soon"));
 			}
 		}, {
 			icon: "transition",
 			title: translate("Transition"),
 			click: function(tool, item) {
-				TransitionEditor.create();
-				tool.deattach();
+				attachTransitionTool(function(next) {
+					tool.deattach();
+				});
 			}
 		}, function(tool) {
 			if (supportSupportables) {
@@ -285,9 +286,10 @@ const PROJECT_TOOL = (function() {
 									}
 								})[0];
 								if (result != true) {
-									ProjectEditor.create();
-									isSupportEnv = false;
-									currentEnvironment = __name__;
+									attachProjectTool(function(next) {
+										isSupportEnv = false;
+										currentEnvironment = __name__;
+									});
 									retraceOrReport(result);
 								} else tool.deattach();
 							} else showHint(translate("Supportable module can't be loaded at menu"));
@@ -353,12 +355,12 @@ const PROJECT_TOOL = (function() {
 								clickItem: function(tool, item, index) {
 									let real = entities[index],
 										entity = content[real];
-									if (EntityEditor.open(real)) {
+									attachEntityTool(real, function(next) {
 										content.splice(real, 1);
 										content.unshift(entity);
 										project.setCurrentlyId(0);
 										tool.deattach();
-									}
+									});
 								},
 								holdItem: function(tool, item, index) {
 									confirm(translate("Warning!"),
@@ -394,12 +396,12 @@ const PROJECT_TOOL = (function() {
 							clickItem: function(tool, item, index) {
 								let real = transitions[index],
 									transition = content[real];
-								if (TransitionEditor.open(real)) {
+								attachTransitionTool(real, function(next) {
 									content.splice(real, 1);
 									content.unshift(transition);
 									project.setCurrentlyId(0);
 									tool.deattach();
-								}
+								});
 							},
 							holdItem: function(tool, item, index) {
 								confirm(translate("Warning!"),
@@ -441,15 +443,16 @@ const PROJECT_TOOL = (function() {
 							icon: "menuBoardConfig",
 							title: translate("Tests"),
 							click: function(tool, item) {
-								tool.deattach();
-								DebugEditor.menu();
+								attachDebugTestTool(function() {
+									tool.deattach();
+								});
 							}
 						}, {
 							icon: "menuBoardInsert",
 							title: translate("Console"),
 							click: function(tool, item) {
 								tool.deattach();
-								ConsoleViewer.show();
+								attachConsoleTool();
 							}
 						}, {
 							icon: "worldActionMeasure",

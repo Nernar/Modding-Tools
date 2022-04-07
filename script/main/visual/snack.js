@@ -400,5 +400,6 @@ createProcess.complete = function() {
 		if (createProcess.processes == 0) {
 			window !== null && window.unpin();
 		}
+		print(createProcess.processes + " task(s)");
 	});
 };

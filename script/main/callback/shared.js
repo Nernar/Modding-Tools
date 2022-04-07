@@ -110,10 +110,10 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 			(position.x += .5, position.y += .5, position.z += .5);
 			let custom = Entity.spawnCustomAtCoords("__editorEntity__", position);
 			Entity.setMobile(custom.entity, false);
-			EntityEditor.data.worker.Define.addEntity(custom.entity);
+			ENTITY_TOOL.getWorker().Define.addEntity(custom.entity);
 			showHint(translate("Entity summoned"));
 			selectMode = 0;
-			EntityEditor.create();
+			ENTITY_TOOL.describe();
 		}
 	});
 });
@@ -124,8 +124,8 @@ Callback.addCallback("LevelPreLoaded", function() {
 	tryout(function() {
 		// Reset entity if entity isn't defined.
 		if (ProjectProvider.getCurrentType() == "transition" &&
-				TransitionEditor.data.worker.Define.getEntity() == -1) {
-			TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
+				TRANSITION_TOOL.getWorker().Define.getEntity() == -1) {
+			TRANSITION_TOOL.getWorker().Define.setEntity(getPlayerEnt());
 			needTransitionReset = true;
 		}
 	});
@@ -134,7 +134,7 @@ Callback.addCallback("LevelPreLoaded", function() {
 Callback.addCallback("LevelLoaded", function() {
 	handle(function() {
 		if (needTransitionReset) {
-			TransitionEditor.data.worker.Define.resetStarting();
+			TRANSITION_TOOL.getWorker().Define.resetStarting();
 			Popups.closeAllByTag("transition");
 			needTransitionReset = false;
 		}
@@ -156,9 +156,9 @@ Callback.addCallback("EntityHurt", function(attacker, victim) {
 	handle(function() {
 		// Hit entity selection.
 		if (selectMode == 2 && attacker == getPlayerEnt()) {
-			TransitionEditor.data.worker.Define.setEntity(victim);
+			TRANSITION_TOOL.getWorker().Define.setEntity(victim);
 			showHint(translate("Entity selected"));
-			selectMode = 0, TransitionEditor.create();
+			selectMode = 0, TRANSITION_TOOL.describe();
 		}
 	});
 });
@@ -178,7 +178,7 @@ Callback.addCallback("tick", function() {
 		// Mostly spawn selection particles.
 		if (Updatable.getSyncTime() % 5 == 0) {
 			if (ProjectProvider.getCurrentType() == "transition") {
-				drawTransitionPoints(TransitionEditor.data.worker);
+				drawTransitionPoints(TRANSITION_TOOL.getWorker());
 			}
 		}
 		if (!thereIsNoTPSMeter) {

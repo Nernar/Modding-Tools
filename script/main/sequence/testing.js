@@ -4,7 +4,7 @@ const FetchTestsSequence = new LogotypeSequence({
 		let files = Files.listFileNames(Dirs.TESTING, true),
 			scripts = Files.checkFormats(files, ".dns"),
 			index = scripts.indexOf("attach.dns");
-		if (index != -1) {
+		if (index > -1) {
 			scripts.splice(index, 1)
 			REQUIRE("attach.dns");
 		}
@@ -17,7 +17,7 @@ const FetchTestsSequence = new LogotypeSequence({
 	process: function(element, value, index) {
 		let name = Files.getNameWithoutExtension(element),
 			json = DebugEditor.fetchInformation(name);
-		if (json !== null) {
+		if (json) {
 			tryout(function() {
 				if (REQUIRE(name + ".dns") !== undefined) {
 					value[name] = json;
@@ -34,7 +34,7 @@ const FetchTestsSequence = new LogotypeSequence({
 	},
 	complete: function(active) {
 		handle(function() {
-			DebugEditor.menu();
+			DEBUG_TEST_TOOL.menu();
 		}, this.getExpirationTime());
 		LogotypeSequence.prototype.complete.apply(this, arguments);
 	}

@@ -369,7 +369,7 @@ Translation.addTranslation("Camera", {
 });
 Translation.addTranslation("Can't change camera at menu", {
 	ru: "Нельзя изменить камеру в меню"
-});
+}); // DEPRECATED
 Translation.addTranslation("Current entity will be lost.", {
 	ru: "Текущее существо будет потеряно."
 });
@@ -378,7 +378,7 @@ Translation.addTranslation("Pathes", {
 });
 Translation.addTranslation("Can't draw points in menu", {
 	ru: "Нельзя отрисовать точки в меню"
-});
+}); // DEPRECATED
 Translation.addTranslation("Animate define properties", {
 	ru: "Параметры объявления анимации"
 });
@@ -391,10 +391,10 @@ Translation.addTranslation("Can't play transitions at menu", {
 Translation.addTranslation("Transition stopped", {
 	ru: "Переход остановлен"
 });
-Translation.addTranslation("Transition are already transitioning", {
+Translation.addTranslation("Transition is already transitioning", {
 	ru: "Переход уже действует"
 });
-Translation.addTranslation("Transition are already stopped", {
+Translation.addTranslation("Transition is already stopped", {
 	ru: "Переход уже остановлен"
 });
 Translation.addTranslation("Transition isn't setted up", {
@@ -516,7 +516,7 @@ Translation.addTranslation("Summon", {
 });
 Translation.addTranslation("Can't summon entity at menu", {
 	ru: "Нельзя призвать существо в меню"
-});
+}); // DEPRECATED
 Translation.addTranslation("Entity summoned", {
 	ru: "Существо призвано"
 });
@@ -1205,7 +1205,7 @@ Translation.addTranslation("Non-assigment", {
 });
 Translation.addTranslation("Can't find opened editor at %s position", {
 	ru: "Не удается найти открытый редактор под индексом %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Compilation failed", {
 	ru: "Компиляция не удалась"
 });
@@ -1408,7 +1408,7 @@ Translation.addTranslation("%s library isn't availabled!", {
 Translation.addTranslation("Congratulations!", {
 	ru: "Поздравляем!"
 }); // DEPRECATED
-Translation.addTranslation("This module are deprecated!", {
+Translation.addTranslation("This module is deprecated!", {
 	ru: "Этот модуль устарел!"
 }); // DEPRECATED
 Translation.addTranslation("Actions", {
@@ -1430,3 +1430,5 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
+Translation.addTranslation(" ", {});
+Translation.addTranslation("\n", {});

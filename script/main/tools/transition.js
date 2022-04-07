@@ -1,11 +1,13 @@
 const playTransition = function(worker, frame) {
 	return tryout(function() {
 		if (Transition.isTransitioning()) {
-			showHint(translate("Transition are already transitioning"), Interface.Color.YELLOW);
+			showHint(translate("Transition is already transitioning"), Interface.Color.YELLOW);
 			return false;
 		}
-		if (TransitionEditor.data.transition) let transition = TransitionEditor.data.transition;
-		else transition = TransitionEditor.data.transition = new Transition();
+		if (!TransitionEditor.data.transition) {
+			TransitionEditor.data.transition = new Transition();
+		}
+		let transition = TransitionEditor.data.transition;
 		transition.withEntity(worker.Define.getEntity() || getPlayerEnt());
 		transition.setFramesPerSecond(worker.Define.getFps() || 60);
 		transition.getFrameCount() > 0 && transition.clearFrames();
@@ -22,7 +24,7 @@ const playTransition = function(worker, frame) {
 		}
 		transition.withOnFinishListener(function() {
 			handle(function() {
-				TransitionEditor.create();
+				TRANSITION_TOOL.describeSidebar();
 			});
 		});
 		transition.start();
@@ -33,7 +35,7 @@ const playTransition = function(worker, frame) {
 const stopTransition = function(worker) {
 	return tryout(function() {
 		if (!Transition.isTransitioning()) {
-			showHint(translate("Transition are already stopped"), Interface.Color.YELLOW);
+			showHint(translate("Transition is already stopped"), Interface.Color.YELLOW);
 			return false;
 		}
 		if (!TransitionEditor.data.transition) {
@@ -45,8 +47,9 @@ const stopTransition = function(worker) {
 	}, false);
 };
 
-const drawTransitionPoints = function(worker) {
+const drawTransitionPoints = function(tool) {
 	return tryout(function() {
+		let worker = tool.getWorker();
 		if (!worker || !LevelInfo.isLoaded()) {
 			return false;
 		}
@@ -141,352 +144,402 @@ const mergeConvertedTransition = function(project, source, action) {
 	});
 };
 
-let TransitionEditor = {
-	data: new Object(),
-	reset: function() {
-		this.data.worker = ProjectProvider.addTransition();
-		ProjectProvider.setOpenedState(true);
-		this.data.worker.Animation.createAnimate();
-		this.unselect();
-	},
-	unselect: function() {
-		this.data.frame = -1;
-		Popups.closeIfOpened("frame_select");
-		delete this.data.selected;
-	},
-	create: function() {
-		let autosaveable = !ProjectProvider.isOpened();
-		if (!this.data.worker) this.reset();
-		autosaveable && ProjectProvider.initializeAutosave(this.data.worker);
-		this.data.hasAnimate = this.data.worker.Animation.getAnimateCount() > 0 &&
-			this.data.worker.Animation.getAnimate(0).getFrameCount() > 0;
-		this.data.isStarted = !!Transition.currently;
-		let button = new ControlButton();
-		button.setIcon("transition");
-		button.setOnClickListener(function() {
-			TransitionEditor.menu();
-			sidebar.hide();
-		});
-		button.show();
-		let sidebar = new SidebarWindow(),
-			group = sidebar.addGroup("transition");
-		if (this.data.hasAnimate) {
-			group.addItem(this.data.isStarted ? "transitionAnimatePlay" : "transitionAnimatePause", this.Transition.play);
-		}
-		group.addItem("transitionAnimateMove", this.Transition.move);
-		group.addItem("transitionAnimateRotate", this.Transition.rotate);
-		group.addItem("transitionAnimateFps", this.reframe);
-		group.addItem("transitionUpdate", this.reload);
-		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
-			if (!TransitionEditor.data.hasAnimate) {
-				itemIndex++;
-			}
-			if (itemIndex == 0) {
-				return translate("Plays or stops animate");
-			} else if (itemIndex == 1) {
-				return translate("Moves startup location");
-			} else if (itemIndex == 2) {
-				return translate("Moves startup rotation");
-			} else if (itemIndex == 3) {
-				return translate("Changes frames per second");
-			} else if (itemIndex == 4) {
-				return translate("Updates animate");
-			}
-		});
-		group = sidebar.addGroup("transitionFrameSelect");
-		if (this.data.hasAnimate) {
-			group.addItem("transitionFrameSelect", this.Frame.select);
-			group.addItem("transitionFrameAdd", this.Frame.add);
-			group.addItem(this.data.isStarted ? "transitionFramePlay" : "transitionFramePause", this.Frame.play);
-			group.addItem("transitionFrameMove", this.Frame.move);
-			group.addItem("transitionFrameRotate", this.Frame.rotate);
-			group.addItem("transitionFrameDurate", this.Frame.durate);
-			group.addItem("transitionFrameInterpolate", this.Frame.interpolator);
-			group.addItem("transitionFrameRemove", this.Frame.remove);
-		} else group.addItem("transitionFrameAdd", this.Frame.add);
-		group.setOnItemFetchListener(function(group, item, groupIndex, itemIndex) {
-			if (TransitionEditor.data.hasAnimate) {
-				if (itemIndex == 0) {
-					return translate("Selects currently frame");
-				} else if (itemIndex == 1) {
-					return translate("Creates and clones frames");
-				} else if (itemIndex == 2) {
-					return translate("Plays or stops frame");
-				} else if (itemIndex == 3) {
-					return translate("Moves frame location");
-				} else if (itemIndex == 4) {
-					return translate("Moves frame rotation");
-				} else if (itemIndex == 5) {
-					return translate("Changes frame duration");
-				} else if (itemIndex == 6) {
-					return translate("Set up frame velocity vector");
-				} else if (itemIndex == 7) {
-					return translate("Removes frame");
+const isNonStandardEntity = function(tool) {
+	return tryout(function() {
+		return tool.getWorker().Define.getEntity() != getPlayerEnt();
+	}, false);
+};
+
+const TRANSITION_TOOL = (function() {
+	return new EditorTool({
+		controlDescriptor: {
+			logotype: function(tool, control) {
+				if (selectMode == 2 || selectMode == 4) {
+					return "transitionFrameMove";
 				}
-			} else if (itemIndex == 0) {
-				return translate("Creates first frame");
+				return "transition";
+			},
+			collapsedClick: function(tool, control) {
+				if (selectMode == 2 || selectMode == 4) {
+					let previous = selectMode;
+					selectMode = 0;
+					if (previous == 4) {
+						drawTransitionPoints(tool);
+					}
+					tool.describeControl();
+					tool.control();
+					return;
+				}
+				EditorTool.prototype.controlDescriptor.collapsedClick.apply(this, arguments);
 			}
-		});
-		if (this.data.selected >= 0) sidebar.select(this.data.selected);
-		sidebar.setOnGroupSelectListener(function(window, group, index, previous, count) {
-			TransitionEditor.data.selected = index;
-			drawTransitionPoints(TransitionEditor.data.worker);
-		});
-		sidebar.setOnGroupUndockListener(function(window, group, index, previous) {
-			if (!previous) {
-				delete TransitionEditor.data.selected;
-				drawTransitionPoints(TransitionEditor.data.worker);
+		},
+		menuDescriptor: {
+			elements: [function(tool, json, menu) {
+				if (LevelInfo.isLoaded()) {
+					return {
+						type: "category",
+						title: translate("Transition"),
+						items: [{
+							icon: "transitionCamera",
+							title: translate("Camera"),
+							click: function(tool, item) {
+								showHint(translate("Hit entity"));
+								selectMode = 2;
+								tool.describeControl();
+								tool.collapse();
+							}
+						}, function(tool, category) {
+							if (isNonStandardEntity(tool)) {
+								let hasRemoveMessage = false;
+								return {
+									icon: "transitionPlayer",
+									title: translate("Player"),
+									click: function(tool, item) {
+										if (!hasRemoveMessage) {
+											let message = control.addMessage("menuBoardWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
+												function() {
+													let worker = tool.getWorker();
+													worker.Define.setEntity(getPlayerEnt());
+													drawTransitionPoints(tool);
+													tool.describeMenu();
+													delete message;
+												});
+											handle(function() {
+												if (message !== undefined) {
+													control.scrollToElement(message);
+												}
+											}, 500);
+											handle(function() {
+												if (message !== undefined) {
+													control.removeElement(message);
+												}
+												hasRemoveMessage = false;
+											}, 5000);
+											hasRemoveMessage = true;
+										}
+									}
+								};
+							}
+						}, {
+							icon: "worldSelectionRange",
+							title: translate("Pathes"),
+							click: function() {
+								selectMode = 4;
+								TransitionEditor.unselect();
+								tool.describeControl();
+								tool.collapse();
+							}
+						}, {
+							icon: "transitionUpdate",
+							title: translate("Reload"),
+							click: function(tool, item) {
+								if (selectMode != 0) {
+									selectMode = 0;
+									tool.describe();
+								}
+								TransitionEditor.reload();
+							}
+						}]
+					};
+				}
+				// in menu
+			}]
+		},
+		sidebarDescriptor: {
+			groups: [{
+				icon: "transition",
+				items: [function(tool, json, group, sidebar) {
+					if (TransitionEditor.data.hasAnimate) {
+						return Transition.isTransitioning() ? {
+							icon: "transitionAnimatePlay"
+						} : {
+							icon: "transitionAnimatePause"
+						};
+					}
+				}, {
+					icon: "transitionAnimateMove"
+				}, {
+					icon: "transitionAnimateRotate"
+				}, {
+					icon: "transitionAnimateFps"
+				}, function(tool, json, group, sidebar) {
+					if (LevelInfo.isLoaded()) {
+						return {
+							icon: "transitionUpdate"
+						};
+					}
+				}]
+			}, {
+				icon: "transitionFrameSelect",
+				items: [function(tool, json, group, sidebar) {
+					if (TransitionEditor.data.hasAnimate) {
+						let selector = [{
+							icon: "transitionFrameSelect"
+						}, {
+							icon: "transitionFrameAdd"
+						}];
+						if (TransitionEditor.Frame.hasSelection()) {
+							return selector.concat([Transition.isTransitioning() ? {
+								icon: "transitionFramePlay"
+							} : {
+								icon: "transitionFramePause"
+							}, {
+								icon: "transitionFrameMove"
+							}, {
+								icon: "transitionFrameRotate"
+							}, {
+								icon: "transitionFrameDurate"
+							}, {
+								icon: "transitionFrameInterpolate"
+							}, {
+								icon: "transitionFrameRemove"
+							}]);
+						}
+						return selector;
+					}
+					return {
+						icon: "transitionFrameAdd"
+					};
+				}]
+			}]
+		},
+		onSelectItem: function(sidebar, group, item, groupIndex, itemIndex) {
+			if (groupIndex == 0) {
+				if (!TransitionEditor.data.hasAnimate) {
+					itemIndex++;
+				}
+				if (itemIndex == 0) {
+					return TransitionEditor.Transition.play(this);
+				} else if (itemIndex == 1) {
+					return TransitionEditor.Transition.move(this);
+				} else if (itemIndex == 2) {
+					return TransitionEditor.Transition.rotate(this);
+				} else if (itemIndex == 3) {
+					return TransitionEditor.reframe(this);
+				} else if (itemIndex == 4) {
+					return TransitionEditor.reload(this);
+				}
+			} else if (groupIndex == 1) {
+				if (TransitionEditor.data.hasAnimate) {
+					if (itemIndex == 0) {
+						return TransitionEditor.Frame.select(this);
+					} else if (itemIndex == 1) {
+						return TransitionEditor.Frame.add(this);
+					} else if (itemIndex == 2) {
+						return TransitionEditor.Frame.play(this);
+					} else if (itemIndex == 3) {
+						return TransitionEditor.Frame.move(this);
+					} else if (itemIndex == 4) {
+						return TransitionEditor.Frame.rotate(this);
+					} else if (itemIndex == 5) {
+						return TransitionEditor.Frame.durate(this);
+					} else if (itemIndex == 6) {
+						return TransitionEditor.Frame.interpolator(this);
+					} else if (itemIndex == 7) {
+						return TransitionEditor.Frame.remove(this);
+					}
+				} else if (itemIndex == 0) {
+					return TransitionEditor.Frame.add(this);
+				}
 			}
-		});
-		sidebar.setOnGroupFetchListener(function(window, group, index) {
+			showHint(translate("Not developed yet"));
+		},
+		onFetchGroup: function(sidebar, group, index) {
 			if (index == 0) {
 				return translate("Animate define properties");
 			} else if (index == 1) {
 				return translate("Frames actions");
 			}
-		})
-		sidebar.show();
-		drawTransitionPoints(this.data.worker);
-	},
-	menu: function() {
-		prepareAdditionalInformation(3, 1);
-		let control = new MenuWindow();
-		attachWarningInformation(control);
-		control.setOnClickListener(function() {
-			TransitionEditor.create();
-		}).addHeader();
-		attachAdditionalInformation(control);
-		let category = control.addCategory(translate("Editor"));
-		category.addItem("menuProjectLoad", translate("Open"), function() {
-			selectFile([".dnp", ".nds", ".dea", ".js"], function(file) {
-				TransitionEditor.replace(file);
-			});
-		});
-		category.addItem("menuProjectImport", translate("Merge"), function() {
-			selectFile([".dnp", ".nds", ".dea", ".js"], function(file) {
-				TransitionEditor.merge(file);
-			});
-		});
-		category.addItem("menuProjectSave", translate("Export"), function() {
-			saveFile(TransitionEditor.data.name, [".dnp", ".js"], function(file, i) {
-				TransitionEditor.save(file, i);
-			});
-		});
-		category.addItem("menuProjectLeave", translate("Back"), function() {
-			control.hide();
-			Popups.closeAll(), TransitionEditor.unselect();
-			ProjectProvider.setOpenedState(false);
-			ProjectProvider.getProject().callAutosave();
-			delete TransitionEditor.data.worker;
-			attachProjectTool();
-		});
-		attachAdditionalInformation(control);
-		category = control.addCategory(translate("Transition"));
-		category.addItem("transitionCamera", translate("Camera"), function() {
-			if (!LevelInfo.isLoaded()) {
-				showHint(translate("Can't change camera at menu"));
-				return;
-			}
-			showHint(translate("Hit entity"));
-			control.hide();
-			selectMode = 2;
-			let button = new ControlButton();
-			button.setIcon("menuBack");
-			button.setOnClickListener(function() {
-				TransitionEditor.create();
-				selectMode = 0;
-			});
-			button.show();
-		});
-		if (TransitionEditor.data.worker.Define.getEntity() != getPlayerEnt()) {
-			let hasResetMessage = false;
-			category.addItem("transitionPlayer", translate("Player"), function() {
-				if (!hasResetMessage) {
-					let message = control.addMessage("menuBoardWarning", translate("Current entity will be lost.") + " " + translate("Touch here to confirm."),
-						function() {
-							TransitionEditor.data.worker.Define.setEntity(getPlayerEnt());
-							control.hide(), TransitionEditor.create();
-						});
-					handle(function() {
-						control.scrollToElement(message);
-					}, 500);
-					handle(function() {
-						control.removeElement(message);
-						hasResetMessage = false;
-					}, 5000);
-					hasResetMessage = true;
+			return translate("Deprecated translation");
+		},
+		onFetchItem: function(sidebar, group, item, groupIndex, itemIndex) {
+			if (groupIndex == 0) {
+				if (!TransitionEditor.data.hasAnimate) {
+					itemIndex++;
 				}
-			});
-		}
-		category.addItem("worldSelectionRange", translate("Pathes"), function() {
-			if (!LevelInfo.isLoaded()) {
-				showHint(translate("Can't draw points in menu"));
-				return;
+				if (itemIndex == 0) {
+					return translate("Plays or stops animate");
+				} else if (itemIndex == 1) {
+					return translate("Moves startup location");
+				} else if (itemIndex == 2) {
+					return translate("Moves startup rotation");
+				} else if (itemIndex == 3) {
+					return translate("Changes frames per second");
+				} else if (itemIndex == 4) {
+					return translate("Updates animate");
+				}
+			} else if (groupIndex == 1) {
+				if (TransitionEditor.data.hasAnimate) {
+					if (itemIndex == 0) {
+						return translate("Selects currently frame");
+					} else if (itemIndex == 1) {
+						return translate("Creates and clones frames");
+					} else if (itemIndex == 2) {
+						return translate("Plays or stops frame");
+					} else if (itemIndex == 3) {
+						return translate("Moves frame location");
+					} else if (itemIndex == 4) {
+						return translate("Moves frame rotation");
+					} else if (itemIndex == 5) {
+						return translate("Changes frame duration");
+					} else if (itemIndex == 6) {
+						return translate("Set up frame velocity vector");
+					} else if (itemIndex == 7) {
+						return translate("Removes frame");
+					}
+				} else if (itemIndex == 0) {
+					return translate("Creates first frame");
+				}
 			}
-			control.hide();
-			selectMode = 4;
-			let button = new ControlButton();
-			button.setIcon("menuBack");
-			button.setOnClickListener(function() {
-				TransitionEditor.create();
+			return translate("Deprecated translation");
+		},
+		onSelectGroup: function(sidebar, group, index, last, count) {
+			drawTransitionPoints(this);
+		},
+		onUndockGroup: function(sidebar, group, index, previous) {
+			if (!previous) {
 				selectMode = 0;
-			});
-			button.show();
-			TransitionEditor.unselect();
-		});
-		category.addItem("transitionUpdate", translate("Reload"), function() {
-			selectMode = 0;
-			TransitionEditor.reload();
-		});
-		attachAdditionalInformation(control);
-		control.show();
-		finishAttachAdditionalInformation();
-	},
-	open: function(source) {
-		if (typeof source != "object") {
-			source = ProjectProvider.getEditorById(source);
-		}
-		let index = ProjectProvider.indexOf(source);
-		if (!source) {
-			showHint(translate("Can't find opened editor at %s position", source));
-			return false;
-		}
-		Popups.closeAll();
-		let worker = this.data.worker = new TransitionWorker(source);
-		if (index == -1) index = ProjectProvider.getCount();
-		ProjectProvider.setupEditor(index, worker);
-		TransitionEditor.unselect();
-		TransitionEditor.create();
-		ProjectProvider.setOpenedState(true);
-		MenuWindow.hideCurrently();
-		return true;
-	},
-	merge: function(file) {
-		let name = file.getName(),
-			project = TransitionEditor.data.worker.getProject();
-		if (name.endsWith(".dnp")) {
-			let active = Date.now();
-			importProject(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					mergeConvertedTransition(project, selected, function(output) {
-						TransitionEditor.data.worker.loadProject(output);
-						drawTransitionPoints(TransitionEditor.data.worker);
-						showHint(translate("Merged success") + " " +
-							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-					});
-				}, "transition");
-			});
-		} else if (name.endsWith(".nds") || name.endsWith(".dea")) {
-			let active = Date.now();
-			tryout(function() {
-				let obj = compileData(Files.read(file)),
-					result = convertNds(obj);
-				mergeConvertedTransition(project, result, function(output) {
-					TransitionEditor.data.worker.loadProject(output);
-					drawTransitionPoints(TransitionEditor.data.worker);
-					showHint(translate("Merged success") + " " +
+				drawTransitionPoints(this);
+			}
+		},
+		getExtensions: function(type) {
+			let source = EditorTool.prototype.getExtensions.apply(this, arguments);
+			if (type != EditorTool.ExtensionType.EXPORT) {
+				source = source.concat([".nds", ".dea"]);
+			}
+			return source;
+		},
+		replace: function(file) {
+			let name = file.getName(),
+				instance = this;
+			if (name.endsWith(".nds") || name.endsWith(".deb")) {
+				let active = Date.now();
+				tryout(function() {
+					let obj = compileData(Files.read(file)),
+						result = convertNds(obj);
+					instance.fromProject(result);
+					showHint(translate("Imported success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				});
-			});
-		} else if (name.endsWith(".js")) {
-			let active = Date.now();
-			importScript(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					mergeConvertedTransition(project, selected, function(output) {
-						TransitionEditor.data.worker.loadProject(output);
-						drawTransitionPoints(TransitionEditor.data.worker);
+			}
+			EditorTool.prototype.replace.apply(this, arguments);
+		},
+		merge: function(file) {
+			let merger = this.getMerger();
+			if (!this.hasMerger()) MCSystem.throwException(null);
+			let name = file.getName(),
+				project = this.toProject(),
+				instance = this;
+			if (name.endsWith(".nds") || name.endsWith(".deb")) {
+				let active = Date.now();
+				handleThread(function() {
+					let obj = compileData(Files.read(file)),
+						result = convertNds(obj);
+					merger(project, result, function(output) {
+						instance.fromProject(output);
 						showHint(translate("Merged success") + " " +
 							translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 					});
-				}, "transition");
-			});
+				});
+			}
+			EditorTool.prototype.merge.apply(this, arguments);
+		},
+		getWorkerFor: function(source) {
+			if (source !== undefined) {
+				return new TransitionWorker(source);
+			}
+			return ProjectProvider.addTransition();
+		},
+		getMerger: function() {
+			return mergeConvertedTransition;
+		},
+		getConverter: function() {
+			return new TransitionConverter();
+		},
+		hasParser: function() {
+			return true;
+		},
+		unselect: function(force) {
+			delete TransitionEditor.data.frame;
+			Popups.closeIfOpened("frame_select");
+			drawTransitionPoints(this);
+			EditorTool.prototype.unselect.apply(this, arguments);
+		}
+	});
+})();
+
+const attachTransitionTool = function(source, post) {
+	TRANSITION_TOOL.attach();
+	TRANSITION_TOOL.queue();
+	handleThread(function() {
+		let accepted = TRANSITION_TOOL.open(source);
+		handle(function() {
+			if (accepted) {
+				tryout(function() {
+					post && post(TRANSITION_TOOL);
+					TransitionEditor.attach(TRANSITION_TOOL);
+					accepted = false;
+				});
+			}
+			if (accepted) {
+				TRANSITION_TOOL.leave();
+			}
+		});
+	});
+};
+
+const TransitionEditor = {
+	data: new Object(),
+	resetIfNeeded: function(tool) {
+		let worker = tool.getWorker();
+		if (worker.Animation.getAnimateCount() == 0) {
+			worker.Animation.createAnimate();
 		}
 	},
-	replace: function(file) {
-		let name = file.getName();
-		if (name.endsWith(".dnp")) {
-			let active = Date.now();
-			importProject(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					TransitionEditor.open(selected);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				}, "transition", true);
-			});
-		} else if (name.endsWith(".nds") || name.endsWith(".dea")) {
-			let active = Date.now();
-			tryout(function() {
-				let current = TransitionEditor.data.worker.getProject(),
-					obj = compileData(Files.read(file)),
-					result = convertNds(obj);
-				TransitionEditor.open(result);
-				showHint(translate("Imported success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		} else if (name.endsWith(".js")) {
-			let active = Date.now();
-			importScript(file.getPath(), function(result) {
-				active = Date.now() - active;
-				selectProjectData(result, function(selected) {
-					active = Date.now() - active;
-					TransitionEditor.open(selected);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				}, "transition", true);
-			});
+	attach: function(tool) {
+		let worker = tool.getWorker();
+		this.resetIfNeeded(tool);
+		this.data.hasAnimate = worker.Animation.getAnimateCount() > 0 &&
+			worker.Animation.getAnimate(0).getFrameCount() > 0;
+		drawTransitionPoints(tool);
+		if (!tool.isAttached()) {
+			tool.attach();
 		}
+		tool.describe();
+		tool.control();
 	},
-	save: function(file, i) {
-		let name = (TransitionEditor.data.name = i, file.getName()),
-			project = TransitionEditor.data.worker.getProject();
-		if (name.endsWith(".dnp")) {
-			exportProject(project, false, file.getPath());
-		} else if (name.endsWith(".js")) {
-			let converter = new TransitionConverter();
-			converter.attach(project);
-			let active = Date.now();
-			converter.executeAsync(function(link, result) {
-				if (link.hasResult()) {
-					Files.write(file, result);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				} else retraceOrReport(link.getLastException());
-			});
-		}
-	},
-	reload: function() {
-		if (drawTransitionPoints(TransitionEditor.data.worker)) {
+	reload: function(tool) {
+		let worker = tool.getWorker();
+		if (drawTransitionPoints(tool)) {
 			showHint(translate("Transition updated"));
 		} else showHint(translate("Nothing to update"));
 	},
 	Transition: {
-		play: function() {
+		play: function(tool) {
 			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
 			}
-			let transition = TransitionEditor.data.transition;
+			let worker = tool.getWorker(),
+				transition = TransitionEditor.data.transition;
 			if (transition && transition.isStarted()) {
-				if (stopTransition(TransitionEditor.data.worker)) {
+				if (stopTransition(worker)) {
 					showHint(translate("Transition stopped"));
 				}
-			} else playTransition(TransitionEditor.data.worker),
-				TransitionEditor.create();
+			} else {
+				playTransition(worker);
+				tool.describeSidebar();
+			}
 		},
-		move: function() {
-			let point = TransitionEditor.data.worker.Define.getStarting();
+		move: function(tool) {
+			let worker = tool.getWorker(),
+				point = worker.Define.getStarting();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			popup.setBaseMathes([1, 10, 100]);
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Define.moveStarting("x", value);
+				worker.Define.moveStarting("x", value);
 			});
 			group.setOnLongChangeListener(function(index) {
 				return preround(Entity.getX(getPlayerEnt()), 1);
@@ -494,7 +547,7 @@ let TransitionEditor = {
 			group.addItem(point.x);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Define.moveStarting("y", value);
+				worker.Define.moveStarting("y", value);
 			});
 			group.setOnLongChangeListener(function(index) {
 				return preround(Entity.getY(getPlayerEnt()), 1);
@@ -502,7 +555,7 @@ let TransitionEditor = {
 			group.addItem(point.y);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Define.moveStarting("z", value);
+				worker.Define.moveStarting("z", value);
 			});
 			group.setOnLongChangeListener(function(index) {
 				return preround(Entity.getZ(getPlayerEnt()), 1);
@@ -513,14 +566,15 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "transition_move");
 		},
-		rotate: function() {
-			let point = TransitionEditor.data.worker.Define.getStarting();
+		rotate: function(tool) {
+			let worker = tool.getWorker(),
+				point = worker.Define.getStarting();
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.setBaseMathes([10, 100]);
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Define.moveStarting("yaw", value);
+				worker.Define.moveStarting("yaw", value);
 			});
 			group.setOnLongChangeListener(function(index) {
 				return preround(Entity.getYaw(getPlayerEnt()), 2);
@@ -528,7 +582,7 @@ let TransitionEditor = {
 			group.addItem(point.yaw);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Define.moveStarting("pitch", value);
+				worker.Define.moveStarting("pitch", value);
 			});
 			group.setOnLongChangeListener(function(index) {
 				return preround(Entity.getPitch(getPlayerEnt()), 2);
@@ -544,26 +598,28 @@ let TransitionEditor = {
 		hasSelection: function() {
 			return TransitionEditor.data.frame >= 0;
 		},
-		select: function() {
+		select: function(tool) {
+			let worker = tool.getWorker();
 			let popup = new ListingPopup();
 			popup.setTitle(translate("Frames"));
 			popup.setOnDismissListener(function() {
 				selectMode = 0;
-				drawTransitionPoints(TransitionEditor.data.worker);
+				drawTransitionPoints(tool);
 			});
-			for (let i = 0; i < TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount(); i++) {
+			for (let i = 0; i < worker.Animation.getAnimate(0).getFrameCount(); i++) {
 				popup.addButtonElement(translate("Frame %s", i + 1));
 			}
 			popup.setOnSelectListener(function(index) {
 				selectMode = 4;
 				TransitionEditor.data.frame = index;
-				drawTransitionPoints(TransitionEditor.data.worker);
+				drawTransitionPoints(tool);
 			});
 			popup.selectButton(TransitionEditor.data.frame);
 			popup.setSelectMode(true);
 			Popups.open(popup, "frame_select");
 		},
-		add: function() {
+		add: function(tool) {
+			let worker = tool.getWorker();
 			if (TransitionEditor.data.hasAnimate) {
 				let popup = new ListingPopup();
 				popup.setTitle(translate("Create"));
@@ -571,35 +627,36 @@ let TransitionEditor = {
 					Popups.updateAll();
 				});
 				popup.addButtonElement(translate("New of"), function() {
-					let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
+					let index = (TransitionEditor.data.frame = worker.Animation.getAnimate(0).addFrame());
 					showHint(translate("Frame %s added", index + 1));
-					drawTransitionPoints(TransitionEditor.data.worker);
+					drawTransitionPoints(tool);
 				});
 				if (LevelInfo.isLoaded()) {
 					popup.addButtonElement(translate("Currently"), function() {
-						let index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame());
-						TransitionEditor.data.worker.Animation.getAnimate(0).setupFrame(index);
+						let selected = TransitionEditor.Frame.hasSelection(),
+							index = (TransitionEditor.data.frame = worker.Animation.getAnimate(0).addFrame());
+						worker.Animation.getAnimate(0).setupFrame(index);
+						if (!selected) tool.describeSidebar();
 						showHint(translate("Frame %s added as currently", index + 1));
-						drawTransitionPoints(TransitionEditor.data.worker);
+						drawTransitionPoints(tool);
 					});
 				}
 				if (TransitionEditor.Frame.hasSelection()) {
 					popup.addButtonElement(translate("Copy current"), function() {
 						let last = TransitionEditor.data.frame,
-							index = (TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).cloneFrame(last));
+							index = (TransitionEditor.data.frame = worker.Animation.getAnimate(0).cloneFrame(last));
 						showHint(translate("Frame %s cloned to %s", [last + 1, index + 1]));
-						drawTransitionPoints(TransitionEditor.data.worker);
+						drawTransitionPoints(tool);
 					});
 				}
 				Popups.open(popup, "frame_add");
 			} else {
-				TransitionEditor.data.frame = TransitionEditor.data.worker.Animation.getAnimate(0).addFrame();
-				TransitionEditor.create();
+				TransitionEditor.data.frame = worker.Animation.getAnimate(0).addFrame();
+				TransitionEditor.attach(tool);
 				showHint(translate("First frame added"));
-				drawTransitionPoints(TransitionEditor.data.worker);
 			}
 		},
-		play: function() {
+		play: function(tool) {
 			if (!LevelInfo.isLoaded()) {
 				showHint(translate("Can't play transitions at menu"));
 				return;
@@ -608,49 +665,53 @@ let TransitionEditor = {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let transition = TransitionEditor.data.transition,
+			let worker = tool.getWorker(),
+				transition = TransitionEditor.data.transition,
 				selected = TransitionEditor.data.frame;
 			if (transition && transition.isStarted()) {
-				if (stopTransition(TransitionEditor.data.worker)) {
+				if (stopTransition(worker)) {
 					showHint(translate("Transition stopped"));
 				}
-			} else playTransition(TransitionEditor.data.worker, selected),
-				TransitionEditor.create();
+			} else {
+				playTransition(worker, selected);
+				tool.describeSidebar();
+			}
 		},
-		move: function() {
+		move: function(tool) {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = TransitionEditor.data.frame,
-				frame = TransitionEditor.data.worker.Animation.getAnimate(0).getFrame(selected);
+			let worker = tool.getWorker(),
+				selected = TransitionEditor.data.frame,
+				frame = worker.Animation.getAnimate(0).getFrame(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Move"));
 			popup.setBaseMathes([1, 10, 100]);
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "x", value);
+				worker.Animation.getAnimate(0).moveFrame(selected, "x", value);
 			});
 			group.setOnLongChangeListener(function(index) {
-				let real = TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCoords(selected);
+				let real = worker.Animation.getAnimate(0).getFrameCoords(selected);
 				return preround(Entity.getX(getPlayerEnt()) - real.x, 1);
 			});
 			group.addItem(frame.x);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "y", value);
+				worker.Animation.getAnimate(0).moveFrame(selected, "y", value);
 			});
 			group.setOnLongChangeListener(function(index) {
-				let real = TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCoords(selected);
+				let real = worker.Animation.getAnimate(0).getFrameCoords(selected);
 				return preround(Entity.getY(getPlayerEnt()) - real.y, 1);
 			});
 			group.addItem(frame.y);
 			group = popup.addGroup("z");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "z", value);
+				worker.Animation.getAnimate(0).moveFrame(selected, "z", value);
 			});
 			group.setOnLongChangeListener(function(index) {
-				let real = TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCoords(selected);
+				let real = worker.Animation.getAnimate(0).getFrameCoords(selected);
 				return preround(Entity.getZ(getPlayerEnt()) - real.z, 1);
 			});
 			group.addItem(frame.z);
@@ -659,31 +720,32 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "frame_move");
 		},
-		rotate: function() {
+		rotate: function(tool) {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = TransitionEditor.data.frame,
-				frame = TransitionEditor.data.worker.Animation.getAnimate(0).getFrame(selected);
+			let worker = tool.getWorker(),
+				selected = TransitionEditor.data.frame,
+				frame = worker.Animation.getAnimate(0).getFrame(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Rotate"));
 			popup.setBaseMathes([10, 100]);
 			let group = popup.addGroup("x");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "yaw", value);
+				worker.Animation.getAnimate(0).moveFrame(selected, "yaw", value);
 			});
 			group.setOnLongChangeListener(function(index) {
-				let real = TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCoords(selected);
+				let real = worker.Animation.getAnimate(0).getFrameCoords(selected);
 				return preround(Entity.getYaw(getPlayerEnt()) - real.yaw, 2);
 			});
 			group.addItem(frame.yaw);
 			group = popup.addGroup("y");
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).moveFrame(selected, "pitch", value);
+				worker.Animation.getAnimate(0).moveFrame(selected, "pitch", value);
 			});
 			group.setOnLongChangeListener(function(index) {
-				let real = TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCoords(selected);
+				let real = worker.Animation.getAnimate(0).getFrameCoords(selected);
 				return preround(Entity.getPitch(getPlayerEnt()) - real.pitch, 2);
 			});
 			group.addItem(frame.pitch);
@@ -692,31 +754,33 @@ let TransitionEditor = {
 			});
 			Popups.open(popup, "frame_rotate");
 		},
-		durate: function() {
+		durate: function(tool) {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = TransitionEditor.data.frame,
-				frame = TransitionEditor.data.worker.Animation.getAnimate(0).getFrame(selected);
+			let worker = tool.getWorker(),
+				selected = TransitionEditor.data.frame,
+				frame = worker.Animation.getAnimate(0).getFrame(selected);
 			let popup = new CoordsPopup();
 			popup.setTitle(translate("Duration"));
 			popup.setBaseMathes([1, 10, 100]);
 			let group = popup.addGroup();
 			group.setOnChangeListener(function(index, value) {
-				TransitionEditor.data.worker.Animation.getAnimate(0).durateFrame(selected, value);
+				worker.Animation.getAnimate(0).durateFrame(selected, value);
 			});
 			group.addItem(frame.duration);
 			group.removeName();
 			Popups.open(popup, "frame_durate");
 		},
-		interpolator: function() {
+		interpolator: function(tool) {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
 			}
-			let selected = TransitionEditor.data.frame,
-				frame = TransitionEditor.data.worker.Animation.getAnimate(0).getFrame(selected);
+			let worker = tool.getWorker(),
+				selected = TransitionEditor.data.frame,
+				frame = worker.Animation.getAnimate(0).getFrame(selected);
 			let popup = new ListingPopup();
 			popup.setSelectMode(true);
 			popup.setTitle(translate("Interpolator"));
@@ -727,16 +791,16 @@ let TransitionEditor = {
 			popup.selectButton(frame.interpolator || 0);
 			popup.setOnSelectListener(function(index) {
 				if (index == 0) {
-					TransitionEditor.data.worker.Animation.getAnimate(0).resetInterpolation(selected);
+					worker.Animation.getAnimate(0).resetInterpolation(selected);
 					showHint(translate("Interpolator disabled"));
 				} else {
-					TransitionEditor.data.worker.Animation.getAnimate(0).interpolateFrame(selected, index);
+					worker.Animation.getAnimate(0).interpolateFrame(selected, index);
 					showHint(translate("Interpolator setted"));
 				}
 			});
 			Popups.open(popup, "frame_interpolator");
 		},
-		remove: function() {
+		remove: function(tool) {
 			if (!TransitionEditor.Frame.hasSelection()) {
 				showHint(translate("Nothing chosen"));
 				return;
@@ -744,22 +808,25 @@ let TransitionEditor = {
 			confirm(translate("Deleting"),
 				translate("Are you sure want to delete this frame?"),
 				function() {
-					TransitionEditor.data.worker.Animation.getAnimate(0).removeFrame(TransitionEditor.data.frame);
+					let worker = tool.getWorker();
+					worker.Animation.getAnimate(0).removeFrame(TransitionEditor.data.frame);
 					TransitionEditor.data.frame = TransitionEditor.data.frame > 0 ? TransitionEditor.data.frame - 1 : 0;
-					if (TransitionEditor.data.worker.Animation.getAnimate(0).getFrameCount() == 0) TransitionEditor.create();
+					if (worker.Animation.getAnimate(0).getFrameCount() == 0) {
+						TransitionEditor.attach(tool);
+					}
 					Popups.closeAllByTag("frame");
 					showHint(translate("Frame deleted"));
 				});
 		}
 	},
-	reframe: function() {
-		let define = TransitionEditor.data.worker.Define;
+	reframe: function(tool) {
+		let worker = tool.getWorker();
 		let popup = new ListingPopup();
 		popup.setTitle(translate("FPS"));
-		popup.addEditElement(translate("Frames/sec."), define.getFps() || 60);
+		popup.addEditElement(translate("Frames/sec."), worker.Define.getFps() || 60);
 		popup.addButtonElement(translate("Save"), function() {
 			let values = popup.getAllEditsValues();
-			define.setFps(compileData(values[0], "number"));
+			worker.Define.setFps(compileData(values[0], "number"));
 			showHint(translate("Data saved"));
 		});
 		Popups.open(popup, "reframe");

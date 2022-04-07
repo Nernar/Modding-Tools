@@ -48,6 +48,9 @@ const TransitionWorker = function(obj) {
 			if (axis) starting[axis] = value;
 		},
 		resetStarting: function() {
+			if (!LevelInfo.isLoaded()) {
+				return false;
+			}
 			let starting = this.getStarting(),
 				coords = Entity.getPosition(this.getEntity()),
 				angle = Entity.getRotation(this.getEntity());
@@ -56,6 +59,7 @@ const TransitionWorker = function(obj) {
 			starting.z = preround(coords[2], 1);
 			starting.yaw = preround(angle[0], 2);
 			starting.pitch = preround(angle[1], 2);
+			return true;
 		}
 	};
 	this.Animation = {
@@ -136,6 +140,9 @@ const TransitionWorker = function(obj) {
 				return this.getFrames().length;
 			};
 			this.setupFrame = function(index) {
+				if (!LevelInfo.isLoaded()) {
+					return false;
+				}
 				let real = this.getFrameCoords(index),
 					frame = this.getFrame(index),
 					coords = Entity.getPosition(worker.Define.getEntity()),
@@ -145,6 +152,7 @@ const TransitionWorker = function(obj) {
 				frame.z = preround(coords[2] - real.z, 1);
 				frame.yaw = preround(angle[0] - real.yaw, 2);
 				frame.pitch = preround(angle[1] - real.pitch, 2);
+				return true;
 			};
 			this.asArray = function() {
 				let frames = this.getFrames(),

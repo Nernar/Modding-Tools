@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-06.04.2022-0";
+const REVISION = "develop-alpha-0.3.6-07.04.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -181,6 +181,29 @@ tryout(function() {
 	library.getScope().reportError = reportTrace;
 });
 
+const CoreEngine = {
+	CORE_ENGINE_API_LEVEL: 0
+};
+
+const getCoreEngineAndInjectIfNeeded = function() {
+	return tryout(function() {
+		if (CoreEngine.CORE_ENGINE_API_LEVEL != 0) {
+			return CoreEngine;
+		}
+		let CoreEngineAPI = findCorePackage().api.mod.coreengine.CoreEngineAPI;
+		let field = CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
+		let ceHandlerSingleton = field.get(null);
+		if (ceHandlerSingleton != null) {
+			ceHandlerSingleton.injectCoreAPI(CoreEngine);
+		}
+		return CoreEngine;
+	}, CoreEngine);
+};
+
+Callback.addCallback("PreBlocksDefined", function() {
+	getCoreEngineAndInjectIfNeeded();
+});
+
 IMPORT("Network:2");
 IMPORT("Transition:6");
 IMPORT("Action:4");
@@ -188,7 +211,10 @@ IMPORT("Sequence:1");
 IMPORT("Drawable:1");
 
 getPlayerEnt = function() {
-	return Number(Player.get());
+	if (LevelInfo.isLoaded()) {
+		return Number(Player.get());
+	}
+	return 0;
 };
 
 const isFirstLaunch = function() {

@@ -45,98 +45,182 @@ const LogViewer = {
 	}
 };
 
-const ConsoleViewer = {
-	show: function() {
-		let button = new ControlButton();
-		button.setIcon("menuBack");
-		button.setOnClickListener(function() {
+const CONSOLE_TOOL = (function() {
+	return new Tool({
+		controlDescriptor: {
+			logotype: "menuBack",
+			collapsedClick: function(tool, control) {
+				tool.deattach();
+			}
+		},
+		deattach: function() {
 			let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 			if (snack !== null) snack.dismiss();
-			attachProjectTool();
 			Popups.closeIfOpened("evaluate");
-		});
-		button.show();
-
-		ConsoleViewer.setupConsole();
-		ConsoleViewer.addEditable();
-	},
-	setupConsole: function() {
-		let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-		if (snack !== null) snack.dismiss();
-		snack = new HintAlert();
-		snack.setConsoleMode(true);
-		snack.setMaximumStacked(8);
-		snack.pin();
-		snack.show();
-	},
-	addEditable: function() {
-		let popup = new ListingPopup();
-		popup.setTitle(translate("Evaluate"));
-		popup.addEditElement(translate("Hi, I'm evaluate stroke"), "29 / 5");
-		popup.addButtonElement(translate("Eval"), function() {
-			let values = popup.getAllEditsValues();
-			if (String(values[0]).length > 0) {
-				showHint(" > " + values[0]);
-				let result = compileData(values[0]);
-				if (result.lineNumber !== undefined) {
-					showHint(result.message, Interface.Color.RED);
-				} else showHint(String(result), Interface.Color.LTGRAY);
-			}
-		}).setBackground("popup");
-		popup.setOnDismissListener(function() {
+			attachProjectTool(function() {
+				Tool.prototype.deattach.apply(this, arguments);
+			});
+		},
+		attach: function() {
+			Tool.prototype.attach.apply(this, arguments);
+			this.setupConsole();
+			this.addEditable();
+		},
+		setupConsole: function() {
 			let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-			if (snack !== null) ConsoleViewer.addEditable();
+			if (snack !== null) snack.dismiss();
+			snack = new HintAlert();
+			snack.setConsoleMode(true);
+			snack.setMaximumStacked(8);
+			snack.pin();
+			snack.show();
+		},
+		addEditable: function() {
+			let popup = new ListingPopup();
+			popup.setTitle(translate("Evaluate"));
+			popup.addEditElement(translate("Hi, I'm evaluate stroke"), "29 / 5");
+			popup.addButtonElement(translate("Eval"), function() {
+				let values = popup.getAllEditsValues();
+				if (String(values[0]).length > 0) {
+					showHint(" > " + values[0]);
+					let result = compileData(values[0]);
+					if (result.lineNumber !== undefined) {
+						showHint(result.message, Interface.Color.RED);
+					} else showHint(String(result), Interface.Color.LTGRAY);
+				}
+			}).setBackground("popup");
+			let instance = this;
+			popup.setOnDismissListener(function() {
+				let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+				if (snack !== null) instance.addEditable();
+			});
+			Popups.open(popup, "evaluate");
+		}
+	});
+})();
+
+const attachConsoleTool = function(post) {
+	CONSOLE_TOOL.attach();
+	CONSOLE_TOOL.queue();
+	handle(function() {
+		CONSOLE_TOOL.collapse();
+		let accepted = true;
+		tryout(function() {
+			post && post(CONSOLE_TOOL);
+			accepted = false;
 		});
-		Popups.open(popup, "evaluate");
+		if (accepted) {
+			attachProjectTool(function() {
+				CONSOLE_TOOL.deattach();
+			});
+		}
+	});
+};
+
+const DEBUG_TEST_TOOL = (function() {
+	return new ControlTool({
+		controlDescriptor: {
+			logotype: function(tool, control) {
+				return "menuProjectManage";
+			}
+		},
+		menuDescriptor: {
+			elements: function(tool, menu) {
+				let selector = [{
+					type: "message",
+					icon: "menuProjectLeave",
+					message: translate("Dev Editor") + ": " + translate("Leave"),
+					click: function() {
+						attachProjectTool(function() {
+							tool.deattach();
+						});
+					}
+				}, {
+					type: "category",
+					title: translate("Debug")
+				}];
+				let list = DebugEditor.data.tests;
+				if (list) {
+					for (let test in list) {
+						let descriptor = tool.getTestDescriptor(test, list[test]);
+						if (descriptor) selector.push(descriptor);
+					}
+					if (selector.length <= 2) {
+						return selector.concat([{
+							type: "message",
+							icon: "menuBoardConfig",
+							message: translate("Developer hasn't provided any test for that build. Please, checkout that section for next time.")
+						}]);
+					}
+				}
+				return selector;
+			}
+		},
+		getTestDescriptor: function(path, json) {
+			if (information) {
+				let instance = this;
+				return {
+					type: "message",
+					icon: information.icon || "support",
+					message: translate(information.title || "Test"),
+					click: function() {
+						confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."),
+							function() {
+								instance.evaluateTest(path + ".dns", information.mobility || information.counter);
+							});
+					}
+				};
+			}
+			return null;
+		},
+		evaluateTest: function(path, timing) {
+			tryout.call(this, function() {
+				if (typeof timing == "number" || timing == true) {
+					this.hide();
+				}
+				REQUIRE(path)();
+				if (typeof timing == "number") {
+					handle(function() {
+						this.menu();
+					}, timing);
+				}
+			}, function(e) {
+				this.control();
+				retraceOrReport(e);
+			});
+		}
+	});
+})();
+
+const attachDebugTestTool = function(post) {
+	DEBUG_TEST_TOOL.attach();
+	if (!DebugEditor.data.tests) {
+		let list = DebugEditor.data.tests = new Object();
+		FetchTestsSequence.execute(list);
 	}
+	DEBUG_TEST_TOOL.queue(FetchTestsSequence);
+	handleThread(function() {
+		FetchTestsSequence.assureYield();
+		handle(function() {
+			if (DEBUG_TEST_TOOL.isQueued()) {
+				DEBUG_TEST_TOOL.menu();
+			}
+			let accepted = true;
+			tryout(function() {
+				post && post(DEBUG_TEST_TOOL);
+				accepted = false;
+			});
+			if (accepted) {
+				attachProjectTool(function() {
+					DEBUG_TEST_TOOL.deattach();
+				});
+			}
+		});
+	});
 };
 
 const DebugEditor = {
 	data: new Object(),
-	create: function() {
-		let button = new ControlButton();
-		button.setIcon("menuProjectManage");
-		button.setOnClickListener(function() {
-			DebugEditor.menu();
-		});
-		button.show();
-	},
-	menu: function() {
-		if (DebugEditor.data.tests !== undefined) {
-			let control = new MenuWindow();
-			control.setOnClickListener(function() {
-				DebugEditor.create();
-			});
-			control.addMessage("menuProjectLeave", translate("Dev Editor") + ": " + translate("Leave"), function() {
-				attachProjectTool();
-			});
-			control.addCategory(translate("Debug"));
-			this.attachTestsList(control);
-			control.show();
-		} else {
-			let tests = DebugEditor.data.tests = new Object();
-			FetchTestsSequence.execute(tests);
-		}
-	},
-	attachTestsList: function(control) {
-		let tests = DebugEditor.data.tests;
-		for (let name in tests) {
-			this.attachTest(name, tests[name], control);
-		}
-		if (isEmpty(tests)) {
-			control.addMessage("menuBoardConfig", translate("Developer hasn't provided any test for that build. Please, checkout that section for next time."));
-		}
-	},
-	attachTest: function(path, information, control) {
-		if (information !== null) {
-			control.addMessage(information.icon || "support", translate(information.title || "Test"), function() {
-				confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."), function() {
-					control.hide();
-					DebugEditor.requireTest(path + ".dns", information.mobility || information.counter);
-				});
-			});
-		}
-	},
 	fetchInformation: function(path) {
 		return tryout(function() {
 			let file = new java.io.File(Dirs.TESTING, path + ".json");
@@ -147,22 +231,6 @@ const DebugEditor = {
 		}, {
 			title: path,
 			icon: "menuBoardWarning"
-		});
-	},
-	requireTest: function(path, timing) {
-		tryout(function() {
-			if (typeof timing != "number" && timing !== true) {
-				DebugEditor.create();
-			}
-			REQUIRE(path)();
-			if (typeof timing == "number") {
-				handle(function() {
-					DebugEditor.create();
-				}, timing);
-			}
-		}, function(e) {
-			DebugEditor.create();
-			retraceOrReport(e);
 		});
 	}
 };

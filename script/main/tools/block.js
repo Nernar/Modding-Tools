@@ -956,9 +956,9 @@ const BlockEditor = {
 		let worker = tool.getWorker();
 		this.resetIfNeeded(tool);
 		this.data.hasRender = worker.Renderer.getModelCount() > 0 &&
-		worker.Renderer.getModel(0).getBoxCount() > 0;
+			worker.Renderer.getModel(0).getBoxCount() > 0;
 		this.data.hasCollision = worker.Collision.getModelCount() > 0 &&
-		worker.Collision.getModel(0).getBoxCount() > 0;
+			worker.Collision.getModel(0).getBoxCount() > 0;
 		mapRenderBlock(tool);
 		if (!tool.isAttached()) {
 			tool.attach();
@@ -975,8 +975,7 @@ const BlockEditor = {
 		}
 	},
 	innersection: function(tool) {
-		let renderer,
-		collision;
+		let renderer, collision;
 		if (this.data.hasRender) {
 			renderer = new ListingPopup();
 			renderer.setIsMayDismissed(false);
