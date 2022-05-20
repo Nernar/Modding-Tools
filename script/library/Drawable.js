@@ -26,10 +26,10 @@ LIBRARY({
 
 IMPORT("Retention:5");
 
-let HashedDrawableMap = new Object();
-HashedDrawableMap.attachedViews = new Object();
-HashedDrawableMap.attachedAsImage = new Object();
-HashedDrawableMap.attachedAsBackground = new Object();
+let HashedDrawableMap = {};
+HashedDrawableMap.attachedViews = {};
+HashedDrawableMap.attachedAsImage = {};
+HashedDrawableMap.attachedAsBackground = {};
 
 HashedDrawableMap.isImageAttachedToView = function(view) {
 	return this.attachedAsImage.hasOwnProperty(view);
@@ -66,8 +66,8 @@ HashedDrawableMap.getDrawablesAttachedToView = function(view) {
 };
 
 HashedDrawableMap.getAttachedViewsInMap = function(map, drawable) {
-	let attached = new Array();
-	if (map === null || typeof map != "object") {
+	let attached = [];
+	if (map == null || typeof map != "object") {
 		return attached;
 	}
 	for (let element in map) {
@@ -269,7 +269,7 @@ CachedDrawable.prototype.toDrawable = function() {
 				this.source = drawable;
 			}
 		}, function(e) {
-			Logger.Log("Failed to process drawable: " + e, "Drawable");
+			Logger.Log("Exception in CachedDrawable.process: " + e, "WARNING");
 		});
 	}
 	return this.source || null;
@@ -288,7 +288,7 @@ CachedDrawable.prototype.getDescriptor = function() {
 };
 
 CachedDrawable.prototype.setDescriptor = function(descriptor) {
-	if (descriptor !== null && typeof descriptor == "object") {
+	if (descriptor != null && typeof descriptor == "object") {
 		this.descriptor = descriptor;
 		this.requireDescribe();
 	} else delete this.descriptor;
@@ -296,14 +296,15 @@ CachedDrawable.prototype.setDescriptor = function(descriptor) {
 
 CachedDrawable.prototype.describe = function(drawable) {
 	let descriptor = this.getDescriptor();
-	if (descriptor !== null) {
+	if (descriptor != null) {
 		Drawable.applyDescribe.call(this, drawable, descriptor);
 	}
 };
 
 CachedDrawable.prototype.requireDescribe = function() {
 	if (this.isProcessed()) {
-		this.describe(this.toDrawable());
+		let drawable = this.toDrawable();
+		if (drawable) this.describe(drawable);
 		return;
 	}
 	this.toDrawable();
@@ -382,7 +383,7 @@ let LayerDrawable = function(layers) {
 LayerDrawable.prototype = new ScheduledDrawable;
 
 LayerDrawable.prototype.process = function() {
-	let layers = new Array();
+	let layers = [];
 	for (let i = 0; i < this.getLayerCount(); i++) {
 		let drawable = this.getLayerAt(i);
 		if (drawable instanceof ScheduledDrawable) {
@@ -401,7 +402,7 @@ LayerDrawable.prototype.process = function() {
 };
 
 LayerDrawable.prototype.clearLayers = function() {
-	this.layers = new Array();
+	this.layers = [];
 	this.invalidate();
 };
 
@@ -433,7 +434,7 @@ LayerDrawable.prototype.addLayers = function(layers) {
 };
 
 LayerDrawable.prototype.hasLayer = function(layer) {
-	return this.getLayers().indexOf(layer) !== -1;
+	return this.getLayers().indexOf(layer) != -1;
 };
 
 LayerDrawable.prototype.removeLayer = function(layer) {
@@ -524,7 +525,7 @@ ClipDrawable.prototype.toString = function() {
 	return "[ClipDrawable " + this.getDrawable() + "@" + this.getLocation() + ":" + this.getSide() + "]";
 };
 
-ClipDrawable.Side = new Object();
+ClipDrawable.Side = {};
 ClipDrawable.Side.HORIZONTAL = 1;
 ClipDrawable.Side.VERTICAL = 2;
 
@@ -578,7 +579,7 @@ ColorDrawable.parseColor = function(value) {
 
 EXPORT("ColorDrawable", ColorDrawable);
 
-let BitmapFactory = new Object();
+let BitmapFactory = {};
 
 BitmapFactory.decodeBytes = function(bytes, options) {
 	return tryout.call(this, function() {
@@ -605,7 +606,7 @@ BitmapFactory.decodeFile = function(path, options) {
 
 BitmapFactory.decodeAsset = function(path, options) {
 	return tryout.call(this, function() {
-		let file = new java.io.File(Dirs.ASSET, path);
+		let file = new java.io.File(__dir__ + "assets", path);
 		if (!file.exists() || file.isDirectory()) {
 			file = new java.io.File(file.getPath() + ".dnr");
 		}
@@ -626,9 +627,9 @@ BitmapFactory.createScaled = function(bitmap, dx, dy) {
 
 EXPORT("BitmapFactory", BitmapFactory);
 
-let BitmapDrawableFactory = new Object();
-BitmapDrawableFactory.required = new Object();
-BitmapDrawableFactory.mapped = new Object();
+let BitmapDrawableFactory = {};
+BitmapDrawableFactory.required = {};
+BitmapDrawableFactory.mapped = {};
 
 BitmapDrawableFactory.getMappedFileByKey = function(key) {
 	return this.mapped[key] || null;
@@ -647,7 +648,7 @@ BitmapDrawableFactory.requireByKey = function(key, options) {
 };
 
 BitmapDrawableFactory.findMappedByTag = function(tag) {
-	let mapped = new Array();
+	let mapped = [];
 	for (let key in this.mapped) {
 		if (tag == "*") {
 			mapped.push(key);
@@ -739,14 +740,14 @@ BitmapDrawableFactory.mapAs = function(key, file) {
 BitmapDrawableFactory.MIME_TYPES = [".png", ".jpg", ".jpeg", ".bmp"];
 
 BitmapDrawableFactory.listFileNames = function(path, explore, root) {
-	let files = new Array(),
+	let files = [],
 		file = new java.io.File(path);
 	if (root === undefined) root = path;
 	if (file.isFile()) return [String(path).replace(root, String())];
 	if (!String(root).endsWith("/") && String(root).length > 0) {
 		root += "/";
 	}
-	let list = file.listFiles() || new Array();
+	let list = file.listFiles() || [];
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].isFile()) {
 			files.push(String(list[i]).replace(root, String()));
@@ -758,14 +759,14 @@ BitmapDrawableFactory.listFileNames = function(path, explore, root) {
 };
 
 BitmapDrawableFactory.mapDirectory = function(path, explore, root) {
-	let mapped = new Array();
+	let mapped = [];
 	if (path instanceof java.io.File) {
 		path = path.getPath();
 	}
 	if (root === undefined) root = path;
 	let entries = (function() {
 		let files = BitmapDrawableFactory.listFileNames(path, explore, root),
-			formatted = new Array();
+			formatted = [];
 		for (let item in BitmapDrawableFactory.MIME_TYPES) {
 			for (let name in files) {
 				if (files[name].endsWith(BitmapDrawableFactory.MIME_TYPES[item])) {
@@ -800,7 +801,7 @@ BitmapDrawableFactory.require = function(value, options) {
 
 BitmapDrawableFactory.wrap = function(value, options) {
 	let required = this.require(value, options);
-	if (required === null) return required;
+	if (required == null) return required;
 	return BitmapFactory.createScaled(required);
 };
 
@@ -853,12 +854,11 @@ BitmapDrawable.prototype = new ScheduledDrawable;
 BitmapDrawable.prototype.process = function() {
 	let bitmap = this.getBitmap(),
 		options = this.getOptions();
-	// TODO: this.recycle();
-	if (bitmap !== null) {
+	if (bitmap != null) {
 		bitmap = BitmapDrawableFactory.wrap(bitmap, options);
 		if (!(bitmap instanceof android.graphics.Bitmap)) {
 			bitmap = this.getCorruptedThumbnail();
-			if (bitmap !== null) {
+			if (bitmap != null) {
 				bitmap = BitmapDrawableFactory.wrap(bitmap, options);
 			}
 		}
@@ -871,6 +871,9 @@ BitmapDrawable.prototype.process = function() {
 };
 
 BitmapDrawable.prototype.describe = function(drawable) {
+	if (drawable.getBitmap() == null) {
+		return;
+	}
 	drawable.setFilterBitmap(false);
 	drawable.setAntiAlias(false);
 	ScheduledDrawable.prototype.describe.apply(this, arguments);
@@ -920,7 +923,7 @@ BitmapDrawable.prototype.setCorruptedThumbnail = function(bitmap) {
 
 BitmapDrawable.prototype.recycle = function() {
 	let wrapped = this.getWrappedBitmap();
-	if (wrapped !== null) wrapped.recycle();
+	if (wrapped != null) wrapped.recycle();
 	delete this.wrapped;
 };
 
@@ -957,7 +960,7 @@ AnimationDrawable.prototype.describe = function(where) {
 	}
 	ScheduledDrawable.prototype.describe.apply(this, arguments);
 	let descriptor = this.getDescriptor();
-	if (descriptor !== null) {
+	if (descriptor != null) {
 		AnimationDrawable.applyDescribe.call(this, drawable, descriptor);
 	}
 	let basic = this.getDefaultDuration();
@@ -989,7 +992,7 @@ AnimationDrawable.prototype.process = function() {
 };
 
 AnimationDrawable.prototype.clearFrames = function() {
-	this.frames = new Array();
+	this.frames = [];
 	this.requireDescribe();
 };
 
@@ -1036,7 +1039,7 @@ AnimationDrawable.prototype.addFrames = function(frames, duration) {
 };
 
 AnimationDrawable.prototype.hasFrame = function(frame) {
-	return this.indexOfFrame(frame) !== -1;
+	return this.indexOfFrame(frame) != -1;
 };
 
 AnimationDrawable.prototype.removeFrame = function(frame) {
@@ -1086,7 +1089,7 @@ AnimationDrawable.prototype.setDefaultDuration = function(duration) {
 };
 
 AnimationDrawable.prototype.isStartingWhenProcess = function() {
-	return this.starting !== undefined ? this.starting : false;
+	return this.starting != undefined ? this.starting : false;
 };
 
 AnimationDrawable.prototype.setIsStartingWhenProcess = function(enabled) {
@@ -1095,7 +1098,7 @@ AnimationDrawable.prototype.setIsStartingWhenProcess = function(enabled) {
 };
 
 AnimationDrawable.prototype.isStoppingWhenCompleted = function() {
-	return this.stopping !== undefined ? this.stopping : false;
+	return this.stopping != undefined ? this.stopping : false;
 };
 
 AnimationDrawable.prototype.setIsStoppingWhenCompleted = function(enabled) {
@@ -1140,7 +1143,7 @@ AnimationDrawable.Frame.prototype.toString = function() {
 
 EXPORT("AnimationDrawable", AnimationDrawable);
 
-let AnimationDrawableFactory = new Object();
+let AnimationDrawableFactory = {};
 
 AnimationDrawableFactory.setEnterFadeDuration = function(drawable, duration) {
 	drawable.setEnterFadeDuration(Number(duration));
@@ -1156,7 +1159,7 @@ AnimationDrawableFactory.setOneShot = function(drawable, enabled) {
 
 EXPORT("AnimationDrawableFactory", AnimationDrawableFactory);
 
-let DrawableFactory = new Object();
+let DrawableFactory = {};
 
 DrawableFactory.setAlpha = function(drawable, alpha) {
 	drawable.setAlpha(Number(alpha));

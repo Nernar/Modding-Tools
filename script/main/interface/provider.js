@@ -1,8 +1,8 @@
-const WindowProvider = new Object();
+const WindowProvider = {};
 
 WindowProvider.BASE_WINDOW_FLAGS = isHorizon ? 256 : 0;
 
-WindowProvider.attached = new Object();
+WindowProvider.attached = {};
 
 Object.defineProperty(WindowProvider, "manager", {
 	get: function() {
@@ -137,12 +137,12 @@ WindowProvider.destroy = function() {
 	for (let item in this.attached) {
 		this.attached[item].dismiss();
 	}
-	this.attached = new Object();
+	this.attached = {};
 };
 
-const UniqueHelper = new Object();
+const UniqueHelper = {};
 
-UniqueHelper.opened = new Object();
+UniqueHelper.opened = {};
 
 UniqueHelper.getWindow = function(window) {
 	if (window instanceof FocusableWindow) {

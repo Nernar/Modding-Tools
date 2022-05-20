@@ -14,7 +14,7 @@ const requireMethod = function(pointer, field, denyConversion) {
 		}
 		return pointer[field];
 	}, function(e) {
-		Logger.Log("Failed to find method " + field, "DEV-EDITOR");
+		Logger.Log("Not found method " + field, "WARNING");
 		return requireMethod.IMPL;
 	});
 };

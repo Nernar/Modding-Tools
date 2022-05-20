@@ -37,107 +37,86 @@ const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrVal
 		}
 	}
 	if (base !== value) {
-		__config__.set(key, value);
+		let config = this.__config__ || __config__;
+		config.set(key, value);
 	}
 	return value;
 };
 
 const loadSetting = function(key, type) {
 	let args = Array.prototype.slice.call(arguments);
+	let config = this.__config__ || __config__;
 	switch (type) {
 		case "bool":
 		case "boolean":
-			args[1] = Boolean(__config__.getBool(key));
+			args[1] = Boolean(config.getBool(key));
 			break;
 		case "number":
-			args[1] = Number(__config__.getNumber(key));
+			args[1] = Number(config.getNumber(key));
 			break;
 		case "string":
-			args[1] = String(__config__.getString(key));
+			args[1] = String(config.getString(key));
 			break;
 		default:
-			args[1] = __config__.get(key);
+			args[1] = config.get(key);
 	}
 	return resetSettingIfNeeded.apply(this, args);
+};
+
+const setSetting = function(where, key, type) {
+	if (!this.hasOwnProperty(where)) {
+		Logger.Log("Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
+	}
+	this[where] = loadSetting.apply(this, Array.prototype.slice.call(arguments, 1));
 };
 
 /**
  * Update settings from config.
  */
 const updateSettings = function() {
-	tryout(function() {
-		uiScaler = loadSetting("interface.interface_scale", "number", .75, 1.5);
-		fontScale = loadSetting("interface.font_scale", "number", .75, 1.5);
-		maxWindows = loadSetting("interface.max_windows", "number", 1, 15);
-		menuDividers = loadSetting("interface.show_dividers", "boolean");
-		projectHeaderBackground = loadSetting("interface.header_background", "boolean");
-		maximumHints = loadSetting("performance.maximum_hints", "number", 1, 100);
-		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean");
-		showProcesses = loadSetting("performance.show_processes", "boolean");
-		safetyProcesses = loadSetting("performance.safety_processes", "boolean");
-		autosave = loadSetting("autosave.enabled", "boolean");
-		/* autosaveInterface */
-		loadSetting("autosave.with_interface", "boolean", false);
-		autosavePeriod = loadSetting("autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
-		autosaveProjectable = __config__.getBool("autosave.as_projectable");
-		/* autosaveCount */
-		loadSetting("autosave.maximum_count", "number", 0, 50);
-		/* entityBoxType */
-		loadSetting("render.use_box_sizes", "boolean", false);
-		drawSelection = loadSetting("render.draw_selection", "boolean");
-		/* injectBorder */
-		loadSetting("render.inject_border", "boolean", false);
-		transparentBoxes = loadSetting("render.transparent_boxes", "boolean", function(value) {
+	tryout.call(this, function() {
+		setSetting("uiScaler", "interface.interface_scale", "number", .75, 1.5);
+		setSetting("fontScale", "interface.font_scale", "number", .75, 1.5);
+		setSetting("maxWindows", "interface.max_windows", "number", 1, 15);
+		setSetting("menuDividers", "interface.show_dividers", "boolean");
+		setSetting("projectHeaderBackground", "interface.header_background", "boolean");
+		setSetting("maximumHints", "performance.maximum_hints", "number", 1, 100);
+		setSetting("hintStackableDenied", "performance.hint_stackable", "boolean", function(value) {
+			return !value;
+		});
+		setSetting("showProcesses", "performance.show_processes", "boolean");
+		setSetting("safetyProcesses", "performance.safety_processes", "boolean");
+		setSetting("autosave", "autosave.enabled", "boolean");
+		setSetting("autosaveInterface", "autosave.with_interface", "boolean", false);
+		setSetting("autosavePeriod", "autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
+		setSetting("autosaveProjectable", "autosave.as_projectable");
+		setSetting("autosaveCount", "autosave.maximum_count", "number", 0, 50);
+		setSetting("entityBoxType", "render.use_box_sizes", "boolean", false);
+		setSetting("drawSelection", "render.draw_selection", "boolean");
+		setSetting("injectBorder", "render.inject_border", "boolean", false);
+		setSetting("transparentBoxes", "render.transparent_boxes", "boolean", function(value) {
+			if (!isHorizon && value) {
+				Logger.Log("Transparent block renderer boxes not supported on Inner Core", "WARNING");
+			}
 			return value && isHorizon;
 		});
-		ignoreKeyDeprecation = loadSetting("user_login.ignore_deprecation", "boolean");
-		noImportedScripts = !loadSetting("user_login.imported_script", "boolean");
-		/* sendAnalytics */
-		loadSetting("user_login.send_analytics", "boolean", true);
-		importAutoselect = loadSetting("other.import_autoselect", "boolean");
-		saveCoords = loadSetting("other.autosave_mapping", "boolean");
+		setSetting("ignoreKeyDeprecation", "user_login.ignore_deprecation", "boolean");
+		setSetting("noImportedScripts", "user_login.imported_script", "boolean", function(value) {
+			return !value;
+		});
+		setSetting("sendAnalytics", "user_login.send_analytics", "boolean", true);
+		setSetting("importAutoselect", "other.import_autoselect", "boolean");
+		setSetting("saveCoords", "other.autosave_mapping", "boolean");
 		__config__.save();
 	});
 };
 
+updateSettings();
+
 let selectMode = 0;
-
-Callback.addCallback("ItemUse", function(coords, item, block) {
-	handle(function() {
-		if (selectMode == 6) {
-			// Entity summon by tapping.
-			let position = coords.relative;
-			(position.x += .5, position.y += .5, position.z += .5);
-			let custom = Entity.spawnCustomAtCoords("__editorEntity__", position);
-			Entity.setMobile(custom.entity, false);
-			ENTITY_TOOL.getWorker().Define.addEntity(custom.entity);
-			showHint(translate("Entity summoned"));
-			selectMode = 0;
-			ENTITY_TOOL.describe();
-		}
-	});
-});
-
-let needTransitionReset = false;
-
-Callback.addCallback("LevelPreLoaded", function() {
-	tryout(function() {
-		// Reset entity if entity isn't defined.
-		if (ProjectProvider.getCurrentType() == "transition" &&
-				TRANSITION_TOOL.getWorker().Define.getEntity() == -1) {
-			TRANSITION_TOOL.getWorker().Define.setEntity(getPlayerEnt());
-			needTransitionReset = true;
-		}
-	});
-});
 
 Callback.addCallback("LevelLoaded", function() {
 	handle(function() {
-		if (needTransitionReset) {
-			TRANSITION_TOOL.getWorker().Define.resetStarting();
-			Popups.closeAllByTag("transition");
-			needTransitionReset = false;
-		}
 		if (LevelProvider.isAttached()) {
 			LevelProvider.show();
 		}
@@ -148,17 +127,6 @@ Callback.addCallback("LevelLeft", function() {
 	handle(function() {
 		if (LevelProvider.isAttached()) {
 			LevelProvider.hide();
-		}
-	});
-});
-
-Callback.addCallback("EntityHurt", function(attacker, victim) {
-	handle(function() {
-		// Hit entity selection.
-		if (selectMode == 2 && attacker == getPlayerEnt()) {
-			TRANSITION_TOOL.getWorker().Define.setEntity(victim);
-			showHint(translate("Entity selected"));
-			selectMode = 0, TRANSITION_TOOL.describe();
 		}
 	});
 });
@@ -175,14 +143,233 @@ tryoutSafety.call(this, function() {
 
 Callback.addCallback("tick", function() {
 	tryoutSafety(function() {
-		// Mostly spawn selection particles.
-		if (Updatable.getSyncTime() % 5 == 0) {
-			if (ProjectProvider.getCurrentType() == "transition") {
-				drawTransitionPoints(TRANSITION_TOOL.getWorker());
-			}
-		}
 		if (!thereIsNoTPSMeter) {
 			TPSMeter.onTick();
 		}
 	});
 });
+
+const API = {
+	tryout: tryout,
+	tryoutSafety: tryoutSafety,
+	require: require,
+	handle: handle,
+	handleAction: handleAction,
+	acquire: acquire,
+	handleThread: handleThread,
+	registerTool: function(id, tool) {
+		if (Tools.hasOwnProperty(id)) {
+			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
+			return;
+		}
+		Logger.Log("ModdingTools: registered adaptive tool " + id, "DEBUG");
+		Tools[id] = tool;
+	},
+	registerMenuTool: function(id, tool, entry) {
+		if (Tools.hasOwnProperty(id)) {
+			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
+			return;
+		}
+		if (entry === undefined) {
+			entry = new ProjectTool.MenuFactory();
+		}
+		if (!entry instanceof ProjectTool.MenuFactory) {
+			MCSystem.throwException("ModdingTools: registerMenuTool entry must be instance of Tool.MenuEntry");
+		}
+		Logger.Log("ModdingTools: registered tool " + id + " into menu entry", "DEBUG");
+		PROJECT_TOOL.tools[id] = entry;
+		Tools[id] = tool;
+	},
+	registerBitsetUi: registerBitsetUi,
+
+	translate: translate,
+	translateCounter: translateCounter,
+	translateCode: translateCode,
+	reportTrace: reportTrace,
+	reportError: reportError,
+	retraceOrReport: retraceOrReport,
+	localizeError: localizeError,
+
+	random: random,
+	isEmpty: isEmpty,
+	preround: preround,
+	calloutOrParse: calloutOrParse,
+	parseCallback: parseCallback,
+	MathUtils: MathUtils,
+	Base64: Base64,
+	getTime: getTime,
+	launchTime: launchTime,
+	isHorizon: isHorizon,
+
+	getContext: getContext,
+	getTypeface: function() {
+		return typeface;
+	},
+	confirm: confirm,
+	select: select,
+	getPlayerEnt: getPlayerEnt,
+
+	findCorePackage: findCorePackage,
+	findAssertionPackage: findAssertionPackage,
+	findEditorPackage: findEditorPackage,
+	isCoreEngineLoaded: isCoreEngineLoaded,
+	getCoreEngineAndInjectIfNeeded: getCoreEngineAndInjectIfNeeded,
+
+	resetSettingIfNeeded: resetSettingIfNeeded,
+	loadSetting: loadSetting,
+	injectSetting: setSetting,
+	updateInternalConfig: updateSettings,
+	formatSize: formatSize,
+	Dirs: Dirs,
+	MediaTypes: MediaTypes,
+	Files: Files,
+	Archives: Archives,
+	Options: Options,
+	Hashable: Hashable,
+
+	ImageFactory: ImageFactory,
+	AssetFactory: AssetFactory,
+	HashedDrawableMap: HashedDrawableMap,
+	Drawable: Drawable,
+	CachedDrawable: CachedDrawable,
+	ScheduledDrawable: ScheduledDrawable,
+	LayerDrawable: LayerDrawable,
+	ClipDrawable: ClipDrawable,
+	ColorDrawable: ColorDrawable,
+	BitmapFactory: BitmapFactory,
+	BitmapDrawable: BitmapDrawable,
+	BitmapDrawableFactory: BitmapDrawableFactory,
+	AnimationDrawable: AnimationDrawable,
+	AnimationDrawableFactory: AnimationDrawableFactory,
+	DrawableFactory: DrawableFactory,
+
+	assign: assign,
+	merge: merge,
+	clone: clone,
+	requireMethod: requireMethod,
+	requireClass: requireClass,
+
+	CoreEngine: $,
+	Action: Action,
+	// ModBrowser: ModBrowser,
+	Network: Network,
+	Transition: Transition,
+
+	Interface: Interface,
+	Fragment: Fragment,
+	FrameFragment: FrameFragment,
+	Frame: Frame,
+	FocusableWindow: FocusableWindow,
+	TransitionWindow: TransitionWindow,
+	UniqueWindow: UniqueWindow,
+	FocusablePopup: FocusablePopup,
+
+	WindowProvider: WindowProvider,
+	UniqueHelper: UniqueHelper,
+	AdditionalMessage: AdditionalMessage,
+
+	ControlFragment: ControlFragment,
+	ControlWindow: ControlWindow,
+	LogotypeFragment: LogotypeFragment,
+	LogotypeWindow: LogotypeWindow,
+	OverlayFragment: OverlayFragment,
+	OverlayWindow: OverlayWindow,
+	SidebarFragment: SidebarFragment,
+	SidebarWindow: SidebarWindow,
+	MenuWindow: MenuWindow,
+	ExplorerWindow: ExplorerWindow,
+	HintAlert: HintAlert,
+
+	openPopup: function(id, popup) {
+		Popups.open(popup, id);
+	},
+	closePopup: function(id) {
+		return Popups.closeIfOpened(id);
+	},
+	closePopupGroup: function(id) {
+		Popups.closeAllByTag(id);
+	},
+	closeAllPopups: function() {
+		Popups.closeAll();
+	},
+	hasOpenedPopup: function(id) {
+		return Popups.hasOpenedByName(id);
+	},
+	updatePopup: function(id) {
+		return Popups.updateAtName(id);
+	},
+	updateAllPopups: function() {
+		Popups.updateAll();
+	},
+
+	HieraclyPopup: HieraclyPopup,
+	ListingPopup: ListingPopup,
+	CoordsPopup: CoordsPopup,
+
+	showHint: showHint,
+	getUserCode: getUserCode,
+	checkOnlineable: checkOnlineable,
+	stringifyObject: stringifyObject,
+	readFileAsync: readFile,
+	formatExceptionReport: formatExceptionReport,
+	selectFile: selectFile,
+	saveFile: saveFile,
+	selectProjectData: selectProjectData,
+
+	compileScript: compileScript,
+	compileData: compileData,
+	getScriptScope: getScriptScope,
+	exportProject: exportProject,
+	importProject: importProject,
+	importScript: importScript,
+
+	attachAdditionalInformation: attachAdditionalInformation,
+	attachWarningInformation: attachWarningInformation,
+	prepareAdditionalInformation: prepareAdditionalInformation,
+	finishAttachAdditionalInformation: finishAttachAdditionalInformation,
+
+	Project: Project,
+	ProjectProvider: ProjectProvider,
+	ScriptConverter: ScriptConverter,
+
+	Sequence: Sequence,
+	LogotypeSequence: LogotypeSequence,
+	TutorialSequence: TutorialSequence,
+	SnackSequence: SnackSequence,
+	StackedSnackSequence: StackedSnackSequence,
+	AsyncSnackSequence: AsyncSnackSequence,
+
+	Tool: Tool,
+	ControlTool: ControlTool,
+	SidebarTool: SidebarTool,
+	ProjectTool: ProjectTool,
+	EditorTool: EditorTool,
+
+	attachProjectTool: attachProjectTool,
+
+	LogViewer: LogViewer,
+	ModificationSource: ModificationSource,
+	LevelProvider: LevelProvider,
+	RuntimeCodeEvaluate: RuntimeCodeEvaluate,
+
+	$: {
+		LevelInfo: LevelInfo,
+		Files: FileTools,
+		MCSystem: MCSystem
+	},
+
+	Supportable: {
+		canLeaveAtMoment: function() {
+			return !isSupportEnv;
+		},
+		getCurrentEnvironment: function() {
+			return currentEnvironment;
+		},
+		sendBackstageStatus: function() {
+			restart();
+		}
+	},
+
+	showSupportableInformation: showSupportableInfo,
+	isAnyCustomSupportableLoaded: isAnyCustomSupportableLoaded
+};

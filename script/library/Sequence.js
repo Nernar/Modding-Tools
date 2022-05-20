@@ -117,7 +117,7 @@ Sequence.prototype.execute = function(value) {
 		MCSystem.throwException("Sequence[" + this.id + "] are already executing");
 	}
 	this.index = 0;
-	this.thread = new Object();
+	this.thread = {};
 	let sequence = this;
 	handle(function() {
 		let active = Date.now(), next;
@@ -170,6 +170,9 @@ Sequence.prototype.require = function(index, count) {
 
 Sequence.prototype.shrink = function(addition) {
 	if (addition !== undefined) {
+		if (this.count === undefined) {
+			this.count = 0;
+		}
 		this.count += addition;
 	}
 	this.updated = true;

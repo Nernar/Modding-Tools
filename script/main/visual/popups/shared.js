@@ -1,8 +1,12 @@
-const Popups = new Object();
+const Popups = {};
 
-Popups.widgets = new Array();
+Popups.widgets = [];
 
 Popups.open = function(widget, name) {
+	if (widget === undefined || widget === null) {
+		Logger.Log("ModdingTools: passed widget to openPopup " + name + " is undefined or not considered", "WARNING");
+		return;
+	}
 	let opened = this.closeIfOpened(name);
 	if (!opened) {
 		let index = this.widgets.length;

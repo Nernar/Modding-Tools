@@ -1,5 +1,5 @@
 const minifySource = function(text, callback) {
-	handleThread(function() {
+	checkOnlineable(function() {
 		let data = new java.lang.StringBuilder();
 		data.append(java.net.URLEncoder.encode("input", "UTF-8"));
 		data.append("=");

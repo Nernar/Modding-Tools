@@ -20,12 +20,12 @@ Translation.addTranslation("Refreshed", {
 });
 
 const refreshCategoriedIcons = function() {
-	refreshCategoriedIcons.currently = new Object();
+	refreshCategoriedIcons.currently = {};
 	let file = new java.io.File(Dirs.ASSET);
 	if (!file.exists()) throw null;
 	let list = file.listFiles();
 	for (let i = 0; i < list.length; i++) {
-		let category = new Array(), name = list[i].getName();
+		let category = [], name = list[i].getName();
 		if (list[i].isFile()) {
 			if (name.endsWith(".dnr")) {
 				if (refreshCategoriedIcons.currently["$"]) {
@@ -49,7 +49,7 @@ const attachCategoriedIcons = function(control, action) {
 	if (isEmpty(refreshCategoriedIcons.currently)) {
 		MCSystem.throwException("At least one category must be defined");
 	}
-	let categories = new Array();
+	let categories = [];
 	for (let category in refreshCategoriedIcons.currently) {
 		categories.push(String(category));
 	}

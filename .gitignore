@@ -1,12 +1,11 @@
-# Logs
+typings/
+
 .logging/
 
-# Resources abilities
 .placeholder.ico
-/assets/cache/
-/textures/
 
-# Local development
-/projects/
-/.todo/
-/.eval/
+projects/
+.todo/
+.eval/
+
+/textures/

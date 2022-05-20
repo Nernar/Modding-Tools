@@ -44,7 +44,7 @@ let Transition = function(params) {
 	this.id = "transition" + count;
 };
 
-Transition.prototype.frames = new Array();
+Transition.prototype.frames = [];
 Transition.prototype.fps = 60;
 
 Transition.prototype.repointComparedVector = function(index, request) {
@@ -74,7 +74,7 @@ Transition.prototype.getFrameCount = function() {
 };
 
 Transition.prototype.clearFrames = function() {
-	this.frames = new Array();
+	this.frames = [];
 };
 
 Transition.prototype.getRelativePoint = function() {
@@ -101,11 +101,11 @@ Transition.prototype.setFramesPerSecond = function(limit) {
 
 Transition.prototype.start = function() {
 	if (!this.entity) {
-		Logger.Log("Transition[" + this.id + "] entity isn't defined", "ERROR");
+		Logger.Log("Transition[" + this.id + "] entity is not defined", "ERROR");
 		return;
 	}
 	if (!this.starting) {
-		Logger.Log("Transition[" + this.id + "] start point isn't setted up", "ERROR");
+		Logger.Log("Transition[" + this.id + "] start point is not setted up", "ERROR");
 		return;
 	}
 	if (Transition.isTransitioning()) {
@@ -212,7 +212,7 @@ Transition.prototype.withOnFinishListener = function(action) {
 
 Transition.instances = 0;
 
-Transition.Interpolator = new Object();
+Transition.Interpolator = {};
 Transition.Interpolator.LINEAR = 0;
 Transition.Interpolator.ACCELERATE = 1;
 Transition.Interpolator.DECELERATE = 2;

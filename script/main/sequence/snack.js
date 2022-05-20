@@ -100,6 +100,12 @@ SnackSequence.prototype.setHintAndBackground = function(hint, background) {
 	return true;
 };
 
+SnackSequence.prototype.prepare = function(hint, background) {
+	return acquire.call(this, function() {
+		return this.setHintAndBackground(hint, background);
+	});
+};
+
 SnackSequence.prototype.update = function(progress, index) {
 	if (this.getMessage() !== null) {
 		this.setHintAndBackground(this.getProgressionHint(progress, index),
@@ -133,7 +139,7 @@ SnackSequence.prototype.complete = function(active) {
 	this.handleCompletion();
 };
 
-SnackSequence.processes = new Array();
+SnackSequence.processes = [];
 
 SnackSequence.getProcesses = function() {
 	return this.processes || null;
@@ -274,7 +280,7 @@ StackedSnackSequence.prototype.create = function(value, active) {
 		this.snack = snack;
 		SnackSequence.addProcess(this);
 	}
-	this.stack = new Array();
+	this.stack = [];
 };
 
 StackedSnackSequence.prototype.update = function(progress, index) {
@@ -357,6 +363,9 @@ StackedSnackSequence.prototype.require = function(index, count) {
 
 StackedSnackSequence.prototype.shrink = function(addition) {
 	if (addition !== undefined) {
+		if (this.count === undefined) {
+			this.count = 0;
+		}
 		this.count += addition;
 	}
 };
@@ -443,6 +452,12 @@ AsyncSnackSequence.prototype.setHintAndBackground = function(hint, background) {
 	return true;
 };
 
+AsyncSnackSequence.prototype.prepare = function(hint, background) {
+	return acquire.call(this, function() {
+		return this.setHintAndBackground(hint, background);
+	});
+};
+
 AsyncSnackSequence.prototype.update = function(progress, index) {
 	if (this.getMessage() !== null) {
 		this.setHintAndBackground(this.getProgressionHint(progress, index),
@@ -485,7 +500,12 @@ AsyncSnackSequence.access = function(where, who, post) {
 	sequence.completionMessage = translate("Completed");
 	sequence.queueMessage = translate("Interrupted");
 	sequence.interruptMessage = translate("Something happened");
+	let encountedSequences = 0;
 	sequence.process = function(next, entry, index) {
+		encountedSequences++;
+		if (encountedSequences > 1) {
+			MCSystem.throwException("Invalid sequence length: " + index + ".." + sequence.getFixedCount());
+		}
 		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);
 		post && post(wrapped, sequence.getFixedCount());
@@ -499,9 +519,7 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 	return {
 		TARGET: who,
 		INSTANCE: AsyncSnackSequence,
-		getSequence: function() {
-			return sequence;
-		},
+		SELF: sequence,
 		sleep: function(ms) {
 			Interface.sleepMilliseconds(ms);
 		},
@@ -555,7 +573,7 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 			sequence.setSynchronizeTime(ms);
 		},
 		prepare: function(message, color) {
-			sequence.setHintAndBackground(message, color);
+			sequence.prepare(message, color);
 		},
 		encount: function(count) {
 			sequence.setFixedCount(count);
@@ -565,7 +583,9 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 		},
 		seek: function(message, addition) {
 			sequence.message = message;
-			sequence.shrink(addition);
+			if (addition !== undefined) {
+				sequence.require(sequence.index + addition);
+			}
 		},
 		shrink: function(addition) {
 			sequence.shrink(addition);
@@ -585,7 +605,7 @@ AsyncStackedSnackSequence.prototype.completionColor = Interface.Color.WHITE;
 
 AsyncStackedSnackSequence.prototype.getProgressionBackground = function(progress, index) {
 	if (progress >= 100) {
-		return this.background;
+		return this.foreground;
 	} else if (this.count !== undefined) {
 		let level = preround(progress * 100, 0) + 1;
 		return ImageFactory.clipAndMerge(this.background, this.foreground, level);
@@ -622,7 +642,7 @@ AsyncStackedSnackSequence.prototype.create = function(value, active) {
 		this.snack = snack;
 		SnackSequence.addProcess(this);
 	}
-	this.stack = new Array();
+	this.stack = [];
 };
 
 AsyncStackedSnackSequence.prototype.update = function(progress, index) {
@@ -706,6 +726,9 @@ AsyncStackedSnackSequence.prototype.require = function(index, count) {
 
 AsyncStackedSnackSequence.prototype.shrink = function(addition) {
 	if (addition !== undefined) {
+		if (this.count === undefined) {
+			this.count = 0;
+		}
 		this.count += addition;
 	}
 };
@@ -717,7 +740,12 @@ AsyncStackedSnackSequence.access = function(where, who, post) {
 	sequence.completionMessage = translate("Completed");
 	sequence.queueMessage = translate("Interrupted");
 	sequence.interruptMessage = translate("Something happened");
+	let encountedSequences = 0;
 	sequence.process = function(next, entry, index) {
+		encountedSequences++;
+		if (encountedSequences > 1) {
+			MCSystem.throwException("Invalid sequence length: " + index + ".." + sequence.getFixedCount());
+		}
 		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);
 		post && post(wrapped, sequence.getFixedCount());
@@ -731,9 +759,7 @@ AsyncStackedSnackSequence.initScriptable = function(sequence, who) {
 	return {
 		TARGET: who,
 		INSTANCE: AsyncStackedSnackSequence,
-		getSequence: function() {
-			return sequence;
-		},
+		SELF: sequence,
 		sleep: function(ms) {
 			Interface.sleepMilliseconds(ms);
 		},
@@ -790,7 +816,7 @@ AsyncStackedSnackSequence.initScriptable = function(sequence, who) {
 			sequence.setSynchronizeTime(ms);
 		},
 		prepare: function(message, color) {
-			sequence.setHintAndBackground(message, color);
+			sequence.prepare(message, color);
 		},
 		encount: function(count) {
 			sequence.setFixedCount(count);
@@ -799,7 +825,9 @@ AsyncStackedSnackSequence.initScriptable = function(sequence, who) {
 			sequence.require(index, count);
 		},
 		seek: function(message, addition, color) {
-			sequence.shrink(addition);
+			if (addition !== undefined) {
+				sequence.require(sequence.index + addition);
+			}
 			sequence.change(message, color);
 		},
 		change: function(message, color) {

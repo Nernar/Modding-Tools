@@ -3,7 +3,7 @@ const SidebarWindow = function() {
 	window.setGravity(Interface.Gravity.RIGHT);
 	window.setHeight(Interface.Display.MATCH);
 	window.setFragment(new SidebarFragment());
-	window.groups = new Array();
+	window.groups = [];
 	window.setBackground("popup");
 	if (!menuDividers) window.setTabBackground("popup");
 
@@ -254,7 +254,7 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 		if (hint !== null) showHint(hint);
 		return true;
 	});
-	this.items = new Array();
+	this.items = [];
 	if (parentOrSrc instanceof SidebarWindow) {
 		this.attachToWindow(parentOrSrc);
 		srcOrAction && this.setIcon(srcOrAction);
@@ -626,6 +626,9 @@ SidebarWindow.Group.Item.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("icon")) {
 		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("select")) {
 		instanceOrJson.setOnSelectListener(parseCallback(json, json.select, this));

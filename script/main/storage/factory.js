@@ -21,7 +21,7 @@ BitmapFactory.getPotatoOptions = function() {
 	return options;
 };
 
-const ImageFactory = new Object();
+const ImageFactory = {};
 
 ImageFactory.getDrawable = function(key) {
 	if (key) return new Drawable().toDrawable();
@@ -56,9 +56,9 @@ ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	return LayerDrawable.parseJson([background, foreground]);
 };
 
-const AssetFactory = new Object();
+const AssetFactory = {};
 
-AssetFactory.loaded = new Object();
+AssetFactory.loaded = {};
 
 AssetFactory.loadAsset = function(key, path) {
 	return (this.loaded[key] = new java.io.File(Dirs.ASSET, path));
@@ -324,12 +324,14 @@ BitmapFactory.__decodeFile = BitmapFactory.decodeFile;
 
 BitmapFactory.decodeFile = function(path, options) {
 	let file = path instanceof java.io.File ? path : new java.io.File(path);
+	let self = this;
+	let args = arguments;
 	return tryout.call(this, function() {
 		if (file.getName().endsWith(".dnr")) {
 			let bytes = Files.readBytes(file);
 			return this.decodeResource(bytes, options);
 		}
-		return BitmapFactory.__decodeFile.apply(this, arguments);
+		return BitmapFactory.__decodeFile.apply(self, args);
 	}, function(e) {
 		Logger.Log("BitmapFactory failed to decode file " + file.getName(), "WARNING");
 	}, null);

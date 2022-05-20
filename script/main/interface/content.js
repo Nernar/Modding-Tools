@@ -1,5 +1,5 @@
 const Fragment = function() {
-	this.views = new Object();
+	this.views = {};
 };
 
 Fragment.prototype.getContainer = function() {

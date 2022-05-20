@@ -152,7 +152,7 @@ const attachKeyboard = function() {
 	params.weight = 0.1;
 	popup.getContainer().addView(seek, params);
 	popup.setOnDismissListener(function() {
-		attachKeyboard.track = new Array();
+		attachKeyboard.track = [];
 		showHint(translate("Goat"));
 		stopTune();
 	});
@@ -161,7 +161,7 @@ const attachKeyboard = function() {
 	playTrack(25, attachKeyboard.track);
 };
 
-attachKeyboard.track = new Array();
+attachKeyboard.track = [];
 attachKeyboard.modifier = 8;
 
 return function(watcher) {

@@ -96,9 +96,9 @@ AdditionalClickableMessage.prototype.setAction = function(action) {
 	};
 };
 
-const AdditionalMessageFactory = new Object();
+const AdditionalMessageFactory = {};
 
-AdditionalMessageFactory.registered = new Array();
+AdditionalMessageFactory.registered = [];
 
 AdditionalMessageFactory.getRegistered = function() {
 	return this.registered || null;
@@ -144,13 +144,13 @@ AdditionalMessageFactory.registerClickable = function(srcOrMessage, message, cha
 };
 
 AdditionalMessageFactory.resetAll = function() {
-	this.registered = new Array();
+	this.registered = [];
 };
 
 AdditionalMessageFactory.randomize = function(limit) {
 	let registered = this.getRegistered();
-	if (registered === null) return new Array();
-	let randomized = new Array();
+	if (registered === null) return [];
+	let randomized = [];
 	if (limit === undefined) limit = -1;
 	registered = registered.sort(function(a, b) {
 		return .5 - Math.random();
@@ -203,15 +203,15 @@ AdditionalMessageFactory.Session.prototype.getMessageCount = function() {
 
 AdditionalMessageFactory.Session.prototype.queue = function() {
 	this.randomized = AdditionalMessageFactory.randomize(this.getLimit());
-	let indexed = this.indexed = new Object();
+	let indexed = this.indexed = {};
 	for (let i = 0; i < this.getCount(); i++) {
-		indexed[i + 1] = new Array();
+		indexed[i + 1] = [];
 	}
 	for (let i = 0; i < this.getMessageCount(); i++) {
 		let position = i % this.getCount() + 1;
 		indexed[position].push(this.randomized[i]);
 	}
-	let values = new Array();
+	let values = [];
 	for (let index in indexed) {
 		values.push(indexed[index]);
 	}
@@ -245,7 +245,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("Can't attach session to null or undefined");
+		MCSystem.throwException("Impossible attach session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

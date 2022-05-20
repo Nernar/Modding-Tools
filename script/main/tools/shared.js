@@ -35,7 +35,7 @@ const finishAttachAdditionalInformation = function() {
 
 const registerAdditionalInformation = function() {
 	if (AdditionalMessageFactory.getRegisteredCount() > 0) AdditionalMessageFactory.resetAll();
-	AdditionalMessageFactory.register("blockDefineType", translate("Modification still in development state, so something may not work properly."), .2);
+	AdditionalMessageFactory.register("inspectorType", translate("Modification still in development state, so something may not work properly."), .2);
 	AdditionalMessageFactory.register("block", translate("Create custom variations, renders, shapes and collisions in-game with block editor."), .2);
 	AdditionalMessageFactory.register("entity", translate("Add or load self render, visualize it and create custom intellect pathes in-game with entity editor."), 0);
 	AdditionalMessageFactory.register("animation", translate("Transform custom shapes, visualize your own render and just draw it in-game with animation editor."), 0);
@@ -125,9 +125,9 @@ const registerAdditionalInformation = function() {
 const selectProjectData = function(result, action, type, single) {
 	tryout(function() {
 		if (!result || result.length == 0) return;
-		let items = new Array(),
-			data = new Array(),
-			selected = new Array();
+		let items = [],
+			data = [],
+			selected = [];
 		result.forEach(function(element, index) {
 			if (element && (type === undefined || element.type == type)) {
 				switch (element.type) {
@@ -163,7 +163,7 @@ const selectProjectData = function(result, action, type, single) {
 			return;
 		}
 		select(translate("Element selector"), items, function(selected, items) {
-			let value = new Array();
+			let value = [];
 			if (typeof selected == "object") {
 				selected.forEach(function(element, index) {
 					element && value.push(data[index]);
@@ -225,7 +225,7 @@ const select = function(title, items, action, multiple, approved) {
 		if (title !== undefined) builder.setTitle(title || translate("Selection"));
 		builder.setNegativeButton(translate("Cancel"), null);
 		if (multiple) {
-			if (approved === undefined) approved = new Array();
+			if (approved === undefined) approved = [];
 			builder.setMultiChoiceItems(items, approved, function(dialog, index, active) {
 				tryout(function() {
 					approved[index] = Boolean(active);
@@ -262,7 +262,7 @@ const selectFile = function(availabled, action, outside, directory) {
 	handle(function() {
 		let explorer = new ExplorerWindow();
 		availabled && explorer.setFilter(availabled);
-		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
+		let bar = explorer.addPath().setPath(directory || Dirs.PROJECT);
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.hide();
@@ -280,7 +280,7 @@ const saveFile = function(name, availabled, action, outside, directory) {
 	handle(function() {
 		let explorer = new ExplorerWindow();
 		availabled && explorer.setFilter(availabled);
-		let bar = explorer.addPath().setPath(directory || Dirs.EXPORT);
+		let bar = explorer.addPath().setPath(directory || Dirs.PROJECT);
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.hide();
@@ -312,7 +312,7 @@ const Tool = function(object) {
 };
 
 Tool.prototype.reset = function() {
-	let descriptor = new Object();
+	let descriptor = {};
 	descriptor.buttonBackground = "popupButton";
 	descriptor.logotypeProgress = function(tool, control) {
 		return calloutOrParse(this, this.logotype, arguments);
@@ -358,7 +358,7 @@ Tool.prototype.getControlDescriptor = function() {
 
 Tool.prototype.describeControl = function() {
 	let control = this.getControlWindow();
-	if (control === null) MCSystem.throwException(null);
+	if (control == null) MCSystem.throwException(null);
 	ControlWindow.parseJson.call(this, control, this.getControlDescriptor());
 };
 
@@ -372,7 +372,7 @@ Tool.prototype.attach = function() {
 	}
 	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;
-	this.describe();
+	this.describeControl();
 };
 
 Tool.prototype.isAttached = function() {
@@ -381,7 +381,7 @@ Tool.prototype.isAttached = function() {
 
 Tool.prototype.deattach = function() {
 	let control = this.getControlWindow();
-	if (control === null) MCSystem.throwException(null);
+	if (control == null) MCSystem.throwException(null);
 	this.state = Tool.State.INACTIVE;
 	control.dismiss();
 	delete this.controlWindow;
@@ -389,7 +389,7 @@ Tool.prototype.deattach = function() {
 
 Tool.prototype.hide = function() {
 	let control = this.getControlWindow();
-	if (control === null) return;
+	if (control == null) return;
 	this.state = Tool.State.ATTACHED;
 	control.hide();
 };
@@ -400,7 +400,7 @@ Tool.prototype.isVisible = function() {
 
 Tool.prototype.control = function() {
 	let control = this.getControlWindow();
-	if (control === null) return;
+	if (control == null) return;
 	this.state = Tool.State.FACED;
 	control.transformButton();
 	control.show();
@@ -412,7 +412,7 @@ Tool.prototype.isFaced = function() {
 
 Tool.prototype.collapse = function() {
 	let control = this.getControlWindow();
-	if (control === null) return;
+	if (control == null) return;
 	this.state = Tool.State.COLLAPSED;
 	control.transformCollapsedButton();
 	control.show();
@@ -422,21 +422,24 @@ Tool.prototype.isCollapsed = function() {
 	return this.state == Tool.State.COLLAPSED;
 };
 
-Tool.prototype.queue = function(sequence) {
+Tool.prototype.queue = function() {
 	let control = this.getControlWindow();
-	if (control === null) return;
+	if (control == null) return;
 	this.state = Tool.State.QUEUED;
 	control.transformLogotype();
+	control.show();
+};
+
+Tool.prototype.sequence = function(sequence) {
 	if (sequence instanceof Sequence) {
 		let instance = this;
 		handleThread(function() {
 			sequence.assureYield();
-			handle(function() {
+			acquire(function() {
 				instance.unqueue();
 			});
 		});
 	}
-	control.show();
 };
 
 Tool.prototype.isQueued = function() {
@@ -447,7 +450,7 @@ Tool.prototype.unqueue = function() {
 	this.control();
 };
 
-Tool.State = new Object();
+Tool.State = {};
 Tool.State.INACTIVE = 0;
 Tool.State.ATTACHED = 1;
 Tool.State.FACED = 2;
@@ -464,7 +467,7 @@ ControlTool.prototype = new Tool;
 
 ControlTool.prototype.reset = function() {
 	Tool.prototype.reset.apply(this, arguments);
-	let descriptor = new Object();
+	let descriptor = {};
 	descriptor.background = "popupControl";
 	descriptor.click = function(tool, menu) {
 		if (typeof tool.onMenuClick == "function") {
@@ -486,7 +489,7 @@ ControlTool.prototype.getMenuDescriptor = function() {
 
 ControlTool.prototype.describeMenu = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) MCSystem.throwException(null);
+	if (menu == null) MCSystem.throwException(null);
 	MenuWindow.parseJson.call(this, menu, this.getMenuDescriptor());
 };
 
@@ -505,7 +508,7 @@ ControlTool.prototype.attach = function() {
 
 ControlTool.prototype.deattach = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) MCSystem.throwException(null);
+	if (menu == null) MCSystem.throwException(null);
 	Tool.prototype.deattach.apply(this, arguments);
 	menu.dismiss();
 	delete this.menuWindow;
@@ -513,16 +516,16 @@ ControlTool.prototype.deattach = function() {
 
 ControlTool.prototype.hide = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) return;
+	if (menu == null) return;
 	Tool.prototype.hide.apply(this, arguments);
 	menu.hide();
 };
 
 ControlTool.prototype.menu = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) return;
+	if (menu == null) return;
 	let control = this.getControlWindow();
-	if (control === null) return;
+	if (control == null) return;
 	this.state = ControlTool.State.CONTROLLING;
 	control.hide();
 	menu.show();
@@ -542,21 +545,21 @@ ControlTool.prototype.onMenuClick = function(menu) {
 
 ControlTool.prototype.control = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) return;
+	if (menu == null) return;
 	menu.hide();
 	Tool.prototype.control.apply(this, arguments);
 };
 
 ControlTool.prototype.collapse = function() {
 	let menu = this.getMenuWindow();
-	if (menu === null) return;
+	if (menu == null) return;
 	menu.hide();
 	Tool.prototype.collapse.apply(this, arguments);
 };
 
 ControlTool.prototype.queue = function(sequence) {
 	let menu = this.getMenuWindow();
-	if (menu === null) return;
+	if (menu == null) return;
 	menu.hide();
 	Tool.prototype.queue.apply(this, arguments);
 };
@@ -572,7 +575,7 @@ SidebarTool.prototype = new ControlTool;
 
 SidebarTool.prototype.reset = function() {
 	ControlTool.prototype.reset.apply(this, arguments);
-	let descriptor = new Object();
+	let descriptor = {};
 	descriptor.background = "popup";
 	if (!menuDividers) descriptor.tabBackground = "popup";
 	descriptor.selectGroup = function(tool, sidebar) {
@@ -621,7 +624,7 @@ SidebarTool.prototype.getSidebarDescriptor = function() {
 
 SidebarTool.prototype.describeSidebar = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) MCSystem.throwException(null);
+	if (sidebar == null) MCSystem.throwException(null);
 	SidebarWindow.parseJson.call(this, sidebar, this.getSidebarDescriptor());
 	if (sidebar.isSelected()) sidebar.reinflateLayout();
 };
@@ -633,7 +636,7 @@ SidebarTool.prototype.describe = function() {
 
 SidebarTool.prototype.getSelectedGroup = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return SidebarWindow.NOTHING_SELECTED;
+	if (sidebar == null) return SidebarWindow.NOTHING_SELECTED;
 	return sidebar.getSelected();
 };
 
@@ -647,7 +650,7 @@ SidebarTool.prototype.attach = function() {
 
 SidebarTool.prototype.deattach = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) MCSystem.throwException(null);
+	if (sidebar == null) MCSystem.throwException(null);
 	ControlTool.prototype.deattach.apply(this, arguments);
 	sidebar.dismiss();
 	delete this.sidebarWindow;
@@ -655,28 +658,28 @@ SidebarTool.prototype.deattach = function() {
 
 SidebarTool.prototype.hide = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return;
+	if (sidebar == null) return;
 	ControlTool.prototype.hide.apply(this, arguments);
 	sidebar.hide();
 };
 
 SidebarTool.prototype.menu = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return;
+	if (sidebar == null) return;
 	sidebar.hide();
 	ControlTool.prototype.menu.apply(this, arguments);
 };
 
 SidebarTool.prototype.control = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return;
+	if (sidebar == null) return;
 	sidebar.show();
 	ControlTool.prototype.control.apply(this, arguments);
 };
 
 SidebarTool.prototype.collapse = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return;
+	if (sidebar == null) return;
 	if (!sidebar.isSelected()) {
 		sidebar.hide();
 	}
@@ -692,7 +695,7 @@ SidebarTool.prototype.isCollapsedWithoutSidebar = function() {
 
 SidebarTool.prototype.queue = function(sequence) {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar === null) return;
+	if (sidebar == null) return;
 	sidebar.hide();
 	ControlTool.prototype.queue.apply(this, arguments);
 };

@@ -7,8 +7,8 @@ ListingPopup.prototype.TYPE = "ListingPopup";
 
 ListingPopup.prototype.reset = function() {
 	FocusablePopup.prototype.reset.apply(this, arguments);
-	this.views.edits = new Array();
-	this.views.buttons = new Array();
+	this.views.edits = [];
+	this.views.buttons = [];
 };
 
 ListingPopup.prototype.addButtonElement = function(name, click) {
@@ -69,6 +69,9 @@ ListingPopup.prototype.getButton = function(index) {
 		visible = true;
 	return {
 		view: button,
+		isVisible: function() {
+			return visible;
+		},
 		setBackground: function(texture) {
 			if (!(texture instanceof Drawable)) {
 				texture = Drawable.parseJson.call(this, texture);
@@ -93,12 +96,15 @@ ListingPopup.prototype.getEdit = function(index) {
 	let edit = this.views.edits[index],
 		visible = true;
 	return {
+		isVisible: function() {
+			return visible;
+		},
 		getValue: function() {
 			let editable = edit.getText();
 			return String(editable.toString());
 		},
 		setValue: function(text) {
-			edit.setText(text);
+			edit.setText(String(text));
 			return this;
 		},
 		setBackground: function(texture) {
@@ -123,7 +129,7 @@ ListingPopup.prototype.getEdit = function(index) {
 
 ListingPopup.prototype.getAllEditsValues = function() {
 	let edits = this.views.edits,
-		values = new Array();
+		values = [];
 	for (let item in edits) {
 		values.push(this.getEdit(item).getValue());
 	}

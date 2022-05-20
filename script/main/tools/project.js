@@ -1,988 +1,572 @@
-const ProjectTool = function(object) {
-	ControlTool.apply(this, arguments);
+const monthToName = function(number) {
+	let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
 };
 
-ProjectTool.prototype = new ControlTool;
-
-ProjectTool.prototype.reset = function() {
-	ControlTool.prototype.reset.apply(this, arguments);
-	this.controlDescriptor.logotype = "menu";
-	this.contentProjectDescriptor = [];
-	this.contentEntryDescriptor = [];
-	this.menuDescriptor.elements = [{
-		type: "projectHeader",
-		categories: function(tool) {
-			return tool.contentProjectDescriptor;
+const stringifyObject = function(obj, identate, callback) {
+	if (callback === undefined) {
+		callback = {};
+	}
+	const recursiveStringify = function(obj, tabs) {
+		if (callback.onUpdate) {
+			callback.onUpdate();
 		}
-	}, {
-		type: "category",
-		title: translate("Editors"),
-		items: function(tool) {
-			return tool.contentEntryDescriptor;
-		}
-	}, {
-		type: "category",
-		title: translate("Project"),
-		items: [{
-			icon: "menuProjectLoad",
-			title: translate("Open"),
-			click: function(tool, item) {
-				let formats = tool.getExtensions(ProjectTool.ExtensionType.REPLACE);
-				if (formats && formats.length > 0) {
-					selectFile(formats, function(file) {
-						tool.replace(file);
-					});
-					return;
-				}
-				showHint(translate("There's no availabled entry to replace"));
+		return tryout(function() {
+			if (obj === null) {
+				return "null";
 			}
-		}, {
-			icon: "menuProjectImport",
-			title: translate("Merge"),
-			click: function(tool, item) {
-				let formats = tool.getExtensions(ProjectTool.ExtensionType.MERGE);
-				if (formats && formats.length > 0) {
-					selectFile(formats, function(file) {
-						tool.merge(file);
-					});
-					return;
-				}
-				showHint(translate("There's no availabled entry to merge"));
-			}
-		}, {
-			icon: "menuProjectSave",
-			title: translate("Export"),
-			click: function(tool, item) {
-				let formats = tool.getExtensions(ProjectTool.ExtensionType.EXPORT);
-				if (formats && formats.length > 0) {
-					let lastName = tool.getExplorerLastName();
-					saveFile(lastName, formats, function(file, name) {
-						tool.export(file);
-						tool.setExplorerLastName(name);
-					});
-					return;
-				}
-				showHint(translate("There's no availabled entry to export"));
-			}
-		}, {
-			icon: "menuProjectManual",
-			title: translate("Tutorial"),
-			click: function(tool, item) {
-				if (REVISION.indexOf("alpha") != -1) {
-					confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
-						TutorialSequence.ButtonInteraction.execute();
-						tool.deattach();
-					});
-				} else showHint(translate("This content will be availabled soon"));
-			}
-		}, {
-			icon: "menuProjectStar",
-			title: translate("Reset"),
-			click: function(tool, item) {
-				confirm(translate("Creating project"),
-					translate("Current project will be erased, all unsaved data will be lost.") + " " +
-					translate("Do you want to continue?"), function() {
-						tool.fromProject();
-				});
-			}
-		}]
-	}];
-};
-
-ProjectTool.prototype.getExplorerLastName = function() {
-	return this.explorerLastName || null;
-};
-
-ProjectTool.prototype.setExplorerLastName = function(name) {
-	this.explorerLastName = String(name);
-};
-
-ProjectTool.prototype.resetExplorerLastName = function() {
-	return delete this.explorerLastName;
-};
-
-ProjectTool.prototype.getExtensions = function(type) {
-	let formats = [".dnp"];
-	if (type == ProjectTool.ExtensionType.EXPORT) {
-		if (this.hasConverter()) formats.push(".js");
-	} else formats.push(".js");
-	return formats;
-};
-
-ProjectTool.prototype.hasConverter = function() {
-	let converter = this.getConverter();
-	return converter instanceof ScriptConverter;
-};
-
-ProjectTool.prototype.getConverter = new Function();
-
-ProjectTool.prototype.open = function(source) {
-	let project = ProjectProvider.create();
-	if (source !== undefined) {
-		project.object = source;
-	}
-	if (!this.isAttached()) this.attach();
-	return true;
-};
-
-ProjectTool.prototype.selectData = function(where, multiple, post) {
-	selectProjectData(where, function(selected) {
-		typeof post == "function" && post(selected);
-	}, undefined, !multiple);
-};
-
-ProjectTool.prototype.replace = function(file) {
-	let name = file.getName(),
-		instance = this;
-	if (name.endsWith(".dnp")) {
-		let active = Date.now();
-		importProject(file.getPath(), function(result) {
-			instance.fromProject(selected);
-			showHint(translate("Loaded success") + " " +
-				translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-		});
-	} else if (name.endsWith(".js")) {
-		let active = Date.now();
-		importScript(file.getPath(), function(result) {
-			instance.fromProject(selected);
-			showHint(translate("Converted success") + " " +
-				translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-		});
-	}
-};
-
-ProjectTool.prototype.merge = function(file) {
-	let name = file.getName(),
-		project = this.toProject(),
-		instance = this;
-	if (name.endsWith(".dnp")) {
-		let active = Date.now();
-		importProject(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, true, function(selected) {
-				active = Date.now() - active;
-				selected.forEach(function(value) {
-					project.getAll().push(value);
-				});
-				instance.describe();
-				showHint(translate("Merged success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		});
-	} else if (name.endsWith(".js")) {
-		let active = Date.now();
-		importScript(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, true, function(selected) {
-				active = Date.now() - active;
-				selected.forEach(function(value) {
-					project.getAll().push(value);
-				});
-				instance.describe();
-				showHint(translate("Merged success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		});
-	}
-};
-
-ProjectTool.prototype.export = function(file) {
-	let name = file.getName(),
-		project = this.toProject();
-	if (name.endsWith(".dnp")) {
-		exportProject(project, false, file.getPath());
-	} else if (name.endsWith(".js")) {
-		let converter = this.getConverter();
-		if (!this.hasConverter()) MCSystem.throwException(null);
-		let active = Date.now();
-		tryout(function() {
-			converter.attach(project);
-			converter.executeAsync(function(link, result) {
-				if (link.hasResult()) {
-					Files.write(file, result);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				} else retraceOrReport(link.getLastException());
-			});
-		});
-	}
-};
-
-ProjectTool.prototype.toProject = function() {
-	return ProjectProvider.getProject() || null;
-};
-
-ProjectTool.prototype.fromProject = function(source) {
-	let project = ProjectProvider.create();
-	if (source !== undefined) {
-		project.object = source;
-	}
-	this.describe();
-};
-
-ProjectTool.ExtensionType = new Object();
-ProjectTool.ExtensionType.REPLACE = 0;
-ProjectTool.ExtensionType.MERGE = 1;
-ProjectTool.ExtensionType.EXPORT = 2;
-
-const PROJECT_TOOL = (function() {
-	return new ProjectTool({
-		contentEntryDescriptor: [{
-			icon: "block",
-			title: translate("Block"),
-			click: function(tool, item) {
-				attachBlockTool(function(next) {
-					tool.deattach();
-				});
-			}
-		}, {
-			icon: "entity",
-			title: translate("Entity"),
-			background: function(tool) {
-				return REVISION.indexOf("alpha") == -1 ? "popupSelectionLocked" : "popupSelectionQueued";
-			},
-			click: function(tool, item) {
-				if (REVISION.indexOf("alpha") != -1) {
-					attachEntityTool(function(next) {
-						tool.deattach();
-						showHint(translate("Not developed yet"));
-					});
-				} else showHint(translate("This content will be availabled soon"));
-			}
-		}, {
-			icon: "animation",
-			title: translate("Animation"),
-			background: "popupSelectionLocked",
-			click: function(tool, item) {
-				if (REVISION.startsWith("develop")) {
-					showHint(translate("Not developed yet"));
-				} else showHint(translate("This content will be availabled soon"));
-			}
-		}, {
-			icon: "transition",
-			title: translate("Transition"),
-			click: function(tool, item) {
-				attachTransitionTool(function(next) {
-					tool.deattach();
-				});
-			}
-		}, function(tool) {
-			if (supportSupportables) {
-				return {
-					icon: "world",
-					title: translate("World"),
-					click: function(tool, item) {
-						if (loadSupportables && Setting) {
-							if (LevelInfo.isLoaded()) {
-								isSupportEnv = true;
-								currentEnvironment = Setting.modName;
-								let result = Setting(function() {
-									try {
-										rover = true;
-										createButton();
-										return true;
-									} catch (e) {
-										return e;
-									}
-								})[0];
-								if (result != true) {
-									attachProjectTool(function(next) {
-										isSupportEnv = false;
-										currentEnvironment = __name__;
-									});
-									retraceOrReport(result);
-								} else tool.deattach();
-							} else showHint(translate("Supportable module can't be loaded at menu"));
-						}
-					},
-					hold: function(tool, item) {
-						return showSupportableInfo(Setting);
-					}
-				};
-			}
-		}],
-		contentProjectDescriptor: function(tool) {
-			if (ProjectProvider.isInitialized()) {
-				let categories = [],
-					project = tool.toProject();
-				if (project && project.getCount() > 0) {
-					let content = project.getAll(),
-						blocks = project.getBlocks();
-					if (blocks && blocks.length > 0) {
-						let category = categories.push({
-							title: translate("Blocks"),
-							clickItem: function(tool, item, index) {
-								let real = blocks[index],
-									block = content[real];
-								attachBlockTool(real, function(next) {
-									content.splice(real, 1);
-									content.unshift(block);
-									project.setCurrentlyId(0);
-									tool.deattach();
-								});
-							},
-							holdItem: function(tool, item, index) {
-								confirm(translate("Warning!"),
-									translate("Selected worker will be removed, including all it's data.") + " " +
-									translate("Do you want to continue?"), function() {
-										let position = blocks[index];
-										if (position >= 0 && position < content.length) {
-											content.splice(position, 1);
-											showHint(translate("Worker has been removed"));
-										} else showHint(translate("Something went wrong"));
-										tool.describe();
-									});
-								return true;
-							},
-							items: []
-						}) - 1;
-						for (let i = 0; i < blocks.length; i++) {
-							let block = content[blocks[i]],
-								models = block.renderer.length + block.collision.length;
-							categories[category].items.push({
-								icon: "block",
-								title: block.define.id,
-								description: translateCounter(models, "no models", "%s1 model",
-									"%s" + (models % 10) + " models", "%s models", [models])
-							});
-						}
-					}
-					if (REVISION.indexOf("alpha") != -1) {
-						let entities = project.getEntities();
-						if (entities && entities.length > 0) {
-							let category = categories.push({
-								title: translate("Entities"),
-								clickItem: function(tool, item, index) {
-									let real = entities[index],
-										entity = content[real];
-									attachEntityTool(real, function(next) {
-										content.splice(real, 1);
-										content.unshift(entity);
-										project.setCurrentlyId(0);
-										tool.deattach();
-									});
-								},
-								holdItem: function(tool, item, index) {
-									confirm(translate("Warning!"),
-										translate("Selected worker will be removed, including all it's data.") + " " +
-										translate("Do you want to continue?"), function() {
-											let position = blocks[index];
-											if (position >= 0 && position < content.length) {
-												content.splice(position, 1);
-												showHint(translate("Worker has been removed"));
-											} else showHint(translate("Something went wrong"));
-											tool.describe();
-										});
-									return true;
-								},
-								items: []
-							}) - 1;
-							for (let i = 0; i < entities.length; i++) {
-								let entity = content[entities[i]],
-									models = entity.visual.length;
-								categories[category].items.push({
-									icon: "entity",
-									title: entity.define.id,
-									description: translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-										"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models])
-								});
-							}
-						}
-					}
-					let transitions = project.getTransitions();
-					if (transitions && transitions.length > 0) {
-						let category = categories.push({
-							title: translate("Transitions"),
-							clickItem: function(tool, item, index) {
-								let real = transitions[index],
-									transition = content[real];
-								attachTransitionTool(real, function(next) {
-									content.splice(real, 1);
-									content.unshift(transition);
-									project.setCurrentlyId(0);
-									tool.deattach();
-								});
-							},
-							holdItem: function(tool, item, index) {
-								confirm(translate("Warning!"),
-									translate("Selected worker will be removed, including all it's data.") + " " +
-									translate("Do you want to continue?"), function() {
-										let position = blocks[index];
-										if (position >= 0 && position < content.length) {
-											content.splice(position, 1);
-											showHint(translate("Worker has been removed"));
-										} else showHint(translate("Something went wrong"));
-										tool.describe();
-									});
-								return true;
-							},
-							items: []
-						}) - 1;
-						for (let i = 0; i < transitions.length; i++) {
-							let transition = content[transitions[i]],
-								animates = transition.animation.length;
-							categories[category].items.push({
-								icon: "transition",
-								title: translate("Transition"),
-								description: translateCounter(animates, "no animates", "%s1 animate",
-									"%s" + (animates % 10) + " animates", "%s animates", [animates]) + " / " + translate("%s fps", transition.define.fps || 60)
-							});
-						}
-					}
-				}
-			}
-		},
-		menuDescriptor: {
-			elements: [function(tool) {
-				if (REVISION.indexOf("alpha") != -1) {
-					return {
-						type: "category",
-						title: translate("Debug & testing"),
-						background: "popupSelectionQueued",
-						items: [{
-							icon: "menuBoardConfig",
-							title: translate("Tests"),
-							click: function(tool, item) {
-								attachDebugTestTool(function() {
-									tool.deattach();
-								});
-							}
-						}, {
-							icon: "menuBoardInsert",
-							title: translate("Console"),
-							click: function(tool, item) {
-								tool.deattach();
-								attachConsoleTool();
-							}
-						}, {
-							icon: "worldActionMeasure",
-							title: translate("Log"),
-							click: function(tool, item) {
-								LogViewer.show();
-							}
-						}, {
-							icon: "support",
-							title: translate("Mods"),
-							click: function(tool, item) {
-								tool.deattach();
-								ModificationSource.selector();
-							}
-						}, {
-							icon: "explorer",
-							title: translate("Explorer"),
-							click: function(tool, item) {
-								let explorer = new ExplorerWindow();
-								explorer.setMultipleSelectable(true);
-								let bar = explorer.addPath();
-								bar.setOnOutsideListener(function(bar) {
-									explorer.dismiss();
-								});
-								bar.setPath(__dir__);
-								explorer.show();
-							}
-						}]
-					};
-				}
-			}, function(tool) {
-				if (isAnyCustomSupportableLoaded()) {
-					return {
-						type: "category",
-						title: translate("Supportables"),
-						holdItem: function(tool, item, index) {
-							return showSupportableInfo([UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner][index]);
-						},
-						items: [function(tool) {
-							if (UIEditor) {
-								return {
-									icon: UIEditor.icon,
-									title: translate("UIEditor"),
-									click: function(tool, item) {
-										isSupportEnv = true;
-										currentEnvironment = UIEditor.modName;
-										let result = UIEditor(function() {
-											try {
-												start.open.click(null);
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) {
-											isSupportEnv = false;
-											currentEnvironment = __name__;
-											retraceOrReport(result);
-											return;
+			switch (typeof obj) {
+				case "undefined":
+					return "undefined";
+				case "string":
+					obj = new java.lang.String(obj);
+					obj = obj.replaceAll("\"", "\\\\\"");
+					obj = obj.replaceAll("\t", "\\\\t");
+					obj = obj.replaceAll("\n", "\\\\n");
+					return "\"" + obj + "\"";
+				case "number":
+					return String(preround(obj));
+				case "boolean":
+					return String(obj);
+				case "object":
+					if (Array.isArray(obj)) {
+						let array = [],
+							tabbed = false;
+						for (let i = 0; i < obj.length; i++) {
+							let result = recursiveStringify(obj[i], tabs);
+							if (result && result.length > 0) {
+								if (identate) {
+									if (result.indexOf("\n") != -1 || result.length > 48) {
+										if (!tabbed) {
+											tabbed = true;
+											tabs += "\t";
 										}
-										if (!hintStackableDenied) {
-											showHint(translate(UIEditor.modName) + " " + translate(UIEditor.version));
-											showHint(translate(UIEditor.author));
-										} else showHint(translate(UIEditor.modName) + " - " + translate(UIEditor.author));
-										tool.deattach();
-									}
-								};
+										array.push(result + (i < obj.length ? "\n" + tabs : String()));
+									} else if (i != 0) {
+										array.push(" " + result);
+									} else array.push(result);
+								} else array.push(result);
 							}
-						}, function(tool) {
-							if (WorldEdit) {
-								return {
-									icon: WorldEdit.icon,
-									title: translate("WorldEdit"),
-									click: function(tool, item) {
-										let result = WorldEdit(function() {
-											try {
-												let array = new Array();
-												for (let item in Commands) {
-													let command = Commands[item];
-													array.push(command.name + (command.args && command.args.length > 0 ? " " +
-														command.args : String()) + "\n" + Translation.translate(command.description));
-												}
-												return array.join("\n\n");
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (String(result) == result) {
-											confirm(translate(WorldEdit.modName) + " " + translate(WorldEdit.version), result);
-										} else if (result) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(WorldEdit.modName) + " " + translate(WorldEdit.version));
-											showHint(translate(WorldEdit.author));
-										} else showHint(translate(WorldEdit.modName) + " - " + translate(WorldEdit.author));
-									}
-								};
+						}
+						return "[" + array.join(",") + "]";
+					} else {
+						let array = [],
+							tabbed = false,
+							last, count = 0;
+						for (let counted in obj) {
+							last = counted;
+							count++;
+						}
+						for (let item in obj) {
+							let result = recursiveStringify(obj[item], tabs);
+							if (result && result.length > 0) {
+								if (identate) {
+									if (result.indexOf("\n") != -1 || result.length > 8) {
+										if (!tabbed) {
+											tabbed = true;
+											tabs += "\t";
+										}
+										array.push(item + ": " + result + (item != last ? "\n" + tabs : String()));
+									} else if (item != 0) {
+										array.push(" " + item + ": " + result);
+									} else array.push(result);
+								} else array.push("\"" + item + "\":" + result);
 							}
-						}, function(tool) {
-							if (DumpCreator) {
-								return {
-									icon: DumpCreator.icon,
-									title: translate("Dumper"),
-									click: function(tool, item) {
-										let result = DumpCreator(function() {
-											try {
-												return __makeAndSaveDump__.dumped;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
-											LevelInfo.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
-											"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
-											let evaluate = DumpCreator(function() {
-												try {
-													__makeAndSaveDump__();
-													return true;
-												} catch (e) {
-													return e;
-												}
-											})[0];
-											if (evaluate != true) retraceOrReport(evaluate);
-										});
-									}
-								};
-							}
-						}, function(tool) {
-							if (RunJSingame) {
-								return {
-									icon: RunJSingame.icon,
-									title: translate("Run JS"),
-									click: function(tool, item) {
-										let result = RunJSingame(function() {
-											try {
-												MainUI.codeWindow();
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(RunJSingame.modName) + " " + translate(RunJSingame.version));
-											showHint(translate(RunJSingame.author));
-										} else showHint(translate(RunJSingame.modName) + " - " + translate(RunJSingame.author));
-									}
-								};
-							}
-						}, function(tool) {
-							if (InstantRunner) {
-								return {
-									icon: InstantRunner.icon,
-									title: translate("IRunner"),
-									click: function(tool, item) {
-										let result = InstantRunner(function() {
-											try {
-												openAndroidUI();
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(InstantRunner.modName) + " " + translate(InstantRunner.version));
-											showHint(translate(InstantRunner.author));
-										} else showHint(translate(InstantRunner.modName) + " - " + translate(InstantRunner.author));
-									}
-								};
-							}
-						}]
-					};
-				}
-			}]
-		},
-		replace: function(file) {
-			let name = file.getName(),
-				instance = this;
-			if (name.endsWith(".json")) {
-				let active = Date.now();
-				convertJsonBlock(Files.read(file), function(result) {
-					instance.fromProject([result]);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".ndb")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					instance.fromProject([convertNdb(obj)]);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".nds")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					instance.fromProject([convertNds(obj)]);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			}
-			ProjectTool.prototype.replace.apply(this, arguments);
-		},
-		merge: function(file) {
-			let name = file.getName(),
-				project = this.toProject(),
-				instance = this;
-			if (name.endsWith(".json")) {
-				let active = Date.now();
-				convertJsonBlock(Files.read(file), function(result) {
-					project.getAll().push(result);
-					instance.describe();
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".ndb")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					project.getAll().push(convertNdb(obj));
-					instance.describe();
-					showHint(translate("Imported success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".nds")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					current.getAll().push(convertNds(obj));
-					instance.describe();
-					showHint(translate("Imported success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			}
-			ProjectTool.prototype.merge.apply(this, arguments);
-		}
-	});
-})();
-
-const attachProjectTool = function(source, post) {
-	if (!PROJECT_TOOL.isAttached()) {
-		PROJECT_TOOL.attach();
-	}
-	PROJECT_TOOL.queue();
-	handleThread(function() {
-		let accepted = PROJECT_TOOL.open(source);
-		handle(function() {
-			if (accepted) {
-				tryout(function() {
-					post && post(PROJECT_TOOL);
-					ProjectProvider.setOpenedState(false);
-					PROJECT_TOOL.control();
-					accepted = false;
-				});
-			}
-			if (accepted) {
-				PROJECT_TOOL.deattach();
+						}
+						let joined = array.join(",");
+						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
+							(identate ? tabbed ? tabs.replace("\t", String()) + "\n}" : " }" : "}");
+					}
+					default:
+						if (callback.onPassed) {
+							callback.onPassed(obj, typeof obj);
+						}
 			}
 		});
+	};
+	return recursiveStringify(obj, String());
+};
+
+const readFile = function(path, isBytes, action) {
+	handleThread(function() {
+		let file = new java.io.File(String(path));
+		if (!file.exists()) return;
+		let readed = isBytes ? Files.readBytes(file) : Files.read(file);
+		if (typeof action == "function") action(readed);
 	});
 };
 
-const EditorTool = function() {
-	SidebarTool.apply(this, arguments);
+const exportProject = function(object, isAutosave, path, action) {
+	return AsyncSnackSequence.access("internal.js", [path, object, 30,
+		isAutosave ? translate("Autosaving") : translate("Exporting"),
+		isAutosave ? translate("Autosaved") : translate("Exported")], action);
 };
 
-EditorTool.prototype = new SidebarTool;
+const compileData = function(text, type, additional) {
+	if (type == "string") text = "\"" + text + "\"";
+	let code = "(function() { return " + text + "; })();",
+		scope = runAtScope(code, additional, "compile.js");
+	return scope.error ? scope.error : !type ? scope.result :
+		type == "string" ? String(scope.result) :
+		type == "number" ? parseInt(scope.result) :
+		type == "float" ? parseFloat(scope.result) :
+		type == "object" ? scope.result : null;
+};
 
-EditorTool.prototype.reset = function() {
-	SidebarTool.prototype.reset.apply(this, arguments);
-	this.menuDescriptor.elements = [{
-		type: "header"
-	}, {
-		type: "category",
-		title: translate("Editor"),
-		items: [{
-			icon: "menuProjectLoad",
-			title: translate("Replace"),
-			click: function(tool, item) {
-				let formats = tool.getExtensions(EditorTool.ExtensionType.REPLACE);
-				if (formats && formats.length > 0) {
-					selectFile(formats, function(file) {
-						tool.replace(file);
+const formatExceptionReport = function(error, upper) {
+	let report = localizeError(error),
+		point = report.charAt(report.length - 1);
+	if (!/\.|\!|\?/.test(point)) report += ".";
+	let char = report.charAt(0);
+	if (upper) char = char.toUpperCase();
+	else if (upper !== null) char = char.toLowerCase();
+	if (error && typeof error == "object" && error.lineNumber !== undefined) {
+		return char + report.substring(1) + " (#" + error.lineNumber + ")";
+	}
+	return char + report.substring(1);
+};
+
+const importProject = function(path, action) {
+	readFile(path, true, function(bytes) {
+		let result = decompileFromProduce(bytes),
+			data = compileData(result, "object");
+		if (data && !(data.lineNumber === undefined)) {
+			handle(function() {
+				action && (data.length !== undefined ?
+					action(data) : action([data]));
+			});
+		} else {
+			confirm(translate("Impossible open file"),
+				translate("Looks like, project is damaged. Check project and following exception information:") +
+				" " + (data ? formatExceptionReport(data) : translate("empty project.")) + "\n\n" +
+				translate("Do you want to retry?"),
+					function() {
+						importProject(path, action);
 					});
-					return;
+		}
+	});
+};
+
+const importScript = function(path, action) {
+	readFile(path, false, function(text) {
+		let result = compileScript(text);
+		if (result !== null) {
+			action && handle(function() {
+				action(result);
+			});
+		}
+	});
+};
+
+const compileScript = function(text) {
+	let code = "(function() { try { " + text + "\n\t} catch (e) {" +
+		"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
+		scope = runAtScope(code, getScriptScope(), "import.js");
+	if (noImportedScripts) {
+		noImportedScripts = false;
+		loadSetting("user_login.imported_script", "boolean", true);
+		__config__.save();
+	}
+	if (scope.error) retraceOrReport(scope.error);
+	else if (scope.result && scope.result.error) {
+		retraceOrReport(scope.result.error);
+	}
+	return scope.result || null;
+};
+
+const getScriptScope = function() {
+	let scope = {
+		__data__: [],
+		Callback: {
+			addCallback: function(name, func) {
+				try {
+					func();
+				} catch (e) {
+					// Something may happened
 				}
-				showHint(translate("There's no availabled entry to replace"));
 			}
-		}, function(tool, category) {
-			if (tool.hasMerger()) {
-				return {
-					icon: "menuProjectImport",
-					title: translate("Merge"),
-					click: function(tool, item) {
-						let formats = tool.getExtensions(EditorTool.ExtensionType.MERGE);
-						if (formats && formats.length > 0) {
-							selectFile(formats, function(file) {
-								tool.merge(file);
-							});
-							return;
-						}
-						showHint(translate("There's no availabled entry to merge"));
-					}
+		},
+		BlockID: {},
+		IDRegistry: {
+			fromString: function(id) {
+				return scope.BlockID[id] !== undefined ? scope.BlockID[id] : -1;
+			},
+			genBlockID: function(name) {
+				let nid = scope.BlockID[name] = scope.__data__.length;
+				scope.__data__[nid] = {
+					type: "block",
+					define: {
+						id: name
+					},
+					renderer: [],
+					collision: []
+				};
+				return nid;
+			}
+		},
+		Block: {
+			createBlock: function(id, data, special) {
+				let nid = scope.IDRegistry.fromString(id);
+				if (nid == -1) return;
+				data && (scope.__data__[nid].define.data = stringifyObject(data, true));
+				special && (scope.__data__[nid].define.special = stringifyObject(special, true));
+			},
+			createSpecialType: function(params) {
+				return params;
+			},
+			setShape: function(id, x1, y1, z1, x2, y2, z2) {
+				scope.__data__[id].define.shape = {
+					x1: x1,
+					y1: y1,
+					z1: z1,
+					x2: x2,
+					y2: y2,
+					z2: z2
+				};
+			},
+			setBlockShape: function(id, pos1, pos2) {
+				scope.__data__[id].define.shape = {
+					x1: pos1.x,
+					y1: pos1.y,
+					z1: pos1.z,
+					x2: pos2.x,
+					y2: pos2.y,
+					z2: pos2.z
 				};
 			}
-		}, {
-			icon: "menuProjectSave",
-			title: translate("Export"),
-			click: function(tool, item) {
-				let formats = tool.getExtensions(EditorTool.ExtensionType.EXPORT);
-				if (formats && formats.length > 0) {
-					let lastName = tool.getExplorerLastName();
-					saveFile(lastName, formats, function(file, name) {
-						tool.export(file);
-						tool.setExplorerLastName(name);
+		},
+		ICRender: {
+			Model: function() {
+				this.renderer = [];
+				this.addEntry = function(model) {
+					model && this.renderer.push({
+						boxes: model.boxes
 					});
-					return;
+				};
+			},
+			CollisionShape: function() {
+				this.shape = [];
+				this.addEntry = function() {
+					let entry = new scope.BlockRenderer.Collision();
+					this.shape.push({
+						boxes: entry.boxes
+					});
+					return entry;
+				};
+			}
+		},
+		BlockRenderer: {
+			Model: function() {
+				this.boxes = [];
+				this.addBox = function(x1, y1, z1, x2, y2, z2, texture, data) {
+					let index = this.boxes.push({
+						x1: x1,
+						y1: y1,
+						z1: z1,
+						x2: x2,
+						y2: y2,
+						z2: z2
+					}) - 1;
+					if (texture !== undefined) this.boxes[index].texture = texture;
+					if (data !== undefined) this.boxes[index].texture = [[texture, data]];
+				};
+			},
+			Collision: function() {
+				this.boxes = [];
+				this.addBox = function(x1, y1, z1, x2, y2, z2) {
+					this.boxes.push({
+						x1: x1,
+						y1: y1,
+						z1: z1,
+						x2: x2,
+						y2: y2,
+						z2: z2
+					});
+				};
+			},
+			createModel: function() {
+				return new this.Model();
+			},
+			setStaticICRender: function(id, meta, render) {
+				if (!(id >= 0)) {
+					scope.__data__.push({
+						type: "block",
+						define: {
+							id: "invalidIdentifier"
+						},
+						renderer: render.renderer,
+						collision: []
+					});
+				} else scope.__data__[id].renderer = render.renderer;
+			},
+			setCustomCollisionShape: function(id, meta, collision) {
+				if (!(id >= 0)) {
+					scope.__data__.push({
+						type: "block",
+						define: {
+							id: "invalidIdentifier"
+						},
+						renderer: [],
+						collision: collision.shape
+					});
+				} else scope.__data__[id].collision = collision.shape;
+			},
+			enableCoordMapping: function(id, meta, render) {
+				this.setStaticICRender(id, meta, render);
+			}
+		},
+		Transition: function(obj) {
+			this.__data__ = (scope.__data__[scope.__data__.length] = {
+				type: "transition",
+				define: {
+					starting: {}
+				},
+				animation: [{
+					frames: []
+				}]
+			});
+			this.__compareVectorPoint = function(index, request) {};
+			this.addFrame = function(x, y, z, yaw, pitch, duration, interpolator) {
+				let index = this.__data__.animation[0].frames.push({
+					x: x,
+					y: y,
+					z: z,
+					yaw: yaw,
+					pitch: pitch,
+					duration: duration || 1 / (this.__data__.define.fps || 60)
+				}) - 1;
+				if (typeof interpolator != "undefined")
+					this.__data__.animation[0].frames[index].interpolator = interpolator;
+			};
+			this.addPoint = function(x, y, z, yaw, pitch) {};
+			this.getRelativePoint = function() {};
+			this.setPoint = function(x, y, z, yaw, pitch) {};
+			this.setFramesPerSecond = function(limit) {
+				this.__data__.define.fps = limit;
+			};
+			this.start = function() {};
+			this.stop = function() {};
+			this.isStarted = function() {};
+			this.withFrom = function(x, y, z, yaw, pitch) {
+				this.__data__.define.starting = {
+					x: x,
+					y: y,
+					z: z,
+					yaw: yaw,
+					pitch: pitch
+				};
+			};
+			this.withEntity = function(entity) {
+				this.__data__.define.entity = entity;
+			};
+			this.withOnStartListener = function(listener) {};
+			this.withOnFrameListener = function(listener) {};
+			this.withOnFinishListener = function(listener) {};
+			this.withFrames = function(frames) {
+				for (let i = 0; i < frames.length; i++) {
+					this.addFrame(frames[i].x, frames[i].y, frames[i].z,
+						frames[i].yaw, frames[i].pitch,
+						frames[i].duration, frames[i].vector);
 				}
-				showHint(translate("There's no availabled entry to export"));
+			};
+			if (obj) {
+				typeof obj == "object" && this.withFrames(obj);
+				typeof obj == "number" && this.withEntity(obj);
 			}
-		}, {
-			icon: "menuProjectLeave",
-			title: translate("Back"),
-			click: function(tool, item) {
-				tool.leave();
-			}
-		}]
-	}];
-};
-
-EditorTool.prototype.getExplorerLastName = function() {
-	return this.explorerLastName || null;
-};
-
-EditorTool.prototype.setExplorerLastName = function(name) {
-	this.explorerLastName = String(name);
-};
-
-EditorTool.prototype.resetExplorerLastName = function() {
-	return delete this.explorerLastName;
-};
-
-EditorTool.prototype.getExtensions = function(type) {
-	let formats = [".dnp"];
-	if (type == EditorTool.ExtensionType.EXPORT) {
-		if (this.hasConverter()) formats.push(".js");
-	} else if (this.hasParser()) formats.push(".js");
-	return formats;
-};
-
-EditorTool.prototype.hasConverter = function() {
-	let converter = this.getConverter();
-	return converter instanceof ScriptConverter;
-};
-
-EditorTool.prototype.getConverter = new Function();
-
-EditorTool.prototype.hasMerger = function() {
-	let merger = this.getMerger();
-	return typeof merger == "function";
-};
-
-EditorTool.prototype.getMerger = new Function();
-
-EditorTool.prototype.hasParser = function() {
-	return false;
-};
-
-EditorTool.prototype.open = function(source) {
-	let index = (function() {
-		if (source !== undefined) {
-			if (typeof source != "object") {
-				source = ProjectProvider.getEditorById(source);
-			}
-			return ProjectProvider.indexOf(source);
 		}
-		return -1;
-	})();
-	let worker = this.worker = this.getWorkerFor(source);
-	if (index == -1) index = ProjectProvider.getCount();
-	if (source === undefined) index--;
-	if (index == -1) return false;
-	ProjectProvider.setupEditor(index, worker);
-	if (!this.isAttached()) this.attach();
-	ProjectProvider.setOpenedState(true);
-	ProjectProvider.initializeAutosave();
-	return true;
+	};
+	scope.Transition.Interpolator = {
+		LINEAR: 0,
+		ACCELERATE: 1,
+		DECELERATE: 2,
+		ACCELERATE_DECELERATE: 3
+	};
+	return scope;
 };
 
-EditorTool.prototype.selectData = function(where, multiple, post) {
-	selectProjectData(where, function(selected) {
-		typeof post == "function" && post(selected);
-	}, this.getProjectType(), !multiple);
+const Project = function(obj) {
+	this.object = Array.isArray(obj) ? obj : [];
 };
 
-EditorTool.prototype.replace = function(file) {
-	let name = file.getName(),
-		instance = this;
-	if (name.endsWith(".dnp")) {
-		let active = Date.now();
-		importProject(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, false, function(selected) {
-				active = Date.now() - active;
-				instance.fromProject(selected);
-				showHint(translate("Loaded success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		});
-	} else if (name.endsWith(".js")) {
-		if (!this.hasParser()) MCSystem.throwException(null);
-		let active = Date.now();
-		importScript(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, false, function(selected) {
-				active = Date.now() - active;
-				instance.fromProject(selected);
-				showHint(translate("Converted success") + " " +
-					translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-			});
-		});
-	}
+Project.prototype.getAll = function() {
+	return this.object;
 };
 
-EditorTool.prototype.merge = function(file) {
-	let merger = this.getMerger();
-	if (!this.hasMerger()) MCSystem.throwException(null);
-	let name = file.getName(),
-		project = this.toProject(),
-		instance = this;
-	if (name.endsWith(".dnp")) {
-		let active = Date.now();
-		importProject(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, true, function(selected) {
-				active = Date.now() - active;
-				merger(project, selected, function(output) {
-					instance.fromProject(output);
-					showHint(translate("Merged success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			});
-		});
-	} else if (name.endsWith(".js")) {
-		if (!this.hasParser()) MCSystem.throwException(null);
-		let active = Date.now();
-		importScript(file.getPath(), function(result) {
-			active = Date.now() - active;
-			instance.selectData(result, true, function(selected) {
-				active = Date.now() - active;
-				merger(project, selected, function(output) {
-					instance.fromProject(output);
-					showHint(translate("Merged success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			});
-		});
-	}
+Project.prototype.getCount = function() {
+	return this.getAll().length;
 };
 
-EditorTool.prototype.export = function(file) {
-	let name = file.getName(),
-		project = this.toProject();
-	if (name.endsWith(".dnp")) {
-		exportProject(project, false, file.getPath());
-	} else if (name.endsWith(".js")) {
-		let converter = this.getConverter();
-		if (!this.hasConverter()) MCSystem.throwException(null);
-		let active = Date.now();
-		tryout(function() {
-			converter.attach(project);
-			converter.executeAsync(function(link, result) {
-				if (link.hasResult()) {
-					Files.write(file, result);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				} else retraceOrReport(link.getLastException());
-			});
-		});
-	}
+Project.prototype.currentId = -1;
+
+Project.prototype.getCurrentlyId = function() {
+	return this.currentId;
 };
 
-EditorTool.prototype.leave = function() {
-	this.deattach();
-	let instance = this;
-	delete instance.worker;
-	attachProjectTool(undefined, function(tool) {
-		tool.toProject().callAutosave();
-		instance.unselect(true);
-	});
+Project.prototype.setCurrentlyId = function(id) {
+	this.currentId = Number(id);
 };
 
-EditorTool.prototype.getProject = function() {
-	return ProjectProvider.getProject() || null;
+Project.prototype.getCurrentObject = function() {
+	let id = this.getCurrentlyId(),
+		obj = this.getAll()[id];
+	if (obj) return obj;
+	delete this.worker;
+	this.currentId = -1;
+	return null;
 };
 
-EditorTool.prototype.getProjectType = function() {
-	let project = this.toProject();
-	if (!project) return "unknown";
-	return project.type;
+Project.prototype.getCurrentType = function() {
+	let object = this.getCurrentObject();
+	return object ? object.type : null;
 };
 
-EditorTool.prototype.getWorker = function() {
+Project.prototype.getCurrentWorker = function() {
 	return this.worker || null;
 };
 
-EditorTool.prototype.getWorkerFor = function(source) {
-	MCSystem.throwException("EditorTool.getWorkerFor must be implemented");
+Project.prototype.switchToWorker = function(worker) {
+	this.worker = worker;
+	this.updateCurrentWorker();
 };
 
-EditorTool.prototype.toProject = function() {
-	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException(null);
-	return worker.getProject();
+Project.prototype.updateCurrentWorker = function() {
+	let id = this.getCurrentlyId(),
+		worker = this.getCurrentWorker();
+	if (!worker || id < 0) return;
+	this.getAll()[id] = worker.getProject();
 };
 
-EditorTool.prototype.fromProject = function(source) {
-	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException(null);
-	worker.loadProject(source);
-	this.unselect(true);
-	this.describe();
+Project.prototype.isOpened = false;
+
+Project.prototype.callAutosave = function() {
+	if (!autosave || this.isAutosaving) {
+		this.updateCurrentWorker();
+		return;
+	}
+	tryout.call(this, function() {
+		let scope = this;
+		this.isAutosaving = true;
+		this.updateCurrentWorker();
+		exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
+			Dirs.PROJECT_AUTOSAVE + this.getProjectTime() + ".dnp",
+			function(result) {
+				delete scope.isAutosaving;
+			});
+	}, function(e) {
+		retraceOrReport(e);
+		delete this.isAutosaving;
+	});
 };
 
-EditorTool.prototype.unselect = function(force) {
-	if (force) Popups.closeAll();
+Project.prototype.getProjectTime = function() {
+	let time = new Date(this.time);
+	if (!this.time) {
+		return translate("Autosave %s", random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER));
+	}
+	return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
+		(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + "-" +
+		(time.getMinutes() >= 10 ? time.getMinutes() : "0" + time.getMinutes()) + "-" +
+		(time.getSeconds() >= 10 ? time.getSeconds() : "0" + time.getSeconds());
 };
 
-EditorTool.ExtensionType = new Object();
-EditorTool.ExtensionType.REPLACE = 0;
-EditorTool.ExtensionType.MERGE = 1;
-EditorTool.ExtensionType.EXPORT = 2;
+Project.prototype.getByType = function(type) {
+	let obj = this.getAll(),
+		values = [];
+	for (let i = 0; i < this.getCount(); i++) {
+		if (obj[i].type == type) {
+			values.push(i);
+		}
+	}
+	return values;
+};
+
+Project.prototype.getIdByObject = function(obj) {
+	let content = this.getAll();
+	return content.indexOf(obj);
+};
+
+const ProjectProvider = {};
+
+ProjectProvider.getProject = function() {
+	return this.opened || null;
+};
+
+ProjectProvider.getEditorById = function(index) {
+	let project = this.getProject();
+	if (!project) return null;
+	let obj = project.getAll();
+	return obj[index] || null;
+};
+
+ProjectProvider.isInitialized = function() {
+	return this.getProject() !== null;
+};
+
+ProjectProvider.create = function() {
+	let opened = this.opened = new Project();
+	return (opened.time = Date.now(), opened);
+};
+
+ProjectProvider.addWorker = function(worker) {
+	this.setupEditor(this.opened.object.push(worker.getProject()) - 1, worker);
+	return worker;
+};
+
+ProjectProvider.isOpened = function() {
+	let project = this.getProject();
+	if (!project) return false;
+	return project.isOpened;
+};
+
+ProjectProvider.getCount = function() {
+	let project = this.getProject();
+	if (!project) return 0;
+	return project.getCount();
+};
+
+ProjectProvider.setOpenedState = function(state) {
+	let project = this.getProject();
+	if (!project) return;
+	project.isOpened = !!state;
+};
+
+ProjectProvider.getCurrentType = function() {
+	let project = this.getProject();
+	if (!project || !project.isOpened) {
+		return "none";
+	}
+	return project.getCurrentType();
+};
+
+ProjectProvider.initializeAutosave = function() {
+	let scope = this,
+		project = this.getProject();
+	if (project.isAutosaving) return;
+	if (!autosave || this.thread || autosavePeriod <= 0) {
+		project.updateCurrentWorker();
+		return;
+	}
+	this.thread = handleThread(function() {
+		do {
+			Interface.sleepMilliseconds(autosavePeriod * 1000);
+			project.callAutosave();
+			while (project.isAutosaving) {
+				Interface.sleepMilliseconds(1);
+			}
+		} while (project.isOpened);
+		delete scope.thread;
+	});
+};
+
+ProjectProvider.indexOf = function(obj) {
+	let project = this.getProject();
+	if (!project) return -1;
+	return project.getAll().indexOf(obj);
+};
+
+ProjectProvider.setupEditor = function(id, worker) {
+	let project = this.getProject();
+	if (!project) return;
+	project.setCurrentlyId(id);
+	project.switchToWorker(worker);
+};

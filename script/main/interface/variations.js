@@ -190,8 +190,8 @@ TransitionWindow.prototype.hide = function() {
 		let availabled = this.getRootScene();
 		if (availabled !== null) {
 			let exit = this.getExitTransition();
-			this.transitionTo(availabled, exit);
 			this.destructing = true;
+			this.transitionTo(availabled, exit);
 		} else this.dismiss();
 		let touchable = this.isTouchable();
 		this.setTouchable(false);
@@ -249,11 +249,31 @@ UniqueWindow.prototype.attach = function() {
 	}
 };
 
-UniqueWindow.prototype.show = function() {
-	this.attach();
+UniqueWindow.prototype.showInternal = function() {
+	// java.lang.IllegalStateException
+	tryout.call(this, function() {
+		this.attach();
+	});
 	if (UniqueHelper.isAttached(this)) {
 		TransitionWindow.prototype.show.call(this, true);
+		return true;
 	}
+	return false;
+};
+
+UniqueWindow.prototype.show = function() {
+	if (!this.inDestructing()) {
+		return this.showInternal();
+	}
+	handleThread.call(this, function() {
+		while (this.inDestructing()) {
+			java.lang.Thread.yield();
+		}
+		handle.call(this, function() {
+			return this.showInternal();
+		});
+	});
+	return false;
 };
 
 UniqueWindow.prototype.dismiss = function() {
@@ -274,7 +294,8 @@ const FocusablePopup = function() {
 	this.setExitTransition(fadeOut);
 
 	let place = Popups.getAvailablePlace();
-	this.setX(place.x), this.setY(place.y);
+	this.setX(place.x);
+	this.setY(place.y);
 	this.setGravity(Interface.Gravity.LEFT | Interface.Gravity.TOP);
 
 	this.reset();
@@ -284,7 +305,7 @@ FocusablePopup.prototype = new TransitionWindow;
 FocusablePopup.prototype.TYPE = "FocusablePopup";
 
 FocusablePopup.prototype.reset = function() {
-	let views = this.views = new Object();
+	let views = this.views = {};
 	views.layout = new android.widget.LinearLayout(context);
 	new BitmapDrawable("popup").attachAsBackground(views.layout);
 	views.layout.setOrientation(Interface.Orientate.VERTICAL);

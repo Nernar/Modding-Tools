@@ -1,7 +1,7 @@
 const FetchTestsSequence = new LogotypeSequence({
 	uncount: function(value) {
 		if (value === undefined) return 0;
-		let files = Files.listFileNames(Dirs.TESTING, true),
+		let files = Files.listFileNames(Dirs.SCRIPT_TESTING, true),
 			scripts = Files.checkFormats(files, ".dns"),
 			index = scripts.indexOf("attach.dns");
 		if (index > -1) {

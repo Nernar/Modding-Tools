@@ -49,7 +49,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 				if (!(background instanceof Drawable)) {
 					background = Drawable.parseJson.call(this, background);
 				}
-				// background.setCorruptedThumbnail("popup");
+				return background;
 			}
 			return new BitmapDrawable("popup");
 		});
@@ -64,6 +64,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let text = new android.widget.TextView(context);
 		text.setTextSize(Interface.getFontSize(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
+		Logger.Log("hint: " + text.getText(), "DEBUG");
 		if (!this.inConsoleMode()) text.setGravity(Interface.Gravity.CENTER);
 		text.setTextColor(color || Interface.Color.WHITE);
 		typeface && text.setTypeface(typeface);
@@ -230,7 +231,7 @@ HintAlert.prototype.alreadyHasHint = function(hint) {
 };
 
 HintAlert.prototype.clearStack = function() {
-	this.stack = new Array();
+	this.stack = [];
 };
 
 HintAlert.prototype.hasAutoReawait = function() {
@@ -251,6 +252,7 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
 	view.setVisibility(Interface.Visibility.VISIBLE);
+	Logger.Log("flash hint: " + hint, "DEBUG");
 	this.reawait();
 	return true;
 };
@@ -277,9 +279,11 @@ HintAlert.prototype.show = function() {
 					action.run();
 					return;
 				}
-				action.destroy();
-				delete scope.action;
-				scope.hide();
+				// TODO: @hide not stopping action or not working
+				// action.destroy();
+				// delete scope.action;
+				// scope.hide();
+				scope.dismiss();
 			});
 		}, function() {
 			if (scope.isPinned()) scope.reawait();
@@ -327,7 +331,7 @@ const showHint = function(hint, color, reawait) {
 	});
 };
 
-showHint.launchStacked = new Array();
+showHint.launchStacked = [];
 
 showHint.unstackLaunch = function() {
 	let stack = this.launchStacked;
@@ -336,70 +340,4 @@ showHint.unstackLaunch = function() {
 	for (let i = 0; i < stack.length; i++) {
 		showHint(stack[i].hint, stack[i].color, stack[i].reawait);
 	}
-};
-
-/**
- * Creates snack for processes; pins it to foreground.
- */
-const createProcess = function(hint, color) {
-	let content = null;
-	if (showHint.launchStacked === undefined) {
-		handle(function() {
-			let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-			if (window === null) {
-				window = new HintAlert();
-			}
-			window.setStackable(!hintStackableDenied);
-			if (!window.canStackedMore()) {
-				window.removeFirstStacked();
-			}
-			window.pin();
-			createProcess.processes++;
-			content = window.attachMessage(hint, color, "popupSelectionQueued");
-			if (!window.isOpened()) window.show();
-		});
-	}
-	return function(process, progress) {
-		createProcess.update(content, process, progress);
-	};
-};
-
-createProcess.processes = 0;
-
-createProcess.update = function(content, hint, progress) {
-	handle(function() {
-		progress = preround(progress * 100, 0) + 1;
-		tryoutSafety(function() {
-			if (content === undefined || content === null) {
-				if (progress >= 10001) showHint(hint);
-				return;
-			}
-			let text = content.getChildAt(0);
-			if (progress < 10001) {
-				text.setText(String(hint).replace("%s", preround(progress / 100, 1) + "%"));
-				let drawable = ImageFactory.clipAndMerge("popup", "popupSelectionSelected", progress);
-				if (drawable) drawable.attachAsBackground(content);
-			} else {
-				text.setText(String(hint));
-				new BitmapDrawable("popupSelectionSelected").attachAsBackground(content);
-			}
-		}, function(e) {
-			if (progress >= 10001) {
-				showHint(hint, Interface.Color.YELLOW, true);
-			}
-		});
-	});
-};
-
-createProcess.complete = function() {
-	handle(function() {
-		let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-		if (createProcess.processes > 0) {
-			createProcess.processes--;
-		}
-		if (createProcess.processes == 0) {
-			window !== null && window.unpin();
-		}
-		print(createProcess.processes + " task(s)");
-	});
 };

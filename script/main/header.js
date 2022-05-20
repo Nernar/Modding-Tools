@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.3.6-07.04.2022-0";
+const REVISION = "develop-alpha-0.4-19.05.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -39,12 +39,6 @@ let hintStackableDenied = false;
 let maximumHints = 25;
 let showProcesses = true;
 let safetyProcesses = true;
-
-// Configurable: workers
-let saveCoords = false;
-let drawSelection = true;
-let transparentBoxes = true;
-let transitionSideDividers = 8;
 
 // Configurable: supportables
 let currentEnvironment = __name__;
@@ -111,7 +105,7 @@ reportError.setStackAction(function(err) {
 });
 
 reportError.setReportAction(function(err) {
-	Logger.Log(reportError.getCode(err) + ": " + err, "DEV-CORE");
+	Logger.Log(reportError.getCode(err) + ": " + err, "ERROR");
 });
 
 Interface.getFontSize = function(size) {
@@ -130,7 +124,7 @@ const findCorePackage = function() {
 	return tryout(function() {
 		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 	}, function(e) {
-		MCSystem.throwException("Couldn't find engine package, please referr developer");
+		MCSystem.throwException("Impossible find engine package, please referr developer");
 	}, null);
 };
 
@@ -138,7 +132,7 @@ const findAssertionPackage = function() {
 	return tryout(function() {
 		return Packages.io.nernar;
 	}, function(e) {
-		MCSystem.throwException("Couldn't find assertion package, please referr developer");
+		MCSystem.throwException("Impossible find assertion package, please referr developer");
 	}, null);
 };
 
@@ -146,23 +140,22 @@ const findEditorPackage = function() {
 	return tryout(function() {
 		return findAssertionPackage().innercore.editor;
 	}, function(e) {
-		MCSystem.throwException("Couldn't find modification package, please referr developer");
+		MCSystem.throwException("Impossible find modification package, please referr developer");
 	}, null);
 };
 
 if (REVISION.startsWith("develop")) {
 	IMPORT("Stacktrace:2");
-	
 	reportTrace.setupPrint(function(message) {
 		message !== undefined && showHint(message);
 	});
-	
 	if (isInstant) {
 		reportTrace.reloadModifications();
 	}
 }
 
 const retraceOrReport = function(error) {
+	error && Logger.Log(error, "WARNING");
 	if (REVISION.startsWith("develop")) {
 		reportTrace(error);
 	} else {
@@ -181,23 +174,36 @@ tryout(function() {
 	library.getScope().reportError = reportTrace;
 });
 
-const CoreEngine = {
+const $ = {
 	CORE_ENGINE_API_LEVEL: 0
+};
+
+const isCoreEngineLoaded = function() {
+	return $.CORE_ENGINE_API_LEVEL != 0;
 };
 
 const getCoreEngineAndInjectIfNeeded = function() {
 	return tryout(function() {
-		if (CoreEngine.CORE_ENGINE_API_LEVEL != 0) {
-			return CoreEngine;
+		if (isCoreEngineLoaded()) {
+			return $;
 		}
+		let instance = null;
 		let CoreEngineAPI = findCorePackage().api.mod.coreengine.CoreEngineAPI;
-		let field = CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
-		let ceHandlerSingleton = field.get(null);
+		let field = tryout(function() {
+			return CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
+		}, function(e) {
+			let declared = CoreEngineAPI.__javaObject__.getDeclaredField("coreEngineHandler");
+			instance = findCorePackage().api.mod.API.getInstanceByName("CoreEngine");
+			return declared;
+		});
+		field.setAccessible(true);
+		let ceHandlerSingleton = field.get(instance);
 		if (ceHandlerSingleton != null) {
-			ceHandlerSingleton.injectCoreAPI(CoreEngine);
+			ceHandlerSingleton.injectCoreAPI($);
 		}
-		return CoreEngine;
-	}, CoreEngine);
+		notifyCoreEngineLoaded();
+		return $;
+	}, $);
 };
 
 Callback.addCallback("PreBlocksDefined", function() {
@@ -209,6 +215,7 @@ IMPORT("Transition:6");
 IMPORT("Action:4");
 IMPORT("Sequence:1");
 IMPORT("Drawable:1");
+IMPORT("Mehwrap:1");
 
 getPlayerEnt = function() {
 	if (LevelInfo.isLoaded()) {

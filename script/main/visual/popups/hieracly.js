@@ -7,10 +7,10 @@ HieraclyPopup.prototype.TYPE = "HieraclyPopup";
 
 HieraclyPopup.prototype.reset = function() {
 	FocusablePopup.prototype.reset.apply(this, arguments);
-	this.views.groups = new Array();
-	this.views.items = new Array();
-	this.views.footers = new Array();
-	this.groups = new Object();
+	this.views.groups = [];
+	this.views.items = [];
+	this.views.footers = [];
+	this.groups = {};
 
 	this.views.footer = new android.widget.LinearLayout(context);
 	this.views.footer.setGravity(Interface.Gravity.CENTER | Interface.Gravity.LEFT);
@@ -97,7 +97,7 @@ HieraclyPopup.prototype.getParent = function(name) {
 };
 
 HieraclyPopup.prototype.getHieracly = function(name) {
-	let hieracly = new Array();
+	let hieracly = [];
 	if (name !== undefined) {
 		do {
 			hieracly.push(name);

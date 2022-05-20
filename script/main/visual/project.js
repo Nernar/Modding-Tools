@@ -2,7 +2,7 @@ const MenuWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setWidth(Interface.Display.MATCH);
 	window.setHeight(Interface.Display.MATCH);
-	window.elements = new Array();
+	window.elements = [];
 	window.resetContent();
 	window.setBackground("popupControl");
 	
@@ -26,7 +26,7 @@ MenuWindow.prototype.outside = true;
 
 MenuWindow.prototype.resetContent = function() {
 	let scope = this,
-		views = this.views = new Object();
+		views = this.views = {};
 	let content = new android.widget.FrameLayout(context);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
@@ -169,7 +169,7 @@ MenuWindow.Header = function(parent) {
 };
 
 MenuWindow.Header.prototype.reset = function() {
-	let views = this.views = new Object();
+	let views = this.views = {};
 	let content = new android.widget.FrameLayout(context);
 	let params = new android.widget.LinearLayout.LayoutParams
 		(Interface.Display.MATCH, Interface.Display.WRAP);
@@ -342,7 +342,7 @@ MenuWindow.ProjectHeader = function(parent) {
 	parent && this.setWindow(parent);
 	projectHeaderBackground &&
 		this.setBackground("popupControl");
-	this.categories = new Array();
+	this.categories = [];
 	this.checkNothingNeedable();
 	this.setMaxScroll(Interface.getY(480));
 	this.updateSlideProgress();
@@ -508,11 +508,11 @@ MenuWindow.ProjectHeader.Category = function(parentOrName, name) {
 	} else if (parentOrName) {
 		this.setTitle(parentOrName);
 	}
-	this.items = new Array();
+	this.items = [];
 };
 
 MenuWindow.ProjectHeader.Category.prototype.reset = function() {
-	let views = this.views = new Object();
+	let views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	let params = new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
@@ -708,7 +708,7 @@ MenuWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, title
 
 MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	let scope = this,
-		views = this.views = new Object();
+		views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 	content.setGravity(Interface.Gravity.CENTER);
@@ -917,11 +917,11 @@ MenuWindow.Category = function(parentOrName, name) {
 		this.setWindow(parentOrName);
 		name && this.setTitle(name);
 	} else if (parentOrName) this.setTitle(parentOrName);
-	this.items = new Array();
+	this.items = [];
 };
 
 MenuWindow.Category.prototype.reset = function() {
-	let views = this.views = new Object();
+	let views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	content.setGravity(Interface.Gravity.CENTER);
@@ -1106,7 +1106,7 @@ MenuWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, acti
 
 MenuWindow.Category.Item.prototype.reset = function() {
 	let scope = this,
-		views = this.views = new Object();
+		views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	content.setGravity(Interface.Gravity.CENTER);
@@ -1295,7 +1295,7 @@ MenuWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action
 
 MenuWindow.Message.prototype.reset = function() {
 	let scope = this,
-		views = this.views = new Object();
+		views = this.views = {};
 	let content = new android.widget.LinearLayout(context);
 	content.setPadding(Interface.getY(128), Interface.getY(12), Interface.getY(128), Interface.getY(12));
 	content.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP));
@@ -1482,7 +1482,7 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 					} else if (element.type == "message") {
 						element = MenuWindow.Message.parseJson.call(this, element);
 					} else {
-						Logger.Log("MenuWindow counldn't parse " + element.type, "WARNING");
+						Logger.Log("MenuWindow unable to parse " + element.type, "WARNING");
 						continue;
 					}
 					element.setWindow(instanceOrJson);

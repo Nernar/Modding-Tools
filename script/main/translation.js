@@ -2,14 +2,14 @@ MCSystem.setLoadingTip(NAME + ": Localizing");
 
 // Modifications information
 Translation.addTranslation("Dev Editor", {});
-Translation.addTranslation("Alpha 0.3.6", {
-	ru: "Альфа 0.3.6"
+Translation.addTranslation("Alpha 0.4", {
+	ru: "Альфа 0.4"
 }); // NO-TRANSLATE
-Translation.addTranslation("Beta 0.3.6", {
-	ru: "Бета 0.3.6"
+Translation.addTranslation("Beta 0.4", {
+	ru: "Бета 0.4"
 }); // NO-TRANSLATE
-Translation.addTranslation("Preview 0.3.6", {
-	ru: "Предпросмотр 0.3.6"
+Translation.addTranslation("Preview 0.4", {
+	ru: "Предпросмотр 0.4"
 }); // NO-TRANSLATE
 Translation.addTranslation("Setting", {}); // NO-TRANSLATE
 Translation.addTranslation("1.0-develop", {
@@ -69,10 +69,10 @@ Translation.addTranslation("Reset", {
 });
 Translation.addTranslation("Player", {
 	ru: "Игрок"
-});
+}); // DEPRECATED
 Translation.addTranslation("Reload", {
 	ru: "Обновить"
-});
+}); // DEPRECATED
 Translation.addTranslation("Tutorial", {
 	ru: "Обучение"
 });
@@ -90,7 +90,7 @@ Translation.addTranslation("Debug & testing", {
 });
 Translation.addTranslation("Script report", {
 	ru: "Отчет скрипта"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creating project", {
 	ru: "Создание проекта"
 });
@@ -149,31 +149,31 @@ Translation.addTranslation("Eval", {
 });
 Translation.addTranslation("Create", {
 	ru: "Создать"
-});
+}); // DEPRECATED
 Translation.addTranslation("New of", {
 	ru: "Новый"
-});
+}); // DEPRECATED
 Translation.addTranslation("Currently", {
 	ru: "Текущий"
-});
+}); // DEPRECATED
 Translation.addTranslation("Copy current", {
 	ru: "Клон"
-});
+}); // DEPRECATED
 Translation.addTranslation("Deleting", {
 	ru: "Удаление"
-});
+}); // DEPRECATED
 Translation.addTranslation("Nothing", {
 	ru: "Ничего"
 });
 Translation.addTranslation("Name", {
 	ru: "Имя"
-});
+}); // DEPRECATED
 Translation.addTranslation("Empty", {
 	ru: "Пусто"
 });
 Translation.addTranslation("Rename", {
 	ru: "Ренейм"
-});
+}); // DEPRECATED
 Translation.addTranslation("Confirmation", {
 	ru: "Подтверждение"
 });
@@ -211,127 +211,127 @@ Translation.addTranslation("%s models", {
 }); // COUNTER
 Translation.addTranslation("To manipulate with in-world block visualization load any world firstly.", {
 	ru: "Для взаимодействия с отрисовкой блока загрузите любой мир."
-});
+}); // DEPRECATED
 Translation.addTranslation("There's will appear mapping section, innersection checkout and render controls.", {
 	ru: "Здесь появится секция с маппингом, проверкой слияний и настройками рендера."
-});
+}); // DEPRECATED
 Translation.addTranslation("In-section", {
 	ru: "Слияния"
-});
+}); // DEPRECATED
 Translation.addTranslation("Manually view boxes innersection", {
 	ru: "Ручной просмотр слияния коробок"
-});
+}); // DEPRECATED
 Translation.addTranslation("Renderer", {
 	ru: "Рендер"
-});
+}); // DEPRECATED
 Translation.addTranslation("Collision", {
 	ru: "Форма"
-});
+}); // DEPRECATED
 Translation.addTranslation("Block define properties", {
 	ru: "Параметры объявления блока"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes block identifier", {
 	ru: "Изменяет идентификатор блока"
-});
+}); // DEPRECATED
 Translation.addTranslation("Sets block few variations", {
 	ru: "Устанавливает блоку несколько вариаций"
-});
+}); // DEPRECATED
 Translation.addTranslation("Define", {
 	ru: "Вариации"
-});
+}); // DEPRECATED
 Translation.addTranslation("Force save define data?", {
 	ru: "Все равно сохранить вариации?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes variation textures", {
 	ru: "Изменяет текстуры вариации"
-});
+}); // DEPRECATED
 Translation.addTranslation("Adds special type properties", {
 	ru: "Добавляет свойства специального типа"
-});
+}); // DEPRECATED
 Translation.addTranslation("Special", {
 	ru: "Свойства"
-});
+}); // DEPRECATED
 Translation.addTranslation("Type", {
 	ru: "Тип"
-});
+}); // DEPRECATED
 Translation.addTranslation("Force save special type?", {
 	ru: "Все равно сохранить специальный тип?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Scretches basic collision box", {
 	ru: "Растягивает базовую физическую коробку"
-});
+}); // DEPRECATED
 Translation.addTranslation("Shape", {
 	ru: "Форма"
-});
+}); // DEPRECATED
 Translation.addTranslation("Updates mapped blocks", {
 	ru: "Обновляет отрисованные блоки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Render updated", {
 	ru: "Визуализация обновлена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Render models", {
 	ru: "Визуальные модели"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selects currently box", {
 	ru: "Выбирает текущую коробку"
-});
+}); // DEPRECATED
 Translation.addTranslation("Boxes", {
 	ru: "Коробки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Box %s", {
 	ru: "Коробка %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates or clones box", {
 	ru: "Создает или копирует коробку"
-});
+}); // DEPRECATED
 Translation.addTranslation("Box %s added", {
 	ru: "Создана %s коробка"
-});
+}); // DEPRECATED
 Translation.addTranslation("Box %s cloned to %s", {
 	ru: "%s коробка клонирована в %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Moves box location", {
 	ru: "Перемещает положение коробки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Scretches box sizes", {
 	ru: "Растягивает размеры коробки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Mirrors box belong side", {
 	ru: "Отражает коробку относительно направления"
-});
+}); // DEPRECATED
 Translation.addTranslation("Rotates box into specified angle", {
 	ru: "Поворачивает коробку на заданный угол"
-});
+}); // DEPRECATED
 Translation.addTranslation("Side", {
 	ru: "Сторона"
-});
+}); // DEPRECATED
 Translation.addTranslation("At %s angle", {
 	ru: "На %s градусов"
-});
+}); // DEPRECATED
 Translation.addTranslation("Box rotated at %s angle", {
 	ru: "Коробка повернута на %s градусов"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes box texture", {
 	ru: "Изменяет текстуру коробки"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removes box", {
 	ru: "Удаляет коробку"
-});
+}); // DEPRECATED
 Translation.addTranslation("Are you sure want to delete this box?", {
 	ru: "Вы уверены, что хотите удалить эту коробку?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Box deleted", {
 	ru: "Коробка удалена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates first box", {
 	ru: "Создает первую коробку"
-});
+}); // DEPRECATED
 Translation.addTranslation("First box added", {
 	ru: "Первая коробка создана"
-});
+}); // DEPRECATED
 Translation.addTranslation("Collision models", {
 	ru: "Физические модели"
-});
+}); // DEPRECATED
 
 // Transitions content
 Translation.addTranslation("Transition", {
@@ -363,125 +363,125 @@ Translation.addTranslation("%s animates", {
 }); // COUNTER
 Translation.addTranslation("Current all", {
 	ru: "Все текущие"
-});
+}); // DEPRECATED
 Translation.addTranslation("Camera", {
 	ru: "Камера"
-});
-Translation.addTranslation("Can't change camera at menu", {
+}); // DEPRECATED
+Translation.addTranslation("Impossible change camera at menu", {
 	ru: "Нельзя изменить камеру в меню"
 }); // DEPRECATED
 Translation.addTranslation("Current entity will be lost.", {
 	ru: "Текущее существо будет потеряно."
-});
+}); // DEPRECATED
 Translation.addTranslation("Pathes", {
 	ru: "Пути"
-});
-Translation.addTranslation("Can't draw points in menu", {
+}); // DEPRECATED
+Translation.addTranslation("Impossible draw points in menu", {
 	ru: "Нельзя отрисовать точки в меню"
 }); // DEPRECATED
 Translation.addTranslation("Animate define properties", {
 	ru: "Параметры объявления анимации"
-});
+}); // DEPRECATED
 Translation.addTranslation("Plays or stops animate", {
 	ru: "Проигрывает или останавливает анимацию"
-});
-Translation.addTranslation("Can't play transitions at menu", {
+}); // DEPRECATED
+Translation.addTranslation("Impossible play transitions at menu", {
 	ru: "Нельзя проигрывать переходы в меню"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition stopped", {
 	ru: "Переход остановлен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition is already transitioning", {
 	ru: "Переход уже действует"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition is already stopped", {
 	ru: "Переход уже остановлен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition isn't setted up", {
 	ru: "Переход не был создан"
-});
+}); // DEPRECATED
 Translation.addTranslation("Moves startup location", {
 	ru: "Перемещает начальное положение"
-});
+}); // DEPRECATED
 Translation.addTranslation("Moves startup rotation", {
 	ru: "Перемещает начальный поворот"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes frames per second", {
 	ru: "Изменяет кадры в секунду"
-});
-Translation.addTranslation("FPS", {});
+}); // DEPRECATED
+Translation.addTranslation("FPS", {}); // DEPRECATED
 Translation.addTranslation("%s fps", {
 	ru: "%s к.с."
 });
 Translation.addTranslation("Frames/sec.", {
 	ru: "Кадры/сек."
-});
+}); // DEPRECATED
 Translation.addTranslation("Updates animate", {
 	ru: "Обновляет анимацию"
-});
+}); // DEPRECATED
 Translation.addTranslation("Transition updated", {
 	ru: "Переход обновлен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frames actions", {
 	ru: "Действия над кадрами"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selects currently frame", {
 	ru: "Выбирает текущий кадр"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frames", {
 	ru: "Кадры"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame %s", {
 	ru: "Кадр %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates and clones frames", {
 	ru: "Создает и копирует кадры"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame %s added", {
 	ru: "Кадр %s создан"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame %s cloned to %s", {
 	ru: "%s кадр клонирован в %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame %s added as currently", {
 	ru: "Кадр %s добавлен как текущий"
-});
+}); // DEPRECATED
 Translation.addTranslation("Plays or stops frame", {
 	ru: "Проигрывает или останавливает кадр"
-});
+}); // DEPRECATED
 Translation.addTranslation("Moves frame location", {
 	ru: "Перемещает положение кадра"
-});
+}); // DEPRECATED
 Translation.addTranslation("Moves frame rotation", {
 	ru: "Перемещает поворот кадра"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes frame duration", {
 	ru: "Изменяет длительность кадра"
-});
+}); // DEPRECATED
 Translation.addTranslation("Set up frame velocity vector", {
 	ru: "Устанавливает кадру вектор ускорения"
-});
+}); // DEPRECATED
 Translation.addTranslation("Interpolator disabled", {
 	ru: "Интерполятор отключен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Interpolator setted", {
 	ru: "Интерполятор измененен"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removes frame", {
 	ru: "Удаляет кадр"
-});
+}); // DEPRECATED
 Translation.addTranslation("Are you sure want to delete this frame?", {
 	ru: "Вы уверены, что хотите удалить этот кадр?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Frame deleted", {
 	ru: "Кадр удален"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates first frame", {
 	ru: "Создает первый кадр"
-});
+}); // DEPRECATED
 Translation.addTranslation("First frame added", {
 	ru: "Первый кадр создан"
-});
+}); // DEPRECATED
 
 // Entities content
 Translation.addTranslation("Entity", {
@@ -513,77 +513,77 @@ Translation.addTranslation("%s models \/ tree", {
 }); // COUNTER
 Translation.addTranslation("Summon", {
 	ru: "Призвать"
-});
-Translation.addTranslation("Can't summon entity at menu", {
+}); // DEPRECATED
+Translation.addTranslation("Impossible summon entity at menu", {
 	ru: "Нельзя призвать существо в меню"
 }); // DEPRECATED
 Translation.addTranslation("Entity summoned", {
 	ru: "Существо призвано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Entity define properties", {
 	ru: "Параметры объявления существа"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes entity identifier", {
 	ru: "Изменяет идентификатор сущности"
-});
+}); // DEPRECATED
 Translation.addTranslation("Set up path texture", {
 	ru: "Устанавливает путь к текстуре"
-});
+}); // DEPRECATED
 Translation.addTranslation("Updates render", {
 	ru: "Обновляет визуальную составляющую"
-});
+}); // DEPRECATED
 Translation.addTranslation("Visual model bones", {
 	ru: "Кости визуальной модели"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selects currently bone", {
 	ru: "Выбирает текущую кость"
-});
+}); // DEPRECATED
 Translation.addTranslation("Bones", {
 	ru: "Кости"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates and clones bones", {
 	ru: "Создает и копирует кости"
-});
+}); // DEPRECATED
 Translation.addTranslation("Bone %s added", {
 	ru: "Кость %s добавлена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Bone %s cloned to %s", {
 	ru: "Кость %s клонирована в %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Renames bone in tree", {
 	ru: "Переименовывает кость в дереве"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes offset between center and bone", {
 	ru: "Изменяет сдвиг между центром и костью"
-});
+}); // DEPRECATED
 Translation.addTranslation("Offset", {
 	ru: "Отступ"
-});
+}); // DEPRECATED
 Translation.addTranslation("Rotates bone around offset", {
 	ru: "Поворачивает кость вокруг сдвига"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removes bone", {
 	ru: "Удаляет кость"
-});
+}); // DEPRECATED
 Translation.addTranslation("Are you sure want to delete this bone?", {
 	ru: "Вы уверены, что хотите удалить эту кость?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Bone deleted", {
 	ru: "Кость удалена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Creates first bone", {
 	ru: "Создает первую кость"
-});
+}); // DEPRECATED
 Translation.addTranslation("First bone added", {
 	ru: "Первая кость добавлена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selected bone boxes", {
 	ru: "Коробки выбранной кости"
-});
+}); // DEPRECATED
 Translation.addTranslation("Changes box location in texture", {
 	ru: "Изменяет положение коробки в текстуре"
-});
-Translation.addTranslation("UV", {});
+}); // DEPRECATED
+Translation.addTranslation("UV", {}); // DEPRECATED
 
 // Animations content
 Translation.addTranslation("Animation", {
@@ -602,31 +602,31 @@ Translation.addTranslation("%stps", {});
 // Different tools
 Translation.addTranslation("Move", {
 	ru: "Перемещение"
-});
+}); // DEPRECATED
 Translation.addTranslation("Rotate", {
 	ru: "Поворот"
-});
+}); // DEPRECATED
 Translation.addTranslation("Mirror", {
 	ru: "Отражение"
-});
+}); // DEPRECATED
 Translation.addTranslation("Scretch", {
 	ru: "Растяжка"
-});
+}); // DEPRECATED
 Translation.addTranslation("ID", {
 	ru: "Идентификатор"
-});
+}); // DEPRECATED
 Translation.addTranslation("Data", {
 	ru: "Данные"
-});
+}); // DEPRECATED
 Translation.addTranslation("Duration", {
 	ru: "Длительность"
-});
+}); // DEPRECATED
 Translation.addTranslation("Data saved", {
 	ru: "Данные сохранены"
-});
+}); // DEPRECATED
 Translation.addTranslation("Save", {
 	ru: "Сохранить"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selection", {
 	ru: "Выбор"
 });
@@ -635,89 +635,89 @@ Translation.addTranslation("Select", {
 });
 Translation.addTranslation("Interpolator", {
 	ru: "Интерполятор"
-});
+}); // DEPRECATED
 Translation.addTranslation("Ac-Decelerate", {
 	ru: "Центральный"
-});
+}); // DEPRECATED
 Translation.addTranslation("Accelerate", {
 	ru: "Ускорение"
-});
+}); // DEPRECATED
 Translation.addTranslation("Decelerate", {
 	ru: "Замедление"
-});
+}); // DEPRECATED
 Translation.addTranslation("Linear", {
 	ru: "Линейный"
-});
+}); // DEPRECATED
 
 // Textures
 Translation.addTranslation("Texture", {
 	ru: "Текстура"
-});
+}); // DEPRECATED
 Translation.addTranslation("in %s textures", {
 	ru: "в %s текстурах"
-});
+}); // DEPRECATED
 Translation.addTranslation("All list", {
 	ru: "Весь список"
-});
+}); // DEPRECATED
 Translation.addTranslation("Minecraft", {
 	ru: "Майнкрафт"
-});
+}); // DEPRECATED
 Translation.addTranslation("Enter array", {
 	ru: "Ввод массива"
-});
+}); // DEPRECATED
 Translation.addTranslation("Texture changed", {
 	ru: "Текстура изменена"
-});
+}); // DEPRECATED
 Translation.addTranslation("Textures changed", {
 	ru: "Текстуры изменены"
-});
+}); // DEPRECATED
 Translation.addTranslation("Nothing finded.", {
 	ru: "Ничего не нашлось."
-});
+}); // DEPRECATED
 Translation.addTranslation("Textures requested successfully", {
 	ru: "Запрос текстур успешно завершен"
 }); // UNKNOWN-REASON-NO-LINK
 Translation.addTranslation("Textures array must be contains only arrays inside", {
 	ru: "Массив текстур должен содержать внутри только массивы"
-});
+}); // DEPRECATED
 Translation.addTranslation("Every element in textures array must have 2 length", {
 	ru: "Каждый элемент в массиве текстур должен быть из 2 элементов"
-});
+}); // DEPRECATED
 Translation.addTranslation("Every element in textures array may incudes only strings or numbers", {
 	ru: "Каждый элемент в массиве текстур может содержать только строки или числа"
-});
+}); // DEPRECATED
 
 // Mappings
 Translation.addTranslation("Map", {
 	ru: "Маппинг"
-});
+}); // DEPRECATED
 Translation.addTranslation("Unmap", {
 	ru: "Демаппинг"
-});
+}); // DEPRECATED
 Translation.addTranslation("Added mapping to %s, %s, %s", {
 	ru: "Маппинг добавлен в %s, %s, %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removed mapping from %s, %s, %s", {
 	ru: "Маппинг удален из %s, %s, %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Removed %s mappings", {
 	ru: "Очищено %s маппингов"
-});
+}); // DEPRECATED
 Translation.addTranslation("All mappings will be removed.", {
 	ru: "Все маппинги будут удалены."
-});
+}); // DEPRECATED
 Translation.addTranslation("Tap block", {
 	ru: "Нажмите на блок"
-});
+}); // DEPRECATED
 Translation.addTranslation("Hit entity", {
 	ru: "Ударьте существо"
-});
+}); // DEPRECATED
 Translation.addTranslation("Entity selected", {
 	ru: "Существо выбрано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Assigment updated", {
 	ru: "Дерево обновлено"
-});
+}); // DEPRECATED
 
 // Selection
 Translation.addTranslation("Element selector", {
@@ -728,7 +728,7 @@ Translation.addTranslation("Invert", {
 }); // DEPRECATED
 Translation.addTranslation("Nothing chosen", {
 	ru: "Ничего не выбрано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Always", {
 	ru: "Всегда"
 }); // DEPRECATED
@@ -754,7 +754,7 @@ Translation.addTranslation("Explorer", {
 });
 Translation.addTranslation("search filter", {
 	ru: "фильтр поиска"
-});
+}); // DEPRECATED
 Translation.addTranslation("%s bytes", {
 	ru: "%s байт"
 });
@@ -775,7 +775,7 @@ Translation.addTranslation("project", {
 });
 Translation.addTranslation("converted", {
 	ru: "конвертировано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Project", {
 	ru: "Проект"
 });
@@ -848,7 +848,7 @@ Translation.addTranslation("Which modification will be changed?", {
 Translation.addTranslation("Or maybe checkout supportables", {
 	ru: "Или можно проверить модули"
 });
-Translation.addTranslation("Can't open file", {
+Translation.addTranslation("Impossible open file", {
 	ru: "Нельзя открыть файл"
 });
 Translation.addTranslation("Autosave %s", {
@@ -859,7 +859,7 @@ Translation.addTranslation("Void itself.", {
 });
 Translation.addTranslation("Path", {
 	ru: "Путь"
-});
+}); // DEPRECATED
 
 // Times
 Translation.addTranslation("Jan", {
@@ -902,13 +902,13 @@ Translation.addTranslation("Dec", {
 // Hints
 Translation.addTranslation("Nothing to update", {
 	ru: "Нечего обновлять"
-});
+}); // DEPRECATED
 Translation.addTranslation("Nothing to remove", {
 	ru: "Нечего удалять"
 }); // DEPRECATED
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Worker has been removed", {
 	ru: "Редактор был удален"
 });
@@ -979,10 +979,10 @@ Translation.addTranslation("Preparing", {
 });
 Translation.addTranslation("Stringify", {
 	ru: "Преобразование"
-});
+}); // DEPRECATED
 Translation.addTranslation("Indexating", {
 	ru: "Индексация"
-});
+}); // DEPRECATED
 Translation.addTranslation("Compilation", {
 	ru: "Компиляция"
 });
@@ -991,7 +991,7 @@ Translation.addTranslation("Decompilation", {
 });
 Translation.addTranslation("Done", {
 	ru: "Готово"
-});
+}); // DEPRECATED
 Translation.addTranslation("Completed", {
 	ru: "Выполнено"
 });
@@ -1020,10 +1020,10 @@ Translation.addTranslation("There's no availabled entry to export", {
 // Confirmations dialogs
 Translation.addTranslation("Converter generated invalid script, they can't be runned.", {
 	ru: "Конвертер сгенерировал неправильный скрипт, он не может быть запущен."
-});
+}); // DEPRECATED
 Translation.addTranslation("Retry compile with another converted model.", {
 	ru: "Попробуйте скомпилировать другую конвертированную модель."
-});
+}); // DEPRECATED
 Translation.addTranslation("Do you want to review report?", {
 	ru: "Вы хотите пересмотреть готовый отчет?"
 });
@@ -1032,13 +1032,13 @@ Translation.addTranslation("Do you want to switch modification build type in bui
 });
 Translation.addTranslation("Save exported result?", {
 	ru: "Сохранить экспортированный результат?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
 	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны."
 });
 Translation.addTranslation("Script logging have several messages:", {
 	ru: "Отладка скрипта записала несколько сообщений:"
-});
+}); // DEPRECATED
 Translation.addTranslation("Launch sequence interrupted or handled exception.", {
 	ru: "Цепочка запуска прервалась или привела к ошибке."
 });
@@ -1191,7 +1191,7 @@ Translation.addTranslation("UNKNOWN", {
 });
 Translation.addTranslation("Unknown mod", {
 	ru: "Неизвестный мод"
-});
+}); // DEPRECATED
 Translation.addTranslation("Supportables isn't supported and disabled", {
 	ru: "Модули не поддерживаются и отключены"
 });
@@ -1202,13 +1202,13 @@ Translation.addTranslation("Something went wrong", {
 });
 Translation.addTranslation("Non-assigment", {
 	ru: "Не является деревом"
-});
-Translation.addTranslation("Can't find opened editor at %s position", {
+}); // DEPRECATED
+Translation.addTranslation("Impossible find opened editor at %s position", {
 	ru: "Не удается найти открытый редактор под индексом %s"
 }); // DEPRECATED
 Translation.addTranslation("Compilation failed", {
 	ru: "Компиляция не удалась"
-});
+}); // DEPRECATED
 Translation.addTranslation("An error occurred while executing modification.", {
 	ru: "Произошла ошибка во время работы модификации."
 });
@@ -1223,13 +1223,13 @@ Translation.addTranslation("Looks like, project is damaged. Check project and fo
 });
 Translation.addTranslation("Looks like, you entered invalid object. Check it with following exception:", {
 	ru: "По всей видимости, введен некорректный объект. Проверьте его со следующей ошибкой:"
-});
+}); // DEPRECATED
 Translation.addTranslation("Looks like, you entered invalid array. Check it with following exception:", {
 	ru: "По всей видимости, введен некорректный массив. Проверьте его со следующей ошибкой:"
-});
+}); // DEPRECATED
 Translation.addTranslation("Unknown or unsupported stringify type for:", {
 	ru: "Неизвестный или неподдерживаемый тип приведения для:"
-});
+}); // DEPRECATED
 Translation.addTranslation("Selected worker will be removed, including all it's data.", {
 	ru: "Выбранный редактор будет удален без возможности восстановления."
 });
@@ -1244,13 +1244,13 @@ Translation.addTranslation("Do you want to continue?", {
 });
 Translation.addTranslation("Touch here to confirm.", {
 	ru: "Нажмите здесь для подтверждения."
-});
+}); // DEPRECATED
 Translation.addTranslation("There's doesn't has any availabled data", {
 	ru: "Здесь нет никаких доступных данных"
 });
 Translation.addTranslation("That's isn't array", {
 	ru: "Это не массив"
-});
+}); // DEPRECATED
 Translation.addTranslation("Something went wrong during compilation process.", {
 	ru: "Что-то пошло не так во время процесса компиляции."
 });
@@ -1430,5 +1430,6 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
+Translation.addTranslation("Evaluate In", {});
 Translation.addTranslation(" ", {});
 Translation.addTranslation("\n", {});

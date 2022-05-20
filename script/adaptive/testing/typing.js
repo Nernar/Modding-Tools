@@ -68,7 +68,7 @@ const NarrationWindow = function() {
 	fade.setDuration(800);
 	window.setExitTransition(fade);
 	window.setFragment(new NarrationFragment());
-	window.fields = new Array();
+	window.fields = [];
 	let fragment = window.getFragment();
 	fragment.getContainer().setOnClickListener(function() {
 		window.continue();

@@ -27,10 +27,10 @@ LIBRARY({
 IMPORT("Retention:5");
 IMPORT("Network:2");
 
-let ModBrowser = new Object();
+let ModBrowser = {};
 
 ModBrowser.Query = function() {
-	this.query = new Object();
+	this.query = {};
 };
 
 ModBrowser.Query.prototype = new Network.Reader;
@@ -42,7 +42,7 @@ ModBrowser.Query.prototype.getQuery = function() {
 ModBrowser.Query.prototype.formatQuery = function() {
 	let query = this.getQuery();
 	if (!query) return null;
-	let result = new Array();
+	let result = [];
 	for (let item in query) {
 		let value = query[item];
 		result.push(item + (value !== null && value !== undefined
@@ -74,7 +74,7 @@ ModBrowser.Query.prototype.getJSON = function() {
 	return JSON.parse(this.getResult());
 };
 
-ModBrowser.Query.Sort = new Object();
+ModBrowser.Query.Sort = {};
 ModBrowser.Query.Sort.POPULAR = "popular";
 ModBrowser.Query.Sort.NEW = "new";
 ModBrowser.Query.Sort.REDACTION = "redaction";

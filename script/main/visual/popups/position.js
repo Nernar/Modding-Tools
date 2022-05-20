@@ -7,10 +7,10 @@ CoordsPopup.prototype.TYPE = "CoordsPopup";
 
 CoordsPopup.prototype.reset = function() {
 	ListingPopup.prototype.reset.apply(this, arguments);
-	this.views.groups = new Array();
-	this.views.titles = new Array();
-	this.views.containers = new Array();
-	this.groups = new Array();
+	this.views.groups = [];
+	this.views.titles = [];
+	this.views.containers = [];
+	this.groups = [];
 };
 
 CoordsPopup.prototype.addButtonElement = function(name, click) {
@@ -50,12 +50,12 @@ CoordsPopup.prototype.getGroup = function(position) {
 	let views = this.views,
 		mathes = this.mathes;
 	return this.groups[position] = {
-		items: new Array(),
+		items: [],
 		addItem: function(current) {
 			let elements = this,
 				index = this.items.length,
 				item = (this.items[index] = {
-					views: new Object(),
+					views: {},
 					current: [current, 0],
 					mathes: mathes || [16, 32, 64]
 				});

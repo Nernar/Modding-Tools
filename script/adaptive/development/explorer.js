@@ -1,4 +1,4 @@
-const Unicode = new Object();
+const Unicode = {};
 
 Unicode.isValidCode = function(code) {
 	return java.lang.Character.isValidCodePoint(code);
@@ -31,7 +31,7 @@ Unicode.toCodePoints = function(string) {
 	if (!(string instanceof java.lang.String)) {
 		string = new java.lang.String(string);
 	}
-	let points = new Array();
+	let points = [];
 	for (let i = 0; i < string.length(); i++) {
 		point.push(string.codePointAt(i));
 	}
@@ -93,7 +93,7 @@ Unicode.Charset.prototype.toHexRange = function() {
 	return this.getHexRange().join("-");
 };
 
-Unicode.charts = new Array();
+Unicode.charts = [];
 
 Unicode.getAvailabledCharsets = function() {
 	return this.charts;
@@ -500,7 +500,7 @@ ListHolderAdapter.prototype.createView = function(position, parent) {
 };
 
 ListHolderAdapter.prototype.createHolder = function(view) {
-	let holder = new Object();
+	let holder = {};
 	holder.text = view;
 	return holder;
 };
@@ -813,8 +813,8 @@ const openSupportedFileIfMay = function(file, extension) {
 		case Files.ExtensionType.AUDIO:
 			break;
 		default:
-			let items = new Array(),
-				extensions = new Array();
+			let items = [],
+				extensions = [];
 			for (let key in Files.ExtensionType) {
 				let extension = Files.ExtensionType[key];
 				if (extension == "folder" || extension == "unknown" || extension == "none") continue;

@@ -9,8 +9,8 @@ return function() {
 		return;
 	}
 	let json = compileData(Files.read(file), "object"),
-		categories = new Object(),
-		result = new Array();
+		categories = {},
+		result = [];
 	for (let item in json) {
 		let currently = json[item];
 		if (typeof currently != "object") continue;
@@ -24,7 +24,7 @@ return function() {
 			continue;
 		}
 		if (categories[category] === undefined) {
-			categories[category] = new Array();
+			categories[category] = [];
 		}
 		categories[category].push(item);
 	}

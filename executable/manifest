@@ -4,9 +4,5 @@
 	],
 	"library-dirs": [
 		"libs"
-	],
-	"options": [
-		"-cp",
-		"/storage/emulated/0/games/horizon/includes/2.3.0b113.jar"
 	]
 }

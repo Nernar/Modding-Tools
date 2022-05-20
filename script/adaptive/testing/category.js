@@ -1,60 +1,13 @@
-const recursiveRefresh = function(result, file, key) {
-	let name = Files.getNameWithoutExtension(file.getName());
-	key = String(key === undefined ? name : key);
-	if (!key.toLowerCase().endsWith(name.toLowerCase())) {
-		name = name.substring(0, 1).toUpperCase() + name.substring(1);
-		key += name;
-	}
-	if (file.isDirectory()) {
-		let list = file.listFiles();
-		for (let i = 0; i < list.length; i++) {
-			recursiveRefresh(result, list[i], key);
-		}
-	} else if (file.getName().endsWith(".dnr")) {
-		result.push(key);
-	}
-};
-
-const refreshCategoriedIcons = function() {
-	refreshCategoriedIcons.currently = new Object();
-	let file = new java.io.File(Dirs.ASSET);
-	if (!file.exists()) throw null;
-	let list = file.listFiles();
-	for (let i = 0; i < list.length; i++) {
-		let category = new Array(), name = list[i].getName();
-		if (list[i].isFile()) {
-			if (name.endsWith(".dnr")) {
-				if (refreshCategoriedIcons.currently["$"]) {
-					category = refreshCategoriedIcons.currently["$"];
-				}
-				recursiveRefresh(category, list[i]);
-				name = "$";
-			}
-		} else recursiveRefresh(category, list[i]);
-		if (category.length > 0) {
-			category.sort();
-			refreshCategoriedIcons.currently[name] = category;
-		}
-	}
-};
-
-refreshCategoriedIcons();
-
 const attachCategoriedIcons = function(control) {
-	if (isEmpty(refreshCategoriedIcons.currently)) {
+	if (isEmpty(BitmapDrawableFactory.mapped) && isEmpty(BitmapDrawableFactory.required)) {
 		MCSystem.throwException("At least one category must be defined");
 	}
-	let categories = new Array();
-	for (let category in refreshCategoriedIcons.currently) {
-		categories.push(String(category));
+	for (let who in BitmapDrawableFactory.mapped) {
+		control.addMessage(who, who);
 	}
-	categories.sort();
-	for (let c = 0; c < categories.length; c++) {
-		let name = categories[c], items = refreshCategoriedIcons.currently[name];
-		if (name != "$") control.addCategory(name);
-		for (let i = 0; i < items.length; i++) {
-			control.addMessage(items[i], items[i]);
-		}
+	control.addHeader().setLogo("support");
+	for (let who in BitmapDrawableFactory.required) {
+		control.addMessage(who, who);
 	}
 };
 
@@ -62,10 +15,12 @@ return function() {
 	handle(function() {
 		let control = new MenuWindow();
 		control.setOnClickListener(function() {
-			attachDebugTestTool();
+			DEBUG_TEST_TOOL.menu();
 		});
-		control.addHeader().setLogo("supportDumpCreator");
 		attachCategoriedIcons(control);
 		control.show();
+	}, function(e) {
+		traceOrReport(e);
+		DEBUG_TEST_TOOL.menu();
 	});
 };

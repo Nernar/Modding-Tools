@@ -1,10 +1,13 @@
 const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
-		// if (isFirstLaunch()) {
-			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, false);
+		if (REVISION.startsWith("develop") || isFirstLaunch()) {
+			if (!REVISION.startsWith("develop") && FileTools.exists(Dirs.INTERNAL_UI)) {
+				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
+			}
+			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 			LogotypeSequence.prototype.create.apply(this, arguments);
-		// }
+		}
 	},
 	getExpirationTime: function() {
 		return isFirstLaunch() ? LogotypeSequence.prototype.getExpirationTime.apply(this, arguments) : 0;
@@ -21,14 +24,22 @@ const LaunchSequence = new LogotypeSequence({
 				reportError.addDebugValue("autosaveEnabled", autosave);
 				reportError.addDebugValue("moveMapping", saveCoords);
 			}
+			if (!REVISION.startsWith("develop") && FileTools.exists(Dirs.INTERNAL_UI)) {
+				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
+			}
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
-			FileTools.assureDir(Dirs.EXPORT);
+			FileTools.assureDir(Dirs.PROJECT);
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
 			registerAdditionalInformation();
 		} else if (index == 3) {
 			refreshSupportablesIcons();
+			if (isInstant) {
+				Callback.invokeCallback("Instant:ModdingTools", API);
+			} else {
+				Callback.invokeCallback("ModdingTools", API);
+			}
 		}
 		return index;
 	},
@@ -64,120 +75,5 @@ const LaunchSequence = new LogotypeSequence({
 		}
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();
-		if (textures.length <= 1) {
-			FetchAdditionalSequence.execute();
-		}
-	}
-});
-
-const FetchAdditionalSequence = new SnackSequence({
-	requiresProgress: false,
-	count: 4,
-	process: function(index) {
-		if (index == 1) {
-			let file = new java.io.File(Dirs.ASSET, "converterlib/src/index.js");
-			if (file.exists() && file.length() > 0) {
-				ModelConverter = FileTools.readFileText(file.getPath());
-			}
-		} else if (!isHorizon && index == 2) {
-			let path = Dirs.RESOURCE + "textures/terrain_texture.json";
-			if (FileTools.exists(path)) {
-				let text = FileTools.readFileText(path);
-				if (text && text.length > 0) {
-					let object = compileData(text, "object");
-					if (object) {
-						let terrain = object.texture_data;
-						if (terrain) {
-							let index = addTextureMod(translate("All list"));
-							for (let item in terrain) {
-								let element = terrain[item];
-								if (!element) continue;
-								let items = element.textures;
-								if (!items) continue
-								if (Array.isArray(items)) {
-									for (let t = 0; t < items.length; t++) {
-										let name = items[t];
-										if (typeof name == "object") {
-											addTexture(index, name.path, t);
-										} else addTexture(index, item, t);
-									}
-								} else if (items !== undefined && items !== null) {
-									if (typeof items == "object") {
-										addTexture(index, items.path, 0);
-									} else addTexture(index, item, 0);
-								}
-							}
-						}
-					}
-				}
-			}
-		} else if (index == 3) {
-			let file = tryout(function() {
-				let version = Packages.com.zhekasmirnov.apparatus.minecraft.version.MinecraftVersions.getCurrent();
-				return "blocks_" + version.getCode();
-			}, function(e) {
-				return isHorizon ? "blocks_12" : "blocks_0";
-			});
-			let path = Dirs.ASSET + file + ".json";
-			if (FileTools.exists(path)) {
-				let data = FileTools.readFileText(path);
-				if (data && (data = compileData(data, "object"))) {
-					let index = addTextureMod(translate("Minecraft"));
-					textures[index].items = data;
-				}
-			} else {
-				Logger.Log("File " + file + " doesn't seems to be created, vanilla atlas skipped", "DEV-CORE");
-			}
-		} else if (index == 4) {
-			let mods = Files.listDirectories(Dirs.MOD);
-			for (let m = 0; m < mods.length; m++) {
-				let directory = mods[m].getPath() + "/";
-				let redirect = directory + ".redirect";
-				if (FileTools.exists(redirect)) {
-					directory = FileTools.readFileText(redirect).trim();
-				}
-				let path = directory + "build.config";
-				if (!FileTools.exists(path)) {
-					continue;
-				}
-				tryout(function() {
-					let text = FileTools.readFileText(path);
-					let config = compileData(text, "object");
-					let resources = config && config.resources ? config.resources : null;
-					if (!resources || resources.length == 0) {
-						return;
-					}
-					let index = addTextureMod(mods[m].getName());
-					for (let i = 0; i < resources.length; i++) {
-						let resource = resources[i];
-						if (resource && resource.resourceType == "resource") {
-							let res = directory + resource.path + "terrain-atlas";
-							if (!FileTools.exists(res)) continue;
-							let files = Files.listFileNames(res, true);
-							files = Files.checkFormats(files, [".png", ".tga"]);
-							for (let t = 0; t < files.length; t++) {
-								let name = files[t];
-								if (!name || name.length == 0) {
-									continue;
-								}
-								name = Files.getNameWithoutExtension(name);
-								let begin = name.indexOf(resource.path);
-								if (begin != -1) name = name.substring(begin);
-								let animation = name.lastIndexOf(".anim.");
-								if (animation != -1) name = name.substring(0, animation);
-								let underscore = name.lastIndexOf("_");
-								if (underscore != -1) {
-									addTexture(index, name.substring(0, underscore), name.substring(underscore + 1));
-								} else addTexture(index, name, 0);
-							}
-						}
-					}
-				});
-			}
-		}
-		return index;
-	},
-	getPrecompleteHint: function() {
-		return translate("Textures requested successfully");
 	}
 });

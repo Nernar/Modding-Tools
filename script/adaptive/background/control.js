@@ -4,16 +4,16 @@ let tool = new ControlTool({
 	},
 	menuDescriptor: {
 		elements: function() {
-			let array = new Array();
+			let array = [];
 			header = array[array.push({
 				type: "projectHeader",
-				categories: new Array()
+				categories: []
 			}) - 1];
 			let registered = AdditionalMessageFactory.getRegistered();
 			for (let i = 0; i < 2; i++) {
 				let item = header.categories[header.categories.push({
 					title: registered[random(0, random.length - 1)].getMessage(),
-					items: new Array()
+					items: []
 				}) - 1];
 				for (let m = 0; m < registered.length; m++) {
 					let next = registered[m];
@@ -37,7 +37,7 @@ let tool = new ControlTool({
 					item = array[array.push({
 						type: "category",
 						title: message.getMessage(),
-						items: new Array()
+						items: []
 					}) - 1];
 				for (let m = 0; m < registered.length; m++) {
 					let next = registered[m];

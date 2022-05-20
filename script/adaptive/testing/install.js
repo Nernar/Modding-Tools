@@ -18,8 +18,8 @@ let catchLastAvailabledId = function() {
 };
 
 return function() {
-	let downloaded = new Array();
-	handleThread(function() {
+	checkOnlineable(function() {
+		let downloaded = [];
 		let lastId = catchLastAvailabledId();
 		print("1 -> " + lastId);
 		for (let i = 1; i <= lastId; i++) {

@@ -24,7 +24,7 @@ MenuWindow.parseJson = function() {
 		category.addItem("menuBoardInsert", translate("Evaluate"), function() {
 			RuntimeCodeEvaluate.showSpecifiedDialog();
 		});
-		category.addItem("blockDefineType", translate("Check"), function() {
+		category.addItem("inspectorType", translate("Check"), function() {
 			evaluateScope();
 		});
 		category.addItem("explorerExtensionScript", translate("Launch"), function() {
@@ -32,7 +32,7 @@ MenuWindow.parseJson = function() {
 		});
 		category.addItem("worldShape", translate("Require"), function() {
 			let files = Files.listFileNames(Dirs.EVALUATE, true),
-				more = Files.listFileNames(Dirs.ADAPTIVE, true);
+				more = Files.listFileNames(Dirs.SCRIPT_ADAPTIVE, true);
 			files = Files.checkFormats(files.concat(more), ".js");
 			for (let i = 0; i < files.length; i++) {
 				let file = files[i];
@@ -87,9 +87,11 @@ LaunchSequence.__process = LaunchSequence.process;
 let debugIgnoreLockedBackground = true;
 
 LaunchSequence.process = function(index) {
-	if (index == 3) {
-		if (FileTools.exists(Dirs.IMAGE)) {
-			AsyncSnackSequence.access("resource.js", [Dirs.IMAGE, Dirs.ASSET]).assureYield();
+	if (index == 1) {
+		showHint.unstackLaunch();
+	} else if (index == 3) {
+		if (FileTools.exists(Dirs.INTERNAL_UI)) {
+			AsyncSnackSequence.access("packer.js", [Dirs.INTERNAL_UI, Dirs.ASSET, 192]).assureYield();
 		}
 		BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 	}
@@ -120,10 +122,10 @@ LaunchSequence.process = function(index) {
 	} else if (index == 3) {
 		tryoutSafety(function() {
 			if (FileTools.exists(Dirs.EVALUATE + "testing/")) {
-				AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.TESTING]).assureYield();
+				AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
 			}
-			if (FileTools.exists(Dirs.ADAPTIVE + "testing/")) {
-				AsyncSnackSequence.access("script.js", [Dirs.ADAPTIVE + "testing/", Dirs.TESTING]).assureYield();
+			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "testing/")) {
+				AsyncSnackSequence.access("script.js", [Dirs.SCRIPT_ADAPTIVE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
 			}
 		});
 		if (debugIgnoreLockedBackground) {

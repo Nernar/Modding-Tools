@@ -26,9 +26,9 @@ if (typeof Object.assign != "function") {
 const assign = function(target, source) {
 	if (source === null || source === undefined) {
 		if (target instanceof Object || target instanceof Function) {
-			source = new Object();
+			source = {};
 		} else if (target instanceof Array) {
-			source = new Array();
+			source = [];
 		}
 	}
 	if (source instanceof Object || source instanceof Array || source instanceof Function) {
@@ -48,7 +48,7 @@ const merge = function(target, source) {
 		return target.slice().concat(source);
 	} else if (typeof source == "object") {
 		if (typeof target != "object") {
-			target = new Object();
+			target = {};
 		}
 		for (let item in source) {
 			target[item] = merge(target[item], source[item]);
@@ -58,11 +58,32 @@ const merge = function(target, source) {
 	return source;
 };
 
+const _clone = function(target, source) {
+	if (source === null || source === undefined) {
+		return clone(target);
+	}
+	if (source && (typeof source == "object" || typeof source == "function")) {
+		if (Array.isArray(source)) {
+			if (!Array.isArray(target)) {
+				target = [];
+			}
+		} else {
+			target = {};
+		}
+		for (let item in source) {
+			target[item] = _clone(target[item], source[item]);
+		}
+		return target;
+	}
+	return source;
+};
+
 const clone = function(source) {
-	if (source instanceof Object || source instanceof Function) {
-		return merge(new Object(), source);
-	} else if (source instanceof Array) {
-		return merge(new Array(), source);
+	if (source && (typeof source == "object" || typeof source == "function")) {
+		if (Array.isArray(source)) {
+			return _clone([], source);
+		}
+		return _clone({}, source);
 	}
 	return source;
 };

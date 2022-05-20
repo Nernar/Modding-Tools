@@ -22,15 +22,6 @@ tryoutSafety(function() {
 	}
 });
 
-if (isInstant) initialize();
-
-Callback.addCallback("PostLoaded", function() {
-	if (!isInstant) {
-		initialize();
-	}
-	isInstant = false;
-});
-
 const restart = function() {
 	if (!isSupportEnv) {
 		return;
@@ -42,3 +33,21 @@ const restart = function() {
 	});
 	isSupportEnv = false;
 };
+
+if (isInstant) {
+	initialize();
+}
+
+Callback.addCallback("PostLoaded", function() {
+	if (!isInstant) {
+		initialize();
+	} else {
+		handle(function() {
+			if (PROJECT_TOOL.isAttached()) {
+				PROJECT_TOOL.deattach();
+			}
+			attachProjectTool();
+		});
+	}
+	isInstant = false;
+});

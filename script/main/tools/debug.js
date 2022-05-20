@@ -1,47 +1,75 @@
 const LogViewer = {
-	FREQUENCY: 250,
+	span: function(text, color) {
+		let spannable = new android.text.SpannableString(text);
+		spannable.setSpan(new android.text.style.ForegroundColorSpan(color), 0, text.length, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		return spannable;
+	},
+	append: function(text, scroll, horizontal, prefix, message, color) {
+		text.post(function() {
+			if (color !== undefined && color != 0) {
+				text.append(LogViewer.span("\n" + (prefix != "undefined" ? prefix + "/" + message : "" + message), color));
+			} else {
+				text.append("\n" + (prefix != "undefined" ? prefix + "/" + message : "" + message));
+			}
+			scroll.scrollTo(horizontal.getScrollX(), text.getMeasuredHeight());
+		});
+	},
+	handle: function(text, scroll, horizontal, message) {
+		if (message == null) {
+			return;
+		}
+		// let color = message.prefix.toFontColor();
+		// color = Interface.Color.parse(color);
+		if (message.type.level == 3) {
+			return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.RED);
+		}
+		if (message.strPrefix == "WARNING") {
+			return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.YELLOW);
+		}
+		if (message.type.level == 2 || message.strPrefix == "INFO") {
+			return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.GREEN);
+		} else if (message.type.level == 1 || message.strPrefix == "DEBUG") {
+			return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.GRAY);
+		}
+		if (message.strPrefix == "MOD") {
+			return this.append(text, scroll, horizontal, message.strPrefix, message.message);
+		}
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.LTGRAY);
+	},
 	show: function() {
 		let popup = new ListingPopup();
 		popup.setTitle(translate("Currently log"));
+	   	popup.views.scroll.setLayoutParams(new android.widget.LinearLayout.
+			LayoutParams(Interface.Display.WIDTH / 4, Interface.Display.HEIGHT / 3));
 		let horizontal = new android.widget.HorizontalScrollView(context);
-		popup.views.content.addView(horizontal);
 		let text = new android.widget.TextView(context);
 		text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 		text.setTextSize(Interface.getFontSize(12));
-		text.setTextColor(Interface.Color.WHITE);
-		if (typeface) text.setTypeface(typeface);
+	   	text.setTextColor(Interface.Color.WHITE);
+		text.setTypeface(android.graphics.Typeface.MONOSPACE);
+		text.setText(NAME + " " + REVISION);
+		popup.views.content.addView(horizontal);
 		horizontal.addView(text);
-		let seek = new android.widget.SeekBar(context);
-		seek.setMax(39);
-		seek.setProgress((LogViewer.FREQUENCY - 50) / 50);
-		seek.setOnSeekBarChangeListener({
-			onProgressChanged: function(view, progress) {
-				tryout.call(LogViewer, function() {
-					this.FREQUENCY = preround(progress * 50 + 50);
-				});
+		let filter = findCorePackage().api.log.ICLog.getLogFilter();
+		let messagesField = getClass(filter).__javaObject__.getDeclaredField("logMessages");
+		messagesField.setAccessible(true);
+		let messages = messagesField.get(filter);
+		Popups.open(popup, "logging");
+		let count = messages.size();
+		handleThread(function() {
+			while (popup.isOpened()) {
+				if (popup.isExpanded()) {
+					let next = messages.size();
+					if (next > count) {
+						for (let i = count; i < next; i++) {
+							LogViewer.handle(text, popup.views.scroll, horizontal, messages.get(i));
+						}
+						count = next;
+					}
+				}
+				java.lang.Thread.yield();
 			}
 		});
-		let params = new android.widget.LinearLayout.
-			LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-		params.weight = .1;
-		popup.getContainer().addView(seek, params);
-		handleThread(function() {
-			let log = java.lang.Class.forName("zhekasmirnov.launcher.api.log.ICLog", true, context.getClass().getClassLoader()),
-				filter = log.getMethod("getLogFilter").invoke(null);
-			do {
-				if (popup.isExpanded()) {
-					let result = filter.buildFilteredLog(false);
-					handle(function() {
-						text.setText(result);
-						if (text.getMeasuredHeight() - popup.views.scroll.getScrollY() < Interface.Display.HEIGHT) {
-							popup.views.scroll.scrollTo(horizontal.getScrollX(), text.getMeasuredHeight());
-						}
-					});
-					Interface.sleepMilliseconds(LogViewer.FREQUENCY);
-				}
-			} while (popup.name && Popups.hasOpenedByName(popup.name));
-		});
-		Popups.open(popup, "innercore_log");
 	}
 };
 
@@ -157,6 +185,7 @@ const DEBUG_TEST_TOOL = (function() {
 			}
 		},
 		getTestDescriptor: function(path, json) {
+			let information = DebugEditor.fetchInformation(path);
 			if (information) {
 				let instance = this;
 				return {
@@ -180,7 +209,7 @@ const DEBUG_TEST_TOOL = (function() {
 				}
 				REQUIRE(path)();
 				if (typeof timing == "number") {
-					handle(function() {
+					handle.call(this, function() {
 						this.menu();
 					}, timing);
 				}
@@ -195,13 +224,14 @@ const DEBUG_TEST_TOOL = (function() {
 const attachDebugTestTool = function(post) {
 	DEBUG_TEST_TOOL.attach();
 	if (!DebugEditor.data.tests) {
-		let list = DebugEditor.data.tests = new Object();
+		let list = DebugEditor.data.tests = {};
 		FetchTestsSequence.execute(list);
 	}
-	DEBUG_TEST_TOOL.queue(FetchTestsSequence);
+	DEBUG_TEST_TOOL.queue();
 	handleThread(function() {
 		FetchTestsSequence.assureYield();
 		handle(function() {
+			DEBUG_TEST_TOOL.describeMenu();
 			if (DEBUG_TEST_TOOL.isQueued()) {
 				DEBUG_TEST_TOOL.menu();
 			}
@@ -220,10 +250,10 @@ const attachDebugTestTool = function(post) {
 };
 
 const DebugEditor = {
-	data: new Object(),
+	data: {},
 	fetchInformation: function(path) {
 		return tryout(function() {
-			let file = new java.io.File(Dirs.TESTING, path + ".json");
+			let file = new java.io.File(Dirs.SCRIPT_TESTING, path + ".json");
 			if (!file.exists()) throw null;
 			return compileData(Files.read(file));
 		}, function(e) {
@@ -251,10 +281,7 @@ const ModificationSource = {
 	},
 	findModList: function() {
 		return tryout(function() {
-			let loader = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader;
-			if (loader == null) MCSystem.throwException(null);
-			let mods = loader.getSingleton().getAllMods();
-			if (mods == null) MCSystem.throwException(null);
+			let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
 			let sorted = new java.util.ArrayList();
 			for (let i = 0; i < mods.size(); i++) {
 				let mod = mods.get(i);
@@ -264,9 +291,7 @@ const ModificationSource = {
 			}
 			return sorted;
 		}, function(e) {
-			let loader = findCorePackage().mod.build.ModLoader;
-			if (loader == null) return null;
-			return loader.instance.modsList;
+			return findCorePackage().mod.build.ModLoader.instance.modsList;
 		});
 	},
 	attachSources: function(control) {
@@ -297,7 +322,18 @@ const ModificationSource = {
 			dir = new java.io.File(mod.dir).getName(),
 			version = mod.getInfoProperty("version") || "1.0",
 			key = BitmapDrawableFactory.generateKeyFor("support/" + mod.getName(), false),
-			icon = (BitmapDrawableFactory.isMapped(key) ? key : mod.dir + "mod_icon.png");
+			icon = (BitmapDrawableFactory.isMapped(key) ? key : null);
+		if (icon == null) {
+			if (FileTools.exists(mod.dir + "mod_icon_dark.png")) {
+				icon = mod.dir + "mod_icon_dark.png";
+			} else if (FileTools.exists(mod.dir + "mod_icon.png")) {
+				icon = mod.dir + "mod_icon.png";
+			} else if (FileTools.exists(mod.dir + "icon.png")) {
+				icon = mod.dir + "icon.png";
+			} else {
+				icon = "support";
+			}
+		}
 		control.addMessage(icon, translate(mod.getName()) + " " + translate(version) +
 			"\n/" + dir + " / " + translate(type), function() {
 				ModificationSource.rebuild(mod, type);
@@ -306,13 +342,13 @@ const ModificationSource = {
 	rebuild: function(mod, type) {
 		if (type == "release") {
 			confirm(translate("Decompilation"), translate("Modification currently was compiled into dexes.") + " " + translate("If you're developer, it may be decompiled.") + " " + translate("Do you want to continue?"), function() {
-				LogViewer.show();
+				// LogViewer.show();
 				handleThread(function() {
 					ModificationSource.requireDecompilerAsync(mod);
 					handle(function() {
 						ModificationSource.confirmSwitchBuild(mod);
 						ModificationSource.selector();
-						Popups.closeIfOpened("innercore_log");
+						// Popups.closeIfOpened("logging");
 					});
 				});
 				MenuWindow.hideCurrently();
@@ -331,7 +367,11 @@ const ModificationSource = {
 						confirm(translate(result.name) + " " + translate(result.version), (result.wasFailed ?
 								translate("Something went wrong during compilation process.") + " " + translate("Checkout reports below to see more details.") :
 								translate("Modification successfully compiled.") + " " + translate("You can switch build type in next window.")) + " " +
-							translate("Founded sources count") + ": " + (result.buildConfig ? result.buildConfig.getAllSourcesToCompile().size() : 0) + ".\n" +
+							translate("Founded sources count") + ": " + (result.buildConfig ? tryout(function() {
+								return result.buildConfig.getAllSourcesToCompile(true)
+							}, function() {
+								return result.buildConfig.getAllSourcesToCompile();
+							}).size() : 0) + ".\n" +
 							translate("Do you want to review report?"),
 							function() {
 								if (result.messages && result.messages.length > 0) {
@@ -353,7 +393,7 @@ const ModificationSource = {
 		return yields;
 	},
 	requireDecompilerAsync: function(mod, yields) {
-		let formatter = AsyncSnackSequence.access("decompiler.js", mod, function(who) {
+		let formatter = AsyncStackedSnackSequence.access("decompiler.js", mod, function(who) {
 			yields = who;
 		});
 		if (yields !== false) formatter.assureYield();
@@ -377,7 +417,7 @@ const ModificationSource = {
 	}
 };
 
-const LevelProvider = new Object();
+const LevelProvider = {};
 
 LevelProvider.attach = function() {
 	let overlay = new OverlayWindow();
@@ -433,10 +473,10 @@ LevelProvider.hide = function() {
 	overlay.hide();
 };
 
-const RuntimeCodeEvaluate = new Object();
+const RuntimeCodeEvaluate = {};
 
 RuntimeCodeEvaluate.setupNewContext = function() {
-	let somewhere = this.somewhere = new Object();
+	let somewhere = this.somewhere = {};
 	runCustomSource("runtime.js", {
 		GLOBAL: somewhere
 	});
@@ -453,10 +493,11 @@ RuntimeCodeEvaluate.getContextOrSetupIfNeeded = function() {
 	return this.setupNewContext();
 };
 
-RuntimeCodeEvaluate.showSpecifiedDialog = function(source) {
+RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
 	let edit = new android.widget.EditText(context);
 	edit.setHint(translate("Hi, I'm evaluate stroke"));
 	source === undefined && (source = RuntimeCodeEvaluate.lastCode);
+	where === undefined && (where = RuntimeCodeEvaluate.lastExecutable);
 	if (source !== undefined) edit.setText(String(source));
 	edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
 		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
@@ -464,7 +505,8 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source) {
 	edit.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
 	edit.setTypeface(android.graphics.Typeface.MONOSPACE);
-	edit.setTextSize(Interface.getFontSize(27));
+	edit.setTextColor(android.graphics.Color.WHITE);
+	edit.setTextSize(Interface.getFontSize(21));
 	edit.setHorizontalScrollBarEnabled(true);
 	edit.setHorizontallyScrolling(true);
 	edit.setSingleLine(false);
@@ -472,32 +514,73 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source) {
 	
 	let dialog = new android.app.AlertDialog.Builder(context,
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-	dialog.setTitle(translate(NAME) + " " + translate(VERSION));
 	dialog.setPositiveButton(translate("Evaluate"), function() {
-		tryout(function() {
+		let something = tryout(function() {
 			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
-			eval(RuntimeCodeEvaluate.lastCode);
+			RuntimeCodeEvaluate.lastExecutable = where;
+			if (where !== undefined && where !== null) {
+				return where.evaluateStringInScope(RuntimeCodeEvaluate.lastCode);
+			}
+			return eval(RuntimeCodeEvaluate.lastCode);
 		});
+		if (something !== undefined) {
+			showHint(something);
+		}
 	});
 	dialog.setNeutralButton(translate("Export"), function() {
 		tryout(function() {
 			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
+			RuntimeCodeEvaluate.lastExecutable = where;
 			RuntimeCodeEvaluate.exportEvaluate();
 		});
 	});
 	dialog.setNegativeButton(translate("Cancel"), null);
 	dialog.setCancelable(false).setView(edit);
 	let something = dialog.create();
-	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.WRAP);
-	something.show();
-	let title = something.findViewById(android.R.id.title);
-	if (title != null) {
-		title.setOnClickListener(function(view) {
-			tryout(function() {
-				
+	tryout(function() {
+		let identifier = context.getResources().getIdentifier("alertTitle", "id", context.getPackageName());
+		if (identifier <= 0) {
+			identifier = context.getResources().getIdentifier("alertTitle", "id", "android");
+		}
+		let title = something.findViewById(identifier > 0 ? identifier : android.R.id.title);
+		if (title == null) {
+			MCSystem.throwException("ModdingTools: not found actual android dialog title, using custom view");
+		}
+		return title;
+	}, function(any) {
+		Logger.Log(any, "INFO");
+		let title = new android.widget.TextView(context);
+		title.setPadding(Interface.getY(32), Interface.getY(16), Interface.getY(32), 0);
+		title.setTextSize(Interface.getFontSize(36));
+		title.setTextColor(Interface.Color.WHITE);
+		title.setText(translate(NAME) + " " + translate(VERSION));
+		something.setCustomTitle(title);
+		return title;
+	}).setOnClickListener(function(view) {
+		tryout(function() {
+			let executables = RuntimeCodeEvaluate.resolveAvailabledExecutables();
+			let realExecutablePointer = [];
+			let readableArray = [];
+			for (let i = 0; i < executables.length; i++) {
+				for (let element in executables[i]) {
+					if (element == "__mod__") {
+						continue;
+					}
+					for (let s = 0; s < executables[i][element].length; s++) {
+						let source = executables[i][element][s];
+						readableArray.push(executables[i].__mod__.name + ": " + source.name + " (" + element + ")");
+						realExecutablePointer.push(source);
+					}
+				}
+			}
+			select(translate("Evaluate In"), readableArray, function(index, value) {
+				where = realExecutablePointer[index];
+				showHint(value);
 			});
 		});
-	}
+	});
+	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.WRAP);
+	something.show();
 };
 
 RuntimeCodeEvaluate.exportEvaluate = function() {
@@ -515,8 +598,8 @@ RuntimeCodeEvaluate.loadEvaluate = function() {
 
 RuntimeCodeEvaluate.resolveSpecifiedTypeSources = function(modification, type) {
 	let sources = modification[type];
-	if (sources.size() > 0) {
-		let source = new Array();
+	if (sources && sources.size() > 0) {
+		let source = [];
 		for (let w = 0; w < sources.size(); w++) {
 			source.push(sources.get(w));
 		}
@@ -526,32 +609,33 @@ RuntimeCodeEvaluate.resolveSpecifiedTypeSources = function(modification, type) {
 };
 
 RuntimeCodeEvaluate.putSpecifiedTypeSources = function(modification, someone, type, name) {
-	return require(function() {
+	return require.call(this, function() {
 		let specified = this.resolveSpecifiedTypeSources(modification, type);
 		return specified && (someone[name] = specified) != null;
 	}, new Function(), false);
 };
 
 RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification) {
-	let someone = new Object();
+	let someone = {};
 	this.putSpecifiedTypeSources(modification, someone, "compiledModSources", "modification");
 	this.putSpecifiedTypeSources(modification, someone, "compiledLauncherScripts", "launcher");
 	this.putSpecifiedTypeSources(modification, someone, "compiledLibs", "library");
 	this.putSpecifiedTypeSources(modification, someone, "compiledPreloaderScripts", "preloader");
 	this.putSpecifiedTypeSources(modification, someone, "compiledInstantScripts", "instant");
+	// TODO: Custom must additionaly added byself
 	if (isEmpty(someone)) {
 		return null;
 	}
-	someone.modification = modification;
+	someone.__mod__ = modification;
 	return someone;
 };
 
 RuntimeCodeEvaluate.resolveAvailabledExecutables = function(callback) {
 	let sources = ModificationSource.findModList(),
-		modByName = new Array();
-	for (let i = 0; i < sources.length; i++) {
-		let modification = sources[i];
-		callback && callback(i + 1, sources.length);
+		modByName = [];
+	for (let i = 0; i < sources.size(); i++) {
+		let modification = sources.get(i);
+		callback && callback(i + 1, sources.size());
 		let someone = this.resolveSpecifiedModificationSources(modification);
 		someone && modByName.push(someone);
 	}

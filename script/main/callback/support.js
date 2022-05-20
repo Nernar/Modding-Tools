@@ -1,34 +1,10 @@
-Callback.addCallback("CoreEngineLoaded", function(api) {
-	handle(function() {
-		if (isHorizon) {
-			let window = context.getWindow();
-			if (android.os.Build.VERSION.SDK_INT >= 30) {
-				window.setDecorFitsSystemWindows(false);
-				let controller = window.getInsetsController();
-				if (controller != null) {
-					controller.hide(android.view.WindowInsets.Type.statusBars() | android.view.WindowInsets.Type.navigationBars());
-					controller.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-				}
-			} else window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
-			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		}
-	});
+const notifyCoreEngineLoaded = function() {
+	$.ModAPI.registerAPI("ModdingTools", API);
 	tryout(function() {
-		api.ModAPI.registerAPI("DevEditor", {
-			createAndLock: function() {
-				restart();
-			},
-			getCurrentEnvironment: function() {
-				return currentEnvironment;
-			},
-			isLocked: function() {
-				return !isSupportEnv;
-			}
-		});
 		/* if (ExecuteableSupport.isModuleMissed()) {
 			MCSystem.setLoadingTip(NAME + ": Loading Supportables");
 			UIEditor = importMod("UIEditor", function() {
-				let DevEditor = ModAPI.requireAPI("DevEditor");
+				let ModdingTools = ModAPI.requireAPI("ModdingTools");
 				if (!this.hasOwnProperty("Windows")) {
 					return false;
 				}
@@ -37,8 +13,8 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 					let source = java.lang.String.valueOf(String(menu)),
 						index = source.indexOf("{");
 					if (index > -1) {
-						let injectable = "if (DevEditor.isLocked()) return;\n" +
-							"if (layout.getChildCount() == 1) DevEditor.createAndLock();",
+						let injectable = "if (ModdingTools.Supportable.canLeaveAtMoment()) return;\n" +
+							"if (layout.getChildCount() == 1) ModdingTools.Supportable.sendBackstageStatus();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						Windows.menu = eval(first + "\n" + injectable + "\nelse " + second);
@@ -47,7 +23,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				return true;
 			});
 			Setting = importMod("Setting", function() {
-				let DevEditor = ModAPI.requireAPI("DevEditor");
+				let ModdingTools = ModAPI.requireAPI("ModdingTools");
 				if (typeof this.rover == "undefined" || !this.removeMenu) {
 					return false;
 				}
@@ -56,15 +32,15 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 					let source = java.lang.String.valueOf(String(removeMenu)),
 						index = source.indexOf("{");
 					if (index > -1) {
-						let injectable = "if (!rover) DevEditor.createAndLock();",
+						let injectable = "if (!rover) ModdingTools.Supportable.sendBackstageStatus();",
 							first = source.substring(0, index + 1),
 							second = source.substring(index + 2, source.length() - 1);
 						removeMenu = eval(first + "\n" + injectable + "\n " + second);
 					} else return false;
 				} else return false;
 				Callback.addCallback("LevelLeft", function() {
-					if (!DevEditor.isLocked() && DevEditor.getCurrentEnvironment() == __name__) {
-						DevEditor.createAndLock(), rover = false;
+					if (!ModdingTools.Supportable.canLeaveAtMoment() && ModdingTools.Supportable.getCurrentEnvironment() == __name__) {
+						ModdingTools.Supportable.sendBackstageStatus(), rover = false;
 					}
 				});
 				return true;
@@ -86,7 +62,7 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 				if (!this.hasOwnProperty("openAndroidUI") || !this.hasOwnProperty("container")) {
 					return false;
 				}
-				container = new Object();
+				container = {};
 				container.close = new Function();
 				container.isOpened = function() {
 					return true;
@@ -101,12 +77,40 @@ Callback.addCallback("CoreEngineLoaded", function(api) {
 			});
 		} else supportSupportables = false; */
 	});
+};
+
+/*
+Callback.addCallback("CoreEngineLoaded", function(api) {
+	handle(function() {
+		if (isHorizon) {
+			let window = context.getWindow();
+			if (android.os.Build.VERSION.SDK_INT >= 30) {
+				window.setDecorFitsSystemWindows(false);
+				let controller = window.getInsetsController();
+				if (controller != null) {
+					controller.hide(android.view.WindowInsets.Type.statusBars() | android.view.WindowInsets.Type.navigationBars());
+					controller.setSystemBarsBehavior(android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+				}
+			} else window.getDecorView().setSystemUiVisibility(android.view.View.SYSTEM_UI_FLAG_IMMERSIVE);
+			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		}
+	});
 });
+
+Callback.addCallback("CoreEngineLoaded", function(api) {
+	handle(function() {
+		let window = context.getWindow();
+		if (REVISION.indexOf("alpha") != -1 && !REVISION.startsWith("develop")) {
+			window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
+		}
+	});
+});
+*/
 
 Callback.addCallback("CoreConfigured", function(config) {
 	tryout(function() {
 		if (!supportSupportables) {
-			Logger.Log("Supportables disabled, because it's not approved by developer", "DEV-CORE");
+			Logger.Log("Supportables disabled, because it's not approved by developer", "MOD");
 		} else loadSupportables = loadSetting("supportable.enabled", "boolean");
 		if (loadSupportables) {
 			if (supportSupportables) {

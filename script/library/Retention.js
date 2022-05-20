@@ -38,6 +38,40 @@ let getContext = function() {
 
 EXPORT("getContext", getContext);
 
+if (this.isInstant === undefined) {
+	this.isInstant = false;
+}
+
+/**
+ * invoke(who, when => (th)): any
+ * invokeRuntime(who, when => (th)): any
+ * invokeRhino(who, when => (th)): any
+ */
+let resolveThrowable = (function() {
+	let decodeBase64 = function(base64) {
+		if (android.os.Build.VERSION.SDK_INT >= 26) {
+			return java.util.Base64.getDecoder().decode(java.lang.String(base64).getBytes());
+		}
+		return android.util.Base64.decode(java.lang.String(base64).getBytes(), android.util.Base64.NO_WRAP);
+	};
+	// let bytes = decodeBase64("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");
+	let bytes = decodeBase64("ZGV4CjAzNQA7yC65zIj/irByxZUNv+ejN5SKUkKw3cq4CgAAcAAAAHhWNBIAAAAAAAAAAAwKAAAoAAAAcAAAABQAAAAQAQAADAAAAGABAAABAAAA8AEAABMAAAD4AQAAAQAAAJACAAAICAAAsAIAALACAAC6AgAAwgIAAMUCAADJAgAAzgIAANQCAADbAgAAAAMAABMDAAA3AwAAWwMAAH0DAACgAwAAtAMAANIDAADmAwAA/QMAACgEAABXBAAAcwQAAJUEAAC4BAAA4QQAAAYFAAAeBQAAIQUAACUFAAA5BQAATgUAAG0FAABzBQAApwUAALAFAAC8BQAAxwUAANcFAADfBQAA7AUAAPsFAAAHAAAACAAAAAkAAAAKAAAACwAAAAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAFAAAABUAAAAWAAAAFwAAABkAAAAbAAAAHAAAAAMAAAABAAAAOAYAAAQAAAAGAAAAZAYAAAYAAAAGAAAAWAYAAAQAAAAGAAAASAYAAAUAAAAGAAAALAYAAAIAAAAIAAAAAAAAAAQAAAAMAAAAQAYAAAIAAAANAAAAAAAAAAIAAAAQAAAAAAAAABkAAAARAAAAAAAAABoAAAARAAAAOAYAABoAAAARAAAAUAYAAAAADAAdAAAAAAAJAAAAAAAAAAkAAQAAAAAABwAdAAAAAAADACQAAAAAAAQAJAAAAAAAAwAlAAAAAAAEACUAAAAAAAMAJgAAAAAABAAmAAAAAQAAACAAAAABAAYAIgAAAAQACgABAAAABgAJAAEAAAAJAAUAIQAAAAoACwABAAAADAABACQAAAAOAAIAHgAAAA4ACAAjAAAAEAAIACMAAAAAAAAAAQAAAAYAAAAAAAAAGAAAAAAAAADcCQAAAAAAAAg8Y2xpbml0PgAGPGluaXQ+AAFMAAJMTAADTExMAARMTExMAAVMTExMTAAjTGlvL25lcm5hci9yaGluby9UaHJvd2FibGVSZXNvbHZlcjsAEUxqYXZhL2xhbmcvQ2xhc3M7ACJMamF2YS9sYW5nL0NsYXNzTm90Rm91bmRFeGNlcHRpb247ACJMamF2YS9sYW5nL0lsbGVnYWxBY2Nlc3NFeGNlcHRpb247ACBMamF2YS9sYW5nL05vQ2xhc3NEZWZGb3VuZEVycm9yOwAhTGphdmEvbGFuZy9Ob1N1Y2hNZXRob2RFeGNlcHRpb247ABJMamF2YS9sYW5nL09iamVjdDsAHExqYXZhL2xhbmcvUnVudGltZUV4Y2VwdGlvbjsAEkxqYXZhL2xhbmcvU3RyaW5nOwAVTGphdmEvbGFuZy9UaHJvd2FibGU7AClMamF2YS9sYW5nL1Vuc3VwcG9ydGVkT3BlcmF0aW9uRXhjZXB0aW9uOwAtTGphdmEvbGFuZy9yZWZsZWN0L0ludm9jYXRpb25UYXJnZXRFeGNlcHRpb247ABpMamF2YS9sYW5nL3JlZmxlY3QvTWV0aG9kOwAgTG9yZy9tb3ppbGxhL2phdmFzY3JpcHQvQ29udGV4dDsAIUxvcmcvbW96aWxsYS9qYXZhc2NyaXB0L0Z1bmN0aW9uOwAnTG9yZy9tb3ppbGxhL2phdmFzY3JpcHQvUmhpbm9FeGNlcHRpb247ACNMb3JnL21vemlsbGEvamF2YXNjcmlwdC9TY3JpcHRhYmxlOwAWVGhyb3dhYmxlUmVzb2x2ZXIuamF2YQABVgACVkwAEltMamF2YS9sYW5nL0NsYXNzOwATW0xqYXZhL2xhbmcvT2JqZWN0OwAdYXNzdXJlQ29udGV4dEZvckN1cnJlbnRUaHJlYWQABGNhbGwAMmNvbS56aGVrYXNtaXJub3YuaW5uZXJjb3JlLm1vZC5leGVjdXRhYmxlLkNvbXBpbGVyAAdmb3JOYW1lAApnZXRNZXNzYWdlAAlnZXRNZXRob2QADmdldFBhcmVudFNjb3BlAAZpbnZva2UAC2ludm9rZVJoaW5vAA1pbnZva2VSdW50aW1lAC16aGVrYXNtaXJub3YubGF1bmNoZXIubW9kLmV4ZWN1dGFibGUuQ29tcGlsZXIAAAADAAAAEAAOAA4AAAABAAAACAAAAAIAAAAIABIAAgAAAA4ADgABAAAACQAAAAQAAAANABAAEAATAAIAAAAGABMAAAAAABAABw4BERcCdx3FadN6AntoAEcABw4AHwAHDgEQEGYALgIAAAcOACcDAAAABywBERAbagBGAgAABw4APwMAAAAHLAEREBtqADoCAAAHDgAzAwAAAAcsAREQG2oAAwAAAAMAAwBwBgAAQAAAABoAHwBxEAkAAAAMABoBHQASAiMiEgBuMAoAEAIMAGkAAAAOAA0AIgEEAG4QDQAAAAwAcCALAAEAJwENABoAJwBxEAkAAAAMABoBHQASAiMiEgBuMAoAEAIMAGkAAAAo4g0AIgEKAHAgDgABACcBDQAiAQoAcCAOAAEAJwENACjyAAAAAAUAAQAGAAAAFwAIAB4AAAARAA0AAwMCEgQdBTcCBB0FNwICMAU+AAABAAEAAQAAAIIGAAAEAAAAcBAMAAAADgADAAAAAwABAIcGAAAYAAAAYgEAABIAHwAGABICIyITAG4wDwABAgwAHwANABEADQAiAQoAcCAOAAEAJwENACj5AAAAAA4AAQABAgsWAw8AAAMAAgADAAAAkAYAAAkAAAByEBEAAQAMAHEwBAAQAgwAEQAAAAgAAwAFAAEAlwYAADIAAAASARIEcQACAAAADAI4BQ4AchASAAUADAASAyMzEwByUxAAJlAMABEAEgAfABAAKPUNAAcCcQACAAAADAM4BRAAchASAAUADAASESMREwBNAgEEclEQADdQDAAo5gcQHwAQACjzAgAAABUAAQABAQkYAwACAAMAAACkBgAACQAAAHIQEQABAAwAcTAEABACDAARAAAACAADAAUAAQCrBgAAMgAAABIBEgRxAAIAAAAMAjgFDgByEBIABQAMABIDIzMTAHJTEAAmUAwAEQASAB8AEAAo9Q0ABwJxAAIAAAAMAzgFEAByEBIABQAMABIRIxETAE0CAQRyURAAN1AMACjmBxAfABAAKPMCAAAAFQABAAEBDxgDAAIAAwAAALgGAAAJAAAAchARAAEADABxMAQAEAIMABEAAAAIAAMABQABAL8GAAAyAAAAEgESBHEAAgAAAAwCOAUOAHIQEgAFAAwAEgMjMxMAclMQACZQDAARABIAHwAQACj1DQAHAnEAAgAAAAwDOAUQAHIQEgAFAAwAEhEjERMATQIBBHJREAA3UAwAKOYHEB8AEAAo8wIAAAAVAAEAAQEHGAEACQAAGgCYgATMDQGBgASIDwEKoA8BCfAPAQmUEAEJlBEBCbgRAQm4EgEJ3BIAAA4AAAAAAAAAAQAAAAAAAAABAAAAKAAAAHAAAAACAAAAFAAAABABAAADAAAADAAAAGABAAAEAAAAAQAAAPABAAAFAAAAEwAAAPgBAAAGAAAAAQAAAJACAAACIAAAKAAAALACAAABEAAABwAAACwGAAADEAAAAQAAAGwGAAADIAAACQAAAHAGAAABIAAACQAAAMwGAAAAIAAAAQAAANwJAAAAEAAAAQAAAAwKAAA=");
+	return java.lang.Class.forName("io.nernar.rhino.ThrowableResolver", false, (function() {
+		if (android.os.Build.VERSION.SDK_INT >= 26) {
+			return new Packages.dalvik.system.InMemoryDexClassLoader(java.nio.ByteBuffer.wrap(bytes), getContext().getClassLoader());
+		}
+		let dex = new java.io.File(__dir__ + ".dex/0");
+		dex.getParentFile().mkdirs();
+		dex.createNewFile();
+		let stream = new java.io.FileOutputStream(dex);
+		stream.write(bytes);
+		stream.close();
+		return new Packages.dalvik.system.PathClassLoader(dex.getPath(), getContext().getClassLoader());
+	})()).newInstance();
+})();
+
+EXPORT("resolveThrowable", resolveThrowable);
+
 /**
  * Tries to just call action or returns
  * [[basic]] value. Equivalent to try-catch.
@@ -76,7 +110,7 @@ EXPORT("tryout", tryout);
  * @returns {any} action result or default
  */
 let require = function(action, report, basic) {
-	let result = tryout(action, report);
+	let result = tryout.call(this, action, report);
 	if (basic === undefined) basic = report;
 	return result !== undefined ? result : basic;
 };
@@ -91,9 +125,10 @@ EXPORT("require", require);
  * @param {function} [report] action when error
  */
 let handle = function(action, time, report) {
+	let self = this;
 	getContext().runOnUiThread(function() {
 		new android.os.Handler().postDelayed(function() {
-			if (action !== undefined) tryout(action, report);
+			if (action !== undefined) tryout.call(self, action, report);
 		}, time >= 0 ? time : 0);
 	});
 };
@@ -110,10 +145,11 @@ EXPORT("handle", handle);
  * @returns {any} action result or default
  */
 let acquire = function(action, report, basic) {
+	let self = this;
 	let completed = false;
 	getContext().runOnUiThread(function() {
 		if (action !== undefined) {
-			let value = tryout(action, report);
+			let value = tryout.call(self, action, report);
 			if (value !== undefined) {
 				basic = value;
 			}
@@ -135,9 +171,10 @@ EXPORT("acquire", acquire);
  * @param {number} priority number between 1-10
  * @returns {java.lang.Thread} thread
  */
-let handleThread = function(action, priority) {
+let handleThread = function(action, report, priority) {
+	let self = this;
 	let thread = new java.lang.Thread(function() {
-		if (action !== undefined) tryout(action);
+		if (action !== undefined) tryout.call(self, action, report);
 		let index = handleThread.stack.indexOf(thread);
 		if (index != -1) handleThread.stack.splice(index, 1);
 	});
@@ -152,7 +189,7 @@ handleThread.MIN_PRIORITY = java.lang.Thread.MIN_PRIORITY;
 handleThread.NORM_PRIORITY = java.lang.Thread.NORM_PRIORITY;
 handleThread.MAX_PRIORITY = java.lang.Thread.MAX_PRIORITY;
 
-handleThread.stack = new Array();
+handleThread.stack = [];
 
 handleThread.interruptAll = function() {
 	handleThread.stack.forEach(function(thread) {
@@ -160,7 +197,7 @@ handleThread.interruptAll = function() {
 			thread.interrupt();
 		}
 	});
-	handleThread.stack = new Array();
+	handleThread.stack = [];
 };
 
 EXPORT("handleThread", handleThread);
@@ -206,7 +243,7 @@ let translate = function(str, args) {
 				args = [args];
 			}
 			args = args.map(function(value) {
-				return String(value);
+				return "" + value;
 			});
 			str = java.lang.String.format(str, args);
 		}
@@ -335,13 +372,19 @@ Interface.Color.parse = function(str) {
 
 Interface.updateDisplay = function() {
 	let display = getContext().getWindowManager().getDefaultDisplay();
-	this.Display.WIDTH = display.getWidth();
-	this.Display.HEIGHT = display.getHeight();
+	this.Display.WIDTH = Math.max(display.getWidth(), display.getHeight());
+	this.Display.HEIGHT = Math.min(display.getWidth(), display.getHeight());
 	let metrics = getContext().getResources().getDisplayMetrics();
 	this.Display.DENSITY = metrics.density;
 };
 
 Interface.updateDisplay();
+
+if (isInstant) {
+	Callback.addCallback("CoreConfigured", function() {
+		Interface.updateDisplay();
+	});
+}
 
 Interface.getFontSize = function(size) {
 	return Math.round(this.getX(size) / this.Display.DENSITY);
@@ -413,7 +456,7 @@ EXPORT("Interface", Interface);
  * For caching, you must use the check amount
  * files and any other content, the so-called hashes.
  */
-let Hashable = new Object();
+let Hashable = {};
 
 Hashable.toMD5 = function(bytes) {
 	let digest = java.security.MessageDigest.getInstance("md5");
@@ -438,34 +481,34 @@ let reportError = function(err) {
 		return;
 	}
 	err.date = Date.now();
-	if (reportError.stack === undefined) {
+	if (__reportError.stack === undefined) {
 		getContext().runOnUiThread(function() {
 			throw err;
 		});
 		return;
 	}
-	if (reportError.isReporting) {
-		if (reportError.stack.length < 16) {
-			reportError.stack.push(err);
+	if (__reportError.isReporting) {
+		if (__reportError.stack.length < 16) {
+			__reportError.stack.push(err);
 		}
 		return;
 	}
-	reportError.isReporting = true;
+	__reportError.isReporting = true;
 	getContext().runOnUiThread(function() {
 		let builder = new android.app.AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-		builder.setTitle(reportError.title || translate("Oh nose everything broke"));
+		builder.setTitle(__reportError.title || translate("Oh nose everything broke"));
 		builder.setCancelable(false);
 		
-		reportError.__report && reportError.__report(err);
+		__reportError.__report && __reportError.__report(err);
 		
-		let result = new Array(),
-			message = reportError.message;
+		let result = [],
+			message = __reportError.message;
 		message && result.push(message + "<br/>");
 		result.push("<font color=\"#CCCC33\"><b>" + err.name + "</b>");
 		result.push(err.stack ? err.message : err.message + "</font>");
 		err.stack && result.push(new java.lang.String(err.stack).replaceAll("\n", "<br/>") + "</font>");
 		
-		let values = reportError.getDebugValues();
+		let values = __reportError.getDebugValues();
 		if (values != null) {
 			result.push(translate("Development debug values"));
 			result.push(values + "<br/>");
@@ -474,35 +517,37 @@ let reportError = function(err) {
 		builder.setMessage(android.text.Html.fromHtml(result.join("<br/>")));
 		builder.setPositiveButton(translate("Understand"), null);
 		builder.setNeutralButton(translate("Leave"), function() {
-			reportError.stack = new Array();
+			__reportError.stack = [];
 		});
-		builder.setNegativeButton(reportError.getCode(err), function() {
-			reportError.__stack && reportError.__stack(err);
+		builder.setNegativeButton(__reportError.getCode(err), function() {
+			__reportError.__stack && __reportError.__stack(err);
 		});
 		
 		let dialog = builder.create();
 		dialog.getWindow().setLayout(Interface.Display.WIDTH / 1.5, Interface.Display.HEIGHT / 1.2);
 		dialog.setOnDismissListener(function() {
-			reportError.isReporting = false;
-			if (reportError.stack.length > 0) {
-				reportError(reportError.stack.shift());
+			__reportError.isReporting = false;
+			if (__reportError.stack.length > 0) {
+				reportError(__reportError.stack.shift());
 			}
 		});
 		dialog.show();
 	});
 };
 
-reportError.stack = new Array();
+let __reportError = {};
 
-reportError.setTitle = function(title) {
+__reportError.stack = [];
+
+__reportError.setTitle = function(title) {
 	title && (this.title = title);
 };
 
-reportError.setInfoMessage = function(html) {
+__reportError.setInfoMessage = function(html) {
 	html && (this.message = html);
 };
 
-reportError.setStackAction = function(action) {
+__reportError.setStackAction = function(action) {
 	this.__stack = function(err) {
 		tryout(function() {
 			action && action(err);
@@ -510,7 +555,7 @@ reportError.setStackAction = function(action) {
 	};
 };
 
-reportError.setReportAction = function(action) {
+__reportError.setReportAction = function(action) {
 	this.__report = function(err) {
 		tryout(function() {
 			action && action(err);
@@ -518,40 +563,44 @@ reportError.setReportAction = function(action) {
 	};
 };
 
-reportError.values = new Array();
+__reportError.values = [];
 
-reportError.addDebugValue = function(name, value) {
+__reportError.addDebugValue = function(name, value) {
 	this.values.push([name, value]);
 };
 
-reportError.formCollectedValues = function() {
-	let collected = new Array();
+__reportError.formCollectedValues = function() {
+	let collected = [];
 	for (let index = 0; index < this.values.length; index++) {
 		let value = this.values[index];
-		result.push(value[0] + " = " + value[1] + ";");
+		collected.push(value[0] + " = " + value[1] + ";");
 	}
 	return collected;
 };
 
-reportError.getDebugValues = function() {
-	let result = new Array();
+__reportError.getDebugValues = function() {
+	let result = [];
 	result.concat(this.formCollectedValues());
 	return result.length > 0 ? "<font face=\"monospace\">" + result.join("<br/>") + "</font>" : null;
 };
 
-reportError.getStack = function(err) {
+__reportError.getStack = function(err) {
 	return err.message + "\n" + err.stack;
 };
 
-reportError.getCode = function(err) {
+__reportError.getCode = function(err) {
 	let encoded = java.lang.String(this.getStack(err)),
 		counter = Hashable.toMD5(encoded.getBytes());
 	return "NE-" + Math.abs(counter.hashCode());
 };
 
-reportError.getLaunchTime = function() {
+__reportError.getLaunchTime = function() {
 	return new Date(launchTime).toString();
 };
+
+for (let element in __reportError) {
+	reportError[element] = __reportError[element];
+}
 
 EXPORT("reportError", reportError);
 

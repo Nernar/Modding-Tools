@@ -67,7 +67,7 @@ ControlWindow.prototype.getCollapsedButtonFragment = function() {
 };
 
 ControlWindow.prototype.getButtonFragments = function() {
-	let array = new Array();
+	let array = [];
 	array.push(this.getButtonFragment());
 	array.push(this.getCollapsedButtonFragment());
 	return array;

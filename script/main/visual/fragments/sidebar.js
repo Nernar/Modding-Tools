@@ -282,6 +282,18 @@ SidebarFragment.Group.Item.prototype.setIcon = function(src) {
 	return this;
 };
 
+SidebarFragment.Group.Item.prototype.getTitle = function() {
+	return this.title || null;
+};
+
+SidebarFragment.Group.Item.prototype.setTitle = function(title) {
+	let container = this.getContainer();
+	if (container == null) return this;
+	// TODO
+	this.title = title;
+	return this;
+};
+
 SidebarFragment.Group.Item.prototype.setOnClickListener = function(action) {
 	let container = this.getContainer(),
 		scope = this;

@@ -32,7 +32,7 @@ IMPORT("Retention:5");
  * @param {string} [address] address
  */
 let Network = function(address) {
-	this.callback = new Object();
+	this.callback = {};
 	address && this.setAddress(address);
 };
 
@@ -78,7 +78,7 @@ Network.prototype.setCallback = function(callback) {
 		this.callback = callback;
 		return;
 	}
-	this.callback = new Object();
+	this.callback = {};
 };
 
 /**
@@ -132,7 +132,7 @@ Network.prototype.hasConnection = function() {
 Network.prototype.connect = function() {
 	let connection = this.getConnection();
 	if (connection) connection.connect();
-	else MCSystem.throwException("Can't find any opened connection to connect");
+	else MCSystem.throwException("Impossible find any opened connection to connect");
 	if (this.callback.hasOwnProperty("onConnect")) {
 		this.callback.onConnect.call(this, connection);
 	}
@@ -280,9 +280,9 @@ Network.Reader.prototype.getResult = function() {
 Network.Reader.prototype.read = function() {
 	let stream = this.getStreamReader();
 	if (!stream) {
-		MCSystem.throwException("Can't read stream, because one of params is missing");
+		MCSystem.throwException("Impossible read stream, because one of params is missing");
 	}
-	let result = this.result = new Array(),
+	let result = this.result = [],
 		reader = new java.io.BufferedReader(stream);
 	this.processing = true;
 	if (this.callback.hasOwnProperty("onPrepare")) {
@@ -384,10 +384,10 @@ Network.Writer.prototype.download = function() {
 	let stream = this.getStreamReader(),
 		output = this.getOutputStream();
 	if (!stream) {
-		MCSystem.throwException("Can't download stream, because input stream is missing");
+		MCSystem.throwException("Impossible download stream, because input stream is missing");
 	}
 	if (!output) {
-		MCSystem.throwException("Can't download stream, because output stream is missing");
+		MCSystem.throwException("Impossible download stream, because output stream is missing");
 	}
 	this.connect(), this.count = 0;
 	this.processing = true;

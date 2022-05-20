@@ -7,9 +7,7 @@ polyfill/Object.js
 storage/explorer.js
 storage/factory.js
 storage/message.js
-storage/converter/shared.js
-storage/converter/block.js
-storage/converter/transition.js
+storage/converter.js
 
 api/shared.js
 api/protect.js
@@ -19,11 +17,6 @@ interface/content.js
 interface/window.js
 interface/variations.js
 interface/provider.js
-
-project/shared.js
-project/block.js
-project/transition.js
-project/entity.js
 
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
@@ -41,12 +34,9 @@ visual/popups/listing.js
 visual/popups/position.js
 visual/popups/hieracly.js
 
-tools/shared.js
 tools/project.js
-tools/block.js
-tools/entity.js
-tools/transition.js
-tools/world.js
+tools/shared.js
+tools/editor.js
 tools/debug.js
 
 sequence/logotype.js

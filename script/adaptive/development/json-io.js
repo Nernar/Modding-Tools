@@ -2,7 +2,7 @@ const $ = new JavaImporter();
 $.importPackage(org.mozilla.javascript);
 $.importPackage(Packages.com.cedarsoftware.util.io);
 
-const JsonIo = new Object();
+const JsonIo = {};
 
 JsonIo.Writer = $.JsonWriter;
 JsonIo.Reader = $.JsonReader;
@@ -97,7 +97,7 @@ const readJsonIoToNativeObject = function(json, allowClasses) {
 		MCSystem.throwException("Code bug: passed to readNativeObject value must be JsonIo.Object");
 	}
 	let iterator = json.keySet().iterator(),
-		object = new Object();
+		object = {};
 	while (iterator.hasNext()) {
 		let key = iterator.next(),
 			someone = readJsonIoToScriptable(json.get(key), allowClasses);
@@ -110,7 +110,7 @@ const readJsonIoToNativeArray = function(json, allowClasses) {
 	if (json === null || json === undefined) {
 		MCSystem.throwException("Code bug: passed to readNativeArray value must be defined");
 	}
-	let array = new Array();
+	let array = [];
 	if (json instanceof java.util.List) {
 		for (let i = 0; i < json.size(); i++) {
 			let someone = readJsonIoToScriptable(json.get(i), allowClasses);

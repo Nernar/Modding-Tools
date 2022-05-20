@@ -66,7 +66,7 @@ Action.prototype.setIsMayCancelled = function(cancelable) {
 };
 
 Action.prototype.setAwait = function(time) {
-	this.await = Number(time);
+	this.left = Number(time);
 };
 
 Action.prototype.makeInfinity = function() {
@@ -74,11 +74,11 @@ Action.prototype.makeInfinity = function() {
 };
 
 Action.prototype.getAwait = function() {
-	return this.await !== undefined ? this.await : 1;
+	return this.left !== undefined ? this.left : 1;
 };
 
 Action.prototype.setRealAwait = function(ms) {
-	this.await = Number(ms) / this.getTickTime();
+	this.left = Number(ms) / this.getTickTime();
 };
 
 Action.prototype.getRealAwait = function() {
@@ -129,9 +129,9 @@ Action.prototype.setCondition = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onCondition;
 	}
-	this.onCondition = function(scope, count, await) {
+	this.onCondition = function(scope, count, left) {
 		return tryout(function() {
-			return action(scope, count, await);
+			return action(scope, count, left);
 		}, false);
 	};
 	return true;
@@ -157,8 +157,8 @@ Action.prototype.create = function() {
 					let next = action.tick(currently);
 					action.setCurrentTick(next);
 					action.real += action.getTickTime();
-					let await = action.getAwait();
-					if (await >= 0 && next >= await) {
+					let left = action.getAwait();
+					if (left >= 0 && next >= left) {
 						action.complete();
 					} else if (!action.isInterrupted()) {
 						if (action.condition(next)) {

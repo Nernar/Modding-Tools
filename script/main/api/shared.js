@@ -12,23 +12,28 @@ const runAtScope = function(code, scope, name) {
 	if (scope == null || typeof scope != "object") {
 		scope = executable.parentContext.newObject(executable.getScope());
 	}
-	return tryout(function() {
+	return resolveThrowable.invoke(function() {
 		return {
 			source: source,
 			scope: scope,
 			context: executable.parentContext,
 			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
 		};
-	}, function(e) {
-		Logger.Log(code, "RUN");
+	}, function(th) {
+		Logger.Log(source + ": " + findCorePackage().api.log.ICLog.getStackTrace(th), "WARNING");
+		if (th instanceof org.mozilla.javascript.JavaScriptException) {
+			return {
+				error: th.getValue()
+			};
+		}
 		return {
-			error: e
+			error: new Error(th != null ? th.toString() : "null")
 		};
 	});
 };
 
 const findWrappedScript = function(path) {
-	let file = new java.io.File(Dirs.ADAPTIVE, path);
+	let file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.EVALUATE, path);
 	if (file.exists()) return file;
@@ -43,18 +48,20 @@ const UNWRAP = function(path, scope) {
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 		let file = findWrappedScript(path);
 		if (file == null) {
-			MCSystem.throwException("Script " + path + " doesn't exists");
+			MCSystem.throwException("Not found " + path + " script");
 		}
+		Logger.Log("Wrapping " + file + " script", "MOD");
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
 		if (scope.error) throw scope.error;
 		return scope.result;
 	} else if (REVISION.indexOf("alpha") != -1) {
-		let file = new java.io.File(Dirs.TESTING, path);
+		let file = new java.io.File(Dirs.SCRIPT_TESTING, path);
 		if (!file.exists()) {
-			MCSystem.throwException("Script " + path + " doesn't exists");
+			MCSystem.throwException("Not found " + path + " testing script");
 		}
+		Logger.Log("Unwrapping " + file + " source", "MOD");
 		return tryoutSafety(function() {
 			let source = decompileExecuteable(Files.readBytes(file)),
 				code = "(function() {\n" + source + "\n})();",
@@ -95,8 +102,8 @@ const REQUIRE = function(path, scope) {
 	return REQUIRE.results[path];
 };
 
-REQUIRE.loaded = new Array();
-REQUIRE.results = new Object();
+REQUIRE.loaded = [];
+REQUIRE.results = {};
 
 const CHECKOUT = function(path, scope, post) {
 	return tryout(function() {
@@ -104,7 +111,7 @@ const CHECKOUT = function(path, scope, post) {
 		post && post(something);
 		return something;
 	}, function(e) {
-		Logger.Log(e, "CHECKOUT");
+		Logger.Log(e, "WARNING");
 	}, null);
 };
 
@@ -213,7 +220,7 @@ const requireInvertedLogotype = function() {
 	if (logotype == "logo_alpha") return "logo_preview";
 	if (logotype == "logo_beta") return "logo";
 	if (logotype == "logo_preview") return "logo_alpha";
-	Logger.Log("No inverted logotype for " + logotype, "DEV-CORE");
+	Logger.Log("No inverted logotype for " + logotype, "INFO");
 };
 
 const isInvertedLogotype = function() {
