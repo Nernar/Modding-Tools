@@ -667,6 +667,11 @@ const PROJECT_TOOL = (function() {
 				}
 			}]
 		},
+		controlDescriptor: {
+			collapsedClick: function(tool, control) {
+				RuntimeCodeEvaluate.showSpecifiedDialog();
+			}
+		},
 		replace: function(file) {
 			let name = file.getName(),
 				instance = this;

@@ -38,7 +38,7 @@ const registerAdditionalInformation = function() {
 	AdditionalMessageFactory.register("inspectorType", translate("Modification still in development state, so something may not work properly."), .2);
 	AdditionalMessageFactory.register("block", translate("Create custom variations, renders, shapes and collisions in-game with block editor."), .2);
 	AdditionalMessageFactory.register("entity", translate("Add or load self render, visualize it and create custom intellect pathes in-game with entity editor."), 0);
-	AdditionalMessageFactory.register("animation", translate("Transform custom shapes, visualize your own render and just draw it in-game with animation editor."), 0);
+	AdditionalMessageFactory.register("render", translate("Transform custom shapes, visualize your own render and just draw it in-game with render editor."), 0);
 	AdditionalMessageFactory.register("transition", translate("Record wonderful video or make quest-modded map in-game with transition editor."), .2);
 	AdditionalMessageFactory.register("world", translate("Manipulate with world regions, fill, replace and save your buildings with world editor."), .2);
 	AdditionalMessageFactory.register("explorerExtensionProject", translate("Load or create your first editor, it'll appear here."), .75, function() {
@@ -67,7 +67,7 @@ const registerAdditionalInformation = function() {
 			android.net.Uri.parse("https://github.com/nernar/dev-editor"));
 		context.startActivity(intent);
 	});
-	AdditionalMessageFactory.registerClickable("animationItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
+	AdditionalMessageFactory.registerClickable("renderDefineItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.me/join/AJQ1d98l9x_XZG7T1qjlEBEf="));
 		context.startActivity(intent);

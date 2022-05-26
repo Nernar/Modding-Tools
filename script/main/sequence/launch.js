@@ -32,6 +32,8 @@ const LaunchSequence = new LogotypeSequence({
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
+			AssetFactory.loadAsset("jetBrainsMonoFont", "JetBrainsMono-Regular.ttf");
+			typefaceJetBrains = AssetFactory.createFont("jetBrainsMono");
 			registerAdditionalInformation();
 		} else if (index == 3) {
 			refreshSupportablesIcons();

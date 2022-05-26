@@ -313,6 +313,7 @@ let Interface = {
 	Gravity: {
 		BOTTOM: android.view.Gravity.BOTTOM,
 		CENTER: android.view.Gravity.CENTER,
+		CENTER_VERTICAL: android.view.Gravity.CENTER_VERTICAL,
 		FILL: android.view.Gravity.FILL,
 		RIGHT: android.view.Gravity.RIGHT,
 		LEFT: android.view.Gravity.LEFT,
@@ -448,6 +449,14 @@ Interface.sleepMilliseconds = function(ms) {
 
 Interface.getInnerCoreVersion = function() {
 	return { name: version, code: code };
+};
+
+Interface.toComplexUnitDip = function(value) {
+	return android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_DIP, value, getContext().getResources().getDisplayMetrics());
+};
+
+Interface.toComplexUnitSp = function(value) {
+	return android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_SP, value, getContext().getResources().getDisplayMetrics());
 };
 
 EXPORT("Interface", Interface);

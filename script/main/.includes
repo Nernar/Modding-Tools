@@ -18,6 +18,7 @@ interface/window.js
 interface/variations.js
 interface/provider.js
 
+visual/fragments/editor.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
 visual/fragments/control.js

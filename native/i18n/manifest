@@ -1,0 +1,9 @@
+{
+	"shared": {
+		"name": "i18n"
+	},
+	"depends": [
+		"innercore",
+		"gnustl_shared"
+	]
+}

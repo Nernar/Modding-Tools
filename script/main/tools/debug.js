@@ -443,7 +443,7 @@ LevelProvider.update = function() {
 	if (overlay === null) return false;
 	if (!thereIsNoTPSMeter) {
 		let tps = this.getFormattedTps(); // 20.0
-		overlay.setText(translate("%stps", tps));
+		overlay.setText(Updatable.getSyncTime() + " / " + translate("%stps", tps) + " / " + preround((java.lang.Runtime.getRuntime().totalMemory() - java.lang.Runtime.getRuntime().freeMemory()) / 1048576) + "MiB");
 		return true;
 	}
 	return false;
@@ -455,7 +455,7 @@ LevelProvider.updateRecursive = function() {
 		if (instance.update() && LevelInfo.isLoaded()) {
 			instance.updateRecursive();
 		}
-	}, 500);
+	}, 50);
 };
 
 LevelProvider.show = function() {
@@ -493,24 +493,18 @@ RuntimeCodeEvaluate.getContextOrSetupIfNeeded = function() {
 	return this.setupNewContext();
 };
 
-RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
-	let edit = new android.widget.EditText(context);
-	edit.setHint(translate("Hi, I'm evaluate stroke"));
+RuntimeCodeEvaluate.evaluateInRuntime = function(executable, what) {
+	let context = this.getContextOrSetupIfNeeded();
+	return executable.parentContext.evaluateString(executable.scriptScope, what, executable.name, 0, null);
+};
+
+RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
+	let fragment = new EditorFragment();
+	let edit = fragment.getEditorView();
 	source === undefined && (source = RuntimeCodeEvaluate.lastCode);
 	where === undefined && (where = RuntimeCodeEvaluate.lastExecutable);
+	location === undefined && (location = RuntimeCodeEvaluate.lastLocation);
 	if (source !== undefined) edit.setText(String(source));
-	edit.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
-		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
-		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-	edit.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
-		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-	edit.setTypeface(android.graphics.Typeface.MONOSPACE);
-	edit.setTextColor(android.graphics.Color.WHITE);
-	edit.setTextSize(Interface.getFontSize(21));
-	edit.setHorizontalScrollBarEnabled(true);
-	edit.setHorizontallyScrolling(true);
-	edit.setSingleLine(false);
-	edit.setMinLines(3);
 	
 	let dialog = new android.app.AlertDialog.Builder(context,
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
@@ -518,6 +512,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
 		let something = tryout(function() {
 			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
 			RuntimeCodeEvaluate.lastExecutable = where;
+			RuntimeCodeEvaluate.lastLocation = location;
 			if (where !== undefined && where !== null) {
 				return where.evaluateStringInScope(RuntimeCodeEvaluate.lastCode);
 			}
@@ -531,12 +526,16 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
 		tryout(function() {
 			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
 			RuntimeCodeEvaluate.lastExecutable = where;
+			RuntimeCodeEvaluate.lastLocation = location;
 			RuntimeCodeEvaluate.exportEvaluate();
 		});
 	});
 	dialog.setNegativeButton(translate("Cancel"), null);
-	dialog.setCancelable(false).setView(edit);
+	dialog.setCancelable(false).setView(fragment.getContainer());
+	dialog.setTitle(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
 	let something = dialog.create();
+	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.HEIGHT / 1.1);
+	something.show();
 	tryout(function() {
 		let identifier = context.getResources().getIdentifier("alertTitle", "id", context.getPackageName());
 		if (identifier <= 0) {
@@ -548,12 +547,12 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
 		}
 		return title;
 	}, function(any) {
-		Logger.Log(any, "INFO");
+		Logger.Log(any, "WARNING");
 		let title = new android.widget.TextView(context);
-		title.setPadding(Interface.getY(32), Interface.getY(16), Interface.getY(32), 0);
-		title.setTextSize(Interface.getFontSize(36));
+		title.setPadding(Interface.getY(32), Interface.getY(32), Interface.getY(32), 0);
+		title.setTextSize(Interface.getFontSize(28));
 		title.setTextColor(Interface.Color.WHITE);
-		title.setText(translate(NAME) + " " + translate(VERSION));
+		title.setText(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
 		something.setCustomTitle(title);
 		return title;
 	}).setOnClickListener(function(view) {
@@ -575,12 +574,11 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where) {
 			}
 			select(translate("Evaluate In"), readableArray, function(index, value) {
 				where = realExecutablePointer[index];
-				showHint(value);
+				location = value;
+				something.setTitle(location);
 			});
 		});
 	});
-	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.WRAP);
-	something.show();
 };
 
 RuntimeCodeEvaluate.exportEvaluate = function() {
@@ -622,7 +620,7 @@ RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification)
 	this.putSpecifiedTypeSources(modification, someone, "compiledLibs", "library");
 	this.putSpecifiedTypeSources(modification, someone, "compiledPreloaderScripts", "preloader");
 	this.putSpecifiedTypeSources(modification, someone, "compiledInstantScripts", "instant");
-	// TODO: Custom must additionaly added byself
+	// TODO: Custom must additionaly added byself, but not required at all
 	if (isEmpty(someone)) {
 		return null;
 	}

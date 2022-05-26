@@ -63,6 +63,7 @@ let Setting, UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner, Model
 // Definitions for default values
 let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
+let typefaceJetBrains = android.graphics.Typeface.MONOSPACE;
 
 if (this.isInstant === undefined) {
 	this.isInstant = false;

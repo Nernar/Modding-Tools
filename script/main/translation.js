@@ -585,10 +585,10 @@ Translation.addTranslation("Changes box location in texture", {
 }); // DEPRECATED
 Translation.addTranslation("UV", {}); // DEPRECATED
 
-// Animations content
-Translation.addTranslation("Animation", {
-	ru: "Анимация"
-});
+// Renders content
+Translation.addTranslation("Render", {
+	ru: "Render"
+}); // DEPRECATED
 
 // Worlds content
 Translation.addTranslation("World", {
@@ -1080,8 +1080,8 @@ Translation.addTranslation("Create custom variations, renders, shapes and collis
 Translation.addTranslation("Add or load self render, visualize it and create custom intellect pathes in-game with entity editor.", {
 	ru: "Добавьте или загрузите свою модель, визуализируйте ее и создайте необычные пути для интеллекта прямо в игре с редактором существа."
 });
-Translation.addTranslation("Transform custom shapes, visualize your own render and just draw it in-game with animation editor.", {
-	ru: "Измените необычную форму, визуализируйте свою собственную модель и просто отрисуйте ее в игре с редактором анимаций."
+Translation.addTranslation("Transform custom shapes, visualize your own render and just draw it in-game with render editor.", {
+	ru: "Измените необычную форму, визуализируйте свою собственную модель и просто отрисуйте ее в игре с редактором рендеров."
 });
 Translation.addTranslation("Record wonderful video or make quest-modded map in-game with transition editor.", {
 	ru: "Запишите потрясающее видео или сделайте квест-карту с модами в игре с редактором переходов."
@@ -1430,6 +1430,3 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
-Translation.addTranslation("Evaluate In", {});
-Translation.addTranslation(" ", {});
-Translation.addTranslation("\n", {});
