@@ -33,9 +33,11 @@ const runAtScope = function(code, scope, name) {
 };
 
 const findWrappedScript = function(path) {
-	let file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
+	let file = new java.io.File(Dirs.SCRIPT_REVISION, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.EVALUATE, path);
+	if (file.exists()) return file;
+	file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
 	if (file.exists()) return file;
 	return null;
 };
@@ -45,8 +47,8 @@ const UNWRAP = function(path, scope) {
 	if (scope !== undefined && scope !== null) {
 		who = assign(who, scope);
 	}
+	let file = findWrappedScript(path);
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
-		let file = findWrappedScript(path);
 		if (file == null) {
 			MCSystem.throwException("Not found " + path + " script");
 		}
@@ -56,10 +58,10 @@ const UNWRAP = function(path, scope) {
 			scope = runAtScope(code, who, path);
 		if (scope.error) throw scope.error;
 		return scope.result;
-	} else if (REVISION.indexOf("alpha") != -1) {
+	} else if (file == null && REVISION.indexOf("alpha") != -1) {
 		let file = new java.io.File(Dirs.SCRIPT_TESTING, path);
 		if (!file.exists()) {
-			MCSystem.throwException("Not found " + path + " testing script");
+			MCSystem.throwException("Not found " + path + " testing executable");
 		}
 		Logger.Log("Unwrapping " + file + " source", "MOD");
 		return tryoutSafety(function() {
@@ -70,7 +72,16 @@ const UNWRAP = function(path, scope) {
 			return scope.result;
 		}, null);
 	}
-	return null;
+	if (file == null) {
+		MCSystem.throwException("Not found " + path + " executable");
+	}
+	return tryoutSafety(function() {
+		let source = decompileExecuteable(Files.readBytes(file)),
+			code = "(function() {\n" + source + "\n})();",
+			scope = runAtScope(code, who, path);
+		if (scope.error) throw scope.error;
+		return scope.result;
+	}, null);
 };
 
 UNWRAP.initScriptable = function(name) {
@@ -114,6 +125,55 @@ const CHECKOUT = function(path, scope, post) {
 		Logger.Log(e, "WARNING");
 	}, null);
 };
+
+const findTranslationByHash = function(hash, fallback) {
+	hash = java.lang.Integer.valueOf(hash);
+	if (translateCode.currentLanguageTranslations) {
+		let translation = translateCode.currentLanguageTranslations.get(null).get(hash);
+		if (translation) {
+			return translation;
+		}
+	}
+	if (translateCode.defaultLanguageTranslations) {
+		let translation = translateCode.defaultLanguageTranslations.get(null).get(hash);
+		if (translation) {
+			return translation;
+		}
+	}
+	if (fallback) {
+		return fallback;
+	}
+	return translate("Deprecated translation");
+};
+
+const translateCode = function(hash, args, fallback) {
+	return tryout(function() {
+		let text = findTranslationByHash(hash, fallback);
+		if (args !== undefined) {
+			if (!Array.isArray(args)) {
+				args = [args];
+			}
+			args = args.map(function(value) {
+				return String(value);
+			});
+			text = java.lang.String.format(text, args);
+		}
+		return String(text);
+	}, "...");
+};
+
+tryoutSafety(function() {
+	let $ = new JavaImporter(findCorePackage().api.runtime.other),
+		clazz = $.NameTranslation.__javaObject__,
+		field = clazz.getDeclaredField("currentLanguageTranslations");
+	field.setAccessible(true);
+	translateCode.currentLanguageTranslations = field;
+	if (isHorizon) {
+		let proto = clazz.getDeclaredField("defaultLanguageTranslations");
+		proto.setAccessible(true);
+		translateCode.defaultLanguageTranslations = proto;
+	}
+});
 
 const playTuneDirectly = function() {
 	let buffsize = android.media.AudioTrack.getMinBufferSize(4000,

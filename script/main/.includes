@@ -47,6 +47,5 @@ sequence/manual.js
 sequence/testing.js
 
 callback/shared.js
-callback/debug.js
 callback/support.js
 callback/loading.js

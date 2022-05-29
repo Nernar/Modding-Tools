@@ -97,7 +97,7 @@ const readFile = function(path, isBytes, action) {
 };
 
 const exportProject = function(object, isAutosave, path, action) {
-	return AsyncSnackSequence.access("internal.js", [path, object, 30,
+	return AsyncSnackSequence.access("internal.dns", [path, object, 30,
 		isAutosave ? translate("Autosaving") : translate("Exporting"),
 		isAutosave ? translate("Autosaved") : translate("Exported")], action);
 };

@@ -21,6 +21,21 @@ BitmapFactory.getPotatoOptions = function() {
 	return options;
 };
 
+let BITSET_PATCH = {};
+
+const registerBitsetUi = function(json) {
+	if (json == null || typeof json != "object") {
+		MCSystem.throwException("Registered bitset must be object { moduleBitset: .. }");
+	}
+	for (let element in json) {
+		if (BITSET_PATCH.hasOwnProperty(element)) {
+			Logger.Log("Bitset " + element + " already registered", "WARNING");
+			continue;
+		}
+		BITSET_PATCH[element] = "" + json[element];
+	}
+};
+
 const ImageFactory = {};
 
 ImageFactory.getDrawable = function(key) {
@@ -321,7 +336,6 @@ Drawable.parseJson = function(instanceOrJson, json) {
 };
 
 BitmapFactory.__decodeFile = BitmapFactory.decodeFile;
-
 BitmapFactory.decodeFile = function(path, options) {
 	let file = path instanceof java.io.File ? path : new java.io.File(path);
 	let self = this;
@@ -346,4 +360,25 @@ BitmapFactory.decodeResource = function(bytes, options) {
 	}, function(e) {
 		Logger.Log("BitmapFactory failed to decode resource " + bytes, "WARNING");
 	}, null);
+};
+
+const fetchResourceOverridesIfNeeded = function(path) {
+	tryout(function() {
+		let file = new java.io.File(path, "bitset.json");
+		if (file.exists()) {
+			let json = JSON.parse(Files.read(file));
+			for (let element in json) {
+				if (BITSET_PATCH.hasOwnProperty(element)) {
+					continue;
+				}
+				BITSET_PATCH[element] = "" + json[element];
+			}
+		}
+	});
+};
+
+BitmapDrawableFactory.__mapDirectory = BitmapDrawableFactory.mapDirectory;
+BitmapDrawableFactory.mapDirectory = function(path, explore, root) {
+	fetchResourceOverridesIfNeeded(path);
+	return BitmapDrawableFactory.__mapDirectory.apply(this, arguments);
 };

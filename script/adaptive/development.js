@@ -91,13 +91,13 @@ LaunchSequence.process = function(index) {
 		showHint.unstackLaunch();
 	} else if (index == 3) {
 		if (FileTools.exists(Dirs.INTERNAL_UI)) {
-			AsyncSnackSequence.access("packer.js", [Dirs.INTERNAL_UI, Dirs.ASSET, 192]).assureYield();
+			AsyncSnackSequence.access("packer.dns", [Dirs.INTERNAL_UI, Dirs.ASSET, 192]).assureYield();
 		}
 		BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 	}
 	let process = this.__process.apply(this, arguments);
 	if (index == 2) {
-		CHECKOUT("produce.js", null, function(who) {
+		CHECKOUT("produce.dns", null, function(who) {
 			AdditionalMessageFactory.registerClickable("menuProjectManage", translate("If you're wouldn't see development panel here, it may be removed."), 1, function(message) {
 				debugAttachControlTools = !debugAttachControlTools;
 				let control = message.getWindow();
@@ -107,25 +107,28 @@ LaunchSequence.process = function(index) {
 				return debugAttachControlTools;
 			});
 			AdditionalMessageFactory.registerClickable("explorerImport", translate("Modification is outgoing to produce? Let's compile anything that's we're developed!"), 0.5, function(message) {
-				REQUIRE("produce.js")(function() {
+				REQUIRE("produce.dns")(function() {
 					UniqueHelper.requireDestroy();
 					WindowProvider.destroy();
-					CHECKOUT("provider.js", null, function(who) {
+					CHECKOUT("provider.dns", null, function(who) {
 						attachEvalButton();
 					});
 				});
 			});
 		});
 		if (!isInstant) {
-			AsyncSnackSequence.access("translation.js", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
+			AsyncSnackSequence.access("translation.dns", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
 		}
 	} else if (index == 3) {
 		tryoutSafety(function() {
 			if (FileTools.exists(Dirs.EVALUATE + "testing/")) {
-				AsyncSnackSequence.access("script.js", [Dirs.EVALUATE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
+				AsyncSnackSequence.access("script.dns", [Dirs.EVALUATE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
 			}
 			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "testing/")) {
-				AsyncSnackSequence.access("script.js", [Dirs.SCRIPT_ADAPTIVE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
+				AsyncSnackSequence.access("script.dns", [Dirs.SCRIPT_ADAPTIVE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
+			}
+			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "sequence/")) {
+				AsyncSnackSequence.access("script.dns", [Dirs.SCRIPT_ADAPTIVE + "sequence/", Dirs.SCRIPT_REVISION + "sequence/"]).assureYield();
 			}
 		});
 		if (debugIgnoreLockedBackground) {

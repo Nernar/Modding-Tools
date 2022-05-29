@@ -149,7 +149,23 @@ Callback.addCallback("tick", function() {
 	});
 });
 
+const RETRY_TIME = 60000;
+
+const checkOnlineable = function(action) {
+	handleThread(function() {
+		if (!Network.isOnline()) {
+			warningMessage = "Please check network connection. Connect to collect updates, special events and prevent key deprecation.";
+			handle(function() {
+				checkOnlineable(action);
+			}, RETRY_TIME);
+			return;
+		} else warningMessage = null;
+		action && action();
+	});
+};
+
 const API = {
+	USER_ID: USER_ID,
 	tryout: tryout,
 	tryoutSafety: tryoutSafety,
 	require: require,
@@ -307,7 +323,6 @@ const API = {
 	CoordsPopup: CoordsPopup,
 
 	showHint: showHint,
-	getUserCode: getUserCode,
 	checkOnlineable: checkOnlineable,
 	stringifyObject: stringifyObject,
 	readFileAsync: readFile,

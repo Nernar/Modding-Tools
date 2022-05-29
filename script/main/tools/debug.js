@@ -386,14 +386,14 @@ const ModificationSource = {
 		}
 	},
 	requireDexerAsync: function(mod, yields) {
-		let dexer = AsyncStackedSnackSequence.access("compiler.js", mod, function(who) {
+		let dexer = AsyncStackedSnackSequence.access("compiler.dns", mod, function(who) {
 			yields = who;
 		});
 		if (yields !== false) dexer.assureYield();
 		return yields;
 	},
 	requireDecompilerAsync: function(mod, yields) {
-		let formatter = AsyncStackedSnackSequence.access("decompiler.js", mod, function(who) {
+		let formatter = AsyncStackedSnackSequence.access("decompiler.dns", mod, function(who) {
 			yields = who;
 		});
 		if (yields !== false) formatter.assureYield();
@@ -443,7 +443,7 @@ LevelProvider.update = function() {
 	if (overlay === null) return false;
 	if (!thereIsNoTPSMeter) {
 		let tps = this.getFormattedTps(); // 20.0
-		overlay.setText(Updatable.getSyncTime() + " / " + translate("%stps", tps) + " / " + preround((java.lang.Runtime.getRuntime().totalMemory() - java.lang.Runtime.getRuntime().freeMemory()) / 1048576) + "MiB");
+		overlay.setText(Updatable.getSyncTime() + " / " + translate("%stps", tps) + " / " + Math.ceil((java.lang.Runtime.getRuntime().totalMemory() - java.lang.Runtime.getRuntime().freeMemory()) / 1048576) + "MiB");
 		return true;
 	}
 	return false;

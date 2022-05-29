@@ -1430,3 +1430,7 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
+Translation.addTranslation("Animation", {});
+Translation.addTranslation("Evaluate In", {});
+Translation.addTranslation(" ", {});
+Translation.addTranslation("\n", {});
