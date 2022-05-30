@@ -6,6 +6,5 @@ const launchModification = function(additionalScope) {
 	Launch();
 };
 (function() {
-	IMPORT("Mehwrap");
 	launchModification();
 })();
