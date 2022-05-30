@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-30.05.2022-0";
+const REVISION = "testing-alpha-0.4-30.05.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -145,15 +145,7 @@ const findEditorPackage = function() {
 	}, null);
 };
 
-if (REVISION.startsWith("develop")) {
-	IMPORT("Stacktrace:2");
-	reportTrace.setupPrint(function(message) {
-		message !== undefined && showHint(message);
-	});
-	if (isInstant) {
-		reportTrace.reloadModifications();
-	}
-}
+IMPORT("Stacktrace:2");
 
 const retraceOrReport = function(error) {
 	error && Logger.Log(error, "WARNING");
@@ -164,16 +156,24 @@ const retraceOrReport = function(error) {
 	}
 };
 
-tryout(function() {
-	let $ = new JavaImporter(findCorePackage().mod.executable.library),
-		dependency = new $.LibraryDependency("Retention");
-	dependency.setParentMod(__mod__);
-	let library = $.LibraryRegistry.resolveDependency(dependency);
-	if (!library.isLoaded()) {
-		MCSystem.throwException("Without Retention Dev Editor may not working");
+if (REVISION.startsWith("develop")) {
+	reportTrace.setupPrint(function(message) {
+		message !== undefined && showHint(message);
+	});
+	if (isInstant) {
+		reportTrace.reloadModifications();
 	}
-	library.getScope().reportError = reportTrace;
-});
+	tryout(function() {
+		let $ = new JavaImporter(findCorePackage().mod.executable.library),
+			dependency = new $.LibraryDependency("Retention");
+		dependency.setParentMod(__mod__);
+		let library = $.LibraryRegistry.resolveDependency(dependency);
+		if (!library.isLoaded()) {
+			MCSystem.throwException("Without Retention Dev Editor may not working");
+		}
+		library.getScope().reportError = reportTrace;
+	});
+}
 
 const $ = {
 	CORE_ENGINE_API_LEVEL: 0

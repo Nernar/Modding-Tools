@@ -5,6 +5,7 @@ const launchModification = function(additionalScope) {
 	}
 	Launch();
 };
+
 (function() {
 	launchModification();
 })();

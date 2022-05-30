@@ -82,8 +82,6 @@ const API = {
 	translate: translate,
 	translateCounter: translateCounter,
 	translateCode: translateCode,
-	reportTrace: reportTrace,
-	reportError: reportError,
 	retraceOrReport: retraceOrReport,
 	localizeError: localizeError,
 	

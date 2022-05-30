@@ -85,7 +85,7 @@ const writeScriptableToJsonIo = function(who, primitiveArrays) {
 		if (e instanceof java.lang.RuntimeException) {
 			throw e;
 		}
-		reportTrace(e);
+		retraceOrReport(e);
 		log("Unsupported scriptable to json value " + who);
 	});
 };
@@ -138,7 +138,7 @@ const readJsonIoToScriptable = function(json, allowClasses) {
 			if (allowClasses) {
 				return json;
 			}
-			reportTrace(e);
+			retraceOrReport(e);
 			log("Unsupported class passed to JsonIo.fromJson: " + json + ", nothing will happened");
 		});
 	}

@@ -1,6 +1,6 @@
 # Dev Editor
 
-[![Alpha 0.4](https://img.shields.io/badge/version-0.4-green.svg)](https://icmods.mineprogramming.org/mod?id=614)
+[![Snapshot 0.4](https://img.shields.io/badge/version-0.4-green.svg)](https://icmods.mineprogramming.org/mod?id=614)
 [![Support](https://img.shields.io/github/repo-size/nernar/dev-editor)](https://vk.com/nteditor)
 [![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
