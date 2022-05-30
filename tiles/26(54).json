@@ -1,0 +1,23 @@
+{
+	"Command": "",
+	"CustomName": "",
+	"ExecuteOnFirstTick": 0,
+	"LPCommandMode": 0,
+	"LPCondionalMode": 0,
+	"LPRedstoneMode": 0,
+	"LastExecution": 0,
+	"LastOutput": "",
+	"LastOutputParams": [],
+	"SuccessCount": 0,
+	"TickDelay": 0,
+	"TrackOutput": 1,
+	"Version": 13,
+	"auto": 0,
+	"conditionMet": 0,
+	"id": "CommandBlock",
+	"isMovable": 1,
+	"powered": 0,
+	"x": 2,
+	"y": 4,
+	"z": 98
+}

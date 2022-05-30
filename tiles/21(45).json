@@ -1,0 +1,9 @@
+{
+	"id": "Beacon",
+	"isMovable": 1,
+	"primary": 1,
+	"secondary": 0,
+	"x": 2,
+	"y": 4,
+	"z": 53
+}

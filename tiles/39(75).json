@@ -1,0 +1,34 @@
+{
+	"BurnDuration": 1600,
+	"BurnTime": 1146,
+	"CookTime": 55,
+	"Items": [
+		{
+			"Count": 59,
+			"Damage": 0,
+			"Name": "minecraft:mutton",
+			"Slot": 0,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 61,
+			"Damage": 0,
+			"Name": "minecraft:coal",
+			"Slot": 1,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 4,
+			"Damage": 0,
+			"Name": "minecraft:cooked_mutton",
+			"Slot": 2,
+			"WasPickedUp": 0
+		}
+	],
+	"StoredXPInt": 0,
+	"id": "Smoker",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 21
+}

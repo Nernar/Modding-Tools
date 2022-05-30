@@ -1,0 +1,27 @@
+{
+	"Command": "tellraw @a heheheh",
+	"CustomName": "",
+	"ExecuteOnFirstTick": 0,
+	"LPCommandMode": 0,
+	"LPCondionalMode": 0,
+	"LPRedstoneMode": 0,
+	"LastExecution": 0,
+	"LastOutput": "commands.generic.syntax",
+	"LastOutputParams": [
+		"ellraw @a ",
+		"heheheh",
+		""
+	],
+	"SuccessCount": 0,
+	"TickDelay": 0,
+	"TrackOutput": 1,
+	"Version": 13,
+	"auto": 1,
+	"conditionMet": 0,
+	"id": "CommandBlock",
+	"isMovable": 1,
+	"powered": 0,
+	"x": 3,
+	"y": 4,
+	"z": 98
+}

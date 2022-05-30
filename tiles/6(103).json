@@ -1,0 +1,11 @@
+{
+	"MouthMoving": 0,
+	"MouthTickCount": 0,
+	"Rotation": 180,
+	"SkullType": 4,
+	"id": "Skull",
+	"isMovable": 1,
+	"x": 5,
+	"y": 4,
+	"z": 72
+}

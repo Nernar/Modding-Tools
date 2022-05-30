@@ -1,0 +1,44 @@
+{
+	"Findable": 0,
+	"Items": [
+		{
+			"Block": {
+				"name": "minecraft:gold_ore",
+				"states": {},
+				"version": 17825808
+			},
+			"Count": 8,
+			"Damage": 0,
+			"Name": "minecraft:gold_ore",
+			"Slot": 8,
+			"WasPickedUp": 0
+		},
+		{
+			"Block": {
+				"name": "minecraft:gold_ore",
+				"states": {},
+				"version": 17825808
+			},
+			"Count": 8,
+			"Damage": 0,
+			"Name": "minecraft:gold_ore",
+			"Slot": 9,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 1,
+			"Damage": 0,
+			"Name": "minecraft:mutton",
+			"Slot": 12,
+			"WasPickedUp": 0
+		}
+	],
+	"id": "Chest",
+	"isMovable": 1,
+	"pairlead": 0,
+	"pairx": 3,
+	"pairz": 55,
+	"x": 4,
+	"y": 4,
+	"z": 55
+}

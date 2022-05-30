@@ -1,0 +1,44 @@
+{
+	"Items": [
+		{
+			"Count": 3,
+			"Damage": 0,
+			"Name": "minecraft:coal",
+			"Slot": 1,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 1,
+			"Damage": 0,
+			"Name": "minecraft:cooked_mutton",
+			"Slot": 3,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 1,
+			"Damage": 0,
+			"Name": "minecraft:cooked_mutton",
+			"Slot": 4,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 3,
+			"Damage": 0,
+			"Name": "minecraft:coal",
+			"Slot": 5,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 1,
+			"Damage": 0,
+			"Name": "minecraft:cooked_mutton",
+			"Slot": 7,
+			"WasPickedUp": 0
+		}
+	],
+	"id": "Dispenser",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 84
+}

@@ -1,0 +1,15 @@
+{
+	"Item": {
+		"Count": 1,
+		"Damage": 0,
+		"Name": "minecraft:skull",
+		"WasPickedUp": 0
+	},
+	"ItemDropChance": 1,
+	"ItemRotation": 45,
+	"id": "ItemFrame",
+	"isMovable": 1,
+	"x": 0,
+	"y": 4,
+	"z": 17
+}

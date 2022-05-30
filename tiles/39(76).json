@@ -1,0 +1,12 @@
+{
+	"BurnDuration": 0,
+	"BurnTime": 0,
+	"CookTime": 0,
+	"Items": [],
+	"StoredXPInt": 0,
+	"id": "Smoker",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 21
+}

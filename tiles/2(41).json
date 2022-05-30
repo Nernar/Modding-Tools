@@ -1,0 +1,24 @@
+{
+	"Items": [
+		{
+			"Count": 32,
+			"Damage": 4,
+			"Name": "minecraft:skull",
+			"Slot": 1,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 32,
+			"Damage": 4,
+			"Name": "minecraft:skull",
+			"Slot": 2,
+			"WasPickedUp": 0
+		}
+	],
+	"TransferCooldown": 0,
+	"id": "Hopper",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 80
+}

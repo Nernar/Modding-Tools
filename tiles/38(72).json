@@ -1,0 +1,39 @@
+{
+	"BurnDuration": 1600,
+	"BurnTime": 1321,
+	"CookTime": 80,
+	"Items": [
+		{
+			"Block": {
+				"name": "minecraft:gold_ore",
+				"states": {},
+				"version": 17825808
+			},
+			"Count": 62,
+			"Damage": 0,
+			"Name": "minecraft:gold_ore",
+			"Slot": 0,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 62,
+			"Damage": 0,
+			"Name": "minecraft:coal",
+			"Slot": 1,
+			"WasPickedUp": 0
+		},
+		{
+			"Count": 2,
+			"Damage": 0,
+			"Name": "minecraft:gold_ingot",
+			"Slot": 2,
+			"WasPickedUp": 0
+		}
+	],
+	"StoredXPInt": 0,
+	"id": "BlastFurnace",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 19
+}

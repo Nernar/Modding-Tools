@@ -1,0 +1,10 @@
+{
+	"Direction": 1,
+	"Ringing": 0,
+	"Ticks": 6,
+	"id": "Bell",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 74
+}

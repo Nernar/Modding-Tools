@@ -1,0 +1,12 @@
+{
+	"PlantBlock": {
+		"name": "minecraft:brown_mushroom",
+		"states": {},
+		"version": 17825808
+	},
+	"id": "FlowerPot",
+	"isMovable": 1,
+	"x": -2,
+	"y": 4,
+	"z": 27
+}

@@ -1,0 +1,11 @@
+{
+	"ItemTime1": 0,
+	"ItemTime2": 0,
+	"ItemTime3": 0,
+	"ItemTime4": 0,
+	"id": "Campfire",
+	"isMovable": 1,
+	"x": 2,
+	"y": 4,
+	"z": 13
+}
