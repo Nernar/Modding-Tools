@@ -3,5 +3,5 @@
 /runtime.js
 
 # Enstablized source
-/main/api/protect.js
+/adaptive/bridge.js
 /adaptive/sequence/

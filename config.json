@@ -28,8 +28,8 @@
   },
   "user_login":{
     "first_launch":false,
-    "ignore_deprecation":false,
-    "imported_script":true,
+    "ignore_deprecation":true,
+    "imported_script":false,
     "send_analytics":true
   },
   "supportable":{

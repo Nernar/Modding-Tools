@@ -70,7 +70,7 @@ LaunchSequence.create = function() {
 		}
 	});
 	this.__create.apply(this, arguments);
-	CHECKOUT("provider.js", null, function(who) {
+	CHECKOUT("provider.dns", null, function(who) {
 		attachEvalButton();
 	});
 };
@@ -130,6 +130,12 @@ LaunchSequence.process = function(index) {
 			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "sequence/")) {
 				AsyncSnackSequence.access("script.dns", [Dirs.SCRIPT_ADAPTIVE + "sequence/", Dirs.SCRIPT_REVISION + "sequence/"]).assureYield();
 			}
+			let internal = new java.io.File(Dirs.SCRIPT_ADAPTIVE + "bridge.js");
+			if (!internal.exists()) {
+				return;
+			}
+			let reader = new java.io.FileReader(internal);
+			findCorePackage().mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.jar");
 		});
 		if (debugIgnoreLockedBackground) {
 			let popup = BitmapDrawableFactory.getMappedFileByKey("popup");

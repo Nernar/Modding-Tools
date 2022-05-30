@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-29.05.2022-0";
+const REVISION = "develop-alpha-0.4-30.05.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -216,7 +216,6 @@ IMPORT("Transition:6");
 IMPORT("Action:4");
 IMPORT("Sequence:1");
 IMPORT("Drawable:1");
-IMPORT("Mehwrap:1");
 
 getPlayerEnt = function() {
 	if (LevelInfo.isLoaded()) {
