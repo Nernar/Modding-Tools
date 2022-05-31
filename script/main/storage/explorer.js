@@ -1,7 +1,7 @@
 MCSystem.setLoadingTip(NAME + ": Preparing APIs");
 
 const Dirs = {};
-Dirs.EXTERNAL = android.os.Environment.getExternalStorageDirectory();
+Dirs.EXTERNAL = android.os.Environment.getExternalStorageDirectory() + "/";
 Dirs.INTERNAL_UI = __dir__ + "textures/";
 Dirs.ASSET = __dir__ + "assets/";
 Dirs.PROJECT = __dir__ + "projects/";
@@ -12,6 +12,7 @@ Dirs.SCRIPT_ADAPTIVE = Dirs.SCRIPT + "adaptive/";
 Dirs.SCRIPT_REVISION = Dirs.SCRIPT + "revision/";
 Dirs.SCRIPT_TESTING = Dirs.SCRIPT + "testing/";
 Dirs.EVALUATE = __dir__ + ".eval/";
+Dirs.TODO = __dir__ + ".todo/";
 Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";
 
 if (isHorizon) {
@@ -22,14 +23,14 @@ if (isHorizon) {
 		return __packdir__ + "innercore/mods/";
 	});
 	Dirs.WORLD = __packdir__ + "worlds/";
-	Dirs.OPTION = Dirs.EXTERNAL + "/games/horizon/minecraftpe/options.txt";
+	Dirs.OPTION = Dirs.EXTERNAL + "games/horizon/minecraftpe/options.txt";
 	Dirs.RESOURCE = __packdir__ + "assets/resource_packs/vanilla/";
 } else {
 	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/com.zhekasmirnov.innercore/";
-	Dirs.MOD = Dirs.EXTERNAL + "/games/com.mojang/mods/";
-	Dirs.WORLD = Dirs.EXTERNAL + "/games/com.mojang/innercoreWorlds/";
-	Dirs.OPTION = Dirs.EXTERNAL + "/games/com.mojang/minecraftpe/options.txt";
-	Dirs.RESOURCE = Dirs.EXTERNAL + "/games/com.mojang/resource_packs/innercore-resources/";
+	Dirs.MOD = Dirs.EXTERNAL + "games/com.mojang/mods/";
+	Dirs.WORLD = Dirs.EXTERNAL + "games/com.mojang/innercoreWorlds/";
+	Dirs.OPTION = Dirs.EXTERNAL + "games/com.mojang/minecraftpe/options.txt";
+	Dirs.RESOURCE = Dirs.EXTERNAL + "games/com.mojang/resource_packs/innercore-resources/";
 }
 
 /**
