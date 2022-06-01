@@ -181,14 +181,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 		if (index == 1) {
 			let control = new MenuWindow();
 			control.setTouchable(false);
-			control.addHeader();
-			let category = control.addCategory(translate("Editors"));
-			this.block = category.addItem("block", translate("Block"));
-			category.addItem("entity", translate("Entity"));
-			category.addItem("animation", translate("Animation"));
-			category.addItem("transition", translate("Transition"));
-			category.addItem("world", translate("World"));
-			this.editors = category;
+			this.header = control.addHeader();
 			category = control.addCategory(translate("Project"));
 			category.addItem("menuProjectLoad", translate("Open"));
 			category.addItem("menuProjectImport", translate("Import"));
@@ -211,13 +204,11 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			} else this.hint.addMessage(translate("And editor may be added by your wish."));
 			this.hint.show();
 		} else if (index == 3) {
-			this.currently.scrollToElement(this.editors, this.hint.getTime() / 4);
+			this.currently.scrollToElement(this.header, this.hint.getTime() / 4);
 		} else if (index == 4) {
 			this.currently.scrollDown(this.hint.getTime() * 2);
 		} else if (index == 5) {
 			this.currently.scrollTo(0, this.hint.getTime() / 2);
-		} else if (index == 6) {
-			this.block.setBackground("popupSelectionQueued");
 		}
 	},
 	process: function(index) {
@@ -245,7 +236,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 		if (this.currently !== undefined) {
 			this.currently.hide();
 			delete this.currently;
-			delete this.block;
+			delete this.header;
 		}
 		TutorialSequence.prototype.complete.apply(this, arguments);
 	},
@@ -259,24 +250,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 	update: function(progress, index) {
 		let sequence = this;
 		if (index == 1) {
-			let sidebar = new SidebarWindow(),
-				group = sidebar.addGroup("block");
-			group.setOnClickListener(null);
-			this.identifier = group.addItem("blockDefineIdentifier");
-			this.variation = group.addItem("blockDefineVariation");
-			group.addItem("blockDefineTexture");
-			group.addItem("blockDefineType");
-			group.addItem("blockDefineShape");
-			group.addItem("blockUpdate");
-			this.block = group;
-			group = sidebar.addGroup("blockBoxSelect");
-			group.setOnClickListener(null);
-			this.adding = group.addItem("blockBoxAdd");
-			this.renderer = group;
-			group = sidebar.addGroup("blockDefineShape");
-			group.setOnClickListener(null);
-			group.addItem("blockBoxAdd");
-			this.collision = group;
+			let sidebar = new SidebarWindow();
 			sidebar.show();
 			this.currently = sidebar;
 		} else if (index == 2) {
@@ -291,25 +265,6 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.hint.addMessage(translate("It will be helpful to add define information."));
 			this.hint.addMessage(translate("Let's change sidebar tab to second."));
 			this.hint.show();
-		} else if (index == 3) {
-			this.currently.select(this.block);
-		} else if (index == 4) {
-			this.identifier.setBackground("popupSelectionQueued");
-		} else if (index == 5) {
-			this.variation.setBackground("popupSelectionQueued");
-		} else if (index == 6) {
-			this.identifier.setBackground(null);
-			this.variation.setBackground(null);
-		} else if (index == 7) {
-			this.block.setOnClickListener(function() {
-				sequence.tounchIncorrecrly();
-			});
-			this.renderer.setOnClickListener(function() {
-				sequence.touchCorrectly(1);
-			});
-			this.collision.setOnClickListener(function() {
-				sequence.tounchIncorrecrly();
-			});
 		// Hold tutorial starts here.
 		} else if (index == 8) {
 			this.hint.addMessage(translate("You may have a logical question:"));
@@ -369,10 +324,6 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 	touchCorrectly: function(process) {
 		if (process == 1) {
 			this.goto = 9;
-			this.currently.select(this.renderer);
-			this.block.setOnClickListener(null);
-			this.renderer.setOnClickListener(null);
-			this.collision.setOnClickListener(null);
 		} else if (process == 2 || process == 3) {
 			this.goto = 11 + Number(process == 3);
 			this.currently.setOnGroupFetchListener(null);
@@ -384,9 +335,6 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 		if (this.currently !== undefined) {
 			this.currently.hide();
 			delete this.currently;
-			delete this.block;
-			delete this.adding;
-			delete this.renderer;
 		}
 		TutorialSequence.prototype.complete.apply(this, arguments);
 	},

@@ -23,10 +23,6 @@ const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
 
-var who = "me";
-let who = "you";
-print(who);
-
 // Configurable: autosave
 let autosave = true;
 let autosavePeriod = 45;
@@ -60,7 +56,6 @@ let noImportedScripts = true;
 
 // Runtime changed values
 let warningMessage = null;
-let Setting, UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner, ModelConverter;
 
 // Definitions for default values
 let firstLaunchTutorial = REVISION.startsWith("testing");
@@ -123,6 +118,8 @@ Interface.getY = function(y) {
 	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
 };
 
+IMPORT("Drawable:1");
+
 const findCorePackage = function() {
 	return tryout(function() {
 		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
@@ -177,6 +174,9 @@ if (REVISION.startsWith("develop")) {
 	});
 }
 
+IMPORT("Action:4");
+IMPORT("Sequence:1");
+
 const $ = {
 	CORE_ENGINE_API_LEVEL: 0
 };
@@ -213,12 +213,6 @@ Callback.addCallback("PreBlocksDefined", function() {
 	getCoreEngineAndInjectIfNeeded();
 });
 
-IMPORT("Network:2");
-IMPORT("Transition:6");
-IMPORT("Action:4");
-IMPORT("Sequence:1");
-IMPORT("Drawable:1");
-
 getPlayerEnt = function() {
 	if (LevelInfo.isLoaded()) {
 		return Number(Player.get());
@@ -231,3 +225,5 @@ const isFirstLaunch = function() {
 		return loadSetting("user_login.first_launch", "boolean");
 	}, false);
 };
+
+IMPORT("Network:2");

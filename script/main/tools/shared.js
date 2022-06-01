@@ -36,11 +36,6 @@ const finishAttachAdditionalInformation = function() {
 const registerAdditionalInformation = function() {
 	if (AdditionalMessageFactory.getRegisteredCount() > 0) AdditionalMessageFactory.resetAll();
 	AdditionalMessageFactory.register("inspectorType", translate("Modification still in development state, so something may not work properly."), .2);
-	AdditionalMessageFactory.register("block", translate("Create custom variations, renders, shapes and collisions in-game with block editor."), .2);
-	AdditionalMessageFactory.register("entity", translate("Add or load self render, visualize it and create custom intellect pathes in-game with entity editor."), 0);
-	AdditionalMessageFactory.register("render", translate("Transform custom shapes, visualize your own render and just draw it in-game with render editor."), 0);
-	AdditionalMessageFactory.register("transition", translate("Record wonderful video or make quest-modded map in-game with transition editor."), .2);
-	AdditionalMessageFactory.register("world", translate("Manipulate with world regions, fill, replace and save your buildings with world editor."), .2);
 	AdditionalMessageFactory.register("explorerExtensionProject", translate("Load or create your first editor, it'll appear here."), .75, function() {
 		return ProjectProvider.getCount() == 0;
 	});
@@ -119,26 +114,7 @@ const selectProjectData = function(result, action, type, single) {
 			selected = [];
 		result.forEach(function(element, index) {
 			if (element && (type === undefined || element.type == type)) {
-				switch (element.type) {
-					case "block":
-						let renderers = element.renderer.length + element.collision.length;
-						items.push(translate("Block: %s", element.define.id) + "\n" +
-							translateCounter(renderers, "no models", "%s1 model",
-								"%s" + (renderers % 10) + " models", "%s models", [renderers]));
-						break;
-					case "entity":
-						let models = element.visual.length;
-						items.push(translate("Entity: %s", element.define.id) + "\n" +
-							translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-								"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models]));
-						break;
-					case "transition":
-						let animates = element.animation.length;
-						items.push(translate("Transition: %s", (element.define.fps || 60) + " fps") + "\n" +
-							translateCounter(animates, "no animates", "%s1 animate",
-								"%s" + (animates % 10) + " animates", "%s animates", [animates]));
-						break;
-				}
+				items.push(element.define && element.define.id !== undefined ? element.define.id : "unknown");
 				(!single) && selected.push(importAutoselect);
 				data.push(element);
 			}
