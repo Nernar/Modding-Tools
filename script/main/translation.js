@@ -8,6 +8,9 @@ Translation.addTranslation("Alpha 0.4", {
 Translation.addTranslation("Beta 0.4", {
 	ru: "Бета 0.4"
 }); // NO-TRANSLATE
+Translation.addTranslation("Snapshot 0.4", {
+	ru: "Снапшот 0.4"
+}); // NO-TRANSLATE
 Translation.addTranslation("Preview 0.4", {
 	ru: "Предпросмотр 0.4"
 }); // NO-TRANSLATE

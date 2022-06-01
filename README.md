@@ -6,6 +6,8 @@
 
 ![Logo](.preview/header.png)
 
+**This project is at stage of a global rethinking of current code logic, please temporarily do not use API until refactoring completion.**
+
 ## Introduction
 
 We're created it for you, developers like us. *Creating content right in-game — main purpose of that API link.* Control menu button will open up extensive possibilities of visual part of modification, special tools for developers and fashion designers.

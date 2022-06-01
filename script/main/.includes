@@ -4,20 +4,30 @@ translation.js
 polyfill/shared.js
 polyfill/Object.js
 
-storage/explorer.js
-storage/factory.js
-storage/message.js
-storage/converter.js
+utils/wrapping.js
+utils/drawable.js
+utils/storage.js
+utils/encoding.js
+utils/tune.js
 
-api/shared.js
-api/protect.js
-api/utils.js
+storage/Dirs.js
+storage/Files.js
+storage/Options.js
+storage/Archives.js
 
-interface/content.js
-interface/window.js
-interface/variations.js
-interface/provider.js
+content/Fragment.js
+content/FrameFragment.js
+content/Frame.js
+content/FocusableWindow.js
+content/TransitionWindow.js
+content/UniqueWindow.js
+content/FocusablePopup.js
 
+provider/WindowProvider.js
+provider/UniqueHelper.js
+provider/LevelProvider.js
+
+visual/AdditionalMessage.js
 visual/fragments/editor.js
 visual/fragments/sidebar.js
 visual/fragments/logotype.js
@@ -35,17 +45,29 @@ visual/popups/listing.js
 visual/popups/position.js
 visual/popups/hieracly.js
 
-tools/project.js
-tools/shared.js
-tools/editor.js
-tools/debug.js
+tool/Tool.js
+tool/ControlTool.js
+tool/SidebarTool.js
+tool/ProjectTool.js
+tool/EditorTool.js
 
-sequence/logotype.js
-sequence/snack.js
-sequence/launch.js
-sequence/manual.js
-sequence/testing.js
+project/Project.js
+project/ProjectProvider.js
+project/ScriptConverter.js
+
+debug/LogViewer.js
+debug/ModificationSource.js
+debug/RuntimeCodeEvaluate.js
+
+sequence/LogotypeSequence.js
+sequence/SnackSequence.js
+sequence/LaunchSequence.js
+sequence/TutorialSequence.js
+
+tools/shared.js
+tools/project.js
+tools/console.js
+tools/testing.js
 
 callback/shared.js
-callback/support.js
 callback/loading.js

@@ -131,24 +131,6 @@ Callback.addCallback("LevelLeft", function() {
 	});
 });
 
-let thereIsNoTPSMeter = false;
-
-tryoutSafety.call(this, function() {
-	let TPSMeter = findCorePackage().api.runtime.TPSMeter;
-	this.TPSMeter = new TPSMeter(20, 1000);
-}, function(e) {
-	showHint(translate("Couldn't create engine TPS Meter"));
-	thereIsNoTPSMeter = true;
-});
-
-Callback.addCallback("tick", function() {
-	tryoutSafety(function() {
-		if (!thereIsNoTPSMeter) {
-			TPSMeter.onTick();
-		}
-	});
-});
-
 const RETRY_TIME = 60000;
 
 const checkOnlineable = function(action) {

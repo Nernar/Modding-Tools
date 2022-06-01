@@ -120,6 +120,32 @@ Interface.getY = function(y) {
 
 IMPORT("Drawable:1");
 
+const requireLogotype = function() {
+	return tryoutSafety(function() {
+		if (REVISION.indexOf("alpha") != -1) {
+			return "logo_alpha";
+		} else if (REVISION.indexOf("beta") != -1) {
+			return "logo_beta";
+		} else if (REVISION.indexOf("preview") != -1) {
+			return "logo_preview";
+		}
+	}, "logo");
+};
+
+const requireInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	if (logotype == "logo") return "logo_beta";
+	if (logotype == "logo_alpha") return "logo_preview";
+	if (logotype == "logo_beta") return "logo";
+	if (logotype == "logo_preview") return "logo_alpha";
+	Logger.Log("No inverted logotype for " + logotype, "INFO");
+};
+
+const isInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	return logotype == "logo_alpha" || logotype == "logo_beta";
+};
+
 const findCorePackage = function() {
 	return tryout(function() {
 		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
@@ -168,7 +194,7 @@ if (REVISION.startsWith("develop")) {
 		dependency.setParentMod(__mod__);
 		let library = $.LibraryRegistry.resolveDependency(dependency);
 		if (!library.isLoaded()) {
-			MCSystem.throwException("Without Retention Dev Editor may not working");
+			MCSystem.throwException("Retention.js library required for this modification");
 		}
 		library.getScope().reportError = reportTrace;
 	});
@@ -227,3 +253,34 @@ const isFirstLaunch = function() {
 };
 
 IMPORT("Network:2");
+
+const calloutOrParse = function(scope, value, args) {
+	return tryout(function() {
+		if (typeof value == "function") {
+			if (args === undefined) {
+				args = [];
+			} else if (!Array.isArray(args)) {
+				args = [args];
+			}
+			return value.apply(scope, args);
+		}
+		return value;
+	}, null);
+};
+
+const parseCallback = function(scope, value, args) {
+	return tryout(function() {
+		if (args === undefined) {
+			args = [];
+		} else if (!Array.isArray(args)) {
+			args = [args];
+		}
+		if (typeof value == "function") {
+			return function() {
+				let argArray = args.slice();
+				argArray = argArray.concat(Array.prototype.slice.call(arguments));
+				return value.apply(scope, argArray);
+			};
+		}
+	}, null);
+};

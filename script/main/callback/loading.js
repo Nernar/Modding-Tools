@@ -147,7 +147,6 @@ const API = {
 	CoreEngine: $,
 	Action: Action,
 	Network: Network,
-	Transition: Transition,
 	
 	Interface: Interface,
 	Fragment: Fragment,
@@ -263,6 +262,10 @@ const API = {
 		}
 	},
 	showModuleInformation: showModuleInfo
+};
+
+const notifyCoreEngineLoaded = function() {
+	$.ModAPI.registerAPI("ModdingTools", API);
 };
 
 (function(who) {

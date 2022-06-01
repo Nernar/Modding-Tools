@@ -1,10 +1,3 @@
-const isEmpty = function(obj) {
-	for (let item in obj) {
-		return false;
-	}
-	return true;
-};
-
 /**
  * Avoids large fractions in project.
  */
@@ -99,35 +92,4 @@ Base64.decode = function(bytes) {
 		return java.util.Base64.getDecoder().decode(bytes);
 	}
 	return android.util.Base64.decode(bytes, android.util.Base64.NO_WRAP);
-};
-
-const calloutOrParse = function(scope, value, args) {
-	return tryout(function() {
-		if (typeof value == "function") {
-			if (args === undefined) {
-				args = [];
-			} else if (!Array.isArray(args)) {
-				args = [args];
-			}
-			return value.apply(scope, args);
-		}
-		return value;
-	}, null);
-};
-
-const parseCallback = function(scope, value, args) {
-	return tryout(function() {
-		if (args === undefined) {
-			args = [];
-		} else if (!Array.isArray(args)) {
-			args = [args];
-		}
-		if (typeof value == "function") {
-			return function() {
-				let argArray = args.slice();
-				argArray = argArray.concat(Array.prototype.slice.call(arguments));
-				return value.apply(scope, argArray);
-			};
-		}
-	}, null);
 };
