@@ -274,9 +274,6 @@ const ModificationSource = {
 		if (!this.attachSources(control)) {
 			control.addMessage("worldSelectionRange", translate("There's we can't find any modification. Please, consider developer about that cause."));
 		}
-		if (supportSupportables) {
-			this.attachSupportables(control);
-		}
 		control.show();
 	},
 	findModList: function() {
@@ -306,17 +303,6 @@ const ModificationSource = {
 		}
 		return true;
 	},
-	attachSupportables: function(control) {
-		/* let supportables = ExecuteableSupport.getModList();
-		if (supportables.length == 0) return false;
-		control.addCategory(translate("Or maybe checkout supportables"));
-		for (let i = 0; i < supportables.length; i++) {
-			let mod = supportables[i];
-			this.attachSource(control, mod);
-		}
-		return true; */
-		return false;
-	},
 	attachSource: function(control, mod) {
 		let type = mod.getBuildType().toString(),
 			dir = new java.io.File(mod.dir).getName(),
@@ -342,13 +328,11 @@ const ModificationSource = {
 	rebuild: function(mod, type) {
 		if (type == "release") {
 			confirm(translate("Decompilation"), translate("Modification currently was compiled into dexes.") + " " + translate("If you're developer, it may be decompiled.") + " " + translate("Do you want to continue?"), function() {
-				// LogViewer.show();
 				handleThread(function() {
 					ModificationSource.requireDecompilerAsync(mod);
 					handle(function() {
 						ModificationSource.confirmSwitchBuild(mod);
 						ModificationSource.selector();
-						// Popups.closeIfOpened("logging");
 					});
 				});
 				MenuWindow.hideCurrently();

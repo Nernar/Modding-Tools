@@ -195,14 +195,6 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			category.addItem("menuProjectSave", translate("Export"));
 			category.addItem("menuProjectManual", translate("Tutorial"));
 			category.addItem("menuProjectManage", translate("Manage"));
-			if (isAnyCustomSupportableLoaded()) {
-				category = control.addCategory(translate("Supportables"));
-				if (UIEditor) category.addItem(UIEditor.icon, translate("UIEditor"));
-				if (WorldEdit) category.addItem(WorldEdit.icon, translate("WorldEdit"));
-				if (DumpCreator) category.addItem(DumpCreator.icon, translate("Dumper"));
-				if (RunJSingame) category.addItem(RunJSingame.icon, translate("Run JS"));
-				if (InstantRunner) category.addItem(InstantRunner.icon, translate("IRunner"));
-			}
 			control.show();
 			this.currently = control;
 		} else if (index == 2) {

@@ -32,9 +32,6 @@
     "imported_script":false,
     "send_analytics":true
   },
-  "supportable":{
-    "enabled":true
-  },
   "other":{
     "import_autoselect":false,
     "autosave_mapping":false

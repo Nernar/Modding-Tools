@@ -252,7 +252,7 @@ const PROJECT_TOOL = (function() {
 	return new ProjectTool({
 		tools: {},
 		contentEntryDescriptor: function(tool) {
-			if (supportSupportables || !isEmpty(tool.tools)) {
+			if (!isEmpty(tool.tools)) {
 				let items = [];
 				for (let id in tool.tools) {
 					let entry = tool.tools[id];
@@ -295,37 +295,6 @@ const PROJECT_TOOL = (function() {
 									attachProjectTool();
 								});
 							});
-						}
-					});
-				}
-				if (loadSupportables && Setting) {
-					items.push({
-						icon: "world",
-						title: translate("World"),
-						click: function(tool, item) {
-							if (LevelInfo.isLoaded()) {
-								isSupportEnv = true;
-								currentEnvironment = Setting.modName;
-								let result = Setting(function() {
-									try {
-										rover = true;
-										createButton();
-										return true;
-									} catch (e) {
-										return e;
-									}
-								})[0];
-								if (result != true) {
-									attachProjectTool(function(next) {
-										isSupportEnv = false;
-										currentEnvironment = __name__;
-									});
-									retraceOrReport(result);
-								} else tool.deattach();
-							} else showHint(translate("Supportable module can't be loaded at menu"));
-						},
-						hold: function(tool, item) {
-							return showSupportableInfo(Setting);
 						}
 					});
 				}
@@ -383,46 +352,44 @@ const PROJECT_TOOL = (function() {
 						}
 					});
 					tryout(function() {
-						if (REVISION.indexOf("alpha") != -1) {
-							let entities = project.getEntities();
-							if (entities && entities.length > 0) {
-								let category = categories.push({
-									title: translate("Entities"),
-									clickItem: function(tool, item, index) {
-										let real = entities[index],
-											entity = content[real];
-										attachEntityTool(real, function(next) {
-											content.splice(real, 1);
-											content.unshift(entity);
-											project.setCurrentlyId(0);
-											tool.deattach();
-										});
-									},
-									holdItem: function(tool, item, index) {
-										confirm(translate("Warning!"),
-											translate("Selected worker will be removed, including all it's data.") + " " +
-											translate("Do you want to continue?"), function() {
-												let position = blocks[index];
-												if (position >= 0 && position < content.length) {
-													content.splice(position, 1);
-													showHint(translate("Worker has been removed"));
-												} else showHint(translate("Something went wrong"));
-												tool.describe();
-											});
-										return true;
-									},
-									items: []
-								}) - 1;
-								for (let i = 0; i < entities.length; i++) {
-									let entity = content[entities[i]],
-										models = entity.visual.length;
-									categories[category].items.push({
-										icon: "entity",
-										title: entity.define.id,
-										description: translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
-											"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models])
+						let entities = project.getEntities();
+						if (entities && entities.length > 0) {
+							let category = categories.push({
+								title: translate("Entities"),
+								clickItem: function(tool, item, index) {
+									let real = entities[index],
+										entity = content[real];
+									attachEntityTool(real, function(next) {
+										content.splice(real, 1);
+										content.unshift(entity);
+										project.setCurrentlyId(0);
+										tool.deattach();
 									});
-								}
+								},
+								holdItem: function(tool, item, index) {
+									confirm(translate("Warning!"),
+										translate("Selected worker will be removed, including all it's data.") + " " +
+										translate("Do you want to continue?"), function() {
+											let position = blocks[index];
+											if (position >= 0 && position < content.length) {
+												content.splice(position, 1);
+												showHint(translate("Worker has been removed"));
+											} else showHint(translate("Something went wrong"));
+											tool.describe();
+										});
+									return true;
+								},
+								items: []
+							}) - 1;
+							for (let i = 0; i < entities.length; i++) {
+								let entity = content[entities[i]],
+									models = entity.visual.length;
+								categories[category].items.push({
+									icon: "entity",
+									title: entity.define.id,
+									description: translateCounter(models, "no models /\ tree", "%s1 model /\ tree",
+										"%s" + (models % 10) + " models \/ tree", "%s models \/ tree", [models])
+								});
 							}
 						}
 					});
@@ -494,7 +461,7 @@ const PROJECT_TOOL = (function() {
 								attachConsoleTool();
 							}
 						}, {
-							icon: "worldActionMeasure",
+							icon: "inspectorMeasure",
 							title: translate("Log"),
 							click: function(tool, item) {
 								LogViewer.show();
@@ -522,218 +489,11 @@ const PROJECT_TOOL = (function() {
 						}]
 					};
 				}
-			}, function(tool) {
-				if (isAnyCustomSupportableLoaded()) {
-					return {
-						type: "category",
-						title: translate("Supportables"),
-						holdItem: function(tool, item, index) {
-							return showSupportableInfo([UIEditor, WorldEdit, DumpCreator, RunJSingame, InstantRunner][index]);
-						},
-						items: [function(tool) {
-							if (UIEditor) {
-								return {
-									icon: UIEditor.icon,
-									title: translate("UIEditor"),
-									click: function(tool, item) {
-										isSupportEnv = true;
-										currentEnvironment = UIEditor.modName;
-										let result = UIEditor(function() {
-											try {
-												start.open.click(null);
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) {
-											isSupportEnv = false;
-											currentEnvironment = __name__;
-											retraceOrReport(result);
-											return;
-										}
-										if (!hintStackableDenied) {
-											showHint(translate(UIEditor.modName) + " " + translate(UIEditor.version));
-											showHint(translate(UIEditor.author));
-										} else showHint(translate(UIEditor.modName) + " - " + translate(UIEditor.author));
-										tool.deattach();
-									}
-								};
-							}
-						}, function(tool) {
-							if (WorldEdit) {
-								return {
-									icon: WorldEdit.icon,
-									title: translate("WorldEdit"),
-									click: function(tool, item) {
-										let result = WorldEdit(function() {
-											try {
-												let array = [];
-												for (let item in Commands) {
-													let command = Commands[item];
-													array.push(command.name + (command.args && command.args.length > 0 ? " " +
-														command.args : String()) + "\n" + Translation.translate(command.description));
-												}
-												return array.join("\n\n");
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (String(result) == result) {
-											confirm(translate(WorldEdit.modName) + " " + translate(WorldEdit.version), result);
-										} else if (result) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(WorldEdit.modName) + " " + translate(WorldEdit.version));
-											showHint(translate(WorldEdit.author));
-										} else showHint(translate(WorldEdit.modName) + " - " + translate(WorldEdit.author));
-									}
-								};
-							}
-						}, function(tool) {
-							if (DumpCreator) {
-								return {
-									icon: DumpCreator.icon,
-									title: translate("Dumper"),
-									click: function(tool, item) {
-										let result = DumpCreator(function() {
-											try {
-												return __makeAndSaveDump__.dumped;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										confirm(translate(DumpCreator.modName), translate(result ? "Dump will be saved into supportable directory. Do you want to overwrite it?" :
-											LevelInfo.isLoaded() ? "Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?" :
-											"Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?"), function() {
-											let evaluate = DumpCreator(function() {
-												try {
-													__makeAndSaveDump__();
-													return true;
-												} catch (e) {
-													return e;
-												}
-											})[0];
-											if (evaluate != true) retraceOrReport(evaluate);
-										});
-									}
-								};
-							}
-						}, function(tool) {
-							if (RunJSingame) {
-								return {
-									icon: RunJSingame.icon,
-									title: translate("Run JS"),
-									click: function(tool, item) {
-										let result = RunJSingame(function() {
-											try {
-												MainUI.codeWindow();
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(RunJSingame.modName) + " " + translate(RunJSingame.version));
-											showHint(translate(RunJSingame.author));
-										} else showHint(translate(RunJSingame.modName) + " - " + translate(RunJSingame.author));
-									}
-								};
-							}
-						}, function(tool) {
-							if (InstantRunner) {
-								return {
-									icon: InstantRunner.icon,
-									title: translate("IRunner"),
-									click: function(tool, item) {
-										let result = InstantRunner(function() {
-											try {
-												openAndroidUI();
-												return true;
-											} catch (e) {
-												return e;
-											}
-										})[0];
-										if (result != true) retraceOrReport(result);
-										if (!hintStackableDenied) {
-											showHint(translate(InstantRunner.modName) + " " + translate(InstantRunner.version));
-											showHint(translate(InstantRunner.author));
-										} else showHint(translate(InstantRunner.modName) + " - " + translate(InstantRunner.author));
-									}
-								};
-							}
-						}]
-					};
-				}
 			}]
-		},
-		controlDescriptor: {
-			collapsedClick: function(tool, control) {
-				RuntimeCodeEvaluate.showSpecifiedDialog();
-			}
-		},
-		replace: function(file) {
-			let name = file.getName(),
-				instance = this;
-			if (name.endsWith(".json")) {
-				let active = Date.now();
-				convertJsonBlock(Files.read(file), function(result) {
-					instance.fromProject([result]);
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".ndb")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					instance.fromProject([convertNdb(obj)]);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".nds")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					instance.fromProject([convertNds(obj)]);
-					showHint(translate("Loaded success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			}
-			ProjectTool.prototype.replace.apply(this, arguments);
-		},
-		merge: function(file) {
-			let name = file.getName(),
-				project = this.toProject(),
-				instance = this;
-			if (name.endsWith(".json")) {
-				let active = Date.now();
-				convertJsonBlock(Files.read(file), function(result) {
-					project.getAll().push(result);
-					instance.describe();
-					showHint(translate("Converted success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".ndb")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					project.getAll().push(convertNdb(obj));
-					instance.describe();
-					showHint(translate("Imported success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			} else if (name.endsWith(".nds")) {
-				let active = Date.now();
-				tryout(function() {
-					let obj = compileData(Files.read(file));
-					current.getAll().push(convertNds(obj));
-					instance.describe();
-					showHint(translate("Imported success") + " " +
-						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				});
-			}
-			ProjectTool.prototype.merge.apply(this, arguments);
 		}
+		// TODO: register replace, merge, open actions in editors.
+		// Some realization implemented in previous commit, but
+		// it highly recommended to indent it inside that code.
 	});
 })();
 

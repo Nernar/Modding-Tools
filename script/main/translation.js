@@ -20,12 +20,12 @@ Translation.addTranslation("Allows you to edit the world.", {
 }); // NO-TRANSLATE
 Translation.addTranslation("Dumper", {
 	ru: "Дампинг"
-});
+}); // DEPRECATED
 Translation.addTranslation("Dump Creator", {}); // NO-TRANSLATE
 Translation.addTranslation("Extract dump by moment.", {
 	ru: "Извлекает дамп в момент."
 }); // NO-TRANSLATE
-Translation.addTranslation("UIEditor", {});
+Translation.addTranslation("UIEditor", {}); // DEPRECATED
 Translation.addTranslation("Создан Антоном Крыжановским", {
 	en: "Created by Anton Kryzhanovskiy"
 }); // NO-TRANSLATE
@@ -35,14 +35,14 @@ Translation.addTranslation("open beta 1.4.7", {
 Translation.addTranslation("UI Editor For InnerCore Interfaces", {
 	ru: "Редактор интерфейсов для InnerCore"
 }); // NO-TRANSLATE
-Translation.addTranslation("IRunner", {});
-Translation.addTranslation("WorldEdit", {});
+Translation.addTranslation("IRunner", {}); // DEPRECATED
+Translation.addTranslation("WorldEdit", {}); // DEPRECATED
 Translation.addTranslation("WorldEdit for InnerCore", {
 	ru: "WorldEdit для InnerCore"
 }); // NO-TRANSLATE
 Translation.addTranslation("Run JS", {
 	ru: "Запуск JS"
-});
+}); // DEPRECATED
 Translation.addTranslation("DaRealMonika", {}); // NO-TRANSLATE
 Translation.addTranslation("This mod adds 2 new commands \"/run\" which lets you run any JavaScript code that horizon can run in mods and \"/getscreen\" which by default tells you if it's telling you the screen name or not and putting either \"enable\" or \"disable\" after it will make it get the screen name or not.", {
 	ru: "Этот мод добавляет 2 новые комманды \"/run\", дающая возможность запускать любой JavaScript код, который хорайзон может запускать в модах и \"/getscreen\", определяющий нужно ли показывать название экрана или нет, используя \"enable\" или \"disable\" определить необходимо ли это делать или нет."
@@ -845,9 +845,6 @@ Translation.addTranslation("File is already created, that process will be rewrit
 Translation.addTranslation("Which modification will be changed?", {
 	ru: "Какая модификация должна быть изменена?"
 });
-Translation.addTranslation("Or maybe checkout supportables", {
-	ru: "Или можно проверить модули"
-});
 Translation.addTranslation("Impossible open file", {
 	ru: "Нельзя открыть файл"
 });
@@ -921,14 +918,8 @@ Translation.addTranslation("Warning!", {
 Translation.addTranslation("Error stack saved into internal storage", {
 	ru: "Информация об ошибке сохранена в хранилище"
 });
-Translation.addTranslation("Supportable module can't be loaded at menu", {
-	ru: "Модуль не может быть загружен в меню"
-});
 Translation.addTranslation("Option successfully changed", {
 	ru: "Настройка успешно изменена"
-});
-Translation.addTranslation("Supportables will be enabled with next launch", {
-	ru: "Модули будут активны со следующим запуском"
 });
 Translation.addTranslation("Build type %s is unsupported", {
 	ru: "Тип сборки %s не поддерживается"
@@ -949,7 +940,7 @@ Translation.addTranslation("Well done!", {
 // Processes
 Translation.addTranslation("Imported success", {
 	ru: "Успешно импортировано"
-});
+}); // DEPRECATED
 Translation.addTranslation("Loaded success", {
 	ru: "Успешно загружено"
 });
@@ -1110,9 +1101,6 @@ Translation.addTranslation("Don't want to lost any information from messages? Tr
 Translation.addTranslation("Have troubles with interface scales? Try to reset it with default sizes.", {
 	ru: "Появились проблемы с размерами интерфейса? Попробуйте сбросить размеры на стандартные."
 });
-Translation.addTranslation("Want more? Enable supportables to resolve another developer modifications experience!", {
-	ru: "Хотите больше? Включите модули, чтобы получить наслаждение от других модицикаций для разработчиков!"
-});
 Translation.addTranslation("Developer hasn't provided any test for that build. Please, checkout that section for next time.", {
 	ru: "Разработчик не предоставил тесты для этой сборки. Пожалуйта, проверьте эту секцию в следующий раз."
 });
@@ -1146,20 +1134,11 @@ Translation.addTranslation("Unknown exception is catched, please retry modificat
 	ru: "Произошла неизвестная ошибка, пожалуйста повторите попытку установки или повторите позже."
 }); // DEPRECATED
 
-// Supportables
-Translation.addTranslation("Supportables", {
+// Modules
+Translation.addTranslation("Modules", {
 	ru: "Модули"
-});
-Translation.addTranslation("Dump will be saved into supportable directory. Do you want to overwrite it?", {
-	ru: "Дамп уже сохранен в папку модуля. Вы хотите перезаписать его?"
-});
-Translation.addTranslation("Dump will be generated and saved into supportable directory. This will be take a few seconds. Continue?", {
-	ru: "Дамп будет сгенерирован и сохранен в папку модуля. Это займет некоторое время. Продолжить?"
-});
-Translation.addTranslation("Launch dump generation in menu may cause crash, you can also enter into world. Continue anyway?", {
-	ru: "Запуск генерации дампа в меню может стать причиной краша, возможно стоит зайти в мир. Все равно продолжить?"
-});
-Translation.addTranslation("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
+}); // DEPRECATED
+Translation.addTranslation("Module will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
 	ru: "Модуль будет удален со всеми прилежащими данными, пожалуйста убедитесь в сохранности своих файлов."
 });
 Translation.addTranslation("Restart game for better stability", {
@@ -1192,9 +1171,9 @@ Translation.addTranslation("UNKNOWN", {
 Translation.addTranslation("Unknown mod", {
 	ru: "Неизвестный мод"
 }); // DEPRECATED
-Translation.addTranslation("Supportables isn't supported and disabled", {
+Translation.addTranslation("Modules isn't supported and disabled", {
 	ru: "Модули не поддерживаются и отключены"
-});
+}); // DEPRECATED
 
 // Fails
 Translation.addTranslation("Something went wrong", {
@@ -1432,5 +1411,5 @@ Translation.addTranslation("Ignore", {
 // Not localized content will be appear here
 Translation.addTranslation("Animation", {});
 Translation.addTranslation("Evaluate In", {});
-Translation.addTranslation(" ", {});
-Translation.addTranslation("\n", {});
+Translation.addTranslation(" ", {}); // DEPRECATED
+Translation.addTranslation("\n", {}); // DEPRECATED

@@ -100,17 +100,6 @@ const registerAdditionalInformation = function() {
 	}, function() {
 		return uiScaler != 1. || fontScale != 1.;
 	});
-	if (supportSupportables) {
-		AdditionalMessageFactory.registerClickable("support", translate("Want more? Enable supportables to resolve another developer modifications experience!"), .5, function(message) {
-			loadSupportables = loadSetting("supportable.enabled", "boolean", true);
-			showHint(translate("Supportables will be enabled with next launch"));
-			let control = message.getWindow();
-			control.removeElement(message);
-			__config__.save();
-		}, function() {
-			return !loadSupportables;
-		});
-	}
 };
 
 /**
@@ -176,7 +165,7 @@ const selectProjectData = function(result, action, type, single) {
 	});
 };
 
-const showSupportableInfo = function(mod) {
+const showModuleInfo = function(mod) {
 	return tryout(function() {
 		let builder = new android.app.AlertDialog.Builder(context,
 			android.R.style.Theme_DeviceDefault_Dialog);
@@ -185,14 +174,14 @@ const showSupportableInfo = function(mod) {
 			translate("Developer: %s", translate(mod.author || "Unknown")) + "\n" + translate("State: %s", translate(mod.result === true ?
 				"ACTIVE" : mod.result === false ? "OUTDATED" : mod.result.lineNumber !== undefined ? "FAILED" : !mod.result ? "DISABLED" : "UNKNOWN")));
 		builder.setNegativeButton(translate("Remove"), function() {
-			confirm(translate("Warning!"), translate("Supportable will be uninstalled with all content inside, please notice that's you're data may be deleted.") + " " +
+			confirm(translate("Warning!"), translate("Module will be uninstalled with all content inside, please notice that's you're data may be deleted.") + " " +
 				translate("Do you want to continue?"),
 				function() {
 					if (mod.result === true) {
 						showHint(translate("Restart game for better stability"));
 					}
 					eval(mod.modName.replace(/\W/, String()) + " = null;");
-					// ExecuteableSupport.uninstall(mod.modName);
+					// TODO: ExecuteableSupport.uninstall(mod.modName);
 					PROJECT_TOOL.describe();
 				});
 		});

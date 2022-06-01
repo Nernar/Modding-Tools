@@ -17,11 +17,15 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-31.05.2022-0";
+const REVISION = "develop-alpha-0.4-01.06.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
+
+var who = "me";
+let who = "you";
+print(who);
 
 // Configurable: autosave
 let autosave = true;
@@ -40,11 +44,9 @@ let maximumHints = 25;
 let showProcesses = true;
 let safetyProcesses = true;
 
-// Configurable: supportables
+// Configurable: modules
 let currentEnvironment = __name__;
 let isSupportEnv = false;
-let supportSupportables = true;
-let loadSupportables = true;
 
 // Configurable: explorer
 let maximumThumbnailBounds = 96;

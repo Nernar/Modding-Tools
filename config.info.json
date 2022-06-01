@@ -298,35 +298,13 @@
 			"displayIf": false
 		},
 
-		"supportable": {
-			"name": {
-				"en": "Supportables",
-				"ru": "Модули"
-			},
-
-			"index": 23,
-			"collapsible": false
-		},
-
-		"supportable.enabled": {
-			"name": {
-				"en": "Enabled",
-				"ru": "Включено"
-			},
-			"description": {
-				"en": "Responsible for general state of inclusion «Supportables» function, each of which can be disabled separately by changing it's config",
-				"ru": "Отвечает за общее состояние включения функции «Модулей», каждый из которых может быть отключен отдельно изменением их конфига"
-			},
-			"index": 24
-		},
-
 		"other": {
 			"name": {
 				"en": "Other",
 				"ru": "Другое"
 			},
 
-			"index": 25,
+			"index": 23,
 			"collapsible": false
 		},
 
@@ -339,7 +317,7 @@
 				"en": "After inclusion, if there are two or more editors in imported project, it automatically selects everything, giving user opportunity to change his choice",
 				"ru": "После включения, при наличии в импортированном проекте двух или более редакторов, автоматически выбирает все, давая пользователю возможность изменить свой выбор"
 			},
-			"index": 26
+			"index": 24
 		},
 
 		"other.autosave_mapping": {
@@ -351,7 +329,7 @@
 				"en": "After switching on, it doesn't clear coordinates of mapped models, but uses old ones, saves them to newest editor",
 				"ru": "После включения не очищает координаты отрисованных моделей, а использует старые, сохраняя их в новый редактор"
 			},
-			"index": 27
+			"index": 25
 		}
 	}
 }

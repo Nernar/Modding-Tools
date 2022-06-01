@@ -285,7 +285,5 @@ const requireInvertedLogotype = function() {
 
 const isInvertedLogotype = function() {
 	let logotype = requireLogotype();
-	if (logotype == "logo_alpha") return true;
-	if (logotype == "logo_beta") return true;
-	return false;
+	return logotype == "logo_alpha" || logotype == "logo_beta";
 };

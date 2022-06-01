@@ -25,12 +25,14 @@ MenuWindow.parseJson = function() {
 			RuntimeCodeEvaluate.showSpecifiedDialog();
 		});
 		category.addItem("inspectorType", translate("Check"), function() {
-			evaluateScope();
+			CHECKOUT("provider.js", null, function(who) {
+				evaluateScope();
+			});
 		});
 		category.addItem("explorerExtensionScript", translate("Launch"), function() {
 			RuntimeCodeEvaluate.loadEvaluate();
 		});
-		category.addItem("worldShape", translate("Require"), function() {
+		category.addItem("inspectorObject", translate("Require"), function() {
 			let files = Files.listFileNames(Dirs.EVALUATE, true),
 				more = Files.listFileNames(Dirs.SCRIPT_ADAPTIVE, true);
 			files = Files.checkFormats(files.concat(more), ".js");
@@ -52,7 +54,7 @@ MenuWindow.parseJson = function() {
 				}
 			});
 		});
-		category.addItem("explorer", translate("Explorer"), function() {
+		category.addItem("explorerImport", translate("File Manager"), function() {
 			attachAdvancedExplorer();
 		});
 	}
@@ -70,7 +72,7 @@ LaunchSequence.create = function() {
 		}
 	});
 	this.__create.apply(this, arguments);
-	CHECKOUT("provider.dns", null, function(who) {
+	CHECKOUT("provider.js", null, function(who) {
 		attachEvalButton();
 	});
 };
@@ -97,7 +99,12 @@ LaunchSequence.process = function(index) {
 	}
 	let process = this.__process.apply(this, arguments);
 	if (index == 2) {
-		CHECKOUT("produce.dns", null, function(who) {
+		if (debugIgnoreLockedBackground) {
+			let popup = BitmapDrawableFactory.getMappedFileByKey("popup");
+			BitmapDrawableFactory.mapAs("popupSelectionLocked", popup);
+			BitmapDrawableFactory.mapAs("popupSelectionQueued", popup);
+		}
+		CHECKOUT("produce.js", null, function(who) {
 			AdditionalMessageFactory.registerClickable("menuProjectManage", translate("If you're wouldn't see development panel here, it may be removed."), 1, function(message) {
 				debugAttachControlTools = !debugAttachControlTools;
 				let control = message.getWindow();
@@ -107,18 +114,16 @@ LaunchSequence.process = function(index) {
 				return debugAttachControlTools;
 			});
 			AdditionalMessageFactory.registerClickable("explorerImport", translate("Modification is outgoing to produce? Let's compile anything that's we're developed!"), 0.5, function(message) {
-				REQUIRE("produce.dns")(function() {
+				REQUIRE("produce.js")(function() {
 					UniqueHelper.requireDestroy();
 					WindowProvider.destroy();
-					CHECKOUT("provider.dns", null, function(who) {
+					CHECKOUT("provider.js", null, function(who) {
 						attachEvalButton();
 					});
 				});
 			});
 		});
-		if (!isInstant) {
-			AsyncSnackSequence.access("translation.dns", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
-		}
+		AsyncSnackSequence.access("translation.dns", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
 	} else if (index == 3) {
 		tryoutSafety(function() {
 			if (FileTools.exists(Dirs.EVALUATE + "testing/")) {
@@ -137,11 +142,6 @@ LaunchSequence.process = function(index) {
 			let reader = new java.io.FileReader(internal);
 			findCorePackage().mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.jar");
 		});
-		if (debugIgnoreLockedBackground) {
-			let popup = BitmapDrawableFactory.getMappedFileByKey("popup");
-			BitmapDrawableFactory.mapAs("popupSelectionLocked", popup);
-			BitmapDrawableFactory.mapAs("popupSelectionQueued", popup);
-		}
 	}
 	return process;
 };

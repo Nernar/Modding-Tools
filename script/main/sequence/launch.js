@@ -20,7 +20,6 @@ const LaunchSequence = new LogotypeSequence({
 				reportError.addDebugValue("isHorizon", isHorizon);
 				reportError.addDebugValue("interfaceScale", uiScaler);
 				reportError.addDebugValue("fontSizeScale", fontScale);
-				reportError.addDebugValue("loadSupportables", loadSupportables);
 				reportError.addDebugValue("autosaveEnabled", autosave);
 				reportError.addDebugValue("moveMapping", saveCoords);
 			}
@@ -36,7 +35,6 @@ const LaunchSequence = new LogotypeSequence({
 			typefaceJetBrains = AssetFactory.createFont("jetBrainsMono");
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			refreshSupportablesIcons();
 			if (isInstant) {
 				Callback.invokeCallback("Instant:ModdingTools", API);
 			} else {

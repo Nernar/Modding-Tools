@@ -251,7 +251,7 @@ const API = {
 		MCSystem: MCSystem
 	},
 	
-	Supportable: {
+	Module: {
 		canLeaveAtMoment: function() {
 			return !isSupportEnv;
 		},
@@ -262,9 +262,7 @@ const API = {
 			restart();
 		}
 	},
-	
-	showSupportableInformation: showSupportableInfo,
-	isAnyCustomSupportableLoaded: isAnyCustomSupportableLoaded
+	showModuleInformation: showModuleInfo
 };
 
 (function(who) {
