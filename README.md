@@ -1,8 +1,9 @@
 # Dev Editor
 
-[![Snapshot 0.4](https://img.shields.io/badge/version-0.4-green.svg)](https://icmods.mineprogramming.org/mod?id=614)
-[![Support](https://img.shields.io/github/repo-size/nernar/dev-editor)](https://vk.com/nteditor)
-[![License](https://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+![Version](https://img.shields.io/badge/dynamic/json?label=version&query=version&url=https://raw.githubusercontent.com/nernar/modding-tools/master/mod.info&color=D19121&logoColor=white&logo=clockify&style=flat-square)
+![Lines of code](https://img.shields.io/tokei/lines/github/nernar/modding-tools?color=2727E3&logoColor=white&logo=sourcegraph&style=flat-square)
+![License](https://img.shields.io/github/license/nernar/modding-tools?color=D22128&logoColor=white&logo=apache&style=flat-square)
+[![Telegram](https://img.shields.io/badge/channel-gray?logo=telegram&style=flat-square)](https://t.me/ntInsideChat)
 
 ![Logo](.preview/header.png)
 
