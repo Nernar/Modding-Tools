@@ -54,6 +54,22 @@ LevelProvider.hide = function() {
 	overlay.hide();
 };
 
+Callback.addCallback("LevelLoaded", function() {
+	handle(function() {
+		if (LevelProvider.isAttached()) {
+			LevelProvider.show();
+		}
+	});
+});
+
+Callback.addCallback("LevelLeft", function() {
+	handle(function() {
+		if (LevelProvider.isAttached()) {
+			LevelProvider.hide();
+		}
+	});
+});
+
 let thereIsNoTPSMeter = false;
 
 tryoutSafety.call(this, function() {

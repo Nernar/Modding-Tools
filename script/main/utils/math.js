@@ -93,3 +93,29 @@ Base64.decode = function(bytes) {
 	}
 	return android.util.Base64.decode(bytes, android.util.Base64.NO_WRAP);
 };
+
+const requireLogotype = function() {
+	return tryoutSafety(function() {
+		if (REVISION.indexOf("alpha") != -1) {
+			return "logo_alpha";
+		} else if (REVISION.indexOf("beta") != -1) {
+			return "logo_beta";
+		} else if (REVISION.indexOf("preview") != -1) {
+			return "logo_preview";
+		}
+	}, "logo");
+};
+
+const requireInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	if (logotype == "logo") return "logo_beta";
+	if (logotype == "logo_alpha") return "logo_preview";
+	if (logotype == "logo_beta") return "logo";
+	if (logotype == "logo_preview") return "logo_alpha";
+	Logger.Log("No inverted logotype for " + logotype, "INFO");
+};
+
+const isInvertedLogotype = function() {
+	let logotype = requireLogotype();
+	return logotype == "logo_alpha" || logotype == "logo_beta";
+};

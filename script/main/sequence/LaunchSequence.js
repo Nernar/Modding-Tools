@@ -21,7 +21,6 @@ const LaunchSequence = new LogotypeSequence({
 				reportError.addDebugValue("interfaceScale", uiScaler);
 				reportError.addDebugValue("fontSizeScale", fontScale);
 				reportError.addDebugValue("autosaveEnabled", autosave);
-				reportError.addDebugValue("moveMapping", saveCoords);
 			}
 			if (!REVISION.startsWith("develop") && FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);

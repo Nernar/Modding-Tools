@@ -20,20 +20,12 @@
     "as_projectable":true,
     "maximum_count":20
   },
-  "render":{
-    "use_box_sizes":false,
-    "draw_selection":true,
-    "inject_border":false,
-    "transparent_boxes":false
-  },
   "user_login":{
     "first_launch":false,
-    "ignore_deprecation":true,
-    "imported_script":true,
+    "imported_script":false,
     "send_analytics":true
   },
   "other":{
-    "import_autoselect":false,
-    "autosave_mapping":false
+    "import_autoselect":false
   }
 }

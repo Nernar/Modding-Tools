@@ -1,5 +1,3 @@
-MCSystem.setLoadingTip(NAME + ": Localizing");
-
 // Modifications information
 Translation.addTranslation("Dev Editor", {});
 Translation.addTranslation("Alpha 0.4", {

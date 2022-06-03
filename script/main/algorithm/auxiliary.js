@@ -1,4 +1,41 @@
 /**
+ * Some useful code; warnings and information.
+ */
+const showHint = function(hint, color, reawait) {
+	if (showHint.launchStacked !== undefined) {
+		showHint.launchStacked.push({
+			hint: hint,
+			color: color,
+			reawait: reawait
+		});
+		return;
+	}
+	handle(function() {
+		let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
+		if (window === null) {
+			window = new HintAlert();
+		}
+		window.setStackable(!hintStackableDenied);
+		if (reawait && !window.canStackedMore()) {
+			window.removeFirstStacked();
+		}
+		window.addMessage(hint, color, reawait);
+		if (!window.isOpened()) window.show();
+	});
+};
+
+showHint.launchStacked = [];
+
+showHint.unstackLaunch = function() {
+	let stack = this.launchStacked;
+	delete this.launchStacked;
+	delete this.unstackLaunch;
+	for (let i = 0; i < stack.length; i++) {
+		showHint(stack[i].hint, stack[i].color, stack[i].reawait);
+	}
+};
+
+/**
  * Little specification: sound with a certain frequency
  * plays at the system level, it will not be recorded by
  * built-in recorder on screen during recording, it is used
@@ -89,4 +126,19 @@ const playTune = function(duration, min, max, static, forever) {
 
 const stopTune = function() {
 	delete playTune.track;
+};
+
+const RETRY_TIME = 60000;
+
+const checkOnlineable = function(action) {
+	handleThread(function() {
+		if (!Network.isOnline()) {
+			warningMessage = "Please check network connection. Connect to collect updates, special events and prevent key deprecation.";
+			handle(function() {
+				checkOnlineable(action);
+			}, RETRY_TIME);
+			return;
+		} else warningMessage = null;
+		action && action();
+	});
 };

@@ -1,14 +1,13 @@
 header.js
 translation.js
 
-polyfill/shared.js
 polyfill/Object.js
 
+utils/object.js
+utils/math.js
 utils/wrapping.js
 utils/drawable.js
 utils/storage.js
-utils/encoding.js
-utils/tune.js
 
 storage/Dirs.js
 storage/Files.js
@@ -22,28 +21,27 @@ content/FocusableWindow.js
 content/TransitionWindow.js
 content/UniqueWindow.js
 content/FocusablePopup.js
+content/provider/WindowProvider.js
+content/provider/UniqueHelper.js
+content/provider/Popups.js
+content/provider/LevelProvider.js
 
-provider/WindowProvider.js
-provider/UniqueHelper.js
-provider/LevelProvider.js
-
-visual/AdditionalMessage.js
-visual/fragments/editor.js
-visual/fragments/sidebar.js
-visual/fragments/logotype.js
-visual/fragments/control.js
-visual/fragments/overlay.js
-visual/sidebar.js
-visual/control.js
-visual/explorer.js
-visual/project.js
-visual/snack.js
-visual/logotype.js
-visual/overlay.js
-visual/popups/shared.js
-visual/popups/listing.js
-visual/popups/position.js
-visual/popups/hieracly.js
+layout/AdditionalMessage.js
+layout/HintAlert.js
+layout/ExplorerWindow.js
+layout/EditorFragment.js
+layout/control/OverlayFragment.js
+layout/control/OverlayWindow.js
+layout/control/ControlFragment.js
+layout/control/ControlWindow.js
+layout/menu/LogotypeFragment.js
+layout/menu/LogotypeWindow.js
+layout/menu/MenuWindow.js
+layout/sidebar/SidebarFragment.js
+layout/sidebar/SidebarWindow.js
+layout/popup/ListingPopup.js
+layout/popup/HieraclyPopup.js
+layout/popup/CoordsPopup.js
 
 tool/Tool.js
 tool/ControlTool.js
@@ -61,13 +59,17 @@ debug/RuntimeCodeEvaluate.js
 
 sequence/LogotypeSequence.js
 sequence/SnackSequence.js
+sequence/AsyncSnackSequence.js
 sequence/LaunchSequence.js
 sequence/TutorialSequence.js
 
-tools/shared.js
 tools/project.js
 tools/console.js
 tools/testing.js
 
-callback/shared.js
-callback/loading.js
+algorithm/config.js
+algorithm/auxiliary.js
+algorithm/interaction.js
+algorithm/launcher.js
+
+integration/shared.js

@@ -1,50 +1,3 @@
-/**
- * Retrying update and launch.
- */
-const initialize = function() {
-	tryout(function() {
-		tryout(function() {
-			MCSystem.setLoadingTip(NAME + ": Starting");
-			reportError.setTitle(translate(NAME) + " " + translate(VERSION));
-			reportError.setInfoMessage(translate("An error occurred while executing modification.") + " " +
-				translate("If your developing process is affected, try export all non-saved data.") + " " +
-				translate("Send a screenshot of error to our group or save error in internal storage."));
-		});
-		if (showHint.launchStacked !== undefined) {
-			LaunchSequence.execute();
-		}
-	});
-};
-
-tryoutSafety(function() {
-	if (REVISION.startsWith("develop")) {
-		CHECKOUT("development.js");
-	}
-});
-
-const restart = function() {
-	if (!isSupportEnv) {
-		return;
-	}
-	handle(function() {
-		attachProjectTool(undefined, function() {
-			currentEnvironment = __name__;
-		});
-	});
-	isSupportEnv = false;
-};
-
-(function() {
-	let internal = new java.io.File(Dirs.SCRIPT_REVISION + "bridge.jar");
-	if (internal.exists()) {
-		let reader = new java.io.FileReader(internal);
-		findCorePackage().mod.executable.Compiler.enter(-1);
-		merge(this, findCorePackage().mod.executable.Compiler.loadScriptFromDex(internal)());
-	} else {
-		Logger.Log("ModdingTools: not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
-	}
-})();
-
 const API = {
 	USER_ID: "unknown",
 	tryout: tryout,
@@ -54,6 +7,7 @@ const API = {
 	handleAction: handleAction,
 	acquire: acquire,
 	handleThread: handleThread,
+	
 	registerTool: function(id, tool) {
 		if (Tools.hasOwnProperty(id)) {
 			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
@@ -95,6 +49,7 @@ const API = {
 	getTime: getTime,
 	launchTime: launchTime,
 	isHorizon: isHorizon,
+	minecraftVersion: minecraftVersion,
 		
 	getContext: getContext,
 	getTypeface: function() {
@@ -141,8 +96,6 @@ const API = {
 	assign: assign,
 	merge: merge,
 	clone: clone,
-	requireMethod: requireMethod,
-	requireClass: requireClass,
 	
 	CoreEngine: $,
 	Action: Action,
@@ -264,10 +217,6 @@ const API = {
 	showModuleInformation: showModuleInfo
 };
 
-const notifyCoreEngineLoaded = function() {
-	$.ModAPI.registerAPI("ModdingTools", API);
-};
-
 (function(who) {
 	for (let element in who) {
 		if (this.hasOwnProperty(element)) {
@@ -276,20 +225,34 @@ const notifyCoreEngineLoaded = function() {
 	}
 })("USER_ID", "ModBrowser", "Mehwrap");
 
-if (isInstant) {
-	initialize();
-}
+const notifyCoreEngineLoaded = function() {
+	$.ModAPI.registerAPI("ModdingTools", API);
+};
 
-Callback.addCallback("PostLoaded", function() {
-	if (!isInstant) {
-		initialize();
-	} else {
-		handle(function() {
-			if (PROJECT_TOOL.isAttached()) {
-				PROJECT_TOOL.deattach();
-			}
-			attachProjectTool();
+const getCoreEngineAndInjectIfNeeded = function() {
+	return tryout(function() {
+		if (isCoreEngineLoaded()) {
+			return $;
+		}
+		let instance = null;
+		let CoreEngineAPI = findCorePackage().api.mod.coreengine.CoreEngineAPI;
+		let field = tryout(function() {
+			return CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
+		}, function(e) {
+			let declared = CoreEngineAPI.__javaObject__.getDeclaredField("coreEngineHandler");
+			instance = findCorePackage().api.mod.API.getInstanceByName("CoreEngine");
+			return declared;
 		});
-	}
-	isInstant = false;
+		field.setAccessible(true);
+		let ceHandlerSingleton = field.get(instance);
+		if (ceHandlerSingleton != null) {
+			ceHandlerSingleton.injectCoreAPI($);
+		}
+		notifyCoreEngineLoaded();
+		return $;
+	}, $);
+};
+
+Callback.addCallback("PreBlocksDefined", function() {
+	getCoreEngineAndInjectIfNeeded();
 });

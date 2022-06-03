@@ -232,64 +232,6 @@
 			"max": 50
 		},
 
-		"render": {
-			"name": {
-				"en": "Render",
-				"ru": "Отрисовка"
-			},
-
-			"index": 20,
-			"collapsible": false
-		},
-
-		"render.use_box_sizes": {
-			"name": {
-				"en": "Use Box Sizes",
-				"ru": "Использовать координаты коробок"
-			},
-			"description": {
-				"en": "After inclusion in editors with box sizes, instead of size and location, displays two coordinates points",
-				"ru": "После включения в редакторах с размерами коробок, вместо размера и расположения, отображает две точки координат"
-			},
-			"displayIf": false
-		},
-
-		"render.draw_selection": {
-			"name": {
-				"en": "Draw Selection",
-				"ru": "Отрисовка выборки"
-			},
-			"description": {
-				"en": "When focusing on element selection window, draws selection in any of one possible ways",
-				"ru": "При фокусировке на окне выбора элементов, отрисовывает выборку любым из возможных способов"
-			},
-			"index": 21
-		},
-
-		"render.inject_border": {
-			"name": {
-				"en": "Inject Borders",
-				"ru": "Вставка границ"
-			},
-			"description": {
-				"en": "Draws a border around selected elements, perhaps less stable than drawing selection, but more clearly",
-				"ru": "Обводит границу для выбранных элементов, возможно менее стабильно чем отрисовка выборки, но более наглядно"
-			},
-			"displayIf": false
-		},
-
-		"render.transparent_boxes": {
-			"name": {
-				"en": "Transparent Boxes",
-				"ru": "Прозрачные коробки"
-			},
-			"description": {
-				"en": "Changes rendering state of translucent textures, works only on translucent blocks, also automatically turns off on old version launcher",
-				"ru": "Меняет состояние отрисовки полупрозрачных текстур, работает только на полупрозрачных блоках, также автоматически отключается на старой версии лаунчера"
-			},
-			"index": 22
-		},
-
 		"user_login": {
 			"name": {
 				"en": "User Login",
@@ -304,7 +246,7 @@
 				"ru": "Другое"
 			},
 
-			"index": 23,
+			"index": 16,
 			"collapsible": false
 		},
 
@@ -317,19 +259,7 @@
 				"en": "After inclusion, if there are two or more editors in imported project, it automatically selects everything, giving user opportunity to change his choice",
 				"ru": "После включения, при наличии в импортированном проекте двух или более редакторов, автоматически выбирает все, давая пользователю возможность изменить свой выбор"
 			},
-			"index": 24
-		},
-
-		"other.autosave_mapping": {
-			"name": {
-				"en": "Autosave Mapping",
-				"ru": "Авто-сохранение маппинга"
-			},
-			"description": {
-				"en": "After switching on, it doesn't clear coordinates of mapped models, but uses old ones, saves them to newest editor",
-				"ru": "После включения не очищает координаты отрисованных моделей, а использует старые, сохраняя их в новый редактор"
-			},
-			"index": 25
+			"index": 17
 		}
 	}
 }

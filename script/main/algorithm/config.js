@@ -1,5 +1,3 @@
-MCSystem.setLoadingTip(NAME + ": Injecting Callbacks");
-
 const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
 	if (minOrIteratorOrValue === undefined) {
 		return value;
@@ -91,57 +89,20 @@ const updateSettings = function() {
 		setSetting("autosavePeriod", "autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
 		setSetting("autosaveProjectable", "autosave.as_projectable");
 		setSetting("autosaveCount", "autosave.maximum_count", "number", 0, 50);
-		setSetting("entityBoxType", "render.use_box_sizes", "boolean", false);
-		setSetting("drawSelection", "render.draw_selection", "boolean");
-		setSetting("injectBorder", "render.inject_border", "boolean", false);
-		setSetting("transparentBoxes", "render.transparent_boxes", "boolean", function(value) {
-			if (!isHorizon && value) {
-				Logger.Log("Transparent block renderer boxes not supported on Inner Core", "WARNING");
-			}
-			return value && isHorizon;
-		});
 		setSetting("ignoreKeyDeprecation", "user_login.ignore_deprecation", "boolean");
 		setSetting("noImportedScripts", "user_login.imported_script", "boolean", function(value) {
 			return !value;
 		});
 		setSetting("sendAnalytics", "user_login.send_analytics", "boolean", true);
 		setSetting("importAutoselect", "other.import_autoselect", "boolean");
-		setSetting("saveCoords", "other.autosave_mapping", "boolean");
 		__config__.save();
 	});
 };
 
 updateSettings();
 
-let selectMode = 0;
-
-Callback.addCallback("LevelLoaded", function() {
-	handle(function() {
-		if (LevelProvider.isAttached()) {
-			LevelProvider.show();
-		}
-	});
-});
-
-Callback.addCallback("LevelLeft", function() {
-	handle(function() {
-		if (LevelProvider.isAttached()) {
-			LevelProvider.hide();
-		}
-	});
-});
-
-const RETRY_TIME = 60000;
-
-const checkOnlineable = function(action) {
-	handleThread(function() {
-		if (!Network.isOnline()) {
-			warningMessage = "Please check network connection. Connect to collect updates, special events and prevent key deprecation.";
-			handle(function() {
-				checkOnlineable(action);
-			}, RETRY_TIME);
-			return;
-		} else warningMessage = null;
-		action && action();
-	});
+const isFirstLaunch = function() {
+	return tryoutSafety(function() {
+		return loadSetting("user_login.first_launch", "boolean");
+	}, false);
 };
