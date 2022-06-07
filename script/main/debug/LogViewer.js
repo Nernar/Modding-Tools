@@ -43,7 +43,7 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 LogViewer.show = function() {
 	let popup = new ListingPopup();
 	popup.setTitle(translate("Currently log"));
-   	popup.views.scroll.setLayoutParams(new android.widget.LinearLayout.
+   	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.WIDTH / 4, Interface.Display.HEIGHT / 3));
 	let horizontal = new android.widget.HorizontalScrollView(context);
 	let text = new android.widget.TextView(context);
@@ -52,7 +52,7 @@ LogViewer.show = function() {
    	text.setTextColor(Interface.Color.WHITE);
 	text.setTypeface(android.graphics.Typeface.MONOSPACE);
 	text.setText(NAME + " " + REVISION);
-	popup.views.content.addView(horizontal);
+	popup.getFragment().getContainerLayout().addView(horizontal);
 	horizontal.addView(text);
 	let filter = findCorePackage().api.log.ICLog.getLogFilter();
 	let messagesField = getClass(filter).__javaObject__.getDeclaredField("logMessages");
@@ -66,7 +66,7 @@ LogViewer.show = function() {
 				let next = messages.size();
 				if (next > count) {
 					for (let i = count; i < next; i++) {
-						LogViewer.handle(text, popup.views.scroll, horizontal, messages.get(i));
+						LogViewer.handle(text, popup.getFragment().getContainerScroll(), horizontal, messages.get(i));
 					}
 					count = next;
 				}

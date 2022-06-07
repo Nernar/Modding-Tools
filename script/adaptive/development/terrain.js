@@ -1,4 +1,4 @@
-const TerrainGeneratorFactory = findAssertionPackage().innercore.terrain.TerrainGeneratorFactory;
+TerrainGeneratorFactory = findAssertionPackage().innercore.terrain.TerrainGeneratorFactory;
 
 const attachTerrainWindow = function() {
 	let popup = new ListingPopup();
@@ -14,7 +14,7 @@ const attachTerrainWindow = function() {
 	source.setScaleType(Interface.Scale.FIT_CENTER);
 	source.setMinimumHeight(Interface.Display.HEIGHT * 0.625);
 	let params = new android.widget.FrameLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-	popup.views.content.addView(source, params);
+	popup.getFragment().getContainerLayout().addView(source, params);
 	popup.addButtonElement(translate("Save") + " & " + translate("Redraw"), function() {
 		json = edit.getValue();
 		isDirty = true;
@@ -40,7 +40,7 @@ const attachTerrainWindow = function() {
 	let json = edit.getValue();
 	popup.setWidth(Interface.Display.MATCH);
 	popup.setHeight(Interface.Display.MATCH);
-	popup.views.title.setVisibility(Interface.Visibility.GONE);
+	popup.getFragment().getTitleView().setVisibility(Interface.Visibility.GONE);
 	Popups.open(popup, "terrain");
 	let invalidate = false;
 	handleThread(function() {

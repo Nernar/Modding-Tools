@@ -61,26 +61,20 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	let something = dialog.create();
 	something.getWindow().setLayout(Interface.Display.WIDTH / 1.3, Interface.Display.HEIGHT / 1.1);
 	something.show();
-	tryout(function() {
-		let identifier = context.getResources().getIdentifier("alertTitle", "id", context.getPackageName());
-		if (identifier <= 0) {
-			identifier = context.getResources().getIdentifier("alertTitle", "id", "android");
+	(function() {
+		for (let i = 0; i < arguments.length; i++) {
+			if (arguments[i] == 0) {
+				continue;
+			}
+			let view = something.findViewById(arguments[i]);
+			if (view != null) {
+				return view;
+			}
 		}
-		let title = something.findViewById(identifier > 0 ? identifier : android.R.id.title);
-		if (title == null) {
-			MCSystem.throwException("ModdingTools: not found actual android dialog title, using custom view");
-		}
-		return title;
-	}, function(any) {
-		Logger.Log(any, "WARNING");
-		let title = new android.widget.TextView(context);
-		title.setPadding(Interface.getY(32), Interface.getY(32), Interface.getY(32), 0);
-		title.setTextSize(Interface.getFontSize(28));
-		title.setTextColor(Interface.Color.WHITE);
-		title.setText(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
-		something.setCustomTitle(title);
-		return title;
-	}).setOnClickListener(function(view) {
+		MCSystem.throwException("ModdingTools: not found actual android dialog title, using custom view");
+	})(context.getResources().getIdentifier("alertTitle", "id", context.getPackageName()),
+		context.getResources().getIdentifier("alertTitle", "id", "android"),
+		android.R.id.title).setOnClickListener(function(view) {
 		tryout(function() {
 			let executables = RuntimeCodeEvaluate.resolveAvailabledExecutables();
 			let realExecutablePointer = [];

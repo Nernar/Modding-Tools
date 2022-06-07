@@ -15,7 +15,7 @@ Popups.open = function(widget, name) {
 		}
 		this.widgets.push(widget);
 		widget.name = name;
-		widget.show();
+		widget.showInternal();
 	}
 };
 
@@ -59,7 +59,7 @@ Popups.closeAllByTag = function(tag) {
 Popups.close = function(index) {
 	let widget = this.widgets[index];
 	if (widget) {
-		widget.hide();
+		widget.dismissInternal();
 		this.widgets.splice(index, 1);
 		return true;
 	}

@@ -1,15 +1,13 @@
 const ListingPopup = function() {
-	FocusablePopup.apply(this, arguments);
+	ExpandablePopup.apply(this, arguments);
+	this.views = {
+		edits: [],
+		buttons: []
+	};
 };
 
-ListingPopup.prototype = new FocusablePopup;
+ListingPopup.prototype = new ExpandablePopup;
 ListingPopup.prototype.TYPE = "ListingPopup";
-
-ListingPopup.prototype.reset = function() {
-	FocusablePopup.prototype.reset.apply(this, arguments);
-	this.views.edits = [];
-	this.views.buttons = [];
-};
 
 ListingPopup.prototype.addButtonElement = function(name, click) {
 	let views = this.views,
@@ -30,7 +28,7 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 	views.buttons[index].setTextColor(Interface.Color.WHITE);
 	if (name) views.buttons[index].setText(name);
 	views.buttons[index].setTypeface(typeface);
-	views.content.addView(views.buttons[index]);
+	this.getFragment().getContainerLayout().addView(views.buttons[index]);
 	return this.getButton(index);
 };
 
@@ -59,7 +57,7 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 		let ims = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
 		ims.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
 	});
-	views.content.addView(views.edits[index]);
+	this.getFragment().getContainerLayout().addView(views.edits[index]);
 	if (!this.isFocusable()) this.setFocusable(true);
 	return this.getEdit(index);
 };

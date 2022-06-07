@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-03.06.2022-0";
+const REVISION = "develop-alpha-0.4-08.06.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -199,5 +199,5 @@ getPlayerEnt = function() {
 
 IMPORT("Network:2");
 
-let FileTools = findCorePackage().utils.FileTools;
-let LevelInfo = findCorePackage().api.runtime.LevelInfo;
+FileTools = findCorePackage().utils.FileTools;
+LevelInfo = findCorePackage().api.runtime.LevelInfo;

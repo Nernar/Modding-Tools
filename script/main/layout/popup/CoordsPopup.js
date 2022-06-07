@@ -1,17 +1,13 @@
 const CoordsPopup = function() {
 	ListingPopup.apply(this, arguments);
-};
-
-CoordsPopup.prototype = new ListingPopup;
-CoordsPopup.prototype.TYPE = "CoordsPopup";
-
-CoordsPopup.prototype.reset = function() {
-	ListingPopup.prototype.reset.apply(this, arguments);
 	this.views.groups = [];
 	this.views.titles = [];
 	this.views.containers = [];
 	this.groups = [];
 };
+
+CoordsPopup.prototype = new ListingPopup;
+CoordsPopup.prototype.TYPE = "CoordsPopup";
 
 CoordsPopup.prototype.addButtonElement = function(name, click) {
 	let button = ListingPopup.prototype.addButtonElement.apply(this, arguments);
@@ -25,7 +21,7 @@ CoordsPopup.prototype.addGroup = function(name) {
 		index = views.groups.length;
 	views.groups[index] = new android.widget.LinearLayout(context);
 	views.groups[index].setPadding(Interface.getY(10), index == 0 ? Interface.getY(10) : 0, Interface.getY(10), Interface.getY(10));
-	views.content.addView(views.groups[index]);
+	this.getFragment().getContainerLayout().addView(views.groups[index]);
 
 	views.titles[index] = new android.widget.TextView(context);
 	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.Display.MATCH));

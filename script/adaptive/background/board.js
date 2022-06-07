@@ -1,3 +1,4 @@
+/** DEPRECATED */
 const playTrack = function(time, buffer, delay) {
 	handleThread(function() {
 		let buffsize = android.media.AudioTrack.getMinBufferSize(4000,

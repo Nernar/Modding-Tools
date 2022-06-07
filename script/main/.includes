@@ -20,11 +20,15 @@ content/Frame.js
 content/FocusableWindow.js
 content/TransitionWindow.js
 content/UniqueWindow.js
-content/FocusablePopup.js
-content/provider/WindowProvider.js
-content/provider/UniqueHelper.js
-content/provider/Popups.js
-content/provider/LevelProvider.js
+content/window/WindowProvider.js
+content/window/UniqueHelper.js
+content/window/Popups.js
+content/window/LevelProvider.js
+content/popup/FocusablePopup.js
+content/popup/FixedFragment.js
+content/popup/FixedPopup.js
+content/popup/ExpandableFragment.js
+content/popup/ExpandablePopup.js
 
 layout/AdditionalMessage.js
 layout/HintAlert.js
@@ -40,7 +44,6 @@ layout/menu/MenuWindow.js
 layout/sidebar/SidebarFragment.js
 layout/sidebar/SidebarWindow.js
 layout/popup/ListingPopup.js
-layout/popup/HieraclyPopup.js
 layout/popup/CoordsPopup.js
 
 tool/Tool.js

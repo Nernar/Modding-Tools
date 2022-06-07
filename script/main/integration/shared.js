@@ -148,7 +148,6 @@ const API = {
 		Popups.updateAll();
 	},
 	
-	HieraclyPopup: HieraclyPopup,
 	ListingPopup: ListingPopup,
 	CoordsPopup: CoordsPopup,
 	
