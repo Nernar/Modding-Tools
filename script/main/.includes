@@ -15,7 +15,12 @@ storage/Options.js
 storage/Archives.js
 
 content/Fragment.js
-content/FrameFragment.js
+content/fragment/BaseFragment.js
+content/fragment/LayoutFragment.js
+content/fragment/FrameFragment.js
+content/fragment/TextFragment.js
+content/fragment/ImageFragment.js
+
 content/Frame.js
 content/FocusableWindow.js
 content/TransitionWindow.js
@@ -43,6 +48,13 @@ layout/menu/LogotypeWindow.js
 layout/menu/MenuWindow.js
 layout/sidebar/SidebarFragment.js
 layout/sidebar/SidebarWindow.js
+
+layout/fragment/ThinButtonFragment.js
+layout/fragment/SolidButtonFragment.js
+layout/fragment/PropertyInputFragment.js
+layout/fragment/SliderFragment.js
+layout/fragment/CounterFragment.js
+layout/fragment/AxisGroupFragment.js
 layout/popup/ListingPopup.js
 layout/popup/CoordsPopup.js
 

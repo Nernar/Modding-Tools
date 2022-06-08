@@ -7,40 +7,18 @@ const FixedPopup = function() {
 FixedPopup.prototype = new FocusablePopup;
 FixedPopup.prototype.TYPE = "FixedPopup";
 
-FixedPopup.prototype.addElementFragment = function(fragment, params) {
-	if (params === undefined) {
-		this.getFragment().getContainerLayout().addView(fragment.getContainer());
-	} else {
-		this.getFragment().getContainerLayout().addView(fragment.getContainer(), params);
-	}
-	return this.fragments.push(fragment) - 1;
-};
-
-FixedPopup.prototype.addElementView = function(container, params) {
-	let fragment = new Fragment();
-	fragment.setContainerView(container);
-	return this.addElementFragment(fragment, params);
+FixedPopup.prototype.addElement = function(fragment, params) {
+	return this.getFragment().addElementFragment(fragment, params);
 };
 
 FixedPopup.prototype.getElementCount = function() {
-	return this.fragments.length;
+	return this.getFragment().getElementCount();
 };
 
-FixedPopup.prototype.getElementFragment = function(index) {
-	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: not found FixedPopup element at index " + index);
-		return null;
-	}
-	return this.fragments[index];
+FixedPopup.prototype.getElement = function(index) {
+	return this.getFragment().getElementFragment(index);
 };
 
 FixedPopup.prototype.removeElementAt = function(index) {
-	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: not found FixedPopup element at index " + index);
-		return false;
-	}
-	let fragment = this.fragments[index];
-	this.getFragment().getContainerLayout().removeView(fragment.getContainer());
-	this.fragments.splice(index, 1);
-	return true;
+	return this.getFragment().removeElementAt(index);
 };

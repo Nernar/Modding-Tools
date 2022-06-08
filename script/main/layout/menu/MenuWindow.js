@@ -767,8 +767,8 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getParentCategory = function() 
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(category) {
 	if (!category || typeof category != "object") return this;
-	category.items && category.items.indexOf(this) ==
-		-1 && category.items.push(this);
+	category.items && category.items.indexOf(this) == -1
+		&& category.items.push(this);
 	let layout = category.getContent(),
 		content = this.getContent();
 	if (!content) return this;
