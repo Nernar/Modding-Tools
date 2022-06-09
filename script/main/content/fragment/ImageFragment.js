@@ -24,3 +24,19 @@ ImageFragment.prototype.setImage = function(src) {
 	this.image = src;
 	return this;
 };
+
+ImageFragment.parseJson = function(instanceOrJson, json) {
+	if (!instanceOrJson instanceof ImageFragment) {
+		json = instanceOrJson;
+		instanceOrJson = new ImageFragment();
+	}
+	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("icon")) {
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

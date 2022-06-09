@@ -18,6 +18,7 @@ content/Fragment.js
 content/fragment/BaseFragment.js
 content/fragment/LayoutFragment.js
 content/fragment/FrameFragment.js
+content/fragment/ScrollFragment.js
 content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
 

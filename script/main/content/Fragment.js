@@ -1,5 +1,6 @@
 const Fragment = function() {
 	this.views = {};
+	this.selectable = false;
 };
 
 Fragment.prototype.getContainer = function() {
@@ -8,6 +9,7 @@ Fragment.prototype.getContainer = function() {
 
 Fragment.prototype.setContainerView = function(view) {
 	this.container = view;
+	return this;
 };
 
 Fragment.prototype.getViews = function() {
@@ -36,4 +38,13 @@ Fragment.prototype.findView = function(stroke) {
 	return this.findViewByKey(stroke) ||
 		this.findViewById(stroke) ||
 		this.findViewByTag(stroke);
+};
+
+Fragment.prototype.isSelectable = function() {
+	return !!this.selectable;
+};
+
+Fragment.prototype.setIsSelectable = function(selectable) {
+	this.selectable = !!selectable;
+	return this;
 };

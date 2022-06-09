@@ -43,7 +43,7 @@ CounterFragment.prototype.resetContainer = function() {
 			return self.holdDefault();
 		}, false);
 	});
-	modifier.setTag("counterTag");
+	modifier.setTag("counterText");
 	content.addView(modifier, new android.widget.LinearLayout.
 		LayoutParams(Interface.getY(160), Interface.Display.MATCH));
 	

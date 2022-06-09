@@ -47,3 +47,27 @@ BaseFragment.prototype.setOnHoldListener = function(action) {
 	});
 	return this;
 };
+
+BaseFragment.parseJson = function(instanceOrJson, json) {
+	if (!instanceOrJson instanceof BaseFragment) {
+		json = instanceOrJson;
+		instanceOrJson = new BaseFragment();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("selectable")) {
+		instanceOrJson.setIsSelectable(calloutOrParse(json, json.selectable, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("background")) {
+		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("click")) {
+		instanceOrJson.setOnClickListener(parseCallback(json, json.click, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("hold")) {
+		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

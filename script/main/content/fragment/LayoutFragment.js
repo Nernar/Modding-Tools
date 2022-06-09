@@ -47,3 +47,28 @@ LayoutFragment.prototype.removeElementAt = function(index) {
 	this.fragments.splice(index, 1);
 	return true;
 };
+
+LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
+	if (!instanceOrJson instanceof ImageFragment) {
+		json = instanceOrJson;
+		instanceOrJson = new ImageFragment();
+	}
+	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("elements")) {
+		let elements = calloutOrParse(json, json.elements, [this, instanceOrJson]);
+		if (elements !== null && typeof elements == "object") {
+			if (!Array.isArray(elements)) elements = [elements];
+			for (let i = 0; i < elements.length; i++) {
+				let item = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
+				if (item !== null && typeof item == "object") {
+					// TODO
+				}
+			}
+		}
+	}
+	return instanceOrJson;
+};

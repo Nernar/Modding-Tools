@@ -28,3 +28,22 @@ TextFragment.prototype.setText = function(text) {
 	view.setText("" + text);
 	return this;
 };
+
+TextFragment.parseJson = function(instanceOrJson, json) {
+	if (!instanceOrJson instanceof TextFragment) {
+		json = instanceOrJson;
+		instanceOrJson = new TextFragment();
+	}
+	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("text")) {
+		instanceOrJson.setText(calloutOrParse(json, json.text, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("append")) {
+		instanceOrJson.appendText(calloutOrParse(json, json.append, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

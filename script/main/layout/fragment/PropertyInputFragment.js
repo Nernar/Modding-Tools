@@ -34,5 +34,22 @@ PropertyInputFragment.prototype.getTextView = function() {
 };
 
 PropertyInputFragment.prototype.setHint = function(who) {
-	this.getView().setHint("" + who);
+	this.getTextView().setHint("" + who);
+	return this;
+};
+
+PropertyInputFragment.parseJson = function(instanceOrJson, json) {
+	if (!instanceOrJson instanceof PropertyInputFragment) {
+		json = instanceOrJson;
+		instanceOrJson = new PropertyInputFragment();
+	}
+	instanceOrJson = TextFragment.parseJson(instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("hint")) {
+		instanceOrJson.setHint(calloutOrParse(json, json.hint, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
 };

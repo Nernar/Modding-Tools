@@ -21,14 +21,14 @@ ExpandableFragment.prototype.resetContainer = function() {
 	params.weight = .1;
 	title.setTag("popupTitle");
 	layout.addView(title, params);
-
+	
 	let scroll = new android.widget.ScrollView(context);
 	scroll.setTag("containerExpandableScroll");
 	params = new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	params.weight = 16.;
 	layout.addView(scroll, params);
-
+	
 	let content = new android.widget.LinearLayout(context);
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	content.setGravity(Interface.Gravity.CENTER);
@@ -42,10 +42,6 @@ ExpandableFragment.prototype.getContainerLayout = function() {
 
 ExpandableFragment.prototype.getContainerScroll = function() {
 	return this.findViewByTag("containerExpandableScroll");
-};
-
-ExpandableFragment.prototype.getContainerRoot = function() {
-	return FixedFragment.prototype.getContainerLayout.apply(this, arguments);
 };
 
 ExpandableFragment.prototype.getTitleView = function() {
