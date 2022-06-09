@@ -11,6 +11,10 @@ LayoutFragment.prototype.getContainerLayout = function() {
 };
 
 LayoutFragment.prototype.addElementFragment = function(fragment, params) {
+	if (!(fragment instanceof Fragment)) {
+		Logger.Log("ModdintTools: trying adding non-fragment element passed to addElementFragment", "INFO");
+		return -1;
+	}
 	if (params === undefined) {
 		this.getContainerLayout().addView(fragment.getContainer());
 	} else {
@@ -49,11 +53,11 @@ LayoutFragment.prototype.removeElementAt = function(index) {
 };
 
 LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
-	if (!instanceOrJson instanceof ImageFragment) {
+	if (!(instanceOrJson instanceof LayoutFragment)) {
 		json = instanceOrJson;
-		instanceOrJson = new ImageFragment();
+		instanceOrJson = new LayoutFragment();
 	}
-	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
@@ -65,7 +69,10 @@ LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 			for (let i = 0; i < elements.length; i++) {
 				let item = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
 				if (item !== null && typeof item == "object") {
-					// TODO
+					let fragment = Fragment.parseJson.call(this, item, item, preferredElement);
+					if (fragment != null) {
+						instanceOrJson.addElementFragment(fragment);
+					}
 				}
 			}
 		}

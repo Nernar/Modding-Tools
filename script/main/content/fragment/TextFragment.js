@@ -30,11 +30,11 @@ TextFragment.prototype.setText = function(text) {
 };
 
 TextFragment.parseJson = function(instanceOrJson, json) {
-	if (!instanceOrJson instanceof TextFragment) {
+	if (!(instanceOrJson instanceof TextFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new TextFragment();
 	}
-	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;

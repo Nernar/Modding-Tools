@@ -1,37 +1,28 @@
 return function() {
 	let unique = new UniqueWindow();
 	unique.TYPE = "FragmentTestingWindow";
-	/*
-	for (let element in this) {
-		tryoutSafety(function() {
-			let next = this[element];
-			if (typeof next != "function" || !next.prototype instanceof Fragment) {
-				return;
-			}
-			let instance = new next();
-			if (instance == null) {
-				return;
-			}
-			let container = instance.getContainer();
-			if (instance == null) {
-				return;
-			}
-			unique.setFragment(instance);
-		});
-	}
-	*/
+	unique.setFocusable(true);
+	
 	let frame = new ScrollFragment();
 	
+	frame.addElementFragment(new CategoryTitleFragment().setText("Selection"));
 	frame.addElementFragment(new ThinButtonFragment().setText("Item 1"));
-	frame.addElementFragment(new ThinButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
+    frame.addElementFragment(new ThinButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
 	frame.addElementFragment(new ThinButtonFragment().setText("Item 3"));
 	
 	frame.addElementFragment(new SolidButtonFragment().setText("Item 1"));
 	frame.addElementFragment(new SolidButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
-	frame.addElementFragment(new SolidButtonFragment().setText("Item 3"));
+    frame.addElementFragment(Fragment.parseJson({
+    	type: "categoryTitle",
+    	text: "Json category"
+    }));
+	frame.addElementFragment(Fragment.parseJson({
+		text: "Item 3"
+	}, null, "solidButton"));
 	
 	frame.addElementFragment(new PropertyInputFragment());
 	frame.addElementFragment(new PropertyInputFragment().setHint("value").setBackground("popupSelectionLocked"));
+    frame.addElementFragment(new ExplanatoryFragment().setText("Did you know that among wildlife, goats are considered the most intelligent animals? Their hooves allow them to climb the rocky slopes of the mountains without any problems. I don’t know how goats without hooves could repeat the same. Okay, I deceived you, but you read this fictitious fact, which means that you clearly have little interest or laziness. But you are not a goat."));
 	frame.addElementFragment(new PropertyInputFragment().setText("0.0f").setHint("float"));
 	
 	let groupX = new AxisGroupFragment().setAxis("x");
@@ -67,6 +58,25 @@ return function() {
 	group.addElementFragment(new SliderFragment().setModifiers([16, 32, 64]).setValue(1));
 	group.addElementFragment(new SolidButtonFragment().setText("Item 3"));
 	frame.addElementFragment(group);
+	
+	let groupDelta = AxisGroupFragment.parseJson({
+		background: "popupSelectionSelected",
+		elements: [
+			{
+				type: "explanatory",
+				text: "Explanatory text is not needed, but snippet needs to be tested."
+			},
+			{
+				value: 66,
+				background: "popupSelectionLocked"
+			},
+			{
+				modifiers: [16, 64]
+			}
+		]
+	});
+	groupDelta.addElementFragment(new SolidButtonFragment().setText("Hardcoded"));
+	frame.addElementFragment(groupDelta);
 	
 	unique.setFragment(frame);
 	unique.show();

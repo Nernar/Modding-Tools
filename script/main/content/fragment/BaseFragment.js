@@ -48,8 +48,17 @@ BaseFragment.prototype.setOnHoldListener = function(action) {
 	return this;
 };
 
+Fragment.prototype.isSelectable = function() {
+	return !!this.selectable;
+};
+
+Fragment.prototype.setIsSelectable = function(selectable) {
+	this.selectable = !!selectable;
+	return this;
+};
+
 BaseFragment.parseJson = function(instanceOrJson, json) {
-	if (!instanceOrJson instanceof BaseFragment) {
+	if (!(instanceOrJson instanceof BaseFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new BaseFragment();
 	}

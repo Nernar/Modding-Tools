@@ -48,3 +48,43 @@ Fragment.prototype.setIsSelectable = function(selectable) {
 	this.selectable = !!selectable;
 	return this;
 };
+
+const registerFragmentJson = (function() {
+	let fragments = {};
+	
+	Fragment.parseJson = function(instanceOrJson, json, preferredElement) {
+		if (!(instanceOrJson instanceof Fragment)) {
+			json = instanceOrJson;
+			instanceOrJson = null;
+		}
+		json = calloutOrParse(this, json, instanceOrJson);
+		if (json === null || typeof json != "object") {
+			return instanceOrJson;
+		}
+		if (json.type === undefined && preferredElement !== undefined) {
+			json.type = preferredElement;
+		}
+		if (fragments.hasOwnProperty(json.type)) {
+			return fragments[json.type].parseJson.call(this, instanceOrJson || new fragments[json.type](), json, preferredElement);
+		}
+		log("ModdingTools: unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
+		return instanceOrJson;
+	};
+	
+	return function(id, fragment) {
+		if (fragments.hasOwnProperty(id)) {
+			log("ModdingTools: fragment json " + id + " is already occupied");
+			return false;
+		}
+		if (typeof fragment != "function" || !fragment.prototype instanceof Fragment) {
+			Logger.Log("ModdingTools: passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
+			return false;
+		}
+		if (typeof fragment.parseJson != "function") {
+			Logger.Log("ModdingTools: nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
+			return false;
+		}
+		fragments[id] = fragment;
+		return true;
+	};
+})();

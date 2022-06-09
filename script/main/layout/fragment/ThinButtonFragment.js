@@ -22,3 +22,13 @@ ThinButtonFragment.prototype.resetContainer = function() {
 ThinButtonFragment.prototype.getTextView = function() {
 	return this.getContainer();
 };
+
+ThinButtonFragment.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof ThinButtonFragment)) {
+		json = instanceOrJson;
+		instanceOrJson = new ThinButtonFragment();
+	}
+	return TextFragment.parseJson.call(this, instanceOrJson, json);
+};
+
+registerFragmentJson("thinButton", ThinButtonFragment);

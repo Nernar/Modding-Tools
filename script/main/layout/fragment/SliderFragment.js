@@ -130,11 +130,11 @@ SliderFragment.prototype.holdDefault = function() {
 };
 
 SliderFragment.parseJson = function(instanceOrJson, json) {
-	if (!instanceOrJson instanceof SliderFragment) {
+	if (!(instanceOrJson instanceof SliderFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new SliderFragment();
 	}
-	instanceOrJson = TextFragment.parseJson(instanceOrJson, json);
+	instanceOrJson = TextFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
@@ -157,4 +157,4 @@ SliderFragment.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
-
+registerFragmentJson("slider", SliderFragment);

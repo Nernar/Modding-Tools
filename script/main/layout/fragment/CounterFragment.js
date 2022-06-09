@@ -72,3 +72,13 @@ CounterFragment.prototype.getSubtractView = function() {
 CounterFragment.prototype.getAddView = function() {
 	return this.findViewByTag("counterAdd");
 };
+
+CounterFragment.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof CounterFragment)) {
+		json = instanceOrJson;
+		instanceOrJson = new CounterFragment();
+	}
+	return SliderFragment.parseJson.call(this, instanceOrJson, json);
+};
+
+registerFragmentJson("counter", CounterFragment);

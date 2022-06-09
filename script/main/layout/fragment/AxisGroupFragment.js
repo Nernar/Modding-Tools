@@ -52,11 +52,11 @@ AxisGroupFragment.prototype.setAxis = function(text) {
 };
 
 AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredElement) {
-	if (!instanceOrJson instanceof AxisGroupFragment) {
+	if (!(instanceOrJson instanceof AxisGroupFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new AxisGroupFragment();
 	}
-	instanceOrJson = LayoutFragment.parseJson(instanceOrJson, json, preferredElement !== undefined ? preferredElement : "slider");
+	instanceOrJson = LayoutFragment.parseJson.call(this, instanceOrJson, json, preferredElement !== undefined ? preferredElement : "slider");
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
@@ -69,3 +69,5 @@ AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 	}
 	return instanceOrJson;
 };
+
+registerFragmentJson("axisGroup", AxisGroupFragment);

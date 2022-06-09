@@ -26,11 +26,11 @@ ImageFragment.prototype.setImage = function(src) {
 };
 
 ImageFragment.parseJson = function(instanceOrJson, json) {
-	if (!instanceOrJson instanceof ImageFragment) {
+	if (!(instanceOrJson instanceof ImageFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new ImageFragment();
 	}
-	instanceOrJson = BaseFragment.parseJson(instanceOrJson, json);
+	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;

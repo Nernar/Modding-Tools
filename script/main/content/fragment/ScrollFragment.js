@@ -24,3 +24,13 @@ ScrollFragment.prototype.getContainerLayout = function() {
 ScrollFragment.prototype.getContainerScroll = function() {
 	return this.findViewByTag("containerScroll");
 };
+
+ScrollFragment.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof ScrollFragment)) {
+		json = instanceOrJson;
+		instanceOrJson = new ScrollFragment();
+	}
+	return FrameFragment.parseJson.call(this, instanceOrJson, json);
+};
+
+registerFragmentJson("scroll", ScrollFragment);

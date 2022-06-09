@@ -39,11 +39,11 @@ PropertyInputFragment.prototype.setHint = function(who) {
 };
 
 PropertyInputFragment.parseJson = function(instanceOrJson, json) {
-	if (!instanceOrJson instanceof PropertyInputFragment) {
+	if (!(instanceOrJson instanceof PropertyInputFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new PropertyInputFragment();
 	}
-	instanceOrJson = TextFragment.parseJson(instanceOrJson, json);
+	instanceOrJson = TextFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
@@ -53,3 +53,5 @@ PropertyInputFragment.parseJson = function(instanceOrJson, json) {
 	}
 	return instanceOrJson;
 };
+
+registerFragmentJson("propertyInput", PropertyInputFragment);

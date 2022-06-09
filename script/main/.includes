@@ -50,6 +50,8 @@ layout/menu/MenuWindow.js
 layout/sidebar/SidebarFragment.js
 layout/sidebar/SidebarWindow.js
 
+layout/fragment/CategoryTitleFragment.js
+layout/fragment/ExplanatoryFragment.js
 layout/fragment/ThinButtonFragment.js
 layout/fragment/SolidButtonFragment.js
 layout/fragment/PropertyInputFragment.js
