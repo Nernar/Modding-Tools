@@ -7,22 +7,22 @@ return function() {
 	
 	frame.addElementFragment(new CategoryTitleFragment().setText("Selection"));
 	frame.addElementFragment(new ThinButtonFragment().setText("Item 1"));
-    frame.addElementFragment(new ThinButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
+	frame.addElementFragment(new ThinButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
 	frame.addElementFragment(new ThinButtonFragment().setText("Item 3"));
 	
 	frame.addElementFragment(new SolidButtonFragment().setText("Item 1"));
 	frame.addElementFragment(new SolidButtonFragment().setText("Item 2").setBackground("popupSelectionSelected"));
-    frame.addElementFragment(Fragment.parseJson({
-    	type: "categoryTitle",
-    	text: "Json category"
-    }));
+	frame.addElementFragment(Fragment.parseJson({
+		type: "categoryTitle",
+		text: "Json category"
+	}));
 	frame.addElementFragment(Fragment.parseJson({
 		text: "Item 3"
 	}, null, "solidButton"));
 	
 	frame.addElementFragment(new PropertyInputFragment());
 	frame.addElementFragment(new PropertyInputFragment().setHint("value").setBackground("popupSelectionLocked"));
-    frame.addElementFragment(new ExplanatoryFragment().setText("Did you know that among wildlife, goats are considered the most intelligent animals? Their hooves allow them to climb the rocky slopes of the mountains without any problems. I don’t know how goats without hooves could repeat the same. Okay, I deceived you, but you read this fictitious fact, which means that you clearly have little interest or laziness. But you are not a goat."));
+	frame.addElementFragment(new ExplanatoryFragment().setText("Did you know that among wildlife, goats are considered the most intelligent animals? Their hooves allow them to climb the rocky slopes of the mountains without any problems. I don’t know how goats without hooves could repeat the same. Okay, I deceived you, but you read this fictitious fact, which means that you clearly have little interest or laziness. But you are not a goat."));
 	frame.addElementFragment(new PropertyInputFragment().setText("0.0f").setHint("float"));
 	
 	let groupX = new AxisGroupFragment().setAxis("x");

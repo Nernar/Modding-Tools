@@ -45,7 +45,7 @@ const formatSize = function(size) {
  */
 const MediaTypes = {
 	AUDIO: ["3gp", "mp4", "m4a", "aac", "ts", "flac", "gsm", "mid", "xmf",
-	    "mxmf", "rtttl", "rtx", "ota", "imy", "mp3", "mkv", "wav", "ogg"],
+		"mxmf", "rtttl", "rtx", "ota", "imy", "mp3", "mkv", "wav", "ogg"],
 	VIDEO: ["3gp", "mp4", "ts", "webm", "mkv"],
 	IMAGE: ["bmp", "gif", "jpg", "jpeg", "png", "webp", "heic", "heif", "ico"]
 };

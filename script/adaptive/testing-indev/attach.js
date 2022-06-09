@@ -10,3 +10,9 @@ Translation.addTranslation("Music: Dynamical custom source", {
 Translation.addTranslation("That test creates dynamical sound source inside nearest randomness player position. Your task is - enter world, checkout sound source and position randomize, dynamical channels and reversed zone.", {
 	ru: "Этот тест создает динамический источник звука внутри ближайшей случайной позиции игрока. Ваша задача - войти в мир, проверить источник звука и его положение, динамические каналы и реверсивную зону."
 });
+Translation.addTranslation("Narration: The Beginning", {
+	ru: "Narration: Начало"
+});
+Translation.addTranslation("Filled with DETERMINATION, HATRED and DESPAIR. But most importantly, LOVE.", {
+	ru: "К сожалению, этот тест недоступен на территории вашей страны."
+});
