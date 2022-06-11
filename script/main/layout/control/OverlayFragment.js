@@ -1,9 +1,9 @@
 const OverlayFragment = function() {
-	Fragment.apply(this, arguments);
+	TextFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-OverlayFragment.prototype = new Fragment;
+OverlayFragment.prototype = new TextFragment;
 
 OverlayFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(context);
@@ -20,39 +20,6 @@ OverlayFragment.prototype.resetContainer = function() {
 	container.addView(text);
 };
 
-OverlayFragment.prototype.getInformationView = function() {
+OverlayFragment.prototype.getTextView = function() {
 	return this.findViewByTag("overlayInformation");
-};
-
-OverlayFragment.prototype.appendText = function(text) {
-	let view = this.getInformationView();
-	if (view === null) return;
-	view.append(String(text));
-};
-
-OverlayFragment.prototype.setText = function(text) {
-	let view = this.getInformationView();
-	if (view === null) return;
-	view.setText(String(text));
-};
-
-OverlayFragment.prototype.getText = function() {
-	let view = this.getInformationView();
-	if (view === null) return;
-	return String(view.getText());
-};
-
-OverlayFragment.prototype.getBackground = function() {
-	return this.background || null;
-};
-
-OverlayFragment.prototype.setBackground = function(drawable) {
-	let background = this.getInformationView();
-	if (background === null) return this;
-	if (!(drawable instanceof Drawable)) {
-		drawable = Drawable.parseJson.call(this, drawable);
-	}
-	drawable.attachAsBackground(background);
-	this.background = drawable;
-	return this;
 };

@@ -219,7 +219,7 @@ const ToolbarFragment = function() {
 	this.resetContainer();
 	this.setBackground("popup");
 	this.setTitle(translate(NAME));
-	this.setBackButtonIcon("controlBack");
+	this.setBackButtonImage("controlBack");
 };
 
 ToolbarFragment.prototype = new Fragment;
@@ -319,12 +319,12 @@ ToolbarFragment.prototype.setOnBackButtonHoldListener = function(listener) {
 	this.getBackButtonFragment().setOnHoldListener(listener);
 };
 
-ToolbarFragment.prototype.getBackButtonIcon = function() {
-	return this.getBackButtonFragment().getIcon();
+ToolbarFragment.prototype.getBackButtonImage = function() {
+	return this.getBackButtonFragment().getImage();
 };
 
-ToolbarFragment.prototype.setBackButtonIcon = function(src) {
-	this.getBackButtonFragment().setIcon(src);
+ToolbarFragment.prototype.setBackButtonImage = function(src) {
+	this.getBackButtonFragment().setImage(src);
 };
 
 ToolbarFragment.prototype.getBackButtonBackground = function() {
@@ -561,7 +561,7 @@ ImageSourceFragment.prototype.resetContainer = function() {
 	});
 	let scale = new ToolbarFragment.Item();
 	scale.getContainer().setTag(scale);
-	scale.setIcon("controlScaleCenter");
+	scale.setImage("controlScaleCenter");
 	scale.setOnClickListener(function() {
 		self.requireControl();
 		if (self.onScaleChange) {
@@ -631,13 +631,13 @@ ImageSourceFragment.prototype.changeScaleType = function() {
 	scale = scale.getTag();
 	switch (this.getScaleType()) {
 		case Interface.Scale.CENTER:
-			return scale.setIcon("controlScaleCenter");
+			return scale.setImage("controlScaleCenter");
 		case Interface.Scale.CENTER_CROP:
-			return scale.setIcon("controlScaleCrop");
+			return scale.setImage("controlScaleCrop");
 		case Interface.Scale.FIT_CENTER:
-			return scale.setIcon("controlScaleInside");
+			return scale.setImage("controlScaleInside");
 	}
-	scale.setIcon("controlScaleFit");
+	scale.setImage("controlScaleFit");
 };
 
 ImageSourceFragment.prototype.setOnBackClickListener = function(listener) {

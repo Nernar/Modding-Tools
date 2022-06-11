@@ -10,7 +10,7 @@ const PROJECT_TOOL = (function() {
 					let entry = tool.tools[id];
 					items.push({
 						pointer: id,
-						icon: entry.getIcon(),
+						icon: entry.getImage(),
 						title: entry.getTitle(),
 						click: function(tool, item) {
 							let who = Tools[this.pointer];

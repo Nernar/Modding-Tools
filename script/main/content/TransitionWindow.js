@@ -213,3 +213,22 @@ TransitionWindow.prototype.setOnHideListener = function(listener) {
 TransitionWindow.prototype.inDestructing = function() {
 	return Boolean(this.destructing);
 };
+
+TransitionWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof TransitionWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new TransitionWindow();
+	}
+	instanceOrJson = FocusableWindow.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("onShow")) {
+		instanceOrJson.setOnShowListener(parseCallback(json, json.onShow, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("onHide")) {
+		instanceOrJson.setOnHideListener(parseCallback(json, json.onHide, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

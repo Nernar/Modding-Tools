@@ -257,10 +257,10 @@ SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 	this.items = [];
 	if (parentOrSrc instanceof SidebarWindow) {
 		this.attachToWindow(parentOrSrc);
-		srcOrAction && this.setIcon(srcOrAction);
+		srcOrAction && this.setImage(srcOrAction);
 		action && this.setOnSelectListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrAction && this.setOnSelectListener(srcOrAction);
 	}
 	this.setSelectedBackground("popupSelectionSelected");
@@ -484,7 +484,7 @@ SidebarWindow.Group.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("icon")) {
-		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("select")) {
 		instanceOrJson.setOnSelectListener(parseCallback(json, json.select, this));
@@ -547,10 +547,10 @@ SidebarWindow.Group.Item = function(parentOrSrc, srcOrAction, action) {
 	});
 	if (parentOrSrc instanceof SidebarWindow.Group) {
 		this.attachToGroup(parentOrSrc);
-		srcOrAction && this.setIcon(srcOrAction);
+		srcOrAction && this.setImage(srcOrAction);
 		action && this.setOnSelectListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrAction && this.setOnSelectListener(srcOrAction);
 	}
 };
@@ -625,7 +625,7 @@ SidebarWindow.Group.Item.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("icon")) {
-		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("title")) {
 		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));

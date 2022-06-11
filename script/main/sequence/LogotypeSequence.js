@@ -4,11 +4,11 @@ const LogotypeSequence = function(obj) {
 
 LogotypeSequence.prototype = new Sequence;
 
-LogotypeSequence.prototype.getForegroundIcon = function() {
+LogotypeSequence.prototype.getForegroundImage = function() {
 	return requireLogotype();
 };
 
-LogotypeSequence.prototype.getBackgroundIcon = function() {
+LogotypeSequence.prototype.getBackgroundImage = function() {
 	return requireInvertedLogotype();
 };
 
@@ -29,8 +29,8 @@ LogotypeSequence.prototype.getWindow = function() {
 
 LogotypeSequence.prototype.create = function() {
 	let logotype = new LogotypeWindow();
-	logotype.setForegroundIcon(this.getForegroundIcon());
-	logotype.setBackgroundIcon(this.getBackgroundIcon());
+	logotype.setForegroundImage(this.getForegroundImage());
+	logotype.setBackgroundImage(this.getBackgroundImage());
 	logotype.show();
 	this.window = logotype;
 };

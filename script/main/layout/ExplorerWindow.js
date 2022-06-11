@@ -267,10 +267,10 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 	this.reset();
 	if (parentOrSrc instanceof ExplorerWindow) {
 		this.setWindow(parentOrSrc);
-		srcOrAction && this.setIcon(srcOrAction);
+		srcOrAction && this.setImage(srcOrAction);
 		action && this.setOnApproveListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrAction && this.setOnApproveListener(srcOrAction);
 	}
 	this.checkIfCanBeApproved();
@@ -335,11 +335,11 @@ ExplorerWindow.Approve.prototype.setBackground = function(src) {
 	return this;
 };
 
-ExplorerWindow.Approve.prototype.getIcon = function() {
+ExplorerWindow.Approve.prototype.getImage = function() {
 	return this.icon || null;
 };
 
-ExplorerWindow.Approve.prototype.setIcon = function(src) {
+ExplorerWindow.Approve.prototype.setImage = function(src) {
 	let content = this.getContent();
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
@@ -381,7 +381,7 @@ ExplorerWindow.prototype.addApprove = function(srcOrApprove, actionOrSrc, action
 	let approve = srcOrApprove instanceof ExplorerWindow.Approve ?
 		srcOrApprove : new ExplorerWindow.Approve(this, srcOrApprove, actionOrSrc);
 	actionOrSrc && srcOrApprove instanceof ExplorerWindow.Approve &&
-		srcOrApprove.setIcon(actionOrSrc);
+		srcOrApprove.setImage(actionOrSrc);
 	action && srcOrApprove instanceof ExplorerWindow.Approve &&
 		srcOrApprove.setOnApproveListener(action);
 	this.indexOfElement(approve) == -1 && this.getElements().push(approve);

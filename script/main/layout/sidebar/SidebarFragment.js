@@ -1,9 +1,9 @@
 const SidebarFragment = function() {
-	Fragment.apply(this, arguments);
+	BaseFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-SidebarFragment.prototype = new Fragment;
+SidebarFragment.prototype = new BaseFragment;
 
 SidebarFragment.prototype.resetContainer = function() {
 	let container = new android.widget.LinearLayout(context);
@@ -26,21 +26,6 @@ SidebarFragment.prototype.resetContainer = function() {
 	tabs.setMinimumHeight(Interface.Display.HEIGHT);
 	tabs.setTag("containerTabs");
 	scrollTabs.addView(tabs);
-};
-
-SidebarFragment.prototype.getBackground = function() {
-	return this.background || null;
-};
-
-SidebarFragment.prototype.setBackground = function(src) {
-	let container = this.getContainer();
-	if (container == null) return this;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
-	}
-	src.attachAsBackground(container);
-	this.background = src;
-	return this;
 };
 
 SidebarFragment.prototype.getItemContainer = function() {
@@ -149,11 +134,11 @@ SidebarFragment.prototype.getTabCount = function() {
 };
 
 SidebarFragment.Group = function() {
-	Fragment.apply(this, arguments);
+	ImageFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-SidebarFragment.Group.prototype = new Fragment;
+SidebarFragment.Group.prototype = new ImageFragment;
 
 SidebarFragment.Group.prototype.resetContainer = function() {
 	let container = new android.widget.LinearLayout(context);
@@ -170,77 +155,29 @@ SidebarFragment.Group.prototype.resetContainer = function() {
 	icon.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.getY(54), Interface.getY(81)));
 	icon.setScaleType(Interface.Scale.CENTER_CROP);
 	icon.setPadding(Interface.getY(42), 0, 0, 0);
-	icon.setTag("groupIcon")
+	icon.setTag("groupImage")
 	container.addView(icon);
 };
 
-SidebarFragment.Group.prototype.getBackground = function() {
-	return this.background || null;
+SidebarFragment.Group.prototype.getImageView = function() {
+	return this.findViewByTag("groupImage");
 };
 
-SidebarFragment.Group.prototype.setBackground = function(src) {
+SidebarFragment.Group.prototype.setImage = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
-	}
-	src.attachAsBackground(container);
-	this.background = src;
-	return this;
-};
-
-SidebarFragment.Group.prototype.getIconView = function() {
-	return this.findViewByTag("groupIcon");
-};
-
-SidebarFragment.Group.prototype.getIcon = function() {
-	return this.icon || null;
-};
-
-SidebarFragment.Group.prototype.setIcon = function(src) {
-	let icon = this.getIconView();
-	if (icon == null) return this;
 	if (src !== null && typeof src == "object") {
-		Interface.setTransitionName(icon, src.bitmap + "Group");
-	} else Interface.setTransitionName(icon, src + "Group");
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
-	}
-	src.attachAsImage(icon);
-	this.icon = src;
-	return this;
-};
-
-SidebarFragment.Group.prototype.setOnClickListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
-	if (container == null) return this;
-	container.setOnClickListener(function() {
-		tryout(function() {
-			action && action(scope);
-		});
-	});
-	return this;
-};
-
-SidebarFragment.Group.prototype.setOnHoldListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
-	if (container == null) return this;
-	container.setOnLongClickListener(function() {
-		return tryout(function() {
-			return action && action(scope);
-		}, false);
-	});
-	return this;
+		Interface.setTransitionName(container, src.bitmap + "Group");
+	} else Interface.setTransitionName(container, src + "Group");
+	return ImageFragment.prototype.setImage.apply(this, arguments);
 };
 
 SidebarFragment.Group.Item = function() {
-	Fragment.apply(this, arguments);
+	ImageFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-SidebarFragment.Group.Item.prototype = new Fragment;
+SidebarFragment.Group.Item.prototype = new ImageFragment;
 
 SidebarFragment.Group.Item.prototype.resetContainer = function() {
 	let container = new android.widget.ImageView(context);
@@ -249,37 +186,17 @@ SidebarFragment.Group.Item.prototype.resetContainer = function() {
 	this.setContainerView(container);
 };
 
-SidebarFragment.Group.Item.prototype.getBackground = function() {
-	return this.background || null;
+SidebarFragment.Group.Item.prototype.getImageView = function() {
+	return this.getContainer();
 };
 
-SidebarFragment.Group.Item.prototype.setBackground = function(src) {
-	let container = this.getContainer();
-	if (container == null) return this;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
-	}
-	src.attachAsBackground(container);
-	this.background = src;
-	return this;
-};
-
-SidebarFragment.Group.Item.prototype.getIcon = function() {
-	return this.icon || null;
-};
-
-SidebarFragment.Group.Item.prototype.setIcon = function(src) {
+SidebarFragment.Group.Item.prototype.setImage = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
 	if (src !== null && typeof src == "object") {
 		Interface.setTransitionName(container, src.bitmap + "Item");
 	} else Interface.setTransitionName(container, src + "Item");
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
-	}
-	src.attachAsImage(container);
-	this.icon = src;
-	return this;
+	return ImageFragment.prototype.setImage.apply(this, arguments);
 };
 
 SidebarFragment.Group.Item.prototype.getTitle = function() {
@@ -291,29 +208,5 @@ SidebarFragment.Group.Item.prototype.setTitle = function(title) {
 	if (container == null) return this;
 	// TODO
 	this.title = title;
-	return this;
-};
-
-SidebarFragment.Group.Item.prototype.setOnClickListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
-	if (container == null) return this;
-	container.setOnClickListener(function() {
-		tryout(function() {
-			action && action(scope);
-		});
-	});
-	return this;
-};
-
-SidebarFragment.Group.Item.prototype.setOnHoldListener = function(action) {
-	let container = this.getContainer(),
-		scope = this;
-	if (container == null) return this;
-	container.setOnLongClickListener(function() {
-		return tryout(function() {
-			return action && action(scope);
-		}, false);
-	});
 	return this;
 };

@@ -1,72 +1,18 @@
 const ControlFragment = function() {
-	Fragment.apply(this, arguments);
+	ImageFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-ControlFragment.prototype = new Fragment;
+ControlFragment.prototype = new ImageFragment;
 
 ControlFragment.prototype.resetContainer = new Function();
 
-ControlFragment.prototype.getLogotypeView = function() {
+ControlFragment.prototype.getImageView = function() {
 	return this.findViewByTag("logotypeForeground");
 };
 
-ControlFragment.prototype.getBackgroundView = function() {
+ControlFragment.prototype.getContainerRoot = function() {
 	return this.findViewByTag("logotypeBackground");
-};
-
-ControlFragment.prototype.getIcon = function() {
-	return this.drawable || null;
-};
-
-ControlFragment.prototype.setIcon = function(drawable) {
-	let logotype = this.getLogotypeView();
-	if (logotype == null) return this;
-	if (!(drawable instanceof Drawable)) {
-		drawable = Drawable.parseJson.call(this, drawable);
-	}
-	drawable.attachAsImage(logotype);
-	this.drawable = drawable;
-	return this;
-};
-
-ControlFragment.prototype.getBackground = function() {
-	return this.background || null;
-};
-
-ControlFragment.prototype.setBackground = function(drawable) {
-	let background = this.getBackgroundView();
-	if (background === null) return this;
-	if (!(drawable instanceof Drawable)) {
-		drawable = Drawable.parseJson.call(this, drawable);
-	}
-	drawable.attachAsBackground(background);
-	this.background = drawable;
-	return this;
-};
-
-ControlFragment.prototype.setOnClickListener = function(action) {
-	let container = this.getLogotypeView();
-	if (container === null) return this;
-	let instance = this;
-	container.setOnClickListener(function() {
-		tryout(function() {
-			action && action(instance);
-		});
-	});
-	return this;
-};
-
-ControlFragment.prototype.setOnHoldListener = function(action) {
-	let container = this.getLogotypeView();
-	if (container === null) return this;
-	let instance = this;
-	container.setOnLongClickListener(function() {
-		return tryout(function() {
-			return action && action(instance);
-		}) || false;
-	});
-	return this;
 };
 
 ControlFragment.Button = function() {
@@ -105,7 +51,7 @@ ControlFragment.CollapsedButton = function() {
 ControlFragment.CollapsedButton.prototype = new ControlFragment.Button;
 
 ControlFragment.CollapsedButton.prototype.setOffset = function(x, y) {
-	let layout = this.getBackgroundView();
+	let layout = this.getContainerRoot();
 	if (x !== undefined) layout.setX(-Number(x));
 	if (y !== undefined) layout.setY(-Number(y));
 };

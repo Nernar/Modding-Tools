@@ -1,12 +1,12 @@
 const ExpandableFragment = function() {
-	FixedFragment.apply(this, arguments);
+	FocusableFragment.apply(this, arguments);
 };
 
-ExpandableFragment.prototype = new FixedFragment;
+ExpandableFragment.prototype = new FocusableFragment;
 ExpandableFragment.prototype.TYPE = "ExpandableFragment";
 
 ExpandableFragment.prototype.resetContainer = function() {
-	FixedFragment.prototype.resetContainer.apply(this, arguments);
+	FocusableFragment.prototype.resetContainer.apply(this, arguments);
 	let layout = this.getContainerRoot();
 	
 	let title = new android.widget.TextView(context);

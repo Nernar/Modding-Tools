@@ -65,3 +65,19 @@ UniqueWindow.prototype.dismiss = function() {
 		TransitionWindow.prototype.dismiss.apply(this, arguments);
 	}
 };
+
+UniqueWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof UniqueWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new UniqueWindow();
+	}
+	instanceOrJson = TransitionWindow.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("updatable")) {
+		instanceOrJson.setIsUpdatable(calloutOrParse(json, json.updatable, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

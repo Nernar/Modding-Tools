@@ -4,13 +4,13 @@ PROJECT_TOOL.controlDescriptor.collapsedHold = function(tool, control) {
 };
 
 const attachEvalButton = function() {
-	log("TODO(attachEvalButton)");
+	log("TODO: attachEvalButton");
 };
 
 SHARE("attachEvalButton", attachEvalButton);
 
 const evaluateScope = function(where) {
-	log("TODO(evaluateScope)");
+	log("TODO: evaluateScope");
 };
 
 SHARE("evaluateScope", evaluateScope);

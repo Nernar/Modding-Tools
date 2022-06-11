@@ -1,12 +1,12 @@
-const FixedFragment = function() {
+const FocusableFragment = function() {
 	FrameFragment.apply(this, arguments);
 	this.setBackground("popup");
 };
 
-FixedFragment.prototype = new FrameFragment;
-FixedFragment.prototype.TYPE = "FixedFragment";
+FocusableFragment.prototype = new FrameFragment;
+FocusableFragment.prototype.TYPE = "FocusableFragment";
 
-FixedFragment.prototype.resetContainer = function() {
+FocusableFragment.prototype.resetContainer = function() {
 	FrameFragment.prototype.resetContainer.apply(this, arguments);
 	let layout = new android.widget.LinearLayout(context);
 	layout.setOrientation(Interface.Orientate.VERTICAL);
@@ -14,10 +14,10 @@ FixedFragment.prototype.resetContainer = function() {
 	this.getContainer().addView(layout);
 };
 
-FixedFragment.prototype.getContainerRoot = function() {
+FocusableFragment.prototype.getContainerRoot = function() {
 	return this.findViewByTag("containerLayout");
 };
 
-FixedFragment.prototype.getContainerLayout = function() {
+FocusableFragment.prototype.getContainerLayout = function() {
 	return this.getContainerRoot();
 };

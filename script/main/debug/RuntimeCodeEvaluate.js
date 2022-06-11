@@ -139,7 +139,8 @@ RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification)
 	this.putSpecifiedTypeSources(modification, someone, "compiledLibs", "library");
 	this.putSpecifiedTypeSources(modification, someone, "compiledPreloaderScripts", "preloader");
 	this.putSpecifiedTypeSources(modification, someone, "compiledInstantScripts", "instant");
-	// TODO: Custom must additionaly added byself, but not required at all
+	// TODO: custom sources must additionaly added manually, but not required at all.
+	// It must be called by the `runCustomSource` function from parent script.
 	if (isEmpty(someone)) {
 		return null;
 	}

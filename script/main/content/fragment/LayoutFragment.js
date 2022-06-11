@@ -59,6 +59,9 @@ LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 	}
 	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
+	while (instanceOrJson.getElementCount() > 0) {
+		instanceOrJson.removeElementAt(0);
+	}
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
 	}
@@ -78,4 +81,103 @@ LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 		}
 	}
 	return instanceOrJson;
+};
+
+LayoutFragment.prototype.addCategoryTitle = function(text) {
+	let fragment = new CategoryTitleFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addExplanatory = function(text) {
+	let fragment = new ExplanatoryFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addAxisGroup = function(axis) {
+	let fragment = new AxisGroupFragment();
+	if (axis !== undefined) {
+		fragment.setAxis(axis);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addSlider = function(value, change, modifiers, modifier) {
+	let fragment = new SliderFragment();
+	if (value !== undefined) {
+		fragment.setValue(value);
+	}
+	if (change !== undefined) {
+		fragment.setOnChangeListener(change);
+	}
+	if (modifiers !== undefined) {
+		fragment.setModifiers(modifiers);
+	}
+	if (modifier !== undefined) {
+		fragment.setModifier(modifier);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addCounter = function(value, change, modifiers, modifier) {
+	let fragment = new CounterFragment();
+	if (value !== undefined) {
+		fragment.setValue(value);
+	}
+	if (change !== undefined) {
+		fragment.setOnChangeListener(change);
+	}
+	if (modifiers !== undefined) {
+		fragment.setModifiers(modifiers);
+	}
+	if (modifier !== undefined) {
+		fragment.setModifier(modifier);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addPropertyInput = function(text, hint) {
+	let fragment = new PropertyInputFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	if (hint !== undefined) {
+		fragment.setHint(hint);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addSolidButton = function(text, click) {
+	let fragment = new SolidButtonFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	if (click !== undefined) {
+		fragment.setOnClickListener(click);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addThinButton = function(text, click) {
+	let fragment = new ThinButtonFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	if (click !== undefined) {
+		fragment.setOnClickListener(click);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
 };

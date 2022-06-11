@@ -2,19 +2,31 @@ const Popups = {};
 
 Popups.widgets = [];
 
-Popups.open = function(widget, name) {
+Popups.getOpenedIds = function() {
+	let ids = [];
+	for (let i = 0; i < this.widgets.length; i++) {
+		ids.push(this.widgets[i].id);
+	}
+	return ids;
+};
+
+Popups.getOpened = function() {
+	return this.widgets;
+};
+
+Popups.open = function(widget, id) {
 	if (widget === undefined || widget === null) {
-		Logger.Log("ModdingTools: passed widget to openPopup " + name + " is undefined or not considered", "WARNING");
+		Logger.Log("ModdingTools: passed widget to openPopup " + id + " is undefined or not considered", "WARNING");
 		return;
 	}
-	let opened = this.closeIfOpened(name);
+	let opened = this.closeIfOpened(id);
 	if (!opened) {
 		let index = this.widgets.length;
 		if (index > maxWindows) {
 			this.closeFirst();
 		}
 		this.widgets.push(widget);
-		widget.name = name;
+		widget.id = id;
 		widget.showInternal();
 	}
 };
@@ -27,18 +39,18 @@ Popups.getAvailablePlace = function(root) {
 	};
 };
 
-Popups.hasOpenedByName = function(name) {
+Popups.hasOpenedByName = function(id) {
 	for (let i = 0; i < this.widgets.length; i++) {
-		if (this.widgets[i].name == name) {
+		if (this.widgets[i].id == id) {
 			return true;
 		}
 	}
 	return false;
 };
 
-Popups.closeIfOpened = function(name) {
+Popups.closeIfOpened = function(id) {
 	for (let i = 0; i < this.widgets.length; i++) {
-		if (this.widgets[i].name == name) {
+		if (this.widgets[i].id == id) {
 			return this.close(i);
 		}
 	}
@@ -50,7 +62,7 @@ Popups.closeAllByTag = function(tag) {
 		tag += "_";
 	}
 	for (let i = 0; i < this.widgets.length; i++) {
-		if (this.widgets[i].name.startsWith(tag)) {
+		if (this.widgets[i].id.startsWith(tag)) {
 			this.close(i--);
 		}
 	}
@@ -76,9 +88,9 @@ Popups.closeAll = function() {
 	}
 };
 
-Popups.updateAtName = function(name) {
+Popups.updateAtName = function(id) {
 	for (let i = 0; i < this.widgets.length; i++) {
-		if (this.widgets[i].name == name) {
+		if (this.widgets[i].id == id) {
 			return this.update(i);
 		}
 	}

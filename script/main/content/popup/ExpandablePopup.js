@@ -1,6 +1,6 @@
 const ExpandablePopup = function() {
 	let self = this;
-	FixedPopup.apply(this, arguments);
+	FocusablePopup.apply(this, arguments);
 	let fragment = new ExpandableFragment();
 	fragment.getTitleView().setOnTouchListener(function(view, event) {
 		return tryoutSafety(function() {
@@ -10,7 +10,7 @@ const ExpandablePopup = function() {
 	this.setFragment(fragment);
 };
 
-ExpandablePopup.prototype = new FixedPopup;
+ExpandablePopup.prototype = new FocusablePopup;
 ExpandablePopup.prototype.TYPE = "ExpandablePopup";
 
 ExpandablePopup.prototype.setTitle = function(title) {
@@ -122,4 +122,32 @@ ExpandablePopup.prototype.isMayDragged = function() {
 
 ExpandablePopup.prototype.setIsMayDragged = function(enabled) {
 	this.mayDragged = Boolean(enabled);
+};
+
+ExpandablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
+	if (!(instanceOrJson instanceof ExpandablePopup)) {
+		json = instanceOrJson;
+		instanceOrJson = new ExpandablePopup();
+	}
+	instanceOrJson = FocusablePopup.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("title")) {
+		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("mayCollapsed")) {
+		instanceOrJson.setIsMayCollapsed(calloutOrParse(json, json.mayCollapsed, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("mayDragged")) {
+		instanceOrJson.setIsMayDragged(calloutOrParse(json, json.mayDragged, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("expanded")) {
+		let property = calloutOrParse(json, json.expanded, [this, instanceOrJson]);
+		if (property) {
+			instanceOrJson.maximize();
+		} else instanceOrJson.minimize();
+	}
+	return instanceOrJson;
 };

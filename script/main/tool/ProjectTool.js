@@ -238,7 +238,7 @@ ProjectTool.MenuFactory.prototype.getTitle = function() {
 	return translate("Editor");
 };
 
-ProjectTool.MenuFactory.prototype.getIcon = function() {
+ProjectTool.MenuFactory.prototype.getImage = function() {
 	return "support";
 };
 

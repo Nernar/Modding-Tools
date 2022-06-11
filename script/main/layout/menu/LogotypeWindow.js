@@ -16,8 +16,8 @@ const LogotypeWindow = function(foreground, background) {
 	exit.setDuration(500);
 	window.setExitTransition(exit);
 	
-	if (foreground !== undefined) window.setForegroundIcon(foreground);
-	if (background !== undefined) window.setBackgroundIcon(background);
+	if (foreground !== undefined) window.setForegroundImage(foreground);
+	if (background !== undefined) window.setBackgroundImage(background);
 	return window;
 };
 
@@ -54,35 +54,35 @@ LogotypeWindow.prototype.setProgress = function(progress) {
 	this.setLevel(progress * 100);
 };
 
-LogotypeWindow.prototype.getIcon = function() {
+LogotypeWindow.prototype.getImage = function() {
 	let fragment = this.getFragment();
 	if (fragment === null) return null;
-	return fragment.getIcon();
+	return fragment.getImage();
 };
 
-LogotypeWindow.prototype.getForegroundIcon = function() {
-	return this.foregroundIcon || null;
+LogotypeWindow.prototype.getForegroundImage = function() {
+	return this.foregroundImage || null;
 };
 
-LogotypeWindow.prototype.setForegroundIcon = function(src) {
-	this.foregroundIcon = src;
+LogotypeWindow.prototype.setForegroundImage = function(src) {
+	this.foregroundImage = src;
 	if (this.isOpened()) this.updateProgress();
 };
 
-LogotypeWindow.prototype.getBackgroundIcon = function() {
-	return this.backgroundIcon || null;
+LogotypeWindow.prototype.getBackgroundImage = function() {
+	return this.backgroundImage || null;
 };
 
-LogotypeWindow.prototype.setBackgroundIcon = function(src) {
-	this.backgroundIcon = src;
+LogotypeWindow.prototype.setBackgroundImage = function(src) {
+	this.backgroundImage = src;
 	if (this.isOpened()) this.updateProgress();
 };
 
 LogotypeWindow.prototype.updateProgress = function(force) {
 	let fragment = this.getFragment();
 	if (fragment === null) return false;
-	let drawable = ImageFactory.clipAndMerge(this.getBackgroundIcon(), this.getForegroundIcon(), this.getLevel(), this.getOrientation());
-	fragment.setIcon(drawable);
+	let drawable = ImageFactory.clipAndMerge(this.getBackgroundImage(), this.getForegroundImage(), this.getLevel(), this.getOrientation());
+	fragment.setImage(drawable);
 	if (drawable && !force) {
 		return this.updateLevel();
 	}
@@ -92,16 +92,16 @@ LogotypeWindow.prototype.updateProgress = function(force) {
 LogotypeWindow.prototype.updateLevel = function() {
 	let fragment = this.getFragment();
 	if (fragment === null) return false;
-	if (this.getBackgroundIcon() !== null && this.getForegroundIcon() !== null) {
+	if (this.getBackgroundImage() !== null && this.getForegroundImage() !== null) {
 		this.updateProgress(true);
-	} else if (this.getBackgroundIcon() !== null) {
+	} else if (this.getBackgroundImage() !== null) {
 		fragment.setLevel(10001 - this.getLevel());
 	} else fragment.setLevel(this.getLevel());
 	return true;
 };
 
 LogotypeWindow.prototype.show = function() {
-	if (this.getBackgroundIcon() !== null || this.getForegroundIcon() !== null) {
+	if (this.getBackgroundImage() !== null || this.getForegroundImage() !== null) {
 		this.updateProgress();
 	}
 	UniqueWindow.prototype.show.apply(this, arguments);

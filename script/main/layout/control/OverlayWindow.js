@@ -3,14 +3,17 @@ const OverlayWindow = function() {
 	window.setTouchable(false);
 	window.setX(Interface.getY(140));
 	window.setFragment(new OverlayFragment());
+	
 	let slide = new android.transition.Slide(Interface.Gravity.TOP);
 	slide.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	slide.setDuration(400);
 	window.setEnterTransition(slide);
+	
 	slide = new android.transition.Slide(Interface.Gravity.TOP);
 	slide.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	slide.setDuration(400);
 	window.setExitTransition(slide);
+	
 	window.setBackground("popup");
 	return window;
 };

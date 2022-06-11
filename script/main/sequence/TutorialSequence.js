@@ -128,7 +128,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 		if (index == 1) {
 			let control = new ControlWindow();
 			control.setHideableInside(false);
-			control.setButtonIcon("menu");
+			control.setButtonImage("menu");
 			control.transformButton();
 			control.show();
 			this.currently = control;

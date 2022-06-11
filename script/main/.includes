@@ -30,9 +30,8 @@ content/window/WindowProvider.js
 content/window/UniqueHelper.js
 content/window/Popups.js
 content/window/LevelProvider.js
+content/popup/FocusableFragment.js
 content/popup/FocusablePopup.js
-content/popup/FixedFragment.js
-content/popup/FixedPopup.js
 content/popup/ExpandableFragment.js
 content/popup/ExpandablePopup.js
 

@@ -147,6 +147,12 @@ const API = {
 	updateAllPopups: function() {
 		Popups.updateAll();
 	},
+	getPopupIds: function() {
+		return Popups.getOpenedIds();
+	},
+	getPopups: function() {
+		return Popups.getOpened();
+	},
 	
 	ListingPopup: ListingPopup,
 	CoordsPopup: CoordsPopup,

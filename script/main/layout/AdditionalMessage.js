@@ -1,5 +1,5 @@
 const AdditionalMessage = function(src, message, chance, condition) {
-	if (src !== undefined) this.setIcon(src);
+	if (src !== undefined) this.setImage(src);
 	if (message !== undefined) this.setMessage(message);
 	if (chance !== undefined) this.setChance(chance);
 	if (condition !== undefined) this.setCondition(condition);
@@ -28,11 +28,11 @@ AdditionalMessage.prototype.setMessage = function(message) {
 	this.message = message;
 };
 
-AdditionalMessage.prototype.getIcon = function() {
+AdditionalMessage.prototype.getImage = function() {
 	return this.src || null;
 };
 
-AdditionalMessage.prototype.setIcon = function(src) {
+AdditionalMessage.prototype.setImage = function(src) {
 	this.src = src;
 };
 
@@ -251,8 +251,8 @@ AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 		return false;
 	}
 	if (message instanceof AdditionalClickableMessage) {
-		control.addMessage(message.getIcon(), message.getMessage(), message.getAction());
-	} else control.addMessage(message.getIcon(), message.getMessage());
+		control.addMessage(message.getImage(), message.getMessage(), message.getAction());
+	} else control.addMessage(message.getImage(), message.getMessage());
 	return true;
 };
 

@@ -585,7 +585,7 @@ MenuWindow.ProjectHeader.Category.prototype.addItem = function(srcOrItem, titleO
 	let item = srcOrItem instanceof MenuWindow.ProjectHeader.Category.Item ?
 		srcOrItem : new MenuWindow.ProjectHeader.Category.Item(this, srcOrItem, titleOrSrc, descriptionOrTitle, actionOrDescription, action);
 	titleOrSrc && srcOrItem instanceof MenuWindow.ProjectHeader.Category.Item &&
-		srcOrItem.setIcon(titleOrSrc);
+		srcOrItem.setImage(titleOrSrc);
 	descriptionOrTitle && srcOrItem instanceof MenuWindow.ProjectHeader.Category.Item &&
 		srcOrItem.setTitle(descriptionOrTitle);
 	actionOrDescription && srcOrItem instanceof MenuWindow.ProjectHeader.Category.Item &&
@@ -693,12 +693,12 @@ MenuWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, title
 	this.reset();
 	if (parentOrSrc instanceof MenuWindow.ProjectHeader.Category) {
 		this.setParentCategory(parentOrSrc);
-		srcOrTitle && this.setIcon(srcOrTitle);
+		srcOrTitle && this.setImage(srcOrTitle);
 		titleOrDescription && this.setTitle(titleOrDescription);
 		descriptionOrAction && this.setDescription(descriptionOrAction);
 		action && this.setOnClickListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrTitle && this.setTitle(srcOrTitle);
 		titleOrDescription && this.setDescription(titleOrDescription);
 		descriptionOrAction && this.setOnClickListener(descriptionOrAction);
@@ -801,11 +801,11 @@ MenuWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
 	return this;
 };
 
-MenuWindow.ProjectHeader.Category.Item.prototype.getIcon = function() {
+MenuWindow.ProjectHeader.Category.Item.prototype.getImage = function() {
 	return this.icon || null;
 };
 
-MenuWindow.ProjectHeader.Category.Item.prototype.setIcon = function(src) {
+MenuWindow.ProjectHeader.Category.Item.prototype.setImage = function(src) {
 	let content = this.getContent(),
 		views = this.views;
 	if (!(src instanceof Drawable)) {
@@ -894,7 +894,7 @@ MenuWindow.ProjectHeader.Category.Item.parseJson = function(instanceOrJson, json
 		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("icon")) {
-		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("title")) {
 		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
@@ -1093,11 +1093,11 @@ MenuWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, acti
 	this.reset();
 	if (parentOrSrc instanceof MenuWindow.Category) {
 		this.setParentCategory(parentOrSrc);
-		srcOrTitle && this.setIcon(srcOrTitle);
+		srcOrTitle && this.setImage(srcOrTitle);
 		titleOrAction && this.setTitle(titleOrAction);
 		action && this.setOnClickListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrTitle && this.setTitle(srcOrTitle);
 		titleOrAction && this.setOnClickListener(titleOrAction);
 	}
@@ -1185,11 +1185,11 @@ MenuWindow.Category.Item.prototype.setBackground = function(src) {
 	return this;
 };
 
-MenuWindow.Category.Item.prototype.getIcon = function() {
+MenuWindow.Category.Item.prototype.getImage = function() {
 	return this.icon || null;
 };
 
-MenuWindow.Category.Item.prototype.setIcon = function(src) {
+MenuWindow.Category.Item.prototype.setImage = function(src) {
 	let content = this.getContent(),
 		views = this.views;
 	if (!(src instanceof Drawable)) {
@@ -1264,7 +1264,7 @@ MenuWindow.Category.Item.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("icon")) {
-		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("title")) {
 		instanceOrJson.setTitle(calloutOrParse(json, json.title, [this, instanceOrJson]));
@@ -1282,11 +1282,11 @@ MenuWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action
 	this.reset();
 	if (parentOrSrc instanceof MenuWindow) {
 		this.setWindow(parentOrSrc);
-		srcOrMessage && this.setIcon(srcOrMessage);
+		srcOrMessage && this.setImage(srcOrMessage);
 		messageOrAction && this.setMessage(messageOrAction);
 		action && this.setOnClickListener(action);
 	} else {
-		parentOrSrc && this.setIcon(parentOrSrc);
+		parentOrSrc && this.setImage(parentOrSrc);
 		srcOrMessage && this.setMessage(srcOrMessage);
 		messageOrAction && this.setOnClickListener(messageOrAction);
 	}
@@ -1360,11 +1360,11 @@ MenuWindow.Message.prototype.setBackground = function(src) {
 	return this;
 };
 
-MenuWindow.Message.prototype.getIcon = function() {
+MenuWindow.Message.prototype.getImage = function() {
 	return this.icon || null;
 };
 
-MenuWindow.Message.prototype.setIcon = function(src) {
+MenuWindow.Message.prototype.setImage = function(src) {
 	let content = this.getContent(),
 		views = this.views;
 	if (!(src instanceof Drawable)) {
@@ -1416,7 +1416,7 @@ MenuWindow.Message.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setBackground(calloutOrParse(json, json.background, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("icon")) {
-		instanceOrJson.setIcon(calloutOrParse(json, json.icon, [this, instanceOrJson]));
+		instanceOrJson.setImage(calloutOrParse(json, json.icon, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("message")) {
 		instanceOrJson.setMessage(calloutOrParse(json, json.message, [this, instanceOrJson]));
@@ -1431,7 +1431,7 @@ MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrM
 	let message = srcOrMessage instanceof MenuWindow.Message ?
 		srcOrMessage : new MenuWindow.Message(this, srcOrMessage, messageOrSrc, actionOrMessage);
 	messageOrSrc && srcOrMessage instanceof MenuWindow.Message &&
-		srcOrMessage.setIcon(messageOrSrc);
+		srcOrMessage.setImage(messageOrSrc);
 	actionOrMessage && srcOrMessage instanceof MenuWindow.Message &&
 		srcOrMessage.setMessage(actionOrMessage);
 	action && srcOrMessage instanceof MenuWindow.Message &&

@@ -180,35 +180,35 @@ ControlWindow.prototype.setProgress = function(progress) {
 	this.setLevel(Number(progress) * 100);
 };
 
-ControlWindow.prototype.getIcon = function() {
+ControlWindow.prototype.getImage = function() {
 	let fragment = this.getFragment();
 	if (fragment === null) return null;
-	return fragment.getIcon();
+	return fragment.getImage();
 };
 
-ControlWindow.prototype.getForegroundIcon = function() {
-	return this.foregroundIcon || null;
+ControlWindow.prototype.getForegroundImage = function() {
+	return this.foregroundImage || null;
 };
 
-ControlWindow.prototype.setForegroundIcon = function(src) {
-	this.foregroundIcon = src;
+ControlWindow.prototype.setForegroundImage = function(src) {
+	this.foregroundImage = src;
 	if (this.isOpened()) this.updateProgress();
 };
 
-ControlWindow.prototype.getBackgroundIcon = function() {
-	return this.backgroundIcon || null;
+ControlWindow.prototype.getBackgroundImage = function() {
+	return this.backgroundImage || null;
 };
 
-ControlWindow.prototype.setBackgroundIcon = function(src) {
-	this.backgroundIcon = src;
+ControlWindow.prototype.setBackgroundImage = function(src) {
+	this.backgroundImage = src;
 	if (this.isOpened()) this.updateProgress();
 };
 
 ControlWindow.prototype.updateProgress = function(force) {
 	let fragment = this.getLogotypeFragment();
 	if (fragment === null) return false;
-	let drawable = ImageFactory.clipAndMerge(this.getBackgroundIcon(), this.getForegroundIcon(), this.getLevel(), this.getOrientation());
-	fragment.setIcon(drawable);
+	let drawable = ImageFactory.clipAndMerge(this.getBackgroundImage(), this.getForegroundImage(), this.getLevel(), this.getOrientation());
+	fragment.setImage(drawable);
 	if (drawable instanceof android.graphics.drawable.ClipDrawable) {
 		if (!force) return this.updateLevel();
 	}
@@ -218,24 +218,24 @@ ControlWindow.prototype.updateProgress = function(force) {
 ControlWindow.prototype.updateLevel = function() {
 	let fragment = this.getLogotypeFragment();
 	if (fragment === null) return false;
-	if (this.getBackgroundIcon() !== null && this.getForegroundIcon() !== null) {
+	if (this.getBackgroundImage() !== null && this.getForegroundImage() !== null) {
 		this.updateProgress(true);
-	} else if (this.getBackgroundIcon() !== null) {
+	} else if (this.getBackgroundImage() !== null) {
 		fragment.setLevel(10001 - this.getLevel());
 	} else fragment.setLevel(this.getLevel());
 	return true;
 };
 
-ControlWindow.prototype.setButtonIcon = function(src) {
+ControlWindow.prototype.setButtonImage = function(src) {
 	let founded = this.getButtonFragments();
 	for (let i = 0; i < founded.length; i++) {
-		founded[i].setIcon(src);
+		founded[i].setImage(src);
 	}
-	this.buttonIcon = src;
+	this.buttonImage = src;
 };
 
-ControlWindow.prototype.getButtonIcon = function() {
-	return this.buttonIcon || null;
+ControlWindow.prototype.getButtonImage = function() {
+	return this.buttonImage || null;
 };
 
 ControlWindow.prototype.setButtonBackground = function(src) {
@@ -342,7 +342,7 @@ ControlWindow.prototype.transformLogotype = function() {
 };
 
 ControlWindow.prototype.show = function() {
-	if (this.getBackgroundIcon() !== null || this.getForegroundIcon() !== null) {
+	if (this.getBackgroundImage() !== null || this.getForegroundImage() !== null) {
 		this.updateProgress();
 	}
 	UniqueWindow.prototype.show.apply(this, arguments);
@@ -361,13 +361,13 @@ ControlWindow.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setOrientation(calloutOrParse(json, json.orientation, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("logotypeProgress")) {
-		instanceOrJson.setForegroundIcon(calloutOrParse(json, json.logotypeProgress, [this, instanceOrJson]));
+		instanceOrJson.setForegroundImage(calloutOrParse(json, json.logotypeProgress, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("logotypeOutside")) {
-		instanceOrJson.setBackgroundIcon(calloutOrParse(json, json.logotypeOutside, [this, instanceOrJson]));
+		instanceOrJson.setBackgroundImage(calloutOrParse(json, json.logotypeOutside, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("logotype")) {
-		instanceOrJson.setButtonIcon(calloutOrParse(json, json.logotype, [this, instanceOrJson]));
+		instanceOrJson.setButtonImage(calloutOrParse(json, json.logotype, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("buttonBackground")) {
 		instanceOrJson.setButtonBackground(calloutOrParse(json, json.buttonBackground, [this, instanceOrJson]));

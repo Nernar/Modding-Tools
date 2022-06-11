@@ -214,3 +214,60 @@ FocusableWindow.prototype.dismiss = function() {
 		this.onClose && this.onClose();
 	}
 };
+
+FocusableWindow.parseJson = function(instanceOrJson, json) {
+	if (!(instanceOrJson instanceof FocusableWindow)) {
+		json = instanceOrJson;
+		instanceOrJson = new FocusableWindow();
+	}
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("touchable")) {
+		instanceOrJson.setTouchable(calloutOrParse(json, json.touchable, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("focusable")) {
+		instanceOrJson.setFocusable(calloutOrParse(json, json.focusable, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("gravity")) {
+		instanceOrJson.setGravity(calloutOrParse(json, json.gravity, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("width")) {
+		instanceOrJson.setWidth(calloutOrParse(json, json.width, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("height")) {
+		instanceOrJson.setHeight(calloutOrParse(json, json.height, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("x")) {
+		instanceOrJson.setX(calloutOrParse(json, json.x, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("y")) {
+		instanceOrJson.setY(calloutOrParse(json, json.y, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("content")) {
+		instanceOrJson.setContent(calloutOrParse(json, json.content, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("fragment")) {
+		instanceOrJson.setFragment(calloutOrParse(json, json.fragment, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("frame")) {
+		instanceOrJson.setFrame(calloutOrParse(json, json.frame, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("onAttach")) {
+		instanceOrJson.setOnAttachListener(parseCallback(json, json.onAttach, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("onUpdate")) {
+		instanceOrJson.setOnUpdateListener(parseCallback(json, json.onUpdate, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("onDismiss")) {
+		instanceOrJson.setOnAttachListener(parseCallback(json, json.onDismiss, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("enterTransition")) {
+		instanceOrJson.setEnterTransition(calloutOrParse(json, json.enterTransition, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("exitTransition")) {
+		instanceOrJson.setExitTransition(calloutOrParse(json, json.exitTransition, [this, instanceOrJson]));
+	}
+	return instanceOrJson;
+};

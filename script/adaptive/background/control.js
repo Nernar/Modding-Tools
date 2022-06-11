@@ -19,8 +19,8 @@ let tool = new ControlTool({
 					let next = registered[m];
 					item.items.push({
 						description: next.getMessage(),
-						title: next.getIcon(),
-						icon: next.getIcon()
+						title: next.getImage(),
+						icon: next.getImage()
 					});
 				}
 			}
@@ -29,7 +29,7 @@ let tool = new ControlTool({
 				array.push({
 					type: "message",
 					message: message.getMessage(),
-					icon: message.getIcon()
+					icon: message.getImage()
 				});
 			}
 			for (let i = 0; i < registered.length; i++) {
@@ -42,8 +42,8 @@ let tool = new ControlTool({
 				for (let m = 0; m < registered.length; m++) {
 					let next = registered[m];
 					item.items.push({
-						title: next.getIcon(),
-						icon: next.getIcon()
+						title: next.getImage(),
+						icon: next.getImage()
 					});
 				}
 			}

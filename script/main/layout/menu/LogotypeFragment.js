@@ -1,9 +1,9 @@
 const LogotypeFragment = function() {
-	Fragment.apply(this, arguments);
+	ImageFragment.apply(this, arguments);
 	this.resetContainer();
 };
 
-LogotypeFragment.prototype = new Fragment;
+LogotypeFragment.prototype = new ImageFragment;
 
 LogotypeFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(context);
@@ -20,26 +20,12 @@ LogotypeFragment.prototype.resetContainer = function() {
 	layout.addView(logotype, params);
 };
 
-LogotypeFragment.prototype.getLogotypeView = function() {
+LogotypeFragment.prototype.getImageView = function() {
 	return this.findViewByTag("logotype");
 };
 
-LogotypeFragment.prototype.getIcon = function() {
-	return this.drawable || null;
-};
-
-LogotypeFragment.prototype.setIcon = function(drawable) {
-	let logotype = this.getLogotypeView();
-	if (logotype == null) return this;
-	if (!(drawable instanceof Drawable)) {
-		logotype.setImageDrawable(drawable);
-	} else drawable.attachAsImage(logotype);
-	this.drawable = drawable;
-	return this;
-};
-
 LogotypeFragment.prototype.setLevel = function(level) {
-	let logotype = this.getLogotypeView();
+	let logotype = this.getImageView();
 	if (logotype == null) return this;
 	logotype.setImageLevel(level);
 	return this;
