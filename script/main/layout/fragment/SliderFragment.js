@@ -10,7 +10,7 @@ SliderFragment.prototype = new TextFragment;
 SliderFragment.prototype.TYPE = "SliderFragment";
 
 SliderFragment.prototype.resetContainer = function() {
-	let view = new android.widget.TextView(context);
+	let view = new android.widget.TextView(getContext());
 	view.setPadding(Interface.getY(24), Interface.getY(12), Interface.getY(24), Interface.getY(12));
 	let self = this;
 	let x = 0;

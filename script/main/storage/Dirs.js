@@ -14,7 +14,7 @@ Dirs.TODO = __dir__ + ".todo/";
 Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";
 
 if (isHorizon) {
-	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + context.getPackageName() + "/";
+	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + getContext().getPackageName() + "/";
 	Dirs.MOD = tryout(function() {
 		return __modpack__.getDirectoryOfType("MODS");
 	}, function(e) {

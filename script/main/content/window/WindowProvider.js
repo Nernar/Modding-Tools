@@ -6,7 +6,7 @@ WindowProvider.attached = {};
 
 Object.defineProperty(WindowProvider, "manager", {
 	get: function() {
-		return context.getSystemService("window");
+		return getContext().getSystemService("window");
 	},
 	enumerable: true,
 	configurable: false

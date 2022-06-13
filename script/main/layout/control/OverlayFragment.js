@@ -6,10 +6,10 @@ const OverlayFragment = function() {
 OverlayFragment.prototype = new TextFragment;
 
 OverlayFragment.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context);
+	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
 	
-	let text = new android.widget.TextView(context);
+	let text = new android.widget.TextView(getContext());
 	text.setTextSize(Interface.getFontSize(22));
 	text.setGravity(Interface.Gravity.CENTER);
 	text.setTextColor(Interface.Color.WHITE);

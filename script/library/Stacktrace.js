@@ -29,17 +29,9 @@ let isHorizon = (function() {
 	return parseInt(version.toString()[0]) >= 2;
 })();
 
-Object.defineProperty(this, "context", {
-	get: function() {
-		return UI.getContext();
-	},
-	enumerable: true,
-	configurable: false
-});
-
 Object.defineProperty(this, "display", {
 	get: function() {
-		return context.getWindowManager().getDefaultDisplay();
+		return UI.getContext().getWindowManager().getDefaultDisplay();
 	},
 	enumerable: true,
 	configurable: false
@@ -641,8 +633,8 @@ let reportTrace = function(error) {
 	}
 	let date = reportTrace.fetchTime();
 	reportTrace.isReporting = true;
-	context.runOnUiThread(function() {
-		let builder = new android.app.AlertDialog.Builder(context,
+	UI.getContext().runOnUiThread(function() {
+		let builder = new android.app.AlertDialog.Builder(UI.getContext(),
 			android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 		builder.setTitle(fetchErrorName(error));
 		builder.setCancelable(false);

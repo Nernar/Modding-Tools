@@ -20,7 +20,7 @@ RuntimeCodeEvaluate.getContextOrSetupIfNeeded = function() {
 
 RuntimeCodeEvaluate.evaluateInRuntime = function(executable, what) {
 	let context = this.getContextOrSetupIfNeeded();
-	return executable.parentContext.evaluateString(executable.scriptScope, what, executable.name, 0, null);
+	return executable.parentContext.evaluateString(context || executable.scriptScope, what, executable.name, 0, null);
 };
 
 RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
@@ -31,7 +31,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	location === undefined && (location = RuntimeCodeEvaluate.lastLocation);
 	if (source !== undefined) edit.setText(String(source));
 	
-	let dialog = new android.app.AlertDialog.Builder(context,
+	let dialog = new android.app.AlertDialog.Builder(getContext(),
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 	dialog.setPositiveButton(translate("Evaluate"), function() {
 		let something = tryout(function() {
@@ -72,8 +72,8 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 			}
 		}
 		MCSystem.throwException("ModdingTools: not found actual android dialog title, using custom view");
-	})(context.getResources().getIdentifier("alertTitle", "id", context.getPackageName()),
-		context.getResources().getIdentifier("alertTitle", "id", "android"),
+	})(getContext().getResources().getIdentifier("alertTitle", "id", getContext().getPackageName()),
+		getContext().getResources().getIdentifier("alertTitle", "id", "android"),
 		android.R.id.title).setOnClickListener(function(view) {
 		tryout(function() {
 			let executables = RuntimeCodeEvaluate.resolveAvailabledExecutables();

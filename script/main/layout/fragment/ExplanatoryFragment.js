@@ -7,7 +7,7 @@ ExplanatoryFragment.prototype = new TextFragment;
 ExplanatoryFragment.prototype.TYPE = "ExplanatoryFragment";
 
 ExplanatoryFragment.prototype.resetContainer = function() {
-	let view = new android.widget.TextView(context);
+	let view = new android.widget.TextView(getContext());
 	view.setPadding(Interface.getY(20), Interface.getY(16), Interface.getY(20), Interface.getY(16));
 	view.setTextSize(Interface.getFontSize(15));
 	view.setTextColor(Interface.Color.LTGRAY);

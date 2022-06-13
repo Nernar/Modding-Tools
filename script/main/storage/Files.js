@@ -218,7 +218,7 @@ Files.deleteRecursive = function(path, explore) {
 };
 
 Files.getFromAssets = function(name) {
-	let assets = context.getAssets();
+	let assets = getContext().getAssets();
 	return assets.open(name);
 };
 
@@ -311,7 +311,7 @@ Files.sendMail = function(file) {
 	let intent = new android.content.Intent("android.intent.action.SEND");
 	intent.setType("text/plain");
 	intent.putExtra("android.intent.extra.TEXT", Files.read(file));
-	context.startActivity(intent);
+	getContext().startActivity(intent);
 };
 
 Files.linesCount = function(file) {

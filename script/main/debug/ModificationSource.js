@@ -23,7 +23,7 @@ ModificationSource.findModList = function() {
 		}
 		return sorted;
 	}, function(e) {
-		return findCorePackage().mod.build.ModLoader.instance.modsList;
+		return INNERCORE_PACKAGE.mod.build.ModLoader.instance.modsList;
 	});
 };
 

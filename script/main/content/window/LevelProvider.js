@@ -73,7 +73,7 @@ Callback.addCallback("LevelLeft", function() {
 let thereIsNoTPSMeter = false;
 
 tryoutSafety.call(this, function() {
-	let TPSMeter = findCorePackage().api.runtime.TPSMeter;
+	let TPSMeter = INNERCORE_PACKAGE.api.runtime.TPSMeter;
 	this.TPSMeter = new TPSMeter(20, 1000);
 }, function(e) {
 	showHint(translate("Couldn't create engine TPS Meter"));

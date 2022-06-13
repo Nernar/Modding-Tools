@@ -4,7 +4,7 @@ const attachBackground = function(drawableOrColor) {
 		unique.TYPE = "BackgroundWindow";
 		unique.setWidth(Interface.Display.MATCH);
 		unique.setHeight(Interface.Display.MATCH);
-		let frame = new android.widget.FrameLayout(context);
+		let frame = new android.widget.FrameLayout(getContext());
 		if (drawableOrColor === undefined) {
 			drawableOrColor = Interface.Color.BLACK;
 		}

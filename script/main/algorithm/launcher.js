@@ -2,8 +2,8 @@
 	let internal = new java.io.File(Dirs.SCRIPT_REVISION + "bridge.jar");
 	if (internal.exists()) {
 		let reader = new java.io.FileReader(internal);
-		findCorePackage().mod.executable.Compiler.enter(-1);
-		merge(this, findCorePackage().mod.executable.Compiler.loadScriptFromDex(internal)());
+		INNERCORE_PACKAGE.mod.executable.Compiler.enter(-1);
+		merge(this, INNERCORE_PACKAGE.mod.executable.Compiler.loadScriptFromDex(internal)());
 	} else {
 		Logger.Log("ModdingTools: not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
 	}

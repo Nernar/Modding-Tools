@@ -22,10 +22,10 @@ ControlFragment.Button = function() {
 ControlFragment.Button.prototype = new ControlFragment;
 
 ControlFragment.Button.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context);
+	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
 	
-	let layout = new android.widget.LinearLayout(context);
+	let layout = new android.widget.LinearLayout(getContext());
 	layout.setOrientation(Interface.Orientate.VERTICAL);
 	layout.setTag("logotypeBackground");
 	Interface.setTransitionName(layout, "logotypeBackground");
@@ -34,7 +34,7 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	params.setMargins(Interface.getY(20), Interface.getY(20), 0, 0);
 	container.addView(layout, params);
 	
-	let button = new android.widget.ImageView(context);
+	let button = new android.widget.ImageView(getContext());
 	button.setPadding(Interface.getY(15), Interface.getY(15), Interface.getY(15), Interface.getY(15));
 	button.setTag("logotypeForeground");
 	Interface.setTransitionName(button, "logotypeForeground");
@@ -63,19 +63,19 @@ ControlFragment.Logotype = function() {
 ControlFragment.Logotype.prototype = new ControlFragment;
 
 ControlFragment.Logotype.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context),
+	let container = new android.widget.FrameLayout(getContext()),
 		params = android.widget.FrameLayout.LayoutParams
 			(Interface.Display.MATCH, Interface.Display.MATCH);
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 	
-	let layout = new android.widget.LinearLayout(context);
+	let layout = new android.widget.LinearLayout(getContext());
 	layout.setGravity(Interface.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
 	Interface.setTransitionName(layout, "logotypeBackground");
 	container.addView(layout);
 	
-	let logotype = new android.widget.ImageView(context);
+	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotypeForeground");
 	Interface.setTransitionName(logotype, "logotypeForeground");
 	params = new android.widget.LinearLayout.LayoutParams

@@ -12,9 +12,7 @@ const attachAdditionalInformation = function(control) {
 };
 
 const attachWarningInformation = function(control) {
-	if (keyExpiresSoon) {
-		control.addMessage("menuNetworkKey", translate("Key needs validation and will be expires soon. Please, check network connection, or you have risk to lost testing abilities."));
-	} else if (warningMessage !== null) {
+	if (warningMessage !== null) {
 		control.addMessage("menuNetwork", translate(warningMessage), function(message) {
 			control.removeElement(message), warningMessage = null;
 		});
@@ -45,27 +43,27 @@ const registerAdditionalInformation = function() {
 	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), .2, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://trello.com/b/wzYtpA3W/dev-editor"));
-		context.startActivity(intent);
+		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkUser", translate("Want to follow modification updates? Checkout out VK community and starts to be part of it!"), .15, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.com/club168765348"));
-		context.startActivity(intent);
+		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkSupport", translate("Enjoying development process? Let's discuss, donate and write any suggestions to our messages."), .1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.com/donut/club168765348"));
-		context.startActivity(intent);
+		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkConnect", translate("We're in search of developers for project. You may contribute and reshare our open source code."), .1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://github.com/nernar/dev-editor"));
-		context.startActivity(intent);
+		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("renderDefineItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.me/join/AJQ1d98l9x_XZG7T1qjlEBEf="));
-		context.startActivity(intent);
+		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), .25, function(message) {
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean", false);
@@ -143,7 +141,7 @@ const selectProjectData = function(result, action, type, single) {
 
 const showModuleInfo = function(mod) {
 	return tryout(function() {
-		let builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		builder.setTitle(translate(mod.modName) + " " + translate(mod.version));
 		builder.setMessage((mod.description && mod.description.length > 0 ? translate(mod.description) + "\n" : String()) +
@@ -169,7 +167,7 @@ const showModuleInfo = function(mod) {
 
 const confirm = function(title, message, action, button) {
 	handle(function() {
-		let builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		if (title !== undefined) builder.setTitle(title || translate("Confirmation"));
 		if (message !== undefined) builder.setMessage(String(message));
@@ -185,7 +183,7 @@ const confirm = function(title, message, action, button) {
 const select = function(title, items, action, multiple, approved) {
 	handle(function() {
 		if (!Array.isArray(items)) MCSystem.throwException("Nothing to select inside select()");
-		let builder = new android.app.AlertDialog.Builder(context,
+		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		if (title !== undefined) builder.setTitle(title || translate("Selection"));
 		builder.setNegativeButton(translate("Cancel"), null);

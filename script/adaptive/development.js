@@ -140,7 +140,7 @@ LaunchSequence.process = function(index) {
 				return;
 			}
 			let reader = new java.io.FileReader(internal);
-			findCorePackage().mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.jar");
+			INNERCORE_PACKAGE.mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.jar");
 		});
 	}
 	return process;

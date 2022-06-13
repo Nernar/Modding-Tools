@@ -13,7 +13,7 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 	let views = this.views,
 		elements = this,
 		index = views.buttons.length;
-	views.buttons[index] = new android.widget.TextView(context);
+	views.buttons[index] = new android.widget.TextView(getContext());
 	views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Interface.getY(300), Interface.getY(84)));
 	views.buttons[index].setPadding(Interface.getY(30), 0, Interface.getY(30), 0);
 	views.buttons[index].setOnClickListener(function(view) {
@@ -36,7 +36,7 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 	let scope = this,
 		views = this.views,
 		index = views.edits.length;
-	views.edits[index] = new android.widget.EditText(context);
+	views.edits[index] = new android.widget.EditText(getContext());
 	views.edits[index].setInputType(android.text.InputType.TYPE_CLASS_TEXT |
 		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -54,7 +54,7 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 	views.edits[index].setFocusableInTouchMode(true);
 	views.edits[index].setOnClickListener(function(view) {
 		view.requestFocus() && scope.update();
-		let ims = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+		let ims = getContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
 		ims.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
 	});
 	this.getFragment().getContainerLayout().addView(views.edits[index]);

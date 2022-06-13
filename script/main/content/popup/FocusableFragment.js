@@ -8,7 +8,7 @@ FocusableFragment.prototype.TYPE = "FocusableFragment";
 
 FocusableFragment.prototype.resetContainer = function() {
 	FrameFragment.prototype.resetContainer.apply(this, arguments);
-	let layout = new android.widget.LinearLayout(context);
+	let layout = new android.widget.LinearLayout(getContext());
 	layout.setOrientation(Interface.Orientate.VERTICAL);
 	layout.setTag("containerLayout");
 	this.getContainer().addView(layout);

@@ -6,22 +6,22 @@ const SidebarFragment = function() {
 SidebarFragment.prototype = new BaseFragment;
 
 SidebarFragment.prototype.resetContainer = function() {
-	let container = new android.widget.LinearLayout(context);
+	let container = new android.widget.LinearLayout(getContext());
 	this.setContainerView(container);
 
-	let scrollItems = new android.widget.ScrollView(context);
+	let scrollItems = new android.widget.ScrollView(getContext());
 	container.addView(scrollItems);
 
-	let items = new android.widget.LinearLayout(context);
+	let items = new android.widget.LinearLayout(getContext());
 	items.setOrientation(Interface.Orientate.VERTICAL);
 	items.setMinimumHeight(Interface.Display.HEIGHT);
 	items.setTag("containerItems");
 	scrollItems.addView(items);
 
-	let scrollTabs = new android.widget.ScrollView(context);
+	let scrollTabs = new android.widget.ScrollView(getContext());
 	container.addView(scrollTabs);
 
-	let tabs = new android.widget.LinearLayout(context);
+	let tabs = new android.widget.LinearLayout(getContext());
 	tabs.setOrientation(Interface.Orientate.VERTICAL);
 	tabs.setMinimumHeight(Interface.Display.HEIGHT);
 	tabs.setTag("containerTabs");
@@ -141,7 +141,7 @@ SidebarFragment.Group = function() {
 SidebarFragment.Group.prototype = new ImageFragment;
 
 SidebarFragment.Group.prototype.resetContainer = function() {
-	let container = new android.widget.LinearLayout(context);
+	let container = new android.widget.LinearLayout(getContext());
 	container.setMinimumHeight(Interface.getY(178));
 	container.setGravity(Interface.Gravity.CENTER);
 	let params = new android.widget.LinearLayout.
@@ -151,7 +151,7 @@ SidebarFragment.Group.prototype.resetContainer = function() {
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 
-	let icon = new android.widget.ImageView(context);
+	let icon = new android.widget.ImageView(getContext());
 	icon.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.getY(54), Interface.getY(81)));
 	icon.setScaleType(Interface.Scale.CENTER_CROP);
 	icon.setPadding(Interface.getY(42), 0, 0, 0);
@@ -180,7 +180,7 @@ SidebarFragment.Group.Item = function() {
 SidebarFragment.Group.Item.prototype = new ImageFragment;
 
 SidebarFragment.Group.Item.prototype.resetContainer = function() {
-	let container = new android.widget.ImageView(context);
+	let container = new android.widget.ImageView(getContext());
 	container.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.getY(81), Interface.getY(81)));
 	container.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 	this.setContainerView(container);

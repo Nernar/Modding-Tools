@@ -1,4 +1,4 @@
-TerrainGeneratorFactory = findAssertionPackage().innercore.terrain.TerrainGeneratorFactory;
+TerrainGeneratorFactory = Packages.io.nernar.innercore.terrain.TerrainGeneratorFactory;
 
 const attachTerrainWindow = function() {
 	let popup = new ListingPopup();
@@ -10,7 +10,7 @@ const attachTerrainWindow = function() {
 		showHint("Changed seed to " + seed);
 		isDirty = true;
 	});
-	let source = new android.widget.ImageView(context);
+	let source = new android.widget.ImageView(getContext());
 	source.setScaleType(Interface.Scale.FIT_CENTER);
 	source.setMinimumHeight(Interface.Display.HEIGHT * 0.625);
 	let params = new android.widget.FrameLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);

@@ -10,12 +10,12 @@ CounterFragment.prototype.resetContainer = function() {
 	let modifier = this.getContainer();
 	let self = this;
 	
-	let content = new android.widget.LinearLayout(context);
+	let content = new android.widget.LinearLayout(getContext());
 	content.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 	content.setGravity(Interface.Gravity.CENTER);
 	this.setContainerView(content);
 	
-	let subtract = new android.widget.ImageView(context);
+	let subtract = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterMinus").attachAsImage(subtract);
 	subtract.setOnClickListener(function(view) {
 		tryout(function() {
@@ -47,7 +47,7 @@ CounterFragment.prototype.resetContainer = function() {
 	content.addView(modifier, new android.widget.LinearLayout.
 		LayoutParams(Interface.getY(160), Interface.Display.MATCH));
 	
-	let add = new android.widget.ImageView(context);
+	let add = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterPlus").attachAsImage(add);
 	add.setOnClickListener(function(view) {
 		tryout(function() {

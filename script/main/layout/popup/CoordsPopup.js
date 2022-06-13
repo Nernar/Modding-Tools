@@ -19,11 +19,11 @@ CoordsPopup.prototype.addButtonElement = function(name, click) {
 CoordsPopup.prototype.addGroup = function(name) {
 	let views = this.views,
 		index = views.groups.length;
-	views.groups[index] = new android.widget.LinearLayout(context);
+	views.groups[index] = new android.widget.LinearLayout(getContext());
 	views.groups[index].setPadding(Interface.getY(10), index == 0 ? Interface.getY(10) : 0, Interface.getY(10), Interface.getY(10));
 	this.getFragment().getContainerLayout().addView(views.groups[index]);
 
-	views.titles[index] = new android.widget.TextView(context);
+	views.titles[index] = new android.widget.TextView(getContext());
 	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.Display.MATCH));
 	views.titles[index].setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
 	views.titles[index].setTextSize(Interface.getFontSize(32));
@@ -33,7 +33,7 @@ CoordsPopup.prototype.addGroup = function(name) {
 	views.titles[index].setMaxLines(1);
 	views.groups[index].addView(views.titles[index]);
 
-	views.containers[index] = new android.widget.LinearLayout(context);
+	views.containers[index] = new android.widget.LinearLayout(getContext());
 	views.containers[index].setOrientation(Interface.Orientate.VERTICAL);
 	views.groups[index].addView(views.containers[index]);
 	return this.getGroup(index);
@@ -55,14 +55,14 @@ CoordsPopup.prototype.getGroup = function(position) {
 					current: [current, 0],
 					mathes: mathes || [16, 32, 64]
 				});
-			item.views.root = new android.widget.LinearLayout(context);
+			item.views.root = new android.widget.LinearLayout(getContext());
 			new BitmapDrawable("popup").attachAsBackground(item.views.root);
 			item.views.root.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
 			views.containers[position].addView(item.views.root);
 
 			let params = new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.getY(60));
 
-			item.views.minus = new android.widget.ImageView(context);
+			item.views.minus = new android.widget.ImageView(getContext());
 			new BitmapDrawable("controlAdapterMinus").attachAsImage(item.views.minus);
 			item.views.minus.setOnClickListener(function(view) {
 				tryout(function() {
@@ -74,7 +74,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 			});
 			item.views.root.addView(item.views.minus, params);
 
-			item.views.mather = new android.widget.TextView(context);
+			item.views.mather = new android.widget.TextView(getContext());
 			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(160), -1));
 			item.views.mather.setPadding(Interface.getY(12), 0, Interface.getY(12), 0);
 			item.views.mather.setOnClickListener(function(view) {
@@ -102,7 +102,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 			item.views.root.addView(item.views.mather);
 			elements.updateMather(index);
 
-			item.views.plus = new android.widget.ImageView(context);
+			item.views.plus = new android.widget.ImageView(getContext());
 			new BitmapDrawable("controlAdapterPlus").attachAsImage(item.views.plus);
 			item.views.plus.setOnClickListener(function(view) {
 				tryout(function() {

@@ -7,8 +7,8 @@ FrameFragment.prototype = new LayoutFragment;
 FrameFragment.prototype.TYPE = "FrameFragment";
 
 FrameFragment.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context);
-	this.setContainerView(container)
+	let container = new android.widget.FrameLayout(getContext());
+	this.setContainerView(container);
 };
 
 FrameFragment.parseJson = function(instanceOrJson, json) {

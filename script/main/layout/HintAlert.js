@@ -34,7 +34,7 @@ HintAlert.prototype.forever = false;
 HintAlert.prototype.time = 3000;
 
 HintAlert.prototype.resetContent = function() {
-	let content = new android.widget.LinearLayout(context);
+	let content = new android.widget.LinearLayout(getContext());
 	content.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	this.setContent(content);
@@ -42,7 +42,7 @@ HintAlert.prototype.resetContent = function() {
 
 HintAlert.prototype.attachMessage = function(hint, color, background) {
 	if (this.canStackedMore()) {
-		let layout = new android.widget.LinearLayout(context);
+		let layout = new android.widget.LinearLayout(getContext());
 		layout.setPadding(Interface.getY(48), Interface.getY(16), Interface.getY(48), Interface.getY(16));
 		background = tryout(function() {
 			if (background !== undefined) {
@@ -61,7 +61,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		layout.setVisibility(Interface.Visibility.GONE);
 		content.addView(layout, params);
 
-		let text = new android.widget.TextView(context);
+		let text = new android.widget.TextView(getContext());
 		text.setTextSize(Interface.getFontSize(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
 		Logger.Log("hint: " + text.getText(), "DEBUG");

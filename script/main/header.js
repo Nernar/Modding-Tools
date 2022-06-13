@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-11.06.2022-0";
+const REVISION = "develop-alpha-0.4-13.06.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -50,8 +50,6 @@ let maximumAllowedBounds = 1920;
 let importAutoselect = false;
 
 // Different values
-let keyExpiresSoon = false;
-let ignoreKeyDeprecation = false;
 let noImportedScripts = true;
 
 // Runtime changed values
@@ -67,14 +65,6 @@ if (this.isInstant === undefined) {
 }
 
 IMPORT("Retention:5");
-
-Object.defineProperty(this, "context", {
-	get: function() {
-		return getContext();
-	},
-	enumerable: true,
-	configurable: false
-});
 
 const tryoutSafety = function(action, report, basic) {
 	return tryout.call(this, action, function(e) {
@@ -125,29 +115,7 @@ reportError.setReportAction(function(err) {
 
 IMPORT("Drawable:1");
 
-const findCorePackage = function() {
-	return tryout(function() {
-		return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
-	}, function(e) {
-		MCSystem.throwException("Impossible find engine package, please referr developer");
-	}, null);
-};
-
-const findAssertionPackage = function() {
-	return tryout(function() {
-		return Packages.io.nernar;
-	}, function(e) {
-		MCSystem.throwException("Impossible find assertion package, please referr developer");
-	}, null);
-};
-
-const findEditorPackage = function() {
-	return tryout(function() {
-		return findAssertionPackage().innercore.editor;
-	}, function(e) {
-		MCSystem.throwException("Impossible find modification package, please referr developer");
-	}, null);
-};
+const INNERCORE_PACKAGE = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
 IMPORT("Stacktrace:2");
 
@@ -168,7 +136,7 @@ if (REVISION.startsWith("develop")) {
 		reportTrace.reloadModifications();
 	}
 	tryout(function() {
-		let $ = new JavaImporter(findCorePackage().mod.executable.library),
+		let $ = new JavaImporter(INNERCORE_PACKAGE.mod.executable.library),
 			dependency = new $.LibraryDependency("Retention");
 		dependency.setParentMod(__mod__);
 		let library = $.LibraryRegistry.resolveDependency(dependency);
@@ -199,5 +167,5 @@ getPlayerEnt = function() {
 
 IMPORT("Network:2");
 
-FileTools = findCorePackage().utils.FileTools;
-LevelInfo = findCorePackage().api.runtime.LevelInfo;
+FileTools = INNERCORE_PACKAGE.utils.FileTools;
+LevelInfo = INNERCORE_PACKAGE.api.runtime.LevelInfo;

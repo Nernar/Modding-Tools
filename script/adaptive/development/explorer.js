@@ -225,7 +225,7 @@ const ToolbarFragment = function() {
 ToolbarFragment.prototype = new Fragment;
 
 ToolbarFragment.prototype.resetContainer = function() {
-	let container = new android.widget.RelativeLayout(context);
+	let container = new android.widget.RelativeLayout(getContext());
 	container.setPadding(Interface.getY(16), Interface.getY(12), Interface.getY(16), Interface.getY(12));
 	container.setMinimumWidth(Interface.Display.MATCH);
 	let params = android.widget.FrameLayout.LayoutParams
@@ -233,7 +233,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 	
-	let menu = new android.widget.LinearLayout(context);
+	let menu = new android.widget.LinearLayout(getContext());
 	menu.setId(java.lang.String("containerItems").hashCode());
 	menu.setTag("containerItems");
 	params = android.widget.RelativeLayout.LayoutParams
@@ -261,7 +261,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	container.addView(button, params);
 	
-	let bar = new android.widget.LinearLayout(context);
+	let bar = new android.widget.LinearLayout(getContext());
 	bar.setOrientation(Interface.Orientate.VERTICAL);
 	bar.setId(java.lang.String("toolbarBar").hashCode());
 	bar.setTag("toolbarBar");
@@ -273,7 +273,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.leftMargin = Interface.getY(36);
 	container.addView(bar, params);
 	
-	let title = new android.widget.TextView(context);
+	let title = new android.widget.TextView(getContext());
 	title.setVisibility(Interface.Visibility.GONE);
 	typeface && title.setTypeface(typeface);
 	title.setSingleLine(true);
@@ -283,7 +283,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	title.setTag("toolbarTitle");
 	bar.addView(title);
 	
-	let subtitle = new android.widget.TextView(context);
+	let subtitle = new android.widget.TextView(getContext());
 	subtitle.setVisibility(Interface.Visibility.GONE);
 	typeface && subtitle.setTypeface(typeface);
 	subtitle.setSingleLine(true);
@@ -491,7 +491,7 @@ const ListHolderAdapter = function(proto) {
 };
 
 ListHolderAdapter.prototype.createView = function(position, parent) {
-	let view = new android.widget.TextView(context);
+	let view = new android.widget.TextView(getContext());
 	view.setPadding(Interface.getY(16), Interface.getY(8), Interface.getY(16), Interface.getY(8));
 	typeface && view.setTypeface(typeface);
 	view.setTextColor(Interface.Color.WHITE);
@@ -545,7 +545,7 @@ ImageSourceFragment.prototype.resetContainer = function() {
 	FrameFragment.prototype.resetContainer.call(this);
 	let frame = this.getContainer();
 	
-	let source = new android.widget.ImageView(context);
+	let source = new android.widget.ImageView(getContext());
 	source.setScaleType(Interface.Scale.CENTER);
 	source.setTag("sourceImage")
 	let params = new android.widget.FrameLayout.LayoutParams

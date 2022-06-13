@@ -10,10 +10,10 @@ const EditorFragment = function() {
 EditorFragment.prototype = new Fragment;
 
 EditorFragment.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context);
+	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
 	
-	let text = new Packages.io.github.rosemoe.sora.widget.CodeEditor(context);
+	let text = new Packages.io.github.rosemoe.sora.widget.CodeEditor(getContext());
 	text.setTypefaceText(typefaceJetBrains);
 	/*
 		processor.setWordwrap(true);
@@ -35,18 +35,18 @@ EditorFragment.prototype.resetContainer = function() {
 		processor.setEdgeEffectColor(-1);
 	*/
 	let drawable = new android.graphics.drawable.ColorDrawable(Interface.Color.YELLOW);
-	text.setSelectionHandleStyle(new findAssertionPackage().editor.style.HandleStyleSideDrop(context, drawable));
+	text.setSelectionHandleStyle(new Packages.io.nernar.editor.style.HandleStyleSideDrop(getContext(), drawable));
 	text.setColorScheme(new Packages.io.github.rosemoe.sora.widget.schemes.SchemeDarcula());
 	text.setAutoCompletionItemAdapter(EditorFragment.COMPLETION_ADAPTER);
-	text.getComponent(Packages.io.github.rosemoe.sora.widget.component.EditorAutoCompletion).setParentView(context.getWindow().getDecorView());
-	let textAction = new android.widget.LinearLayout(context);
+	text.getComponent(Packages.io.github.rosemoe.sora.widget.component.EditorAutoCompletion).setParentView(getContext().getWindow().getDecorView());
+	let textAction = new android.widget.LinearLayout(getContext());
 	new BitmapDrawable("popup").attachAsBackground(textAction);
 	textAction.setGravity(Interface.Gravity.CENTER);
 	let textActionButtonParams = new android.widget.LinearLayout.
 		LayoutParams(Interface.toComplexUnitDip(40), Interface.toComplexUnitDip(40));
 	textActionButtonParams.leftMargin = textActionButtonParams.rightMargin =
 		textActionButtonParams.topMargin = textActionButtonParams.bottomMargin = Interface.toComplexUnitDip(8);
-	let copyBtn = new android.widget.Button(context);
+	let copyBtn = new android.widget.Button(getContext());
 	new BitmapDrawable("explorerSelectionApprove").attachAsBackground(copyBtn);
 	copyBtn.setOnClickListener(function(self) {
 		text.copyText();
@@ -54,7 +54,7 @@ EditorFragment.prototype.resetContainer = function() {
 		textAction.dismiss();
 	});
 	textAction.addView(copyBtn, textActionButtonParams);
-	let cutBtn = new android.widget.Button(context);
+	let cutBtn = new android.widget.Button(getContext());
 	new BitmapDrawable("explorerSelectionWhole").attachAsBackground(cutBtn);
 	cutBtn.setOnClickListener(function(self) {
 		text.copyText();
@@ -64,7 +64,7 @@ EditorFragment.prototype.resetContainer = function() {
 		textAction.dismiss();
 	});
 	textAction.addView(cutBtn, textActionButtonParams);
-	let pasteBtn = new android.widget.Button(context);
+	let pasteBtn = new android.widget.Button(getContext());
 	new BitmapDrawable("explorerSelectionSame").attachAsBackground(pasteBtn);
 	pasteBtn.setOnClickListener(function(self) {
 		text.pasteText();
@@ -72,33 +72,33 @@ EditorFragment.prototype.resetContainer = function() {
 		textAction.dismiss();
 	});
 	textAction.addView(pasteBtn, textActionButtonParams);
-	let selectAllBtn = new android.widget.Button(context);
+	let selectAllBtn = new android.widget.Button(getContext());
 	new BitmapDrawable("explorerSelectionInvert").attachAsBackground(selectAllBtn);
 	selectAllBtn.setOnClickListener(function(self) {
 		text.selectAll();
 		textAction.show();
 	});
 	textAction.addView(selectAllBtn, textActionButtonParams);
-	textAction = new findAssertionPackage().editor.component.EditorTextActionWindow(text, textAction, pasteBtn, copyBtn, cutBtn);
-	textAction.setParentView(context.getWindow().getDecorView());
+	textAction = new Packages.io.nernar.editor.component.EditorTextActionWindow(text, textAction, pasteBtn, copyBtn, cutBtn);
+	textAction.setParentView(getContext().getWindow().getDecorView());
 	text.replaceComponent(Packages.io.github.rosemoe.sora.widget.component.EditorTextActionWindow, textAction);
-	let magnifierRoot = new android.widget.FrameLayout(context);
+	let magnifierRoot = new android.widget.FrameLayout(getContext());
 	magnifierRoot.setElevation(Interface.toComplexUnitDip(4));
-	let magnifier = new android.widget.ImageView(context);
+	let magnifier = new android.widget.ImageView(getContext());
 	magnifierRoot.addView(magnifier, new android.widget.FrameLayout.
 		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH));
-	magnifier = new findAssertionPackage().editor.component.Magnifier(text, magnifierRoot, magnifier);
-	magnifier.setParentView(context.getWindow().getDecorView());
+	magnifier = new Packages.io.nernar.editor.component.Magnifier(text, magnifierRoot, magnifier);
+	magnifier.setParentView(getContext().getWindow().getDecorView());
 	text.replaceComponent(Packages.io.github.rosemoe.sora.widget.component.Magnifier, magnifier);
 	text.setTag("editor");
 	container.addView(text);
 };
 
 EditorFragment.prototype.resetLegacyContainer = function() {
-	let container = new android.widget.FrameLayout(context);
+	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
 	
-	let text = new android.widget.EditText(context);
+	let text = new android.widget.EditText(getContext());
 	text.setHint(translate("Hi, I'm evaluate stroke"));
 	text.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
 		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
@@ -175,28 +175,28 @@ if (isHorizon) {
 	});
 	
 	EditorFragment.COMPLETION_ADAPTER.newItem = function() {
-		let layout = new android.widget.LinearLayout(context);
+		let layout = new android.widget.LinearLayout(getContext());
 		layout.setGravity(Interface.Gravity.CENTER_VERTICAL);
 		layout.setPadding(0, Interface.toComplexUnitDip(2), 0, Interface.toComplexUnitDip(2));
 		
-		let icon = new android.widget.ImageView(context);
+		let icon = new android.widget.ImageView(getContext());
 		icon.setTag("itemIcon");
 		let params = new android.widget.LinearLayout.LayoutParams(Interface.toComplexUnitDip(24), Interface.toComplexUnitDip(24));
 		params.leftMargin = params.rightMargin = Interface.toComplexUnitDip(4);
 		layout.addView(icon, params);
 		
-		let descriptor = new android.widget.LinearLayout(context);
+		let descriptor = new android.widget.LinearLayout(getContext());
 		descriptor.setOrientation(Interface.Orientate.VERTICAL);
 		descriptor.setGravity(Interface.Gravity.CENTER_VERTICAL);
 		descriptor.setPadding(Interface.toComplexUnitDip(8), 0, Interface.toComplexUnitDip(8), 0);
 		layout.addView(descriptor);
 		
-		let label = new android.widget.TextView(context);
+		let label = new android.widget.TextView(getContext());
 		label.setTextSize(Interface.getFontSize(16));
 		label.setTag("itemLabel");
 		descriptor.addView(label);
 		
-		let description = new android.widget.TextView(context);
+		let description = new android.widget.TextView(getContext());
 		description.setTextSize(Interface.getFontSize(12));
 		description.setTag("itemDescription");
 		params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);

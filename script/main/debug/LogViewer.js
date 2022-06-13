@@ -45,8 +45,8 @@ LogViewer.show = function() {
 	popup.setTitle(translate("Currently log"));
    	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.
 		LayoutParams(Interface.Display.WIDTH / 4, Interface.Display.HEIGHT / 3));
-	let horizontal = new android.widget.HorizontalScrollView(context);
-	let text = new android.widget.TextView(context);
+	let horizontal = new android.widget.HorizontalScrollView(getContext());
+	let text = new android.widget.TextView(getContext());
 	text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 	text.setTextSize(Interface.getFontSize(12));
    	text.setTextColor(Interface.Color.WHITE);
@@ -54,7 +54,7 @@ LogViewer.show = function() {
 	text.setText(NAME + " " + REVISION);
 	popup.getFragment().getContainerLayout().addView(horizontal);
 	horizontal.addView(text);
-	let filter = findCorePackage().api.log.ICLog.getLogFilter();
+	let filter = INNERCORE_PACKAGE.api.log.ICLog.getLogFilter();
 	let messagesField = getClass(filter).__javaObject__.getDeclaredField("logMessages");
 	messagesField.setAccessible(true);
 	let messages = messagesField.get(filter);

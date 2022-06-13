@@ -7,11 +7,11 @@ const NarrationFragment = function() {
 NarrationFragment.prototype = new Fragment;
 
 NarrationFragment.prototype.resetContainer = function() {
-	let content = new android.widget.LinearLayout(context);
+	let content = new android.widget.LinearLayout(getContext());
 	content.setGravity(Interface.Gravity.CENTER);
 	this.setContainerView(content);
 	
-	let typing = new findAssertionPackage().android.widget.ToneTypingTextView(context);
+	let typing = new Packages.io.nernar.android.widget.ToneTypingTextView(getContext());
 	typeface && typing.setTypeface(typeface);
 	typing.setTextSize(Interface.getFontSize(45));
 	typing.setGravity(Interface.Gravity.CENTER);

@@ -59,9 +59,7 @@ const API = {
 	select: select,
 	getPlayerEnt: getPlayerEnt,
 	
-	findCorePackage: findCorePackage,
-	findAssertionPackage: findAssertionPackage,
-	findEditorPackage: findEditorPackage,
+	INNERCORE_PACKAGE: INNERCORE_PACKAGE,
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	getCoreEngineAndInjectIfNeeded: getCoreEngineAndInjectIfNeeded,
 	
@@ -240,12 +238,12 @@ const getCoreEngineAndInjectIfNeeded = function() {
 			return $;
 		}
 		let instance = null;
-		let CoreEngineAPI = findCorePackage().api.mod.coreengine.CoreEngineAPI;
+		let CoreEngineAPI = INNERCORE_PACKAGE.api.mod.coreengine.CoreEngineAPI;
 		let field = tryout(function() {
 			return CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
 		}, function(e) {
 			let declared = CoreEngineAPI.__javaObject__.getDeclaredField("coreEngineHandler");
-			instance = findCorePackage().api.mod.API.getInstanceByName("CoreEngine");
+			instance = INNERCORE_PACKAGE.api.mod.API.getInstanceByName("CoreEngine");
 			return declared;
 		});
 		field.setAccessible(true);

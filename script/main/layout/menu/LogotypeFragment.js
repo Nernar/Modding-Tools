@@ -6,14 +6,14 @@ const LogotypeFragment = function() {
 LogotypeFragment.prototype = new ImageFragment;
 
 LogotypeFragment.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(context);
+	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
 	
-	let layout = new android.widget.LinearLayout(context);
+	let layout = new android.widget.LinearLayout(getContext());
 	layout.setGravity(Interface.Gravity.CENTER);
 	container.addView(layout);
 	
-	let logotype = new android.widget.ImageView(context);
+	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotype");
 	let params = new android.widget.LinearLayout.LayoutParams
 		(Interface.getY(320), Interface.getY(320));

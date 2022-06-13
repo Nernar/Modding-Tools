@@ -8,11 +8,11 @@ AxisGroupFragment.prototype = new LayoutFragment;
 AxisGroupFragment.prototype.TYPE = "AxisGroupFragment";
 
 AxisGroupFragment.prototype.resetContainer = function() {
-	let content = new android.widget.LinearLayout(context);
+	let content = new android.widget.LinearLayout(getContext());
 	content.setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
 	this.setContainerView(content);
 	
-	let axis = new android.widget.TextView(context);
+	let axis = new android.widget.TextView(getContext());
 	axis.setPadding(Interface.getY(16), Interface.getY(10), Interface.getY(16), Interface.getY(10));
 	axis.setTextSize(Interface.getFontSize(32));
 	axis.setTextColor(Interface.Color.WHITE);
@@ -21,7 +21,7 @@ AxisGroupFragment.prototype.resetContainer = function() {
 	axis.setTag("groupAxis");
 	content.addView(axis);
 	
-	let container = new android.widget.LinearLayout(context);
+	let container = new android.widget.LinearLayout(getContext());
 	container.setOrientation(Interface.Orientate.VERTICAL);
 	container.setTag("containerGroup");
 	content.addView(container);

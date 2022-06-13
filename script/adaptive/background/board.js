@@ -120,7 +120,7 @@ const attachKeyboard = function() {
 			confirm(translate("Currently track"), attachKeyboard.track.join(", "));
 		});
 	});
-	let text = new android.widget.TextView(context);
+	let text = new android.widget.TextView(getContext());
 	text.setPadding(Interface.getY(30), 0, Interface.getY(5), 0);
 	text.setTextSize(Interface.getFontSize(22));
 	text.setTextColor(Interface.Color.WHITE);
@@ -136,7 +136,7 @@ const attachKeyboard = function() {
 		reindexateText(popup.views.items);
 		updateTrackNotesCount(text);
 	});
-	let seek = new android.widget.SeekBar(context);
+	let seek = new android.widget.SeekBar(getContext());
 	seek.setMax(63);
 	seek.setProgress(attachKeyboard.modifier + 1);
 	seek.setOnSeekBarChangeListener({

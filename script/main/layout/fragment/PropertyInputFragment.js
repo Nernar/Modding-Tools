@@ -7,7 +7,7 @@ PropertyInputFragment.prototype = new TextFragment;
 PropertyInputFragment.prototype.TYPE = "PropertyInputFragment";
 
 PropertyInputFragment.prototype.resetContainer = function() {
-	let view = new android.widget.EditText(context);
+	let view = new android.widget.EditText(getContext());
 	view.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
 		android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE |
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -23,7 +23,7 @@ PropertyInputFragment.prototype.resetContainer = function() {
 	view.setFocusableInTouchMode(true);
 	view.setOnClickListener(function(view) {
 		view.requestFocus();
-		let ims = context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+		let ims = getContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
 		ims.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
 	});
 	this.setContainerView(view);

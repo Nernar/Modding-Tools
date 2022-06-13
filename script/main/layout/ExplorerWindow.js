@@ -22,14 +22,14 @@ ExplorerWindow.prototype.single = false;
 ExplorerWindow.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = {};
-	let content = new android.widget.FrameLayout(context);
+	let content = new android.widget.FrameLayout(getContext());
 	this.setContent(content);
 
-	views.layout = new android.widget.RelativeLayout(context);
+	views.layout = new android.widget.RelativeLayout(getContext());
 	let params = android.widget.FrameLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	content.addView(views.layout, params);
 
-	views.files = new android.widget.ListView(context);
+	views.files = new android.widget.ListView(getContext());
 	views.files.setOnItemClickListener(function(parent, view, position, id) {
 		scope.selectItem(position) && scope.checkIfCanBeApproved();
 	});
@@ -41,19 +41,19 @@ ExplorerWindow.prototype.resetContent = function() {
 	params = android.widget.RelativeLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	views.layout.addView(views.files, params);
 	
-	views.empty = new android.widget.LinearLayout(context);
+	views.empty = new android.widget.LinearLayout(getContext());
 	views.empty.setOrientation(Interface.Orientate.VERTICAL);
 	views.empty.setGravity(Interface.Gravity.CENTER);
 	views.empty.setId(android.R.id.empty);
 	params = android.widget.RelativeLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
 	views.layout.addView(views.empty, params);
 	
-	views.icon = new android.widget.ImageView(context);
+	views.icon = new android.widget.ImageView(getContext());
 	new BitmapDrawable("explorerFolder").attachAsImage(views.icon);
 	params = android.widget.LinearLayout.LayoutParams(Interface.getY(180), Interface.getY(180));
 	views.empty.addView(views.icon, params);
 	
-	views.info = new android.widget.TextView(context);
+	views.info = new android.widget.TextView(getContext());
 	typeface && views.info.setTypeface(typeface);
 	views.info.setText(translate("Void itself."));
 	views.info.setGravity(Interface.Gravity.CENTER);
@@ -280,7 +280,7 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 ExplorerWindow.Approve.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
-	let content = new android.widget.ImageView(context);
+	let content = new android.widget.ImageView(getContext());
 	content.setVisibility(Interface.Visibility.GONE);
 	content.setPadding(Interface.getY(20), Interface.getY(20), Interface.getY(20), Interface.getY(20));
 	content.setScaleType(Interface.Scale.CENTER_CROP);
@@ -401,7 +401,7 @@ ExplorerWindow.Path = function(parentOrAction, action) {
 ExplorerWindow.Path.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
-	let content = new android.widget.LinearLayout(context);
+	let content = new android.widget.LinearLayout(getContext());
 	content.setId(java.lang.String("pathLayout").hashCode());
 	content.setOrientation(Interface.Orientate.VERTICAL);
 	content.setGravity(Interface.Gravity.BOTTOM);
@@ -411,11 +411,11 @@ ExplorerWindow.Path.prototype.reset = function() {
 	let params = new android.widget.RelativeLayout.LayoutParams(Interface.Display.MATCH, Interface.getY(110));
 	this.content = (content.setLayoutParams(params), content);
 
-	views.scroll = new android.widget.HorizontalScrollView(context);
+	views.scroll = new android.widget.HorizontalScrollView(getContext());
 	params = android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
 	content.addView(views.scroll, params);
 
-	views.layout = new android.widget.LinearLayout(context);
+	views.layout = new android.widget.LinearLayout(getContext());
 	views.layout.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
 	params = android.view.ViewGroup.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
 	views.scroll.addView(views.layout, params);
@@ -484,7 +484,7 @@ ExplorerWindow.Path.prototype.makePathClick = function(path) {
 };
 
 ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
-	let path = new android.widget.ImageView(context);
+	let path = new android.widget.ImageView(getContext());
 	new BitmapDrawable(src).attachAsImage(path);
 	path.setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
 	path.setScaleType(Interface.Scale.CENTER_CROP);
@@ -494,7 +494,7 @@ ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 };
 
 ExplorerWindow.Path.prototype.addPathText = function(text, file) {
-	let path = new android.widget.TextView(context);
+	let path = new android.widget.TextView(getContext());
 	text !== undefined && path.setText(text);
 	typeface && path.setTypeface(typeface);
 	path.setTextColor(Interface.Color.WHITE);
@@ -507,7 +507,7 @@ ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 };
 
 ExplorerWindow.Path.prototype.attachArrowToPath = function() {
-	let path = new android.widget.ImageView(context);
+	let path = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterDivider").attachAsImage(path);
 	path.setPadding(Interface.getY(10), Interface.getY(20), Interface.getY(10), Interface.getY(20));
 	path.setScaleType(Interface.Scale.CENTER_CROP);
@@ -586,14 +586,14 @@ ExplorerWindow.Rename.prototype.formatIndex = -1;
 ExplorerWindow.Rename.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
-	let content = new android.widget.RelativeLayout(context);
+	let content = new android.widget.RelativeLayout(getContext());
 	content.setId(java.lang.String("renameLayout").hashCode());
 	let params = android.widget.RelativeLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
 	content.setLayoutParams(params);
 	this.content = content;
 
-	views.approve = new android.widget.TextView(context);
+	views.approve = new android.widget.TextView(getContext());
 	typeface && views.approve.setTypeface(typeface);
 	views.approve.setSingleLine();
 	views.approve.setTextColor(isInvertedLogotype() ? Interface.Color.WHITE : Interface.Color.GREEN);
@@ -609,7 +609,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	params.leftMargin = Interface.getY(24);
 	content.addView(views.approve, params);
 
-	views.format = new android.widget.TextView(context);
+	views.format = new android.widget.TextView(getContext());
 	typeface && views.format.setTypeface(typeface);
 	views.format.setSingleLine();
 	views.format.setTextColor(Interface.Color.WHITE);
@@ -624,7 +624,7 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	content.addView(views.format, params);
 
-	views.name = new android.widget.EditText(context);
+	views.name = new android.widget.EditText(getContext());
 	views.name.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.name.setHintTextColor(Interface.Color.LTGRAY);
@@ -927,11 +927,11 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		return this.getFile(position).isDirectory();
 	},
 	makeItemLayout: function() {
-		let layout = new android.widget.RelativeLayout(context);
+		let layout = new android.widget.RelativeLayout(getContext());
 		let params = android.view.ViewGroup.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
 		layout.setLayoutParams(params);
 
-		let icon = new android.widget.ImageView(context);
+		let icon = new android.widget.ImageView(getContext());
 		icon.setPadding(Interface.getY(20), Interface.getY(20), Interface.getY(20), Interface.getY(20));
 		icon.setScaleType(Interface.Scale.CENTER_CROP);
 		icon.setTag("fileIcon");
@@ -942,7 +942,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.rightMargin = Interface.getY(15);
 		layout.addView(icon, params);
 
-		let additional = new android.widget.LinearLayout(context);
+		let additional = new android.widget.LinearLayout(getContext());
 		additional.setOrientation(Interface.Orientate.VERTICAL);
 		additional.setGravity(Interface.Gravity.RIGHT);
 		additional.setPadding(Interface.getY(30), 0, Interface.getY(30), 0);
@@ -953,7 +953,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		layout.addView(additional, params);
 
-		let date = new android.widget.TextView(context);
+		let date = new android.widget.TextView(getContext());
 		typeface && date.setTypeface(typeface);
 		date.setGravity(Interface.Gravity.RIGHT);
 		date.setTextSize(Interface.getFontSize(21));
@@ -961,7 +961,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		date.setTag("fileDate");
 		additional.addView(date);
 
-		let info = new android.widget.TextView(context);
+		let info = new android.widget.TextView(getContext());
 		typeface && info.setTypeface(typeface);
 		info.setGravity(Interface.Gravity.RIGHT);
 		info.setTextSize(Interface.getFontSize(21));
@@ -969,7 +969,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		info.setTag("fileInfo");
 		additional.addView(info);
 
-		let uniqal = new android.widget.LinearLayout(context);
+		let uniqal = new android.widget.LinearLayout(getContext());
 		uniqal.setOrientation(Interface.Orientate.VERTICAL);
 		uniqal.setTag("uniqalInfo");
 		uniqal.setId(java.lang.String("uniqalInfo").hashCode());
@@ -980,7 +980,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		uniqal.post(function() { uniqal.requestLayout(); });
 		layout.addView(uniqal, params);
 
-		let name = new android.widget.TextView(context);
+		let name = new android.widget.TextView(getContext());
 		typeface && name.setTypeface(typeface);
 		name.setTextSize(Interface.getFontSize(22.5));
 		name.setTextColor(Interface.Color.WHITE);
@@ -988,7 +988,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		name.setMaxLines(3);
 		uniqal.addView(name);
 
-		let size = new android.widget.TextView(context);
+		let size = new android.widget.TextView(getContext());
 		typeface && size.setTypeface(typeface);
 		size.setTextSize(Interface.getFontSize(21));
 		size.setTextColor(Interface.Color.LTGRAY);

@@ -20,7 +20,7 @@ const runAtScope = function(code, scope, name) {
 			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
 		};
 	}, function(th) {
-		Logger.Log(source + ": " + findCorePackage().api.log.ICLog.getStackTrace(th), "WARNING");
+		Logger.Log(source + ": " + INNERCORE_PACKAGE.api.log.ICLog.getStackTrace(th), "WARNING");
 		if (th instanceof org.mozilla.javascript.JavaScriptException) {
 			return {
 				error: th.getValue()
@@ -163,7 +163,7 @@ const translateCode = function(hash, args, fallback) {
 };
 
 tryoutSafety(function() {
-	let $ = new JavaImporter(findCorePackage().api.runtime.other),
+	let $ = new JavaImporter(INNERCORE_PACKAGE.api.runtime.other),
 		clazz = $.NameTranslation.__javaObject__,
 		field = clazz.getDeclaredField("currentLanguageTranslations");
 	field.setAccessible(true);

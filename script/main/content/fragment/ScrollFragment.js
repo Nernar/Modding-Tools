@@ -7,11 +7,11 @@ ScrollFragment.prototype.TYPE = "ScrollFragment";
 
 ScrollFragment.prototype.resetContainer = function() {
 	FrameFragment.prototype.resetContainer.apply(this, arguments);
-	let scroll = new android.widget.ScrollView(context);
+	let scroll = new android.widget.ScrollView(getContext());
 	scroll.setTag("containerScroll");
 	this.getContainer().addView(scroll);
 	
-	let layout = new android.widget.LinearLayout(context);
+	let layout = new android.widget.LinearLayout(getContext());
 	layout.setOrientation(Interface.Orientate.VERTICAL);
 	layout.setTag("containerLayout");
 	scroll.addView(layout);

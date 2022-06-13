@@ -89,7 +89,6 @@ const updateSettings = function() {
 		setSetting("autosavePeriod", "autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
 		setSetting("autosaveProjectable", "autosave.as_projectable");
 		setSetting("autosaveCount", "autosave.maximum_count", "number", 0, 50);
-		setSetting("ignoreKeyDeprecation", "user_login.ignore_deprecation", "boolean");
 		setSetting("noImportedScripts", "user_login.imported_script", "boolean", function(value) {
 			return !value;
 		});

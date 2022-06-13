@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: ''
-assignees: maks
+assignees: ''
 
 ---
 
@@ -26,7 +26,8 @@ If applicable, add screenshots to help explain your problem.
 **Smartphone (please complete the following information):**
  - Device: [e.g. Pixel 3a]
  - OS: [e.g. Android 9]
- - App Version [e.g. 1.5.3]
+ - Horizon Version [e.g. 1.2.0-beta]
+ - Inner Core Version [e.g. 2.1.0b71]
 
 **Additional context**
 Add any other context about the problem here.
