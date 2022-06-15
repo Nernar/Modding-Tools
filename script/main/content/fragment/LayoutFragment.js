@@ -10,6 +10,10 @@ LayoutFragment.prototype.getContainerLayout = function() {
 	return this.getContainer();
 };
 
+LayoutFragment.prototype.getFragments = function() {
+	return this.fragments || null;
+};
+
 LayoutFragment.prototype.addElementFragment = function(fragment, params) {
 	if (!(fragment instanceof Fragment)) {
 		Logger.Log("ModdintTools: trying adding non-fragment element passed to addElementFragment", "INFO");
@@ -41,6 +45,10 @@ LayoutFragment.prototype.getElementFragment = function(index) {
 	return this.fragments[index];
 };
 
+LayoutFragment.prototype.indexOfElement = function(fragment) {
+	return this.fragments.indexOf(fragment);
+};
+
 LayoutFragment.prototype.removeElementAt = function(index) {
 	if (this.fragments.length > index || index < 0) {
 		log("ModdingTools: not found LayoutFragment element at index " + index);
@@ -50,6 +58,15 @@ LayoutFragment.prototype.removeElementAt = function(index) {
 	this.getContainerLayout().removeView(fragment.getContainer());
 	this.fragments.splice(index, 1);
 	return true;
+};
+
+LayoutFragment.prototype.isRequiresFocusable = function() {
+	for (let i = 0; i < this.fragments.length; i++) {
+		if (this.fragments[i].isRequiresFocusable()) {
+			return true;
+		}
+	}
+	return false;
 };
 
 LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {

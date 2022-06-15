@@ -1,5 +1,6 @@
 const BaseFragment = function() {
 	Fragment.apply(this, arguments);
+	this.visible = true;
 };
 
 BaseFragment.prototype = new Fragment;
@@ -21,6 +22,18 @@ BaseFragment.prototype.setBackground = function(src) {
 	}
 	src.attachAsBackground(container);
 	this.background = src;
+	return this;
+};
+
+BaseFragment.prototype.isVisible = function() {
+	return this.visible || false;
+};
+
+BaseFragment.prototype.switchVisibility = function() {
+	this.getContainer().setVisibility(this.visible ?
+		Interface.Visibility.GONE :
+		Interface.Visibility.VISIBLE);
+	this.visible = !this.visible;
 	return this;
 };
 

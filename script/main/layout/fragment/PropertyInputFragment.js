@@ -38,6 +38,10 @@ PropertyInputFragment.prototype.setHint = function(who) {
 	return this;
 };
 
+PropertyInputFragment.prototype.isRequiresFocusable = function() {
+	return true;
+};
+
 PropertyInputFragment.parseJson = function(instanceOrJson, json) {
 	if (!(instanceOrJson instanceof PropertyInputFragment)) {
 		json = instanceOrJson;

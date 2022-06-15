@@ -196,6 +196,10 @@ FocusableWindow.prototype.setExitTransition = function(actor) {
 
 FocusableWindow.prototype.attach = function() {
 	if (!this.isOpened()) {
+		let fragment = this.getFragment();
+		if (fragment != null && fragment.isRequiresFocusable()) {
+			this.focusable = true;
+		}
 		WindowProvider.openWindow(this);
 		this.onAttach && this.onAttach();
 		return true;
@@ -204,6 +208,10 @@ FocusableWindow.prototype.attach = function() {
 };
 
 FocusableWindow.prototype.update = function() {
+	let fragment = this.getFragment();
+	if (fragment != null && fragment.isRequiresFocusable()) {
+		this.focusable = true;
+	}
 	WindowProvider.updateWindow(this);
 	this.onUpdate && this.onUpdate();
 };

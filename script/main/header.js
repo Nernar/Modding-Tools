@@ -60,6 +60,8 @@ let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let typefaceJetBrains = android.graphics.Typeface.MONOSPACE;
 
+IMPORT("JsonIo:1");
+
 if (this.isInstant === undefined) {
 	this.isInstant = false;
 }

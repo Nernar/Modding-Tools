@@ -49,6 +49,10 @@ Fragment.prototype.setIsSelectable = function(selectable) {
 	return this;
 };
 
+Fragment.prototype.isRequiresFocusable = function() {
+	return false;
+};
+
 const registerFragmentJson = (function() {
 	let fragments = {};
 	

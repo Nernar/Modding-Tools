@@ -46,7 +46,7 @@ ModBrowser.Query.prototype.formatQuery = function() {
 	for (let item in query) {
 		let value = query[item];
 		result.push(item + (value !== null && value !== undefined
-			? "=" + value : String()));
+			? "=" + value : ""));
 	}
 	return result.length > 0 ? result.join("&") : null;
 };
@@ -136,8 +136,8 @@ ModBrowser.Query.List.prototype.previous = function() {
 		if (count > 0) {
 			query.start -= query.count;
 		} else {
-			delete query.start;
 			query.count -= query.start;
+			delete query.start;
 		}
 	} else return false;
 	this.updateAddress();
@@ -230,7 +230,7 @@ ModBrowser.Query.List.prototype.getIds = function() {
 ModBrowser.Query.List.prototype.setIds = function(ids) {
 	let query = this.getQuery();
 	if (query) {
-		if (String(ids) === ids) {
+		if ("" + ids == ids) {
 			query.ids = id;
 		} else if (ids && ids.length > 0) {
 			query.ids = ids.join(",");
@@ -359,7 +359,7 @@ ModBrowser.Query.Recommendation.prototype.setLimit = function(limit) {
 ModBrowser.Query.Search = function(query) {
 	this.setLanguage("en");
 	this.setLimit(20);
-	if (String(query) === query) {
+	if ("" + query == query) {
 		this.setRequest(query);
 	} else if (Number.isInteger(query)) {
 		this.setAuthor(query);

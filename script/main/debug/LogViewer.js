@@ -9,9 +9,9 @@ LogViewer.span = function(text, color) {
 LogViewer.append = function(text, scroll, horizontal, prefix, message, color) {
 	text.post(function() {
 		if (color !== undefined && color != 0) {
-			text.append(LogViewer.span("\n" + (prefix != "undefined" ? prefix + "/" + message : "" + message), color));
+			text.append(LogViewer.span("\n" + (prefix != "undefined" ? prefix + "/" + message : message), color));
 		} else {
-			text.append("\n" + (prefix != "undefined" ? prefix + "/" + message : "" + message));
+			text.append("\n" + (prefix != "undefined" ? prefix + "/" + message : message));
 		}
 		scroll.scrollTo(horizontal.getScrollX(), text.getMeasuredHeight());
 	});

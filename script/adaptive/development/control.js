@@ -1,6 +1,6 @@
 let tool = new ControlTool({
 	controlDescriptor: {
-		logotype: "world"
+		logotype: "inspector"
 	},
 	menuDescriptor: {
 		elements: function() {
@@ -50,15 +50,16 @@ let tool = new ControlTool({
 			return array;
 		}
 	},
-	onControlClick: function(control) {
-		showHint(translate("Not developed yet"));
-	}
+	// onControlClick: function(control) {
+		// showHint(translate("Not developed yet"));
+	// }
 });
 
 return function() {
 	tool.attach();
 	handle(function() {
+		tool.describe();
 		tool.control();
-	}, 3000);
+	}, 1000);
 	tool.queue();
 };
