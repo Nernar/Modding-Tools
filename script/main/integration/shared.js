@@ -188,7 +188,8 @@ const API = {
 	AsyncSnackSequence: AsyncSnackSequence,
 	
 	Tool: Tool,
-	ControlTool: ControlTool,
+	InteractionTool: InteractionTool,
+	MenuTool: MenuTool,
 	SidebarTool: SidebarTool,
 	ProjectTool: ProjectTool,
 	EditorTool: EditorTool,

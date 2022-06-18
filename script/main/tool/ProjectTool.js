@@ -1,11 +1,11 @@
 const ProjectTool = function(object) {
-	ControlTool.apply(this, arguments);
+	MenuTool.apply(this, arguments);
 };
 
-ProjectTool.prototype = new ControlTool;
+ProjectTool.prototype = new MenuTool;
 
 ProjectTool.prototype.reset = function() {
-	ControlTool.prototype.reset.apply(this, arguments);
+	MenuTool.prototype.reset.apply(this, arguments);
 	this.controlDescriptor.logotype = "menu";
 	this.contentProjectDescriptor = [];
 	this.contentEntryDescriptor = [];

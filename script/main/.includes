@@ -22,6 +22,7 @@ content/fragment/ScrollFragment.js
 content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
 
+content/WindowProxy.js
 content/Frame.js
 content/FocusableWindow.js
 content/TransitionWindow.js
@@ -61,7 +62,8 @@ layout/popup/ListingPopup.js
 layout/popup/CoordsPopup.js
 
 tool/Tool.js
-tool/ControlTool.js
+tool/InteractionTool.js
+tool/MenuTool.js
 tool/SidebarTool.js
 tool/ProjectTool.js
 tool/EditorTool.js

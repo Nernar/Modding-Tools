@@ -151,3 +151,5 @@ ExpandablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
 	}
 	return instanceOrJson;
 };
+
+registerWindowJson("expandable", ExpandablePopup);

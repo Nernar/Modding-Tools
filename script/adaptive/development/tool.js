@@ -1,4 +1,4 @@
-let tool = new ControlTool({
+let tool = new MenuTool({
 	controlDescriptor: {
 		logotype: "inspector"
 	},

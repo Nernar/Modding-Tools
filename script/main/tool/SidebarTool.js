@@ -1,11 +1,11 @@
 const SidebarTool = function(object) {
-	ControlTool.apply(this, arguments);
+	MenuTool.apply(this, arguments);
 };
 
-SidebarTool.prototype = new ControlTool;
+SidebarTool.prototype = new MenuTool;
 
 SidebarTool.prototype.reset = function() {
-	ControlTool.prototype.reset.apply(this, arguments);
+	MenuTool.prototype.reset.apply(this, arguments);
 	let descriptor = {};
 	descriptor.background = "popup";
 	if (!menuDividers) descriptor.tabBackground = "popup";
@@ -61,7 +61,7 @@ SidebarTool.prototype.describeSidebar = function() {
 };
 
 SidebarTool.prototype.describe = function() {
-	ControlTool.prototype.describe.apply(this, arguments);
+	MenuTool.prototype.describe.apply(this, arguments);
 	this.describeSidebar();
 };
 
@@ -73,16 +73,16 @@ SidebarTool.prototype.getSelectedGroup = function() {
 
 SidebarTool.prototype.attach = function() {
 	if (this.isAttached()) {
-		ControlTool.prototype.attach.apply(this, arguments);
+		MenuTool.prototype.attach.apply(this, arguments);
 	}
 	this.sidebarWindow = new SidebarWindow();
-	ControlTool.prototype.attach.apply(this, arguments);
+	MenuTool.prototype.attach.apply(this, arguments);
 };
 
 SidebarTool.prototype.deattach = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) MCSystem.throwException(null);
-	ControlTool.prototype.deattach.apply(this, arguments);
+	MenuTool.prototype.deattach.apply(this, arguments);
 	sidebar.dismiss();
 	delete this.sidebarWindow;
 };
@@ -90,7 +90,7 @@ SidebarTool.prototype.deattach = function() {
 SidebarTool.prototype.hide = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
-	ControlTool.prototype.hide.apply(this, arguments);
+	MenuTool.prototype.hide.apply(this, arguments);
 	sidebar.hide();
 };
 
@@ -98,14 +98,14 @@ SidebarTool.prototype.menu = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	sidebar.hide();
-	ControlTool.prototype.menu.apply(this, arguments);
+	MenuTool.prototype.menu.apply(this, arguments);
 };
 
 SidebarTool.prototype.control = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	sidebar.show();
-	ControlTool.prototype.control.apply(this, arguments);
+	MenuTool.prototype.control.apply(this, arguments);
 };
 
 SidebarTool.prototype.collapse = function() {
@@ -114,7 +114,7 @@ SidebarTool.prototype.collapse = function() {
 	if (!sidebar.isSelected()) {
 		sidebar.hide();
 	}
-	ControlTool.prototype.collapse.apply(this, arguments);
+	MenuTool.prototype.collapse.apply(this, arguments);
 	if (sidebar.isSelected()) {
 		this.state = SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
 	}
@@ -128,8 +128,8 @@ SidebarTool.prototype.queue = function(sequence) {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	sidebar.hide();
-	ControlTool.prototype.queue.apply(this, arguments);
+	MenuTool.prototype.queue.apply(this, arguments);
 };
 
-SidebarTool.State = clone(ControlTool.State);
+SidebarTool.State = clone(MenuTool.State);
 SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR = 6;

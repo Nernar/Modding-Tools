@@ -279,3 +279,6 @@ FocusableWindow.parseJson = function(instanceOrJson, json) {
 	}
 	return instanceOrJson;
 };
+
+registerWindowJson("window", FocusableWindow);
+registerWindowJson("focusable", FocusableWindow);

@@ -80,7 +80,7 @@ const registerFragmentJson = (function() {
 			log("ModdingTools: fragment json " + id + " is already occupied");
 			return false;
 		}
-		if (typeof fragment != "function" || !fragment.prototype instanceof Fragment) {
+		if (typeof fragment != "function" || !(fragment.prototype instanceof Fragment)) {
 			Logger.Log("ModdingTools: passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
 			return false;
 		}

@@ -72,7 +72,7 @@ FocusablePopup.prototype.dismiss = function() {
 	}
 };
 
-FocusablePopup.parseJson = function(instanceOrJson, json) {
+FocusablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
 	if (!(instanceOrJson instanceof FocusablePopup)) {
 		json = instanceOrJson;
 		instanceOrJson = new FocusablePopup();
@@ -108,3 +108,5 @@ FocusablePopup.parseJson = function(instanceOrJson, json) {
 	}
 	return instanceOrJson;
 };
+
+registerWindowJson("popup", FocusablePopup);

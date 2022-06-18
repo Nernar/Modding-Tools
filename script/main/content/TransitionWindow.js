@@ -232,3 +232,5 @@ TransitionWindow.parseJson = function(instanceOrJson, json) {
 	}
 	return instanceOrJson;
 };
+
+registerWindowJson("transition", TransitionWindow);

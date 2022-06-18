@@ -21,6 +21,29 @@ SHARE("attachEvalButton", attachEvalButton);
 		}
 	};
 	
+	const toStringSafety = function(who, type) {
+		try {
+			if (who == null) {
+				return "null";
+			}
+			switch (type) {
+				case "number":
+				case "boolean":
+				case "class":
+				case "undefined":
+					return "" + who;
+				case "string":
+					return "\"" + tryout(function() {
+						return org.mozilla.javascript.ScriptRuntime.escapeString(who);
+					}, function(e) {
+						return who;
+					}) + "\"";
+			}
+		} catch (e) {
+		    log("ModdingTools: toStringSafety: " + e);
+		}
+	};
+	
 	const evaluateScope = function(where, serialized) {
 		let noActualTitle = false;
 		if (serialized === undefined || serialized === null) {
@@ -33,13 +56,12 @@ SHARE("attachEvalButton", attachEvalButton);
 		if (where === null) {
 			confirm(serialized, "" + where);
 		}
-		switch (typeofSafety(where)) {
-			case "object":
-				break;
+		let type = typeofSafety(where);
+		switch (type) {
 			case "function":
 				try {
-					confirm(serialized, "" + where.toSource(), function() {
-						if (where.prototype) {
+					confirm(serialized, where != null ? ("" + where).trim() : "function<no source>", function() {
+						if (!isEmpty(where.prototype)) {
 							evaluateScope(where.prototype, noActualTitle ?
 								"prototype" : serialized + ".prototype");
 						}
@@ -51,36 +73,44 @@ SHARE("attachEvalButton", attachEvalButton);
 			case "number":
 			case "boolean":
 			case "undefined":
-				confirm(serialized, "" + where);
-				return;
 			case "string":
-				confirm(serialized, "\"" + where + "\"");
-				return;
-			default:
-				try {
-					createDump(getClass(where).__javaObject__);
-				} catch (e) {
-					try {
-						confirm(serialized, where + "\n" + getClass(where));
-					} catch (e) {
-						confirm(serialized, "" + e);
-					}
-				}
+				confirm(serialized, "" + toStringSafety(where, type));
 				return;
 		}
-		let who = [];
-		let self = [];
-		for (let element in where) {
-			who.push(element + ": " + typeofSafety(where[element]));
-			self.push(element);
+		try {
+			let who = [];
+			let self = [];
+			if (where instanceof java.util.List) {
+			    for (let i = 0; i < where.size(); i++) {
+				    let type = typeofSafety(where.get(i));
+			    	if (type == "undefined") continue;
+				    let stroke = toStringSafety(where.get(i), type);
+				    who.push(i + ": " + (stroke !== undefined ? stroke : type));
+				    self.push(i);
+			    }
+			} else {
+			    for (let element in where) {
+				    let type = typeofSafety(where[element]);
+			    	if (type == "undefined") continue;
+				    let stroke = toStringSafety(where[element], type);
+				    who.push(element + ": " + (stroke !== undefined ? stroke : type));
+				    self.push(element);
+			    }
+			}
+			if (who.length == 0) {
+				MCSystem.throwException("ModdingTools: target object is empty");
+			}
+			select(type == "class" ? toStringSafety(where, type) : serialized, who, function(index, name) {
+				evaluateScope(where instanceof java.util.List ? where.get(self[index]) : where[self[index]],
+				    noActualTitle ? "" + self[index] : serialized + "." + self[index]);
+			});
+		} catch (e) {
+			try {
+				confirm(serialized, "" + where);
+			} catch (e) {
+				confirm(serialized, "" + e);
+			}
 		}
-		if (who.length == 0) {
-			return;
-		}
-		select(serialized, who, function(index, name) {
-			evaluateScope(where[self[index]], noActualTitle ?
-				"" + self[index] : serialized + "." + self[index]);
-		});
 	};
 	
 	SHARE("evaluateScope", evaluateScope);

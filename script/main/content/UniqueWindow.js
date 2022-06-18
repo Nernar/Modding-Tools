@@ -76,8 +76,13 @@ UniqueWindow.parseJson = function(instanceOrJson, json) {
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
 	}
+	if (json.hasOwnProperty("id")) {
+		instanceOrJson.TYPE = calloutOrParse(json, json.id, [this, instanceOrJson]);
+	}
 	if (json.hasOwnProperty("updatable")) {
 		instanceOrJson.setIsUpdatable(calloutOrParse(json, json.updatable, [this, instanceOrJson]));
 	}
 	return instanceOrJson;
 };
+
+registerWindowJson("unique", UniqueWindow);

@@ -1,5 +1,5 @@
 const DEBUG_TEST_TOOL = (function() {
-	return new ControlTool({
+	return new MenuTool({
 		tests: {},
 		controlDescriptor: {
 			logotype: function(tool, control) {
