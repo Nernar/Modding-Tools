@@ -167,9 +167,9 @@ const compileScript = function(text) {
 		loadSetting("user_login.imported_script", "boolean", true);
 		__config__.save();
 	}
-	if (scope.error) retraceOrReport(scope.error);
+	if (scope.error) reportError(scope.error);
 	else if (scope.result && scope.result.error) {
-		retraceOrReport(scope.result.error);
+		reportError(scope.result.error);
 	}
 	return scope.result || null;
 };

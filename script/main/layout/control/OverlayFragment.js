@@ -10,12 +10,12 @@ OverlayFragment.prototype.resetContainer = function() {
 	this.setContainerView(container);
 	
 	let text = new android.widget.TextView(getContext());
-	text.setTextSize(Interface.getFontSize(22));
-	text.setGravity(Interface.Gravity.CENTER);
-	text.setTextColor(Interface.Color.WHITE);
+	text.setTextSize(getRelativeDisplayPercentWidth(22));
+	text.setGravity($.Gravity.CENTER);
+	text.setTextColor($.Color.WHITE);
 	typeface && text.setTypeface(typeface);
-	text.setPadding(Interface.getY(32), Interface.getY(16),
-		Interface.getY(32), Interface.getY(16));
+	text.setPadding(getDisplayPercentHeight(32), getDisplayPercentHeight(16),
+		getDisplayPercentHeight(32), getDisplayPercentHeight(16));
 	text.setTag("overlayInformation");
 	container.addView(text);
 };

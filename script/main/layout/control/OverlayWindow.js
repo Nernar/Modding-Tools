@@ -1,15 +1,15 @@
 const OverlayWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setTouchable(false);
-	window.setX(Interface.getY(140));
+	window.setX(getDisplayPercentHeight(140));
 	window.setFragment(new OverlayFragment());
 	
-	let slide = new android.transition.Slide(Interface.Gravity.TOP);
+	let slide = new android.transition.Slide($.Gravity.TOP);
 	slide.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	slide.setDuration(400);
 	window.setEnterTransition(slide);
 	
-	slide = new android.transition.Slide(Interface.Gravity.TOP);
+	slide = new android.transition.Slide($.Gravity.TOP);
 	slide.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	slide.setDuration(400);
 	window.setExitTransition(slide);

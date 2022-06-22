@@ -1,18 +1,18 @@
 const SidebarWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity(Interface.Gravity.RIGHT);
-	window.setHeight(Interface.Display.MATCH);
+	window.setGravity($.Gravity.RIGHT);
+	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.setFragment(new SidebarFragment());
 	window.groups = [];
 	window.setBackground("popup");
 	if (!menuDividers) window.setTabBackground("popup");
 
-	let enter = new android.transition.Slide(Interface.Gravity.RIGHT);
+	let enter = new android.transition.Slide($.Gravity.RIGHT);
 	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
 	enter.setDuration(400);
 	window.setEnterTransition(enter);
 	
-	let exit = new android.transition.Slide(Interface.Gravity.RIGHT);
+	let exit = new android.transition.Slide($.Gravity.RIGHT);
 	exit.setInterpolator(new android.view.animation.BounceInterpolator());
 	exit.setDuration(1000);
 	window.setExitTransition(exit);
@@ -150,7 +150,7 @@ SidebarWindow.prototype.reinflateLayout = function() {
 	if (fragment !== null) {
 		if (this.isSelected()) {
 			let set = new android.transition.TransitionSet(),
-				slide = new android.transition.Slide(Interface.Gravity.RIGHT),
+				slide = new android.transition.Slide($.Gravity.RIGHT),
 				bounds = new android.transition.ChangeBounds();
 			if (this.isTouchable()) {
 				set.addListener({

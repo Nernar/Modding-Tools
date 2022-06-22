@@ -44,7 +44,7 @@ LogotypeSequence.prototype.setProgress = function(progress) {
 
 LogotypeSequence.prototype.process = function(index) {
 	if (index == 1) {
-		Interface.sleepMilliseconds(this.getExpirationTime());
+		java.lang.Thread.sleep(this.getExpirationTime());
 		this.updated = true;
 	}
 	return index;

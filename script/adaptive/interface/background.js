@@ -2,11 +2,11 @@ const attachBackground = function(drawableOrColor) {
 	handle(function() {
 		let unique = new UniqueWindow();
 		unique.TYPE = "BackgroundWindow";
-		unique.setWidth(Interface.Display.MATCH);
-		unique.setHeight(Interface.Display.MATCH);
+		unique.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+		unique.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 		let frame = new android.widget.FrameLayout(getContext());
 		if (drawableOrColor === undefined) {
-			drawableOrColor = Interface.Color.BLACK;
+			drawableOrColor = $.Color.BLACK;
 		}
 		if (!(drawableOrColor instanceof android.graphics.drawable.Drawable)) {
 			drawableOrColor = new android.graphics.drawable.ColorDrawable(drawableOrColor);

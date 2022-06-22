@@ -12,7 +12,7 @@ const FocusablePopup = function() {
 	let place = Popups.getAvailablePlace();
 	this.setX(place.x);
 	this.setY(place.y);
-	this.setGravity(Interface.Gravity.LEFT | Interface.Gravity.TOP);
+	this.setGravity($.Gravity.LEFT | $.Gravity.TOP);
 	this.setFragment(new FocusableFragment());
 	this.fragments = [];
 };

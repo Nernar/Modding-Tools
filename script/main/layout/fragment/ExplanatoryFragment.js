@@ -8,13 +8,13 @@ ExplanatoryFragment.prototype.TYPE = "ExplanatoryFragment";
 
 ExplanatoryFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(Interface.getY(20), Interface.getY(16), Interface.getY(20), Interface.getY(16));
-	view.setTextSize(Interface.getFontSize(15));
-	view.setTextColor(Interface.Color.LTGRAY);
-	view.setGravity(Interface.Gravity.CENTER);
+	view.setPadding(getDisplayPercentHeight(20), getDisplayPercentHeight(16), getDisplayPercentHeight(20), getDisplayPercentHeight(16));
+	view.setTextSize(getRelativeDisplayPercentWidth(15));
+	view.setTextColor($.Color.LTGRAY);
+	view.setGravity($.Gravity.CENTER);
 	view.setTypeface(typeface);
 	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP));
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 	this.setContainerView(view);
 };
 

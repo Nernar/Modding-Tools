@@ -78,7 +78,7 @@ const DEBUG_TEST_TOOL = (function() {
 				}
 			}, function(e) {
 				this.control();
-				retraceOrReport(e);
+				reportError(e);
 			});
 		}
 	});

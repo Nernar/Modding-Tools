@@ -10,14 +10,14 @@ ExpandableFragment.prototype.resetContainer = function() {
 	let layout = this.getContainerRoot();
 	
 	let title = new android.widget.TextView(getContext());
-	title.setPadding(Interface.getY(30), Interface.getY(18), Interface.getY(30), Interface.getY(18));
+	title.setPadding(getDisplayPercentHeight(30), getDisplayPercentHeight(18), getDisplayPercentHeight(30), getDisplayPercentHeight(18));
 	new BitmapDrawable("popup").attachAsBackground(title);
-	title.setTextSize(Interface.getFontSize(24));
-	title.setGravity(Interface.Gravity.CENTER);
-	title.setTextColor(Interface.Color.WHITE);
+	title.setTextSize(getRelativeDisplayPercentWidth(24));
+	title.setGravity($.Gravity.CENTER);
+	title.setTextColor($.Color.WHITE);
 	title.setTypeface(typeface);
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	params.weight = .1;
 	title.setTag("popupTitle");
 	layout.addView(title, params);
@@ -25,13 +25,13 @@ ExpandableFragment.prototype.resetContainer = function() {
 	let scroll = new android.widget.ScrollView(getContext());
 	scroll.setTag("containerExpandableScroll");
 	params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	params.weight = 16.;
 	layout.addView(scroll, params);
 	
 	let content = new android.widget.LinearLayout(getContext());
-	content.setOrientation(Interface.Orientate.VERTICAL);
-	content.setGravity(Interface.Gravity.CENTER);
+	content.setOrientation($.LinearLayout.VERTICAL);
+	content.setGravity($.Gravity.CENTER);
 	content.setTag("containerExpandable");
 	scroll.addView(content);
 };

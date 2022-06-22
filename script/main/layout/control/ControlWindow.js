@@ -42,6 +42,7 @@ ControlWindow.prototype.resetContent = function() {
 	let transform = this.getTransformTransition();
 	this.setTransition(behold, queue, transform);
 	this.setTransition(behold, collapse, transform);
+	// This is not an error, a new transition is being created
 	let actor = this.getTransformTransition();
 	actor.addListener({
 		onTransitionEnd: function() {
@@ -49,8 +50,8 @@ ControlWindow.prototype.resetContent = function() {
 				if (instance.isMayTouched()) {
 					UniqueWindow.prototype.setTouchable.call(instance, true);
 				}
-				instance.setWidth(Interface.Display.WRAP);
-				instance.setHeight(Interface.Display.WRAP);
+				instance.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+				instance.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 			});
 		}
 	});
@@ -109,7 +110,7 @@ ControlWindow.prototype.getButtonEnterTransition = function() {
 };
 
 ControlWindow.prototype.getButtonExitTransition = function() {
-	let actor = new android.transition.Slide(Interface.Gravity.LEFT);
+	let actor = new android.transition.Slide($.Gravity.LEFT);
 	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	actor.setDuration(400);
 	return actor;
@@ -333,8 +334,8 @@ ControlWindow.prototype.transformCollapsedButton = function() {
 };
 
 ControlWindow.prototype.transformLogotype = function() {
-	this.setWidth(Interface.Display.WIDTH);
-	this.setHeight(Interface.Display.HEIGHT);
+	this.setWidth(getDisplayWidth());
+	this.setHeight(getDisplayHeight());
 	this.setEnterTransition(this.getLogotypeEnterTransition());
 	this.setExitTransition(this.getLogotypeExitTransition());
 	this.setFragment(this.getLogotypeFragment());

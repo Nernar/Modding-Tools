@@ -11,9 +11,9 @@ const attachTerrainWindow = function() {
 		isDirty = true;
 	});
 	let source = new android.widget.ImageView(getContext());
-	source.setScaleType(Interface.Scale.FIT_CENTER);
-	source.setMinimumHeight(Interface.Display.HEIGHT * 0.625);
-	let params = new android.widget.FrameLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
+	source.setScaleType($.ImageView.ScaleType.FIT_CENTER);
+	source.setMinimumHeight(getDisplayHeight() * 0.625);
+	let params = new android.widget.FrameLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	popup.getFragment().getContainerLayout().addView(source, params);
 	popup.addButtonElement(translate("Save") + " & " + translate("Redraw"), function() {
 		json = edit.getValue();
@@ -38,9 +38,9 @@ const attachTerrainWindow = function() {
 		]
 	}, null, "\t"));
 	let json = edit.getValue();
-	popup.setWidth(Interface.Display.MATCH);
-	popup.setHeight(Interface.Display.MATCH);
-	popup.getFragment().getTitleView().setVisibility(Interface.Visibility.GONE);
+	popup.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	popup.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
+	popup.getFragment().getTitleView().setVisibility($.View.GONE);
 	Popups.open(popup, "terrain");
 	let invalidate = false;
 	handleThread(function() {

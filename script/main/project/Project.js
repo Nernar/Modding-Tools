@@ -67,7 +67,7 @@ Project.prototype.callAutosave = function() {
 				delete scope.isAutosaving;
 			});
 	}, function(e) {
-		retraceOrReport(e);
+		reportError(e);
 		delete this.isAutosaving;
 	});
 };

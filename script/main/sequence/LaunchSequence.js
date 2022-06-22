@@ -2,7 +2,7 @@ const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
 		if (REVISION.startsWith("develop") || isFirstLaunch()) {
-			if (!REVISION.startsWith("develop") && FileTools.exists(Dirs.INTERNAL_UI)) {
+			if (!REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
 			}
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
@@ -16,17 +16,11 @@ const LaunchSequence = new LogotypeSequence({
 		index = LogotypeSequence.prototype.process.apply(this, arguments);
 		if (index == 1) {
 			updateSettings();
-			if (reportError.getDebugValues() === null) {
-				reportError.addDebugValue("isHorizon", isHorizon);
-				reportError.addDebugValue("interfaceScale", uiScaler);
-				reportError.addDebugValue("fontSizeScale", fontScale);
-				reportError.addDebugValue("autosaveEnabled", autosave);
-			}
-			if (!REVISION.startsWith("develop") && FileTools.exists(Dirs.INTERNAL_UI)) {
+			if (!REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
 			}
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
-			FileTools.assureDir(Dirs.PROJECT);
+			$.FileTools.assureDir(Dirs.PROJECT);
 		} else if (index == 2) {
 			AssetFactory.loadAsset("minecraftFont", "font.ttf");
 			typeface = AssetFactory.createFont("minecraft");
@@ -67,7 +61,7 @@ const LaunchSequence = new LogotypeSequence({
 					showHint.unstackLaunch();
 				}
 				LevelProvider.attach();
-				if (LevelInfo.isLoaded()) {
+				if ($.LevelInfo.isLoaded()) {
 					LevelProvider.show();
 				}
 			});

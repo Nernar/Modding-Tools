@@ -4,9 +4,9 @@ FocusableWindow.prototype.TYPE = "FocusableWindow";
 
 FocusableWindow.prototype.touchable = true;
 FocusableWindow.prototype.focusable = false;
-FocusableWindow.prototype.gravity = Interface.Gravity.NONE;
-FocusableWindow.prototype.width = Interface.Display.WRAP;
-FocusableWindow.prototype.height = Interface.Display.WRAP;
+FocusableWindow.prototype.gravity = $.Gravity.NO_GRAVITY;
+FocusableWindow.prototype.width = $.ViewGroup.LayoutParams.WRAP_CONTENT;
+FocusableWindow.prototype.height = $.ViewGroup.LayoutParams.WRAP_CONTENT;
 FocusableWindow.prototype.x = 0;
 FocusableWindow.prototype.y = 0;
 
@@ -79,8 +79,8 @@ FocusableWindow.prototype.setFocusable = function(focusable) {
 };
 
 FocusableWindow.prototype.isFullscreen = function() {
-	return (this.width == Interface.Display.MATCH || this.width == Interface.Display.WIDTH) &&
-		(this.height == Interface.Display.MATCH || this.height == Interface.Display.HEIGHT);
+	return (this.width == $.ViewGroup.LayoutParams.MATCH_PARENT || this.width == getDisplayWidth()) &&
+		(this.height == $.ViewGroup.LayoutParams.MATCH_PARENT || this.height == getDisplayHeight());
 };
 
 FocusableWindow.prototype.getParams = function(flags) {

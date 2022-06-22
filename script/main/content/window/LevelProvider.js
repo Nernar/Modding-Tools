@@ -33,7 +33,7 @@ LevelProvider.update = function() {
 LevelProvider.updateRecursive = function() {
 	let instance = this;
 	handle(function() {
-		if (instance.update() && LevelInfo.isLoaded()) {
+		if (instance.update() && $.LevelInfo.isLoaded()) {
 			instance.updateRecursive();
 		}
 	}, 50);

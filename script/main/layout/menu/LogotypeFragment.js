@@ -10,13 +10,13 @@ LogotypeFragment.prototype.resetContainer = function() {
 	this.setContainerView(container);
 	
 	let layout = new android.widget.LinearLayout(getContext());
-	layout.setGravity(Interface.Gravity.CENTER);
+	layout.setGravity($.Gravity.CENTER);
 	container.addView(layout);
 	
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotype");
 	let params = new android.widget.LinearLayout.LayoutParams
-		(Interface.getY(320), Interface.getY(320));
+		(getDisplayPercentHeight(320), getDisplayPercentHeight(320));
 	layout.addView(logotype, params);
 };
 

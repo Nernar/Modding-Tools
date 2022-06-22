@@ -19,7 +19,7 @@ ImageFragment.prototype.setImage = function(src) {
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}
-	Interface.setTransitionName(image, src);
+	$.ViewCompat.setTransitionName(image, src);
 	src.attachAsImage(image);
 	this.image = src;
 	return this;

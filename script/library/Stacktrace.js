@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2021 Nernar (github.com/nernar)
+   Copyright 2021-2022 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 
 LIBRARY({
 	name: "Stacktrace",
-	version: 2,
-	shared: true,
-	api: "AdaptedScript"
+	version: 1,
+	api: "AdaptedScript",
+	shared: true
 });
 
 let launchTime = Date.now();
@@ -28,18 +28,7 @@ let isHorizon = (function() {
 	let version = MCSystem.getInnerCoreVersion();
 	return parseInt(version.toString()[0]) >= 2;
 })();
-
-Object.defineProperty(this, "display", {
-	get: function() {
-		return UI.getContext().getWindowManager().getDefaultDisplay();
-	},
-	enumerable: true,
-	configurable: false
-});
-
-let findCorePackage = function() {
-	return isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
-};
+let innercorePackage = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
 let addTranslation = function(prefix, who, translation) {
 	if (!addTranslation.messages.hasOwnProperty(who)) {
@@ -47,7 +36,7 @@ let addTranslation = function(prefix, who, translation) {
 			enumerable: true
 		});
 	}
-	findCorePackage().api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
+	innercorePackage.api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
 };
 
 addTranslation.messages = {};
@@ -348,7 +337,7 @@ let getLoadedModList = function() {
 		}
 		return sorted;
 	} catch (e) {
-		return findCorePackage().mod.build.ModLoader.instance.modsList;
+		return innercorePackage.mod.build.ModLoader.instance.modsList;
 	}
 };
 
@@ -389,10 +378,10 @@ let getModName = function(id) {
 	if (setupLoadedSources.sources.hasOwnProperty(id)) {
 		let source = setupLoadedSources.sources[id];
 		if (source) {
-			return String(source.getName());
+			return "" + source.getName();
 		}
 	}
-	return String();
+	return "";
 };
 
 let findAvailabledMods = function(name) {
@@ -442,7 +431,7 @@ let findRelatedSources = function(name, file) {
 };
 
 let reformatSpecial = function(element) {
-	element = String(element);
+	element = "" + element;
 	element = element.replace(/\+/g, "\\+");
 	element = element.replace(/\(/g, "\\(");
 	element = element.replace(/\)/g, "\\)");
@@ -461,7 +450,7 @@ let requireFormat = function(message) {
 			let regexp = new RegExp(exp, "m");
 			if (regexp.test(message)) {
 				return {
-					message: String(element),
+					message: "" + element,
 					exec: regexp.exec(message)
 				};
 			}
@@ -476,7 +465,7 @@ let requireFormat = function(message) {
 
 let translateMessage = function(message) {
 	if (typeof message != "string") {
-		message = String(message);
+		message = "" + message;
 	}
 	let format = requireFormat(message);
 	if (addTranslation.messages.hasOwnProperty(format.message)) {
@@ -497,7 +486,7 @@ let translateMessage = function(message) {
 
 let resolveTraceSource = function(line) {
 	if (typeof line != "string") {
-		line = String(line);
+		line = "" + line;
 	}
 	let at = line.indexOf("at ");
 	if (at == -1) {
@@ -527,7 +516,7 @@ let resolveTraceSource = function(line) {
 
 let sliceMessageWithoutTrace = function(message, line) {
 	if (typeof message != "string") {
-		message = String(message);
+		message = "" + message;
 	}
 	let trace = resolveTraceSource(line);
 	if (trace === null) {
@@ -546,22 +535,22 @@ let retraceToArray = function(trace) {
 		return [];
 	}
 	if (typeof trace != "string") {
-		trace = String(trace);
+		trace = "" + trace;
 	}
 	return trace.split("\n");
 };
 
 let fetchErrorMessage = function(error) {
 	if (error === null) {
-		return String(error);
+		return "" + error;
 	}
 	if (typeof error == "object") {
 		if (error.hasOwnProperty("message")) {
-			return String(error.message);
+			return "" + error.message;
 		}
 		return null;
 	}
-	return String(error);
+	return "" + error;
 };
 
 /**
@@ -586,7 +575,7 @@ EXPORT("localizeError", localizeError);
 let fetchErrorName = function(error) {
 	if (error && typeof error == "object") {
 		if (error.name !== undefined) {
-			return String(error.name);
+			return "" + error.name;
 		}
 	}
 	return Translation.translate("Oh nose everything broke");
@@ -661,7 +650,8 @@ let reportTrace = function(error) {
 			!posted.export && posted.cancel();
 		});
 		let popup = dialog.getWindow();
-		popup.setLayout(display.getWidth() / 1.35, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+		popup.setLayout(UI.getContext().getWindowManager().getDefaultDisplay().getWidth() / 1.35,
+			android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		popup.clearFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 		let posted = reportTrace.postUpdate(dialog, error, date);
 		dialog.show();
@@ -707,7 +697,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 					continue;
 				}
 				if (additional.length < 2) {
-					additional.push(String());
+					additional.push("");
 				}
 				additional.push(retraced[i]);
 			}
@@ -715,7 +705,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 			if (additional.length > 0) {
 				attached.push(additional.join("<br/>"));
 			}
-			let marked = String();
+			let marked = "";
 			marked += new Date(launchTime).toString();
 			if (date > 0) {
 				marked += "<br/>" + new Date(launchTime + date).toString();
@@ -740,7 +730,7 @@ reportTrace.postUpdate = function(dialog, error, date) {
 			return !completed;
 		},
 		toResult: function() {
-			return formatted !== undefined ? formatted.toString() : String();
+			return formatted !== undefined ? formatted.toString() : "";
 		},
 		cancel: function() {
 			if (update !== undefined) {
@@ -778,7 +768,7 @@ reportTrace.processFile = function(file, where) {
 	while (count < where + 3 && (line = reader.readLine())) {
 		count++;
 		encounted++;
-		line = String(line);
+		line = "" + line;
 		if (line.startsWith("// file: ")) {
 			included = line.substring(9);
 			encounted = -1;
@@ -843,9 +833,9 @@ reportTrace.processSources = function(related, resolved, where) {
 
 reportTrace.processStack = function(resolved) {
 	let strokes = [],
-		where = Number(resolved.line) + 1;
-	strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : String()) + resolved.file +
-		(resolved.where ? " (" + resolved.where + ")" : String()) + " " + Translation.translate("at line") + " " + where);
+		where = parseInt(resolved.line) + 1;
+	strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : "") + resolved.file +
+		(resolved.where ? " (" + resolved.where + ")" : "") + " " + Translation.translate("at line") + " " + where);
 	let sources = findRelatedSources(resolved.source, resolved.file),
 		processed = reportTrace.processSources(sources, resolved, where);
 	if (processed != null && processed.length > 0) {
@@ -896,7 +886,7 @@ reportTrace.fetchTime = function() {
 };
 
 reportTrace.toCode = function(error) {
-	let message = String(error);
+	let message = "" + error;
 	if (error && typeof error == "object") {
 		let fetched = fetchErrorMessage(error.message);
 		fetched !== null && (message = fetched);
@@ -912,20 +902,12 @@ reportTrace.setupPrint = function(action) {
 	if (typeof action != "function") {
 		return delete print;
 	}
-	return Boolean(print = action);
+	return !!(print = action);
 };
 
 reportTrace.reloadModifications = function() {
 	setupLoadedSources(getLoadedModList());
 };
-
-Callback.addCallback("ModsLoaded", function() {
-	reportTrace.reloadModifications();
-});
-
-if (this.isInstant !== undefined) {
-	reportTrace.reloadModifications();
-}
 
 EXPORT("reportTrace", reportTrace);
 
@@ -965,3 +947,13 @@ Translation.addTranslation("Wouldn't fetch modification sources", {
 Translation.addTranslation("Couldn't save trace", {
 	ru: "Не удается сохранить сводку"
 });
+
+Callback.addCallback("PreBlocksDefined", function() {
+	reportTrace.reloadModifications();
+});
+Callback.addCallback("CorePreconfigured", function() {
+	reportTrace.reloadModifications();
+});
+if (this.isInstant !== undefined) {
+	reportTrace.reloadModifications();
+}

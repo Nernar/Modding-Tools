@@ -9,13 +9,13 @@ ThinButtonFragment.prototype.TYPE = "ThinButtonFragment";
 
 ThinButtonFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(Interface.getY(24), Interface.getY(8), Interface.getY(24), Interface.getY(8));
-	view.setTextSize(Interface.getFontSize(21));
-	view.setGravity(Interface.Gravity.CENTER);
-	view.setTextColor(Interface.Color.WHITE);
+	view.setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(8), getDisplayPercentHeight(24), getDisplayPercentHeight(8));
+	view.setTextSize(getRelativeDisplayPercentWidth(21));
+	view.setGravity($.Gravity.CENTER);
+	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP));
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 	this.setContainerView(view);
 };
 

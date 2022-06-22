@@ -1,4 +1,4 @@
-IMPORT("Music:1");
+IMPORT("Music");
 
 Translation.addTranslation("Load any world firstly", {
 	ru: "Для начала загрузите любой мир"

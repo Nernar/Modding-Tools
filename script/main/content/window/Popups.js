@@ -32,10 +32,10 @@ Popups.open = function(widget, id) {
 };
 
 Popups.getAvailablePlace = function(root) {
-	// return showHint("No place for open popup", Interface.Color.YELLOW);
+	// return showHint("No place for open popup", $.Color.YELLOW);
 	return {
-		x: Interface.getY(100) + Interface.getX(Math.random() * 800),
-		y: Interface.getX(100) + Interface.getY(Math.random() * 200)
+		x: getDisplayPercentHeight(100) + getDisplayPercentWidth(Math.random() * 800),
+		y: getDisplayPercentWidth(100) + getDisplayPercentHeight(Math.random() * 200)
 	};
 };
 

@@ -3,7 +3,7 @@ const AsyncSnackSequence = function(who) {
 };
 
 AsyncSnackSequence.prototype = new Sequence;
-AsyncSnackSequence.prototype.color = Interface.Color.WHITE;
+AsyncSnackSequence.prototype.color = $.Color.WHITE;
 AsyncSnackSequence.prototype.background = "popup";
 AsyncSnackSequence.prototype.foreground = "popupSelectionSelected";
 AsyncSnackSequence.prototype.queueBackground = "popupSelectionQueued";
@@ -149,7 +149,7 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 		INSTANCE: AsyncSnackSequence,
 		SELF: sequence,
 		sleep: function(ms) {
-			Interface.sleepMilliseconds(ms);
+			java.lang.Thread.sleep(ms);
 		},
 		setStartupMessage: function(message) {
 			sequence.startupMessage = message;
@@ -227,9 +227,9 @@ const AsyncStackedSnackSequence = function(obj) {
 
 AsyncStackedSnackSequence.prototype = new AsyncSnackSequence;
 AsyncStackedSnackSequence.prototype.maximumStacked = 7;
-AsyncStackedSnackSequence.prototype.interruptColor = Interface.Color.RED;
-AsyncStackedSnackSequence.prototype.creationColor = Interface.Color.WHITE;
-AsyncStackedSnackSequence.prototype.completionColor = Interface.Color.WHITE;
+AsyncStackedSnackSequence.prototype.interruptColor = $.Color.RED;
+AsyncStackedSnackSequence.prototype.creationColor = $.Color.WHITE;
+AsyncStackedSnackSequence.prototype.completionColor = $.Color.WHITE;
 
 AsyncStackedSnackSequence.prototype.getProgressionBackground = function(progress, index) {
 	if (progress >= 100) {
@@ -389,7 +389,7 @@ AsyncStackedSnackSequence.initScriptable = function(sequence, who) {
 		INSTANCE: AsyncStackedSnackSequence,
 		SELF: sequence,
 		sleep: function(ms) {
-			Interface.sleepMilliseconds(ms);
+			java.lang.Thread.sleep(ms);
 		},
 		setStartupMessage: function(message) {
 			sequence.startupMessage = message;

@@ -9,20 +9,20 @@ AxisGroupFragment.prototype.TYPE = "AxisGroupFragment";
 
 AxisGroupFragment.prototype.resetContainer = function() {
 	let content = new android.widget.LinearLayout(getContext());
-	content.setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
+	content.setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
 	this.setContainerView(content);
 	
 	let axis = new android.widget.TextView(getContext());
-	axis.setPadding(Interface.getY(16), Interface.getY(10), Interface.getY(16), Interface.getY(10));
-	axis.setTextSize(Interface.getFontSize(32));
-	axis.setTextColor(Interface.Color.WHITE);
+	axis.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(10), getDisplayPercentHeight(16), getDisplayPercentHeight(10));
+	axis.setTextSize(getRelativeDisplayPercentWidth(32));
+	axis.setTextColor($.Color.WHITE);
 	axis.setTypeface(typeface);
 	axis.setMaxLines(1);
 	axis.setTag("groupAxis");
 	content.addView(axis);
 	
 	let container = new android.widget.LinearLayout(getContext());
-	container.setOrientation(Interface.Orientate.VERTICAL);
+	container.setOrientation($.LinearLayout.VERTICAL);
 	container.setTag("containerGroup");
 	content.addView(container);
 };

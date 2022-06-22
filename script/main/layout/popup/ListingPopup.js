@@ -14,8 +14,8 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 		elements = this,
 		index = views.buttons.length;
 	views.buttons[index] = new android.widget.TextView(getContext());
-	views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(Interface.getY(300), Interface.getY(84)));
-	views.buttons[index].setPadding(Interface.getY(30), 0, Interface.getY(30), 0);
+	views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(getDisplayPercentHeight(300), getDisplayPercentHeight(84)));
+	views.buttons[index].setPadding(getDisplayPercentHeight(30), 0, getDisplayPercentHeight(30), 0);
 	views.buttons[index].setOnClickListener(function(view) {
 		tryout(function() {
 			click && click();
@@ -23,9 +23,9 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 			elements.__mode && elements.selectButton(index);
 		});
 	});
-	views.buttons[index].setTextSize(Interface.getFontSize(21));
-	views.buttons[index].setGravity(Interface.Gravity.CENTER);
-	views.buttons[index].setTextColor(Interface.Color.WHITE);
+	views.buttons[index].setTextSize(getRelativeDisplayPercentWidth(21));
+	views.buttons[index].setGravity($.Gravity.CENTER);
+	views.buttons[index].setTextColor($.Color.WHITE);
 	if (name) views.buttons[index].setText(name);
 	views.buttons[index].setTypeface(typeface);
 	this.getFragment().getContainerLayout().addView(views.buttons[index]);
@@ -42,10 +42,10 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.edits[index].setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-	views.edits[index].setPadding(Interface.getY(18), Interface.getY(18), Interface.getY(18), Interface.getY(18));
-	views.edits[index].setHintTextColor(Interface.Color.LTGRAY);
-	views.edits[index].setTextSize(Interface.getFontSize(19));
-	views.edits[index].setTextColor(Interface.Color.WHITE);
+	views.edits[index].setPadding(getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18));
+	views.edits[index].setHintTextColor($.Color.LTGRAY);
+	views.edits[index].setTextSize(getRelativeDisplayPercentWidth(19));
+	views.edits[index].setTextColor($.Color.WHITE);
 	if (value) views.edits[index].setText(String(value));
 	if (hint) views.edits[index].setHint(String(hint));
 	views.edits[index].setSingleLine(false);
@@ -82,8 +82,8 @@ ListingPopup.prototype.getButton = function(index) {
 			return this.background || null;
 		},
 		switchVisibility: function() {
-			if (visible) this.view.setVisibility(Interface.Visibility.GONE);
-			else this.view.setVisibility(Interface.Visibility.VISIBLE);
+			if (visible) this.view.setVisibility($.View.GONE);
+			else this.view.setVisibility($.View.VISIBLE);
 			visible = !visible;
 			return this;
 		}
@@ -117,8 +117,8 @@ ListingPopup.prototype.getEdit = function(index) {
 			return this.background || null;
 		},
 		switchVisibility: function() {
-			if (visible) edit.setVisibility(Interface.Visibility.GONE);
-			else edit.setVisibility(Interface.Visibility.VISIBLE);
+			if (visible) edit.setVisibility($.View.GONE);
+			else edit.setVisibility($.View.VISIBLE);
 			visible = !visible;
 			return this;
 		}

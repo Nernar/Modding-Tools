@@ -47,11 +47,11 @@ ModificationSource.attachSource = function(control, mod) {
 		key = BitmapDrawableFactory.generateKeyFor("support/" + mod.getName(), false),
 		icon = (BitmapDrawableFactory.isMapped(key) ? key : null);
 	if (icon == null) {
-		if (FileTools.exists(mod.dir + "mod_icon_dark.png")) {
+		if ($.FileTools.exists(mod.dir + "mod_icon_dark.png")) {
 			icon = mod.dir + "mod_icon_dark.png";
-		} else if (FileTools.exists(mod.dir + "mod_icon.png")) {
+		} else if ($.FileTools.exists(mod.dir + "mod_icon.png")) {
 			icon = mod.dir + "mod_icon.png";
-		} else if (FileTools.exists(mod.dir + "icon.png")) {
+		} else if ($.FileTools.exists(mod.dir + "icon.png")) {
 			icon = mod.dir + "icon.png";
 		} else {
 			icon = "support";
@@ -82,7 +82,7 @@ ModificationSource.rebuild = function(mod, type) {
 				handle(function() {
 					if (result.reported && result.reported.length > 0) {
 						result.reported.forEach(function(element) {
-							element && retraceOrReport(element);
+							element && reportError(element);
 						});
 					}
 					if (!result.wasFailed) ModificationSource.confirmSwitchBuild(mod);

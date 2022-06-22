@@ -74,7 +74,7 @@ const playTuneDirectly = function() {
 		},
 		sleepDuration: function(duration, offset) {
 			if (duration != null && offset < duration) {
-				Interface.sleepMilliseconds(duration - offset);
+				java.lang.Thread.sleep(duration - offset);
 			}
 		},
 		writeDirectly: function(duration, min, max, static) {

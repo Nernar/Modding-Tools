@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2021 Nernar (github.com/nernar)
+   Copyright 2021-2022 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@
 LIBRARY({
 	name: "Sequence",
 	version: 1,
-	shared: true,
 	api: "AdaptedScript",
-	dependencies: ["Retention:5"]
+	dependencies: ["Retention"],
+	shared: true
 });
 
-IMPORT("Retention:5");
+IMPORT("Retention");
 
 /**
  * @constructor
@@ -34,15 +34,17 @@ IMPORT("Retention:5");
  * by [[next()]] besides [[execute()]] passed value.
  * @param {object} [obj] merges with prototype
  */
-let Sequence = function(obj) {
-	if (obj !== undefined) {
-		for (let element in obj) {
-			this[element] = obj[element];
+let Sequence = (function() {
+	let identifier = 0;
+	return function(obj) {
+		if (obj !== undefined) {
+			for (let element in obj) {
+				this[element] = obj[element];
+			}
 		}
-	}
-	let count = Sequence.instances++;
-	this.id = "sequence" + count;
-};
+		this.id = "sequence" + (identifier++);
+	};
+})();
 
 Sequence.prototype.getThread = function() {
 	return this.thread !== undefined ? this.thread : null;
@@ -129,7 +131,7 @@ Sequence.prototype.execute = function(value) {
 					sequence.require();
 				}
 				while ((next = sequence.next.call(sequence, value, sequence.index)) !== undefined) {
-					if (sequence.isInterrupted()) Interface.sleepMilliseconds(1);
+					if (sequence.isInterrupted()) java.lang.Thread.sleep(1);
 					sequence.index = sequence.process.call(sequence, next, value, sequence.index);
 					sequence.require();
 				}
@@ -238,7 +240,5 @@ Sequence.prototype.assureYield = function(thread) {
 	}
 	return true;
 };
-
-Sequence.instances = 0;
 
 EXPORT("Sequence", Sequence);

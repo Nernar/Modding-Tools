@@ -13,8 +13,8 @@ SidebarFragment.prototype.resetContainer = function() {
 	container.addView(scrollItems);
 
 	let items = new android.widget.LinearLayout(getContext());
-	items.setOrientation(Interface.Orientate.VERTICAL);
-	items.setMinimumHeight(Interface.Display.HEIGHT);
+	items.setOrientation($.LinearLayout.VERTICAL);
+	items.setMinimumHeight(getDisplayHeight());
 	items.setTag("containerItems");
 	scrollItems.addView(items);
 
@@ -22,8 +22,8 @@ SidebarFragment.prototype.resetContainer = function() {
 	container.addView(scrollTabs);
 
 	let tabs = new android.widget.LinearLayout(getContext());
-	tabs.setOrientation(Interface.Orientate.VERTICAL);
-	tabs.setMinimumHeight(Interface.Display.HEIGHT);
+	tabs.setOrientation($.LinearLayout.VERTICAL);
+	tabs.setMinimumHeight(getDisplayHeight());
 	tabs.setTag("containerTabs");
 	scrollTabs.addView(tabs);
 };
@@ -142,19 +142,19 @@ SidebarFragment.Group.prototype = new ImageFragment;
 
 SidebarFragment.Group.prototype.resetContainer = function() {
 	let container = new android.widget.LinearLayout(getContext());
-	container.setMinimumHeight(Interface.getY(178));
-	container.setGravity(Interface.Gravity.CENTER);
+	container.setMinimumHeight(getDisplayPercentHeight(178));
+	container.setGravity($.Gravity.CENTER);
 	let params = new android.widget.LinearLayout.
-	LayoutParams(Interface.Display.WRAP, Interface.Display.MATCH);
-	if (menuDividers) params.topMargin = Interface.getY(2);
+	LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
+	if (menuDividers) params.topMargin = getDisplayPercentHeight(2);
 	params.weight = 1.;
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 
 	let icon = new android.widget.ImageView(getContext());
-	icon.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.getY(54), Interface.getY(81)));
-	icon.setScaleType(Interface.Scale.CENTER_CROP);
-	icon.setPadding(Interface.getY(42), 0, 0, 0);
+	icon.setLayoutParams(new android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(54), getDisplayPercentHeight(81)));
+	icon.setScaleType($.ImageView.ScaleType.CENTER_CROP);
+	icon.setPadding(getDisplayPercentHeight(42), 0, 0, 0);
 	icon.setTag("groupImage")
 	container.addView(icon);
 };
@@ -167,8 +167,8 @@ SidebarFragment.Group.prototype.setImage = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
 	if (src !== null && typeof src == "object") {
-		Interface.setTransitionName(container, src.bitmap + "Group");
-	} else Interface.setTransitionName(container, src + "Group");
+		$.ViewCompat.setTransitionName(container, src.bitmap + "Group");
+	} else $.ViewCompat.setTransitionName(container, src + "Group");
 	return ImageFragment.prototype.setImage.apply(this, arguments);
 };
 
@@ -181,8 +181,8 @@ SidebarFragment.Group.Item.prototype = new ImageFragment;
 
 SidebarFragment.Group.Item.prototype.resetContainer = function() {
 	let container = new android.widget.ImageView(getContext());
-	container.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.getY(81), Interface.getY(81)));
-	container.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
+	container.setLayoutParams(new android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(81), getDisplayPercentHeight(81)));
+	container.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
 	this.setContainerView(container);
 };
 
@@ -194,8 +194,8 @@ SidebarFragment.Group.Item.prototype.setImage = function(src) {
 	let container = this.getContainer();
 	if (container == null) return this;
 	if (src !== null && typeof src == "object") {
-		Interface.setTransitionName(container, src.bitmap + "Item");
-	} else Interface.setTransitionName(container, src + "Item");
+		$.ViewCompat.setTransitionName(container, src.bitmap + "Item");
+	} else $.ViewCompat.setTransitionName(container, src + "Item");
 	return ImageFragment.prototype.setImage.apply(this, arguments);
 };
 

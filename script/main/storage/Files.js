@@ -372,9 +372,9 @@ Files.asMD5 = function(file, simpleCompare) {
 	}
 	if (simpleCompare) {
 		let size = java.lang.String(file.length());
-		return Hashable.toMD5(size.getBytes());
+		return toDigestMd5(size.getBytes());
 	}
-	return Hashable.toMD5(this.readBytes(file));
+	return toDigestMd5(this.readBytes(file));
 };
 
 Files.compare = function(left, right, simpleCompare) {

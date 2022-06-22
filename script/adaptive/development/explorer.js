@@ -226,10 +226,10 @@ ToolbarFragment.prototype = new Fragment;
 
 ToolbarFragment.prototype.resetContainer = function() {
 	let container = new android.widget.RelativeLayout(getContext());
-	container.setPadding(Interface.getY(16), Interface.getY(12), Interface.getY(16), Interface.getY(12));
-	container.setMinimumWidth(Interface.Display.MATCH);
+	container.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(12), getDisplayPercentHeight(16), getDisplayPercentHeight(12));
+	container.setMinimumWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
 	let params = android.widget.FrameLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.WRAP);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 	
@@ -237,16 +237,16 @@ ToolbarFragment.prototype.resetContainer = function() {
 	menu.setId(java.lang.String("containerItems").hashCode());
 	menu.setTag("containerItems");
 	params = android.widget.RelativeLayout.LayoutParams
-		(Interface.Display.WRAP, Interface.Display.WRAP);
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.leftMargin = Interface.getY(48);
+	params.leftMargin = getDisplayPercentHeight(48);
 	container.addView(menu, params);
 	
 	let button = new ToolbarFragment.Item();
 	this.views.backButton = button;
 	button = button.getContainer();
-	button.setVisibility(Interface.Visibility.GONE);
+	button.setVisibility($.View.GONE);
 	button.setId(java.lang.String("backButton").hashCode());
 	button.setTag("backButton");
 	let self = this;
@@ -256,40 +256,40 @@ ToolbarFragment.prototype.resetContainer = function() {
 		});
 	});
 	params = android.widget.RelativeLayout.LayoutParams
-		(Interface.getY(81), Interface.getY(81));
+		(getDisplayPercentHeight(81), getDisplayPercentHeight(81));
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	container.addView(button, params);
 	
 	let bar = new android.widget.LinearLayout(getContext());
-	bar.setOrientation(Interface.Orientate.VERTICAL);
+	bar.setOrientation($.LinearLayout.VERTICAL);
 	bar.setId(java.lang.String("toolbarBar").hashCode());
 	bar.setTag("toolbarBar");
 	params = android.widget.RelativeLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.WRAP);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.RIGHT_OF, button.getId());
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, menu.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.leftMargin = Interface.getY(36);
+	params.leftMargin = getDisplayPercentHeight(36);
 	container.addView(bar, params);
 	
 	let title = new android.widget.TextView(getContext());
-	title.setVisibility(Interface.Visibility.GONE);
+	title.setVisibility($.View.GONE);
 	typeface && title.setTypeface(typeface);
 	title.setSingleLine(true);
 	title.setMaxLines(1);
-	title.setTextColor(Interface.Color.WHITE);
-	title.setTextSize(Interface.getFontSize(26));
+	title.setTextColor($.Color.WHITE);
+	title.setTextSize(getRelativeDisplayPercentWidth(26));
 	title.setTag("toolbarTitle");
 	bar.addView(title);
 	
 	let subtitle = new android.widget.TextView(getContext());
-	subtitle.setVisibility(Interface.Visibility.GONE);
+	subtitle.setVisibility($.View.GONE);
 	typeface && subtitle.setTypeface(typeface);
 	subtitle.setSingleLine(true);
 	subtitle.setMaxLines(1);
-	subtitle.setTextColor(Interface.Color.LTGRAY);
-	subtitle.setTextSize(Interface.getFontSize(22));
+	subtitle.setTextColor($.Color.LTGRAY);
+	subtitle.setTextSize(getRelativeDisplayPercentWidth(22));
 	subtitle.setTag("toolbarSubtitle");
 	bar.addView(subtitle);
 };
@@ -345,7 +345,7 @@ ToolbarFragment.prototype.setBackButtonEnabled = function(enabled) {
 	}
 	let button = this.getBackButtonFragment();
 	button = button.getContainer();
-	button.setVisibility(enabled ? Interface.Visibility.VISIBLE : Interface.Visibility.GONE);
+	button.setVisibility(enabled ? $.View.VISIBLE : $.View.GONE);
 	this.backButtonEnabled = enabled;
 };
 
@@ -364,7 +364,7 @@ ToolbarFragment.prototype.setTitle = function(title) {
 	}
 	let view = this.getTitleView();
 	view.setText(title);
-	view.setVisibility(title.length > 0 ? Interface.Visibility.VISIBLE : Interface.Visibility.GONE);
+	view.setVisibility(title.length > 0 ? $.View.VISIBLE : $.View.GONE);
 };
 
 ToolbarFragment.prototype.getSubtitleView = function() {
@@ -382,7 +382,7 @@ ToolbarFragment.prototype.setSubtitle = function(subtitle) {
 	}
 	let view = this.getSubtitleView();
 	view.setText(subtitle);
-	view.setVisibility(subtitle.length > 0 ? Interface.Visibility.VISIBLE : Interface.Visibility.GONE);
+	view.setVisibility(subtitle.length > 0 ? $.View.VISIBLE : $.View.GONE);
 };
 
 ToolbarFragment.prototype.getItemContainer = function() {
@@ -432,18 +432,18 @@ ToolbarFragment.prototype.actorIfMay = function(actor) {
 
 ToolbarFragment.prototype.hide = function() {
 	let view = this.getContainer(),
-		actor = new android.transition.Slide(Interface.Gravity.TOP);
+		actor = new android.transition.Slide($.Gravity.TOP);
 	actor.setDuration(750);
 	this.actorIfMay(actor);
-	view.setVisibility(Interface.Visibility.GONE);
+	view.setVisibility($.View.GONE);
 };
 
 ToolbarFragment.prototype.show = function() {
 	let view = this.getContainer(),
-		actor = new android.transition.Slide(Interface.Gravity.TOP);
+		actor = new android.transition.Slide($.Gravity.TOP);
 	actor.setDuration(750);
 	this.actorIfMay(actor);
-	view.setVisibility(Interface.Visibility.VISIBLE);
+	view.setVisibility($.View.VISIBLE);
 };
 
 ToolbarFragment.Item = function() {
@@ -492,10 +492,10 @@ const ListHolderAdapter = function(proto) {
 
 ListHolderAdapter.prototype.createView = function(position, parent) {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(Interface.getY(16), Interface.getY(8), Interface.getY(16), Interface.getY(8));
+	view.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(8), getDisplayPercentHeight(16), getDisplayPercentHeight(8));
 	typeface && view.setTypeface(typeface);
-	view.setTextColor(Interface.Color.WHITE);
-	view.setTextSize(Interface.getFontSize(24));
+	view.setTextColor($.Color.WHITE);
+	view.setTextSize(getRelativeDisplayPercentWidth(24));
 	return view;
 };
 
@@ -546,10 +546,10 @@ ImageSourceFragment.prototype.resetContainer = function() {
 	let frame = this.getContainer();
 	
 	let source = new android.widget.ImageView(getContext());
-	source.setScaleType(Interface.Scale.CENTER);
+	source.setScaleType($.ImageView.ScaleType.CENTER);
 	source.setTag("sourceImage")
 	let params = new android.widget.FrameLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.MATCH);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	frame.addView(source, params);
 	
 	let toolbar = new ToolbarFragment();
@@ -599,7 +599,7 @@ ImageSourceFragment.prototype.setSource = function(src) {
 };
 
 ImageSourceFragment.prototype.getScaleType = function() {
-	return this.scale !== undefined ? this.scale : Interface.Scale.CENTER;
+	return this.scale !== undefined ? this.scale : $.ImageView.ScaleType.CENTER;
 };
 
 ImageSourceFragment.prototype.setScaleType = function(scale) {
@@ -630,11 +630,11 @@ ImageSourceFragment.prototype.changeScaleType = function() {
 		scale = toolbar.getItemAt(0);
 	scale = scale.getTag();
 	switch (this.getScaleType()) {
-		case Interface.Scale.CENTER:
+		case $.ImageView.ScaleType.CENTER:
 			return scale.setImage("controlScaleCenter");
-		case Interface.Scale.CENTER_CROP:
+		case $.ImageView.ScaleType.CENTER_CROP:
 			return scale.setImage("controlScaleCrop");
-		case Interface.Scale.FIT_CENTER:
+		case $.ImageView.ScaleType.FIT_CENTER:
 			return scale.setImage("controlScaleInside");
 	}
 	scale.setImage("controlScaleFit");
@@ -672,18 +672,18 @@ const ImageSourceWindow = function() {
 	});
 	this.getFragment().setOnScaleChangeListener(function() {
 		switch (self.getFragment().getScaleType()) {
-			case Interface.Scale.CENTER:
-				return Interface.Scale.CENTER_CROP;
-			case Interface.Scale.CENTER_CROP:
-				return Interface.Scale.FIT_CENTER;
-			case Interface.Scale.FIT_CENTER:
-				return Interface.Scale.FIT_XY;
+			case $.ImageView.ScaleType.CENTER:
+				return $.ImageView.ScaleType.CENTER_CROP;
+			case $.ImageView.ScaleType.CENTER_CROP:
+				return $.ImageView.ScaleType.FIT_CENTER;
+			case $.ImageView.ScaleType.FIT_CENTER:
+				return $.ImageView.ScaleType.FIT_XY;
 		}
-		return Interface.Scale.CENTER;
+		return $.ImageView.ScaleType.CENTER;
 	});
-	this.getFragment().setBackground(Interface.Color.BLACK);
-	this.setWidth(Interface.Display.MATCH);
-	this.setHeight(Interface.Display.MATCH);
+	this.getFragment().setBackground($.Color.BLACK);
+	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 };
 
 ImageSourceWindow.prototype = new UniqueWindow;

@@ -31,8 +31,8 @@ BaseFragment.prototype.isVisible = function() {
 
 BaseFragment.prototype.switchVisibility = function() {
 	this.getContainer().setVisibility(this.visible ?
-		Interface.Visibility.GONE :
-		Interface.Visibility.VISIBLE);
+		$.View.GONE :
+		$.View.VISIBLE);
 	this.visible = !this.visible;
 	return this;
 };

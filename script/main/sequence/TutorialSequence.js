@@ -34,7 +34,7 @@ TutorialSequence.prototype.next = function(value, index) {
 
 TutorialSequence.prototype.process = function(index) {
 	if (index == 0) {
-		Interface.sleepMilliseconds(1);
+		java.lang.Thread.sleep(1);
 	}
 	return index;
 };
@@ -69,7 +69,7 @@ TutorialSequence.prototype.touchCorrectly = function() {
 TutorialSequence.prototype.tounchIncorrecrly = function() {
 	let index = this.hint.getStackedCount() - 1;
 	if (index < 0) this.hint.addMessage(translate("Nope"));
-	else this.hint.flashHint(index, Interface.Color.YELLOW);
+	else this.hint.flashHint(index, $.Color.YELLOW);
 };
 
 TutorialSequence.prototype.complete = function() {
@@ -110,9 +110,9 @@ TutorialSequence.Welcome = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			Interface.sleepMilliseconds(500);
+			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 3);
+			java.lang.Thread.sleep(this.hint.getTime() * 3);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -149,15 +149,15 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			Interface.sleepMilliseconds(500);
+			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			Interface.sleepMilliseconds(1000);
+			java.lang.Thread.sleep(1000);
 		} else if (index == 3) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 		} else if (index == 4) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 1.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 1.5);
 		} else if (index == 5) {
-			Interface.sleepMilliseconds(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime());
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -213,22 +213,22 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			Interface.sleepMilliseconds(500);
+			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			Interface.sleepMilliseconds(1000);
+			java.lang.Thread.sleep(1000);
 		} else if (index == 3) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2);
+			java.lang.Thread.sleep(this.hint.getTime() * 2);
 		} else if (index == 4) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 		} else if (index == 5) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 			if (this.isOneRequired()) {
 				this.goto = 7;
 			}
 		} else if (index == 6) {
-			Interface.sleepMilliseconds(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime());
 		} else if (index == 7) {
-			Interface.sleepMilliseconds(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime());
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -299,25 +299,25 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			Interface.sleepMilliseconds(500);
+			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			Interface.sleepMilliseconds(1000);
+			java.lang.Thread.sleep(1000);
 		} else if (index == 3) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 		} else if (index == 4) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2);
+			java.lang.Thread.sleep(this.hint.getTime() * 2);
 		} else if (index == 5) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 3.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 3.5);
 		} else if (index == 6) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 1.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 1.5);
 		} else if (index == 7) {
-			Interface.sleepMilliseconds(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime());
 		} else if (index == 8) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 4);
+			java.lang.Thread.sleep(this.hint.getTime() * 4);
 		} else if (index == 9) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2.5);
+			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 		} else if (index == 11 || index == 12) {
-			Interface.sleepMilliseconds(this.hint.getTime() * 2);
+			java.lang.Thread.sleep(this.hint.getTime() * 2);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -376,9 +376,9 @@ TutorialSequence.Complete = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			Interface.sleepMilliseconds(500);
+			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			Interface.sleepMilliseconds(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime());
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},

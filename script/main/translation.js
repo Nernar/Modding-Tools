@@ -406,7 +406,7 @@ Translation.addTranslation("Warning!", {
 });
 Translation.addTranslation("Error stack saved into internal storage", {
 	ru: "Информация об ошибке сохранена в хранилище"
-});
+}); // DEPRECATED
 Translation.addTranslation("Option successfully changed", {
 	ru: "Настройка успешно изменена"
 });

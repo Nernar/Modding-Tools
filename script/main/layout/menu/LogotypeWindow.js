@@ -1,8 +1,8 @@
 const LogotypeWindow = function(foreground, background) {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity(Interface.Gravity.CENTER);
-	window.setWidth(Interface.Display.MATCH);
-	window.setHeight(Interface.Display.MATCH);
+	window.setGravity($.Gravity.CENTER);
+	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.setFragment(new LogotypeFragment());
 	window.setTouchable(false);
 	

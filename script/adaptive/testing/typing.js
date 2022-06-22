@@ -1,24 +1,24 @@
 const NarrationFragment = function() {
 	Fragment.apply(this, arguments);
 	this.resetContainer();
-	this.setBackground(Interface.Color.BLACK);
+	this.setBackground($.Color.BLACK);
 };
 
 NarrationFragment.prototype = new Fragment;
 
 NarrationFragment.prototype.resetContainer = function() {
 	let content = new android.widget.LinearLayout(getContext());
-	content.setGravity(Interface.Gravity.CENTER);
+	content.setGravity($.Gravity.CENTER);
 	this.setContainerView(content);
 	
 	let typing = new Packages.io.nernar.android.widget.ToneTypingTextView(getContext());
 	typeface && typing.setTypeface(typeface);
-	typing.setTextSize(Interface.getFontSize(45));
-	typing.setGravity(Interface.Gravity.CENTER);
+	typing.setTextSize(getRelativeDisplayPercentWidth(45));
+	typing.setGravity($.Gravity.CENTER);
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
+		LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.leftMargin = params.rightMargin = params.topMargin =
-		params.bottomMargin = Interface.getY(128);
+		params.bottomMargin = getDisplayPercentHeight(128);
 	typing.setTag("narrationTypingField");
 	content.addView(typing, params);
 };
@@ -59,8 +59,8 @@ NarrationFragment.prototype.getVoice = function() {
 
 const NarrationWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setWidth(Interface.Display.MATCH);
-	window.setHeight(Interface.Display.MATCH);
+	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	let fade = new android.transition.Fade();
 	fade.setDuration(400);
 	window.setEnterTransition(fade);
@@ -358,13 +358,13 @@ NarrationVoice.prototype.getColor = function() {
 
 REQUIRE("the-begin-narration.dns");
 
-const Narrator = new NarrationVoice(2060773161, 400, 175, 24, Interface.Color.RED);
-const Human = new NarrationVoice(68147221, 20, 20, 34, Interface.Color.WHITE);
-const YiellingHuman = new NarrationVoice(68147221, 10, 20, 30, Interface.Color.WHITE);
-const Monster = new NarrationVoice(1970600048, 15, 15, 37, Interface.Color.WHITE);
-const ScariedMonster = new NarrationVoice(1970600048, 150, 125, 29, Interface.Color.WHITE);
-const Chara = new NarrationVoice(65071019, 25, 25, 23, Interface.Color.WHITE);
-const Author = new NarrationVoice(1972506027, 60, 40, 20, Interface.Color.GREEN);
+const Narrator = new NarrationVoice(2060773161, 400, 175, 24, $.Color.RED);
+const Human = new NarrationVoice(68147221, 20, 20, 34, $.Color.WHITE);
+const YiellingHuman = new NarrationVoice(68147221, 10, 20, 30, $.Color.WHITE);
+const Monster = new NarrationVoice(1970600048, 15, 15, 37, $.Color.WHITE);
+const ScariedMonster = new NarrationVoice(1970600048, 150, 125, 29, $.Color.WHITE);
+const Chara = new NarrationVoice(65071019, 25, 25, 23, $.Color.WHITE);
+const Author = new NarrationVoice(1972506027, 60, 40, 20, $.Color.GREEN);
 
 return function() {
 	let narration = new NarrationWindow();

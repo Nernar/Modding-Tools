@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2019-2021 Nernar (github.com/nernar)
+   Copyright 2019-2022 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,30 +18,32 @@
 
 LIBRARY({
 	name: "Action",
-	version: 4,
-	shared: true,
+	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention:5"]
+	dependencies: ["Retention"],
+	shared: true
 });
 
-IMPORT("Retention:5");
+IMPORT("Retention");
 
 /**
  * Allows you to create timers that will constantly
  * check the conditions for subsequent execution.
  * @param {object|number} [obj] merges with prototype or tick time
  */
-let Action = function(obj) {
-	if (typeof obj == "number") {
-		this.setTickTime(obj);
-	} else if (obj !== undefined) {
-		for (let element in obj) {
-			this[element] = obj[element];
+let Action = (function() {
+	let identifier = 0;
+	return function(obj) {
+		if (typeof obj == "number") {
+			this.setTickTime(obj);
+		} else if (obj !== undefined) {
+			for (let element in obj) {
+				this[element] = obj[element];
+			}
 		}
-	}
-	let count = Action.instances++;
-	this.id = "action" + count;
-};
+		this.id = "action" + (identifier++);
+	};
+})();
 
 Action.prototype.getThread = function() {
 	return this.thread !== undefined ? this.thread : null;
@@ -152,7 +154,7 @@ Action.prototype.create = function() {
 				if (action.isActive()) {
 					let currently = action.getCurrentTick();
 					if (currently == 0) {
-						Interface.sleepMilliseconds(action.getTickTime());
+						java.lang.Thread.sleep(action.getTickTime());
 					}
 					let next = action.tick(currently);
 					action.setCurrentTick(next);
@@ -162,7 +164,7 @@ Action.prototype.create = function() {
 						action.complete();
 					} else if (!action.isInterrupted()) {
 						if (action.condition(next)) {
-							Interface.sleepMilliseconds(action.getTickTime());
+							java.lang.Thread.sleep(action.getTickTime());
 						} else break;
 					} else if (action.mayCancelled()) {
 						action.cancel();
@@ -339,8 +341,6 @@ Action.prototype.assureYield = function(thread) {
 	}
 	return true;
 };
-
-Action.instances = 0;
 
 EXPORT("Action", Action);
 

@@ -28,13 +28,16 @@ WindowProvider.getFlagsForWindow = function(window) {
 	return flags;
 };
 
-WindowProvider.prepareIdentifier = function(window) {
-	if (window.popupId !== undefined) {
+(function() {
+	let identifier = 0;
+	WindowProvider.prepareIdentifier = function(window) {
+		if (window.popupId !== undefined) {
+			return window.popupId;
+		}
+		window.popupId = identifier++;
 		return window.popupId;
-	}
-	window.popupId = Interface.makeViewId();
-	return window.popupId;
-};
+	};
+})();
 
 WindowProvider.hasOpenedPopup = function(window) {
 	let id = window.popupId;
@@ -72,7 +75,7 @@ WindowProvider.openWindow = function(window) {
 		if (window.exitTransition) {
 			this.setExitTransition(popupId, window.exitTransition);
 		}
-		popup.showAtLocation(Interface.getDecorView(), window.getGravity(),
+		popup.showAtLocation(getDecorView(), window.getGravity(),
 			window.getX(), window.getY());
 		return;
 	}

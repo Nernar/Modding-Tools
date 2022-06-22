@@ -19,12 +19,12 @@
 LIBRARY({
 	name: "Drawable",
 	version: 1,
-	shared: true,
 	api: "AdaptedScript",
-	dependencies: ["Retention:5"]
+	dependencies: ["Retention"],
+	shared: true
 });
 
-IMPORT("Retention:5");
+IMPORT("Retention");
 
 let HashedDrawableMap = {};
 HashedDrawableMap.attachedViews = {};
@@ -496,13 +496,10 @@ ClipDrawable.prototype.setDrawable = function(drawable) {
 };
 
 ClipDrawable.prototype.getLocation = function() {
-	return this.location !== undefined ? this.location : Interface.Gravity.LEFT;
+	return this.location !== undefined ? this.location : android.view.Gravity.LEFT;
 };
 
 ClipDrawable.prototype.setLocation = function(location) {
-	if (typeof location == "string") {
-		location = Interface.Gravity.parse(location);
-	}
 	this.location = Number(location);
 	this.invalidate();
 };
@@ -547,7 +544,7 @@ ColorDrawable.prototype.process = function() {
 };
 
 ColorDrawable.prototype.getColor = function() {
-	return this.color !== undefined ? this.color : Interface.Color.TRANSPARENT;
+	return this.color !== undefined ? this.color : android.graphics.Color.TRANSPARENT;
 };
 
 ColorDrawable.prototype.setColor = function(color) {
@@ -567,14 +564,16 @@ ColorDrawable.parseColor = function(value) {
 	} else if (value) {
 		let stroke = String(value);
 		if (stroke.startsWith("#")) {
-			return Interface.Color.parse(stroke);
+			return android.graphics.Color.parseColor(stroke);
 		}
 		stroke = stroke.toUpperCase();
-		if (Interface.Color.hasOwnProperty(stroke)) {
-			return Interface.Color[stroke];
+		try {
+			return android.graphics.Color[stroke];
+		} catch (e) {
+			// Not found
 		}
 	}
-	return null;
+	return android.graphics.Color.TRANSPARENT;
 };
 
 EXPORT("ColorDrawable", ColorDrawable);
@@ -1201,7 +1200,7 @@ DrawableFactory.setTileMode = function(drawable, modesOrX, y) {
 		modesOrX = modesOrX[0];
 	}
 	if (modesOrX === undefined) {
-		modesOrX = Interface.TileMode.CLAMP;
+		modesOrX = android.graphics.Shader.TileMode.CLAMP;
 	}
 	if (y !== undefined) {
 		drawable.setTileModeX(modesOrX);

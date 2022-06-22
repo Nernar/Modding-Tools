@@ -92,7 +92,7 @@ LaunchSequence.process = function(index) {
 	if (index == 1) {
 		showHint.unstackLaunch();
 	} else if (index == 3) {
-		if (FileTools.exists(Dirs.INTERNAL_UI)) {
+		if ($.FileTools.exists(Dirs.INTERNAL_UI)) {
 			AsyncSnackSequence.access("packer.dns", [Dirs.INTERNAL_UI, Dirs.ASSET, 192]).assureYield();
 		}
 		BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
@@ -126,13 +126,13 @@ LaunchSequence.process = function(index) {
 		AsyncSnackSequence.access("translation.dns", [__dir__ + "script/main/", __dir__ + "script/main/translation.js"]).assureYield();
 	} else if (index == 3) {
 		tryoutSafety(function() {
-			if (FileTools.exists(Dirs.EVALUATE + "testing/")) {
+			if ($.FileTools.exists(Dirs.EVALUATE + "testing/")) {
 				AsyncSnackSequence.access("script.dns", [Dirs.EVALUATE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
 			}
-			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "testing/")) {
+			if ($.FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "testing/")) {
 				AsyncSnackSequence.access("script.dns", [Dirs.SCRIPT_ADAPTIVE + "testing/", Dirs.SCRIPT_TESTING]).assureYield();
 			}
-			if (FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "sequence/")) {
+			if ($.FileTools.exists(Dirs.SCRIPT_ADAPTIVE + "sequence/")) {
 				AsyncSnackSequence.access("script.dns", [Dirs.SCRIPT_ADAPTIVE + "sequence/", Dirs.SCRIPT_REVISION + "sequence/"]).assureYield();
 			}
 			let internal = new java.io.File(Dirs.SCRIPT_ADAPTIVE + "bridge.js");

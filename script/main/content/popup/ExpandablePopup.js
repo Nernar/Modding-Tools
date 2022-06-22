@@ -92,7 +92,7 @@ ExpandablePopup.prototype.minimize = function() {
 	let actor = new android.transition.Fade();
 	actor.setDuration(200);
 	this.beginDelayedTransition(actor);
-	this.getFragment().getContainerScroll().setVisibility(Interface.Visibility.GONE);
+	this.getFragment().getContainerScroll().setVisibility($.View.GONE);
 	this.expanded = false;
 };
 
@@ -100,7 +100,7 @@ ExpandablePopup.prototype.maximize = function() {
 	let actor = new android.transition.Fade();
 	actor.setDuration(400);
 	this.beginDelayedTransition(actor);
-	this.getFragment().getContainerScroll().setVisibility(Interface.Visibility.VISIBLE);
+	this.getFragment().getContainerScroll().setVisibility($.View.VISIBLE);
 	this.expanded = true;
 };
 

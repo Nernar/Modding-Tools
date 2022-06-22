@@ -38,8 +38,8 @@ const CONSOLE_TOOL = (function() {
 					showHint(" > " + values[0]);
 					let result = compileData(values[0]);
 					if (result.lineNumber !== undefined) {
-						showHint(result.message, Interface.Color.RED);
-					} else showHint(String(result), Interface.Color.LTGRAY);
+						showHint(result.message, $.Color.RED);
+					} else showHint(String(result), $.Color.LTGRAY);
 				}
 			}).setBackground("popup");
 			let instance = this;

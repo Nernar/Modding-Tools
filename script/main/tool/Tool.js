@@ -15,7 +15,7 @@ Tool.prototype.reset = function() {
 		let drawable = calloutOrParse(this, this.logotypeProgress, arguments);
 		return {
 			bitmap: drawable,
-			tint: Interface.Color.LTGRAY
+			tint: $.Color.LTGRAY
 		};
 	};
 	descriptor.logotype = function(tool, control) {

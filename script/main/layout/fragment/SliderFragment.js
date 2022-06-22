@@ -11,7 +11,7 @@ SliderFragment.prototype.TYPE = "SliderFragment";
 
 SliderFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(Interface.getY(24), Interface.getY(12), Interface.getY(24), Interface.getY(12));
+	view.setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(12), getDisplayPercentHeight(24), getDisplayPercentHeight(12));
 	let self = this;
 	let x = 0;
 	let y = 0;
@@ -28,15 +28,15 @@ SliderFragment.prototype.resetContainer = function() {
 			tryout(function() {
 				let current = self.modifiers[self.modifier];
 				let raw = event.getX() - x;
-				let offset = raw + Interface.getY(60);
-				let size = (current > 0 ? 1 / current : current) * (offset < 0 ? -1 : 1) * (Math.pow(2, Math.abs(offset) / Interface.getY(120)) - 1);
+				let offset = raw + getDisplayPercentHeight(60);
+				let size = (current > 0 ? 1 / current : current) * (offset < 0 ? -1 : 1) * (Math.pow(2, Math.abs(offset) / getDisplayPercentHeight(120)) - 1);
 				self.value = preround((current == 1 ? size : Math.floor(size * current) / current) + currently);
 				if (self.value != previous) {
 					previous = self.value;
 					self.updateCounter();
 				}
 				if (!moved) {
-					moved = Math.abs(raw) > Interface.getY(12);
+					moved = Math.abs(raw) > getDisplayPercentHeight(12);
 				}
 			});
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
@@ -53,13 +53,13 @@ SliderFragment.prototype.resetContainer = function() {
 		}
 		return true;
 	});
-	view.setTextSize(Interface.getFontSize(21));
-	view.setGravity(Interface.Gravity.CENTER);
-	view.setTextColor(Interface.Color.WHITE);
+	view.setTextSize(getRelativeDisplayPercentWidth(21));
+	view.setGravity($.Gravity.CENTER);
+	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setMaxLines(1);
 	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams(Interface.getY(280), Interface.getY(60)));
+		LayoutParams(getDisplayPercentHeight(280), getDisplayPercentHeight(60)));
 	this.setContainerView(view);
 };
 

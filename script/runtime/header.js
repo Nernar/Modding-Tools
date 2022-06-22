@@ -27,4 +27,4 @@ const requireGlobal = function(key) {
 	return GLOBAL;
 };
 
-IMPORT("Retention:5");
+IMPORT("Retention");

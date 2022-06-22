@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-19.06.2022-0";
+const REVISION = "develop-alpha-0.4-23.06.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -51,8 +51,6 @@ let importAutoselect = false;
 
 // Different values
 let noImportedScripts = true;
-
-// Runtime changed values
 let warningMessage = null;
 
 // Definitions for default values
@@ -60,114 +58,114 @@ let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let typefaceJetBrains = android.graphics.Typeface.MONOSPACE;
 
-IMPORT("JsonIo:1");
+IMPORT("JsonIo");
 
 if (this.isInstant === undefined) {
 	this.isInstant = false;
 }
 
-IMPORT("Retention:5");
+IMPORT("Retention");
 
 const tryoutSafety = function(action, report, basic) {
 	return tryout.call(this, action, function(e) {
-		REVISION.startsWith("develop") && retraceOrReport(e);
+		REVISION.startsWith("develop") && reportError(e);
 		if (typeof report == "function") return report.apply(this, arguments);
 	}, report !== undefined && typeof report != "function" ? report : basic);
 };
 
-Interface.getFontSize = function(size) {
-	return Math.round(this.getX(size) / this.Display.DENSITY * fontScale);
-};
-
-Interface.getX = function(x) {
-	return x > 0 ? Math.round(this.Display.WIDTH / (1280 / x) * uiScaler) : x;
-};
-
-Interface.getY = function(y) {
-	return y > 0 ? Math.round(this.Display.HEIGHT / (720 / y) * uiScaler) : y;
-};
+IMPORT("Stacktrace");
 
 const prepareDebugInfo = function() {
 	return NAME + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") + " " + minecraftVersion +
 		" Report Log\nREVISION " + REVISION.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
 };
 
-let alreadyHasDate = false;
-reportError.setStackAction(function(err) {
-	let message = reportError.getCode(err) + ": " + reportError.getStack(err),
-		file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
-	if (file.isDirectory()) {
-		Files.deleteRecursive(file.getPath());
-	}
-	file.getParentFile().mkdirs();
-	if (!file.exists()) {
-		Files.write(file, prepareDebugInfo());
-	}
-	if (!alreadyHasDate) {
-		Files.addText(file, "\n" + reportError.getLaunchTime());
-		alreadyHasDate = true;
-	}
-	Files.addText(file, "\n" + message);
-	showHint(translate("Error stack saved into internal storage"));
+registerReportAction((function() {
+	let alreadyHasDate = false;
+	return function(error) {
+		error && Logger.Log(NAME + ": " + error, "WARNING");
+		reportTrace(error);
+		let message = reportTrace.toCode(error) + ": " + error + "\n" +
+				(error ? error.stack : null),
+			file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
+		if (file.isDirectory()) {
+			Files.deleteRecursive(file.getPath());
+		}
+		file.getParentFile().mkdirs();
+		if (!file.exists()) {
+			Files.write(file, prepareDebugInfo());
+		}
+		if (!alreadyHasDate) {
+			Files.addText(file, "\n" + launchTime);
+			alreadyHasDate = true;
+		}
+		Files.addText(file, "\n" + message);
+	};
+})());
+
+reportTrace.setupPrint(function(message) {
+	message !== undefined && showHint(message);
 });
 
-reportError.setReportAction(function(err) {
-	Logger.Log(reportError.getCode(err) + ": " + err, "ERROR");
-});
-
-IMPORT("Drawable:1");
+IMPORT("Drawable");
 
 const INNERCORE_PACKAGE = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
-IMPORT("Stacktrace:2");
+IMPORT("Action");
+IMPORT("Sequence");
 
-const retraceOrReport = function(error) {
-	error && Logger.Log(error, "WARNING");
-	if (REVISION.startsWith("develop")) {
-		reportTrace(error);
-	} else {
-		reportError(error);
-	}
-};
-
-if (REVISION.startsWith("develop")) {
-	reportTrace.setupPrint(function(message) {
-		message !== undefined && showHint(message);
-	});
-	if (isInstant) {
-		reportTrace.reloadModifications();
-	}
-	tryout(function() {
-		let $ = new JavaImporter(INNERCORE_PACKAGE.mod.executable.library),
-			dependency = new $.LibraryDependency("Retention");
-		dependency.setParentMod(__mod__);
-		let library = $.LibraryRegistry.resolveDependency(dependency);
-		if (!library.isLoaded()) {
-			MCSystem.throwException("Retention.js library required for this modification");
-		}
-		library.getScope().reportError = reportTrace;
-	});
-}
-
-IMPORT("Action:4");
-IMPORT("Sequence:1");
-
-const $ = {
+const CoreEngine = {
 	CORE_ENGINE_API_LEVEL: 0
 };
 
+let $ = new JavaImporter();
+$.importClass(android.view.ViewGroup);
+$.importClass(android.view.View);
+$.importClass(android.view.Gravity);
+$.importClass(android.graphics.Color);
+$.importClass(android.graphics.Shader);
+$.importClass(android.support.v4.view.ViewCompat);
+$.importClass(android.widget.ImageView);
+$.importClass(android.widget.LinearLayout);
+$.importClass(android.widget.ListView);
+$.importClass(java.util.concurrent.TimeUnit);
+$.importClass(INNERCORE_PACKAGE.utils.FileTools);
+$.importClass(INNERCORE_PACKAGE.api.runtime.LevelInfo);
+
+/**
+ * Used to reduce dependencies from
+ * system interfaces and their imports.
+ *
+ let Interface = {
+	 Display -> $.ViewGroup.LayoutParams.<who>_(PARENT/CONTENT),
+	 Orientate -> $.LinearLayout,
+	 Scale -> $.ImageView.ScaleType,
+	 Gravity: -> $.Gravity,
+	 Gravity.NONE -> $.Gravity.NO_GRAVITY,
+	 Color -> $.Color,
+	 Color.parse -> $.Color.parseColor(str),
+	 Direction -> $.View.LAYOUT_DIRECTION_<who>,
+	 Visibility -> $.View,
+	 Choice -> $.ListView.CHOICE_MODE_<who>,
+	 TileMode -> $.Shader.TileMode,
+	 setTransitionName -> $.ViewCompat.setTransitionName(view, "" + name),
+	 makeViewId -> $.View.generateViewId(),
+	 sleepMilliseconds -> $.TimeUnit.MILLISECONDS.sleep(ms)
+ };
+ */
+
+const minecraftTypefaceMargin = getDisplayPercentHeight(7);
+const blankDrawable = new android.graphics.drawable.ColorDrawable($.Color.TRANSPARENT);
+
 const isCoreEngineLoaded = function() {
-	return $.CORE_ENGINE_API_LEVEL != 0;
+	return CoreEngine.CORE_ENGINE_API_LEVEL != 0;
 };
 
 getPlayerEnt = function() {
-	if (LevelInfo.isLoaded()) {
+	if ($.LevelInfo.isLoaded()) {
 		return Number(Player.get());
 	}
 	return 0;
 };
 
-IMPORT("Network:2");
-
-FileTools = INNERCORE_PACKAGE.utils.FileTools;
-LevelInfo = INNERCORE_PACKAGE.api.runtime.LevelInfo;
+IMPORT("Network");

@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2020-2021 Nernar (github.com/nernar)
+   Copyright 2020-2022 Nernar (github.com/nernar)
    
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 
 LIBRARY({
 	name: "Network",
-	version: 2,
-	shared: false,
+	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention:5"]
+	dependencies: ["Retention"],
+	shared: true
 });
 
-IMPORT("Retention:5");
+IMPORT("Retention");
 
 /**
  * @constructor

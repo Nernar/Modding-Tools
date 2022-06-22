@@ -202,7 +202,7 @@ ProjectTool.prototype.export = function(file) {
 					Files.write(file, result);
 					showHint(translate("Converted success") + " " +
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
-				} else retraceOrReport(link.getLastException());
+				} else reportError(link.getLastException());
 			});
 		});
 	}

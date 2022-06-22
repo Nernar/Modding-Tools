@@ -1,5 +1,6 @@
 const API = {
 	USER_ID: "unknown",
+	$: $,
 	tryout: tryout,
 	tryoutSafety: tryoutSafety,
 	require: require,
@@ -36,7 +37,7 @@ const API = {
 	translate: translate,
 	translateCounter: translateCounter,
 	translateCode: translateCode,
-	retraceOrReport: retraceOrReport,
+	reportError: reportError,
 	localizeError: localizeError,
 	
 	random: random,
@@ -73,7 +74,7 @@ const API = {
 	Files: Files,
 	Archives: Archives,
 	Options: Options,
-	Hashable: Hashable,
+	toDigestMd5: toDigestMd5,
 	
 	ImageFactory: ImageFactory,
 	AssetFactory: AssetFactory,
@@ -95,11 +96,10 @@ const API = {
 	merge: merge,
 	clone: clone,
 	
-	CoreEngine: $,
+	CoreEngine: CoreEngine,
 	Action: Action,
 	Network: Network,
 	
-	Interface: Interface,
 	Fragment: Fragment,
 	FrameFragment: FrameFragment,
 	Frame: Frame,
@@ -201,12 +201,6 @@ const API = {
 	LevelProvider: LevelProvider,
 	RuntimeCodeEvaluate: RuntimeCodeEvaluate,
 	
-	$: {
-		LevelInfo: LevelInfo,
-		Files: FileTools,
-		MCSystem: MCSystem
-	},
-	
 	Module: {
 		canLeaveAtMoment: function() {
 			return !isSupportEnv;
@@ -230,13 +224,13 @@ const API = {
 })("USER_ID", "ModBrowser", "Mehwrap");
 
 const notifyCoreEngineLoaded = function() {
-	$.ModAPI.registerAPI("ModdingTools", API);
+	CoreEngine.ModAPI.registerAPI("ModdingTools", API);
 };
 
 const getCoreEngineAndInjectIfNeeded = function() {
 	return tryout(function() {
 		if (isCoreEngineLoaded()) {
-			return $;
+			return CoreEngine;
 		}
 		let instance = null;
 		let CoreEngineAPI = INNERCORE_PACKAGE.api.mod.coreengine.CoreEngineAPI;
@@ -250,11 +244,11 @@ const getCoreEngineAndInjectIfNeeded = function() {
 		field.setAccessible(true);
 		let ceHandlerSingleton = field.get(instance);
 		if (ceHandlerSingleton != null) {
-			ceHandlerSingleton.injectCoreAPI($);
+			ceHandlerSingleton.injectCoreAPI(CoreEngine);
 		}
 		notifyCoreEngineLoaded();
-		return $;
-	}, $);
+		return CoreEngine;
+	}, CoreEngine);
 };
 
 Callback.addCallback("PreBlocksDefined", function() {

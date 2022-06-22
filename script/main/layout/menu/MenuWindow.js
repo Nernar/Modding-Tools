@@ -1,7 +1,7 @@
 const MenuWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setWidth(Interface.Display.MATCH);
-	window.setHeight(Interface.Display.MATCH);
+	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.elements = [];
 	window.resetContent();
 	window.setBackground("popupControl");
@@ -9,11 +9,11 @@ const MenuWindow = function() {
 	let slideIn = new android.transition.Slide(),
 		slideOut = new android.transition.Slide();
 	slideIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	slideIn.setSlideEdge(Interface.Gravity.TOP);
+	slideIn.setSlideEdge($.Gravity.TOP);
 	slideIn.setDuration(1000);
 	window.setEnterTransition(slideIn);
 	slideOut.setInterpolator(new android.view.animation.AnticipateInterpolator());
-	slideOut.setSlideEdge(Interface.Gravity.TOP);
+	slideOut.setSlideEdge($.Gravity.TOP);
 	slideOut.setDuration(800);
 	window.setExitTransition(slideOut);
 	return window;
@@ -34,16 +34,16 @@ MenuWindow.prototype.resetContent = function() {
 	this.setContent(content);
 
 	views.scroll = new android.widget.ScrollView(getContext());
-	let params = new android.widget.FrameLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
+	let params = new android.widget.FrameLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	content.addView(views.scroll, params);
 
 	views.layout = new android.widget.LinearLayout(getContext());
-	views.layout.setGravity(Interface.Gravity.TOP | Interface.Gravity.CENTER);
-	views.layout.setOrientation(Interface.Orientate.VERTICAL);
+	views.layout.setGravity($.Gravity.TOP | $.Gravity.CENTER);
+	views.layout.setOrientation($.LinearLayout.VERTICAL);
 	views.layout.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
-	params = new android.view.ViewGroup.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
+	params = new android.view.ViewGroup.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	views.scroll.addView(views.layout, params);
 };
 
@@ -161,7 +161,7 @@ MenuWindow.prototype.setOnClickListener = function(listener) {
 MenuWindow.Header = function(parent) {
 	(this.reset(), this.setLogo(requireLogotype()));
 	parent && this.setWindow(parent);
-	this.setMaxScroll(Interface.getY(480));
+	this.setMaxScroll(getDisplayPercentHeight(480));
 	this.updateSlideProgress();
 	if (!isInvertedLogotype()) {
 		this.setCover("popupHeader");
@@ -172,28 +172,28 @@ MenuWindow.Header.prototype.reset = function() {
 	let views = this.views = {};
 	let content = new android.widget.FrameLayout(getContext());
 	let params = new android.widget.LinearLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.WRAP);
-	params.bottomMargin = Interface.getY(32);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.bottomMargin = getDisplayPercentHeight(32);
 	content.setLayoutParams(params);
 	this.content = content;
 
 	views.slide = new android.widget.ImageView(getContext());
 	views.slide.setScaleX(3), views.slide.setScaleY(2);
 	params = new android.widget.FrameLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.MATCH);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	content.addView(views.slide, params);
 
 	views.layout = new android.widget.LinearLayout(getContext());
-	views.layout.setGravity(Interface.Gravity.CENTER);
+	views.layout.setGravity($.Gravity.CENTER);
 	params = new android.widget.FrameLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.MATCH);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	content.addView(views.layout, params);
 
 	views.logo = new android.widget.ImageView(getContext());
 	params = new android.widget.LinearLayout.LayoutParams
-		(Interface.getY(320), Interface.getY(320));
+		(getDisplayPercentHeight(320), getDisplayPercentHeight(320));
 	params.leftMargin = params.topMargin =
-		params.rightMargin = params.bottomMargin = Interface.getY(12);
+		params.rightMargin = params.bottomMargin = getDisplayPercentHeight(12);
 	views.layout.addView(views.logo, params);
 };
 
@@ -251,7 +251,7 @@ MenuWindow.Header.prototype.setupScroll = function() {
 	window.views.scroll.setOnScrollChangeListener(function(view, x, y) {
 		let content = scope.content.getY(),
 			logo = scope.views.logo.getY(),
-			offset = y - content - logo - Interface.getY(12),
+			offset = y - content - logo - getDisplayPercentHeight(12),
 			real = offset / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
@@ -344,7 +344,7 @@ MenuWindow.ProjectHeader = function(parent) {
 		this.setBackground("popupControl");
 	this.categories = [];
 	this.checkNothingNeedable();
-	this.setMaxScroll(Interface.getY(480));
+	this.setMaxScroll(getDisplayPercentHeight(480));
 	this.updateSlideProgress();
 	if (!isInvertedLogotype()) {
 		this.setCover("popupHeader");
@@ -358,19 +358,19 @@ MenuWindow.ProjectHeader.prototype.reset = function() {
 	this.__resetCWH && this.__resetCWH();
 	let views = this.views;
 	views.background = new android.widget.LinearLayout(getContext());
-	let params = new android.widget.LinearLayout.LayoutParams(Interface.getY(640), Interface.Display.WRAP);
-	params.leftMargin = Interface.getY(48);
+	let params = new android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(640), $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.leftMargin = getDisplayPercentHeight(48);
 	params.topMargin = params.rightMargin =
-		params.bottomMargin = Interface.getY(24);
+		params.bottomMargin = getDisplayPercentHeight(24);
 	views.layout.addView(views.background, params);
 
 	views.scroll = new android.widget.ScrollView(getContext());
-	params = new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
+	params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	views.background.addView(views.scroll, params);
 
 	views.project = new android.widget.LinearLayout(getContext());
-	views.project.setOrientation(Interface.Orientate.VERTICAL);
-	views.project.setGravity(Interface.Gravity.CENTER);
+	views.project.setOrientation($.LinearLayout.VERTICAL);
+	views.project.setGravity($.Gravity.CENTER);
 	views.scroll.addView(views.project);
 };
 
@@ -406,9 +406,9 @@ MenuWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
 		window.beginDelayedTransition(set);
 	}
 	let few = this.getCategoryCount() > 0;
-	this.setSlideOffset(few ? -Interface.getY(40) : 0);
+	this.setSlideOffset(few ? -getDisplayPercentHeight(40) : 0);
 	views.background.setVisibility(few ?
-		Interface.Visibility.VISIBLE : Interface.Visibility.GONE);
+		$.View.VISIBLE : $.View.GONE);
 	return this;
 };
 
@@ -514,20 +514,20 @@ MenuWindow.ProjectHeader.Category = function(parentOrName, name) {
 MenuWindow.ProjectHeader.Category.prototype.reset = function() {
 	let views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
-	content.setOrientation(Interface.Orientate.VERTICAL);
-	let params = new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH);
-	params.topMargin = Interface.getY(12);
+	content.setOrientation($.LinearLayout.VERTICAL);
+	let params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
+	params.topMargin = getDisplayPercentHeight(12);
 	content.setLayoutParams(params);
 	this.content = content;
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(Interface.getFontSize(26));
-	views.title.setTextColor(Interface.Color.LTGRAY);
+	views.title.setTextSize(getRelativeDisplayPercentWidth(26));
+	views.title.setTextColor($.Color.LTGRAY);
 	views.title.setSingleLine();
-	params = new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
-	params.leftMargin = params.rightMargin = Interface.getY(16);
-	params.bottomMargin = Interface.getY(8);
+	params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.leftMargin = params.rightMargin = getDisplayPercentHeight(16);
+	params.bottomMargin = getDisplayPercentHeight(8);
 	content.addView(views.title, params);
 };
 
@@ -710,8 +710,8 @@ MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
-	content.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
-	content.setGravity(Interface.Gravity.CENTER);
+	content.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
+	content.setGravity($.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
@@ -719,35 +719,35 @@ MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	content.setLayoutParams(params);
 	this.content = content;
 
 	views.icon = new android.widget.ImageView(getContext());
 	params = new android.widget.LinearLayout.
-		LayoutParams(Interface.getY(54), Interface.getY(54));
-	params.leftMargin = Interface.getY(48);
+		LayoutParams(getDisplayPercentHeight(54), getDisplayPercentHeight(54));
+	params.leftMargin = getDisplayPercentHeight(48);
 	content.addView(views.icon, params);
 
 	views.more = new android.widget.LinearLayout(getContext());
-	views.more.setOrientation(Interface.Orientate.VERTICAL);
+	views.more.setOrientation($.LinearLayout.VERTICAL);
 	params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
-	params.leftMargin = Interface.getY(24);
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.leftMargin = getDisplayPercentHeight(24);
 	content.addView(views.more, params);
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(Interface.getFontSize(23));
-	views.title.setTextColor(Interface.Color.WHITE);
+	views.title.setTextSize(getRelativeDisplayPercentWidth(23));
+	views.title.setTextColor($.Color.WHITE);
 	views.title.setSingleLine();
 	views.more.addView(views.title);
 
 	views.params = new android.widget.TextView(getContext());
 	typeface && views.params.setTypeface(typeface);
-	views.params.setPadding(0, Interface.getY(4), 0, 0);
-	views.params.setTextSize(Interface.getFontSize(21));
-	views.params.setTextColor(Interface.Color.LTGRAY);
+	views.params.setPadding(0, getDisplayPercentHeight(4), 0, 0);
+	views.params.setTextSize(getRelativeDisplayPercentWidth(21));
+	views.params.setTextColor($.Color.LTGRAY);
 	views.params.setSingleLine();
 	views.more.addView(views.params);
 };
@@ -923,20 +923,20 @@ MenuWindow.Category = function(parentOrName, name) {
 MenuWindow.Category.prototype.reset = function() {
 	let views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
-	content.setOrientation(Interface.Orientate.VERTICAL);
-	content.setGravity(Interface.Gravity.CENTER);
-	let params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
-	params.topMargin = Interface.getY(16);
+	content.setOrientation($.LinearLayout.VERTICAL);
+	content.setGravity($.Gravity.CENTER);
+	let params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.topMargin = getDisplayPercentHeight(16);
 	content.setLayoutParams(params);
 	this.content = content;
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(Interface.getFontSize(30));
-	views.title.setTextColor(Interface.Color.LTGRAY);
-	params = new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP);
-	params.leftMargin = params.rightMargin = Interface.getY(32);
-	params.bottomMargin = Interface.getY(8);
+	views.title.setTextSize(getRelativeDisplayPercentWidth(30));
+	views.title.setTextColor($.Color.LTGRAY);
+	params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.leftMargin = params.rightMargin = getDisplayPercentHeight(32);
+	params.bottomMargin = getDisplayPercentHeight(8);
 	content.addView(views.title, params);
 
 	views.layout = new android.widget.GridLayout(getContext());
@@ -1108,8 +1108,8 @@ MenuWindow.Category.Item.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
-	content.setOrientation(Interface.Orientate.VERTICAL);
-	content.setGravity(Interface.Gravity.CENTER);
+	content.setOrientation($.LinearLayout.VERTICAL);
+	content.setGravity($.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
@@ -1117,26 +1117,26 @@ MenuWindow.Category.Item.prototype.reset = function() {
 		return scope.hold ? scope.hold() : false;
 	});
 	let params = new android.widget.GridLayout.LayoutParams();
-	params.topMargin = params.bottomMargin = Interface.getY(8);
-	params.leftMargin = params.rightMargin = Interface.getY(4);
-	params.width = Interface.getY(240);
-	params.height = Interface.getY(296);
+	params.topMargin = params.bottomMargin = getDisplayPercentHeight(8);
+	params.leftMargin = params.rightMargin = getDisplayPercentHeight(4);
+	params.width = getDisplayPercentHeight(240);
+	params.height = getDisplayPercentHeight(296);
 	content.setLayoutParams(params);
 	this.content = content;
 
 	views.icon = new android.widget.ImageView(getContext());
 	params = new android.widget.LinearLayout.
-		LayoutParams(Interface.getY(172), Interface.getY(172));
+		LayoutParams(getDisplayPercentHeight(172), getDisplayPercentHeight(172));
 	content.addView(views.icon, params);
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(Interface.getFontSize(27));
-	views.title.setTextColor(Interface.Color.WHITE);
+	views.title.setTextSize(getRelativeDisplayPercentWidth(27));
+	views.title.setTextColor($.Color.WHITE);
 	views.title.setSingleLine();
 	params = new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
-	params.topMargin = Interface.getY(16);
+		LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.topMargin = getDisplayPercentHeight(16);
 	content.addView(views.title, params);
 };
 
@@ -1297,9 +1297,9 @@ MenuWindow.Message.prototype.reset = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
-	content.setPadding(Interface.getY(128), Interface.getY(12), Interface.getY(128), Interface.getY(12));
-	content.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.Display.WRAP));
-	content.setGravity(Interface.Gravity.CENTER);
+	content.setPadding(getDisplayPercentHeight(128), getDisplayPercentHeight(12), getDisplayPercentHeight(128), getDisplayPercentHeight(12));
+	content.setLayoutParams(new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
+	content.setGravity($.Gravity.CENTER);
 	content.setOnClickListener(function() {
 		scope.click && scope.click();
 	});
@@ -1307,19 +1307,19 @@ MenuWindow.Message.prototype.reset = function() {
 	
 	views.icon = new android.widget.ImageView(getContext());
 	let params = new android.widget.LinearLayout.LayoutParams
-		(Interface.getY(66), Interface.getY(66));
+		(getDisplayPercentHeight(66), getDisplayPercentHeight(66));
 	params.leftMargin = params.topMargin =
-		params.rightMargin = params.bottomMargin = Interface.getY(12);
+		params.rightMargin = params.bottomMargin = getDisplayPercentHeight(12);
 	content.addView(views.icon, params);
 	
 	views.message = new android.widget.TextView(getContext());
 	typeface && views.message.setTypeface(typeface);
-	views.message.setTextSize(Interface.getFontSize(25));
-	views.message.setTextColor(Interface.Color.WHITE);
+	views.message.setTextSize(getRelativeDisplayPercentWidth(25));
+	views.message.setTextColor($.Color.WHITE);
 	params = new android.widget.LinearLayout.LayoutParams
-		(Interface.Display.MATCH, Interface.Display.WRAP);
-	params.leftMargin = Interface.getY(32);
-	params.rightMargin = Interface.getY(24);
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.leftMargin = getDisplayPercentHeight(32);
+	params.rightMargin = getDisplayPercentHeight(24);
 	content.addView(views.message, params);
 };
 

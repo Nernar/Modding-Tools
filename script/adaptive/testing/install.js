@@ -1,4 +1,4 @@
-IMPORT("ModBrowser.Query:1");
+IMPORT("ModBrowser.Query");
 
 Translation.addTranslation("Downloaded", {
 	ru: "Загружено"

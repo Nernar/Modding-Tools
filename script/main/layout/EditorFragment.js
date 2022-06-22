@@ -34,18 +34,18 @@ EditorFragment.prototype.resetContainer = function() {
 		processor.setEditable(false);
 		processor.setEdgeEffectColor(-1);
 	*/
-	let drawable = new android.graphics.drawable.ColorDrawable(Interface.Color.YELLOW);
+	let drawable = new android.graphics.drawable.ColorDrawable($.Color.YELLOW);
 	text.setSelectionHandleStyle(new Packages.io.nernar.editor.style.HandleStyleSideDrop(getContext(), drawable));
 	text.setColorScheme(new Packages.io.github.rosemoe.sora.widget.schemes.SchemeDarcula());
 	text.setAutoCompletionItemAdapter(EditorFragment.COMPLETION_ADAPTER);
 	text.getComponent(Packages.io.github.rosemoe.sora.widget.component.EditorAutoCompletion).setParentView(getContext().getWindow().getDecorView());
 	let textAction = new android.widget.LinearLayout(getContext());
 	new BitmapDrawable("popup").attachAsBackground(textAction);
-	textAction.setGravity(Interface.Gravity.CENTER);
+	textAction.setGravity($.Gravity.CENTER);
 	let textActionButtonParams = new android.widget.LinearLayout.
-		LayoutParams(Interface.toComplexUnitDip(40), Interface.toComplexUnitDip(40));
+		LayoutParams(toComplexUnitDip(40), toComplexUnitDip(40));
 	textActionButtonParams.leftMargin = textActionButtonParams.rightMargin =
-		textActionButtonParams.topMargin = textActionButtonParams.bottomMargin = Interface.toComplexUnitDip(8);
+		textActionButtonParams.topMargin = textActionButtonParams.bottomMargin = toComplexUnitDip(8);
 	let copyBtn = new android.widget.Button(getContext());
 	new BitmapDrawable("explorerSelectionApprove").attachAsBackground(copyBtn);
 	copyBtn.setOnClickListener(function(self) {
@@ -83,10 +83,10 @@ EditorFragment.prototype.resetContainer = function() {
 	textAction.setParentView(getContext().getWindow().getDecorView());
 	text.replaceComponent(Packages.io.github.rosemoe.sora.widget.component.EditorTextActionWindow, textAction);
 	let magnifierRoot = new android.widget.FrameLayout(getContext());
-	magnifierRoot.setElevation(Interface.toComplexUnitDip(4));
+	magnifierRoot.setElevation(toComplexUnitDip(4));
 	let magnifier = new android.widget.ImageView(getContext());
 	magnifierRoot.addView(magnifier, new android.widget.FrameLayout.
-		LayoutParams(Interface.Display.MATCH, Interface.Display.MATCH));
+		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	magnifier = new Packages.io.nernar.editor.component.Magnifier(text, magnifierRoot, magnifier);
 	magnifier.setParentView(getContext().getWindow().getDecorView());
 	text.replaceComponent(Packages.io.github.rosemoe.sora.widget.component.Magnifier, magnifier);
@@ -106,7 +106,7 @@ EditorFragment.prototype.resetLegacyContainer = function() {
 	text.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
 	text.setTextColor(android.graphics.Color.WHITE);
-	text.setTextSize(Interface.getFontSize(21));
+	text.setTextSize(getRelativeDisplayPercentWidth(21));
 	text.setHorizontalScrollBarEnabled(true);
 	text.setHorizontallyScrolling(true);
 	text.setSingleLine(false);
@@ -139,7 +139,7 @@ EditorFragment.prototype.isLegacyEditor = function() {
 if (isHorizon) {
 	EditorFragment.COMPLETION_ADAPTER = new JavaAdapter(Packages.io.github.rosemoe.sora.widget.component.EditorCompletionAdapter, {
 		getItemHeight: function() {
-			return Interface.toComplexUnitDip(45);
+			return toComplexUnitDip(45);
 		},
 		getView: function(position, convertView, parent, isCurrentCursorPosition) {
 			let holder = tryout.call(this, function() {
@@ -176,31 +176,31 @@ if (isHorizon) {
 	
 	EditorFragment.COMPLETION_ADAPTER.newItem = function() {
 		let layout = new android.widget.LinearLayout(getContext());
-		layout.setGravity(Interface.Gravity.CENTER_VERTICAL);
-		layout.setPadding(0, Interface.toComplexUnitDip(2), 0, Interface.toComplexUnitDip(2));
+		layout.setGravity($.Gravity.CENTER_VERTICAL);
+		layout.setPadding(0, toComplexUnitDip(2), 0, toComplexUnitDip(2));
 		
 		let icon = new android.widget.ImageView(getContext());
 		icon.setTag("itemIcon");
-		let params = new android.widget.LinearLayout.LayoutParams(Interface.toComplexUnitDip(24), Interface.toComplexUnitDip(24));
-		params.leftMargin = params.rightMargin = Interface.toComplexUnitDip(4);
+		let params = new android.widget.LinearLayout.LayoutParams(toComplexUnitDip(24), toComplexUnitDip(24));
+		params.leftMargin = params.rightMargin = toComplexUnitDip(4);
 		layout.addView(icon, params);
 		
 		let descriptor = new android.widget.LinearLayout(getContext());
-		descriptor.setOrientation(Interface.Orientate.VERTICAL);
-		descriptor.setGravity(Interface.Gravity.CENTER_VERTICAL);
-		descriptor.setPadding(Interface.toComplexUnitDip(8), 0, Interface.toComplexUnitDip(8), 0);
+		descriptor.setOrientation($.LinearLayout.VERTICAL);
+		descriptor.setGravity($.Gravity.CENTER_VERTICAL);
+		descriptor.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
 		layout.addView(descriptor);
 		
 		let label = new android.widget.TextView(getContext());
-		label.setTextSize(Interface.getFontSize(16));
+		label.setTextSize(getRelativeDisplayPercentWidth(16));
 		label.setTag("itemLabel");
 		descriptor.addView(label);
 		
 		let description = new android.widget.TextView(getContext());
-		description.setTextSize(Interface.getFontSize(12));
+		description.setTextSize(getRelativeDisplayPercentWidth(12));
 		description.setTag("itemDescription");
-		params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
-		params.topMargin = Interface.toComplexUnitDip(4);
+		params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		params.topMargin = toComplexUnitDip(4);
 		descriptor.addView(description, params);
 	};
 }

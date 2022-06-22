@@ -26,26 +26,26 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	this.setContainerView(container);
 	
 	let layout = new android.widget.LinearLayout(getContext());
-	layout.setOrientation(Interface.Orientate.VERTICAL);
+	layout.setOrientation($.LinearLayout.VERTICAL);
 	layout.setTag("logotypeBackground");
-	Interface.setTransitionName(layout, "logotypeBackground");
+	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
 	let params = android.widget.FrameLayout.LayoutParams
-		(Interface.Display.WRAP, Interface.Display.WRAP);
-	params.setMargins(Interface.getY(20), Interface.getY(20), 0, 0);
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params.setMargins(getDisplayPercentHeight(20), getDisplayPercentHeight(20), 0, 0);
 	container.addView(layout, params);
 	
 	let button = new android.widget.ImageView(getContext());
-	button.setPadding(Interface.getY(15), Interface.getY(15), Interface.getY(15), Interface.getY(15));
+	button.setPadding(getDisplayPercentHeight(15), getDisplayPercentHeight(15), getDisplayPercentHeight(15), getDisplayPercentHeight(15));
 	button.setTag("logotypeForeground");
-	Interface.setTransitionName(button, "logotypeForeground");
+	$.ViewCompat.setTransitionName(button, "logotypeForeground");
 	params = android.widget.LinearLayout.LayoutParams
-		(Interface.getY(100), Interface.getY(100));
+		(getDisplayPercentHeight(100), getDisplayPercentHeight(100));
 	layout.addView(button, params);
 };
 
 ControlFragment.CollapsedButton = function() {
 	ControlFragment.Button.apply(this, arguments);
-	this.setOffset(Interface.getX(50));
+	this.setOffset(getDisplayPercentWidth(50));
 };
 
 ControlFragment.CollapsedButton.prototype = new ControlFragment.Button;
@@ -65,21 +65,21 @@ ControlFragment.Logotype.prototype = new ControlFragment;
 ControlFragment.Logotype.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext()),
 		params = android.widget.FrameLayout.LayoutParams
-			(Interface.Display.MATCH, Interface.Display.MATCH);
+			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 	
 	let layout = new android.widget.LinearLayout(getContext());
-	layout.setGravity(Interface.Gravity.CENTER);
+	layout.setGravity($.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
-	Interface.setTransitionName(layout, "logotypeBackground");
+	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
 	container.addView(layout);
 	
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotypeForeground");
-	Interface.setTransitionName(logotype, "logotypeForeground");
+	$.ViewCompat.setTransitionName(logotype, "logotypeForeground");
 	params = new android.widget.LinearLayout.LayoutParams
-		(Interface.getY(320), Interface.getY(320));
+		(getDisplayPercentHeight(320), getDisplayPercentHeight(320));
 	layout.addView(logotype, params);
 };
 

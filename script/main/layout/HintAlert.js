@@ -1,17 +1,17 @@
 const HintAlert = function() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
-	window.setWidth(Interface.Display.MATCH);
+	window.setGravity($.Gravity.LEFT | $.Gravity.BOTTOM);
+	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.setTouchable(false);
 
-	let actor = new android.transition.Slide(Interface.Gravity.BOTTOM),
+	let actor = new android.transition.Slide($.Gravity.BOTTOM),
 		interpolator = new android.view.animation.DecelerateInterpolator();
 	actor.setInterpolator(interpolator);
 	actor.setDuration(window.getTime() / 6);
 	window.setEnterTransition(actor);
 
 	actor = new android.transition.TransitionSet();
-	let slide = new android.transition.Slide(Interface.Gravity.BOTTOM),
+	let slide = new android.transition.Slide($.Gravity.BOTTOM),
 		fade = new android.transition.Fade(android.transition.Visibility.MODE_OUT);
 	actor.addTransition(slide);
 	actor.addTransition(fade);
@@ -35,15 +35,15 @@ HintAlert.prototype.time = 3000;
 
 HintAlert.prototype.resetContent = function() {
 	let content = new android.widget.LinearLayout(getContext());
-	content.setGravity(Interface.Gravity.LEFT | Interface.Gravity.BOTTOM);
-	content.setOrientation(Interface.Orientate.VERTICAL);
+	content.setGravity($.Gravity.LEFT | $.Gravity.BOTTOM);
+	content.setOrientation($.LinearLayout.VERTICAL);
 	this.setContent(content);
 };
 
 HintAlert.prototype.attachMessage = function(hint, color, background) {
 	if (this.canStackedMore()) {
 		let layout = new android.widget.LinearLayout(getContext());
-		layout.setPadding(Interface.getY(48), Interface.getY(16), Interface.getY(48), Interface.getY(16));
+		layout.setPadding(getDisplayPercentHeight(48), getDisplayPercentHeight(16), getDisplayPercentHeight(48), getDisplayPercentHeight(16));
 		background = tryout(function() {
 			if (background !== undefined) {
 				if (!(background instanceof Drawable)) {
@@ -54,21 +54,21 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 			return new BitmapDrawable("popup");
 		});
 		if (background) background.attachAsBackground(layout);
-		layout.setOrientation(Interface.Orientate.VERTICAL);
-		layout.setGravity(Interface.Gravity.CENTER);
+		layout.setOrientation($.LinearLayout.VERTICAL);
+		layout.setGravity($.Gravity.CENTER);
 		let content = this.getContainer(),
-			params = new android.widget.LinearLayout.LayoutParams(Interface.Display.WRAP, Interface.Display.WRAP);
-		layout.setVisibility(Interface.Visibility.GONE);
+			params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		layout.setVisibility($.View.GONE);
 		content.addView(layout, params);
 
 		let text = new android.widget.TextView(getContext());
-		text.setTextSize(Interface.getFontSize(22));
+		text.setTextSize(getRelativeDisplayPercentWidth(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
 		Logger.Log("hint: " + text.getText(), "DEBUG");
-		if (!this.inConsoleMode()) text.setGravity(Interface.Gravity.CENTER);
-		text.setTextColor(color || Interface.Color.WHITE);
+		if (!this.inConsoleMode()) text.setGravity($.Gravity.CENTER);
+		text.setTextColor(color || $.Color.WHITE);
 		typeface && text.setTypeface(typeface);
-		text.setMinimumWidth(Interface.getY(405));
+		text.setMinimumWidth(getDisplayPercentHeight(405));
 		layout.addView(text);
 
 		let actor = new android.transition.TransitionSet();
@@ -80,7 +80,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		actor.addTransition(bounds);
 		actor.addTransition(fade);
 		this.beginDelayedTransition(actor);
-		layout.setVisibility(Interface.Visibility.VISIBLE);
+		layout.setVisibility($.View.VISIBLE);
 		return layout;
 	}
 	return null;
@@ -108,7 +108,7 @@ HintAlert.prototype.canStackedMore = function() {
 	let limit = this.getMaximumStackedLimit();
 	if (limit == -1) {
 		let height = this.getContainer().getHeight();
-		if (Interface.Display.HEIGHT - height < Interface.getY(90)) {
+		if (getDisplayHeight() - height < getDisplayPercentHeight(90)) {
 			limit = 0;
 		}
 	}
@@ -248,10 +248,10 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.CycleInterpolator(1.3));
 	actor.setDuration(this.time / 8);
-	view.setVisibility(Interface.Visibility.INVISIBLE);
+	view.setVisibility($.View.INVISIBLE);
 	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
-	view.setVisibility(Interface.Visibility.VISIBLE);
+	view.setVisibility($.View.VISIBLE);
 	Logger.Log("flash hint: " + hint, "DEBUG");
 	this.reawait();
 	return true;

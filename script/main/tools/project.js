@@ -38,11 +38,11 @@ const PROJECT_TOOL = (function() {
 										attachProjectTool();
 									}
 								}, function(e) {
-									retraceOrReport(e);
+									reportError(e);
 									attachProjectTool();
 								});
 							}, function(e) {
-								retraceOrReport(e);
+								reportError(e);
 								acquire(function() {
 									attachProjectTool();
 								});

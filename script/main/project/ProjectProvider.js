@@ -61,10 +61,10 @@ ProjectProvider.initializeAutosave = function() {
 	}
 	this.thread = handleThread(function() {
 		do {
-			Interface.sleepMilliseconds(autosavePeriod * 1000);
+			java.lang.Thread.sleep(autosavePeriod * 1000);
 			project.callAutosave();
 			while (project.isAutosaving) {
-				Interface.sleepMilliseconds(1);
+				java.lang.Thread.sleep(1);
 			}
 		} while (project.isOpened);
 		delete scope.thread;

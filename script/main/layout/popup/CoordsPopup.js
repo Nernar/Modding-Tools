@@ -12,7 +12,7 @@ CoordsPopup.prototype.TYPE = "CoordsPopup";
 CoordsPopup.prototype.addButtonElement = function(name, click) {
 	let button = ListingPopup.prototype.addButtonElement.apply(this, arguments);
 	button.setBackground("popup");
-	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams(Interface.Display.MATCH, Interface.getY(84)));
+	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, getDisplayPercentHeight(84)));
 	return button;
 };
 
@@ -20,21 +20,21 @@ CoordsPopup.prototype.addGroup = function(name) {
 	let views = this.views,
 		index = views.groups.length;
 	views.groups[index] = new android.widget.LinearLayout(getContext());
-	views.groups[index].setPadding(Interface.getY(10), index == 0 ? Interface.getY(10) : 0, Interface.getY(10), Interface.getY(10));
+	views.groups[index].setPadding(getDisplayPercentHeight(10), index == 0 ? getDisplayPercentHeight(10) : 0, getDisplayPercentHeight(10), getDisplayPercentHeight(10));
 	this.getFragment().getContainerLayout().addView(views.groups[index]);
 
 	views.titles[index] = new android.widget.TextView(getContext());
-	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.Display.MATCH));
-	views.titles[index].setPadding(Interface.getY(10), Interface.getY(10), Interface.getY(10), Interface.getY(10));
-	views.titles[index].setTextSize(Interface.getFontSize(32));
-	views.titles[index].setTextColor(Interface.Color.WHITE);
+	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(60), $.ViewGroup.LayoutParams.MATCH_PARENT));
+	views.titles[index].setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
+	views.titles[index].setTextSize(getRelativeDisplayPercentWidth(32));
+	views.titles[index].setTextColor($.Color.WHITE);
 	if (name) views.titles[index].setText(name);
 	views.titles[index].setTypeface(typeface);
 	views.titles[index].setMaxLines(1);
 	views.groups[index].addView(views.titles[index]);
 
 	views.containers[index] = new android.widget.LinearLayout(getContext());
-	views.containers[index].setOrientation(Interface.Orientate.VERTICAL);
+	views.containers[index].setOrientation($.LinearLayout.VERTICAL);
 	views.groups[index].addView(views.containers[index]);
 	return this.getGroup(index);
 };
@@ -57,10 +57,10 @@ CoordsPopup.prototype.getGroup = function(position) {
 				});
 			item.views.root = new android.widget.LinearLayout(getContext());
 			new BitmapDrawable("popup").attachAsBackground(item.views.root);
-			item.views.root.setPadding(Interface.getY(12), Interface.getY(12), Interface.getY(12), Interface.getY(12));
+			item.views.root.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
 			views.containers[position].addView(item.views.root);
 
-			let params = new android.view.ViewGroup.LayoutParams(Interface.getY(60), Interface.getY(60));
+			let params = new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(60), getDisplayPercentHeight(60));
 
 			item.views.minus = new android.widget.ImageView(getContext());
 			new BitmapDrawable("controlAdapterMinus").attachAsImage(item.views.minus);
@@ -75,8 +75,8 @@ CoordsPopup.prototype.getGroup = function(position) {
 			item.views.root.addView(item.views.minus, params);
 
 			item.views.mather = new android.widget.TextView(getContext());
-			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(Interface.getY(160), -1));
-			item.views.mather.setPadding(Interface.getY(12), 0, Interface.getY(12), 0);
+			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(160), -1));
+			item.views.mather.setPadding(getDisplayPercentHeight(12), 0, getDisplayPercentHeight(12), 0);
 			item.views.mather.setOnClickListener(function(view) {
 				tryout(function() {
 					item.current[1]++;
@@ -94,9 +94,9 @@ CoordsPopup.prototype.getGroup = function(position) {
 					}
 				}, false);
 			});
-			item.views.mather.setTextSize(Interface.getFontSize(21));
-			item.views.mather.setGravity(Interface.Gravity.CENTER);
-			item.views.mather.setTextColor(Interface.Color.WHITE);
+			item.views.mather.setTextSize(getRelativeDisplayPercentWidth(21));
+			item.views.mather.setGravity($.Gravity.CENTER);
+			item.views.mather.setTextColor($.Color.WHITE);
 			item.views.mather.setTypeface(typeface);
 			item.views.mather.setMaxLines(1);
 			item.views.root.addView(item.views.mather);

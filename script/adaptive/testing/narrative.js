@@ -14,7 +14,7 @@ REQUIRE("the-begin-narration.dns");
 
 return function() {
 	updateAndReattach();
-	showHint("...", Interface.Color.RED);
+	showHint("...", $.Color.RED);
 	showHint(translateCode(68147221) + ": ...");
 	showHint(translateCode(68147221) + ": " + translateCode(2057560) + "...");
 	showHint(translateCode(68147221) + ": " + translateCode(2050569) + ".");
@@ -31,6 +31,6 @@ return function() {
 	showHint(translateCode(68147221) + ": " + translateCode(-753049471) + "...");
 	showHint(translateCode(1214760478, [translateCode(68147221), translateCode(2050569)]));
 	showHint(translateCode(68147221) + ": ... " + translateCode(-845363641) + ".");
-	showHint("...", Interface.Color.RED);
-	showHint(translateCode(-214916102) + ": " + translateCode(2480147) + " 1, " + translateCode(-1891298259) + " 7", Interface.Color.GREEN);
+	showHint("...", $.Color.RED);
+	showHint(translateCode(-214916102) + ": " + translateCode(2480147) + " 1, " + translateCode(-1891298259) + " 7", $.Color.GREEN);
 };

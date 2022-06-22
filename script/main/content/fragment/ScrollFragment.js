@@ -12,7 +12,7 @@ ScrollFragment.prototype.resetContainer = function() {
 	this.getContainer().addView(scroll);
 	
 	let layout = new android.widget.LinearLayout(getContext());
-	layout.setOrientation(Interface.Orientate.VERTICAL);
+	layout.setOrientation($.LinearLayout.VERTICAL);
 	layout.setTag("containerLayout");
 	scroll.addView(layout);
 };

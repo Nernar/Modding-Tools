@@ -7,7 +7,7 @@ SolidButtonFragment.prototype.TYPE = "SolidButtonFragment";
 
 SolidButtonFragment.prototype.resetContainer = function() {
 	ThinButtonFragment.prototype.resetContainer.apply(this, arguments);
-	this.getTextView().setPadding(Interface.getY(24), Interface.getY(24), Interface.getY(24), Interface.getY(24));
+	this.getTextView().setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(24), getDisplayPercentHeight(24), getDisplayPercentHeight(24));
 };
 
 SolidButtonFragment.parseJson = function(instanceOrJson, json) {

@@ -1,7 +1,7 @@
 BitmapFactory.createCompressed = function(bitmap, min, max) {
 	if (max === undefined) max = min;
-	let size = Interface.Display.HEIGHT > 480 ? Interface.Display.HEIGHT < 1080 ?
-			min + Interface.Display.HEIGHT / 1560 * (max - min) : max : min,
+	let size = getDisplayHeight() > 480 ? getDisplayHeight() < 1080 ?
+			min + getDisplayHeight() / 1560 * (max - min) : max : min,
 		width = bitmap.getWidth(),
 		height = bitmap.getHeight(),
 		dx = Math.ceil(width * size),
@@ -56,14 +56,14 @@ ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	if (orientate === undefined) orientate = 1;
 	if (foreground !== null) {
 		foreground = new ClipDrawable(foreground,
-			orientate == 1 ? Interface.Gravity.LEFT : Interface.Gravity.BOTTOM,
+			orientate == 1 ? $.Gravity.LEFT : $.Gravity.BOTTOM,
 			orientate || 0);
 		DrawableFactory.setLevel(foreground.toDrawableInThread(), preround(level, 0) || 1);
 		if (background === null) return foreground;
 	}
 	if (background !== null) {
 		background = new ClipDrawable(background,
-			orientate == 1 ? Interface.Gravity.RIGHT : Interface.Gravity.TOP,
+			orientate == 1 ? $.Gravity.RIGHT : $.Gravity.TOP,
 			orientate || 0);
 		DrawableFactory.setLevel(background.toDrawableInThread(), preround(10001 - level, 0) || 10000);
 		if (foreground === null) return background;

@@ -22,34 +22,34 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 		return;
 	}
 	// let color = message.prefix.toFontColor();
-	// color = Interface.Color.parse(color);
+	// color = $.Color.parse(color);
 	if (message.type.level == 3) {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.RED);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.RED);
 	}
 	if (message.strPrefix == "WARNING") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.YELLOW);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.YELLOW);
 	}
 	if (message.type.level == 2 || message.strPrefix == "INFO") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.GREEN);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.GREEN);
 	} else if (message.type.level == 1 || message.strPrefix == "DEBUG") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.GRAY);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.GRAY);
 	}
 	if (message.strPrefix == "MOD") {
 		return this.append(text, scroll, horizontal, message.strPrefix, message.message);
 	}
-	return this.append(text, scroll, horizontal, message.strPrefix, message.message, Interface.Color.LTGRAY);
+	return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.LTGRAY);
 };
 
 LogViewer.show = function() {
 	let popup = new ListingPopup();
 	popup.setTitle(translate("Currently log"));
    	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.
-		LayoutParams(Interface.Display.WIDTH / 4, Interface.Display.HEIGHT / 3));
+		LayoutParams(getDisplayWidth() / 4, getDisplayHeight() / 3));
 	let horizontal = new android.widget.HorizontalScrollView(getContext());
 	let text = new android.widget.TextView(getContext());
-	text.setPadding(Interface.getY(10), 0, Interface.getY(10), 0);
-	text.setTextSize(Interface.getFontSize(12));
-   	text.setTextColor(Interface.Color.WHITE);
+	text.setPadding(getDisplayPercentHeight(10), 0, getDisplayPercentHeight(10), 0);
+	text.setTextSize(getRelativeDisplayPercentWidth(12));
+   	text.setTextColor($.Color.WHITE);
 	text.setTypeface(android.graphics.Typeface.MONOSPACE);
 	text.setText(NAME + " " + REVISION);
 	popup.getFragment().getContainerLayout().addView(horizontal);
