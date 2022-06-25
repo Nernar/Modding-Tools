@@ -64,7 +64,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let text = new android.widget.TextView(getContext());
 		text.setTextSize(getRelativeDisplayPercentWidth(22));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
-		Logger.Log("hint: " + text.getText(), "DEBUG");
+		log("ModdingTools: hint: " + text.getText());
 		if (!this.inConsoleMode()) text.setGravity($.Gravity.CENTER);
 		text.setTextColor(color || $.Color.WHITE);
 		typeface && text.setTypeface(typeface);
@@ -252,7 +252,7 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
 	view.setVisibility($.View.VISIBLE);
-	Logger.Log("flash hint: " + hint, "DEBUG");
+	log("ModdingTools: flash hint: " + hint);
 	this.reawait();
 	return true;
 };

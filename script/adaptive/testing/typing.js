@@ -39,7 +39,7 @@ NarrationFragment.prototype.setBackground = function(colorOrDrawable) {
 
 NarrationFragment.prototype.changeVoice = function(voice) {
 	if (!(voice instanceof NarrationVoice)) {
-		MCSystem.throwException("That isn't narration voice instance");
+		MCSystem.throwException("ModdingTools: that isn't narration voice instance");
 	}
 	let typing = this.getTypingField();
 	typing.setTypingDelay(voice.getDuration());

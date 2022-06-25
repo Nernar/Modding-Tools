@@ -111,7 +111,7 @@ LIBRARY({
 						return null;
 					}
 				case "undefined":
-					return undefined;
+					return;
 			}
 		} catch (e) {
 			log("JsonIo: unsupported scriptable to json value " + who);

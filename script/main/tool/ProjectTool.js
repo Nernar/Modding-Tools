@@ -193,7 +193,9 @@ ProjectTool.prototype.export = function(file) {
 		exportProject(project, false, file.getPath());
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
-		if (!this.hasConverter()) MCSystem.throwException(null);
+		if (!this.hasConverter()) {
+			MCSystem.throwException("ModdingTools: no converter, try override ProjectTool.hasConverter");
+		}
 		let active = Date.now();
 		tryout(function() {
 			converter.attach(project);

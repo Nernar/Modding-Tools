@@ -28,7 +28,6 @@ MenuTool.prototype.getMenuDescriptor = function() {
 
 MenuTool.prototype.describeMenu = function() {
 	let menu = this.getMenuWindow();
-	if (menu == null) MCSystem.throwException(null);
 	MenuWindow.parseJson.call(this, menu, this.getMenuDescriptor());
 };
 
@@ -47,7 +46,6 @@ MenuTool.prototype.attach = function() {
 
 MenuTool.prototype.deattach = function() {
 	let menu = this.getMenuWindow();
-	if (menu == null) MCSystem.throwException(null);
 	InteractionTool.prototype.deattach.apply(this, arguments);
 	menu.dismiss();
 	delete this.menuWindow;

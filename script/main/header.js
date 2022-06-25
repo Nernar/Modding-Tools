@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-23.06.2022-0";
+const REVISION = "develop-alpha-0.4-26.06.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -83,7 +83,7 @@ const prepareDebugInfo = function() {
 registerReportAction((function() {
 	let alreadyHasDate = false;
 	return function(error) {
-		error && Logger.Log(NAME + ": " + error, "WARNING");
+		error && Logger.Log("ModdingTools: " + error, "WARNING");
 		reportTrace(error);
 		let message = reportTrace.toCode(error) + ": " + error + "\n" +
 				(error ? error.stack : null),
@@ -106,6 +106,37 @@ registerReportAction((function() {
 reportTrace.setupPrint(function(message) {
 	message !== undefined && showHint(message);
 });
+
+getDisplayPercentWidth = (function() {
+	let self = getDisplayPercentWidth;
+	return function(x) {
+		// return self(x) * uiScaler;
+		return Math.round(getDisplayWidth() / (1280 / x) * uiScaler);
+	};
+})();
+
+getDisplayPercentHeight = (function() {
+	let self = getDisplayPercentHeight;
+	return function(y) {
+		// return self(y) * uiScaler;
+		return Math.round(getDisplayHeight() / (720 / y) * uiScaler);
+	};
+})();
+
+getRelativeDisplayPercentWidth = (function() {
+	let self = getRelativeDisplayPercentWidth;
+	return function(x) {
+		// return self(x) * fontScale;
+		return Math.round(getDisplayPercentWidth(x) / getDisplayDensity() * fontScale);
+	};
+})();
+
+getRelativeDisplayPercentHeight = (function() {
+	let self = getRelativeDisplayPercentHeight;
+	return function(y) {
+		return self(y) * fontScale;
+	};
+})();
 
 IMPORT("Drawable");
 
@@ -131,31 +162,6 @@ $.importClass(android.widget.ListView);
 $.importClass(java.util.concurrent.TimeUnit);
 $.importClass(INNERCORE_PACKAGE.utils.FileTools);
 $.importClass(INNERCORE_PACKAGE.api.runtime.LevelInfo);
-
-/**
- * Used to reduce dependencies from
- * system interfaces and their imports.
- *
- let Interface = {
-	 Display -> $.ViewGroup.LayoutParams.<who>_(PARENT/CONTENT),
-	 Orientate -> $.LinearLayout,
-	 Scale -> $.ImageView.ScaleType,
-	 Gravity: -> $.Gravity,
-	 Gravity.NONE -> $.Gravity.NO_GRAVITY,
-	 Color -> $.Color,
-	 Color.parse -> $.Color.parseColor(str),
-	 Direction -> $.View.LAYOUT_DIRECTION_<who>,
-	 Visibility -> $.View,
-	 Choice -> $.ListView.CHOICE_MODE_<who>,
-	 TileMode -> $.Shader.TileMode,
-	 setTransitionName -> $.ViewCompat.setTransitionName(view, "" + name),
-	 makeViewId -> $.View.generateViewId(),
-	 sleepMilliseconds -> $.TimeUnit.MILLISECONDS.sleep(ms)
- };
- */
-
-const minecraftTypefaceMargin = getDisplayPercentHeight(7);
-const blankDrawable = new android.graphics.drawable.ColorDrawable($.Color.TRANSPARENT);
 
 const isCoreEngineLoaded = function() {
 	return CoreEngine.CORE_ENGINE_API_LEVEL != 0;

@@ -6,7 +6,7 @@ RuntimeCodeEvaluate.setupNewContext = function() {
 		GLOBAL: somewhere
 	});
 	if (isEmpty(somewhere)) {
-		MCSystem.throwException("Runtime couldn't be resolved");
+		MCSystem.throwException("ModdingTools: runtime couldn't be resolved");
 	}
 	return somewhere;
 };

@@ -274,9 +274,9 @@ SidebarWindow.Group.prototype.getWindow = function() {
 };
 
 SidebarWindow.Group.prototype.attachToWindow = function(window) {
-	if (!window) MCSystem.throwException("Window can't be illegal or undefined state!");
+	if (!window) MCSystem.throwException("ModdingTools: window can't be illegal or undefined state!");
 	let attached = this.getWindow();
-	if (attached != null) MCSystem.throwException("You're must deattach sidebar group firstly!");
+	if (attached != null) MCSystem.throwException("ModdingTools: you're must deattach sidebar group firstly!");
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(200);
 	window.beginDelayedTransition(actor);
@@ -562,9 +562,9 @@ SidebarWindow.Group.Item.prototype.getGroup = function() {
 };
 
 SidebarWindow.Group.Item.prototype.attachToGroup = function(group) {
-	if (!group) MCSystem.throwException("Group can't be illegal or undefined state!");
+	if (!group) MCSystem.throwException("ModdingTools: group can't be illegal or undefined state!");
 	let attached = this.getGroup();
-	if (attached !== null) MCSystem.throwException("You're must deattach sidebar item firstly!");
+	if (attached !== null) MCSystem.throwException("ModdingTools: you're must deattach sidebar item firstly!");
 	let window = group.getWindow();
 	if (window !== null) {
 		let actor = new android.transition.ChangeBounds();

@@ -269,7 +269,7 @@ CachedDrawable.prototype.toDrawable = function() {
 				this.source = drawable;
 			}
 		}, function(e) {
-			Logger.Log("Exception in CachedDrawable.process: " + e, "WARNING");
+			Logger.Log("Drawable: exception in CachedDrawable.process: " + e, "WARNING");
 		});
 	}
 	return this.source || null;
@@ -280,7 +280,7 @@ CachedDrawable.prototype.isProcessed = function() {
 };
 
 CachedDrawable.prototype.process = function() {
-	MCSystem.throwException("CachedDrawable.process must be implemented");
+	MCSystem.throwException("Drawable: CachedDrawable.process must be implemented");
 };
 
 CachedDrawable.prototype.getDescriptor = function() {
@@ -532,14 +532,12 @@ let ColorDrawable = function(color) {
 	if (color !== undefined) {
 		this.setColor(color);
 	}
-	CachedDrawable.call(this);
+	Drawable.call(this);
 };
 
-ColorDrawable.prototype = new CachedDrawable;
+ColorDrawable.prototype = new Drawable;
 
-ColorDrawable.prototype.cacheWhenCreate = true;
-
-ColorDrawable.prototype.process = function() {
+ColorDrawable.prototype.toDrawable = function() {
 	return new android.graphics.drawable.ColorDrawable(this.getColor());
 };
 
@@ -551,7 +549,7 @@ ColorDrawable.prototype.setColor = function(color) {
 	if (color !== undefined) {
 		this.color = ColorDrawable.parseColor(color);
 	} else delete this.color;
-	this.invalidate();
+	this.requestReattach();
 };
 
 ColorDrawable.prototype.toString = function() {
@@ -573,7 +571,6 @@ ColorDrawable.parseColor = function(value) {
 			// Not found
 		}
 	}
-	return android.graphics.Color.TRANSPARENT;
 };
 
 EXPORT("ColorDrawable", ColorDrawable);
@@ -587,7 +584,7 @@ BitmapFactory.decodeBytes = function(bytes, options) {
 		}
 		return android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 	}, function(e) {
-		Logger.Log("BitmapFactory failed to decode bytes " + bytes, "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode bytes " + bytes, "WARNING");
 	}, null);
 };
 
@@ -599,7 +596,7 @@ BitmapFactory.decodeFile = function(path, options) {
 		}
 		return android.graphics.BitmapFactory.decodeFile(file);
 	}, function(e) {
-		Logger.Log("BitmapFactory failed to decode file " + file.getName(), "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode file " + file.getName(), "WARNING");
 	}, null);
 };
 
@@ -611,7 +608,7 @@ BitmapFactory.decodeAsset = function(path, options) {
 		}
 		return this.decodeFile(file, options);
 	}, function(e) {
-		Logger.Log("BitmapFactory failed to decode asset " + path, "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode asset " + path, "WARNING");
 	}, null);
 };
 
@@ -643,6 +640,7 @@ BitmapDrawableFactory.requireByKey = function(key, options) {
 		this.required[key] = BitmapFactory.decodeFile(file, options);
 		return this.requireByKey(key);
 	}
+	log("Drawable: bitmap " + key + " not found or mapped incorrecly");
 	return null;
 };
 
@@ -704,7 +702,7 @@ BitmapDrawableFactory.generateKeyFor = function(path, root) {
 	if (key !== undefined) {
 		return key.replace(/\W/g, String());
 	}
-	MCSystem.throwException("Invalid path passed to BitmapDrawableFactory");
+	MCSystem.throwException("Drawable: invalid path provided in BitmapDrawableFactory: " + path);
 };
 
 BitmapDrawableFactory.getMappedCount = function() {
@@ -854,6 +852,7 @@ BitmapDrawable.prototype.process = function() {
 	let bitmap = this.getBitmap(),
 		options = this.getOptions();
 	if (bitmap != null) {
+		let who = bitmap;
 		bitmap = BitmapDrawableFactory.wrap(bitmap, options);
 		if (!(bitmap instanceof android.graphics.Bitmap)) {
 			bitmap = this.getCorruptedThumbnail();

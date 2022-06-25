@@ -116,7 +116,7 @@ Sequence.prototype.sync = function(active) {
  */
 Sequence.prototype.execute = function(value) {
 	if (this.getThread() !== null) {
-		MCSystem.throwException("Sequence[" + this.id + "] are already executing");
+		MCSystem.throwException("Sequence: sequence[" + this.id + "] are already executing");
 	}
 	this.index = 0;
 	this.thread = {};
@@ -192,7 +192,7 @@ Sequence.prototype.shrink = function(addition) {
  */
 Sequence.prototype.next = function(value, index) {
 	if (index >= this.getFixedCount()) {
-		return undefined;
+		return;
 	}
 	return ++index;
 };
@@ -208,7 +208,7 @@ Sequence.prototype.next = function(value, index) {
  * @throws must be overwritten in usage
  */
 Sequence.prototype.process = function(element, value, index) {
-	MCSystem.throwException("Sequence.process must be overwritten");
+	MCSystem.throwException("Sequence: Sequence.process must be implemented");
 };
 
 Sequence.prototype.cancel = function(error) {

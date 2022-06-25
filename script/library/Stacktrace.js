@@ -562,7 +562,7 @@ let fetchErrorMessage = function(error) {
 let localizeError = function(error) {
 	let message = fetchErrorMessage(error);
 	if (error instanceof java.lang.Object) {
-		MCSystem.throwException("Unsupported localize error type: " + error);
+		MCSystem.throwException("Stacktrace: unsupported localize error type: " + error);
 	} else if (error && typeof error == "object") {
 		let retraced = retraceToArray(error.stack)[0];
 		error = sliceMessageWithoutTrace(message, retraced);
@@ -608,7 +608,7 @@ let reportTrace = function(error) {
 		return;
 	}
 	if (error instanceof java.lang.Object) {
-		MCSystem.throwException("Unsupported report trace type: " + error);
+		MCSystem.throwException("Stacktrace: unsupported report trace type: " + error);
 	}
 	if (reportTrace.isReporting) {
 		if (!Array.isArray(reportTrace.handled)) {

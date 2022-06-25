@@ -132,7 +132,7 @@ AsyncSnackSequence.access = function(where, who, post) {
 	sequence.process = function(next, entry, index) {
 		encountedSequences++;
 		if (encountedSequences > 1) {
-			MCSystem.throwException("Invalid sequence length: " + index + ".." + sequence.getFixedCount());
+			MCSystem.throwException("ModdingTools: invalid sequence length: " + index + ".." + sequence.getFixedCount());
 		}
 		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);
@@ -372,7 +372,7 @@ AsyncStackedSnackSequence.access = function(where, who, post) {
 	sequence.process = function(next, entry, index) {
 		encountedSequences++;
 		if (encountedSequences > 1) {
-			MCSystem.throwException("Invalid sequence length: " + index + ".." + sequence.getFixedCount());
+			MCSystem.throwException("ModdingTools: invalid sequence length: " + index + ".." + sequence.getFixedCount());
 		}
 		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);

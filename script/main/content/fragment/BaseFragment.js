@@ -17,6 +17,7 @@ BaseFragment.prototype.getBackground = function() {
 BaseFragment.prototype.setBackground = function(src) {
 	let container = this.getContainerRoot();
 	if (container == null) return this;
+	let itself = src;
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}

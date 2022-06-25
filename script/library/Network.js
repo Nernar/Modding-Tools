@@ -51,7 +51,7 @@ Network.prototype.getUrl = function() {
  */
 Network.prototype.setUrl = function(url) {
 	if (String(url) === url) {
-		Logger.Log("You should use Network.setAddress(address) instead of Network.setUrl(url) for string values", "WARNING");
+		Logger.Log("Network: you should use Network.setAddress instead of Network.setUrl for string values", "WARNING");
 		this.setAddress(url);
 		return;
 	}
@@ -132,7 +132,7 @@ Network.prototype.hasConnection = function() {
 Network.prototype.connect = function() {
 	let connection = this.getConnection();
 	if (connection) connection.connect();
-	else MCSystem.throwException("Impossible find any opened connection to connect");
+	else MCSystem.throwException("Network: impossible to find any opened connection to connect");
 	if (this.callback.hasOwnProperty("onConnect")) {
 		this.callback.onConnect.call(this, connection);
 	}
@@ -280,7 +280,7 @@ Network.Reader.prototype.getResult = function() {
 Network.Reader.prototype.read = function() {
 	let stream = this.getStreamReader();
 	if (!stream) {
-		MCSystem.throwException("Impossible read stream, because one of params is missing");
+		MCSystem.throwException("Network: impossible to read stream, because one of params is missing");
 	}
 	let result = this.result = [],
 		reader = new java.io.BufferedReader(stream);
@@ -364,7 +364,7 @@ Network.Writer.prototype.getStreamReader = function() {
  * @throws error if not overwritten by prototype
  */
 Network.Writer.prototype.getOutputStream = function() {
-	MCSystem.throwException("You must overwrite a method getOutputStream()");
+	MCSystem.throwException("Network: Network.Writer.getOutputStream must be implemented");
 };
 
 /**
@@ -384,10 +384,10 @@ Network.Writer.prototype.download = function() {
 	let stream = this.getStreamReader(),
 		output = this.getOutputStream();
 	if (!stream) {
-		MCSystem.throwException("Impossible download stream, because input stream is missing");
+		MCSystem.throwException("Network: impossible to download stream, because input stream is missing");
 	}
 	if (!output) {
-		MCSystem.throwException("Impossible download stream, because output stream is missing");
+		MCSystem.throwException("Network: impossible to download stream, because output stream is missing");
 	}
 	this.connect(), this.count = 0;
 	this.processing = true;
@@ -498,7 +498,7 @@ Network.Downloader.prototype.getOutputStream = function() {
  */
 Network.handle = function(action, callback, connect) {
 	if (!(action instanceof Function)) {
-		MCSystem.throwException("Nothing to network handle");
+		MCSystem.throwException("Network: nothing to network handle");
 	}
 	handleThread(function() {
 		tryout(function() {

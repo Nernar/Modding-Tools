@@ -65,7 +65,7 @@ InteractionTool.prototype.attachInteraction = function(id) {
 		if (interaction.length == 0) {
 			delete this.interactionWindows;
 		}
-		MCSystem.throwException("ModdingTools: interaction window must be instanceof FocusablePopup or UniqueWindow");
+		MCSystem.throwException("ModdingTools: interaction window must be instance of FocusablePopup or UniqueWindow");
 	}
 	instance.show();
 	interaction.push(instance);

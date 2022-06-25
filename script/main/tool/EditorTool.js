@@ -146,7 +146,9 @@ EditorTool.prototype.replace = function(file) {
 			});
 		});
 	} else if (name.endsWith(".js")) {
-		if (!this.hasParser()) MCSystem.throwException(null);
+		if (!this.hasParser()) {
+			MCSystem.throwException("ModdingTools: no parser, try override EditorTool.hasParser");
+		}
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
 			active = Date.now() - active;
@@ -162,7 +164,9 @@ EditorTool.prototype.replace = function(file) {
 
 EditorTool.prototype.merge = function(file) {
 	let merger = this.getMerger();
-	if (!this.hasMerger()) MCSystem.throwException(null);
+	if (!this.hasMerger()) {
+		MCSystem.throwException("ModdingTools: no merger, try override EditorTool.hasMerger");
+	}
 	let name = file.getName(),
 		project = this.toProject(),
 		instance = this;

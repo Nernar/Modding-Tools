@@ -8,7 +8,7 @@
     "header_background":false
   },
   "performance":{
-    "hint_stackable":false,
+    "hint_stackable":true,
     "maximum_hints":25,
     "show_processes":true,
     "safety_processes":true
@@ -22,7 +22,7 @@
   },
   "user_login":{
     "first_launch":false,
-    "imported_script":true,
+    "imported_script":false,
     "send_analytics":true
   },
   "other":{

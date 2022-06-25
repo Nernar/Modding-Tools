@@ -16,7 +16,7 @@ LayoutFragment.prototype.getFragments = function() {
 
 LayoutFragment.prototype.addElementFragment = function(fragment, params) {
 	if (!(fragment instanceof Fragment)) {
-		Logger.Log("ModdintTools: trying adding non-fragment element passed to addElementFragment", "INFO");
+		Logger.Log("ModdingTools: trying adding non-fragment element passed to addElementFragment", "WARNING");
 		return -1;
 	}
 	if (params === undefined) {

@@ -1,6 +1,5 @@
 const API = {
 	USER_ID: "unknown",
-	$: $,
 	tryout: tryout,
 	tryoutSafety: tryoutSafety,
 	require: require,
@@ -28,7 +27,7 @@ const API = {
 		if (!entry instanceof ProjectTool.MenuFactory) {
 			MCSystem.throwException("ModdingTools: registerMenuTool entry must be instance of Tool.MenuEntry");
 		}
-		Logger.Log("ModdingTools: registered tool " + id + " into menu entry", "DEBUG");
+		log("ModdingTools: registered tool " + id + " into menu entry");
 		PROJECT_TOOL.tools[id] = entry;
 		Tools[id] = tool;
 	},

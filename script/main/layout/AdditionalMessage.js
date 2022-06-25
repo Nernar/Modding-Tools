@@ -42,7 +42,7 @@ AdditionalMessage.prototype.getChance = function() {
 
 AdditionalMessage.prototype.setChance = function(chance) {
 	if (chance < 0 || chance > 1) {
-		MCSystem.throwException("AdditionalMessage.setChance can't use values outside [0; 1]");
+		MCSystem.throwException("ModdingTools: AdditionalMessage.setChance can't use values outside [0; 1]");
 	}
 	this.chance = chance;
 };
@@ -53,7 +53,7 @@ AdditionalMessage.prototype.getCondition = function() {
 
 AdditionalMessage.prototype.setCondition = function(condition) {
 	if (!condition instanceof Function) {
-		MCSystem.throwException("AdditionalMessage.setCondition can take functions only");
+		MCSystem.throwException("ModdingTools: AdditionalMessage.setCondition can take functions only");
 	}
 	this.condition = function() {
 		return tryout.call(this, condition);
@@ -87,7 +87,7 @@ AdditionalClickableMessage.prototype.getAction = function() {
 
 AdditionalClickableMessage.prototype.setAction = function(action) {
 	if (!action instanceof Function) {
-		MCSystem.throwException("AdditionalClickableMessage.setAction only can take functions");
+		MCSystem.throwException("ModdingTools: AdditionalClickableMessage.setAction only can take functions");
 	}
 	this.action = function(message) {
 		tryout.call(this, function() {
@@ -245,7 +245,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("Impossible attach session to null or undefined");
+		MCSystem.throwException("ModdingTools: impossible to attach session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

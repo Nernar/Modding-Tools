@@ -1,6 +1,6 @@
 const attachCategoriedIcons = function(control) {
 	if (isEmpty(BitmapDrawableFactory.mapped) && isEmpty(BitmapDrawableFactory.required)) {
-		MCSystem.throwException("At least one category must be defined");
+		MCSystem.throwException("ModdingTools: at least one category must be defined");
 	}
 	for (let who in BitmapDrawableFactory.mapped) {
 		control.addMessage(who, who);

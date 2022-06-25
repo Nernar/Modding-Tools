@@ -25,11 +25,11 @@ let BITSET_PATCH = {};
 
 const registerBitsetUi = function(json) {
 	if (json == null || typeof json != "object") {
-		MCSystem.throwException("Registered bitset must be object { moduleBitset: .. }");
+		MCSystem.throwException("ModdingTools: registered bitset must be object { moduleBitset: .. }");
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
-			Logger.Log("Bitset " + element + " already registered", "WARNING");
+			Logger.Log("ModdingTools: bitset " + element + " is already registered", "WARNING");
 			continue;
 		}
 		BITSET_PATCH[element] = "" + json[element];
@@ -37,11 +37,6 @@ const registerBitsetUi = function(json) {
 };
 
 const ImageFactory = {};
-
-ImageFactory.getDrawable = function(key) {
-	if (key) return new Drawable().toDrawable();
-	MCSystem.throwException("Deprecated method");
-};
 
 ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	if (!(foreground instanceof android.graphics.drawable.Drawable)) {
@@ -298,7 +293,7 @@ Drawable.parseJson = function(instanceOrJson, json) {
 	if (json === null || typeof json != "object") {
 		if (json !== null && json !== undefined) {
 			let color = ColorDrawable.parseColor(json);
-			if (color !== null) return new ColorDrawable(color);
+			if (color !== undefined) return new ColorDrawable(color);
 			return new BitmapDrawable(json);
 		}
 		return instanceOrJson;
@@ -347,7 +342,7 @@ BitmapFactory.decodeFile = function(path, options) {
 		}
 		return BitmapFactory.__decodeFile.apply(self, args);
 	}, function(e) {
-		Logger.Log("BitmapFactory failed to decode file " + file.getName(), "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode file " + file.getName(), "WARNING");
 	}, null);
 };
 
@@ -358,7 +353,7 @@ BitmapFactory.decodeResource = function(bytes, options) {
 		let decoded = decodeResource(bytes);
 		return this.decodeBytes(decoded, options);
 	}, function(e) {
-		Logger.Log("BitmapFactory failed to decode resource " + bytes, "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode resource " + bytes, "WARNING");
 	}, null);
 };
 

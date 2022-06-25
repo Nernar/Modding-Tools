@@ -50,9 +50,9 @@ const UNWRAP = function(path, scope) {
 	let file = findWrappedScript(path);
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 		if (file == null) {
-			MCSystem.throwException("Not found " + path + " script");
+			MCSystem.throwException("ModdingTools: not found " + path + " script");
 		}
-		Logger.Log("Wrapping " + file + " script", "MOD");
+		log("ModdingTools: wrapping " + file + " script");
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
@@ -61,9 +61,9 @@ const UNWRAP = function(path, scope) {
 	} else if (file == null && REVISION.indexOf("alpha") != -1) {
 		let file = new java.io.File(Dirs.SCRIPT_TESTING, path);
 		if (!file.exists()) {
-			MCSystem.throwException("Not found " + path + " testing executable");
+			MCSystem.throwException("ModdingTools: not found " + path + " testing executable");
 		}
-		Logger.Log("Unwrapping " + file + " source", "MOD");
+		log("ModdingTools: wnwrapping " + file + " source");
 		return tryoutSafety(function() {
 			let source = decompileExecuteable(Files.readBytes(file)),
 				code = "(function() {\n" + source + "\n})();",
@@ -73,7 +73,7 @@ const UNWRAP = function(path, scope) {
 		}, null);
 	}
 	if (file == null) {
-		MCSystem.throwException("Not found " + path + " executable");
+		MCSystem.throwException("ModdingTools: not found " + path + " executable");
 	}
 	return tryoutSafety(function() {
 		let source = decompileExecuteable(Files.readBytes(file)),
@@ -97,7 +97,7 @@ UNWRAP.initScriptable = function(name) {
 			}
 		},
 		log: function(message) {
-			Logger.Log(message, name);
+			log(name + ": " + message);
 		},
 		__path__: name
 	};
@@ -122,7 +122,7 @@ const CHECKOUT = function(path, scope, post) {
 		post && post(something);
 		return something;
 	}, function(e) {
-		Logger.Log(e, "WARNING");
+		Logger.Log("ModdingTools: checkout: " + e, "WARNING");
 	}, null);
 };
 

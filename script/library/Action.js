@@ -141,7 +141,7 @@ Action.prototype.setCondition = function(action) {
 
 Action.prototype.create = function() {
 	if (this.getThread() !== null) {
-		MCSystem.throwException("Action[" + this.id + "] are already created");
+		MCSystem.throwException("Action: action[" + this.id + "] are already created");
 	}
 	this.count = this.real = 0;
 	let action = this;
@@ -211,13 +211,13 @@ Action.prototype.run = function() {
 		this.count = this.real = 0;
 	}
 	this.active = true;
-	Logger.Log("Action[" + this.id + "] started at " + getTime() + " ms", "DEBUG");
+	log("Action: action[" + this.id + "] started at " + getTime() + " ms");
 	this.onRun && this.onRun(this);
 };
 
 Action.prototype.complete = function() {
 	delete this.active;
-	Logger.Log("Action[" + this.id + "] completed as " + this.real + " ms", "DEBUG");
+	log("Action: action[" + this.id + "] completed as " + this.real + " ms");
 	this.action && this.action(this, this.real, this.count);
 	this.count = this.real = 0;
 };
@@ -233,7 +233,7 @@ Action.prototype.pause = function(time) {
 
 Action.prototype.cancel = function() {
 	delete this.active;
-	Logger.Log("Action[" + this.id + "] cancelled at " + this.real + " ms", "DEBUG");
+	log("Action: action[" + this.id + "] cancelled at " + this.real + " ms");
 	this.onCancel && this.onCancel(this);
 	this.count = this.real = 0;
 };

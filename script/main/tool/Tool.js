@@ -62,7 +62,7 @@ Tool.prototype.describe = function() {
 
 Tool.prototype.attach = function() {
 	if (this.isAttached()) {
-		MCSystem.throwException("You're must deattach tool firstly!");
+		MCSystem.throwException("ModdingTools: you're must deattach tool firstly!");
 	}
 	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;

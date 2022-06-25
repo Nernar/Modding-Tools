@@ -55,7 +55,6 @@ SidebarTool.prototype.getSidebarDescriptor = function() {
 
 SidebarTool.prototype.describeSidebar = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar == null) MCSystem.throwException(null);
 	SidebarWindow.parseJson.call(this, sidebar, this.getSidebarDescriptor());
 	if (sidebar.isSelected()) sidebar.reinflateLayout();
 };
@@ -81,7 +80,6 @@ SidebarTool.prototype.attach = function() {
 
 SidebarTool.prototype.deattach = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar == null) MCSystem.throwException(null);
 	MenuTool.prototype.deattach.apply(this, arguments);
 	sidebar.dismiss();
 	delete this.sidebarWindow;

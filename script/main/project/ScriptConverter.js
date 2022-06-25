@@ -36,7 +36,7 @@ ScriptConverter.prototype.isAttached = function() {
 ScriptConverter.prototype.validate = function(obj) {
 	return tryout.call(this, function() {
 		if (this.TYPE === undefined) {
-			MCSystem.throwException("Impossible resolve project type for ScriptConverter");
+			MCSystem.throwException("ModdingTools: impossible to resolve project type for ScriptConverter");
 		}
 		if (obj == null) {
 			return ScriptConverter.State.ILLEGAL;
@@ -97,10 +97,10 @@ ScriptConverter.prototype.getThread = function() {
 ScriptConverter.prototype.execute = function() {
 	tryout.call(this, function() {
 		if (typeof this.process != "function") {
-			MCSystem.throwException("Impossible find process for ScriptConverter");
+			MCSystem.throwException("ModdingTools: impossible to find process for ScriptConverter");
 		}
 		if (!this.isValid() || this.inProcess()) {
-			Logger.Log("ScriptConverter not validated required object", "WARNING");
+			Logger.Log("ModdingTools: ScriptConverter is not validated required object", "WARNING");
 			return;
 		}
 		if (this.isAttached()) {

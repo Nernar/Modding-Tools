@@ -169,7 +169,7 @@ TransitionWindow.prototype.setExitTransition = function(actor) {
 	if (actor) {
 		let enter = this.getEnterTransition();
 		if (actor == enter) {
-			MCSystem.throwException("You wouldn't use one actor for exit and enter");
+			MCSystem.throwException("ModdingTools: you wouldn't use one actor for exit and enter");
 		}
 		let instance = this;
 		actor.addListener({

@@ -91,5 +91,5 @@ ControlFragment.Logotype.prototype.setLevel = function(level) {
 };
 
 ControlFragment.prototype.resetContainer = function() {
-	MCSystem.throwException("ControlFragment must be superclass only");
+	MCSystem.throwException("ModdingTools: ControlFragment must be superclass only");
 };

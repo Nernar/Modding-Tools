@@ -70,7 +70,7 @@ SliderFragment.prototype.getTextView = function() {
 SliderFragment.prototype.setValue = function(value) {
 	value = parseFloat(value);
 	if (isNaN(value)) {
-		Logger.Log("ModdingTools: slider value passed NaN or incorrect value, it may be string or number", "INFO");
+		Logger.Log("ModdingTools: slider value passed NaN or incorrect value, it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;
@@ -92,7 +92,7 @@ SliderFragment.prototype.setModifier = function(modifier) {
 
 SliderFragment.prototype.setModifiers = function(modifiers) {
 	if (!Array.isArray(modifiers) || modifiers.length == 0) {
-		Logger.Log("ModdingTools: slider modifiers passed in incorrect format, please consider that it must be [..]", "INFO");
+		Logger.Log("ModdingTools: slider modifiers passed in incorrect format, please consider that it must be [..]", "WARNING");
 		return this;
 	}
 	this.modifier = 0;
