@@ -1,4 +1,4 @@
-const FocusablePopup = function() {
+const FocusablePopup = function(id) {
 	TransitionWindow.apply(this, arguments);
 	let fadeIn = new android.transition.Fade(),
 		fadeOut = new android.transition.Fade();
@@ -17,6 +17,10 @@ const FocusablePopup = function() {
 	this.setGravity($.Gravity.LEFT | $.Gravity.TOP);
 	this.setFragment(new FocusableFragment());
 	this.fragments = [];
+	
+	if (id !== undefined) {
+		this.setId(id);
+	}
 };
 
 FocusablePopup.prototype = new TransitionWindow;

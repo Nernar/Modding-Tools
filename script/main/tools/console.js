@@ -29,25 +29,22 @@ const CONSOLE_TOOL = (function() {
 			snack.show();
 		},
 		addEditable: function() {
-			let popup = new ListingPopup();
+			let popup = new ExpandablePopup("evaluate");
 			popup.setTitle(translate("Evaluate"));
-			popup.addEditElement(translate("Hi, I'm evaluate stroke"), "29 / 5");
-			popup.addButtonElement(translate("Eval"), function() {
-				let values = popup.getAllEditsValues();
-				if (String(values[0]).length > 0) {
-					showHint(" > " + values[0]);
-					let result = compileData(values[0]);
+			let layout = popup.getFragment();
+			let input = layout.addPropertyInput("29 / 5", translate("Hi, I'm evaluate stroke"));
+			layout.addSolidButton(translate("Eval"), function() {
+				let action = input.getText().trim();
+				if (action.length > 0) {
+					showHint(" > " + action);
+					let result = compileData(action);
 					if (result.lineNumber !== undefined) {
 						showHint(result.message, $.Color.RED);
-					} else showHint(String(result), $.Color.LTGRAY);
+					} else showHint("" + result, $.Color.LTGRAY);
 				}
-			}).setBackground("popup");
-			let instance = this;
-			popup.setOnDismissListener(function() {
-				let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
-				if (snack !== null) instance.addEditable();
 			});
-			Popups.open(popup, "evaluate");
+			popup.setIsMayDismissed(false);
+			popup.show();
 		}
 	});
 })();

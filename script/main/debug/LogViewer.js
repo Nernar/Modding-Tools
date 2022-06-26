@@ -41,10 +41,10 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 };
 
 LogViewer.show = function() {
-	let popup = new ListingPopup();
+	let popup = new ExpandablePopup("log");
 	popup.setTitle(translate("Currently log"));
-   	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.
-		LayoutParams(getDisplayPercentWidth(25), getDisplayPercentHeight(35)));
+   	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.LayoutParams
+   		(getDisplayPercentWidth(25), getDisplayPercentHeight(35)));
 	let horizontal = new android.widget.HorizontalScrollView(getContext());
 	let text = new android.widget.TextView(getContext());
 	text.setPadding(toComplexUnitDip(6), 0, toComplexUnitDip(6), 0);
@@ -58,7 +58,7 @@ LogViewer.show = function() {
 	let messagesField = getClass(filter).__javaObject__.getDeclaredField("logMessages");
 	messagesField.setAccessible(true);
 	let messages = messagesField.get(filter);
-	Popups.open(popup, "logging");
+	popup.show();
 	let count = messages.size();
 	handleThread(function() {
 		while (popup.isOpened()) {

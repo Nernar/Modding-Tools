@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-26.06.2022-1";
+const REVISION = "develop-alpha-0.4-26.06.2022-2";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -107,26 +107,24 @@ reportTrace.setupPrint(function(message) {
 	message !== undefined && showHint(message);
 });
 
+let toRawComplexUnitDip = toComplexUnitDip;
+
 /**
  * getY -> dip = 0,66525
  * getX -> dip = 0,83333
  */
-toComplexUnitDip = (function() {
-    let self = toComplexUnitDip;
-	return function(value) {
-		return self(value) * uiScaler;
-	};
-})();
+toComplexUnitDip = function(value) {
+	return toRawComplexUnitDip(value) * uiScaler;
+};
+
+let toRawComplexUnitSp = toComplexUnitSp
 
 /**
  * getFontSize -> sp = 0,38095
  */
-toComplexUnitSp = (function() {
-	let self = toComplexUnitSp;
-	return function(value) {
-		return self(value) * fontScale;
-	};
-})();
+toComplexUnitSp = function(value) {
+	return toRawComplexUnitSp(value) * fontScale;
+};
 
 IMPORT("Drawable");
 

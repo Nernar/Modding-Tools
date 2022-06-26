@@ -58,8 +58,6 @@ layout/fragment/PropertyInputFragment.js
 layout/fragment/SliderFragment.js
 layout/fragment/CounterFragment.js
 layout/fragment/AxisGroupFragment.js
-layout/popup/ListingPopup.js
-layout/popup/CoordsPopup.js
 
 tool/Tool.js
 tool/InteractionTool.js

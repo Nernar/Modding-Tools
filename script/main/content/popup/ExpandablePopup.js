@@ -1,4 +1,4 @@
-const ExpandablePopup = function() {
+const ExpandablePopup = function(id) {
 	let self = this;
 	FocusablePopup.apply(this, arguments);
 	let fragment = new ExpandableFragment();
