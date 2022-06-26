@@ -14,8 +14,7 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 		elements = this,
 		index = views.buttons.length;
 	views.buttons[index] = new android.widget.TextView(getContext());
-	views.buttons[index].setLayoutParams(android.widget.RelativeLayout.LayoutParams(getDisplayPercentHeight(300), getDisplayPercentHeight(84)));
-	views.buttons[index].setPadding(getDisplayPercentHeight(30), 0, getDisplayPercentHeight(30), 0);
+	views.buttons[index].setPadding(toComplexUnitDip(20), 0, toComplexUnitDip(20), 0);
 	views.buttons[index].setOnClickListener(function(view) {
 		tryout(function() {
 			click && click();
@@ -23,12 +22,13 @@ ListingPopup.prototype.addButtonElement = function(name, click) {
 			elements.__mode && elements.selectButton(index);
 		});
 	});
-	views.buttons[index].setTextSize(getRelativeDisplayPercentWidth(21));
+	views.buttons[index].setTextSize(toComplexUnitSp(8));
 	views.buttons[index].setGravity($.Gravity.CENTER);
 	views.buttons[index].setTextColor($.Color.WHITE);
 	if (name) views.buttons[index].setText(name);
 	views.buttons[index].setTypeface(typeface);
-	this.getFragment().getContainerLayout().addView(views.buttons[index]);
+	this.getFragment().getContainerLayout().addView(views.buttons[index], new android.widget.RelativeLayout.LayoutParams
+		(toComplexUnitDip(200), toComplexUnitDip(56)));
 	return this.getButton(index);
 };
 
@@ -42,9 +42,10 @@ ListingPopup.prototype.addEditElement = function(hint, value) {
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.edits[index].setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-	views.edits[index].setPadding(getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18));
+	views.edits[index].setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
+		toComplexUnitDip(12), toComplexUnitDip(12));
 	views.edits[index].setHintTextColor($.Color.LTGRAY);
-	views.edits[index].setTextSize(getRelativeDisplayPercentWidth(19));
+	views.edits[index].setTextSize(toComplexUnitSp(7));
 	views.edits[index].setTextColor($.Color.WHITE);
 	if (value) views.edits[index].setText(String(value));
 	if (hint) views.edits[index].setHint(String(hint));

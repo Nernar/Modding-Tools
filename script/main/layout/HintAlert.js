@@ -43,7 +43,8 @@ HintAlert.prototype.resetContent = function() {
 HintAlert.prototype.attachMessage = function(hint, color, background) {
 	if (this.canStackedMore()) {
 		let layout = new android.widget.LinearLayout(getContext());
-		layout.setPadding(getDisplayPercentHeight(48), getDisplayPercentHeight(16), getDisplayPercentHeight(48), getDisplayPercentHeight(16));
+		layout.setPadding(toComplexUnitDip(32), toComplexUnitDip(10),
+			toComplexUnitDip(32), toComplexUnitDip(10));
 		background = tryout(function() {
 			if (background !== undefined) {
 				if (!(background instanceof Drawable)) {
@@ -56,19 +57,19 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		if (background) background.attachAsBackground(layout);
 		layout.setOrientation($.LinearLayout.VERTICAL);
 		layout.setGravity($.Gravity.CENTER);
-		let content = this.getContainer(),
-			params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		let content = this.getContainer();
 		layout.setVisibility($.View.GONE);
-		content.addView(layout, params);
+		content.addView(layout, new android.widget.LinearLayout.LayoutParams
+			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		let text = new android.widget.TextView(getContext());
-		text.setTextSize(getRelativeDisplayPercentWidth(22));
+		text.setTextSize(toComplexUnitSp(8));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
 		log("ModdingTools: hint: " + text.getText());
 		if (!this.inConsoleMode()) text.setGravity($.Gravity.CENTER);
 		text.setTextColor(color || $.Color.WHITE);
 		typeface && text.setTypeface(typeface);
-		text.setMinimumWidth(getDisplayPercentHeight(405));
+		text.setMinimumWidth(toComplexUnitDip(128));
 		layout.addView(text);
 
 		let actor = new android.transition.TransitionSet();
@@ -108,7 +109,7 @@ HintAlert.prototype.canStackedMore = function() {
 	let limit = this.getMaximumStackedLimit();
 	if (limit == -1) {
 		let height = this.getContainer().getHeight();
-		if (getDisplayHeight() - height < getDisplayPercentHeight(90)) {
+		if (getDisplayHeight() - height < toComplexUnitDip(24)) {
 			limit = 0;
 		}
 	}

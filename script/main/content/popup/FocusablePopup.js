@@ -10,8 +10,10 @@ const FocusablePopup = function() {
 	this.setExitTransition(fadeOut);
 	
 	let place = Popups.getAvailablePlace();
-	this.setX(place.x);
-	this.setY(place.y);
+	if (place != null) {
+		this.setX(place.x);
+		this.setY(place.y);
+	}
 	this.setGravity($.Gravity.LEFT | $.Gravity.TOP);
 	this.setFragment(new FocusableFragment());
 	this.fragments = [];

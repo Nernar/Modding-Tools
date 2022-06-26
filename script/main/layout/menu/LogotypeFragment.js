@@ -16,7 +16,7 @@ LogotypeFragment.prototype.resetContainer = function() {
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotype");
 	let params = new android.widget.LinearLayout.LayoutParams
-		(getDisplayPercentHeight(320), getDisplayPercentHeight(320));
+		(toComplexUnitDip(208), toComplexUnitDip(209));
 	layout.addView(logotype, params);
 };
 

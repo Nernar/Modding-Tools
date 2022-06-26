@@ -28,11 +28,13 @@ const LaunchSequence = new LogotypeSequence({
 			typefaceJetBrains = AssetFactory.createFont("jetBrainsMono");
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			if (isInstant) {
-				Callback.invokeCallback("Instant:ModdingTools", API);
-			} else {
-				Callback.invokeCallback("ModdingTools", API);
-			}
+			tryout(function() {
+				if (isInstant) {
+					Callback.invokeCallback("Instant:ModdingTools", API);
+				} else {
+					Callback.invokeCallback("ModdingTools", API);
+				}
+			});
 		}
 		return index;
 	},

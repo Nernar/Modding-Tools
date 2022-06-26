@@ -8,8 +8,9 @@ CategoryTitleFragment.prototype.TYPE = "CategoryTitleFragment";
 
 CategoryTitleFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(16), getDisplayPercentHeight(16), getDisplayPercentHeight(8));
-	view.setTextSize(getRelativeDisplayPercentWidth(18));
+	view.setPadding(toComplexUnitDip(10), toComplexUnitDip(10),
+		toComplexUnitDip(10), toComplexUnitDip(5));
+	view.setTextSize(toComplexUnitSp(7));
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setLayoutParams(new android.view.ViewGroup.

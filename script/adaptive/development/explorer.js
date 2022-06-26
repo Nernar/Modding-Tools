@@ -226,7 +226,8 @@ ToolbarFragment.prototype = new Fragment;
 
 ToolbarFragment.prototype.resetContainer = function() {
 	let container = new android.widget.RelativeLayout(getContext());
-	container.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(12), getDisplayPercentHeight(16), getDisplayPercentHeight(12));
+	container.setPadding(toComplexUnitDip(10), toComplexUnitDip(8),
+		toComplexUnitDip(10), toComplexUnitDip(8));
 	container.setMinimumWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
 	let params = android.widget.FrameLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -240,7 +241,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.leftMargin = getDisplayPercentHeight(48);
+	params.leftMargin = toComplexUnitDip(32);
 	container.addView(menu, params);
 	
 	let button = new ToolbarFragment.Item();
@@ -256,7 +257,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 		});
 	});
 	params = android.widget.RelativeLayout.LayoutParams
-		(getDisplayPercentHeight(81), getDisplayPercentHeight(81));
+		(toComplexUnitDip(54), toComplexUnitDip(54));
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	container.addView(button, params);
@@ -270,7 +271,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.addRule(android.widget.RelativeLayout.RIGHT_OF, button.getId());
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, menu.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.leftMargin = getDisplayPercentHeight(36);
+	params.leftMargin = toComplexUnitDip(24);
 	container.addView(bar, params);
 	
 	let title = new android.widget.TextView(getContext());
@@ -279,7 +280,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	title.setSingleLine(true);
 	title.setMaxLines(1);
 	title.setTextColor($.Color.WHITE);
-	title.setTextSize(getRelativeDisplayPercentWidth(26));
+	title.setTextSize(toComplexUnitSp(11));
 	title.setTag("toolbarTitle");
 	bar.addView(title);
 	
@@ -289,7 +290,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	subtitle.setSingleLine(true);
 	subtitle.setMaxLines(1);
 	subtitle.setTextColor($.Color.LTGRAY);
-	subtitle.setTextSize(getRelativeDisplayPercentWidth(22));
+	subtitle.setTextSize(toComplexUnitSp(9));
 	subtitle.setTag("toolbarSubtitle");
 	bar.addView(subtitle);
 };
@@ -492,10 +493,11 @@ const ListHolderAdapter = function(proto) {
 
 ListHolderAdapter.prototype.createView = function(position, parent) {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(8), getDisplayPercentHeight(16), getDisplayPercentHeight(8));
+	view.setPadding(toComplexUnitDip(10), toComplexUnitDip(5),
+		toComplexUnitDip(10), toComplexUnitDip(5));
 	typeface && view.setTypeface(typeface);
 	view.setTextColor($.Color.WHITE);
-	view.setTextSize(getRelativeDisplayPercentWidth(24));
+	view.setTextSize(toComplexUnitSp(9));
 	return view;
 };
 

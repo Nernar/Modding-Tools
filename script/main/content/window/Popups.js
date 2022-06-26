@@ -32,10 +32,13 @@ Popups.open = function(widget, id) {
 };
 
 Popups.getAvailablePlace = function(root) {
-	// return showHint("No place for open popup", $.Color.YELLOW);
+	if (toComplexUnitDip(160) > getDisplayHeight()) {
+		showHint("No place for open popup", $.Color.YELLOW);
+		return null;
+	}
 	return {
-		x: getDisplayPercentHeight(100) + getDisplayPercentWidth(Math.random() * 800),
-		y: getDisplayPercentWidth(100) + getDisplayPercentHeight(Math.random() * 200)
+		x: random(toComplexUnitDip(64), getDisplayWidth() - toComplexUnitDip(128)),
+		y: random(toComplexUnitDip(64), getDisplayHeight() - toComplexUnitDip(128))
 	};
 };
 

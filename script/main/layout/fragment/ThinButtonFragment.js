@@ -9,8 +9,9 @@ ThinButtonFragment.prototype.TYPE = "ThinButtonFragment";
 
 ThinButtonFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(8), getDisplayPercentHeight(24), getDisplayPercentHeight(8));
-	view.setTextSize(getRelativeDisplayPercentWidth(21));
+	view.setPadding(toComplexUnitDip(16), toComplexUnitDip(6),
+		toComplexUnitDip(16), toComplexUnitDip(6));
+	view.setTextSize(toComplexUnitSp(8));
 	view.setGravity($.Gravity.CENTER);
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);

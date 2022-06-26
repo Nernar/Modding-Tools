@@ -11,7 +11,8 @@ SliderFragment.prototype.TYPE = "SliderFragment";
 
 SliderFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(12), getDisplayPercentHeight(24), getDisplayPercentHeight(12));
+	view.setPadding(toComplexUnitDip(16), toComplexUnitDip(8),
+		toComplexUnitDip(16), toComplexUnitDip(8));
 	let self = this;
 	let x = 0;
 	let y = 0;
@@ -28,15 +29,15 @@ SliderFragment.prototype.resetContainer = function() {
 			tryout(function() {
 				let current = self.modifiers[self.modifier];
 				let raw = event.getX() - x;
-				let offset = raw + getDisplayPercentHeight(60);
-				let size = (current > 0 ? 1 / current : current) * (offset < 0 ? -1 : 1) * (Math.pow(2, Math.abs(offset) / getDisplayPercentHeight(120)) - 1);
+				let offset = raw + toComplexUnitDip(40);
+				let size = (current > 0 ? 1 / current : current) * (offset < 0 ? -1 : 1) * (Math.pow(2, Math.abs(offset) / toComplexUnitDip(80)) - 1);
 				self.value = preround((current == 1 ? size : Math.floor(size * current) / current) + currently);
 				if (self.value != previous) {
 					previous = self.value;
 					self.updateCounter();
 				}
 				if (!moved) {
-					moved = Math.abs(raw) > getDisplayPercentHeight(12);
+					moved = Math.abs(raw) > toComplexUnitDip(8);
 				}
 			});
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
@@ -53,13 +54,13 @@ SliderFragment.prototype.resetContainer = function() {
 		}
 		return true;
 	});
-	view.setTextSize(getRelativeDisplayPercentWidth(21));
+	view.setTextSize(toComplexUnitSp(8));
 	view.setGravity($.Gravity.CENTER);
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setMaxLines(1);
 	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams(getDisplayPercentHeight(280), getDisplayPercentHeight(60)));
+		LayoutParams(toComplexUnitDip(188), toComplexUnitDip(40)));
 	this.setContainerView(view);
 };
 

@@ -296,24 +296,24 @@ EXPORT("getDecorView", function() {
 	};
 	EXPORT("getDisplayWidth", getDisplayWidth);
 	EXPORT("getDisplayPercentWidth", function(x) {
-		return Math.round(getDisplayWidth() / 1000 * x);
+		return Math.round(getDisplayWidth() / 100 * x);
 	});
 	let getDisplayHeight = function() {
 		return Math.min(display.getWidth(), display.getHeight());
 	};
 	EXPORT("getDisplayHeight", getDisplayHeight);
 	EXPORT("getDisplayPercentHeight", function(y) {
-		return Math.round(getDisplayHeight() / 1000 * y);
+		return Math.round(getDisplayHeight() / 100 * y);
 	});
 	let metrics = getContext().getResources().getDisplayMetrics();
 	EXPORT("getDisplayDensity", function() {
 		return metrics.density;
 	});
 	EXPORT("getRelativeDisplayPercentWidth", function(x) {
-		return Math.round(getDisplayWidth() / 1000 * x / metrics.density);
+		return Math.round(getDisplayWidth() / 100 * x / metrics.density);
 	});
 	EXPORT("getRelativeDisplayPercentHeight", function(y) {
-		return Math.round(getDisplayHeight() / 1000 * y / metrics.density);
+		return Math.round(getDisplayHeight() / 100 * y / metrics.density);
 	});
 	EXPORT("toComplexUnitDip", function(value) {
 		return android.util.TypedValue.applyDimension(android.util.TypedValue.COMPLEX_UNIT_DIP, value, metrics);

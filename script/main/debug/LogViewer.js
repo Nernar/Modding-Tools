@@ -44,11 +44,11 @@ LogViewer.show = function() {
 	let popup = new ListingPopup();
 	popup.setTitle(translate("Currently log"));
    	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.
-		LayoutParams(getDisplayWidth() / 4, getDisplayHeight() / 3));
+		LayoutParams(getDisplayPercentWidth(25), getDisplayPercentHeight(35)));
 	let horizontal = new android.widget.HorizontalScrollView(getContext());
 	let text = new android.widget.TextView(getContext());
-	text.setPadding(getDisplayPercentHeight(10), 0, getDisplayPercentHeight(10), 0);
-	text.setTextSize(getRelativeDisplayPercentWidth(12));
+	text.setPadding(toComplexUnitDip(6), 0, toComplexUnitDip(6), 0);
+	text.setTextSize(toComplexUnitSp(5));
    	text.setTextColor($.Color.WHITE);
 	text.setTypeface(android.graphics.Typeface.MONOSPACE);
 	text.setText(NAME + " " + REVISION);

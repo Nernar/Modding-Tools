@@ -142,21 +142,21 @@ SidebarFragment.Group.prototype = new ImageFragment;
 
 SidebarFragment.Group.prototype.resetContainer = function() {
 	let container = new android.widget.LinearLayout(getContext());
-	container.setMinimumHeight(getDisplayPercentHeight(178));
+	container.setMinimumHeight(toComplexUnitDip(120));
 	container.setGravity($.Gravity.CENTER);
-	let params = new android.widget.LinearLayout.
-	LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	if (menuDividers) params.topMargin = getDisplayPercentHeight(2);
+	let params = new android.widget.LinearLayout.LayoutParams
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
+	if (menuDividers) params.topMargin = toComplexUnitDip(1);
 	params.weight = 1.;
 	container.setLayoutParams(params);
 	this.setContainerView(container);
 
 	let icon = new android.widget.ImageView(getContext());
-	icon.setLayoutParams(new android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(54), getDisplayPercentHeight(81)));
 	icon.setScaleType($.ImageView.ScaleType.CENTER_CROP);
-	icon.setPadding(getDisplayPercentHeight(42), 0, 0, 0);
+	icon.setPadding(toComplexUnitDip(28), 0, 0, 0);
 	icon.setTag("groupImage")
-	container.addView(icon);
+	container.addView(icon, new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(36), toComplexUnitDip(54)));
 };
 
 SidebarFragment.Group.prototype.getImageView = function() {
@@ -181,8 +181,10 @@ SidebarFragment.Group.Item.prototype = new ImageFragment;
 
 SidebarFragment.Group.Item.prototype.resetContainer = function() {
 	let container = new android.widget.ImageView(getContext());
-	container.setLayoutParams(new android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(81), getDisplayPercentHeight(81)));
-	container.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
+	container.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(54), toComplexUnitDip(54)));
+	container.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+		toComplexUnitDip(8), toComplexUnitDip(8));
 	this.setContainerView(container);
 };
 

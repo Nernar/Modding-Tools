@@ -59,7 +59,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	dialog.setCancelable(false).setView(fragment.getContainer());
 	dialog.setTitle(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
 	let something = dialog.create();
-	something.getWindow().setLayout(getDisplayWidth() / 1.3, getDisplayHeight() / 1.1);
+	something.getWindow().setLayout(getDisplayPercentWidth(70), getDisplayPercentHeight(90));
 	something.show();
 	(function() {
 		for (let i = 0; i < arguments.length; i++) {

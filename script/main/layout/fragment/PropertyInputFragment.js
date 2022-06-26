@@ -13,9 +13,10 @@ PropertyInputFragment.prototype.resetContainer = function() {
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	view.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-	view.setPadding(getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18), getDisplayPercentHeight(18));
+	view.setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
+		toComplexUnitDip(12), toComplexUnitDip(12));
 	view.setHintTextColor($.Color.LTGRAY);
-	view.setTextSize(getRelativeDisplayPercentWidth(19));
+	view.setTextSize(toComplexUnitSp(7));
 	view.setTextColor($.Color.WHITE);
 	view.setSingleLine(false);
 	view.setTypeface(typeface);

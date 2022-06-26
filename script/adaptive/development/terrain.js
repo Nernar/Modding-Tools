@@ -12,9 +12,9 @@ const attachTerrainWindow = function() {
 	});
 	let source = new android.widget.ImageView(getContext());
 	source.setScaleType($.ImageView.ScaleType.FIT_CENTER);
-	source.setMinimumHeight(getDisplayHeight() * 0.625);
-	let params = new android.widget.FrameLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	popup.getFragment().getContainerLayout().addView(source, params);
+	source.setMinimumHeight(getDisplayPercentHeight(0.625));
+	popup.getFragment().getContainerLayout().addView(source, new android.widget.FrameLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	popup.addButtonElement(translate("Save") + " & " + translate("Redraw"), function() {
 		json = edit.getValue();
 		isDirty = true;

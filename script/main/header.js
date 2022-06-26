@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-26.06.2022-0";
+const REVISION = "develop-alpha-0.4-26.06.2022-1";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -107,34 +107,24 @@ reportTrace.setupPrint(function(message) {
 	message !== undefined && showHint(message);
 });
 
-getDisplayPercentWidth = (function() {
-	let self = getDisplayPercentWidth;
-	return function(x) {
-		// return self(x) * uiScaler;
-		return Math.round(getDisplayWidth() / (1280 / x) * uiScaler);
+/**
+ * getY -> dip = 0,66525
+ * getX -> dip = 0,83333
+ */
+toComplexUnitDip = (function() {
+    let self = toComplexUnitDip;
+	return function(value) {
+		return self(value) * uiScaler;
 	};
 })();
 
-getDisplayPercentHeight = (function() {
-	let self = getDisplayPercentHeight;
-	return function(y) {
-		// return self(y) * uiScaler;
-		return Math.round(getDisplayHeight() / (720 / y) * uiScaler);
-	};
-})();
-
-getRelativeDisplayPercentWidth = (function() {
-	let self = getRelativeDisplayPercentWidth;
-	return function(x) {
-		// return self(x) * fontScale;
-		return Math.round(getDisplayPercentWidth(x) / getDisplayDensity() * fontScale);
-	};
-})();
-
-getRelativeDisplayPercentHeight = (function() {
-	let self = getRelativeDisplayPercentHeight;
-	return function(y) {
-		return self(y) * fontScale;
+/**
+ * getFontSize -> sp = 0,38095
+ */
+toComplexUnitSp = (function() {
+	let self = toComplexUnitSp;
+	return function(value) {
+		return self(value) * fontScale;
 	};
 })();
 

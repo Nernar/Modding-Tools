@@ -11,7 +11,8 @@ CounterFragment.prototype.resetContainer = function() {
 	let self = this;
 	
 	let content = new android.widget.LinearLayout(getContext());
-	content.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
+	content.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+		toComplexUnitDip(8), toComplexUnitDip(8));
 	content.setGravity($.Gravity.CENTER);
 	this.setContainerView(content);
 	
@@ -27,10 +28,10 @@ CounterFragment.prototype.resetContainer = function() {
 	});
 	subtract.setTag("counterSubtract");
 	let params = new android.widget.LinearLayout.
-		LayoutParams(getDisplayPercentHeight(60), getDisplayPercentHeight(60))
+		LayoutParams(toComplexUnitDip(40), toComplexUnitDip(40))
 	content.addView(subtract, params);
 	
-	modifier.setPadding(getDisplayPercentHeight(12), 0, getDisplayPercentHeight(12), 0);
+	modifier.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
 	modifier.setOnClickListener(function(view) {
 		tryout(function() {
 			self.modifier++;
@@ -45,7 +46,7 @@ CounterFragment.prototype.resetContainer = function() {
 	});
 	modifier.setTag("counterText");
 	content.addView(modifier, new android.widget.LinearLayout.
-		LayoutParams(getDisplayPercentHeight(160), $.ViewGroup.LayoutParams.MATCH_PARENT));
+		LayoutParams(toComplexUnitDip(104), $.ViewGroup.LayoutParams.MATCH_PARENT));
 	
 	let add = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterPlus").attachAsImage(add);

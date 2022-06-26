@@ -13,12 +13,12 @@ NarrationFragment.prototype.resetContainer = function() {
 	
 	let typing = new Packages.io.nernar.android.widget.ToneTypingTextView(getContext());
 	typeface && typing.setTypeface(typeface);
-	typing.setTextSize(getRelativeDisplayPercentWidth(45));
+	typing.setTextSize(toComplexUnitSp(17));
 	typing.setGravity($.Gravity.CENTER);
 	let params = new android.widget.LinearLayout.
 		LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.leftMargin = params.rightMargin = params.topMargin =
-		params.bottomMargin = getDisplayPercentHeight(128);
+		params.bottomMargin = toComplexUnitDip(84);
 	typing.setTag("narrationTypingField");
 	content.addView(typing, params);
 };

@@ -12,7 +12,8 @@ CoordsPopup.prototype.TYPE = "CoordsPopup";
 CoordsPopup.prototype.addButtonElement = function(name, click) {
 	let button = ListingPopup.prototype.addButtonElement.apply(this, arguments);
 	button.setBackground("popup");
-	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, getDisplayPercentHeight(84)));
+	button.view.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, toComplexUnitDip(54)));
 	return button;
 };
 
@@ -20,18 +21,20 @@ CoordsPopup.prototype.addGroup = function(name) {
 	let views = this.views,
 		index = views.groups.length;
 	views.groups[index] = new android.widget.LinearLayout(getContext());
-	views.groups[index].setPadding(getDisplayPercentHeight(10), index == 0 ? getDisplayPercentHeight(10) : 0, getDisplayPercentHeight(10), getDisplayPercentHeight(10));
+	views.groups[index].setPadding(toComplexUnitDip(6), index == 0 ? toComplexUnitDip(6) : 0,
+		toComplexUnitDip(6), toComplexUnitDip(6));
 	this.getFragment().getContainerLayout().addView(views.groups[index]);
 
 	views.titles[index] = new android.widget.TextView(getContext());
-	views.titles[index].setLayoutParams(new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(60), $.ViewGroup.LayoutParams.MATCH_PARENT));
-	views.titles[index].setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
-	views.titles[index].setTextSize(getRelativeDisplayPercentWidth(32));
+	views.titles[index].setPadding(toComplexUnitDip(6), toComplexUnitDip(6),
+		toComplexUnitDip(6), toComplexUnitDip(6));
+	views.titles[index].setTextSize(toComplexUnitSp(12));
 	views.titles[index].setTextColor($.Color.WHITE);
 	if (name) views.titles[index].setText(name);
 	views.titles[index].setTypeface(typeface);
 	views.titles[index].setMaxLines(1);
-	views.groups[index].addView(views.titles[index]);
+	views.groups[index].addView(views.titles[index], new android.view.ViewGroup.LayoutParams
+		(toComplexUnitDip(40), $.ViewGroup.LayoutParams.MATCH_PARENT));
 
 	views.containers[index] = new android.widget.LinearLayout(getContext());
 	views.containers[index].setOrientation($.LinearLayout.VERTICAL);
@@ -57,10 +60,12 @@ CoordsPopup.prototype.getGroup = function(position) {
 				});
 			item.views.root = new android.widget.LinearLayout(getContext());
 			new BitmapDrawable("popup").attachAsBackground(item.views.root);
-			item.views.root.setPadding(getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12), getDisplayPercentHeight(12));
+			item.views.root.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+				toComplexUnitDip(8), toComplexUnitDip(8));
 			views.containers[position].addView(item.views.root);
 
-			let params = new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(60), getDisplayPercentHeight(60));
+			let params = new android.view.ViewGroup.LayoutParams
+				(toComplexUnitDip(40), toComplexUnitDip(40));
 
 			item.views.minus = new android.widget.ImageView(getContext());
 			new BitmapDrawable("controlAdapterMinus").attachAsImage(item.views.minus);
@@ -75,8 +80,9 @@ CoordsPopup.prototype.getGroup = function(position) {
 			item.views.root.addView(item.views.minus, params);
 
 			item.views.mather = new android.widget.TextView(getContext());
-			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams(getDisplayPercentHeight(160), -1));
-			item.views.mather.setPadding(getDisplayPercentHeight(12), 0, getDisplayPercentHeight(12), 0);
+			item.views.mather.setLayoutParams(new android.view.ViewGroup.LayoutParams
+				(toComplexUnitDip(104), -1));
+			item.views.mather.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
 			item.views.mather.setOnClickListener(function(view) {
 				tryout(function() {
 					item.current[1]++;
@@ -94,7 +100,7 @@ CoordsPopup.prototype.getGroup = function(position) {
 					}
 				}, false);
 			});
-			item.views.mather.setTextSize(getRelativeDisplayPercentWidth(21));
+			item.views.mather.setTextSize(toComplexUnitSp(8));
 			item.views.mather.setGravity($.Gravity.CENTER);
 			item.views.mather.setTextColor($.Color.WHITE);
 			item.views.mather.setTypeface(typeface);

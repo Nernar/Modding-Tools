@@ -1,7 +1,7 @@
 const OverlayWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setTouchable(false);
-	window.setX(getDisplayPercentHeight(140));
+	window.setX(toComplexUnitDip(96));
 	window.setFragment(new OverlayFragment());
 	
 	let slide = new android.transition.Slide($.Gravity.TOP);

@@ -1,8 +1,12 @@
 const ExplorerWindow = function(mayWrap) {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setGravity($.Gravity.CENTER);
-	window.setWidth(mayWrap ? $.ViewGroup.LayoutParams.WRAP_CONTENT : $.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setHeight(mayWrap ? $.ViewGroup.LayoutParams.WRAP_CONTENT : $.ViewGroup.LayoutParams.MATCH_PARENT);
+	window.setWidth(mayWrap ?
+		$.ViewGroup.LayoutParams.WRAP_CONTENT :
+		$.ViewGroup.LayoutParams.MATCH_PARENT);
+	window.setHeight(mayWrap ?
+		$.ViewGroup.LayoutParams.WRAP_CONTENT :
+		$.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.setFocusable(true);
 	window.file = new java.io.File(__dir__);
 	window.resetContent();
@@ -26,8 +30,8 @@ ExplorerWindow.prototype.resetContent = function() {
 	this.setContent(content);
 
 	views.layout = new android.widget.RelativeLayout(getContext());
-	let params = android.widget.FrameLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	content.addView(views.layout, params);
+	content.addView(views.layout, new android.widget.FrameLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 
 	views.files = new android.widget.ListView(getContext());
 	views.files.setOnItemClickListener(function(parent, view, position, id) {
@@ -38,28 +42,29 @@ ExplorerWindow.prototype.resetContent = function() {
 		scope.selectItem(position) && scope.checkIfCanBeApproved();
 		return true;
 	});
-	params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	views.layout.addView(views.files, params);
+	views.layout.addView(views.files, new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	
 	views.empty = new android.widget.LinearLayout(getContext());
 	views.empty.setOrientation($.LinearLayout.VERTICAL);
 	views.empty.setGravity($.Gravity.CENTER);
 	views.empty.setId(android.R.id.empty);
-	params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	views.layout.addView(views.empty, params);
+	views.layout.addView(views.empty, new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	
 	views.icon = new android.widget.ImageView(getContext());
 	new BitmapDrawable("explorerFolder").attachAsImage(views.icon);
-	params = android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(180), getDisplayPercentHeight(180));
-	views.empty.addView(views.icon, params);
+	views.empty.addView(views.icon, new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(120), toComplexUnitDip(120)));
 	
 	views.info = new android.widget.TextView(getContext());
 	typeface && views.info.setTypeface(typeface);
 	views.info.setText(translate("Void itself."));
 	views.info.setGravity($.Gravity.CENTER);
-	views.info.setTextSize(getRelativeDisplayPercentWidth(36));
+	views.info.setTextSize(toComplexUnitSp(14));
 	views.info.setTextColor($.Color.WHITE);
-	views.info.setPadding(getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20));
+	views.info.setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
+		toComplexUnitDip(12), toComplexUnitDip(12));
 	views.empty.addView(views.info);
 };
 
@@ -282,7 +287,8 @@ ExplorerWindow.Approve.prototype.reset = function() {
 		views = this.views = {};
 	let content = new android.widget.ImageView(getContext());
 	content.setVisibility($.View.GONE);
-	content.setPadding(getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20));
+	content.setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
+		toComplexUnitDip(12), toComplexUnitDip(12));
 	content.setScaleType($.ImageView.ScaleType.CENTER_CROP);
 	content.setOnClickListener(function() {
 		scope.approve();
@@ -309,8 +315,10 @@ ExplorerWindow.Approve.prototype.setWindow = function(window) {
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(600);
 	window.beginDelayedTransition(actor);
-	let params = new android.widget.RelativeLayout.LayoutParams(getDisplayPercentHeight(120), getDisplayPercentHeight(120));
-	params.setMargins(getDisplayPercentHeight(40), getDisplayPercentHeight(40), getDisplayPercentHeight(40), getDisplayPercentHeight(40));
+	let params = new android.widget.RelativeLayout.LayoutParams
+		(toComplexUnitDip(80), toComplexUnitDip(80));
+	params.setMargins(toComplexUnitDip(40), toComplexUnitDip(27),
+		toComplexUnitDip(27), toComplexUnitDip(27));
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	layout.addView(content, params);
@@ -408,17 +416,18 @@ ExplorerWindow.Path.prototype.reset = function() {
 	content.setOnClickListener(function() {
 		scope.__outside && scope.__outside(scope);
 	});
-	let params = new android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, getDisplayPercentHeight(110));
-	this.content = (content.setLayoutParams(params), content);
+	content.setLayoutParams(new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, toComplexUnitDip(80)));
+	this.content = content;
 
 	views.scroll = new android.widget.HorizontalScrollView(getContext());
-	params = android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-	content.addView(views.scroll, params);
+	content.addView(views.scroll, new android.widget.LinearLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 	views.layout = new android.widget.LinearLayout(getContext());
-	views.layout.setPadding(getDisplayPercentHeight(10), 0, getDisplayPercentHeight(10), 0);
-	params = android.view.ViewGroup.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-	views.scroll.addView(views.layout, params);
+	views.layout.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
+	views.scroll.addView(views.layout, new android.view.ViewGroup.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 };
 
 ExplorerWindow.Path.prototype.getContent = function() {
@@ -486,11 +495,13 @@ ExplorerWindow.Path.prototype.makePathClick = function(path) {
 ExplorerWindow.Path.prototype.addPathIcon = function(src, file) {
 	let path = new android.widget.ImageView(getContext());
 	new BitmapDrawable(src).attachAsImage(path);
-	path.setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
+	path.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+		toComplexUnitDip(8), toComplexUnitDip(8));
 	path.setScaleType($.ImageView.ScaleType.CENTER_CROP);
 	path.setOnClickListener(this.makePathClick(file));
-	let params = android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(60), getDisplayPercentHeight(60));
-	return (path.setLayoutParams(params), this.addPathElement(path));
+	path.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(40), toComplexUnitDip(40)));
+	return this.addPathElement(path);
 };
 
 ExplorerWindow.Path.prototype.addPathText = function(text, file) {
@@ -499,20 +510,24 @@ ExplorerWindow.Path.prototype.addPathText = function(text, file) {
 	typeface && path.setTypeface(typeface);
 	path.setTextColor($.Color.WHITE);
 	path.setGravity($.Gravity.CENTER);
-	path.setTextSize(getRelativeDisplayPercentWidth(21));
-	path.setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
+	path.setTextSize(toComplexUnitSp(8));
+	path.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+		toComplexUnitDip(8), toComplexUnitDip(8));
 	path.setOnClickListener(this.makePathClick(file));
-	let params = android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	return (path.setLayoutParams(params), this.addPathElement(path));
+	path.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
+	return this.addPathElement(path);
 };
 
 ExplorerWindow.Path.prototype.attachArrowToPath = function() {
 	let path = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterDivider").attachAsImage(path);
-	path.setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(20), getDisplayPercentHeight(10), getDisplayPercentHeight(20));
+	path.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
+		toComplexUnitDip(8), toComplexUnitDip(8));
 	path.setScaleType($.ImageView.ScaleType.CENTER_CROP);
-	let params = android.widget.LinearLayout.LayoutParams(getDisplayPercentHeight(30), getDisplayPercentHeight(60));
-	return (path.setLayoutParams(params), this.addPathElement(path, false));
+	path.setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(20), toComplexUnitDip(40)));
+	return this.addPathElement(path, false);
 };
 
 ExplorerWindow.Path.prototype.setPath = function(path) {
@@ -588,7 +603,8 @@ ExplorerWindow.Rename.prototype.reset = function() {
 		views = this.views = {};
 	let content = new android.widget.RelativeLayout(getContext());
 	content.setId(java.lang.String("renameLayout").hashCode());
-	let params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	let params = new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
 	content.setLayoutParams(params);
 	this.content = content;
@@ -597,29 +613,33 @@ ExplorerWindow.Rename.prototype.reset = function() {
 	typeface && views.approve.setTypeface(typeface);
 	views.approve.setSingleLine();
 	views.approve.setTextColor(isInvertedLogotype() ? $.Color.WHITE : $.Color.GREEN);
-	views.approve.setTextSize(getRelativeDisplayPercentWidth(27));
+	views.approve.setTextSize(toComplexUnitSp(11));
 	views.approve.setId(java.lang.String("renameApprove").hashCode());
-	views.approve.setPadding(getDisplayPercentHeight(24), getDisplayPercentHeight(24), getDisplayPercentHeight(24), getDisplayPercentHeight(24));
+	views.approve.setPadding(toComplexUnitDip(16), toComplexUnitDip(16),
+		toComplexUnitDip(16), toComplexUnitDip(16));
 	views.approve.setOnClickListener(function() {
 		scope.approve();
 	});
-	params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params = new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.leftMargin = getDisplayPercentHeight(24);
+	params.leftMargin = toComplexUnitDip(16);
 	content.addView(views.approve, params);
 
 	views.format = new android.widget.TextView(getContext());
 	typeface && views.format.setTypeface(typeface);
 	views.format.setSingleLine();
 	views.format.setTextColor($.Color.WHITE);
-	views.format.setTextSize(getRelativeDisplayPercentWidth(30));
+	views.format.setTextSize(toComplexUnitSp(11));
 	views.format.setId(java.lang.String("renameFormat").hashCode());
-	views.format.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(16), getDisplayPercentHeight(16), getDisplayPercentHeight(16));
+	views.format.setPadding(toComplexUnitDip(10), toComplexUnitDip(10),
+		toComplexUnitDip(10), toComplexUnitDip(10));
 	views.format.setOnClickListener(function() {
 		scope.nextFormat();
 	});
-	params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params = new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.approve.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	content.addView(views.format, params);
@@ -629,12 +649,13 @@ ExplorerWindow.Rename.prototype.reset = function() {
 		android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 	views.name.setHintTextColor($.Color.LTGRAY);
 	views.name.setTextColor($.Color.WHITE);
-	views.name.setTextSize(getRelativeDisplayPercentWidth(24));
+	views.name.setTextSize(toComplexUnitSp(9));
 	typeface && views.name.setTypeface(typeface);
-	params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+	params = new android.widget.RelativeLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.addRule(android.widget.RelativeLayout.LEFT_OF, views.format.getId());
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-	params.setMargins(getDisplayPercentHeight(8), getDisplayPercentHeight(8), getDisplayPercentHeight(8), getDisplayPercentHeight(8));
+	params.setMargins(toComplexUnitDip(6), toComplexUnitDip(6), toComplexUnitDip(6), toComplexUnitDip(6));
 	content.addView(views.name, params);
 };
 
@@ -928,27 +949,30 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 	},
 	makeItemLayout: function() {
 		let layout = new android.widget.RelativeLayout(getContext());
-		let params = android.view.ViewGroup.LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-		layout.setLayoutParams(params);
+		layout.setLayoutParams(new android.view.ViewGroup.LayoutParams
+			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 
 		let icon = new android.widget.ImageView(getContext());
-		icon.setPadding(getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20), getDisplayPercentHeight(20));
+		icon.setPadding(toComplexUnitDip(14), toComplexUnitDip(14),
+			toComplexUnitDip(14), toComplexUnitDip(14));
 		icon.setScaleType($.ImageView.ScaleType.CENTER_CROP);
 		icon.setTag("fileIcon");
 		icon.setId(java.lang.String("fileIcon").hashCode());
-		params = android.widget.RelativeLayout.LayoutParams(getDisplayPercentHeight(75), getDisplayPercentHeight(100));
+		let params = new android.widget.RelativeLayout.LayoutParams
+			(toComplexUnitDip(50), toComplexUnitDip(66));
 		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-		params.rightMargin = getDisplayPercentHeight(15);
+		params.rightMargin = toComplexUnitDip(10);
 		layout.addView(icon, params);
 
 		let additional = new android.widget.LinearLayout(getContext());
 		additional.setOrientation($.LinearLayout.VERTICAL);
 		additional.setGravity($.Gravity.RIGHT);
-		additional.setPadding(getDisplayPercentHeight(30), 0, getDisplayPercentHeight(30), 0);
+		additional.setPadding(toComplexUnitDip(20), 0, toComplexUnitDip(20), 0);
 		additional.setTag("additionalInfo");
 		additional.setId(java.lang.String("additionalInfo").hashCode());
-		params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		params = new android.widget.RelativeLayout.LayoutParams
+			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 		layout.addView(additional, params);
@@ -956,7 +980,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		let date = new android.widget.TextView(getContext());
 		typeface && date.setTypeface(typeface);
 		date.setGravity($.Gravity.RIGHT);
-		date.setTextSize(getRelativeDisplayPercentWidth(21));
+		date.setTextSize(toComplexUnitSp(8));
 		date.setTextColor($.Color.LTGRAY);
 		date.setTag("fileDate");
 		additional.addView(date);
@@ -964,7 +988,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		let info = new android.widget.TextView(getContext());
 		typeface && info.setTypeface(typeface);
 		info.setGravity($.Gravity.RIGHT);
-		info.setTextSize(getRelativeDisplayPercentWidth(21));
+		info.setTextSize(toComplexUnitSp(8));
 		info.setTextColor($.Color.LTGRAY);
 		info.setTag("fileInfo");
 		additional.addView(info);
@@ -973,7 +997,8 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 		uniqal.setOrientation($.LinearLayout.VERTICAL);
 		uniqal.setTag("uniqalInfo");
 		uniqal.setId(java.lang.String("uniqalInfo").hashCode());
-		params = android.widget.RelativeLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		params = new android.widget.RelativeLayout.LayoutParams
+			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.addRule(android.widget.RelativeLayout.LEFT_OF, additional.getId());
 		params.addRule(android.widget.RelativeLayout.RIGHT_OF, icon.getId());
 		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
@@ -982,7 +1007,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 
 		let name = new android.widget.TextView(getContext());
 		typeface && name.setTypeface(typeface);
-		name.setTextSize(getRelativeDisplayPercentWidth(22.5));
+		name.setTextSize(toComplexUnitSp(9));
 		name.setTextColor($.Color.WHITE);
 		name.setTag("fileName");
 		name.setMaxLines(3);
@@ -990,7 +1015,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 
 		let size = new android.widget.TextView(getContext());
 		typeface && size.setTypeface(typeface);
-		size.setTextSize(getRelativeDisplayPercentWidth(21));
+		size.setTextSize(toComplexUnitSp(8));
 		size.setTextColor($.Color.LTGRAY);
 		size.setTag("fileSize");
 		uniqal.addView(size);

@@ -106,7 +106,7 @@ EditorFragment.prototype.resetLegacyContainer = function() {
 	text.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN |
 		android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
 	text.setTextColor(android.graphics.Color.WHITE);
-	text.setTextSize(getRelativeDisplayPercentWidth(21));
+	text.setTextSize(toComplexUnitSp(8));
 	text.setHorizontalScrollBarEnabled(true);
 	text.setHorizontallyScrolling(true);
 	text.setSingleLine(false);
@@ -181,7 +181,8 @@ if (isHorizon) {
 		
 		let icon = new android.widget.ImageView(getContext());
 		icon.setTag("itemIcon");
-		let params = new android.widget.LinearLayout.LayoutParams(toComplexUnitDip(24), toComplexUnitDip(24));
+		let params = new android.widget.LinearLayout.LayoutParams
+			(toComplexUnitDip(24), toComplexUnitDip(24));
 		params.leftMargin = params.rightMargin = toComplexUnitDip(4);
 		layout.addView(icon, params);
 		
@@ -192,14 +193,15 @@ if (isHorizon) {
 		layout.addView(descriptor);
 		
 		let label = new android.widget.TextView(getContext());
-		label.setTextSize(getRelativeDisplayPercentWidth(16));
+		label.setTextSize(toComplexUnitSp(12));
 		label.setTag("itemLabel");
 		descriptor.addView(label);
 		
 		let description = new android.widget.TextView(getContext());
-		description.setTextSize(getRelativeDisplayPercentWidth(12));
+		description.setTextSize(toComplexUnitSp(9));
 		description.setTag("itemDescription");
-		params = new android.widget.LinearLayout.LayoutParams($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+		params = new android.widget.LinearLayout.LayoutParams
+			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 		params.topMargin = toComplexUnitDip(4);
 		descriptor.addView(description, params);
 	};

@@ -334,8 +334,8 @@ ControlWindow.prototype.transformCollapsedButton = function() {
 };
 
 ControlWindow.prototype.transformLogotype = function() {
-	this.setWidth(getDisplayWidth());
-	this.setHeight(getDisplayHeight());
+	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	this.setEnterTransition(this.getLogotypeEnterTransition());
 	this.setExitTransition(this.getLogotypeExitTransition());
 	this.setFragment(this.getLogotypeFragment());

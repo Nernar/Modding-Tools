@@ -84,8 +84,8 @@ FocusableWindow.prototype.isFullscreen = function() {
 };
 
 FocusableWindow.prototype.getParams = function(flags) {
-	let params = new android.view.WindowManager.LayoutParams(this.width, this.height,
-		this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
+	let params = new android.view.WindowManager.LayoutParams
+		(this.width, this.height, this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
 	return (params.gravity = this.gravity, params);
 };
 

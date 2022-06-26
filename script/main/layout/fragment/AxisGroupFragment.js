@@ -9,12 +9,14 @@ AxisGroupFragment.prototype.TYPE = "AxisGroupFragment";
 
 AxisGroupFragment.prototype.resetContainer = function() {
 	let content = new android.widget.LinearLayout(getContext());
-	content.setPadding(getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10), getDisplayPercentHeight(10));
+	content.setPadding(toComplexUnitDip(6), toComplexUnitDip(6),
+		toComplexUnitDip(6), toComplexUnitDip(6));
 	this.setContainerView(content);
 	
 	let axis = new android.widget.TextView(getContext());
-	axis.setPadding(getDisplayPercentHeight(16), getDisplayPercentHeight(10), getDisplayPercentHeight(16), getDisplayPercentHeight(10));
-	axis.setTextSize(getRelativeDisplayPercentWidth(32));
+	axis.setPadding(toComplexUnitDip(10), toComplexUnitDip(6),
+		toComplexUnitDip(10), toComplexUnitDip(6));
+	axis.setTextSize(toComplexUnitSp(12));
 	axis.setTextColor($.Color.WHITE);
 	axis.setTypeface(typeface);
 	axis.setMaxLines(1);

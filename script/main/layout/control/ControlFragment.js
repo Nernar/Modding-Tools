@@ -31,21 +31,21 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
 	let params = android.widget.FrameLayout.LayoutParams
 		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-	params.setMargins(getDisplayPercentHeight(20), getDisplayPercentHeight(20), 0, 0);
+	params.setMargins(toComplexUnitDip(12), toComplexUnitDip(12), 0, 0);
 	container.addView(layout, params);
 	
 	let button = new android.widget.ImageView(getContext());
-	button.setPadding(getDisplayPercentHeight(15), getDisplayPercentHeight(15), getDisplayPercentHeight(15), getDisplayPercentHeight(15));
+	button.setPadding(toComplexUnitDip(10), toComplexUnitDip(10),
+		toComplexUnitDip(10), toComplexUnitDip(10));
 	button.setTag("logotypeForeground");
 	$.ViewCompat.setTransitionName(button, "logotypeForeground");
-	params = android.widget.LinearLayout.LayoutParams
-		(getDisplayPercentHeight(100), getDisplayPercentHeight(100));
-	layout.addView(button, params);
+	layout.addView(button, new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(60), toComplexUnitDip(60)));
 };
 
 ControlFragment.CollapsedButton = function() {
 	ControlFragment.Button.apply(this, arguments);
-	this.setOffset(getDisplayPercentWidth(50));
+	this.setOffset(toComplexUnitDip(40));
 };
 
 ControlFragment.CollapsedButton.prototype = new ControlFragment.Button;
@@ -79,7 +79,7 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	logotype.setTag("logotypeForeground");
 	$.ViewCompat.setTransitionName(logotype, "logotypeForeground");
 	params = new android.widget.LinearLayout.LayoutParams
-		(getDisplayPercentHeight(320), getDisplayPercentHeight(320));
+		(toComplexUnitDip(208), toComplexUnitDip(208));
 	layout.addView(logotype, params);
 };
 

@@ -10,9 +10,10 @@ ExpandableFragment.prototype.resetContainer = function() {
 	let layout = this.getContainerRoot();
 	
 	let title = new android.widget.TextView(getContext());
-	title.setPadding(getDisplayPercentHeight(30), getDisplayPercentHeight(18), getDisplayPercentHeight(30), getDisplayPercentHeight(18));
+	title.setPadding(toComplexUnitDip(20), toComplexUnitDip(12),
+		toComplexUnitDip(20), toComplexUnitDip(12));
 	new BitmapDrawable("popup").attachAsBackground(title);
-	title.setTextSize(getRelativeDisplayPercentWidth(24));
+	title.setTextSize(toComplexUnitSp(9));
 	title.setGravity($.Gravity.CENTER);
 	title.setTextColor($.Color.WHITE);
 	title.setTypeface(typeface);

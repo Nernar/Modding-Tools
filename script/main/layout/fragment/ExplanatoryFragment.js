@@ -8,8 +8,9 @@ ExplanatoryFragment.prototype.TYPE = "ExplanatoryFragment";
 
 ExplanatoryFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
-	view.setPadding(getDisplayPercentHeight(20), getDisplayPercentHeight(16), getDisplayPercentHeight(20), getDisplayPercentHeight(16));
-	view.setTextSize(getRelativeDisplayPercentWidth(15));
+	view.setPadding(toComplexUnitDip(14), toComplexUnitDip(10),
+		toComplexUnitDip(14), toComplexUnitDip(10));
+	view.setTextSize(toComplexUnitSp(6));
 	view.setTextColor($.Color.LTGRAY);
 	view.setGravity($.Gravity.CENTER);
 	view.setTypeface(typeface);
