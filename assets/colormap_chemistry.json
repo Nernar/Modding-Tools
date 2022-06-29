@@ -1,182 +1,458 @@
 {
-	"chemical_heat": -13094093,
-	"compound_creator_inside": -5592406,
-	"compound_creator_inside_bottom": -5526613,
-	"compound_creator_side_a": -6316129,
-	"compound_creator_side_b": -6316129,
-	"compound_creator_side_c": -6381922,
-	"compound_creator_top": -3289651,
-	"element_000_unknown": -855310,
-	"element_001_h": -855310,
-	"element_002_he": -723724,
-	"element_003_li": -789517,
-	"element_004_be": -723724,
-	"element_005_b": -2902348,
-	"element_006_c": -855310,
-	"element_007_n": -855310,
-	"element_008_o": -855310,
-	"element_009_f": -460552,
-	"element_010_ne": -723724,
-	"element_011_na": -723724,
-	"element_012_mg": -657931,
-	"element_013_al": -3356746,
-	"element_014_si": -2836555,
-	"element_015_p": -855310,
-	"element_016_s": -855310,
-	"element_017_cl": -789517,
-	"element_018_ar": -723724,
-	"element_019_k": -789517,
-	"element_020_ca": -723724,
-	"element_021_sc": -4868683,
-	"element_022_ti": -4934476,
-	"element_023_v": -5066062,
-	"element_024_cr": -4802890,
-	"element_025_mn": -4473925,
-	"element_026_fe": -4539718,
-	"element_027_co": -4737097,
-	"element_028_ni": -4737097,
-	"element_029_cu": -4671304,
-	"element_030_zn": -4671304,
-	"element_031_ga": -3290696,
-	"element_032_ge": -2572612,
-	"element_033_as": -2638148,
-	"element_034_se": -723724,
-	"element_035_br": -723724,
-	"element_036_kr": -723724,
-	"element_037_rb": -723724,
-	"element_038_sr": -723724,
-	"element_039_y": -5197648,
-	"element_040_zr": -4802890,
-	"element_041_nb": -4539718,
-	"element_042_mo": -4539718,
-	"element_043_tc": -4934476,
-	"element_044_ru": -4605511,
-	"element_045_rh": -4473925,
-	"element_046_pd": -4605511,
-	"element_047_ag": -4342339,
-	"element_048_cd": -4605511,
-	"element_049_in": -3356746,
-	"element_050_sn": -3290953,
-	"element_051_sb": -2704197,
-	"element_052_te": -2704197,
-	"element_053_i": -789517,
-	"element_054_xe": -723724,
-	"element_055_cs": -723724,
-	"element_056_ba": -657931,
-	"element_057_la": -1394205,
-	"element_058_ce": -1393949,
-	"element_059_pr": -1394718,
-	"element_060_nd": -1327900,
-	"element_061_pm": -1394205,
-	"element_062_sm": -1393949,
-	"element_063_eu": -1393949,
-	"element_064_gd": -1393693,
-	"element_065_tb": -1394205,
-	"element_066_dy": -1327900,
-	"element_067_ho": -1394205,
-	"element_068_er": -1394205,
-	"element_069_tm": -1394205,
-	"element_070_yb": -1394718,
-	"element_071_lu": -1394974,
-	"element_072_hf": -4605511,
-	"element_073_ta": -4671304,
-	"element_074_w": -4934476,
-	"element_075_re": -4408132,
-	"element_076_os": -4605511,
-	"element_077_ir": -4934476,
-	"element_078_pt": -4802890,
-	"element_079_au": -4605511,
-	"element_080_hg": -4342339,
-	"element_081_tl": -3488333,
-	"element_082_pb": -3225160,
-	"element_083_bi": -3356746,
-	"element_084_po": -2770504,
-	"element_085_at": -723724,
-	"element_086_rn": -723724,
-	"element_087_fr": -789517,
-	"element_088_ra": -723724,
-	"element_089_ac": -723724,
-	"element_090_th": -723724,
-	"element_091_pa": -723724,
-	"element_092_u": -789517,
-	"element_093_np": -657931,
-	"element_094_pu": -723724,
-	"element_095_am": -723724,
-	"element_096_cm": -723724,
-	"element_097_bk": -723724,
-	"element_098_cf": -723724,
-	"element_099_es": -723724,
-	"element_100_fm": -723724,
-	"element_101_md": -657931,
-	"element_102_no": -723724,
-	"element_103_lr": -723724,
-	"element_104_rf": -4539718,
-	"element_105_db": -4342339,
-	"element_106_sg": -4342339,
-	"element_107_bh": -4408132,
-	"element_108_hs": -4408132,
-	"element_109_mt": -4473925,
-	"element_110_ds": -4473925,
-	"element_111_rg": -4342339,
-	"element_112_cn": -4671304,
-	"element_113_nh": -3159366,
-	"element_114_fl": -3422539,
-	"element_115_mc": -3290696,
-	"element_116_lv": -3422539,
-	"element_117_ts": -723724,
-	"element_118_og": -657931,
-	"element_constructor_back": -7895161,
-	"element_constructor_front": -6380121,
-	"element_constructor_side_a": -7368817,
-	"element_constructor_side_b": -5855578,
-	"element_constructor_top": -8684677,
-	"glow_stick_blue": -13146911,
-	"glow_stick_brown": -4761325,
-	"glow_stick_cyan": -15093277,
-	"glow_stick_gray": -14803426,
-	"glow_stick_green": -12852340,
-	"glow_stick_light_blue": -7092753,
-	"glow_stick_lime": -6689012,
-	"glow_stick_magenta": -946708,
-	"glow_stick_orange": -1862085,
-	"glow_stick_pink": -941872,
-	"glow_stick_purple": -2999325,
-	"glow_stick_red": -1885125,
-	"glow_stick_white": -2302756,
-	"glow_stick_yellow": -1909497,
-	"hard_glass": -3016726,
-	"hard_glass_black": -14540254,
-	"hard_glass_blue": -15520596,
-	"hard_glass_brown": -7644873,
-	"hard_glass_cyan": -12874577,
-	"hard_glass_gray": -8224126,
-	"hard_glass_green": -7553472,
-	"hard_glass_light_blue": -7490066,
-	"hard_glass_lime": -8006117,
-	"hard_glass_magenta": -421901,
-	"hard_glass_orange": -1406189,
-	"hard_glass_pink": -418612,
-	"hard_glass_purple": -422401,
-	"hard_glass_red": -4575698,
-	"hard_glass_silver": -4342339,
-	"hard_glass_white": -460552,
-	"hard_glass_yellow": -55,
-	"lab_table_bottom": -14015980,
-	"lab_table_front": -4868683,
-	"lab_table_side_a": -5921630,
-	"lab_table_side_b": -6184802,
-	"lab_table_side_c": -7895161,
-	"lab_table_top": -9013642,
-	"material_reducer_bottom": -6447715,
-	"material_reducer_front": -4605254,
-	"material_reducer_side": -4868683,
-	"material_reducer_top": -13553620,
-	"tnt_bottom_underwater": -15354976,
-	"tnt_side_underwater": -15354719,
-	"tnt_top_underwater": -15355233,
-	"torch_blue": -16580095,
-	"torch_green": -16580095,
-	"torch_purple": -16580095,
-	"torch_red": -16580095,
-	"torch_underwater": -16514044
+	"element_label_0": [
+		-855310
+	],
+	"element_label_1": [
+		-855310
+	],
+	"element_label_2": [
+		-723724
+	],
+	"element_label_3": [
+		-789517
+	],
+	"element_label_4": [
+		-723724
+	],
+	"element_label_5": [
+		-2902348
+	],
+	"element_label_6": [
+		-855310
+	],
+	"element_label_7": [
+		-855310
+	],
+	"element_label_8": [
+		-855310
+	],
+	"element_label_9": [
+		-460552
+	],
+	"element_label_10": [
+		-723724
+	],
+	"element_label_11": [
+		-723724
+	],
+	"element_label_12": [
+		-657931
+	],
+	"element_label_13": [
+		-3356746
+	],
+	"element_label_14": [
+		-2836555
+	],
+	"element_label_15": [
+		-855310
+	],
+	"element_label_16": [
+		-855310
+	],
+	"element_label_17": [
+		-789517
+	],
+	"element_label_18": [
+		-723724
+	],
+	"element_label_19": [
+		-789517
+	],
+	"element_label_20": [
+		-723724
+	],
+	"element_label_21": [
+		-4868683
+	],
+	"element_label_22": [
+		-4934476
+	],
+	"element_label_23": [
+		-5066062
+	],
+	"element_label_24": [
+		-4802890
+	],
+	"element_label_25": [
+		-4473925
+	],
+	"element_label_26": [
+		-4539718
+	],
+	"element_label_27": [
+		-4737097
+	],
+	"element_label_28": [
+		-4737097
+	],
+	"element_label_29": [
+		-4671304
+	],
+	"element_label_30": [
+		-4671304
+	],
+	"element_label_31": [
+		-3290696
+	],
+	"element_label_32": [
+		-2572612
+	],
+	"element_label_33": [
+		-2638148
+	],
+	"element_label_34": [
+		-723724
+	],
+	"element_label_35": [
+		-723724
+	],
+	"element_label_36": [
+		-723724
+	],
+	"element_label_37": [
+		-723724
+	],
+	"element_label_38": [
+		-723724
+	],
+	"element_label_39": [
+		-5197648
+	],
+	"element_label_40": [
+		-4802890
+	],
+	"element_label_41": [
+		-4539718
+	],
+	"element_label_42": [
+		-4539718
+	],
+	"element_label_43": [
+		-4934476
+	],
+	"element_label_44": [
+		-4605511
+	],
+	"element_label_45": [
+		-4473925
+	],
+	"element_label_46": [
+		-4605511
+	],
+	"element_label_47": [
+		-4342339
+	],
+	"element_label_48": [
+		-4605511
+	],
+	"element_label_49": [
+		-3356746
+	],
+	"element_label_50": [
+		-3290953
+	],
+	"element_label_51": [
+		-2704197
+	],
+	"element_label_52": [
+		-2704197
+	],
+	"element_label_53": [
+		-789517
+	],
+	"element_label_54": [
+		-723724
+	],
+	"element_label_55": [
+		-723724
+	],
+	"element_label_56": [
+		-657931
+	],
+	"element_label_57": [
+		-1394205
+	],
+	"element_label_58": [
+		-1393949
+	],
+	"element_label_59": [
+		-1394718
+	],
+	"element_label_60": [
+		-1327900
+	],
+	"element_label_61": [
+		-1394205
+	],
+	"element_label_62": [
+		-1393949
+	],
+	"element_label_63": [
+		-1393949
+	],
+	"element_label_64": [
+		-1393693
+	],
+	"element_label_65": [
+		-1394205
+	],
+	"element_label_66": [
+		-1327900
+	],
+	"element_label_67": [
+		-1394205
+	],
+	"element_label_68": [
+		-1394205
+	],
+	"element_label_69": [
+		-1394205
+	],
+	"element_label_70": [
+		-1394718
+	],
+	"element_label_71": [
+		-1394974
+	],
+	"element_label_72": [
+		-4605511
+	],
+	"element_label_73": [
+		-4671304
+	],
+	"element_label_74": [
+		-4934476
+	],
+	"element_label_75": [
+		-4408132
+	],
+	"element_label_76": [
+		-4605511
+	],
+	"element_label_77": [
+		-4934476
+	],
+	"element_label_78": [
+		-4802890
+	],
+	"element_label_79": [
+		-4605511
+	],
+	"element_label_80": [
+		-4342339
+	],
+	"element_label_81": [
+		-3488333
+	],
+	"element_label_82": [
+		-3225160
+	],
+	"element_label_83": [
+		-3356746
+	],
+	"element_label_84": [
+		-2770504
+	],
+	"element_label_85": [
+		-723724
+	],
+	"element_label_86": [
+		-723724
+	],
+	"element_label_87": [
+		-789517
+	],
+	"element_label_88": [
+		-723724
+	],
+	"element_label_89": [
+		-723724
+	],
+	"element_label_90": [
+		-723724
+	],
+	"element_label_91": [
+		-723724
+	],
+	"element_label_92": [
+		-789517
+	],
+	"element_label_93": [
+		-657931
+	],
+	"element_label_94": [
+		-723724
+	],
+	"element_label_95": [
+		-723724
+	],
+	"element_label_96": [
+		-723724
+	],
+	"element_label_97": [
+		-723724
+	],
+	"element_label_98": [
+		-723724
+	],
+	"element_label_99": [
+		-723724
+	],
+	"element_label_100": [
+		-723724
+	],
+	"element_label_101": [
+		-657931
+	],
+	"element_label_102": [
+		-723724
+	],
+	"element_label_103": [
+		-723724
+	],
+	"element_label_104": [
+		-4539718
+	],
+	"element_label_105": [
+		-4342339
+	],
+	"element_label_106": [
+		-4342339
+	],
+	"element_label_107": [
+		-4408132
+	],
+	"element_label_108": [
+		-4408132
+	],
+	"element_label_109": [
+		-4473925
+	],
+	"element_label_110": [
+		-4473925
+	],
+	"element_label_111": [
+		-4342339
+	],
+	"element_label_112": [
+		-4671304
+	],
+	"element_label_113": [
+		-3159366
+	],
+	"element_label_114": [
+		-3422539
+	],
+	"element_label_115": [
+		-3290696
+	],
+	"element_label_116": [
+		-3422539
+	],
+	"element_label_117": [
+		-723724
+	],
+	"element_label_118": [
+		-657931
+	],
+	"chemistry_table_top": [
+		-3289651,
+		-13553620,
+		-8684677,
+		-9013642
+	],
+	"chemistry_table_bottom": [
+		-5526613,
+		-6447715,
+		-14015980,
+		-14015980
+	],
+	"chemistry_table_south": [
+		-5592406,
+		-4605254,
+		-6380121,
+		-4868683
+	],
+	"chemistry_table_east": [
+		-6316129,
+		-4868683,
+		-7368817,
+		-5921630
+	],
+	"chemistry_table_north": [
+		-6316129,
+		-4868683,
+		-7895161,
+		-6184802
+	],
+	"chemistry_table_west": [
+		-6381922,
+		-4868683,
+		-5855578,
+		-7895161
+	],
+	"chemical_heat": [
+		-13094093
+	],
+	"underwater_torch": [
+		-16514044
+	],
+	"colored_torch": [
+		-16580095,
+		-16580095,
+		-16580095,
+		-16580095
+	],
+	"tnt_top": [
+		null,
+		-15355233
+	],
+	"tnt_bottom": [
+		null,
+		-15354976
+	],
+	"tnt_side": [
+		null,
+		-15354719
+	],
+	"hard_glass": [
+		-3016726
+	],
+	"hard_stained_glass": [
+		-460552,
+		-1406189,
+		-421901,
+		-7490066,
+		-55,
+		-8006117,
+		-418612,
+		-8224126,
+		-4342339,
+		-12874577,
+		-422401,
+		-15520596,
+		-7644873,
+		-7553472,
+		-4575698,
+		-14540254
+	],
+	"glow_stick": [
+		-1885125,
+		-1885125,
+		-12852340,
+		-4761325,
+		-13146911,
+		-2999325,
+		-15093277,
+		-1885125,
+		-14803426,
+		-941872,
+		-6689012,
+		-1909497,
+		-7092753,
+		-946708,
+		-1862085,
+		-2302756
+	]
 }

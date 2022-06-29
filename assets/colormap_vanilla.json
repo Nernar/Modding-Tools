@@ -1,703 +1,2223 @@
 {
-	"acacia_trapdoor": -6203600,
-	"anvil_base": -12303292,
-	"anvil_top_damaged_0": -13816531,
-	"anvil_top_damaged_1": -13816531,
-	"anvil_top_damaged_2": -13816531,
-	"bamboo_leaf": -15393014,
-	"bamboo_sapling": -15922428,
-	"bamboo_singleleaf": -16711168,
-	"bamboo_small_leaf": -16183804,
-	"bamboo_stem": -11105278,
-	"barrel_bottom": -8035783,
-	"barrel_side": -7641541,
-	"barrel_top": -7378628,
-	"barrel_top_open": -7247043,
-	"barrier": -2883584,
-	"beacon": -2492424,
-	"bed_feet_end": -15399165,
-	"bed_feet_side": -15333885,
-	"bed_feet_top": -7334121,
-	"bed_head_end": -16054525,
-	"bed_head_side": -15596029,
-	"bed_head_top": -6939106,
-	"bedrock": -12237499,
-	"beetroots_stage_0": -16776704,
-	"beetroots_stage_1": -16710655,
-	"beetroots_stage_2": -16248826,
-	"beetroots_stage_3": -15330042,
-	"bell_bottom": -1328320,
-	"bell_side": -271809,
-	"bell_top": -67431,
-	"birch_trapdoor": -6189469,
-	"blast_furnace_front_off": -6250336,
-	"blast_furnace_front_on": -6513508,
-	"blast_furnace_side": -6776936,
-	"blast_furnace_top": -11513775,
-	"blue_ice": -9526020,
-	"bone_block_side": -1711665,
-	"bone_block_top": -3027277,
-	"bookshelf": -5009324,
-	"border": -4703696,
-	"brewing_stand": -15198184,
-	"brewing_stand_base": -9542813,
-	"brick": -6463922,
-	"bubble_column_down_top_a": -12664321,
-	"bubble_column_down_top_b": -12664321,
-	"bubble_column_down_top_c": -12664321,
-	"bubble_column_down_top_d": -12664321,
-	"bubble_column_inner_a": -12336129,
-	"bubble_column_inner_b": -12336129,
-	"bubble_column_outer_a": -11745281,
-	"bubble_column_outer_b": -11745281,
-	"bubble_column_outer_c": -11745281,
-	"bubble_column_outer_d": -11745281,
-	"bubble_column_outer_e": -11745281,
-	"bubble_column_outer_f": -11745281,
-	"bubble_column_outer_g": -11745281,
-	"bubble_column_outer_h": -11745281,
-	"bubble_column_up_top_a": -12007937,
-	"bubble_column_up_top_b": -12007937,
-	"bubble_column_up_top_c": -12007937,
-	"bubble_column_up_top_d": -12007937,
-	"build_allow": -10463415,
-	"build_deny": -10592674,
-	"cake_bottom": -11656430,
-	"cake_inner": -14413559,
-	"cake_side": -16186366,
-	"cake_top": -133139,
-	"camera_back": -7774688,
-	"camera_front": -7577827,
-	"camera_side": -13290187,
-	"camera_top": -13224394,
-	"campfire": -4238080,
-	"campfire_log": -7113917,
-	"campfire_log_lit": -5674715,
-	"carried_waterlily": -14206187,
-	"carrots_stage_0": -16644606,
-	"carrots_stage_1": -16511996,
-	"carrots_stage_2": -15984375,
-	"carrots_stage_3": -16049398,
-	"cartography_table_side1": -12309485,
-	"cartography_table_side2": -12374765,
-	"cartography_table_side3": -12244204,
-	"cartography_table_top": -12505323,
-	"cauldron_bottom": -15921906,
-	"cauldron_inner": -13553355,
-	"cauldron_side": -11908790,
-	"cauldron_top": -13882323,
-	"cauldron_water": -3223858,
-	"cauldron_water_placeholder": -3223858,
-	"chain_command_block_back": -9327214,
-	"chain_command_block_back_mipmap": -9129835,
-	"chain_command_block_conditional": -9327214,
-	"chain_command_block_conditional_mipmap": -9195628,
-	"chain_command_block_front": -9327214,
-	"chain_command_block_front_mipmap": -9129835,
-	"chain_command_block_side": -9326957,
-	"chain_command_block_side_mipmap": -9129835,
-	"chest_front": -12635101,
-	"chest_side": -12766429,
-	"chest_top": -13554912,
-	"chorus_flower": -10799782,
-	"chorus_flower_dead": -11128746,
-	"chorus_plant": -11062953,
-	"clay": -6248781,
-	"coal_block": -15724785,
-	"coal_ore": -7368817,
-	"coarse_dirt": -4684709,
-	"cobblestone": -10197916,
-	"cobblestone_mossy": -10655926,
-	"cocoa_stage_0": -15856122,
-	"cocoa_stage_1": -15265785,
-	"cocoa_stage_2": -15464446,
-	"command_block": -6133434,
-	"command_block_back": -4756160,
-	"command_block_back_mipmap": -5609149,
-	"command_block_conditional": -4756161,
-	"command_block_conditional_mipmap": -5674430,
-	"command_block_front": -4755905,
-	"command_block_front_mipmap": -5674430,
-	"command_block_side": -4756160,
-	"command_block_side_mipmap": -5674430,
-	"comparator_off": -10138036,
-	"comparator_on": -8684165,
-	"compost": -13688564,
-	"compost_ready": -14214388,
-	"composter_bottom": -7907282,
-	"composter_side": -7118539,
-	"composter_top": -6067398,
-	"concrete_black": -16250353,
-	"concrete_blue": -13881713,
-	"concrete_brown": -10470625,
-	"concrete_cyan": -15370360,
-	"concrete_gray": -13223619,
-	"concrete_green": -11969756,
-	"concrete_light_blue": -14448186,
-	"concrete_lime": -10573800,
-	"concrete_magenta": -5689185,
-	"concrete_orange": -2072320,
-	"concrete_pink": -2792050,
-	"concrete_powder_black": -15132129,
-	"concrete_powder_blue": -12170842,
-	"concrete_powder_brown": -8957902,
-	"concrete_powder_cyan": -14379875,
-	"concrete_powder_gray": -11775660,
-	"concrete_powder_green": -10587347,
-	"concrete_powder_light_blue": -11881259,
-	"concrete_powder_lime": -8865752,
-	"concrete_powder_magenta": -4172872,
-	"concrete_powder_orange": -1603034,
-	"concrete_powder_pink": -1729867,
-	"concrete_powder_purple": -8768854,
-	"concrete_powder_red": -5753294,
-	"concrete_powder_silver": -6579308,
-	"concrete_powder_white": -1973277,
-	"concrete_powder_yellow": -1522123,
-	"concrete_purple": -10215524,
-	"concrete_red": -7462880,
-	"concrete_silver": -8553101,
-	"concrete_white": -3156522,
-	"concrete_yellow": -1003755,
-	"conduit_base": -15264756,
-	"conduit_cage": -16316925,
-	"conduit_closed": -16307905,
-	"conduit_open": -15324612,
-	"conduit_wind_horizontal": -6494473,
-	"conduit_wind_vertical": -6363144,
-	"coral_blue": -13676085,
-	"coral_blue_dead": -7963785,
-	"coral_fan_blue": -13544243,
-	"coral_fan_blue_dead": -15396077,
-	"coral_fan_pink": -6475913,
-	"coral_fan_pink_dead": -15527663,
-	"coral_fan_purple": -16383993,
-	"coral_fan_purple_dead": -15264235,
-	"coral_fan_red": -15268601,
-	"coral_fan_red_dead": -15264491,
-	"coral_fan_yellow": -3295427,
-	"coral_fan_yellow_dead": -15593456,
-	"coral_pink": -3188322,
-	"coral_pink_dead": -7963785,
-	"coral_plant_blue": -13742398,
-	"coral_plant_blue_dead": -13093581,
-	"coral_plant_pink": -1536319,
-	"coral_plant_pink_dead": -14738405,
-	"coral_plant_purple": -16056308,
-	"coral_plant_purple_dead": -14869734,
-	"coral_plant_red": -15268601,
-	"coral_plant_red_dead": -15330284,
-	"coral_plant_yellow": -3032514,
-	"coral_plant_yellow_dead": -15724786,
-	"coral_purple": -4644427,
-	"coral_purple_dead": -9476252,
-	"coral_red": -5561038,
-	"coral_red_dead": -6646385,
-	"coral_yellow": -2570430,
-	"coral_yellow_dead": -7963785,
-	"crafting_table_front": -12702695,
-	"crafting_table_side": -12439781,
-	"crafting_table_top": -12047848,
-	"dark_oak_trapdoor": -11849449,
-	"daylight_detector_inverted_top": -12699087,
-	"daylight_detector_side": -12437725,
-	"daylight_detector_top": -11977432,
-	"deadbush": -15331063,
-	"diamond_block": -11605791,
-	"diamond_ore": -6903387,
-	"dirt": -4618916,
-	"dirt_podzol_side": -10008275,
-	"dirt_podzol_top": -11125737,
-	"dispenser_front_horizontal": -11119275,
-	"dispenser_front_vertical": -10987689,
-	"door_acacia_lower": -15069174,
-	"door_acacia_upper": -5217474,
-	"door_birch_lower": -11323364,
-	"door_birch_upper": -1383998,
-	"door_dark_oak_lower": -12046312,
-	"door_dark_oak_upper": -11849191,
-	"door_iron_lower": -13290187,
-	"door_iron_upper": -3882045,
-	"door_jungle_lower": -9482699,
-	"door_jungle_upper": -4157592,
-	"door_spruce_lower": -10401492,
-	"door_spruce_upper": -7904456,
-	"door_wood_lower": -9743568,
-	"door_wood_upper": -5404334,
-	"double_plant_fern_carried": -15195123,
-	"double_plant_grass_carried": -15656439,
-	"double_plant_paeonia_bottom": -15785456,
-	"double_plant_paeonia_top": -16182007,
-	"double_plant_rose_bottom": -15127534,
-	"double_plant_rose_top": -16118010,
-	"double_plant_sunflower_back": -16511997,
-	"double_plant_sunflower_bottom": -16577535,
-	"double_plant_sunflower_front": -406729,
-	"double_plant_sunflower_top": -16709631,
-	"dragon_egg": -15988465,
-	"dried_kelp_side_a": -14734825,
-	"dried_kelp_side_b": -15063536,
-	"dried_kelp_top": -14340325,
-	"dropper_front_horizontal": -11119275,
-	"dropper_front_vertical": -11119018,
-	"emerald_block": -15155902,
-	"emerald_ore": -6775398,
-	"enchanting_table_bottom": -15791592,
-	"enchanting_table_side": -15661550,
-	"enchanting_table_top": -4458002,
-	"end_bricks": -2169435,
-	"end_gateway": -16118254,
-	"end_portal": -16380139,
-	"end_rod": -1186602,
-	"end_stone": -2367842,
-	"ender_chest_front": -15523549,
-	"ender_chest_side": -15787232,
-	"ender_chest_top": -14075332,
-	"endframe_eye": -16248046,
-	"endframe_side": -15324116,
-	"endframe_top": -13740725,
-	"farmland_dry": -6919094,
-	"farmland_wet": -11457521,
-	"fire_0": -4236799,
-	"fire_0_placeholder": -4105984,
-	"fire_1": -4236799,
-	"fire_1_placeholder": -3907584,
-	"fletcher_table_side1": -5202065,
-	"fletcher_table_side2": -5202065,
-	"fletcher_table_top": -5004429,
-	"flower_allium": -2641672,
-	"flower_blue_orchid": -16776960,
-	"flower_cornflower": -16711167,
-	"flower_dandelion": -16776192,
-	"flower_houstonia": -1576977,
-	"flower_lily_of_the_valley": -16578559,
-	"flower_oxeye_daisy": -16776192,
-	"flower_paeonia": -16512763,
-	"flower_pot": -15923451,
-	"flower_rose": -16645118,
-	"flower_rose_blue": -16711168,
-	"flower_tulip_orange": -16710144,
-	"flower_tulip_pink": -16710144,
-	"flower_tulip_red": -16709888,
-	"flower_tulip_white": -16710400,
-	"flower_wither_rose": -16447997,
-	"frosted_ice_0": -7490052,
-	"frosted_ice_1": -7424260,
-	"frosted_ice_2": -7424260,
-	"frosted_ice_3": -7292931,
-	"furnace_front_off": -12434878,
-	"furnace_front_on": -11974584,
-	"furnace_side": -10658724,
-	"furnace_top": -10658724,
-	"glass": -4990755,
-	"glass_black": -15132391,
-	"glass_blue": -13481038,
-	"glass_brown": -10073294,
-	"glass_cyan": -11763815,
-	"glass_gray": -11842741,
-	"glass_green": -10059981,
-	"glass_light_blue": -10053161,
-	"glass_lime": -8402151,
-	"glass_magenta": -5092393,
-	"glass_orange": -2588877,
-	"glass_pane_top": -2887692,
-	"glass_pane_top_black": -15198184,
-	"glass_pane_top_blue": -13612373,
-	"glass_pane_top_brown": -10401232,
-	"glass_pane_top_cyan": -12027760,
-	"glass_pane_top_gray": -11908534,
-	"glass_pane_top_green": -10520529,
-	"glass_pane_top_light_blue": -10382384,
-	"glass_pane_top_lime": -8863721,
-	"glass_pane_top_magenta": -5551408,
-	"glass_pane_top_orange": -3377105,
-	"glass_pane_top_pink": -1804131,
-	"glass_pane_top_purple": -8897368,
-	"glass_pane_top_red": -7131088,
-	"glass_pane_top_silver": -7105645,
-	"glass_pane_top_white": -592138,
-	"glass_pane_top_yellow": -2237136,
-	"glass_pink": -884828,
-	"glass_purple": -8437838,
-	"glass_red": -6737101,
-	"glass_silver": -6710887,
-	"glass_white": -1,
-	"glass_yellow": -1710798,
-	"glazed_terracotta_black": -14541792,
-	"glazed_terracotta_blue": -13153878,
-	"glazed_terracotta_brown": -7183555,
-	"glazed_terracotta_cyan": -15435638,
-	"glazed_terracotta_gray": -12169646,
-	"glazed_terracotta_green": -11442400,
-	"glazed_terracotta_light_blue": -13130285,
-	"glazed_terracotta_lime": -5387731,
-	"glazed_terracotta_magenta": -3780930,
-	"glazed_terracotta_orange": -422104,
-	"glazed_terracotta_pink": -1005634,
-	"glazed_terracotta_purple": -7259195,
-	"glazed_terracotta_red": -4966864,
-	"glazed_terracotta_silver": -4538946,
-	"glazed_terracotta_white": -75188,
-	"glazed_terracotta_yellow": -1002207,
-	"glowing_obsidian": -13631224,
-	"glowstone": -1987230,
-	"gold_block": -668361,
-	"gold_ore": -5658211,
-	"grass_carried": -11964633,
-	"grass_path_side": -10336976,
-	"grass_path_top": -6388667,
-	"grass_side_carried": -9786816,
-	"grass_side_snowed": -1575692,
-	"grass_top": -6908266,
-	"gravel": -9476250,
-	"hardened_clay": -6791613,
-	"hardened_clay_stained_black": -14346736,
-	"hardened_clay_stained_blue": -11912357,
-	"hardened_clay_stained_brown": -11717853,
-	"hardened_clay_stained_cyan": -11117733,
-	"hardened_clay_stained_gray": -13030877,
-	"hardened_clay_stained_green": -11775190,
-	"hardened_clay_stained_light_blue": -9343863,
-	"hardened_clay_stained_lime": -9997004,
-	"hardened_clay_stained_magenta": -6989716,
-	"hardened_clay_stained_orange": -6204635,
-	"hardened_clay_stained_pink": -6205874,
-	"hardened_clay_stained_purple": -9025962,
-	"hardened_clay_stained_red": -7389906,
-	"hardened_clay_stained_silver": -7902623,
-	"hardened_clay_stained_white": -3034463,
-	"hardened_clay_stained_yellow": -4553437,
-	"hay_block_side": -7184605,
-	"hay_block_top": -4942070,
-	"hopper_inside": -13553355,
-	"hopper_outside": -12435132,
-	"hopper_top": -13750994,
-	"ice": -7227394,
-	"ice_packed": -8608268,
-	"iron_bars": -14474206,
-	"iron_block": -2302756,
-	"iron_ore": -6187121,
-	"iron_trapdoor": -3487030,
-	"itemframe_background": -10995415,
-	"jigsaw_back": -16777216,
-	"jigsaw_front": -1,
-	"jigsaw_side": -1,
-	"jukebox_side": -11783133,
-	"jukebox_top": -11125716,
-	"jungle_trapdoor": -12505568,
-	"ladder": -13950701,
-	"lantern": -15460836,
-	"lapis_block": -14793843,
-	"lapis_ore": -7368817,
-	"lava_flow": -3320304,
-	"lava_placeholder": -2992624,
-	"lava_still": -2993137,
-	"leaves_acacia_opaque": -6381922,
-	"leaves_big_oak_opaque": -9343375,
-	"leaves_birch_opaque": -7171439,
-	"leaves_jungle_opaque": -9474961,
-	"leaves_oak_opaque": -9738389,
-	"leaves_spruce_opaque": -7171438,
-	"lectern_base": -4877990,
-	"lectern_front": -10927071,
-	"lectern_sides": -9283535,
-	"lectern_top": -5009577,
-	"lever": -16514045,
-	"log_acacia": -10133931,
-	"log_acacia_top": -11185848,
-	"log_big_oak": -12833254,
-	"log_big_oak_top": -12572139,
-	"log_birch": -1381915,
-	"log_birch_top": -2766429,
-	"log_jungle": -11189479,
-	"log_jungle_top": -11123174,
-	"log_oak": -10269394,
-	"log_oak_top": -10598101,
-	"log_spruce": -12966640,
-	"log_spruce_top": -10073301,
-	"loom_bottom": -12110307,
-	"loom_front": -5140901,
-	"loom_side": -4220834,
-	"loom_top": -4484006,
-	"magma": -10804445,
-	"melon_side": -10450401,
-	"melon_stem_connected": -16579837,
-	"melon_stem_disconnected": -16514044,
-	"melon_top": -10319073,
-	"missing_tile": -4487589,
-	"mob_spawner": -15130837,
-	"mushroom_block_inside": -3692425,
-	"mushroom_block_skin_brown": -6983855,
-	"mushroom_block_skin_red": -3856346,
-	"mushroom_block_skin_stem": -3423047,
-	"mushroom_brown": -16448509,
-	"mushroom_red": -4273219,
-	"mycelium_side": -10269117,
-	"mycelium_top": -9674396,
-	"nether_brick": -11524306,
-	"nether_wart_block": -9568256,
-	"nether_wart_stage_0": -16384000,
-	"nether_wart_stage_1": -14614014,
-	"nether_wart_stage_2": -13958141,
-	"netherrack": -10542044,
-	"noteblock": -11783133,
-	"observer_back": -12369599,
-	"observer_back_lit": -12435649,
-	"observer_front": -12237499,
-	"observer_side": -12435135,
-	"observer_top": -11250604,
-	"obsidian": -15791592,
-	"piston_bottom": -10987689,
-	"piston_inner": -11316397,
-	"piston_side": -7368817,
-	"piston_top_normal": -3159093,
-	"piston_top_sticky": -3747137,
-	"planks_acacia": -5744078,
-	"planks_big_oak": -12440812,
-	"planks_birch": -2636408,
-	"planks_jungle": -4552346,
-	"planks_oak": -5140392,
-	"planks_spruce": -8101319,
-	"portal": -11467076,
-	"portal_placeholder": -11467077,
-	"potatoes_stage_0": -16710911,
-	"potatoes_stage_1": -16710655,
-	"potatoes_stage_2": -16644606,
-	"potatoes_stage_3": -16446203,
-	"prismarine_bricks": -10375775,
-	"prismarine_dark": -13479098,
-	"prismarine_rough": -10050656,
-	"pumpkin_face_off": -5282546,
-	"pumpkin_face_on": -5019376,
-	"pumpkin_side": -5283825,
-	"pumpkin_stem_connected": -16514044,
-	"pumpkin_stem_disconnected": -16514044,
-	"pumpkin_top": -4757742,
-	"purpur_block": -4681288,
-	"purpur_pillar": -4615239,
-	"purpur_pillar_top": -4417604,
-	"quartz_block_bottom": -1251617,
-	"quartz_block_chiseled": -1580326,
-	"quartz_block_chiseled_top": -1580327,
-	"quartz_block_lines": -1317152,
-	"quartz_block_lines_top": -1317410,
-	"quartz_block_side": -1317410,
-	"quartz_block_top": -1317410,
-	"quartz_ore": -10344409,
-	"rail_activator": -13886954,
-	"rail_activator_powered": -14474724,
-	"rail_detector": -13884900,
-	"rail_detector_powered": -14146273,
-	"rail_golden": -13820133,
-	"rail_golden_powered": -14211552,
-	"rail_normal": -13686755,
-	"rail_normal_turned": -14738668,
-	"reactor_core_stage_0": -6046004,
-	"reactor_core_stage_1": -12574945,
-	"reactor_core_stage_2": -15527385,
-	"red_nether_brick": -12253431,
-	"red_sand": -4299231,
-	"red_sandstone_bottom": -4627940,
-	"red_sandstone_carved": -4759525,
-	"red_sandstone_normal": -4562147,
-	"red_sandstone_smooth": -4365025,
-	"red_sandstone_top": -4890337,
-	"redstone_block": -4383994,
-	"redstone_dust_cross": -986896,
-	"redstone_dust_line": -986896,
-	"redstone_lamp_off": -12705517,
-	"redstone_lamp_on": -12836076,
-	"redstone_ore": -7368817,
-	"redstone_torch_off": -16514559,
-	"redstone_torch_on": -16645631,
-	"repeater_off": -10138292,
-	"repeater_on": -8749958,
-	"repeating_command_block_back": -10006860,
-	"repeating_command_block_back_mipmap": -10532440,
-	"repeating_command_block_conditional": -10072651,
-	"repeating_command_block_conditional_mipmap": -10532439,
-	"repeating_command_block_front": -10072651,
-	"repeating_command_block_front_mipmap": -10598487,
-	"repeating_command_block_side": -10006860,
-	"repeating_command_block_side_mipmap": -10532440,
-	"sand": -2371677,
-	"sandstone_bottom": -3756431,
-	"sandstone_carved": -2305627,
-	"sandstone_normal": -2371421,
-	"sandstone_smooth": -2305371,
-	"sandstone_top": -2107734,
-	"sapling_acacia": -14672635,
-	"sapling_birch": -15854328,
-	"sapling_jungle": -15920125,
-	"sapling_oak": -15066614,
-	"sapling_roofed_oak": -15327991,
-	"sapling_spruce": -15854837,
-	"sea_lantern": -11434632,
-	"sea_pickle": -12170727,
-	"seagrass": -16512256,
-	"seagrass_carried": -16578048,
-	"shulker_top_black": -15592937,
-	"shulker_top_blue": -15000460,
-	"shulker_top_brown": -9814241,
-	"shulker_top_cyan": -16293261,
-	"shulker_top_gray": -13354948,
-	"shulker_top_green": -11705318,
-	"shulker_top_light_blue": -13785643,
-	"shulker_top_lime": -10244593,
-	"shulker_top_magenta": -5295195,
-	"shulker_top_orange": -1414653,
-	"shulker_top_pink": -2529134,
-	"shulker_top_purple": -10085731,
-	"shulker_top_red": -9105905,
-	"shulker_top_silver": -9803167,
-	"shulker_top_undyed": -7314544,
-	"shulker_top_white": -2564642,
-	"shulker_top_yellow": -475625,
-	"slime": -9453733,
-	"smithing_table_bottom": -12575721,
-	"smithing_table_front": -13163482,
-	"smithing_table_side": -13295069,
-	"smithing_table_top": -13026746,
-	"smoker_bottom": -10659241,
-	"smoker_front_off": -6917055,
-	"smoker_front_on": -6461390,
-	"smoker_side": -6917055,
-	"smoker_top": -11711672,
-	"snow": -393474,
-	"soul_sand": -11452878,
-	"sponge": -3948470,
-	"sponge_wet": -5524154,
-	"spruce_trapdoor": -10335186,
-	"stone": -7368817,
-	"stone_andesite": -8882056,
-	"stone_andesite_smooth": -7302512,
-	"stone_diorite": -4276545,
-	"stone_diorite_smooth": -3421236,
-	"stone_granite": -4087662,
-	"stone_granite_smooth": -4024186,
-	"stone_slab_side": -5460820,
-	"stone_slab_top": -8816263,
-	"stonebrick": -7172206,
-	"stonebrick_carved": -7106157,
-	"stonebrick_cracked": -9474449,
-	"stonebrick_mossy": -7303536,
-	"stonecutter2_bottom": -10526881,
-	"stonecutter2_side": -13226715,
-	"stonecutter2_top": -7246283,
-	"stonecutter_bottom": -11250604,
-	"stonecutter_other_side": -11382190,
-	"stonecutter_side": -11711155,
-	"stonecutter_top": -11711155,
-	"stripped_acacia_log": -5350341,
-	"stripped_acacia_log_top": -5874893,
-	"stripped_birch_log": -4084877,
-	"stripped_birch_log_top": -4676241,
-	"stripped_dark_oak_log": -12504289,
-	"stripped_dark_oak_log_top": -12506090,
-	"stripped_jungle_log": -6849467,
-	"stripped_jungle_log_top": -6261684,
-	"stripped_oak_log": -6916028,
-	"stripped_oak_log_top": -8559048,
-	"stripped_spruce_log": -11584478,
-	"stripped_spruce_log_top": -10335445,
-	"structure_air": -16729345,
-	"structure_block": -14804448,
-	"structure_block_corner": -14278360,
-	"structure_block_data": -14673118,
-	"structure_block_export": -14541533,
-	"structure_block_load": -14738911,
-	"structure_block_save": -14344410,
-	"structure_void": -65536,
-	"sweet_berry_bush_stage0": -16248309,
-	"sweet_berry_bush_stage1": -15125729,
-	"sweet_berry_bush_stage2": -15060193,
-	"sweet_berry_bush_stage3": -14666976,
-	"tallgrass": -3289907,
-	"tnt_bottom": -5297897,
-	"tnt_side": -4511973,
-	"tnt_top": -4051430,
-	"torch_on": -16580095,
-	"trapdoor": -12503781,
-	"trapped_chest_front": -11977945,
-	"trip_wire": -16185079,
-	"trip_wire_source": -16448251,
-	"turtle_egg_not_cracked": -726073,
-	"turtle_egg_slightly_cracked": -1121347,
-	"turtle_egg_very_cracked": -1318727,
-	"vine": -14145496,
-	"vine_carried": -14403821,
-	"water_flow": -10975746,
-	"water_flow_grey": -5789785,
-	"water_placeholder": -9205249,
-	"water_still": -9271299,
-	"water_still_grey": -6052957,
-	"waterlily": -14342875,
-	"web": -1775126,
-	"wheat_stage_0": -16776960,
-	"wheat_stage_1": -16776448,
-	"wheat_stage_2": -16775680,
-	"wheat_stage_3": -16708095,
-	"wheat_stage_4": -16313342,
-	"wheat_stage_5": -15917821,
-	"wheat_stage_6": -14540534,
-	"wheat_stage_7": -15592699,
-	"wool_colored_black": -15461095,
-	"wool_colored_blue": -13289059,
-	"wool_colored_brown": -9419225,
-	"wool_colored_cyan": -15369334,
-	"wool_colored_gray": -12696505,
-	"wool_colored_green": -11310309,
-	"wool_colored_light_blue": -12931111,
-	"wool_colored_lime": -9521384,
-	"wool_colored_magenta": -4373325,
-	"wool_colored_orange": -1216754,
-	"wool_colored_pink": -1936487,
-	"wool_colored_purple": -9296475,
-	"wool_colored_red": -6281438,
-	"wool_colored_silver": -8092549,
-	"wool_colored_white": -1446676,
-	"wool_colored_yellow": -473817,
-	"cactus_bottom": -16098539,
-	"cactus_side": -4538475,
-	"cactus_top": -12293856,
-	"double_plant_fern_bottom": -3618872,
-	"double_plant_fern_top": -1250324,
-	"double_plant_grass_bottom": -4145472,
-	"double_plant_grass_top": -2105633,
-	"double_plant_syringa_bottom": -331526,
-	"double_plant_syringa_top": -331525,
-	"fern": -1184531,
-	"fern_carried": -1,
-	"grass_side": -6645094,
-	"grindstone_pivot": -11981548,
-	"grindstone_round": -6316129,
-	"grindstone_side": -5987164,
-	"kelp_a": -10778575,
-	"kelp_b": -10778575,
-	"kelp_c": -10778575,
-	"kelp_d": -10778575,
-	"kelp_top": -10779087,
-	"kelp_top_bulb": -10779087,
-	"leaves_acacia": -6381922,
-	"leaves_acacia_carried": -14195191,
-	"leaves_big_oak": -9343375,
-	"leaves_big_oak_carried": -14261239,
-	"leaves_birch": -7171439,
-	"leaves_birch_carried": -13021915,
-	"leaves_jungle": -9474961,
-	"leaves_jungle_carried": -14592505,
-	"leaves_oak": -9738389,
-	"leaves_oak_carried": -14790907,
-	"leaves_spruce": -7171438,
-	"leaves_spruce_carried": -14139352,
-	"reeds": -1708070,
-	"scaffolding_bottom": -3494822,
-	"scaffolding_side": -3363238,
-	"scaffolding_top": -3760037,
-	"seagrass_doubletall_bottom_a": -13532157,
-	"seagrass_doubletall_bottom_b": -13532157,
-	"seagrass_doubletall_top_a": -13466364,
-	"seagrass_doubletall_top_b": -13466364,
-	"stonecutter2_saw": -2434342,
-	"tallgrass_carried": -12228315
+	"missing": [
+		-261889
+	],
+	"grass_side": [
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-6645094,
+		-1575692
+	],
+	"grass_top": [
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266,
+		-6908266
+	],
+	"grass_bottom": [
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916,
+		-4618916
+	],
+	"grass_carried_top": [
+		-11964633
+	],
+	"grass_carried_bottom": [
+		-4618916
+	],
+	"grass_carried": [
+		-6645094
+	],
+	"stone": [
+		-7368817,
+		-4087662,
+		-4024186,
+		-4276545,
+		-3421236,
+		-8882056,
+		-7302512
+	],
+	"cobblestone": [
+		-10197916
+	],
+	"cobblestone_mossy": [
+		-10655926
+	],
+	"cobblestone_wall": [
+		-10197916,
+		-10655926,
+		-4087662,
+		-4276545,
+		-8882056,
+		-2371421,
+		-6463922,
+		-7172206,
+		-7303536,
+		-11524306,
+		-2169435,
+		-10050656,
+		-4562147,
+		-12253431
+	],
+	"stonebrick": [
+		-7172206,
+		-7303536,
+		-9474449,
+		-7106157
+	],
+	"monster_egg": [
+		-10197916,
+		-7172206,
+		-7303536,
+		-9474449,
+		-7106157,
+		-7368817
+	],
+	"barrier": [
+		-2883584
+	],
+	"bedrock": [
+		-12237499
+	],
+	"obsidian": [
+		-15791592
+	],
+	"clay": [
+		-6248781
+	],
+	"sand": [
+		-2371677,
+		-4299231
+	],
+	"sandstone_top": [
+		-2107734,
+		-2107734,
+		-2107734,
+		-2107734
+	],
+	"sandstone_bottom": [
+		-3756431,
+		-2107734,
+		-2107734,
+		-2107734
+	],
+	"sandstone_side": [
+		-2371421,
+		-2305627,
+		-2305371,
+		-2107734
+	],
+	"redsandstone_top": [
+		-4890337,
+		-4890337,
+		-4890337,
+		-4890337
+	],
+	"redsandstone_bottom": [
+		-4627940,
+		-4627940,
+		-4627940,
+		-4890337
+	],
+	"redsandstone_side": [
+		-4562147,
+		-4759525,
+		-4365025,
+		-4890337
+	],
+	"redsandstone": [
+		-4562147
+	],
+	"gravel": [
+		-9476250
+	],
+	"dirt": [
+		-4618916,
+		-4684709
+	],
+	"dirt_podzol_top": [
+		-11125737
+	],
+	"dirt_podzol_bottom": [
+		-4618916
+	],
+	"dirt_podzol_side": [
+		-10008275
+	],
+	"planks": [
+		-5140392,
+		-8101319,
+		-2636408,
+		-4552346,
+		-5744078,
+		-12440812
+	],
+	"acacia_planks": [
+		-5744078
+	],
+	"birch_planks": [
+		-2636408
+	],
+	"dark_oak_planks": [
+		-12440812
+	],
+	"jungle_planks": [
+		-4552346
+	],
+	"spruce_planks": [
+		-8101319
+	],
+	"sign": [
+		-5140392
+	],
+	"spruce_sign": [
+		-8101319
+	],
+	"birch_sign": [
+		-2636408
+	],
+	"jungle_sign": [
+		-4552346
+	],
+	"acacia_sign": [
+		-5744078
+	],
+	"darkoak_sign": [
+		-12440812
+	],
+	"wood_oak": [
+		-5140392
+	],
+	"wood_spruce": [
+		-8101319
+	],
+	"wood_birch": [
+		-2636408
+	],
+	"wood_jungle": [
+		-4552346
+	],
+	"wood_acacia": [
+		-5744078
+	],
+	"wood_big_oak": [
+		-12440812
+	],
+	"stone_slab_top": [
+		-8816263,
+		-2107734,
+		-5140392,
+		-10197916,
+		-6463922,
+		-7172206,
+		-1317410,
+		-11524306
+	],
+	"stone_slab_bottom": [
+		-8816263,
+		-3756431,
+		-5140392,
+		-10197916,
+		-6463922,
+		-7172206,
+		-1251617,
+		-11524306
+	],
+	"stone_slab_side": [
+		-5460820,
+		-2371421,
+		-5140392,
+		-10197916,
+		-6463922,
+		-7172206,
+		-1317410,
+		-11524306
+	],
+	"coral_block": [
+		-13676085,
+		-3188322,
+		-4644427,
+		-5561038,
+		-2570430,
+		-7963785,
+		-7963785,
+		-9476252,
+		-6646385,
+		-7963785
+	],
+	"chorus_plant": [
+		-11062953
+	],
+	"chorus_flower": [
+		-10799782,
+		-11128746
+	],
+	"stone_slab_top_2": [
+		-4890337,
+		-4681288,
+		-10050656,
+		-13479098,
+		-10375775,
+		-10655926,
+		-2107734,
+		-12253431
+	],
+	"stone_slab_bottom_2": [
+		-4627940,
+		-4681288,
+		-10050656,
+		-13479098,
+		-10375775,
+		-10655926,
+		-2107734,
+		-12253431
+	],
+	"stone_slab_side_2": [
+		-4562147,
+		-4681288,
+		-10050656,
+		-13479098,
+		-10375775,
+		-10655926,
+		-2107734,
+		-12253431
+	],
+	"stone_slab_top_3": [
+		-2169435,
+		-4890337,
+		-7302512,
+		-8882056,
+		-4276545,
+		-3421236,
+		-4087662,
+		-4024186
+	],
+	"stone_slab_bottom_3": [
+		-2169435,
+		-4890337,
+		-7302512,
+		-8882056,
+		-4276545,
+		-3421236,
+		-4087662,
+		-4024186
+	],
+	"stone_slab_side_3": [
+		-2169435,
+		-4890337,
+		-7302512,
+		-8882056,
+		-4276545,
+		-3421236,
+		-4087662,
+		-4024186
+	],
+	"stone_slab_top_4": [
+		-7303536,
+		-1317410,
+		-7368817,
+		-2107734,
+		-4890337
+	],
+	"stone_slab_bottom_4": [
+		-7303536,
+		-1317410,
+		-7368817,
+		-2107734,
+		-4890337
+	],
+	"stone_slab_side_4": [
+		-7303536,
+		-1317410,
+		-7368817,
+		-2305371,
+		-4365025
+	],
+	"stone_slab": [
+		-8816263,
+		-5460820
+	],
+	"brick": [
+		-6463922
+	],
+	"tnt_top": [
+		-4051430
+	],
+	"tnt_bottom": [
+		-5297897
+	],
+	"tnt_side": [
+		-4511973
+	],
+	"bookshelf_top": [
+		-5140392
+	],
+	"bookshelf": [
+		-5009324
+	],
+	"web": [
+		-1775126
+	],
+	"yellow_flower": [
+		-16776192
+	],
+	"red_flower": [
+		-16645118,
+		-16776960,
+		-2641672,
+		-1576977,
+		-16709888,
+		-16710144,
+		-16710400,
+		-16710144,
+		-16776192,
+		-16711167,
+		-16578559
+	],
+	"wither_rose": [
+		-16447997
+	],
+	"double_plant_bottom": [
+		-16577535,
+		-331526,
+		-4145472,
+		-3618872,
+		-15127534,
+		-15785456
+	],
+	"double_plant_top": [
+		-16709631,
+		-331525,
+		-2105633,
+		-1250324,
+		-16118010,
+		-16182007
+	],
+	"double_plant_carried": [
+		-406729,
+		-331525,
+		-15656439,
+		-15195123,
+		-16118010,
+		-16182007
+	],
+	"sunflower_additional": [
+		-406729,
+		-16511997
+	],
+	"sapling": [
+		-15066614,
+		-15854837,
+		-15854328,
+		-15920125,
+		-14672635,
+		-15327991
+	],
+	"log_top": [
+		-10598101,
+		-10073301,
+		-2766429,
+		-11123174
+	],
+	"log_side": [
+		-10269394,
+		-12966640,
+		-1381915,
+		-11189479
+	],
+	"log2": [
+		-10133931,
+		-11185848,
+		-12833254,
+		-12572139
+	],
+	"log_top2": [
+		-11185848,
+		-12572139
+	],
+	"log_side2": [
+		-10133931,
+		-12833254
+	],
+	"stripped_oak_log_top": [
+		-8559048
+	],
+	"stripped_oak_log_side": [
+		-6916028
+	],
+	"stripped_birch_log_top": [
+		-4676241
+	],
+	"stripped_birch_log_side": [
+		-4084877
+	],
+	"stripped_dark_oak_log_top": [
+		-12506090
+	],
+	"stripped_dark_oak_log_side": [
+		-12504289
+	],
+	"stripped_acacia_log_top": [
+		-5874893
+	],
+	"stripped_acacia_log_side": [
+		-5350341
+	],
+	"stripped_jungle_log_top": [
+		-6261684
+	],
+	"stripped_jungle_log_side": [
+		-6849467
+	],
+	"stripped_spruce_log_top": [
+		-10335445
+	],
+	"stripped_spruce_log_side": [
+		-11584478
+	],
+	"iron_block": [
+		-2302756
+	],
+	"gold_block": [
+		-668361
+	],
+	"diamond_block": [
+		-11605791
+	],
+	"coal_block": [
+		-15724785
+	],
+	"lapis_block": [
+		-14793843
+	],
+	"emerald_block": [
+		-15155902
+	],
+	"redstone_block": [
+		-4383994
+	],
+	"quartz_block_top": [
+		-1317410,
+		-1580327,
+		-1317410,
+		-1317410
+	],
+	"quartz_block_bottom": [
+		-1251617,
+		-1580327,
+		-1317410,
+		-1317410
+	],
+	"quartz_block_side": [
+		-1317410,
+		-1580326,
+		-1317152,
+		-1317410
+	],
+	"stair_quartz_block_top": [
+		-1317410
+	],
+	"stair_quartz_block_bottom": [
+		-1251617
+	],
+	"stair_quartz_block_side": [
+		-1317410
+	],
+	"purpur_block_top": [
+		-4681288,
+		-4681288,
+		-4417604
+	],
+	"purpur_block_bottom": [
+		-4681288,
+		-4681288,
+		-4417604
+	],
+	"purpur_block_side": [
+		-4681288,
+		-4681288,
+		-4615239
+	],
+	"stair_purpur_block": [
+		-4681288
+	],
+	"structure_block": [
+		-14804448,
+		-14673118,
+		-14344410,
+		-14738911,
+		-14278360,
+		-14541533
+	],
+	"jigsaw_side": [
+		-1
+	],
+	"jigsaw_front": [
+		-1
+	],
+	"jigsaw_back": [
+		-16777216
+	],
+	"structure_void": [
+		-65536,
+		-16729345
+	],
+	"mushroom_red": [
+		-4273219
+	],
+	"mushroom_brown": [
+		-16448509
+	],
+	"gold_ore": [
+		-5658211
+	],
+	"iron_ore": [
+		-6187121
+	],
+	"coal_ore": [
+		-7368817
+	],
+	"lapis_ore": [
+		-7368817
+	],
+	"diamond_ore": [
+		-6903387
+	],
+	"redstone_ore": [
+		-7368817
+	],
+	"emerald_ore": [
+		-6775398
+	],
+	"quartz_ore": [
+		-10344409
+	],
+	"tallgrass": [
+		-3289907,
+		-3289907,
+		-1184531,
+		-1184531
+	],
+	"tallgrass_carried": [
+		-12228315,
+		-12228315,
+		-1,
+		-1
+	],
+	"seagrass_carried": [
+		-16578048
+	],
+	"seagrass_short": [
+		-16512256
+	],
+	"seagrass_tall_bot_a": [
+		-13532157
+	],
+	"seagrass_tall_bot_b": [
+		-13532157
+	],
+	"seagrass_tall_top_a": [
+		-13466364
+	],
+	"seagrass_tall_top_b": [
+		-13466364
+	],
+	"coral": [
+		-13742398,
+		-1536319,
+		-16056308,
+		-15268601,
+		-3032514,
+		-13093581,
+		-14738405,
+		-14869734,
+		-15330284,
+		-15724786
+	],
+	"coral_fan": [
+		-13544243,
+		-6475913,
+		-16383993,
+		-15268601,
+		-3295427
+	],
+	"coral_fan_dead": [
+		-15396077,
+		-15527663,
+		-15264235,
+		-15264491,
+		-15593456
+	],
+	"coral_fan_hang_a": [
+		-13544243,
+		-6475913,
+		-15396077,
+		-15527663
+	],
+	"coral_fan_hang_b": [
+		-16383993,
+		-15268601,
+		-15264235,
+		-15264491
+	],
+	"coral_fan_hang_c": [
+		-3295427,
+		-3295427,
+		-15593456,
+		-15593456
+	],
+	"deadbush": [
+		-15331063
+	],
+	"crafting_table_top": [
+		-12047848
+	],
+	"crafting_table_bottom": [
+		-5140392
+	],
+	"crafting_table_side": [
+		-12439781
+	],
+	"crafting_table_front": [
+		-12702695
+	],
+	"furnace": [
+		-12434878,
+		-11974584,
+		-10658724,
+		-10658724
+	],
+	"furnace_front": [
+		-12434878,
+		-11974584
+	],
+	"furnace_front_off": [
+		-12434878
+	],
+	"furnace_front_on": [
+		-11974584
+	],
+	"furnace_top": [
+		-10658724,
+		-10658724
+	],
+	"furnace_side": [
+		-10658724,
+		-10658724
+	],
+	"stonecutter_top": [
+		-11711155
+	],
+	"stonecutter_bottom": [
+		-11250604
+	],
+	"stonecutter_side": [
+		-11711155
+	],
+	"stonecutter_other_side": [
+		-11382190
+	],
+	"stonecutter2_top": [
+		-7246283
+	],
+	"stonecutter2_bottom": [
+		-10526881
+	],
+	"stonecutter2_side": [
+		-13226715
+	],
+	"stonecutter2_saw": [
+		-2434342
+	],
+	"sponge": [
+		-3948470,
+		-5524154
+	],
+	"glass": [
+		-4990755
+	],
+	"glass_pane_top": [
+		-2887692
+	],
+	"leaves": [
+		-9738389,
+		-7171438,
+		-7171439,
+		-9474961,
+		-9738389,
+		-7171438,
+		-7171439,
+		-9474961
+	],
+	"leaves_carried": [
+		-14790907,
+		-14139352,
+		-13021915,
+		-14592505,
+		-14790907,
+		-14139352,
+		-13021915,
+		-14592505
+	],
+	"leaves2": [
+		-6381922,
+		-9343375,
+		-6381922,
+		-9343375
+	],
+	"leaves_carried2": [
+		-14195191,
+		-14261239,
+		-14195191,
+		-14261239
+	],
+	"mob_spawner": [
+		-15130837
+	],
+	"snow": [
+		-393474
+	],
+	"ice": [
+		-7227394
+	],
+	"ice_packed": [
+		-8608268
+	],
+	"blue_ice": [
+		-9526020
+	],
+	"cactus_top": [
+		-12293856
+	],
+	"cactus_side": [
+		-4538475
+	],
+	"cactus_bottom": [
+		-16098539
+	],
+	"reeds": [
+		-1708070
+	],
+	"jukebox_side": [
+		-11783133
+	],
+	"jukebox_top": [
+		-11125716
+	],
+	"waterlily": [
+		-14342875
+	],
+	"waterlily_carried": [
+		-14206187
+	],
+	"mycelium_top": [
+		-9674396,
+		-9674396
+	],
+	"mycelium_bottom": [
+		-4618916,
+		-4618916
+	],
+	"mycelium_side": [
+		-10269117,
+		-1575692
+	],
+	"torch_on": [
+		-16580095
+	],
+	"redstone_torch_on": [
+		-16645631
+	],
+	"redstone_torch_off": [
+		-16514559
+	],
+	"door_lower": [
+		-9743568,
+		-10401492,
+		-11323364,
+		-9482699,
+		-15069174,
+		-12046312,
+		-13290187
+	],
+	"door_upper": [
+		-5404334,
+		-7904456,
+		-1383998,
+		-4157592,
+		-5217474,
+		-11849191,
+		-3882045
+	],
+	"ladder": [
+		-13950701
+	],
+	"trapdoor": [
+		-12503781
+	],
+	"acacia_trapdoor": [
+		-6203600
+	],
+	"birch_trapdoor": [
+		-6189469
+	],
+	"dark_oak_trapdoor": [
+		-11849449
+	],
+	"jungle_trapdoor": [
+		-12505568
+	],
+	"spruce_trapdoor": [
+		-10335186
+	],
+	"iron_trapdoor": [
+		-3487030
+	],
+	"iron_bars": [
+		-14474206
+	],
+	"iron_bars_edge": [
+		-14474206
+	],
+	"farmland": [
+		-11457521,
+		-6919094
+	],
+	"farmland_side": [
+		-4618916
+	],
+	"wheat": [
+		-16776960,
+		-16776448,
+		-16775680,
+		-16708095,
+		-16313342,
+		-15917821,
+		-14540534,
+		-15592699
+	],
+	"grass_path_top": [
+		-6388667
+	],
+	"grass_path_side": [
+		-10336976
+	],
+	"lever": [
+		-16514045
+	],
+	"lever_particle": [
+		-10197916
+	],
+	"pumpkin_top": [
+		-4757742,
+		-4757742,
+		-4757742
+	],
+	"pumpkin_side": [
+		-5283825,
+		-5283825,
+		-5283825
+	],
+	"pumpkin_face": [
+		-5282546,
+		-5019376,
+		-5283825
+	],
+	"netherrack": [
+		-10542044
+	],
+	"nether_brick": [
+		-11524306
+	],
+	"nether_wart": [
+		-16384000,
+		-14614014,
+		-14614014,
+		-13958141
+	],
+	"magma": [
+		-10804445
+	],
+	"bubble_column_outer": [
+		-11745281,
+		-11745281,
+		-11745281,
+		-11745281,
+		-11745281,
+		-11745281,
+		-11745281,
+		-11745281
+	],
+	"bubble_column_mid": [
+		-12336129,
+		-12336129
+	],
+	"bubble_column_up_top": [
+		-12007937,
+		-12007937,
+		-12007937,
+		-12007937
+	],
+	"bubble_column_down_top": [
+		-12664321,
+		-12664321,
+		-12664321,
+		-12664321
+	],
+	"nether_wart_block": [
+		-9568256
+	],
+	"red_nether_brick": [
+		-12253431
+	],
+	"soul_sand": [
+		-11452878
+	],
+	"skull": [
+		-11452878
+	],
+	"glowstone": [
+		-1987230
+	],
+	"piston_top": [
+		-11316397
+	],
+	"piston_top_sticky": [
+		-3747137
+	],
+	"piston_top_normal": [
+		-3159093
+	],
+	"piston_side": [
+		-7368817
+	],
+	"piston_bottom": [
+		-10987689
+	],
+	"observer_north": [
+		-12237499,
+		-12237499
+	],
+	"observer_south": [
+		-12369599,
+		-12435649
+	],
+	"observer_east": [
+		-12435135,
+		-12435135
+	],
+	"observer_west": [
+		-12435135,
+		-12435135
+	],
+	"observer_top": [
+		-11250604,
+		-11250604
+	],
+	"observer_bottom": [
+		-11250604,
+		-11250604
+	],
+	"melon_top": [
+		-10319073
+	],
+	"melon_side": [
+		-10450401
+	],
+	"melon_stem": [
+		-16514044,
+		-16579837
+	],
+	"pumpkin_stem": [
+		-16514044,
+		-16514044
+	],
+	"rail_normal": [
+		-13686755
+	],
+	"rail_normal_turned": [
+		-14738668
+	],
+	"rail_golden": [
+		-13820133
+	],
+	"rail_golden_powered": [
+		-14211552
+	],
+	"rail_detector": [
+		-13884900
+	],
+	"rail_detector_powered": [
+		-14146273
+	],
+	"rail_activator": [
+		-13886954
+	],
+	"rail_activator_powered": [
+		-14474724
+	],
+	"bed_bottom": [
+		-5140392
+	],
+	"cauldron_top": [
+		-13882323
+	],
+	"cauldron_inner": [
+		-13553355
+	],
+	"cauldron_side": [
+		-11908790
+	],
+	"cauldron_bottom": [
+		-15921906
+	],
+	"brewing_stand_base": [
+		-9542813
+	],
+	"brewing_stand": [
+		-15198184
+	],
+	"cake_top": [
+		-133139,
+		-133139
+	],
+	"cake_bottom": [
+		-11656430,
+		-11656430
+	],
+	"cake_west": [
+		-16186366,
+		-14413559
+	],
+	"cake_side": [
+		-16186366,
+		-16186366
+	],
+	"mushroom_block": [
+		-6983855,
+		-3856346,
+		-3692425,
+		-3423047
+	],
+	"mushroom_red_top": [
+		-3692425,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_red_bottom": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_red_north": [
+		-3692425,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_red_south": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3856346,
+		-3856346,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_red_west": [
+		-3692425,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_red_east": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3856346,
+		-3423047
+	],
+	"mushroom_brown_top": [
+		-3692425,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-6983855,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"mushroom_brown_bottom": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"mushroom_brown_north": [
+		-3692425,
+		-6983855,
+		-6983855,
+		-6983855,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"mushroom_brown_south": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-6983855,
+		-6983855,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"mushroom_brown_west": [
+		-3692425,
+		-6983855,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3692425,
+		-3692425,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"mushroom_brown_east": [
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047,
+		-3692425,
+		-3692425,
+		-3692425,
+		-6983855,
+		-3423047
+	],
+	"vine": [
+		-14145496
+	],
+	"vine_carried": [
+		-14403821
+	],
+	"repeater_torch": [
+		-16514559,
+		-16645631
+	],
+	"repeater_up": [
+		-10138292,
+		-8749958
+	],
+	"repeater_floor": [
+		-8816263,
+		-8816263
+	],
+	"end_bricks": [
+		-2169435
+	],
+	"end_gateway": [
+		-16118254
+	],
+	"end_portal": [
+		-16380139
+	],
+	"end_rod": [
+		-1186602
+	],
+	"end_stone": [
+		-2367842
+	],
+	"endframe_top": [
+		-13740725
+	],
+	"endframe_bottom": [
+		-2367842
+	],
+	"endframe_side": [
+		-15324116
+	],
+	"endframe_eye": [
+		-16248046
+	],
+	"redstone_dust_cross": [
+		-986896
+	],
+	"redstone_dust_line": [
+		-986896
+	],
+	"redstone_lamp_off": [
+		-12705517
+	],
+	"redstone_lamp_on": [
+		-12836076
+	],
+	"enchanting_table_bottom": [
+		-15791592
+	],
+	"enchanting_table_side": [
+		-15661550
+	],
+	"enchanting_table_top": [
+		-4458002
+	],
+	"dragon_egg": [
+		-15988465
+	],
+	"hayblock_top": [
+		-4942070
+	],
+	"hayblock_side": [
+		-7184605
+	],
+	"bone_block_top": [
+		-3027277
+	],
+	"bone_block_side": [
+		-1711665
+	],
+	"cocoa": [
+		-15856122,
+		-15265785,
+		-15464446
+	],
+	"trip_wire": [
+		-16185079
+	],
+	"trip_wire_source": [
+		-16448251
+	],
+	"trip_wire_base": [
+		-5140392
+	],
+	"command_block": [
+		-6133434
+	],
+	"itemframe_background": [
+		-10995415
+	],
+	"flower_pot": [
+		-15923451
+	],
+	"carrots": [
+		-16644606,
+		-16511996,
+		-15984375,
+		-16049398
+	],
+	"potatoes": [
+		-16710911,
+		-16710655,
+		-16644606,
+		-16446203
+	],
+	"beetroot": [
+		-16776704,
+		-16710655,
+		-16248826,
+		-15330042
+	],
+	"anvil_base": [
+		-12303292,
+		-12303292,
+		-12303292,
+		-12303292
+	],
+	"anvil_top_damaged_x": [
+		-13816531,
+		-13816531,
+		-13816531,
+		-12303292
+	],
+	"reactor_core": [
+		-6046004,
+		-12574945,
+		-15527385
+	],
+	"glowing_obsidian": [
+		-13631224
+	],
+	"destroy": [
+		-65794,
+		-131587,
+		-197380,
+		-328966,
+		-526345,
+		-723724,
+		-921103,
+		-1447447,
+		-2039584,
+		-2368549
+	],
+	"chest_inventory": [
+		-13554912,
+		-12766429,
+		-12635101
+	],
+	"chest_inventory_top": [
+		-13554912
+	],
+	"chest_inventory_side": [
+		-12766429
+	],
+	"chest_inventory_front": [
+		-12635101
+	],
+	"trapped_chest_inventory_front": [
+		-11977945
+	],
+	"ender_chest_inventory_top": [
+		-14075332
+	],
+	"ender_chest_inventory_side": [
+		-15787232
+	],
+	"ender_chest_inventory_front": [
+		-15523549
+	],
+	"missing_tile": [
+		-4487589
+	],
+	"flowing_water_grey": [
+		-5789785
+	],
+	"flowing_water": [
+		-10975746
+	],
+	"flowing_lava": [
+		-3320304
+	],
+	"wool": [
+		-1446676,
+		-1216754,
+		-4373325,
+		-12931111,
+		-473817,
+		-9521384,
+		-1936487,
+		-12696505,
+		-8092549,
+		-15369334,
+		-9296475,
+		-13289059,
+		-9419225,
+		-11310309,
+		-6281438,
+		-15461095
+	],
+	"hardened_clay": [
+		-6791613
+	],
+	"stained_clay": [
+		-3034463,
+		-6204635,
+		-6989716,
+		-9343863,
+		-4553437,
+		-9997004,
+		-6205874,
+		-13030877,
+		-7902623,
+		-11117733,
+		-9025962,
+		-11912357,
+		-11717853,
+		-11775190,
+		-7389906,
+		-14346736
+	],
+	"fire_0": [
+		-4236799
+	],
+	"fire_1": [
+		-4236799
+	],
+	"still_water_grey": [
+		-6052957
+	],
+	"still_water": [
+		-9271299
+	],
+	"still_lava": [
+		-2993137
+	],
+	"cauldron_water": [
+		-3223858
+	],
+	"portal": [
+		-11467076
+	],
+	"kelp_a": [
+		-10778575
+	],
+	"kelp_b": [
+		-10778575
+	],
+	"kelp_c": [
+		-10778575
+	],
+	"kelp_d": [
+		-10778575
+	],
+	"kelp_top": [
+		-10779087
+	],
+	"kelp_top_bulb": [
+		-10779087
+	],
+	"dried_kelp_block_top": [
+		-14340325
+	],
+	"dried_kelp_block_side_a": [
+		-14734825
+	],
+	"dried_kelp_block_side_b": [
+		-15063536
+	],
+	"daylight_detector_side": [
+		-12437725,
+		-12437725
+	],
+	"daylight_detector_top": [
+		-11977432,
+		-12699087
+	],
+	"noteblock": [
+		-11783133
+	],
+	"comparator_up": [
+		-10138036,
+		-8684165
+	],
+	"comparator_torch": [
+		-16514559,
+		-16645631
+	],
+	"comparator_stone_slab": [
+		-8816263
+	],
+	"command_block_front": [
+		-5674430
+	],
+	"command_block_back": [
+		-5609149
+	],
+	"command_block_side": [
+		-5674430
+	],
+	"command_block_conditional_side": [
+		-5674430
+	],
+	"command_block_chain_front": [
+		-9129835
+	],
+	"command_block_chain_back": [
+		-9129835
+	],
+	"command_block_chain_side": [
+		-9129835
+	],
+	"command_block_chain_conditional_side": [
+		-9195628
+	],
+	"command_block_repeating_front": [
+		-10598487
+	],
+	"command_block_repeating_back": [
+		-10532440
+	],
+	"command_block_repeating_side": [
+		-10532440
+	],
+	"command_block_repeating_conditional_side": [
+		-10532439
+	],
+	"dispenser_front_horizontal": [
+		-11119275
+	],
+	"dispenser_front_vertical": [
+		-10987689
+	],
+	"dispenser_top": [
+		-10658724
+	],
+	"dispenser_side": [
+		-10658724
+	],
+	"dropper_front_horizontal": [
+		-11119275
+	],
+	"dropper_front_vertical": [
+		-11119018
+	],
+	"dropper_top": [
+		-10658724
+	],
+	"dropper_side": [
+		-10658724
+	],
+	"hopper_inside": [
+		-13553355
+	],
+	"hopper_outside": [
+		-12435132
+	],
+	"hopper_top": [
+		-13750994
+	],
+	"slime_block": [
+		-9453733
+	],
+	"camera_top": [
+		-13224394
+	],
+	"camera_side": [
+		-13290187
+	],
+	"camera_front": [
+		-7577827
+	],
+	"camera_back": [
+		-7774688
+	],
+	"border_block": [
+		-4703696
+	],
+	"build_allow": [
+		-10463415
+	],
+	"build_deny": [
+		-10592674
+	],
+	"prismarine": [
+		-10050656,
+		-13479098,
+		-10375775
+	],
+	"dark_prismarine": [
+		-13479098
+	],
+	"prismarine_bricks": [
+		-10375775
+	],
+	"sea_lantern": [
+		-11434632
+	],
+	"sea_pickle": [
+		-12170727
+	],
+	"sea_pickle_carried": [
+		-16053244
+	],
+	"turtle_egg": [
+		-726073,
+		-1121347,
+		-1318727
+	],
+	"turtle_egg_carried": [
+		-15790068
+	],
+	"beacon": [
+		-2492424
+	],
+	"beacon_core": [
+		-2492424
+	],
+	"beacon_base": [
+		-15791592
+	],
+	"beacon_shell": [
+		-4990755
+	],
+	"conduit": [
+		-15264756
+	],
+	"stained_glass": [
+		-1,
+		-2588877,
+		-5092393,
+		-10053161,
+		-1710798,
+		-8402151,
+		-884828,
+		-11842741,
+		-6710887,
+		-11763815,
+		-8437838,
+		-13481038,
+		-10073294,
+		-10059981,
+		-6737101,
+		-15132391
+	],
+	"stained_glass_pane_top": [
+		-592138,
+		-3377105,
+		-5551408,
+		-10382384,
+		-2237136,
+		-8863721,
+		-1804131,
+		-11908534,
+		-7105645,
+		-12027760,
+		-8897368,
+		-13612373,
+		-10401232,
+		-10520529,
+		-7131088,
+		-15198184
+	],
+	"shulker_box_top": [
+		-2564642,
+		-1414653,
+		-5295195,
+		-13785643,
+		-475625,
+		-10244593,
+		-2529134,
+		-13354948,
+		-9803167,
+		-16293261,
+		-10085731,
+		-15000460,
+		-9814241,
+		-11705318,
+		-9105905,
+		-15592937,
+		-7314544
+	],
+	"undyed_shulker_box_top": [
+		-7314544
+	],
+	"concrete": [
+		-3156522,
+		-2072320,
+		-5689185,
+		-14448186,
+		-1003755,
+		-10573800,
+		-2792050,
+		-13223619,
+		-8553101,
+		-15370360,
+		-10215524,
+		-13881713,
+		-10470625,
+		-11969756,
+		-7462880,
+		-16250353
+	],
+	"concretePowder": [
+		-1973277,
+		-1603034,
+		-4172872,
+		-11881259,
+		-1522123,
+		-8865752,
+		-1729867,
+		-11775660,
+		-6579308,
+		-14379875,
+		-8768854,
+		-12170842,
+		-8957902,
+		-10587347,
+		-5753294,
+		-15132129
+	],
+	"black_glazed_terracotta": [
+		-14541792
+	],
+	"blue_glazed_terracotta": [
+		-13153878
+	],
+	"brown_glazed_terracotta": [
+		-7183555
+	],
+	"cyan_glazed_terracotta": [
+		-15435638
+	],
+	"gray_glazed_terracotta": [
+		-12169646
+	],
+	"green_glazed_terracotta": [
+		-11442400
+	],
+	"light_blue_glazed_terracotta": [
+		-13130285
+	],
+	"lime_glazed_terracotta": [
+		-5387731
+	],
+	"magenta_glazed_terracotta": [
+		-3780930
+	],
+	"orange_glazed_terracotta": [
+		-422104
+	],
+	"pink_glazed_terracotta": [
+		-1005634
+	],
+	"purple_glazed_terracotta": [
+		-7259195
+	],
+	"red_glazed_terracotta": [
+		-4966864
+	],
+	"silver_glazed_terracotta": [
+		-4538946
+	],
+	"white_glazed_terracotta": [
+		-75188
+	],
+	"yellow_glazed_terracotta": [
+		-1002207
+	],
+	"frosted_ice": [
+		-7490052,
+		-7424260,
+		-7424260,
+		-7292931
+	],
+	"bamboo_stem": [
+		-11105278
+	],
+	"bamboo_leaf": [
+		-15393014
+	],
+	"bamboo_small_leaf": [
+		-16183804
+	],
+	"bamboo_singleleaf": [
+		-16711168
+	],
+	"bamboo_sapling": [
+		-15922428
+	],
+	"bamboo_carried": [
+		-16118013
+	],
+	"scaffolding_top": [
+		-3760037
+	],
+	"scaffolding_bottom": [
+		-3494822
+	],
+	"scaffolding_side": [
+		-3363238
+	],
+	"granite": [
+		-4087662
+	],
+	"diorite": [
+		-4276545
+	],
+	"andesite": [
+		-8882056
+	],
+	"smooth_sandstone": [
+		-2107734
+	],
+	"smooth_red_sandstone": [
+		-4890337
+	],
+	"mossy_stone_brick": [
+		-7303536
+	],
+	"polished_diorite": [
+		-3421236
+	],
+	"polished_andesite": [
+		-7302512
+	],
+	"polished_granite": [
+		-4024186
+	],
+	"smooth_stone": [
+		-8816263
+	],
+	"grindstone_leg": [
+		-12833254
+	],
+	"grindstone_pivot": [
+		-11981548
+	],
+	"grindstone_round": [
+		-6316129
+	],
+	"grindstone_side": [
+		-5987164
+	],
+	"bell_top": [
+		-67431
+	],
+	"bell_bottom": [
+		-1328320
+	],
+	"bell_side": [
+		-271809
+	],
+	"bell_carried": [
+		-16120573
+	],
+	"bell_stone": [
+		-7368817
+	],
+	"cartography_table_side1": [
+		-12309485
+	],
+	"cartography_table_side2": [
+		-12374765
+	],
+	"cartography_table_side3": [
+		-12244204
+	],
+	"cartography_table_top": [
+		-12505323
+	],
+	"cartography_table_bottom": [
+		-12440812
+	],
+	"fletching_table_top": [
+		-5004429
+	],
+	"fletching_table_side1": [
+		-5202065
+	],
+	"fletching_table_side2": [
+		-5202065
+	],
+	"barrel_top": [
+		-7378628,
+		-7247043
+	],
+	"barrel_bottom": [
+		-8035783,
+		-8035783
+	],
+	"barrel_side": [
+		-7641541,
+		-7641541
+	],
+	"smithing_table_bottom": [
+		-12575721
+	],
+	"smithing_table_front": [
+		-13163482
+	],
+	"smithing_table_side": [
+		-13295069
+	],
+	"smithing_table_top": [
+		-13026746
+	],
+	"smoker": [
+		-6917055,
+		-6461390,
+		-6917055,
+		-11711672
+	],
+	"smoker_front_off": [
+		-6917055
+	],
+	"smoker_front_on": [
+		-6461390
+	],
+	"smoker_top": [
+		-11711672,
+		-11711672
+	],
+	"smoker_bottom": [
+		-10659241,
+		-10659241
+	],
+	"smoker_side": [
+		-6917055,
+		-6917055
+	],
+	"blast_furnace": [
+		-6250336,
+		-6513508,
+		-6776936,
+		-11513775
+	],
+	"blast_furnace_front": [
+		-6250336,
+		-6513508
+	],
+	"blast_furnace_front_off": [
+		-6250336
+	],
+	"blast_furnace_front_on": [
+		-6513508
+	],
+	"blast_furnace_top": [
+		-11513775,
+		-11513775
+	],
+	"blast_furnace_side": [
+		-6776936,
+		-6776936
+	],
+	"lantern": [
+		-15460836
+	],
+	"lantern_carried": [
+		-16185590
+	],
+	"campfire_fire": [
+		-4238080
+	],
+	"campfire_log": [
+		-7113917
+	],
+	"campfire_log_lit": [
+		-5674715
+	],
+	"loom_top": [
+		-4484006
+	],
+	"loom_bottom": [
+		-12110307
+	],
+	"loom_side": [
+		-4220834
+	],
+	"loom_front": [
+		-5140901
+	],
+	"lectern_top": [
+		-5009577
+	],
+	"lectern_bottom": [
+		-5140392
+	],
+	"lectern_front": [
+		-10927071
+	],
+	"lectern_sides": [
+		-9283535
+	],
+	"lectern_base": [
+		-4877990
+	],
+	"wood": [
+		-10269394,
+		-6916028,
+		-12966640,
+		-11584478,
+		-1381915,
+		-4084877,
+		-11189479,
+		-6849467,
+		-10133931,
+		-5350341,
+		-12833254,
+		-12504289
+	],
+	"sweet_berry_bush_0": [
+		-16248309
+	],
+	"sweet_berry_bush_1": [
+		-15125729
+	],
+	"sweet_berry_bush_2": [
+		-15060193
+	],
+	"sweet_berry_bush_3": [
+		-14666976
+	],
+	"sweet_berry_bush_carried": [
+		-15528951
+	],
+	"composter_top": [
+		-6067398,
+		-13688564,
+		-14214388
+	],
+	"composter_side": [
+		-7118539
+	],
+	"composter_bottom": [
+		-7907282
+	],
+	"light_block_carried": [
+		-16514044,
+		-16579837,
+		-16514301,
+		-16514557,
+		-16580093,
+		-16514557,
+		-16580093,
+		-16580350,
+		-16580094,
+		-16580094,
+		-16514557,
+		-16514557,
+		-16514300,
+		-16514557,
+		-16514557,
+		-16514556
+	]
 }

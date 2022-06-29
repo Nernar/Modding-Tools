@@ -43,20 +43,9 @@ ControlWindow.prototype.resetContent = function() {
 	this.setTransition(behold, queue, transform);
 	this.setTransition(behold, collapse, transform);
 	// This is not an error, a new transition is being created
-	let actor = this.getTransformTransition();
-	actor.addListener({
-		onTransitionEnd: function() {
-			tryout(function() {
-				if (instance.isMayTouched()) {
-					UniqueWindow.prototype.setTouchable.call(instance, true);
-				}
-				instance.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
-				instance.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
-			});
-		}
-	});
-	this.setTransition(queue, behold, actor);
-	this.setTransition(queue, collapse, actor);
+	let unqueue = this.getTransformTransition();
+	this.setTransition(queue, behold, unqueue);
+	this.setTransition(queue, collapse, unqueue);
 };
 
 ControlWindow.prototype.getButtonFragment = function() {
@@ -310,17 +299,6 @@ ControlWindow.prototype.setHideableInside = function(enabled) {
 	this.unclose = Boolean(enabled);
 };
 
-ControlWindow.prototype.mayTouched = true;
-
-ControlWindow.prototype.isMayTouched = function() {
-	return this.mayTouched !== undefined ? this.mayTouched : false;
-};
-
-ControlWindow.prototype.setTouchable = function(enabled) {
-	this.mayTouched = Boolean(enabled);
-	UniqueWindow.prototype.setTouchable.apply(this, arguments);
-};
-
 ControlWindow.prototype.transformButton = function() {
 	this.setEnterTransition(this.getButtonEnterTransition());
 	this.setExitTransition(this.getButtonExitTransition());
@@ -334,16 +312,13 @@ ControlWindow.prototype.transformCollapsedButton = function() {
 };
 
 ControlWindow.prototype.transformLogotype = function() {
-	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
-	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	this.setEnterTransition(this.getLogotypeEnterTransition());
 	this.setExitTransition(this.getLogotypeExitTransition());
 	this.setFragment(this.getLogotypeFragment());
-	if (this.isMayTouched()) UniqueWindow.prototype.setTouchable.call(this, false);
 };
 
 ControlWindow.prototype.show = function() {
-	if (this.getBackgroundImage() !== null || this.getForegroundImage() !== null) {
+	if (this.getBackgroundImage() != null || this.getForegroundImage() != null) {
 		this.updateProgress();
 	}
 	UniqueWindow.prototype.show.apply(this, arguments);

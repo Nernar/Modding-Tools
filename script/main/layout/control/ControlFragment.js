@@ -63,24 +63,24 @@ ControlFragment.Logotype = function() {
 ControlFragment.Logotype.prototype = new ControlFragment;
 
 ControlFragment.Logotype.prototype.resetContainer = function() {
-	let container = new android.widget.FrameLayout(getContext()),
-		params = android.widget.FrameLayout.LayoutParams
-			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
-	container.setLayoutParams(params);
+	let container = new android.widget.FrameLayout(getContext());
+	container.setLayoutParams(new android.widget.FrameLayout.LayoutParams
+			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	this.setContainerView(container);
 	
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setGravity($.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
+	layout.setMinimumWidth(getDisplayWidth());
+	layout.setMinimumHeight(getDisplayHeight());
 	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
 	container.addView(layout);
 	
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotypeForeground");
 	$.ViewCompat.setTransitionName(logotype, "logotypeForeground");
-	params = new android.widget.LinearLayout.LayoutParams
-		(toComplexUnitDip(208), toComplexUnitDip(208));
-	layout.addView(logotype, params);
+	layout.addView(logotype, new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(208), toComplexUnitDip(208)));
 };
 
 ControlFragment.Logotype.prototype.setLevel = function(level) {

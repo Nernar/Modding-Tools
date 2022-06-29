@@ -27,6 +27,7 @@ const API = {
 	toDigestMd5: toDigestMd5,
 	vibrate: vibrate,
 	reportError: reportError,
+	reportTrace: reportTrace,
 	localizeError: localizeError,
 	
 	// Android Ui
@@ -53,7 +54,7 @@ const API = {
 			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
 			return;
 		}
-		Logger.Log("ModdingTools: registered adaptive tool " + id, "DEBUG");
+		log("ModdingTools: registered custom adaptive tool " + id);
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
@@ -64,7 +65,7 @@ const API = {
 		if (entry === undefined) {
 			entry = new ProjectTool.MenuFactory();
 		}
-		if (!entry instanceof ProjectTool.MenuFactory) {
+		if (!(entry instanceof ProjectTool.MenuFactory)) {
 			MCSystem.throwException("ModdingTools: registerMenuTool entry must be instance of Tool.MenuEntry");
 		}
 		log("ModdingTools: registered tool " + id + " into menu entry");
@@ -72,8 +73,11 @@ const API = {
 		Tools[id] = tool;
 	},
 	registerBitsetUi: registerBitsetUi,
+	registerFragmentJson: registerFragmentJson,
+	registerWindowJson: registerWindowJson,
 	
 	// Helper functions
+	random: random,
 	isEmpty: isEmpty,
 	assign: assign,
 	merge: merge,
@@ -83,6 +87,9 @@ const API = {
 	parseCallback: parseCallback,
 	MathUtils: MathUtils,
 	Base64: Base64,
+	playTune: playTune,
+	playTuneDirectly: playTuneDirectly,
+	stopTune: stopTune,
 	getPlayerEnt: getPlayerEnt,
 	
 	// Dialogues
@@ -93,8 +100,8 @@ const API = {
 	stringifyObject: stringifyObject,
 	formatExceptionReport: formatExceptionReport,
 	selectFile: selectFile,
+	saveFile: saveFile,
 	readFileAsync: readFile,
-	saveFileAsync: saveFile,
 	
 	// Storage utility
 	resetSettingIfNeeded: resetSettingIfNeeded,
@@ -214,12 +221,13 @@ const API = {
 	exportProject: exportProject,
 	importProject: importProject,
 	importScript: importScript,
+	selectProjectData: selectProjectData,
 	Project: Project,
 	ProjectProvider: ProjectProvider,
 	ScriptConverter: ScriptConverter,
-	selectProjectData: selectProjectData,
 	
 	// Tools
+	Action: Action,
 	Tool: Tool,
 	InteractionTool: InteractionTool,
 	MenuTool: MenuTool,
@@ -257,6 +265,7 @@ const API = {
 	showModuleInformation: showModuleInfo,
 	
 	// Deprecated way to add additional information
+	registerAdditionalInformation: registerAdditionalInformation,
 	attachAdditionalInformation: attachAdditionalInformation,
 	attachWarningInformation: attachWarningInformation,
 	prepareAdditionalInformation: prepareAdditionalInformation,
@@ -269,7 +278,7 @@ const API = {
 			API[element] = who[element];
 		}
 	}
-})("USER_ID", "ModBrowser", "Mehwrap");
+})("USER_ID", "Network", "JsonIo", "ModBrowser", "Mehwrap");
 
 const notifyCoreEngineLoaded = function() {
 	CoreEngine.ModAPI.registerAPI("ModdingTools", API);

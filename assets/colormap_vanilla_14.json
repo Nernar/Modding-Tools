@@ -1,15 +1,37 @@
 {
-	"bee_nest_bottom": -9153480,
-	"bee_nest_front": -2578090,
-	"bee_nest_front_honey": -2315184,
-	"bee_nest_side": -2380713,
-	"bee_nest_top": -8629973,
-	"beehive_front": -4680355,
-	"beehive_front_honey": -4155564,
-	"beehive_side": -4746148,
-	"beehive_top": -4614819,
-	"honey_bottom": -481519,
-	"honey_side": -279500,
-	"honey_top": -280274,
-	"honeycomb": -3248378
+	"bee_nest_top": [
+		-8629973
+	],
+	"bee_nest_front": [
+		-2578090,
+		-2315184
+	],
+	"bee_nest_side": [
+		-2380713
+	],
+	"bee_nest_bottom": [
+		-9153480
+	],
+	"beehive_top": [
+		-4614819
+	],
+	"beehive_side": [
+		-4746148
+	],
+	"beehive_front": [
+		-4680355,
+		-4155564
+	],
+	"honey_side": [
+		-279500
+	],
+	"honey_top": [
+		-280274
+	],
+	"honey_bottom": [
+		-481519
+	],
+	"honeycomb_block": [
+		-3248378
+	]
 }
