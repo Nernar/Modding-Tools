@@ -84,7 +84,7 @@ SnackSequence.prototype.create = function(value, active) {
 		snack.pin();
 		SnackSequence.addProcess(this);
 		this.message = snack.attachMessage(this.getCreationHint(), this.getColor(), this.getCreationBackground());
-		if (!snack.isOpened()) snack.show();
+		if (!snack.isOpened()) snack.attach();
 	}
 };
 
@@ -276,7 +276,7 @@ StackedSnackSequence.prototype.create = function(value, active) {
 		}
 		snack.attachMessage(this.getCreationHint(),
 			this.getCreationColor(), this.getCreationBackground());
-		snack.show();
+		snack.attach();
 		this.snack = snack;
 		SnackSequence.addProcess(this);
 	}
@@ -297,7 +297,7 @@ StackedSnackSequence.prototype.update = function(progress, index) {
 			stack.splice(i, 1);
 			i--;
 		}
-		snack.show();
+		snack.attach();
 	}
 };
 
@@ -318,7 +318,7 @@ StackedSnackSequence.prototype.cancel = function(error) {
 		this.update(this.index / this.count * 100, this.index);
 		snack.attachMessage(this.getCancellationHint(error),
 			this.getCancellationColor(error), this.getCancellationBackground(error));
-		snack.show();
+		snack.attach();
 	}
 	this.handleCompletion();
 	Sequence.prototype.cancel.apply(this, arguments);
@@ -347,7 +347,7 @@ StackedSnackSequence.prototype.complete = function(active) {
 		}
 		snack.attachMessage(this.getCompletionHint(active),
 			this.getCompletionColor(active), this.getCompletionBackground(active));
-		snack.show();
+		snack.attach();
 	}
 	this.handleCompletion();
 };

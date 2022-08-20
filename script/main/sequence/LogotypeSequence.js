@@ -31,7 +31,7 @@ LogotypeSequence.prototype.create = function() {
 	let logotype = new LogotypeWindow();
 	logotype.setForegroundImage(this.getForegroundImage());
 	logotype.setBackgroundImage(this.getBackgroundImage());
-	logotype.show();
+	logotype.attach();
 	this.window = logotype;
 };
 
@@ -78,7 +78,7 @@ LogotypeSequence.prototype.handleDismiss = function(modifier) {
 	handle(function() {
 		let logotype = sequence.getWindow();
 		if (logotype !== null) {
-			logotype.hide();
+			logotype.dismiss();
 			delete sequence.window;
 		}
 	}, this.getExpirationTime() * modifier);

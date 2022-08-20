@@ -21,28 +21,31 @@ return function() {
 	checkOnlineable(function() {
 		let downloaded = [];
 		let lastId = catchLastAvailabledId();
-		print("1 -> " + lastId);
+		showHint("1 -> " + lastId);
 		for (let i = 1; i <= lastId; i++) {
 			let query = new ModBrowser.Query.Description();
 			query.setLanguage(Translation.getLanguage());
 			query.setIsHorizon(isHorizon);
 			query.setCommentLimit(0);
 			query.setId(i);
-			tryout(function() {
+			try {
 				query.read();
 				let description = query.getJSON();
 				if (description.error) {
 					throw null;
 				}
-				downloaded.push(i + ": " + description.title + " (" + description.author_name + ")");
+				downloaded.push(i + ". " + description.title + " (" + description.author_name + ")");
 				let author = new java.io.File(__dir__ + "modbrowser/" + description.author_name);
 				author.mkdirs();
-				tryout(function() {
+				if (new java.io.File(author.getPath() + "/" + description.title + ".icmod").exists()) {
+					return;
+				}
+				try {
 					let downloader = ModBrowser.getDownloader(i, isHorizon);
 					downloader.setPath(author.getPath() + "/" + description.title + ".icmod");
 					downloader.download();
-				}, function(e) {
-					tryout(function() {
+				} catch (e) {
+					try {
 						if (isHorizon) {
 							let downloader = ModBrowser.getDownloader(i, !isHorizon);
 							downloader.setPath(author.getPath() + "/" + description.title + ".icmod");
@@ -50,16 +53,18 @@ return function() {
 							return;
 						}
 						throw null;
-					}, function(e) {
-						let flag = new java.io.File(author.getPath() + "/" + description.title + "." + i + ".noicmod");
+					} catch (e) {
+						let flag = new java.io.File(author.getPath() + "/" + description.title + "." + i + ".notfound");
 						flag.createNewFile();
-					});
-				});
-				print(downloaded[downloaded.length - 1]);
-			}, new Function());
-			java.lang.Thread.sleep(50 + 50 * Math.random());
+					}
+				}
+				showHint(downloaded[downloaded.length - 1]);
+			} catch (e) {
+				showHint(i + ". " + e);
+			}
+			java.lang.Thread.sleep(100 + 50 * Math.random());
 		}
-		let list = new java.io.File(__dir__ + "modbrowser/list.txt");
+		let list = new java.io.File(__dir__ + "modbrowser/README-raw.md");
 		Files.write(list, downloaded.join("\n"));
 		confirm(translate("Downloaded") + " " + translate("%s mods", downloaded.length), downloaded.join("\n"));
 	});

@@ -18,17 +18,17 @@ ControlWindow.prototype.resetContent = function() {
 	this.queued = queued;
 	let instance = this;
 	button.setOnClickListener(function() {
-		instance.onButtonClick && instance.onButtonClick();
-		if (instance.isHideableInside()) instance.hide();
+		instance.onButtonClick && instance.onButtonClick(instance);
+		if (instance.isHideableInside()) instance.dismiss();
 	});
 	collapsed.setOnClickListener(function() {
-		instance.onCollapsedButtonClick && instance.onCollapsedButtonClick();
+		instance.onCollapsedButtonClick && instance.onCollapsedButtonClick(instance);
 	});
 	button.setOnHoldListener(function() {
-		return instance.onButtonHold && instance.onButtonHold();
+		return (instance.onButtonHold && instance.onButtonHold(instance)) == true;
 	});
 	collapsed.setOnHoldListener(function() {
-		return instance.onCollapsedButtonHold && instance.onCollapsedButtonHold();
+		return (instance.onCollapsedButtonHold && instance.onCollapsedButtonHold(instance)) == true;
 	});
 	let behold = this.makeScene(button.getContainer()),
 		collapse = this.makeScene(collapsed.getContainer()),
@@ -255,9 +255,7 @@ ControlWindow.prototype.setOnButtonClickListener = function(action) {
 	if (typeof action != "function") {
 		return delete this.onButtonClick;
 	}
-	this.onButtonClick = function() {
-		tryout.call(this, action);
-	};
+	this.onButtonClick = action;
 	return true;
 };
 
@@ -265,9 +263,7 @@ ControlWindow.prototype.setOnCollapsedButtonClickListener = function(action) {
 	if (typeof action != "function") {
 		return delete this.onCollapsedButtonClick;
 	}
-	this.onCollapsedButtonClick = function() {
-		tryout.call(this, action);
-	};
+	this.onCollapsedButtonClick = action;
 	return true;
 };
 
@@ -275,9 +271,7 @@ ControlWindow.prototype.setOnButtonHoldListener = function(action) {
 	if (typeof action != "function") {
 		return delete this.onButtonHold;
 	}
-	this.onButtonHold = function() {
-		return tryout.call(this, action);
-	};
+	this.onButtonHold = action;
 	return true;
 };
 
@@ -285,9 +279,7 @@ ControlWindow.prototype.setOnCollapsedButtonHoldListener = function(action) {
 	if (typeof action != "function") {
 		return delete this.onCollapsedButtonHold;
 	}
-	this.onCollapsedButtonHold = function() {
-		return tryout.call(this, action);
-	};
+	this.onCollapsedButtonHold = action;
 	return true;
 };
 
@@ -317,11 +309,11 @@ ControlWindow.prototype.transformLogotype = function() {
 	this.setFragment(this.getLogotypeFragment());
 };
 
-ControlWindow.prototype.show = function() {
+ControlWindow.prototype.attach = function() {
 	if (this.getBackgroundImage() != null || this.getForegroundImage() != null) {
 		this.updateProgress();
 	}
-	UniqueWindow.prototype.show.apply(this, arguments);
+	UniqueWindow.prototype.attach.apply(this, arguments);
 };
 
 ControlWindow.parseJson = function(instanceOrJson, json) {

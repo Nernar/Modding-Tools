@@ -18,13 +18,15 @@ CounterFragment.prototype.resetContainer = function() {
 	
 	let subtract = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterMinus").attachAsImage(subtract);
-	subtract.setOnClickListener(function(view) {
-		tryout(function() {
+	subtract.setOnClickListener(function() {
+		try {
 			let current = self.modifiers[self.modifier];
 			self.value = preround(self.value - (current > 0 ? 1 / current : current));
 			self.onChange && self.onChange(self.value);
 			self.updateCounter();
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	subtract.setTag("counterSubtract");
 	let params = new android.widget.LinearLayout.
@@ -32,17 +34,22 @@ CounterFragment.prototype.resetContainer = function() {
 	content.addView(subtract, params);
 	
 	modifier.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
-	modifier.setOnClickListener(function(view) {
-		tryout(function() {
+	modifier.setOnClickListener(function() {
+		try {
 			self.modifier++;
 			self.modifier == self.modifiers.length && (self.modifier = 0);
 			self.updateCounter();
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
-	modifier.setOnLongClickListener(function(view) {
-		return tryout(function() {
-			return self.holdDefault();
-		}, false);
+	modifier.setOnLongClickListener(function() {
+		try {
+			return !!self.holdDefault();
+		} catch (e) {
+			reportError(e);
+		}
+		return false;
 	});
 	modifier.setTag("counterText");
 	content.addView(modifier, new android.widget.LinearLayout.
@@ -50,13 +57,15 @@ CounterFragment.prototype.resetContainer = function() {
 	
 	let add = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterPlus").attachAsImage(add);
-	add.setOnClickListener(function(view) {
-		tryout(function() {
+	add.setOnClickListener(function() {
+		try {
 			let current = self.modifiers[self.modifier];
 			self.value = preround(self.value + (current > 0 ? 1 / current : current));
 			self.onChange && self.onChange(self.value);
 			self.updateCounter();
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	add.setTag("counterAdd");
 	content.addView(add, params);

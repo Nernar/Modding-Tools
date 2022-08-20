@@ -14,12 +14,20 @@ ProjectTool.prototype.reset = function() {
 		categories: function(tool) {
 			return calloutOrParse(this, tool.contentProjectDescriptor, Array.prototype.slice.call(arguments));
 		}
-	}, {
-		type: "category",
-		title: translate("Editors"),
-		items: function(tool) {
-			return calloutOrParse(this, tool.contentEntryDescriptor, Array.prototype.slice.call(arguments));
+	}, function(tool) {
+		let items = calloutOrParse(this, tool.contentEntryDescriptor, Array.prototype.slice.call(arguments));
+		if (items.length == 0) {
+			return {
+				type: "message",
+				icon: "entitySelect",
+				message: translate("Howdy and welcome to Dev Editor!") + "\n" + translate("Unfortunately, you didn't install any module to start something bewitching.") + " " + translate("Come back here when you find something worthwhile in Mod Browser.")
+			};
 		}
+		return {
+			type: "category",
+			title: translate("Editors"),
+			items: items
+		};
 	}, {
 		type: "category",
 		title: translate("Project"),
@@ -70,7 +78,7 @@ ProjectTool.prototype.reset = function() {
 			click: function(tool, item) {
 				if (REVISION.indexOf("alpha") != -1) {
 					confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
-						TutorialSequence.ButtonInteraction.execute();
+						TutorialSequence.Welcome.execute();
 						tool.deattach();
 					});
 				} else showHint(translate("This content will be availabled soon"));
@@ -117,7 +125,10 @@ ProjectTool.prototype.hasConverter = function() {
 ProjectTool.prototype.getConverter = new Function();
 
 ProjectTool.prototype.open = function(source) {
-	let project = ProjectProvider.create();
+	let project = ProjectProvider.getProject();
+	if (!ProjectProvider.isInitialized()) {
+		project = ProjectProvider.create();
+	}
 	if (source !== undefined) {
 		project.object = source;
 	}
@@ -137,14 +148,14 @@ ProjectTool.prototype.replace = function(file) {
 	if (name.endsWith(".dnp")) {
 		let active = Date.now();
 		importProject(file.getPath(), function(result) {
-			instance.fromProject(selected);
+			instance.fromProject(result);
 			showHint(translate("Loaded success") + " " +
 				translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 		});
 	} else if (name.endsWith(".js")) {
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
-			instance.fromProject(selected);
+			instance.fromProject(result);
 			showHint(translate("Converted success") + " " +
 				translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 		});
@@ -197,7 +208,7 @@ ProjectTool.prototype.export = function(file) {
 			MCSystem.throwException("ModdingTools: no converter, try override ProjectTool.hasConverter");
 		}
 		let active = Date.now();
-		tryout(function() {
+		try {
 			converter.attach(project);
 			converter.executeAsync(function(link, result) {
 				if (link.hasResult()) {
@@ -206,7 +217,9 @@ ProjectTool.prototype.export = function(file) {
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				} else reportError(link.getLastException());
 			});
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	}
 };
 
@@ -246,4 +259,16 @@ ProjectTool.MenuFactory.prototype.getImage = function() {
 
 ProjectTool.MenuFactory.prototype.getBackground = function() {
 	return null;
+};
+
+ProjectTool.MenuFactory.prototype.getBadgeText = function() {
+	return null;
+};
+
+ProjectTool.MenuFactory.prototype.getBadgeOverlay = function() {
+	return null;
+};
+
+ProjectTool.MenuFactory.prototype.observeEntry = function(what, to, index) {
+	to.description = translate("%s bytes", JSON.stringify(what).length);
 };

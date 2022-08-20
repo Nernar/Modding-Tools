@@ -252,9 +252,11 @@ ToolbarFragment.prototype.resetContainer = function() {
 	button.setTag("backButton");
 	let self = this;
 	button.setOnClickListener(function() {
-		tryout(function() {
+		try {
 			self.onBackClick && self.onBackClick();
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	params = android.widget.RelativeLayout.LayoutParams
 		(toComplexUnitDip(54), toComplexUnitDip(54));
@@ -453,91 +455,15 @@ ToolbarFragment.Item = function() {
 
 ToolbarFragment.Item.prototype = new SidebarFragment.Group.Item;
 
-const ListHolderAdapter = function(proto) {
-	return merge(new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, merge({
-		getCount: function() {
-			return tryout.call(this, function() {
-				return this.getItemCount();
-			}, 0);
-		},
-		getItemId: function(position) {
-			return position;
-		},
-		getItem: function(position) {
-			return tryout.call(this, function() {
-				let items = this.getItems();
-				if (items === null) return null;
-				return items.length > position ? items[position] : null;
-			}, null);
-		},
-		getView: function(position, convertView, parent) {
-			return tryout.call(this, function() {
-				let holder = tryout.call(this, function() {
-					if (convertView == null) {
-						convertView = this.createView(position, parent);
-						let instance = this.createHolder(convertView);
-						convertView.setTag(instance);
-						return instance;
-					}
-					return convertView.getTag();
-				}, function(e) {
-					throw e;
-				});
-				this.describe(holder, position, convertView, parent);
-				convertView.setTag(holder);
-				return convertView;
-			}, null);
-		}
-	}, proto)), this);
-};
-
-ListHolderAdapter.prototype.createView = function(position, parent) {
-	let view = new android.widget.TextView(getContext());
-	view.setPadding(toComplexUnitDip(10), toComplexUnitDip(5),
-		toComplexUnitDip(10), toComplexUnitDip(5));
-	typeface && view.setTypeface(typeface);
-	view.setTextColor($.Color.WHITE);
-	view.setTextSize(toComplexUnitSp(9));
-	return view;
-};
-
-ListHolderAdapter.prototype.createHolder = function(view) {
-	let holder = {};
-	holder.text = view;
-	return holder;
-};
-
-ListHolderAdapter.prototype.describe = function(holder, position, view, parent) {
-	let content = this.getItem(position);
-	holder.text.setText(String(content));
-};
-
-ListHolderAdapter.prototype.getItems = function() {
-	return this.array || null;
-};
-
-ListHolderAdapter.prototype.getItemCount = function() {
-	let items = this.getItems();
-	if (items === null) return 0;
-	return items.length || 0;
-};
-
-ListHolderAdapter.prototype.setItems = function(array) {
-	this.array = array;
-	this.notifyDataSetChanged();
-};
-
-ListHolderAdapter.prototype.toAdapter = function() {
-	return this.self;
-};
-
 const ImageSourceFragment = function() {
 	FrameFragment.apply(this, arguments);
 	let self = this;
 	this.postHideControl = new java.lang.Runnable(function() {
-		tryout(function() {
+		try {
 			self.getToolbar().hide();
-		});
+		} catch (e) {
+			Logger.Log("explorer: Toolbar.hide: " + e, "WARNING");
+		}
 	});
 };
 
@@ -646,9 +572,7 @@ ImageSourceFragment.prototype.setOnBackClickListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onBackClick;
 	}
-	this.onBackClick = function() {
-		tryout(listener);
-	};
+	this.onBackClick = listener;
 	return true;
 };
 
@@ -656,9 +580,7 @@ ImageSourceFragment.prototype.setOnScaleChangeListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onScaleChange;
 	}
-	this.onScaleChange = function() {
-		return tryout(listener);
-	};
+	this.onScaleChange = listener;
 	return true;
 };
 
@@ -670,7 +592,7 @@ const ImageSourceWindow = function() {
 		self.getFragment().requireControl();
 	});
 	this.getFragment().setOnBackClickListener(function() {
-		self.hide();
+		self.dismiss();
 	});
 	this.getFragment().setOnScaleChangeListener(function() {
 		switch (self.getFragment().getScaleType()) {
@@ -705,7 +627,7 @@ ImageSourceWindow.prototype.setSource = function(src) {
 const openImageFile = function(file) {
 	let source = new ImageSourceWindow();
 	source.setSource(file);
-	return source.show();
+	return source.attach();
 };
 
 Translation.addTranslation("Do you really want to delete %s?", {
@@ -733,15 +655,18 @@ const attachAdvancedExplorer = function(path, mayWrap, action) {
 				});
 		});
 		explorer.setOnSelectListener(function(popup, file) {
-			let result = tryout(function() {
-				return Boolean(action && action(explorer, file));
-			}, false);
+			let result = false;
+			try {
+				result = action && action(explorer, file);
+			} catch (e) {
+				reportError(e);
+			}
 			if (result !== false) return;
 			let extension = Files.getExtensionType(file);
 			openSupportedFileIfMay(file, extension);
 		});
 		bar.setPath(path !== undefined ? path : __dir__);
-		explorer.show();
+		explorer.attach();
 	});
 };
 
@@ -749,32 +674,32 @@ SHARE("attachAdvancedExplorer", attachAdvancedExplorer);
 
 Translation.addTranslation("Archive", {
 	ru: "Архив"
-});
-Translation.addTranslation("JSON", {});
+}); // DEPRECATED
+Translation.addTranslation("JSON", {}); // DEPRECATED
 Translation.addTranslation("Text", {
 	ru: "Текст"
-});
+}); // DEPRECATED
 Translation.addTranslation("Order", {
 	ru: "Список"
-});
+}); // DEPRECATED
 Translation.addTranslation("Script", {
 	ru: "Скрипт"
-});
+}); // DEPRECATED
 Translation.addTranslation("Project", {
 	ru: "Проект"
 });
 Translation.addTranslation("Font", {
 	ru: "Шрифт"
-});
+}); // DEPRECATED
 Translation.addTranslation("Image", {
 	ru: "Изображение"
-});
+}); // DEPRECATED
 Translation.addTranslation("Video", {
 	ru: "Видео"
-});
+}); // DEPRECATED
 Translation.addTranslation("Audio", {
 	ru: "Аудио"
-});
+}); // DEPRECATED
 
 const openSupportedFileIfMay = function(file, extension) {
 	switch (extension) {
@@ -787,14 +712,14 @@ const openSupportedFileIfMay = function(file, extension) {
 					MCSystem.throwException("ModdingTools: output file is already exists");
 				}
 				handleThread(function() {
-					tryout(function() {
+					try {
 						Archives.unpack(file, output.getPath());
-					}, function(e) {
+					} catch (e) {
 						if (e.message == "java.io.util.ZipFile: Not a zip archive") {
 							return;
 						}
 						throw e;
-					});
+					}
 				});
 			});
 			break;

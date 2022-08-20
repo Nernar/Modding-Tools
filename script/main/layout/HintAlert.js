@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const HintAlert = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setGravity($.Gravity.LEFT | $.Gravity.BOTTOM);
@@ -45,15 +50,17 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let layout = new android.widget.LinearLayout(getContext());
 		layout.setPadding(toComplexUnitDip(32), toComplexUnitDip(10),
 			toComplexUnitDip(32), toComplexUnitDip(10));
-		background = tryout(function() {
+		try {
 			if (background !== undefined) {
 				if (!(background instanceof Drawable)) {
 					background = Drawable.parseJson.call(this, background);
 				}
-				return background;
+			} else {
+				background = new BitmapDrawable("popup");
 			}
-			return new BitmapDrawable("popup");
-		});
+		} catch (e) {
+			log("ModdingTools: HintAlert.attachMessage: " + e);
+		}
 		if (background) background.attachAsBackground(layout);
 		layout.setOrientation($.LinearLayout.VERTICAL);
 		layout.setGravity($.Gravity.CENTER);
@@ -271,7 +278,7 @@ HintAlert.prototype.reawait = function() {
 	this.action && this.action.setCurrentTick(0);
 };
 
-HintAlert.prototype.show = function() {
+HintAlert.prototype.attach = function() {
 	let scope = this;
 	if (!this.action) {
 		this.action = handleAction(function(action) {
@@ -280,10 +287,6 @@ HintAlert.prototype.show = function() {
 					action.run();
 					return;
 				}
-				// TODO: @hide not stopping action or not working
-				// action.destroy();
-				// delete scope.action;
-				// scope.hide();
 				scope.dismiss();
 			});
 		}, function() {
@@ -296,7 +299,7 @@ HintAlert.prototype.show = function() {
 			scope.action.destroy();
 			delete scope.action;
 		});
-		UniqueWindow.prototype.show.apply(this, arguments);
+		UniqueWindow.prototype.attach.apply(this, arguments);
 	} else this.reawait();
 };
 

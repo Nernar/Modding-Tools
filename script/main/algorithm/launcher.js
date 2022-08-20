@@ -2,35 +2,36 @@
 	let internal = new java.io.File(Dirs.SCRIPT_REVISION + "bridge.jar");
 	if (internal.exists()) {
 		let reader = new java.io.FileReader(internal);
-		INNERCORE_PACKAGE.mod.executable.Compiler.enter(-1);
-		merge(this, INNERCORE_PACKAGE.mod.executable.Compiler.loadScriptFromDex(internal)());
+		InnerCorePackages.mod.executable.Compiler.enter(-1);
+		merge(this, InnerCorePackages.mod.executable.Compiler.loadScriptFromDex(internal)());
 	} else {
 		Logger.Log("ModdingTools: not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
 	}
 })();
 
-tryoutSafety(function() {
+try {
 	if (REVISION.startsWith("develop")) {
 		CHECKOUT("development.js");
 	}
-});
+} catch (e) {
+	if (REVISION.indexOf("develop") != -1) {
+		reportError(e);
+	}
+}
 
 /**
  * Retrying update and launch.
  */
 const initialize = function() {
-	tryout(function() {
-		tryout(function() {
-			MCSystem.setLoadingTip(NAME + ": Starting");
-			// reportError.setTitle(translate(NAME) + " " + translate(VERSION));
-			// reportError.setInfoMessage(translate("An error occurred while executing modification.") + " " +
-				// translate("If your developing process is affected, try export all non-saved data.") + " " +
-				// translate("Send a screenshot of error to our group or save error in internal storage."));
-		});
+	try {
+		MCSystem.setLoadingTip(NAME + ": Starting");
 		if (showHint.launchStacked !== undefined) {
 			LaunchSequence.execute();
 		}
-	});
+	} catch (e) {
+		Logger.Log("ModdingTools: Initialization fatal: Unfortunately, we will not be able to run modification", "ERROR");
+		reportError(e);
+	}
 };
 
 const restart = function() {

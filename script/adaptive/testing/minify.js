@@ -29,6 +29,7 @@ const minifySource = function(text, callback) {
 			callback && callback(result);
 			return;
 		}
+		print(reader.read());
 		print(code);
 	});
 };

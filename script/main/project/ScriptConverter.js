@@ -34,9 +34,9 @@ ScriptConverter.prototype.isAttached = function() {
 };
 
 ScriptConverter.prototype.validate = function(obj) {
-	return tryout.call(this, function() {
+	try {
 		if (this.TYPE === undefined) {
-			MCSystem.throwException("ModdingTools: impossible to resolve project type for ScriptConverter");
+			MCSystem.throwException("ModdingTools: Cannot resolve project type for ScriptConverter");
 		}
 		if (obj == null) {
 			return ScriptConverter.State.ILLEGAL;
@@ -48,9 +48,11 @@ ScriptConverter.prototype.validate = function(obj) {
 			return ScriptConverter.State.BAD_TYPE;
 		}
 		return ScriptConverter.State.PREPARED;
-	}, function(throwable) {
-		this.throwable = throwable;
-	}, ScriptConverter.State.UNKNOWN);
+	} catch (e) {
+		this.throwable = e;
+		reportError(e);
+	}
+	return ScriptConverter.State.UNKNOWN;
 };
 
 ScriptConverter.prototype.getLastException = function() {
@@ -79,7 +81,7 @@ ScriptConverter.prototype.inProcess = function() {
 };
 
 ScriptConverter.prototype.assureYield = function() {
-	return tryout.call(this, function() {
+	try {
 		if (!this.getThread()) {
 			return false;
 		}
@@ -87,7 +89,10 @@ ScriptConverter.prototype.assureYield = function() {
 			java.lang.Thread.yield();
 		}
 		return this.isConverted();
-	}, false);
+	} catch (e) {
+		log("ModdingTools: ScriptConverter.assureYield: " + e);
+	}
+	return false;
 };
 
 ScriptConverter.prototype.getThread = function() {
@@ -95,12 +100,12 @@ ScriptConverter.prototype.getThread = function() {
 };
 
 ScriptConverter.prototype.execute = function() {
-	tryout.call(this, function() {
+	try {
 		if (typeof this.process != "function") {
-			MCSystem.throwException("ModdingTools: impossible to find process for ScriptConverter");
+			MCSystem.throwException("ModdingTools: ScriptConverter.process(what) must be implemented");
 		}
 		if (!this.isValid() || this.inProcess()) {
-			Logger.Log("ModdingTools: ScriptConverter is not validated required object", "WARNING");
+			Logger.Log("ModdingTools: ScriptConverter is not validated required object or already processing something", "WARNING");
 			return;
 		}
 		if (this.isAttached()) {
@@ -110,10 +115,11 @@ ScriptConverter.prototype.execute = function() {
 		} else {
 			this.state = ScriptConverter.State.NOT_ATTACHED;
 		}
-	}, function(throwable) {
-		this.throwable = throwable;
+	} catch (e) {
+		this.throwable = e;
 		this.state = ScriptConverter.State.THROWED;
-	});
+		reportError(e);
+	}
 };
 
 ScriptConverter.prototype.executeAsync = function(post) {
@@ -133,18 +139,13 @@ ScriptConverter.prototype.getCurrentlyReaded = function() {
 	return this.result || null;
 };
 
-ScriptConverter.prototype.getReadedCount = function() {
-	let readed = this.getCurrentlyReaded();
-	return readed ? readed.length : -1;
-};
-
 ScriptConverter.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
-	return readed ? readed.join("\n\n") : null;
+	return Array.isArray(readed) ? readed.join("\n\n") : (readed || null);
 };
 
 ScriptConverter.prototype.hasResult = function() {
-	return this.isConverted() && this.getCurrentlyReaded() !== null;
+	return this.isConverted() && this.getCurrentlyReaded() != null;
 };
 
 ScriptConverter.prototype.resolvePrefix = function(suffix, obj, i) {

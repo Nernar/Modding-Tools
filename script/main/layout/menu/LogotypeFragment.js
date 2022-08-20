@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const LogotypeFragment = function() {
 	ImageFragment.apply(this, arguments);
 	this.resetContainer();

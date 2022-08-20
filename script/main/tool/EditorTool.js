@@ -64,6 +64,16 @@ EditorTool.prototype.reset = function() {
 			}
 		}]
 	}];
+	let self = this;
+	Object.defineProperty(this, "data", {
+		enumerable: true,
+		get: function() {
+			if (self.worker === undefined) {
+				MCSystem.throwException("ModdingTools: EditorTool data associated with worker was not found, are you sure that any project opened?");
+			}
+			return self.worker.data;
+		}
+	});
 };
 
 EditorTool.prototype.getExplorerLastName = function() {
@@ -114,11 +124,19 @@ EditorTool.prototype.open = function(source) {
 		}
 		return -1;
 	})();
-	let worker = this.worker = this.getWorkerFor(source);
-	if (index == -1) index = ProjectProvider.getCount();
-	if (source === undefined) index--;
-	if (index == -1) return false;
-	ProjectProvider.setupEditor(index, worker);
+	delete this.worker;
+	let worker = this.getWorkerFor(source);
+	let project = worker.getProject();
+	if ((index = ProjectProvider.indexOf(project)) == -1) {
+		ProjectProvider.setupEditor(ProjectProvider.opened.object.push(project) - 1, worker);
+		// TODO: Project will be crashed if old-type rebuildable data is used
+		// if ((index = ProjectProvider.indexOf(project)) == -1) {
+			// return false;
+		// }
+	} else {
+		ProjectProvider.setupEditor(index, worker);
+	}
+	this.worker = worker;
 	if (!this.isAttached()) this.attach();
 	ProjectProvider.setOpenedState(true);
 	ProjectProvider.initializeAutosave();
@@ -147,7 +165,7 @@ EditorTool.prototype.replace = function(file) {
 		});
 	} else if (name.endsWith(".js")) {
 		if (!this.hasParser()) {
-			MCSystem.throwException("ModdingTools: no parser, try override EditorTool.hasParser");
+			MCSystem.throwException("ModdingTools: No parser, try override EditorTool.hasParser");
 		}
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
@@ -165,7 +183,7 @@ EditorTool.prototype.replace = function(file) {
 EditorTool.prototype.merge = function(file) {
 	let merger = this.getMerger();
 	if (!this.hasMerger()) {
-		MCSystem.throwException("ModdingTools: no merger, try override EditorTool.hasMerger");
+		MCSystem.throwException("ModdingTools: No merger, try override EditorTool.hasMerger");
 	}
 	let name = file.getName(),
 		project = this.toProject(),
@@ -186,7 +204,7 @@ EditorTool.prototype.merge = function(file) {
 			});
 		});
 	} else if (name.endsWith(".js")) {
-		if (!this.hasParser()) MCSystem.throwException(null);
+		if (!this.hasParser()) MCSystem.throwException("ModdingTools: Requested js parsing, but there is no parser!");
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
 			active = Date.now() - active;
@@ -211,9 +229,9 @@ EditorTool.prototype.export = function(file) {
 		exportProject(project, false, file.getPath());
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
-		if (!this.hasConverter()) MCSystem.throwException(null);
+		if (!this.hasConverter()) MCSystem.throwException("ModdingTools: Requested js converter, but there is no converter!");
 		let active = Date.now();
-		tryout(function() {
+		try {
 			converter.attach(project);
 			converter.executeAsync(function(link, result) {
 				if (link.hasResult()) {
@@ -222,7 +240,9 @@ EditorTool.prototype.export = function(file) {
 						translate("as %ss", preround((Date.now() - active) / 1000, 1)));
 				} else reportError(link.getLastException());
 			});
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	}
 };
 
@@ -251,18 +271,18 @@ EditorTool.prototype.getWorker = function() {
 };
 
 EditorTool.prototype.getWorkerFor = function(source) {
-	MCSystem.throwException("EditorTool.getWorkerFor must be implemented");
+	return new Worker(source);
 };
 
 EditorTool.prototype.toProject = function() {
 	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException(null);
+	if (!worker) MCSystem.throwException("ModdingTools: EditorTool.toProject: No attached worker, are you sure that project prepared?");
 	return worker.getProject();
 };
 
 EditorTool.prototype.fromProject = function(source) {
 	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException(null);
+	if (!worker) MCSystem.throwException("ModdingTools: EditorTool.fromProject: No attached worker, are you sure that project prepared?");
 	worker.loadProject(source);
 	this.unselect(true);
 	this.describe();

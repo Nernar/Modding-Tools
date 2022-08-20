@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const MenuWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
@@ -29,7 +34,11 @@ MenuWindow.prototype.resetContent = function() {
 		views = this.views = {};
 	let content = new android.widget.FrameLayout(getContext());
 	content.setOnClickListener(function() {
-		scope.click && scope.click();
+		try {
+			scope.click && scope.click();
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	this.setContent(content);
 
@@ -86,7 +95,6 @@ MenuWindow.prototype.indexOfElement = function(item) {
 MenuWindow.prototype.scrollTo = function(y, duration) {
 	let content = this.getContainer(),
 		views = this.views;
-	if (!content || !views || !views.scroll) return this;
 	let actor = new android.transition.ChangeScroll();
 	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	if (duration !== undefined) actor.setDuration(duration);
@@ -99,16 +107,13 @@ MenuWindow.prototype.scrollToElement = function(elementOrIndex, duration) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
-	if (!element) return this;
 	let content = element.getContent();
-	if (!content) return this;
 	this.scrollTo(content.getY(), duration);
 	return this;
 };
 
 MenuWindow.prototype.scrollDown = function(duration) {
 	let content = this.views.layout;
-	if (!content) return this;
 	this.scrollTo(content.getMeasuredHeight(), duration);
 	return this;
 };
@@ -117,9 +122,7 @@ MenuWindow.prototype.removeElement = function(elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	let element = this.getElementAt(index);
-	if (!element) return this;
 	let content = element.getContent();
-	if (!content) return this;
 	let set = new android.transition.TransitionSet(),
 		fade = new android.transition.Fade(),
 		bounds = new android.transition.ChangeBounds();
@@ -144,17 +147,13 @@ MenuWindow.prototype.setCloseableOutside = function(enabled) {
 };
 
 MenuWindow.prototype.click = function() {
-	this.outside && this.hide();
+	this.outside && this.dismiss();
 	this.__click && this.__click(this);
 	return this;
 };
 
 MenuWindow.prototype.setOnClickListener = function(listener) {
-	this.__click = function(window) {
-		return tryout(function() {
-			return listener && listener(window);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
@@ -253,9 +252,13 @@ MenuWindow.Header.prototype.setupScroll = function() {
 			real = offset / scope.getMaxScroll() * 100;
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
-	window.setOnShowListener(function() {
+	window.setOnAttachListener(function() {
 		window.getContainer().post(function() {
-			scope.updateSlideProgress();
+			try {
+				scope.updateSlideProgress();
+			} catch (e) {
+				reportError(e);
+			}
 		});
 	});
 	return this;
@@ -443,7 +446,6 @@ MenuWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	let category = this.getCategoryAt(index);
 	let layout = this.views.project,
 		content = category.getContent();
-	if (!layout || !content) return this;
 	let window = this.getWindow();
 	if (window) {
 		let actor = new android.transition.ChangeBounds();
@@ -635,20 +637,12 @@ MenuWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
 };
 
 MenuWindow.ProjectHeader.Category.prototype.setOnItemClickListener = function(listener) {
-	this.__click = function(item, index) {
-		return tryout(function() {
-			return listener && listener(item, index);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
 MenuWindow.ProjectHeader.Category.prototype.setOnItemHoldListener = function(listener) {
-	this.__hold = function(item, index) {
-		return tryout(function() {
-			return listener && listener(item, index);
-		}, false);
-	};
+	this.__hold = listener;
 	return this;
 };
 
@@ -715,10 +709,19 @@ MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 		toComplexUnitDip(8), toComplexUnitDip(8));
 	content.setGravity($.Gravity.CENTER);
 	content.setOnClickListener(function() {
-		scope.click && scope.click();
+		try {
+			scope.click && scope.click();
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	content.setOnLongClickListener(function() {
-		return scope.hold ? scope.hold() : false;
+		try {
+			return (scope.hold && scope.hold()) == true;
+		} catch (e) {
+			reportError(e);
+		}
+		return false;
 	});
 	content.setLayoutParams(new android.widget.LinearLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -865,20 +868,12 @@ MenuWindow.ProjectHeader.Category.Item.prototype.hold = function() {
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setOnClickListener = function(listener) {
-	this.__click = function(item) {
-		return tryout(function() {
-			return listener && listener(item);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setOnHoldListener = function(listener) {
-	this.__hold = function(item) {
-		return tryout(function() {
-			return listener && listener(item);
-		}, false);
-	};
+	this.__hold = listener;
 	return this;
 };
 
@@ -926,6 +921,8 @@ MenuWindow.Category.prototype.reset = function() {
 	let content = new android.widget.LinearLayout(getContext());
 	content.setOrientation($.LinearLayout.VERTICAL);
 	content.setGravity($.Gravity.CENTER);
+	content.setClipToPadding(false);
+	content.setClipChildren(false);
 	let params = new android.widget.LinearLayout.LayoutParams
 		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.topMargin = toComplexUnitDip(10);
@@ -944,6 +941,8 @@ MenuWindow.Category.prototype.reset = function() {
 
 	views.layout = new android.widget.GridLayout(getContext());
 	views.layout.setColumnCount(parseInt(5 / uiScaler));
+	views.layout.setClipToPadding(false);
+	views.layout.setClipChildren(false);
 	content.addView(views.layout);
 };
 
@@ -1028,20 +1027,12 @@ MenuWindow.Category.prototype.removeItem = function(itemOrIndex) {
 };
 
 MenuWindow.Category.prototype.setOnItemClickListener = function(listener) {
-	this.__click = function(item, index) {
-		return tryout(function() {
-			return listener && listener(item, index);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
 MenuWindow.Category.prototype.setOnHoldItemListener = function(listener) {
-	this.__hold = function(item, index) {
-		return tryout(function() {
-			return listener && listener(item, index);
-		}, false);
-	};
+	this.__hold = listener;
 	return this;
 };
 
@@ -1108,27 +1099,42 @@ MenuWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, acti
 };
 
 MenuWindow.Category.Item.prototype.reset = function() {
-	let scope = this,
-		views = this.views = {};
-	let content = new android.widget.LinearLayout(getContext());
-	content.setOrientation($.LinearLayout.VERTICAL);
-	content.setGravity($.Gravity.CENTER);
-	content.setOnClickListener(function() {
-		scope.click && scope.click();
-	});
-	content.setOnLongClickListener(function() {
-		return scope.hold ? scope.hold() : false;
-	});
+	let layout = new android.widget.FrameLayout(getContext());
+	layout.setClipToPadding(false);
+	layout.setClipChildren(false);
 	let params = new android.widget.GridLayout.LayoutParams();
-	params.topMargin = params.bottomMargin = toComplexUnitDip(4);
-	params.leftMargin = params.rightMargin = toComplexUnitDip(3);
-	params.width = toComplexUnitDip(160);
-	params.height = toComplexUnitDip(184);
-	content.setLayoutParams(params);
-	this.content = content;
+	params.width = toComplexUnitDip(168);
+	params.height = toComplexUnitDip(192);
+	layout.setLayoutParams(params);
+	this.content = layout;
+
+	let views = this.views = {};
+	views.content = new android.widget.LinearLayout(getContext());
+	views.content.setOrientation($.LinearLayout.VERTICAL);
+	views.content.setGravity($.Gravity.CENTER);
+	let scope = this;
+	views.content.setOnClickListener(function() {
+		try {
+			scope.click && scope.click();
+		} catch (e) {
+			reportError(e);
+		}
+	});
+	views.content.setOnLongClickListener(function() {
+		try {
+			return (scope.hold && scope.hold()) == true;
+		} catch (e) {
+			reportError(e);
+		}
+		return false;
+	});
+	layout.addView(views.content, new android.widget.FrameLayout.LayoutParams
+		(toComplexUnitDip(160), toComplexUnitDip(184)));
+	views.content.setX(toComplexUnitDip(4));
+	views.content.setY(toComplexUnitDip(4));
 
 	views.icon = new android.widget.ImageView(getContext());
-	content.addView(views.icon, new android.widget.LinearLayout.LayoutParams
+	views.content.addView(views.icon, new android.widget.LinearLayout.LayoutParams
 		(toComplexUnitDip(128), toComplexUnitDip(96)));
 
 	views.title = new android.widget.TextView(getContext());
@@ -1139,7 +1145,24 @@ MenuWindow.Category.Item.prototype.reset = function() {
 	params = new android.widget.LinearLayout.LayoutParams
 		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.topMargin = toComplexUnitDip(11);
-	content.addView(views.title, params);
+	views.content.addView(views.title, params);
+
+	views.badgeOverlay = new android.widget.ImageView(getContext());
+	layout.addView(views.badgeOverlay, new android.widget.LinearLayout.LayoutParams
+		(toComplexUnitDip(128), toComplexUnitDip(128)));
+	views.badgeOverlay.setX(-toComplexUnitDip(4));
+	views.badgeOverlay.setY(-toComplexUnitDip(4));
+
+    views.badgeText = new android.widget.TextView(getContext());
+	typeface && views.badgeText.setTypeface(typeface);
+	views.badgeText.setTextSize(toComplexUnitSp(11));
+	views.badgeText.setGravity($.Gravity.TOP | $.Gravity.CENTER);
+	views.badgeText.setTextColor($.Color.WHITE);
+	views.badgeText.setSingleLine();
+	views.badgeText.setRotation(-45);
+	layout.addView(views.badgeText);
+	views.badgeText.setX(toComplexUnitDip(20));
+	views.badgeText.setY(toComplexUnitDip(7));
 };
 
 MenuWindow.Category.Item.prototype.getContent = function() {
@@ -1178,11 +1201,10 @@ MenuWindow.Category.Item.prototype.getBackground = function() {
 };
 
 MenuWindow.Category.Item.prototype.setBackground = function(src) {
-	let content = this.getContent();
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}
-	src.attachAsBackground(content);
+	src.attachAsBackground(this.views.content);
 	this.background = src;
 	return this;
 };
@@ -1192,27 +1214,42 @@ MenuWindow.Category.Item.prototype.getImage = function() {
 };
 
 MenuWindow.Category.Item.prototype.setImage = function(src) {
-	let content = this.getContent(),
-		views = this.views;
 	if (!(src instanceof Drawable)) {
 		src = Drawable.parseJson.call(this, src);
 	}
-	src.attachAsImage(views.icon);
+	src.attachAsImage(this.views.icon);
 	this.icon = src;
 	return this;
 };
 
+MenuWindow.Category.Item.prototype.getBadgeOverlay = function() {
+	return this.badgeOverlay || null;
+};
+
+MenuWindow.Category.Item.prototype.setBadgeOverlay = function(src) {
+	if (!(src instanceof Drawable)) {
+		src = Drawable.parseJson.call(this, src);
+	}
+	src.attachAsImage(this.views.badgeOverlay);
+	this.badgeOverlay = src;
+	return this;
+};
+
 MenuWindow.Category.Item.prototype.getTitle = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.title.getText();
+	return "" + this.views.title.getText();
 };
 
 MenuWindow.Category.Item.prototype.setTitle = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.title.setText(String(text));
+	this.views.title.setText(text ? "" + text : null);
+	return this;
+};
+
+MenuWindow.Category.Item.prototype.getBadgeText = function() {
+	return "" + this.views.badgeText.getText();
+};
+
+MenuWindow.Category.Item.prototype.setBadgeText = function(text) {
+	this.views.badgeText.setText(text ? "" + text : null);
 	return this;
 };
 
@@ -1236,20 +1273,12 @@ MenuWindow.Category.Item.prototype.hold = function() {
 };
 
 MenuWindow.Category.Item.prototype.setOnClickListener = function(listener) {
-	this.__click = function(item) {
-		return tryout(function() {
-			return listener && listener(item);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
 MenuWindow.Category.Item.prototype.setOnHoldListener = function(listener) {
-	this.__hold = function(item) {
-		return tryout(function() {
-			return listener && listener(item);
-		}, false);
-	};
+	this.__hold = listener;
 	return this;
 };
 
@@ -1276,6 +1305,12 @@ MenuWindow.Category.Item.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("hold")) {
 		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("badgeOverlay")) {
+		instanceOrJson.setBadgeOverlay(calloutOrParse(json, json.badgeOverlay, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("badgeText")) {
+		instanceOrJson.setBadgeText(calloutOrParse(json, json.badgeText, [this, instanceOrJson]));
 	}
 	return instanceOrJson;
 };
@@ -1305,7 +1340,11 @@ MenuWindow.Message.prototype.reset = function() {
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 	content.setGravity($.Gravity.CENTER);
 	content.setOnClickListener(function() {
-		scope.click && scope.click();
+		try {
+			scope.click && scope.click();
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	this.content = content;
 	
@@ -1399,11 +1438,7 @@ MenuWindow.Message.prototype.click = function() {
 };
 
 MenuWindow.Message.prototype.setOnClickListener = function(listener) {
-	this.__click = function(card) {
-		return tryout(function() {
-			return listener && listener(card);
-		}, false);
-	};
+	this.__click = listener;
 	return this;
 };
 
@@ -1446,7 +1481,7 @@ MenuWindow.prototype.addMessage = function(srcOrMessage, messageOrSrc, actionOrM
 
 MenuWindow.hideCurrently = function() {
 	let unique = UniqueHelper.getWindow("MenuWindow");
-	if (unique !== null) unique.hide();
+	if (unique !== null) unique.dismiss();
 };
 
 MenuWindow.parseJson = function(instanceOrJson, json) {

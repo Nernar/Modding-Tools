@@ -26,13 +26,13 @@ const CONSOLE_TOOL = (function() {
 			snack.setConsoleMode(true);
 			snack.setMaximumStacked(8);
 			snack.pin();
-			snack.show();
+			snack.attach();
 		},
 		addEditable: function() {
 			let popup = new ExpandablePopup("evaluate");
 			popup.setTitle(translate("Evaluate"));
 			let layout = popup.getFragment();
-			let input = layout.addPropertyInput("29 / 5", translate("Hi, I'm evaluate stroke"));
+			let input = layout.addPropertyInput(translate("Hi, I'm evaluate stroke"), "29 / 5");
 			layout.addSolidButton(translate("Eval"), function() {
 				let action = input.getText().trim();
 				if (action.length > 0) {
@@ -55,10 +55,12 @@ const attachConsoleTool = function(post) {
 	handle(function() {
 		CONSOLE_TOOL.collapse();
 		let accepted = true;
-		tryout(function() {
+		try {
 			post && post(CONSOLE_TOOL);
 			accepted = false;
-		});
+		} catch (e) {
+			reportError(e);
+		}
 		if (accepted) {
 			attachProjectTool(function() {
 				CONSOLE_TOOL.deattach();

@@ -9,10 +9,10 @@ Tool.prototype.reset = function() {
 	let descriptor = {};
 	descriptor.buttonBackground = "popupButton";
 	descriptor.logotypeProgress = function(tool, control) {
-		return calloutOrParse(this, this.logotype, arguments);
+		return calloutOrParse(this, this.logotype, Array.prototype.slice.call(arguments));
 	};
 	descriptor.logotypeOutside = function(tool, control) {
-		let drawable = calloutOrParse(this, this.logotypeProgress, arguments);
+		let drawable = calloutOrParse(this, this.logotypeProgress, Array.prototype.slice.call(arguments));
 		return {
 			bitmap: drawable,
 			tint: $.Color.LTGRAY
@@ -22,17 +22,29 @@ Tool.prototype.reset = function() {
 		return requireLogotype();
 	};
 	descriptor.buttonClick = function(tool, control) {
-		if (typeof tool.onControlClick == "function") {
-			let args = Array.prototype.slice.call(arguments, 1);
-			tool.onControlClick.apply(tool, args);
+		try {
+			if (typeof tool.onControlClick == "function") {
+				let args = Array.prototype.slice.call(arguments, 1);
+				tool.onControlClick.apply(tool, args);
+			}
+		} catch (e) {
+			reportError(e);
 		}
 	};
 	descriptor.buttonHold = function(tool, control) {
-		tool.collapse();
+		try {
+			tool.collapse();
+		} catch (e) {
+			reportError(e);
+		}
 		return true;
 	};
 	descriptor.collapsedClick = function(tool, control) {
-		tool.control();
+		try {
+			tool.control();
+		} catch (e) {
+			reportError(e);
+		}
 	};
 	descriptor.hideable = false;
 	this.controlDescriptor = descriptor;
@@ -52,7 +64,7 @@ Tool.prototype.getControlDescriptor = function() {
 
 Tool.prototype.describeControl = function() {
 	let control = this.getControlWindow();
-	if (control == null) MCSystem.throwException(null);
+	if (control == null) return;
 	ControlWindow.parseJson.call(this, control, this.getControlDescriptor());
 };
 
@@ -62,7 +74,7 @@ Tool.prototype.describe = function() {
 
 Tool.prototype.attach = function() {
 	if (this.isAttached()) {
-		MCSystem.throwException("ModdingTools: you're must deattach tool firstly!");
+		MCSystem.throwException("ModdingTools: You're must deattach tool firstly!");
 	}
 	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;
@@ -75,7 +87,7 @@ Tool.prototype.isAttached = function() {
 
 Tool.prototype.deattach = function() {
 	let control = this.getControlWindow();
-	if (control == null) MCSystem.throwException(null);
+	if (control == null) return;
 	this.state = Tool.State.INACTIVE;
 	control.dismiss();
 	delete this.controlWindow;
@@ -85,7 +97,7 @@ Tool.prototype.hide = function() {
 	let control = this.getControlWindow();
 	if (control == null) return;
 	this.state = Tool.State.ATTACHED;
-	control.hide();
+	control.dismiss();
 };
 
 Tool.prototype.isVisible = function() {
@@ -97,7 +109,7 @@ Tool.prototype.control = function() {
 	if (control == null) return;
 	this.state = Tool.State.FACED;
 	control.transformButton();
-	control.show();
+	control.attach();
 };
 
 Tool.prototype.isFaced = function() {
@@ -109,7 +121,7 @@ Tool.prototype.collapse = function() {
 	if (control == null) return;
 	this.state = Tool.State.COLLAPSED;
 	control.transformCollapsedButton();
-	control.show();
+	control.attach();
 };
 
 Tool.prototype.isCollapsed = function() {
@@ -121,18 +133,12 @@ Tool.prototype.queue = function() {
 	if (control == null) return;
 	this.state = Tool.State.QUEUED;
 	control.transformLogotype();
-	control.show();
+	control.attach();
 };
 
 Tool.prototype.sequence = function(sequence) {
 	if (sequence instanceof Sequence) {
-		let instance = this;
-		handleThread(function() {
-			sequence.assureYield();
-			acquire(function() {
-				instance.unqueue();
-			});
-		});
+		sequence.assureYield();
 	}
 };
 

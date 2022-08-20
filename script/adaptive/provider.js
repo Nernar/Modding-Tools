@@ -1,13 +1,26 @@
-PROJECT_TOOL.controlDescriptor.collapsedHold = function(tool, control) {
-	RuntimeCodeEvaluate.showSpecifiedDialog();
-	return true;
-};
+(function(self) {
+	let action;
+	ControlFragment.CollapsedButton.prototype.resetContainer = function() {
+		self.apply(this, arguments);
+		let action;
+		this.setOnHoldListener(function(fragment) {
+			if (typeof action == "function") {
+				if (action.apply(this, arguments) == true) {
+					return true;
+				}
+			}
+			RuntimeCodeEvaluate.showSpecifiedDialog();
+			return true;
+		});
+		this.setOnHoldListener = function(what) {
+			action = what;
+		};
+	};
+})(ControlFragment.CollapsedButton.prototype.resetContainer);
 
-const attachEvalButton = function() {
+SHARE("attachEvalButton", function() {
 	log("TODO: attachEvalButton");
-};
-
-SHARE("attachEvalButton", attachEvalButton);
+});
 
 (function() {
 	let typeofSafety = function(who) {
@@ -33,15 +46,12 @@ SHARE("attachEvalButton", attachEvalButton);
 				case "undefined":
 					return "" + who;
 				case "string":
-					return "\"" + tryout(function() {
-						return org.mozilla.javascript.ScriptRuntime.escapeString(who);
-					}, function(e) {
-						return who;
-					}) + "\"";
+					return "\"" + who + "\"";
 			}
 		} catch (e) {
 		    log("ModdingTools: toStringSafety: " + e);
 		}
+		return "undefined";
 	};
 	
 	const evaluateScope = function(where, serialized) {
@@ -85,7 +95,7 @@ SHARE("attachEvalButton", attachEvalButton);
 				    let type = typeofSafety(where.get(i));
 			    	if (type == "undefined") continue;
 				    let stroke = toStringSafety(where.get(i), type);
-				    who.push(i + ": " + (stroke !== undefined ? stroke : type));
+				    who.push(i + ": " + (stroke != "undefined" ? stroke : type));
 				    self.push(i);
 			    }
 			} else {
@@ -93,12 +103,12 @@ SHARE("attachEvalButton", attachEvalButton);
 				    let type = typeofSafety(where[element]);
 			    	if (type == "undefined") continue;
 				    let stroke = toStringSafety(where[element], type);
-				    who.push(element + ": " + (stroke !== undefined ? stroke : type));
+				    who.push(element + ": " + (stroke != "undefined" ? stroke : type));
 				    self.push(element);
 			    }
 			}
 			if (who.length == 0) {
-				MCSystem.throwException("ModdingTools: target object is empty");
+				MCSystem.throwException("ModdingTools: Target object is empty");
 			}
 			select(type == "class" ? toStringSafety(where, type) : serialized, who, function(index, name) {
 				evaluateScope(where instanceof java.util.List ? where.get(self[index]) : where[self[index]],

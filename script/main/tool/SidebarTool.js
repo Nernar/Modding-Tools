@@ -89,20 +89,20 @@ SidebarTool.prototype.hide = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	MenuTool.prototype.hide.apply(this, arguments);
-	sidebar.hide();
+	sidebar.dismiss();
 };
 
 SidebarTool.prototype.menu = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
-	sidebar.hide();
+	sidebar.dismiss();
 	MenuTool.prototype.menu.apply(this, arguments);
 };
 
 SidebarTool.prototype.control = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
-	sidebar.show();
+	sidebar.attach();
 	MenuTool.prototype.control.apply(this, arguments);
 };
 
@@ -110,7 +110,7 @@ SidebarTool.prototype.collapse = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	if (!sidebar.isSelected()) {
-		sidebar.hide();
+		sidebar.dismiss();
 	}
 	MenuTool.prototype.collapse.apply(this, arguments);
 	if (sidebar.isSelected()) {
@@ -125,7 +125,7 @@ SidebarTool.prototype.isCollapsedWithoutSidebar = function() {
 SidebarTool.prototype.queue = function(sequence) {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
-	sidebar.hide();
+	sidebar.dismiss();
 	MenuTool.prototype.queue.apply(this, arguments);
 };
 

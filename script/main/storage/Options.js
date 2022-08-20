@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const Options = {};
 
 Options.getValue = function(key) {

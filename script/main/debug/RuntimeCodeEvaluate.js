@@ -6,7 +6,7 @@ RuntimeCodeEvaluate.setupNewContext = function() {
 		GLOBAL: somewhere
 	});
 	if (isEmpty(somewhere)) {
-		MCSystem.throwException("ModdingTools: runtime couldn't be resolved");
+		MCSystem.throwException("ModdingTools: Runtime couldn't be resolved");
 	}
 	return somewhere;
 };
@@ -34,34 +34,40 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	let dialog = new android.app.AlertDialog.Builder(getContext(),
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 	dialog.setPositiveButton(translate("Evaluate"), function() {
-		let something = tryout(function() {
-			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
+		let something;
+		try {
+			RuntimeCodeEvaluate.lastCode = "" + edit.getText().toString();
 			RuntimeCodeEvaluate.lastExecutable = where;
 			RuntimeCodeEvaluate.lastLocation = location;
 			if (where !== undefined && where !== null) {
-				return where.evaluateStringInScope(RuntimeCodeEvaluate.lastCode);
+				something = where.evaluateStringInScope(RuntimeCodeEvaluate.lastCode);
+			} else {
+				something = eval(RuntimeCodeEvaluate.lastCode);
 			}
-			return eval(RuntimeCodeEvaluate.lastCode);
-		});
+		} catch (e) {
+			reportError(e);
+		}
 		if (something !== undefined) {
 			showHint(something);
 		}
 	});
 	dialog.setNeutralButton(translate("Export"), function() {
-		tryout(function() {
-			RuntimeCodeEvaluate.lastCode = String(edit.getText().toString());
+		try {
+			RuntimeCodeEvaluate.lastCode = "" + edit.getText().toString();
 			RuntimeCodeEvaluate.lastExecutable = where;
 			RuntimeCodeEvaluate.lastLocation = location;
 			RuntimeCodeEvaluate.exportEvaluate();
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	dialog.setNegativeButton(translate("Cancel"), null);
 	dialog.setCancelable(false).setView(fragment.getContainer());
 	dialog.setTitle(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
 	let something = dialog.create();
-	something.getWindow().setLayout(getDisplayPercentWidth(70), getDisplayPercentHeight(90));
+	something.getWindow().setLayout(getDisplayPercentWidth(70), android.view.WindowManager.LayoutParams.MATCH_PARENT);
 	something.show();
-	(function() {
+	let titleView = (function() {
 		for (let i = 0; i < arguments.length; i++) {
 			if (arguments[i] == 0) {
 				continue;
@@ -71,11 +77,12 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 				return view;
 			}
 		}
-		MCSystem.throwException("ModdingTools: not found actual android dialog title, using custom view");
+		MCSystem.throwException("ModdingTools: Not found actual android dialog title, using custom view");
 	})(getContext().getResources().getIdentifier("alertTitle", "id", getContext().getPackageName()),
 		getContext().getResources().getIdentifier("alertTitle", "id", "android"),
-		android.R.id.title).setOnClickListener(function(view) {
-		tryout(function() {
+		android.R.id.title);
+	titleView.setOnClickListener(function(view) {
+		try {
 			let executables = RuntimeCodeEvaluate.resolveAvailabledExecutables();
 			let realExecutablePointer = [];
 			let readableArray = [];
@@ -96,7 +103,15 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 				location = value;
 				something.setTitle(location);
 			});
-		});
+		} catch (e) {
+			reportError(e);
+		}
+	});
+	titleView = titleView.getParent();
+	let buttonLayout = something.getButton(android.app.Dialog.BUTTON_NEUTRAL).getParent().getParent();
+	registerKeyboardWatcher(function(onScreen) {
+		titleView.setVisibility(onScreen ? android.view.View.GONE : android.view.View.VISIBLE);
+		buttonLayout.setVisibility(onScreen ? android.view.View.GONE : android.view.View.VISIBLE);
 	});
 };
 
@@ -126,10 +141,13 @@ RuntimeCodeEvaluate.resolveSpecifiedTypeSources = function(modification, type) {
 };
 
 RuntimeCodeEvaluate.putSpecifiedTypeSources = function(modification, someone, type, name) {
-	return require.call(this, function() {
+	try {
 		let specified = this.resolveSpecifiedTypeSources(modification, type);
 		return specified && (someone[name] = specified) != null;
-	}, new Function(), false);
+	} catch (e) {
+		Logger.Log("ModdingTools: RuntimeCodeEvaluate.putSpecifiedTypeSources: " + e, "INFO");
+	}
+	return false;
 };
 
 RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification) {
@@ -139,7 +157,7 @@ RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification)
 	this.putSpecifiedTypeSources(modification, someone, "compiledLibs", "library");
 	this.putSpecifiedTypeSources(modification, someone, "compiledPreloaderScripts", "preloader");
 	this.putSpecifiedTypeSources(modification, someone, "compiledInstantScripts", "instant");
-	// TODO: custom sources must additionaly added manually, but not required at all.
+	// TODO: Custom sources must additionaly added manually, but not required at all.
 	// It must be called by the `runCustomSource` function from parent script.
 	if (isEmpty(someone)) {
 		return null;

@@ -6,7 +6,7 @@ Translation.addTranslation("Do you ready to compile modification as produce?", {
 });
 Translation.addTranslation("Please, be sure that you're backup wouldn't removed before processing!", {
 	ru: "Пожалуйста, убедитесь что текущая резервная копия не пострадает в процессе!"
-});
+}); // DEPRECATED
 
 return function(confirmedPostAction) {
 	handle(function() {

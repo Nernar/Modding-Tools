@@ -262,15 +262,15 @@ CachedDrawable.prototype.cacheWhenCreate = false;
 
 CachedDrawable.prototype.toDrawable = function() {
 	if (!this.isProcessed()) {
-		tryout.call(this, function() {
+		try {
 			let drawable = this.process();
 			if (!this.isProcessed()) {
 				if (drawable) this.describe(drawable);
 				this.source = drawable;
 			}
-		}, function(e) {
+		} catch (e) {
 			Logger.Log("Drawable: exception in CachedDrawable.process: " + e, "WARNING");
-		});
+		}
 	}
 	return this.source || null;
 };
@@ -578,38 +578,41 @@ EXPORT("ColorDrawable", ColorDrawable);
 let BitmapFactory = {};
 
 BitmapFactory.decodeBytes = function(bytes, options) {
-	return tryout.call(this, function() {
+	try {
 		if (options !== undefined) {
 			return android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
 		}
 		return android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-	}, function(e) {
+	} catch (e) {
 		Logger.Log("Drawable: BitmapFactory failed to decode bytes " + bytes, "WARNING");
-	}, null);
+	}
+	return null;
 };
 
 BitmapFactory.decodeFile = function(path, options) {
 	let file = path instanceof java.io.File ? path : new java.io.File(path);
-	return tryout.call(this, function() {
+	try {
 		if (options !== undefined) {
 			return android.graphics.BitmapFactory.decodeFile(file, options);
 		}
 		return android.graphics.BitmapFactory.decodeFile(file);
-	}, function(e) {
+	} catch (e) {
 		Logger.Log("Drawable: BitmapFactory failed to decode file " + file.getName(), "WARNING");
-	}, null);
+	}
+	return null;
 };
 
 BitmapFactory.decodeAsset = function(path, options) {
-	return tryout.call(this, function() {
+	try {
 		let file = new java.io.File(__dir__ + "assets", path);
 		if (!file.exists() || file.isDirectory()) {
 			file = new java.io.File(file.getPath() + ".dnr");
 		}
 		return this.decodeFile(file, options);
-	}, function(e) {
+	} catch (e) {
 		Logger.Log("Drawable: BitmapFactory failed to decode asset " + path, "WARNING");
-	}, null);
+	}
+	return null;
 };
 
 BitmapFactory.createScaled = function(bitmap, dx, dy) {

@@ -61,7 +61,7 @@ FocusablePopup.prototype.removeElementAt = function(index) {
 };
 
 FocusablePopup.prototype.showInternal = function() {
-	return TransitionWindow.prototype.show.apply(this, arguments);
+	return TransitionWindow.prototype.attach.apply(this, arguments);
 };
 
 FocusablePopup.prototype.show = function(id) {

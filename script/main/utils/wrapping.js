@@ -20,7 +20,7 @@ const runAtScope = function(code, scope, name) {
 			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
 		};
 	}, function(th) {
-		Logger.Log(source + ": " + INNERCORE_PACKAGE.api.log.ICLog.getStackTrace(th), "WARNING");
+		Logger.Log(source + ": " + InnerCorePackages.api.log.ICLog.getStackTrace(th), "WARNING");
 		if (th instanceof org.mozilla.javascript.JavaScriptException) {
 			return {
 				error: th.getValue()
@@ -64,24 +64,34 @@ const UNWRAP = function(path, scope) {
 			MCSystem.throwException("ModdingTools: not found " + path + " testing executable");
 		}
 		log("ModdingTools: wnwrapping " + file + " source");
-		return tryoutSafety(function() {
+		try {
 			let source = decompileExecuteable(Files.readBytes(file)),
 				code = "(function() {\n" + source + "\n})();",
 				scope = runAtScope(code, who, path);
 			if (scope.error) throw scope.error;
 			return scope.result;
-		}, null);
+		} catch (e) {
+			if (REVISION.indexOf("develop") != -1) {
+				reportError(e);
+			}
+		}
+		return null;
 	}
 	if (file == null) {
 		MCSystem.throwException("ModdingTools: not found " + path + " executable");
 	}
-	return tryoutSafety(function() {
+	try {
 		let source = decompileExecuteable(Files.readBytes(file)),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
 		if (scope.error) throw scope.error;
 		return scope.result;
-	}, null);
+	} catch (e) {
+		if (REVISION.indexOf("develop") != -1) {
+			reportError(e);
+		}
+	}
+	return null;
 };
 
 UNWRAP.initScriptable = function(name) {
@@ -117,13 +127,14 @@ REQUIRE.loaded = [];
 REQUIRE.results = {};
 
 const CHECKOUT = function(path, scope, post) {
-	return tryout(function() {
+	try {
 		let something = REQUIRE(path, scope);
 		post && post(something);
 		return something;
-	}, function(e) {
-		Logger.Log("ModdingTools: checkout: " + e, "WARNING");
-	}, null);
+	} catch (e) {
+		Logger.Log("ModdingTools: CHECKOUT: " + e, "WARNING");
+	}
+	return null;
 };
 
 const findTranslationByHash = function(hash, fallback) {
@@ -147,7 +158,7 @@ const findTranslationByHash = function(hash, fallback) {
 };
 
 const translateCode = function(hash, args, fallback) {
-	return tryout(function() {
+	try {
 		let text = findTranslationByHash(hash, fallback);
 		if (args !== undefined) {
 			if (!Array.isArray(args)) {
@@ -159,11 +170,14 @@ const translateCode = function(hash, args, fallback) {
 			text = java.lang.String.format(text, args);
 		}
 		return String(text);
-	}, "...");
+	} catch (e) {
+		log("ModdingTools: translateCode: " + e);
+	}
+	return "...";
 };
 
-tryoutSafety(function() {
-	let $ = new JavaImporter(INNERCORE_PACKAGE.api.runtime.other),
+try {
+	let $ = new JavaImporter(InnerCorePackages.api.runtime.other),
 		clazz = $.NameTranslation.__javaObject__,
 		field = clazz.getDeclaredField("currentLanguageTranslations");
 	field.setAccessible(true);
@@ -173,4 +187,8 @@ tryoutSafety(function() {
 		proto.setAccessible(true);
 		translateCode.defaultLanguageTranslations = proto;
 	}
-});
+} catch (e) {
+	if (REVISION.indexOf("develop") != -1) {
+		reportError(e);
+	}
+}

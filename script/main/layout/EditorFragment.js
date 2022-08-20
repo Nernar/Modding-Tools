@@ -122,14 +122,14 @@ EditorFragment.prototype.getEditorView = function() {
 
 EditorFragment.prototype.setText = function(text) {
 	let view = this.getEditorView();
-	if (view === null) return;
-	view.setText(String(text));
+	if (view == null) return;
+	view.setText("" + text);
 };
 
 EditorFragment.prototype.getText = function() {
 	let view = this.getEditorView();
-	if (view === null) return;
-	return String(view.getText());
+	if (view == null) return null;
+	return "" + view.getText();
 };
 
 EditorFragment.prototype.isLegacyEditor = function() {
@@ -142,7 +142,8 @@ if (isHorizon) {
 			return toComplexUnitDip(45);
 		},
 		getView: function(position, convertView, parent, isCurrentCursorPosition) {
-			let holder = tryout.call(this, function() {
+			let holder;
+			try {
 				if (convertView == null) {
 					let tag = {};
 					convertView = EditorFragment.COMPLETION_ADAPTER.newItem();
@@ -154,8 +155,11 @@ if (isHorizon) {
 					tag.drawable.attachAsImage(tag.icon);
 					convertView.setTag(tag);
 				}
-				return convertView.getTag();
-			});
+				holder = convertView.getTag();
+			} catch (e) {
+				log("ModdingTools: EditorFragment.COMPLETION_ADAPTER.getItem: " + e);
+				return convertView;
+			}
 			let completion = this.getItem(position);
 			if (holder != null) {
 				holder.label.setText(completion.label);

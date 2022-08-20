@@ -43,9 +43,11 @@ BaseFragment.prototype.setOnClickListener = function(action) {
 	if (container === null) return this;
 	let instance = this;
 	container.setOnClickListener(function() {
-		tryout(function() {
+		try {
 			action && action(instance);
-		});
+		} catch (e) {
+			reportError(e);
+		}
 	});
 	return this;
 };
@@ -55,9 +57,12 @@ BaseFragment.prototype.setOnHoldListener = function(action) {
 	if (container === null) return this;
 	let instance = this;
 	container.setOnLongClickListener(function() {
-		return tryout(function() {
-			return action && action(instance);
-		}) || false;
+		try {
+			return (action && action(instance)) == true;
+		} catch (e) {
+			reportError(e);
+		}
+		return false;
 	});
 	return this;
 };

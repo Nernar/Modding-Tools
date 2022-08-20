@@ -13,7 +13,7 @@ const DEBUG_TEST_TOOL = (function() {
 					icon: "menuProjectLeave",
 					message: translate("Dev Editor") + ": " + translate("Leave"),
 					click: function() {
-						attachProjectTool(function() {
+						attachProjectTool(undefined, function() {
 							tool.deattach();
 						});
 					}
@@ -54,19 +54,20 @@ const DEBUG_TEST_TOOL = (function() {
 			return null;
 		},
 		fetchInformation: function(path) {
-			return tryout(function() {
+			try {
 				let file = new java.io.File(Dirs.SCRIPT_TESTING, path + ".json");
-				if (!file.exists()) throw null;
+				if (!file.exists()) throw new java.lang.IllegalArgumentException("ModdingTools: Testing script " + path + " not found");
 				return compileData(Files.read(file));
-			}, function(e) {
-				return null;
-			}, {
+			} catch (e) {
+				reportError(e);
+			}
+			return {
 				title: path,
 				icon: "menuBoardWarning"
-			});
+			};
 		},
 		evaluateTest: function(path, timing) {
-			tryout.call(this, function() {
+			try {
 				if (typeof timing == "number" || timing == true) {
 					this.hide();
 				}
@@ -76,10 +77,10 @@ const DEBUG_TEST_TOOL = (function() {
 						this.menu();
 					}, timing);
 				}
-			}, function(e) {
+			} catch (e) {
 				this.control();
 				reportError(e);
-			});
+			}
 		}
 	});
 })();
@@ -99,10 +100,12 @@ const attachDebugTestTool = function(post) {
 				DEBUG_TEST_TOOL.menu();
 			}
 			let accepted = true;
-			tryout(function() {
+			try {
 				post && post(DEBUG_TEST_TOOL);
 				accepted = false;
-			});
+			} catch (e) {
+				reportError(e);
+			}
 			if (accepted) {
 				attachProjectTool(function() {
 					DEBUG_TEST_TOOL.deattach();
@@ -132,11 +135,13 @@ const FetchTestsSequence = new LogotypeSequence({
 		let name = Files.getNameWithoutExtension(element),
 			json = DEBUG_TEST_TOOL.fetchInformation(name);
 		if (json) {
-			tryout(function() {
+			try {
 				if (REQUIRE(name + ".dns") !== undefined) {
 					value[name] = json;
 				}
-			});
+			} catch (e) {
+				reportError(e);
+			}
 		}
 		return ++index;
 	},

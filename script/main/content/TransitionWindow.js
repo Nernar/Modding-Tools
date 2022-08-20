@@ -126,7 +126,7 @@ TransitionWindow.prototype.getAvailabledScene = function() {
 };
 
 TransitionWindow.prototype.update = function() {
-	if (!this.inDestructing() && this.isOpened()) {
+	if (this.isOpened()) {
 		if (this.containerScene !== undefined) {
 			if (this.getContainer() != this.getContainerOfScene()) {
 				this.transitionTo(this.getAvailabledScene());
@@ -136,82 +136,22 @@ TransitionWindow.prototype.update = function() {
 	FocusableWindow.prototype.update.apply(this, arguments);
 };
 
-TransitionWindow.prototype.setEnterTransition = function(actor) {
-	this.enterTransition = actor;
-};
-
-TransitionWindow.prototype.show = function(force) {
-	delete this.destructing;
-	if (!force) this.attach();
+TransitionWindow.prototype.attach = function() {
 	let availabled = this.getAvailabledScene();
 	if (availabled !== null) {
-		let enter = this.getEnterTransition();
-		this.transitionTo(availabled, enter);
+		let transition = this.getEnterTransition();
+		this.transitionTo(availabled, transition);
 	}
-	if (this.isTouchable()) {
-		this.setTouchable(true);
-	}
-	this.onShow && this.onShow();
+	FocusableWindow.prototype.attach.apply(this, arguments);
 };
 
-TransitionWindow.prototype.setOnShowListener = function(listener) {
-	if (typeof listener != "function") {
-		return delete this.onShow;
+TransitionWindow.prototype.dismiss = function() {
+	FocusableWindow.prototype.dismiss.apply(this, arguments);
+	let availabled = this.getRootScene();
+	if (availabled !== null) {
+		let transition = this.getExitTransition();
+		this.transitionTo(availabled, transition);
 	}
-	this.onShow = function() {
-		tryout(listener);
-	};
-	return true;
-};
-
-TransitionWindow.prototype.setExitTransition = function(actor) {
-	this.exitTransition = actor;
-	if (actor) {
-		let enter = this.getEnterTransition();
-		if (actor == enter) {
-			MCSystem.throwException("ModdingTools: you wouldn't use one actor for exit and enter");
-		}
-		let instance = this;
-		actor.addListener({
-			onTransitionEnd: function() {
-				tryout(function() {
-					if (instance.inDestructing()) {
-						instance.dismiss();
-						delete instance.destructing;
-					}
-				});
-			}
-		})
-	}
-};
-
-TransitionWindow.prototype.hide = function() {
-	if (this.isOpened()) {
-		let availabled = this.getRootScene();
-		if (availabled !== null) {
-			let exit = this.getExitTransition();
-			this.destructing = true;
-			this.transitionTo(availabled, exit);
-		} else this.dismiss();
-		let touchable = this.isTouchable();
-		this.setTouchable(false);
-		this.touchable = touchable;
-		this.onHide && this.onHide();
-	}
-};
-
-TransitionWindow.prototype.setOnHideListener = function(listener) {
-	if (typeof listener != "function") {
-		return delete this.onHide;
-	}
-	this.onHide = function() {
-		tryout(listener);
-	};
-	return true;
-};
-
-TransitionWindow.prototype.inDestructing = function() {
-	return Boolean(this.destructing);
 };
 
 TransitionWindow.parseJson = function(instanceOrJson, json) {
@@ -221,15 +161,6 @@ TransitionWindow.parseJson = function(instanceOrJson, json) {
 	}
 	instanceOrJson = FocusableWindow.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
-	if (json === null || typeof json != "object") {
-		return instanceOrJson;
-	}
-	if (json.hasOwnProperty("onShow")) {
-		instanceOrJson.setOnShowListener(parseCallback(json, json.onShow, [this, instanceOrJson]));
-	}
-	if (json.hasOwnProperty("onHide")) {
-		instanceOrJson.setOnHideListener(parseCallback(json, json.onHide, [this, instanceOrJson]));
-	}
 	return instanceOrJson;
 };
 

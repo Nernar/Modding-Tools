@@ -10,7 +10,7 @@ OverlayFragment.prototype.resetContainer = function() {
 	this.setContainerView(container);
 	
 	let text = new android.widget.TextView(getContext());
-	text.setTextSize(toComplexUnitSp(9));
+	text.setTextSize(toComplexUnitSp(8));
 	text.setGravity($.Gravity.CENTER);
 	text.setTextColor($.Color.WHITE);
 	typeface && text.setTypeface(typeface);

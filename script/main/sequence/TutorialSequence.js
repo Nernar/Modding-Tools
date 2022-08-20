@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const TutorialSequence = function(obj) {
 	Sequence.apply(this, arguments);
 };
@@ -14,7 +19,7 @@ TutorialSequence.prototype.create = function() {
 };
 
 TutorialSequence.prototype.requiresUserInteraction = function() {
-	return this.interaction === true;
+	return this.interaction == true;
 };
 
 TutorialSequence.prototype.next = function(value, index) {
@@ -26,7 +31,7 @@ TutorialSequence.prototype.next = function(value, index) {
 		delete this.goto;
 		return label;
 	}
-	if (this.interaction === false) {
+	if (this.interaction == false) {
 		delete this.interaction;
 	}	
 	return Sequence.prototype.next.apply(this, arguments);
@@ -63,17 +68,17 @@ TutorialSequence.prototype.touchCorrectly = function() {
 	if (random(0, 1) == 0) {
 		this.hint.addMessage(translate("Perfectly!"));
 	} else this.hint.addMessage(translate("Well done!"));
-	this.hint.show();
+	this.hint.attach();
 };
 
-TutorialSequence.prototype.tounchIncorrecrly = function() {
+TutorialSequence.prototype.tounchIncorrectly = function() {
 	let index = this.hint.getStackedCount() - 1;
 	if (index < 0) this.hint.addMessage(translate("Nope"));
 	else this.hint.flashHint(index, $.Color.YELLOW);
 };
 
 TutorialSequence.prototype.complete = function() {
-	this.hint.hide();
+	this.hint.dismiss();
 	this.unpinAndClear();
 	delete this.hint;
 	if (!this.isOneRequired()) {
@@ -105,14 +110,14 @@ TutorialSequence.Welcome = new TutorialSequence({
 			this.hint.addMessage(translate("Howdy and welcome to Dev Editor!"));
 			this.hint.addMessage(translate("Tool from developers to developers."));
 			this.hint.addMessage(translate("Let's see, what's we're prepared here."));
-			this.hint.show();
+			this.hint.attach();
 		}
 	},
 	process: function(index) {
 		if (index == 1) {
 			java.lang.Thread.sleep(500);
 		} else if (index == 2) {
-			java.lang.Thread.sleep(this.hint.getTime() * 3);
+			java.lang.Thread.sleep(this.hint.getTime() * 6);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -130,7 +135,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 			control.setHideableInside(false);
 			control.setButtonImage("menu");
 			control.transformButton();
-			control.show();
+			control.attach();
 			this.currently = control;
 		} else if (index == 2) {
 			this.hint.addMessage(translate("That button is key to start process."));
@@ -138,7 +143,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 			if (!this.isOneRequired()) {
 				this.hint.addMessage(translate("Let's click it and look to abilities."));
 			} else this.hint.addMessage(translate("You must click it to open control menu."));
-			this.hint.show();
+			this.hint.attach();
 		} else if (index == 3) {
 			this.currently.setOnButtonClickListener(function() {
 				sequence.touchCorrectly();
@@ -164,7 +169,7 @@ TutorialSequence.ButtonInteraction = new TutorialSequence({
 	touchCorrectly: function() {
 		this.goto = 5;
 		if (this.currently !== undefined) {
-			this.currently.hide();
+			this.currently.dismiss();
 			delete this.currently;
 		}
 		TutorialSequence.prototype.touchCorrectly.apply(this, arguments);
@@ -188,7 +193,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 			category.addItem("menuProjectSave", translate("Export"));
 			category.addItem("menuProjectManual", translate("Tutorial"));
 			category.addItem("menuProjectManage", translate("Manage"));
-			control.show();
+			control.attach();
 			this.currently = control;
 		} else if (index == 2) {
 			this.hint.addMessage(translate("That's menu created to control content."));
@@ -202,7 +207,7 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 				this.hint.addMessage(translate("And editor is adding by us for this time."));
 				this.hint.addMessage(translate("But that's ability beholds to you."));
 			} else this.hint.addMessage(translate("And editor may be added by your wish."));
-			this.hint.show();
+			this.hint.attach();
 		} else if (index == 3) {
 			this.currently.scrollToElement(this.header, this.hint.getTime() / 4);
 		} else if (index == 4) {
@@ -228,13 +233,13 @@ TutorialSequence.ControlMeeting = new TutorialSequence({
 		} else if (index == 6) {
 			java.lang.Thread.sleep(this.hint.getTime());
 		} else if (index == 7) {
-			java.lang.Thread.sleep(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime() * 3);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
-			this.currently.hide();
+			this.currently.dismiss();
 			delete this.currently;
 			delete this.header;
 		}
@@ -251,7 +256,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 		let sequence = this;
 		if (index == 1) {
 			let sidebar = new SidebarWindow();
-			sidebar.show();
+			sidebar.attach();
 			this.currently = sidebar;
 		} else if (index == 2) {
 			this.hint.addMessage(translate("Well, with button we're have there sidebar."));
@@ -264,14 +269,14 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.hint.addMessage(translate("There's collected identifiers, variations, etc."));
 			this.hint.addMessage(translate("It will be helpful to add define information."));
 			this.hint.addMessage(translate("Let's change sidebar tab to second."));
-			this.hint.show();
+			this.hint.attach();
 		// Hold tutorial starts here.
 		} else if (index == 8) {
 			this.hint.addMessage(translate("You may have a logical question:"));
 			this.hint.addMessage(translate("how to recognize what hides behind every icon?"));
 			this.hint.addMessage(translate("Every sidebar filled with holdable elements."));
 			this.hint.addMessage(translate("Let's try hold any element right now."));
-			this.hint.show();
+			this.hint.attach();
 		} else if (index == 9) {
 			this.currently.setOnGroupFetchListener(function() {
 				sequence.touchCorrectly(2);
@@ -279,9 +284,6 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.currently.setOnItemFetchListener(function() {
 				sequence.touchCorrectly(3);
 			});
-		} else if (index == 10) {
-			this.interaction = true;
-			this.hint.pin();
 		} else if (index == 11) {
 			this.hint.addMessage(translate("Every element may be holded too."));
 			this.goto = 13;
@@ -294,7 +296,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 			this.hint.addMessage(translate("You may checkout that self later inside editors."));
 			this.hint.addMessage(translate("So, there's must be element description."));
 			this.hint.addMessage(translate("But we're just learning and there's nothing."));
-			this.hint.show();
+			this.hint.attach();
 		}
 	},
 	process: function(index) {
@@ -317,7 +319,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 		} else if (index == 9) {
 			java.lang.Thread.sleep(this.hint.getTime() * 2.5);
 		} else if (index == 11 || index == 12) {
-			java.lang.Thread.sleep(this.hint.getTime() * 2);
+			java.lang.Thread.sleep(this.hint.getTime() * 8);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},
@@ -333,7 +335,7 @@ TutorialSequence.SidebarInteraction = new TutorialSequence({
 	},
 	complete: function() {
 		if (this.currently !== undefined) {
-			this.currently.hide();
+			this.currently.dismiss();
 			delete this.currently;
 		}
 		TutorialSequence.prototype.complete.apply(this, arguments);
@@ -376,9 +378,9 @@ TutorialSequence.Complete = new TutorialSequence({
 	},
 	process: function(index) {
 		if (index == 1) {
-			java.lang.Thread.sleep(500);
+			java.lang.Thread.sleep(250);
 		} else if (index == 2) {
-			java.lang.Thread.sleep(this.hint.getTime());
+			java.lang.Thread.sleep(this.hint.getTime() * 4);
 		}
 		return TutorialSequence.prototype.process.apply(this, arguments);
 	},

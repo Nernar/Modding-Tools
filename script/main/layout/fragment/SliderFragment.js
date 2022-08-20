@@ -26,12 +26,12 @@ SliderFragment.prototype.resetContainer = function() {
 			previous = currently = self.value;
 			moved = false;
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
-			tryout(function() {
+			try {
 				let current = self.modifiers[self.modifier];
 				let raw = event.getX() - x;
 				let offset = raw + toComplexUnitDip(40);
 				let size = (current > 0 ? 1 / current : current) * (offset < 0 ? -1 : 1) * (Math.pow(2, Math.abs(offset) / toComplexUnitDip(80)) - 1);
-				self.value = preround((current == 1 ? size : Math.floor(size * current) / current) + currently);
+				self.value = preround((current == 1 ? Math.floor(size) : Math.floor(size * current) / current) + currently);
 				if (self.value != previous) {
 					previous = self.value;
 					self.updateCounter();
@@ -39,9 +39,11 @@ SliderFragment.prototype.resetContainer = function() {
 				if (!moved) {
 					moved = Math.abs(raw) > toComplexUnitDip(8);
 				}
-			});
+			} catch (e) {
+				log("ModdingTools: SliderFragment.onTouch: " + e);
+			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-			tryout(function() {
+			try {
 				if (!moved) {
 					self.modifier++;
 					self.modifier >= self.modifiers.length && (self.modifier = 0);
@@ -49,7 +51,9 @@ SliderFragment.prototype.resetContainer = function() {
 				} else if (currently != previous) {
 					self.onChange && self.onChange(self.value);
 				}
-			});
+			} catch (e) {
+				reportError(e);
+			}
 			// TODO: return self.holdDefault()
 		}
 		return true;
@@ -66,6 +70,10 @@ SliderFragment.prototype.resetContainer = function() {
 
 SliderFragment.prototype.getTextView = function() {
 	return this.getContainer();
+};
+
+SliderFragment.prototype.getValue = function() {
+	return this.value || 0;
 };
 
 SliderFragment.prototype.setValue = function(value) {

@@ -13,14 +13,14 @@ const attachBackground = function(drawableOrColor) {
 		}
 		frame.setBackgroundDrawable(drawableOrColor);
 		unique.setContent(frame);
-		unique.show();
+		unique.attach();
 	});
 };
 
 const deattachBackground = function() {
 	handle(function() {
 		let unique = UniqueHelper.getWindow("BackgroundWindow");
-		if (unique !== null) unique.hide();
+		if (unique !== null) unique.dismiss();
 	});
 };
 

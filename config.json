@@ -8,10 +8,10 @@
     "header_background":false
   },
   "performance":{
-    "hint_stackable":true,
+    "hint_stackable":false,
     "maximum_hints":25,
     "show_processes":true,
-    "safety_processes":true
+    "safety_processes":false
   },
   "autosave":{
     "enabled":true,
@@ -22,7 +22,7 @@
   },
   "user_login":{
     "first_launch":false,
-    "imported_script":false,
+    "imported_script":true,
     "send_analytics":true
   },
   "other":{

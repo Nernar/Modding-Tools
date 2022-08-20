@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const UniqueHelper = {};
 
 UniqueHelper.opened = {};
@@ -21,7 +26,7 @@ UniqueHelper.prepareWindow = function(window) {
 	if (this.wasTypeAttached(window)) {
 		let opened = this.getWindow(window),
 			updatable = opened.isUpdatable();
-		if (!opened.inDestructing()) {
+		if (opened.isOpened()) {
 			// Window are already opened
 			if (opened == window) {
 				return false;
@@ -32,7 +37,7 @@ UniqueHelper.prepareWindow = function(window) {
 				opened.update();
 				return false;
 			}
-			opened.hide();
+			opened.dismiss();
 		}
 		this.shiftWindow(opened);
 		return this.prepareWindow(window);

@@ -25,7 +25,7 @@ let BITSET_PATCH = {};
 
 const registerBitsetUi = function(json) {
 	if (json == null || typeof json != "object") {
-		MCSystem.throwException("ModdingTools: registered bitset must be object { moduleBitset: .. }");
+		MCSystem.throwException("ModdingTools: Registered bitset must be object { moduleBitset: .. }");
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
@@ -178,7 +178,7 @@ BitmapDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 AnimationDrawable.applyDescribe = function(drawable, json) {
-	if (drawable === null) MCSystem.throwException(null);
+	if (drawable == null) MCSystem.throwException("ModdingTools: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("enterFadeDuration")) {
 		AnimationDrawableFactory.setEnterFadeDuration(drawable, calloutOrParse(json, json.enterFadeDuration, this));
 	}
@@ -239,7 +239,7 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 Drawable.applyDescribe = function(drawable, json) {
-	if (drawable === null) MCSystem.throwException(null);
+	if (drawable === null) MCSystem.throwException("ModdingTools: Drawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("alpha")) {
 		DrawableFactory.setAlpha(drawable, calloutOrParse(json, json.alpha, this));
 	}
@@ -333,32 +333,32 @@ Drawable.parseJson = function(instanceOrJson, json) {
 BitmapFactory.__decodeFile = BitmapFactory.decodeFile;
 BitmapFactory.decodeFile = function(path, options) {
 	let file = path instanceof java.io.File ? path : new java.io.File(path);
-	let self = this;
-	let args = arguments;
-	return tryout.call(this, function() {
+	try {
 		if (file.getName().endsWith(".dnr")) {
 			let bytes = Files.readBytes(file);
 			return this.decodeResource(bytes, options);
 		}
-		return BitmapFactory.__decodeFile.apply(self, args);
-	}, function(e) {
+		return BitmapFactory.__decodeFile.apply(this, arguments);
+	} catch (e) {
 		Logger.Log("Drawable: BitmapFactory failed to decode file " + file.getName(), "WARNING");
-	}, null);
+	}
+	return null;
 };
 
 BitmapDrawableFactory.MIME_TYPES.push(".dnr");
 
 BitmapFactory.decodeResource = function(bytes, options) {
-	return tryout.call(this, function() {
+	try {
 		let decoded = decodeResource(bytes);
 		return this.decodeBytes(decoded, options);
-	}, function(e) {
+	} catch (e) {
 		Logger.Log("Drawable: BitmapFactory failed to decode resource " + bytes, "WARNING");
-	}, null);
+	}
+	return null;
 };
 
 const fetchResourceOverridesIfNeeded = function(path) {
-	tryout(function() {
+	try {
 		let file = new java.io.File(path, "bitset.json");
 		if (file.exists()) {
 			let json = JSON.parse(Files.read(file));
@@ -369,7 +369,9 @@ const fetchResourceOverridesIfNeeded = function(path) {
 				BITSET_PATCH[element] = "" + json[element];
 			}
 		}
-	});
+	} catch (e) {
+		reportError(e);
+	}
 };
 
 BitmapDrawableFactory.__mapDirectory = BitmapDrawableFactory.mapDirectory;

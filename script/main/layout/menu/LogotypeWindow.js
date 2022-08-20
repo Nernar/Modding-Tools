@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const LogotypeWindow = function(foreground, background) {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setGravity($.Gravity.CENTER);
@@ -100,9 +105,9 @@ LogotypeWindow.prototype.updateLevel = function() {
 	return true;
 };
 
-LogotypeWindow.prototype.show = function() {
+LogotypeWindow.prototype.attach = function() {
 	if (this.getBackgroundImage() !== null || this.getForegroundImage() !== null) {
 		this.updateProgress();
 	}
-	UniqueWindow.prototype.show.apply(this, arguments);
+	UniqueWindow.prototype.attach.apply(this, arguments);
 };

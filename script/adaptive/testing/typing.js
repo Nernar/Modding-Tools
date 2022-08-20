@@ -182,7 +182,7 @@ NarrationWindow.prototype.onTypingCompleted = function(size) {
 
 NarrationWindow.prototype.continue = function() {
 	if (this.hasMore()) this.next();
-	else this.hide();
+	else this.dismiss();
 };
 
 NarrationWindow.prototype.continueDelayed = function() {
@@ -252,9 +252,9 @@ NarrationWindow.prototype.getObserver = function() {
 	return this.observer;
 };
 
-NarrationWindow.prototype.show = function() {
+NarrationWindow.prototype.attach = function() {
 	if (!this.isOpened()) this.continueDelayed();
-	UniqueWindow.prototype.show.apply(this, arguments);
+	UniqueWindow.prototype.attach.apply(this, arguments);
 };
 
 NarrationWindow.prototype.dismiss = function() {
@@ -398,6 +398,6 @@ return function() {
 	});
 	narration.setDelay(1200);
 	handle(function() {
-		narration.show();
+		narration.attach();
 	});
 };

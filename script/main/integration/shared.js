@@ -5,17 +5,17 @@
  */
 const API = {
 	USER_ID: "unknown",
+	API_VERSION: API_VERSION,
 	PRODUCT_REVISION: REVISION,
-	INNERCORE_PACKAGE: INNERCORE_PACKAGE,
+	InnerCorePackage: InnerCorePackages, // Code bug
+	InnerCorePackages: InnerCorePackages,
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
+	launchIfSupported: launchIfSupported,
 	
 	// Retention
 	isHorizon: isHorizon,
 	minecraftVersion: minecraftVersion,
-	tryout: tryout,
-	tryoutSafety: tryoutSafety,
-	require: require,
 	handle: handle,
 	handleThread: handleThread,
 	handleAction: handleAction,
@@ -51,30 +51,31 @@ const API = {
 	// Global registry
 	registerTool: function(id, tool) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
+			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
-		log("ModdingTools: registered custom adaptive tool " + id);
+		log("ModdingTools: Registered custom adaptive tool " + id);
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: id " + id + " is already occupied", "WARNING");
+			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
 		if (entry === undefined) {
 			entry = new ProjectTool.MenuFactory();
 		}
 		if (!(entry instanceof ProjectTool.MenuFactory)) {
-			MCSystem.throwException("ModdingTools: registerMenuTool entry must be instance of Tool.MenuEntry");
+			MCSystem.throwException("ModdingTools: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
 		}
-		log("ModdingTools: registered tool " + id + " into menu entry");
+		log("ModdingTools: Registered tool " + id + " into menu entry");
 		PROJECT_TOOL.tools[id] = entry;
 		Tools[id] = tool;
 	},
 	registerBitsetUi: registerBitsetUi,
 	registerFragmentJson: registerFragmentJson,
 	registerWindowJson: registerWindowJson,
+	registerKeyboardWatcher: registerKeyboardWatcher,
 	
 	// Helper functions
 	random: random,
@@ -102,6 +103,9 @@ const API = {
 	selectFile: selectFile,
 	saveFile: saveFile,
 	readFileAsync: readFile,
+	stringifyJson: stringifyJson,
+	stringifyJsonIndented: stringifyJsonIndented,
+	isLightweightArray: isLightweightArray,
 	
 	// Storage utility
 	resetSettingIfNeeded: resetSettingIfNeeded,
@@ -140,6 +144,10 @@ const API = {
 	ScrollFragment: ScrollFragment,
 	TextFragment: TextFragment,
 	ImageFragment: ImageFragment,
+	
+	// Adapters
+	ListHolderAdapter: ListHolderAdapter,
+	FilterListHolderAdapter: FilterListHolderAdapter,
 	
 	// Fragment variations
 	CategoryTitleFragment: CategoryTitleFragment,
@@ -222,6 +230,7 @@ const API = {
 	importProject: importProject,
 	importScript: importScript,
 	selectProjectData: selectProjectData,
+	Worker: Worker,
 	Project: Project,
 	ProjectProvider: ProjectProvider,
 	ScriptConverter: ScriptConverter,
@@ -235,6 +244,7 @@ const API = {
 	ProjectTool: ProjectTool,
 	EditorTool: EditorTool,
 	attachProjectTool: attachProjectTool,
+	attachEditorTool: attachEditorTool,
 	
 	// Sequence
 	Sequence: Sequence,
@@ -285,27 +295,29 @@ const notifyCoreEngineLoaded = function() {
 };
 
 const getCoreEngineAndInjectIfNeeded = function() {
-	return tryout(function() {
+	try {
 		if (isCoreEngineLoaded()) {
 			return CoreEngine;
 		}
 		let instance = null;
-		let CoreEngineAPI = INNERCORE_PACKAGE.api.mod.coreengine.CoreEngineAPI;
-		let field = tryout(function() {
-			return CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
-		}, function(e) {
-			let declared = CoreEngineAPI.__javaObject__.getDeclaredField("coreEngineHandler");
-			instance = INNERCORE_PACKAGE.api.mod.API.getInstanceByName("CoreEngine");
-			return declared;
-		});
+		let CoreEngineAPI = InnerCorePackages.api.mod.coreengine.CoreEngineAPI;
+		let field;
+		try {
+			field = CoreEngineAPI.__javaObject__.getDeclaredField("ceHandlerSingleton");
+		} catch (e) {
+			field = CoreEngineAPI.__javaObject__.getDeclaredField("coreEngineHandler");
+			instance = InnerCorePackages.api.mod.API.getInstanceByName("CoreEngine");
+		}
 		field.setAccessible(true);
 		let ceHandlerSingleton = field.get(instance);
 		if (ceHandlerSingleton != null) {
 			ceHandlerSingleton.injectCoreAPI(CoreEngine);
 		}
 		notifyCoreEngineLoaded();
-		return CoreEngine;
-	}, CoreEngine);
+	} catch (e) {
+		reportError(e);
+	}
+	return CoreEngine;
 };
 
 Callback.addCallback("PreBlocksDefined", function() {

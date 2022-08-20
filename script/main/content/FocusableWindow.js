@@ -138,9 +138,7 @@ FocusableWindow.prototype.setOnAttachListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onAttach;
 	}
-	this.onAttach = function() {
-		tryout(listener);
-	};
+	this.onAttach = listener;
 	return true;
 };
 
@@ -148,9 +146,7 @@ FocusableWindow.prototype.setOnUpdateListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onUpdate;
 	}
-	this.onUpdate = function() {
-		tryout(listener);
-	};
+	this.onUpdate = listener;
 	return true;
 };
 
@@ -158,9 +154,7 @@ FocusableWindow.prototype.setOnDismissListener = function(listener) {
 	if (typeof listener != "function") {
 		return delete this.onClose;
 	}
-	this.onClose = function() {
-		tryout(listener);
-	};
+	this.onClose = listener;
 	return true;
 };
 
@@ -203,6 +197,8 @@ FocusableWindow.prototype.attach = function() {
 		WindowProvider.openWindow(this);
 		this.onAttach && this.onAttach();
 		return true;
+	} else {
+		Logger.Log("ModdingTools: Attaching window " + this.TYPE + " called on already opened window", "INFO");
 	}
 	return false;
 };
@@ -212,14 +208,16 @@ FocusableWindow.prototype.update = function() {
 	if (fragment != null && fragment.isRequiresFocusable()) {
 		this.focusable = true;
 	}
-	WindowProvider.updateWindow(this);
 	this.onUpdate && this.onUpdate();
+	WindowProvider.updateWindow(this);
 };
 
 FocusableWindow.prototype.dismiss = function() {
 	if (this.isOpened()) {
 		WindowProvider.closeWindow(this);
 		this.onClose && this.onClose();
+	} else {
+		Logger.Log("ModdingTools: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
 	}
 };
 

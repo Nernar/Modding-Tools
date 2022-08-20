@@ -72,7 +72,7 @@ const setSetting = function(where, key, type) {
  * Update settings from config.
  */
 const updateSettings = function() {
-	tryout.call(this, function() {
+	try {
 		setSetting("uiScaler", "interface.interface_scale", "number", .75, 1.5);
 		setSetting("fontScale", "interface.font_scale", "number", .75, 1.5);
 		setSetting("maxWindows", "interface.max_windows", "number", 1, 15);
@@ -95,13 +95,13 @@ const updateSettings = function() {
 		setSetting("sendAnalytics", "user_login.send_analytics", "boolean", true);
 		setSetting("importAutoselect", "other.import_autoselect", "boolean");
 		__config__.save();
-	});
+	} catch (e) {
+		reportError(e);
+	}
 };
 
 updateSettings();
 
 const isFirstLaunch = function() {
-	return tryoutSafety(function() {
-		return loadSetting("user_login.first_launch", "boolean");
-	}, false);
+	return loadSetting("user_login.first_launch", "boolean");
 };

@@ -3,9 +3,12 @@ const ExpandablePopup = function(id) {
 	FocusablePopup.apply(this, arguments);
 	let fragment = new ExpandableFragment();
 	fragment.getTitleView().setOnTouchListener(function(view, event) {
-		return tryoutSafety(function() {
-			return self.handleTouch(event);
-		}, false);
+		try {
+			return !!self.handleTouch(event);
+		} catch (e) {
+			log("ModdingTools: ExpandablePopup.onTouch: " + e);
+		}
+		return false;
 	});
 	this.setFragment(fragment);
 };

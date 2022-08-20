@@ -119,11 +119,7 @@ Action.prototype.setAction = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.action;
 	}
-	this.action = function(scope, real, count) {
-		tryout(function() {
-			action(scope, real, count);
-		});
-	};
+	this.action = action;
 	return true;
 };
 
@@ -131,109 +127,111 @@ Action.prototype.setCondition = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onCondition;
 	}
-	this.onCondition = function(scope, count, left) {
-		return tryout(function() {
-			return action(scope, count, left);
-		}, false);
-	};
+	this.onCondition = action;
 	return true;
 };
 
 Action.prototype.create = function() {
-	if (this.getThread() !== null) {
-		MCSystem.throwException("Action: action[" + this.id + "] are already created");
+	if (this.thread !== undefined && this.thread !== null) {
+		MCSystem.throwException("Action: Action (id=" + this.id + ") is already called create()");
 	}
 	this.count = this.real = 0;
-	let action = this;
-	this.thread = handleThread(function() {
-		tryout(function() {
-			while (action.getThread() !== null) {
-				if (action.isInterrupted()) {
+	this.thread = handleThread.call(this, function() {
+		try {
+			while (this.thread !== undefined && this.thread !== null) {
+				if (this.isInterrupted()) {
 					break;
 				}
-				if (action.isActive()) {
-					let currently = action.getCurrentTick();
+				if (this.isActive()) {
+					let currently = this.getCurrentTick();
 					if (currently == 0) {
-						java.lang.Thread.sleep(action.getTickTime());
+						java.lang.Thread.sleep(this.getTickTime());
 					}
-					let next = action.tick(currently);
-					action.setCurrentTick(next);
-					action.real += action.getTickTime();
-					let left = action.getAwait();
+					let next = this.tick(currently);
+					this.setCurrentTick(next);
+					this.real += this.getTickTime();
+					let left = this.getAwait();
 					if (left >= 0 && next >= left) {
-						action.complete();
-					} else if (!action.isInterrupted()) {
-						if (action.condition(next)) {
-							java.lang.Thread.sleep(action.getTickTime());
+						this.complete();
+					} else if (!this.isInterrupted()) {
+						if (this.condition(next)) {
+							java.lang.Thread.sleep(this.getTickTime());
 						} else break;
-					} else if (action.mayCancelled()) {
-						action.cancel();
+					} else if (this.mayCancelled()) {
+						this.cancel();
 					}
-				} else if (!action.isInterrupted()) {
+				} else if (!this.isInterrupted()) {
 					java.lang.Thread.yield();
 				}
 			}
-		}, function(e) {
-			if (e.message == "java.lang.InterruptedException: null") {
+		} catch (e) {
+			if (e == null) {
 				return;
-			} else if (e.message == "Cannot call method \"isInterrupted\" of undefined") {
+			}
+			if (e.message == "java.lang.InterruptedException: null" ||
+					e.message == "Cannot call method \"isInterrupted\" of undefined") {
 				return;
 			}
 			reportError(e);
-		});
-		action.destroy();
+		}
+		this.destroy();
 	}, this.getPriority());
 	this.onCreate && this.onCreate(this);
 	return this;
 };
 
 Action.prototype.condition = function(currently) {
-	return require.call(this, function() {
+	try {
 		if (this.onCondition !== undefined) {
 			return this.onCondition(this, currently, this.getAwait());
 		}
 		return true;
-	}, false);
+	} catch (e) {
+		Logger.Log("Action: Condition in action (id=" + this.id + ") experienced some troubles", "WARNING");
+	}
+	return false;
 };
 
 Action.prototype.tick = function(currently) {
-	return require.call(this, function() {
+	try {
 		if (this.onTick !== undefined) {
 			return this.onTick(this, currently);
 		}
-	}, ++currently);
+	} catch (e) {
+		Logger.Log("Action: Tick in action (id=" + this.id + ") experienced some troubles", "WARNING");
+	}
+	return ++currently;
 };
 
 Action.prototype.run = function() {
-	if (this.getThread() === null) {
+	if (this.thread === undefined || this.thread === null) {
 		this.create();
 	} else {
 		this.count = this.real = 0;
 	}
 	this.active = true;
-	log("Action: action[" + this.id + "] started at " + getTime() + " ms");
+	log("Action: Action (id=" + this.id + ") started at " + getTime() + " ms");
 	this.onRun && this.onRun(this);
 };
 
 Action.prototype.complete = function() {
 	delete this.active;
-	log("Action: action[" + this.id + "] completed as " + this.real + " ms");
+	log("Action: Action (id=" + this.id + ") completed as " + this.real + " ms");
 	this.action && this.action(this, this.real, this.count);
 	this.count = this.real = 0;
 };
 
 Action.prototype.pause = function(time) {
 	delete this.active;
-	let action = this;
-	time && handle(function() {
-		action.active = true;
+	time && handle.call(this, function() {
+		this.active = true;
 	}, time);
 	this.onPause && this.onPause(this);
 };
 
 Action.prototype.cancel = function() {
 	delete this.active;
-	log("Action: action[" + this.id + "] cancelled at " + this.real + " ms");
+	log("Action: Action (id=" + this.id + ") cancelled at " + this.real + " ms");
 	this.onCancel && this.onCancel(this);
 	this.count = this.real = 0;
 };
@@ -250,11 +248,7 @@ Action.prototype.setOnCreateListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onCreate;
 	}
-	this.onCreate = function(scope) {
-		tryout(function() {
-			action(scope);
-		});
-	};
+	this.onCreate = action;
 	return true;
 };
 
@@ -262,11 +256,7 @@ Action.prototype.setOnRunListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onRun;
 	}
-	this.onRun = function(scope) {
-		tryout(function() {
-			action(scope);
-		});
-	};
+	this.onRun = action;
 	return true;
 };
 
@@ -274,11 +264,7 @@ Action.prototype.setOnTickListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onTick;
 	}
-	this.onTick = function(scope, currently) {
-		return tryout(function() {
-			return action(scope, currently);
-		});
-	};
+	this.onTick = action;
 	return true;
 };
 
@@ -286,11 +272,7 @@ Action.prototype.setOnPauseListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onPause;
 	}
-	this.onPause = function(scope) {
-		tryout(function() {
-			action(scope);
-		});
-	};
+	this.onPause = action;
 	return true;
 };
 
@@ -298,11 +280,7 @@ Action.prototype.setOnCancelListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onCancel;
 	}
-	this.onCancel = function(scope) {
-		tryout(function() {
-			action(scope);
-		});
-	};
+	this.onCancel = action;
 	return true;
 };
 
@@ -310,11 +288,7 @@ Action.prototype.setOnDestroyListener = function(action) {
 	if (action === undefined || action === null) {
 		return delete this.onDestroy;
 	}
-	this.onDestroy = function(scope) {
-		tryout(function() {
-			action(scope);
-		});
-	};
+	this.onDestroy = action;
 	return true;
 };
 
@@ -331,7 +305,7 @@ Action.prototype.isInterrupted = function() {
 };
 
 Action.prototype.assureYield = function(thread) {
-	if (this.getThread() === null) {
+	if (this.thread === undefined || this.thread === null) {
 		return false;
 	}
 	while (this.getThread() !== null) {

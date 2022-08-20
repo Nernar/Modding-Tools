@@ -115,8 +115,8 @@ Sequence.prototype.sync = function(active) {
  * @param {any} [value] data to process
  */
 Sequence.prototype.execute = function(value) {
-	if (this.getThread() !== null) {
-		MCSystem.throwException("Sequence: sequence[" + this.id + "] are already executing");
+	if (this.thread !== undefined && this.thread !== null) {
+		MCSystem.throwException("Sequence: Sequence (id=" + this.id + ") is already running");
 	}
 	this.index = 0;
 	this.thread = {};
@@ -125,7 +125,7 @@ Sequence.prototype.execute = function(value) {
 		let active = Date.now(), next;
 		sequence.create && sequence.create.call(sequence, value, active);
 		sequence.thread = handleThread(function() {
-			tryout(function() {
+			try {
 				if (sequence.uncount !== undefined) {
 					sequence.count = sequence.uncount.call(sequence, value);
 					sequence.require();
@@ -136,12 +136,12 @@ Sequence.prototype.execute = function(value) {
 					sequence.require();
 				}
 				sequence.completed = true;
-			}, function(e) {
+			} catch (e) {
 				sequence.completed = false;
 				handle(function() {
 					sequence.cancel && sequence.cancel.call(sequence, e);
 				});
-			});
+			}
 			delete sequence.thread;
 			if (sequence.uncount !== undefined) {
 				delete sequence.count;

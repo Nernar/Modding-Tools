@@ -95,27 +95,28 @@ Base64.decode = function(bytes) {
 };
 
 const requireLogotype = function() {
-	return tryoutSafety(function() {
-		if (REVISION.indexOf("alpha") != -1) {
-			return "logo_alpha";
-		} else if (REVISION.indexOf("beta") != -1) {
-			return "logo_beta";
-		} else if (REVISION.indexOf("preview") != -1) {
-			return "logo_preview";
-		}
-	}, "logo");
+	if (REVISION.indexOf("alpha") != -1) {
+		return "logoAlpha";
+	}
+	if (REVISION.indexOf("beta") != -1) {
+		return "logoBeta";
+	}
+	if (REVISION.indexOf("preview") != -1) {
+		return "logoPreview";
+	}
+	return "logo";
 };
 
 const requireInvertedLogotype = function() {
 	let logotype = requireLogotype();
-	if (logotype == "logo") return "logo_beta";
-	if (logotype == "logo_alpha") return "logo_preview";
-	if (logotype == "logo_beta") return "logo";
-	if (logotype == "logo_preview") return "logo_alpha";
-	Logger.Log("ModdingTools: no inverted logotype for " + logotype, "WARNING");
+	if (logotype == "logo") return "logoBeta";
+	if (logotype == "logoAlpha") return "logoPreview";
+	if (logotype == "logoBeta") return "logo";
+	if (logotype == "logoPreview") return "logoAlpha";
+	Logger.Log("ModdingTools: Not found inverted logotype for " + logotype, "WARNING");
 };
 
 const isInvertedLogotype = function() {
 	let logotype = requireLogotype();
-	return logotype == "logo_alpha" || logotype == "logo_beta";
+	return logotype == "logoAlpha" || logotype == "logoBeta";
 };

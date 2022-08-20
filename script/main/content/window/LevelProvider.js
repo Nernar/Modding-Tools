@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const LevelProvider = {};
 
 LevelProvider.attach = function() {
@@ -43,7 +48,7 @@ LevelProvider.show = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
 	if (this.update()) {
-		overlay.show();
+		overlay.attach();
 		this.updateRecursive();
 	}
 };
@@ -51,7 +56,7 @@ LevelProvider.show = function() {
 LevelProvider.hide = function() {
 	let overlay = this.getOverlayWindow();
 	if (overlay === null) return;
-	overlay.hide();
+	overlay.dismiss();
 };
 
 Callback.addCallback("LevelLoaded", function() {
@@ -72,18 +77,20 @@ Callback.addCallback("LevelLeft", function() {
 
 let thereIsNoTPSMeter = false;
 
-tryoutSafety.call(this, function() {
-	let TPSMeter = INNERCORE_PACKAGE.api.runtime.TPSMeter;
+try {
+	let TPSMeter = InnerCorePackages.api.runtime.TPSMeter;
 	this.TPSMeter = new TPSMeter(20, 1000);
-}, function(e) {
+} catch (e) {
 	showHint(translate("Couldn't create engine TPS Meter"));
 	thereIsNoTPSMeter = true;
-});
+}
 
 Callback.addCallback("tick", function() {
-	tryoutSafety(function() {
+	try {
 		if (!thereIsNoTPSMeter) {
 			TPSMeter.onTick();
 		}
-	});
+	} catch (e) {
+		log("ModdingTools: tick: " + e);
+	}
 });

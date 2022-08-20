@@ -10,7 +10,7 @@ Frame.prototype.getFragment = function() {
 
 Frame.prototype.setFragment = function(fragment) {
 	let already = this.getFragment();
-	if (already != null) MCSystem.throwException("ModdingTools: frame already has fragment");
+	if (already != null) MCSystem.throwException("ModdingTools: Frame already has fragment");
 	this.fragment = fragment;
 };
 

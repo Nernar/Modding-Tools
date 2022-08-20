@@ -87,12 +87,12 @@ Network.prototype.setCallback = function(callback) {
  * @returns {Object|null} java stream
  */
 Network.prototype.getStream = function() {
-	return tryout.call(this, function() {
+	try {
 		return this.url ? this.url.openStream() : null;
-	}, function(e) {
+	} catch (e) {
 		let connection = this.getConnection();
 		return connection ? connection.getInputStream() : null;
-	});
+	}
 };
 
 /**
@@ -501,10 +501,10 @@ Network.handle = function(action, callback, connect) {
 		MCSystem.throwException("Network: nothing to network handle");
 	}
 	handleThread(function() {
-		tryout(function() {
+		try {
 			action();
-		}, function(e) {
-			tryout(function() {
+		} catch (e) {
+			try {
 				if (callback && callback instanceof Object) {
 					if (callback.hasOwnProperty("onFail")) {
 						callback.onFail.call(connect);
@@ -514,11 +514,11 @@ Network.handle = function(action, callback, connect) {
 					callback.call(connect);
 				}
 				Logger.Log("Failed to read network data from a server", "WARNING");
-			}, function(t) {
+			} catch (t) {
 				Logger.Log("A fatal error occurred while trying to network connect", "ERROR");
-			});
+			}
 			reportError(e);
-		});
+		}
 	});
 };
 

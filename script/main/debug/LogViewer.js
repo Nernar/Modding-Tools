@@ -21,8 +21,6 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 	if (message == null) {
 		return;
 	}
-	// let color = message.prefix.toFontColor();
-	// color = $.Color.parse(color);
 	if (message.type.level == 3) {
 		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.RED);
 	}
@@ -54,7 +52,7 @@ LogViewer.show = function() {
 	text.setText(NAME + " " + REVISION);
 	popup.getFragment().getContainerLayout().addView(horizontal);
 	horizontal.addView(text);
-	let filter = INNERCORE_PACKAGE.api.log.ICLog.getLogFilter();
+	let filter = InnerCorePackages.api.log.ICLog.getLogFilter();
 	let messagesField = getClass(filter).__javaObject__.getDeclaredField("logMessages");
 	messagesField.setAccessible(true);
 	let messages = messagesField.get(filter);

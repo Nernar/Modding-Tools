@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const ModificationSource = {};
 
 ModificationSource.selector = function() {
@@ -8,11 +13,11 @@ ModificationSource.selector = function() {
 	if (!this.attachSources(control)) {
 		control.addMessage("worldSelectionRange", translate("There's we can't find any modification. Please, consider developer about that cause."));
 	}
-	control.show();
+	control.attach();
 };
 
 ModificationSource.findModList = function() {
-	return tryout(function() {
+	try {
 		let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
 		let sorted = new java.util.ArrayList();
 		for (let i = 0; i < mods.size(); i++) {
@@ -22,9 +27,9 @@ ModificationSource.findModList = function() {
 			}
 		}
 		return sorted;
-	}, function(e) {
-		return INNERCORE_PACKAGE.mod.build.ModLoader.instance.modsList;
-	});
+	} catch (e) {
+		return InnerCorePackages.mod.build.ModLoader.instance.modsList;
+	}
 };
 
 ModificationSource.attachSources = function(control) {
@@ -86,14 +91,18 @@ ModificationSource.rebuild = function(mod, type) {
 						});
 					}
 					if (!result.wasFailed) ModificationSource.confirmSwitchBuild(mod);
+					let count = 0;
+					if (result.buildConfig) {
+						try {
+							count = result.buildConfig.getAllSourcesToCompile(true).size();
+						} catch (e) {
+							count = result.buildConfig.getAllSourcesToCompile().size();
+						}
+					}
 					confirm(translate(result.name) + " " + translate(result.version), (result.wasFailed ?
 							translate("Something went wrong during compilation process.") + " " + translate("Checkout reports below to see more details.") :
 							translate("Modification successfully compiled.") + " " + translate("You can switch build type in next window.")) + " " +
-						translate("Founded sources count") + ": " + (result.buildConfig ? tryout(function() {
-							return result.buildConfig.getAllSourcesToCompile(true)
-						}, function() {
-							return result.buildConfig.getAllSourcesToCompile();
-						}).size() : 0) + ".\n" +
+						translate("Founded sources count") + ": " + count + ".\n" +
 						translate("Do you want to review report?"),
 						function() {
 							if (result.messages && result.messages.length > 0) {

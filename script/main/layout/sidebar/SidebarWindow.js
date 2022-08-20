@@ -155,14 +155,18 @@ SidebarWindow.prototype.reinflateLayout = function() {
 			if (this.isTouchable()) {
 				set.addListener({
 					onTransitionStart: function(transition) {
-						tryout(function() {
+						try {
 							sidebar.setTouchable(false);
-						});
+						} catch (e) {
+							reportError(e);
+						}
 					},
 					onTransitionEnd: function(transition) {
-						tryout(function() {
+						try {
 							sidebar.setTouchable(true);
-						});
+						} catch (e) {
+							reportError(e);
+						}
 					}
 				});
 			}
@@ -190,47 +194,27 @@ SidebarWindow.prototype.reinflateLayout = function() {
 };
 
 SidebarWindow.prototype.setOnGroupSelectListener = function(listener) {
-	this.onGroupSelect = function(window, group, index, previous, count) {
-		tryout(function() {
-			listener && listener(window, group, index, previous, count);
-		});
-	};
+	this.onGroupSelect = listener;
 	return this;
 };
 
 SidebarWindow.prototype.setOnGroupUndockListener = function(listener) {
-	this.onGroupUndock = function(window, group, index, previous) {
-		tryout(function() {
-			listener && listener(window, group, index, previous);
-		});
-	};
+	this.onGroupUndock = listener;
 	return this;
 };
 
 SidebarWindow.prototype.setOnGroupFetchListener = function(listener) {
-	this.onGroupFetch = function(window, group, index) {
-		return tryout(function() {
-			return listener && listener(window, group, index);
-		}, null);
-	};
+	this.onGroupFetch = listener;
 	return this;
 };
 
 SidebarWindow.prototype.setOnItemSelectListener = function(listener) {
-	this.onItemSelect = function(window, group, item, groupIndex, itemIndex) {
-		tryout(function() {
-			listener && listener(window, group, item, groupIndex, itemIndex);
-		});
-	};
+	this.onItemSelect = listener;
 	return this;
 };
 
 SidebarWindow.prototype.setOnItemFetchListener = function(listener) {
-	this.onItemFetch = function(window, group, item, groupIndex, itemIndex) {
-		return tryout(function() {
-			return listener && listener(window, group, item, groupIndex, itemIndex);
-		}, null);
-	};
+	this.onItemFetch = listener;
 	return this;
 };
 
@@ -418,47 +402,27 @@ SidebarWindow.Group.prototype.indexOf = function() {
 };
 
 SidebarWindow.Group.prototype.setOnSelectListener = function(listener) {
-	this.onSelect = function(group, index, previous, count) {
-		tryout(function() {
-			listener && listener(group, index, previous, count);
-		});
-	};
+	this.onSelect = listener;
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnUndockListener = function(listener) {
-	this.onUndock = function(group, index, previous) {
-		tryout(function() {
-			listener && listener(group, index, previous);
-		});
-	};
+	this.onUndock = listener;
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnFetchListener = function(listener) {
-	this.onFetch = function(group, index) {
-		return tryout(function() {
-			return listener && listener(group, index);
-		}, null);
-	};
+	this.onFetch = listener;
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnItemSelectListener = function(listener) {
-	this.onItemSelect = function(group, item, groupIndex, itemIndex) {
-		tryout(function() {
-			listener && listener(group, item, groupIndex, itemIndex);
-		});
-	};
+	this.onItemSelect = listener;
 	return this;
 };
 
 SidebarWindow.Group.prototype.setOnItemFetchListener = function(listener) {
-	this.onItemFetch = function(group, item, groupIndex, itemIndex) {
-		return tryout(function() {
-			return listener && listener(group, item, groupIndex, itemIndex);
-		}, null);
-	};
+	this.onItemFetch = listener;
 	return this;
 };
 
@@ -595,20 +559,12 @@ SidebarWindow.Group.Item.prototype.indexOf = function() {
 };
 
 SidebarWindow.Group.Item.prototype.setOnSelectListener = function(listener) {
-	this.onSelect = function(item, index) {
-		tryout(function() {
-			return listener && listener(item, index);
-		});
-	};
+	this.onSelect = listener;
 	return this;
 };
 
 SidebarWindow.Group.Item.prototype.setOnFetchListener = function(listener) {
-	this.onFetch = function(item, index) {
-		return tryout(function() {
-			return listener && listener(item, index);
-		}, null);
-	};
+	this.onFetch = listener;
 	return this;
 };
 

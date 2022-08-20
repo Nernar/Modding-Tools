@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const ProjectProvider = {};
 
 ProjectProvider.getProject = function() {
@@ -12,7 +17,7 @@ ProjectProvider.getEditorById = function(index) {
 };
 
 ProjectProvider.isInitialized = function() {
-	return this.getProject() !== null;
+	return this.getProject() != null;
 };
 
 ProjectProvider.create = function() {
@@ -52,8 +57,7 @@ ProjectProvider.getCurrentType = function() {
 };
 
 ProjectProvider.initializeAutosave = function() {
-	let scope = this,
-		project = this.getProject();
+	let project = this.getProject();
 	if (project.isAutosaving) return;
 	if (!autosave || this.thread || autosavePeriod <= 0) {
 		project.updateCurrentWorker();
@@ -67,7 +71,7 @@ ProjectProvider.initializeAutosave = function() {
 				java.lang.Thread.sleep(1);
 			}
 		} while (project.isOpened);
-		delete scope.thread;
+		delete ProjectProvider.thread;
 	});
 };
 

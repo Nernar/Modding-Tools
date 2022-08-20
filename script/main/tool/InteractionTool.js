@@ -65,9 +65,9 @@ InteractionTool.prototype.attachInteraction = function(id) {
 		if (interaction.length == 0) {
 			delete this.interactionWindows;
 		}
-		MCSystem.throwException("ModdingTools: interaction window must be instance of FocusablePopup or UniqueWindow");
+		MCSystem.throwException("ModdingTools: Interaction window must be instance of FocusablePopup or UniqueWindow");
 	}
-	instance.show();
+	instance.attach();
 	interaction.push(instance);
 };
 
@@ -123,7 +123,7 @@ InteractionTool.prototype.hideInteraction = function() {
 	let interaction = this.getInteractionWindows();
 	if (interaction == null) return;
 	for (let i = 0; i < interaction.length; i++) {
-		interaction[i].hide();
+		interaction[i].dismiss();
 	}
 };
 
@@ -131,7 +131,7 @@ InteractionTool.prototype.showInteraction = function() {
 	let interaction = this.getInteractionWindows();
 	if (interaction == null) return;
 	for (let i = 0; i < interaction.length; i++) {
-		interaction[i].show();
+		interaction[i].attach();
 	}
 };
 

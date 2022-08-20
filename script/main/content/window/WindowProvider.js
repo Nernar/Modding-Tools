@@ -1,3 +1,8 @@
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
+
 const WindowProvider = {};
 
 WindowProvider.BASE_WINDOW_FLAGS = isHorizon ? 256 : 0;
@@ -34,18 +39,17 @@ WindowProvider.getFlagsForWindow = function(window) {
 		if (window.popupId !== undefined) {
 			return window.popupId;
 		}
-		window.popupId = identifier++;
+		window.popupId = ++identifier;
 		return window.popupId;
 	};
 })();
 
 WindowProvider.hasOpenedPopup = function(window) {
-	let id = window.popupId;
-	return Boolean(id == -1 || this.getByPopupId(id));
+	return Boolean(window.popupId == -1 || this.getByPopupId(window.popupId));
 };
 
 WindowProvider.getByPopupId = function(popupId) {
-	if (!popupId || popupId == -1) return null;
+	if (popupId === undefined || popupId == -1) return null;
 	return this.attached[popupId] || null;
 };
 

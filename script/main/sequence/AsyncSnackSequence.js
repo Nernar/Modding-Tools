@@ -64,7 +64,7 @@ AsyncSnackSequence.prototype.create = function(value, active) {
 		snack.pin();
 		SnackSequence.addProcess(this);
 		this.widget = snack.attachMessage(this.startupMessage, this.color, this.queueBackground);
-		if (!snack.isOpened()) snack.show();
+		if (!snack.isOpened()) snack.attach();
 	}
 };
 
@@ -266,7 +266,7 @@ AsyncStackedSnackSequence.prototype.create = function(value, active) {
 		}
 		this.widget = snack.attachMessage(this.creationMessage,
 			this.creationColor, this.queueBackground);
-		snack.show();
+		snack.attach();
 		this.snack = snack;
 		SnackSequence.addProcess(this);
 	}
@@ -287,7 +287,7 @@ AsyncStackedSnackSequence.prototype.update = function(progress, index) {
 			stack.splice(i, 1);
 			i--;
 		}
-		snack.show();
+		snack.attach();
 	}
 };
 
@@ -308,7 +308,7 @@ AsyncStackedSnackSequence.prototype.cancel = function(error) {
 		this.update(this.index / this.count * 100, this.index);
 		this.widget = snack.attachMessage(this.getCancellationHint(error),
 			this.interruptColor, this.getCancellationBackground(error));
-		snack.show();
+		snack.attach();
 	}
 	this.handleCompletion();
 	Sequence.prototype.cancel.apply(this, arguments);
@@ -338,7 +338,7 @@ AsyncStackedSnackSequence.prototype.complete = function(active) {
 		}
 		this.widget = snack.attachMessage(this.getCompletionHint(active),
 			this.completionColor, this.getCompletionBackground(active));
-		snack.show();
+		snack.attach();
 	}
 	this.handleCompletion();
 };

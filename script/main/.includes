@@ -2,12 +2,14 @@ header.js
 translation.js
 
 polyfill/Object.js
+polyfill/String.js
 
 utils/object.js
 utils/math.js
 utils/wrapping.js
 utils/drawable.js
 utils/storage.js
+utils/stringifyJson.js
 
 storage/Dirs.js
 storage/Files.js
@@ -21,6 +23,8 @@ content/fragment/FrameFragment.js
 content/fragment/ScrollFragment.js
 content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
+content/adapter/ListHolderAdapter.js
+content/adapter/FilterListHolderAdapter.js
 
 content/WindowProxy.js
 content/Frame.js
@@ -55,6 +59,7 @@ layout/fragment/ExplanatoryFragment.js
 layout/fragment/ThinButtonFragment.js
 layout/fragment/SolidButtonFragment.js
 layout/fragment/PropertyInputFragment.js
+layout/fragment/AutoCompleteInputFragment.js
 layout/fragment/SliderFragment.js
 layout/fragment/CounterFragment.js
 layout/fragment/AxisGroupFragment.js
@@ -66,6 +71,7 @@ tool/SidebarTool.js
 tool/ProjectTool.js
 tool/EditorTool.js
 
+project/Worker.js
 project/Project.js
 project/ProjectProvider.js
 project/ScriptConverter.js
@@ -87,6 +93,10 @@ tools/testing.js
 algorithm/config.js
 algorithm/auxiliary.js
 algorithm/interaction.js
+algorithm/keyboard.js
 algorithm/launcher.js
 
+integration/launcher.js
 integration/shared.js
+
+auxiliary/.

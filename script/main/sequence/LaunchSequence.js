@@ -2,7 +2,7 @@ const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
 		if (REVISION.startsWith("develop") || isFirstLaunch()) {
-			if (!REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
+			if (REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
 			}
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
@@ -16,7 +16,7 @@ const LaunchSequence = new LogotypeSequence({
 		index = LogotypeSequence.prototype.process.apply(this, arguments);
 		if (index == 1) {
 			updateSettings();
-			if (!REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
+			if (REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
 			}
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
@@ -28,13 +28,16 @@ const LaunchSequence = new LogotypeSequence({
 			typefaceJetBrains = AssetFactory.createFont("jetBrainsMono");
 			registerAdditionalInformation();
 		} else if (index == 3) {
-			tryout(function() {
+			try {
 				if (isInstant) {
 					Callback.invokeCallback("Instant:ModdingTools", API);
 				} else {
 					Callback.invokeCallback("ModdingTools", API);
 				}
-			});
+			} catch (e) {
+				Logger.Log("ModdingTools: Modules initialization aborted due to Callback.invoke", "ERROR");
+				reportError(e);
+			}
 		}
 		return index;
 	},
@@ -55,9 +58,13 @@ const LaunchSequence = new LogotypeSequence({
 		if (firstLaunchTutorial && isFirstLaunch()) {
 			TutorialSequence.Welcome.execute();
 		} else {
-			tryoutSafety(function() {
+			try {
 				prepareEnvironmentIfNeeded();
-			});
+			} catch (e) {
+				if (REVISION.indexOf("develop") != -1) {
+					reportError(e);
+				}
+			}
 			attachProjectTool(undefined, function() {
 				if (showHint.launchStacked !== undefined) {
 					showHint.unstackLaunch();

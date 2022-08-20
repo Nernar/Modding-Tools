@@ -15,11 +15,11 @@ Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";
 
 if (isHorizon) {
 	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + getContext().getPackageName() + "/";
-	Dirs.MOD = tryout(function() {
-		return __modpack__.getDirectoryOfType("MODS");
-	}, function(e) {
-		return __packdir__ + "innercore/mods/";
-	});
+	try {
+		Dirs.MOD = __modpack__.getDirectoryOfType("MODS");
+	} catch (e) {
+		Dirs.MOD = __packdir__ + "innercore/mods/";
+	}
 	Dirs.WORLD = __packdir__ + "worlds/";
 	Dirs.OPTION = Dirs.EXTERNAL + "games/horizon/minecraftpe/options.txt";
 	Dirs.RESOURCE = __packdir__ + "assets/resource_packs/vanilla/";

@@ -79,5 +79,5 @@ return function() {
 	frame.addElementFragment(groupDelta);
 	
 	unique.setFragment(frame);
-	unique.show();
+	unique.attach();
 };

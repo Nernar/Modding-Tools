@@ -20,7 +20,7 @@ const showHint = function(hint, color, reawait) {
 			window.removeFirstStacked();
 		}
 		window.addMessage(hint, color, reawait);
-		if (!window.isOpened()) window.show();
+		if (!window.isOpened()) window.attach();
 	});
 };
 

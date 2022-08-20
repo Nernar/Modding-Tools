@@ -57,7 +57,7 @@ Project.prototype.callAutosave = function() {
 		this.updateCurrentWorker();
 		return;
 	}
-	tryout.call(this, function() {
+	try {
 		let scope = this;
 		this.isAutosaving = true;
 		this.updateCurrentWorker();
@@ -66,16 +66,16 @@ Project.prototype.callAutosave = function() {
 			function(result) {
 				delete scope.isAutosaving;
 			});
-	}, function(e) {
+	} catch (e) {
 		reportError(e);
 		delete this.isAutosaving;
-	});
+	}
 };
 
 Project.prototype.getProjectTime = function() {
 	let time = new Date(this.time);
 	if (!this.time) {
-		return translate("Autosave %s", random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER));
+		return translate("Autosave %s", random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER - 1));
 	}
 	return monthToName(time.getMonth()) + " " + time.getDate() + ", " + time.getFullYear() + " " +
 		(time.getHours() >= 10 ? time.getHours() : "0" + time.getHours()) + "-" +

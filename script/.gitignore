@@ -1,6 +1,7 @@
 # Environment files
 /main.js
 /runtime.js
+/main/auxiliary/
 
 # Enstablized source
 /adaptive/bridge.js

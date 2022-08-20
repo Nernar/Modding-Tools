@@ -52,12 +52,10 @@ AdditionalMessage.prototype.getCondition = function() {
 };
 
 AdditionalMessage.prototype.setCondition = function(condition) {
-	if (!condition instanceof Function) {
+	if (typeof condition != "function") {
 		MCSystem.throwException("ModdingTools: AdditionalMessage.setCondition can take functions only");
 	}
-	this.condition = function() {
-		return tryout.call(this, condition);
-	};
+	this.condition = condition;
 };
 
 AdditionalMessage.prototype.tryToDisplay = function() {
@@ -89,11 +87,7 @@ AdditionalClickableMessage.prototype.setAction = function(action) {
 	if (!action instanceof Function) {
 		MCSystem.throwException("ModdingTools: AdditionalClickableMessage.setAction only can take functions");
 	}
-	this.action = function(message) {
-		tryout.call(this, function() {
-			action(message);
-		});
-	};
+	this.action = action;
 };
 
 const AdditionalMessageFactory = {};
@@ -162,6 +156,11 @@ AdditionalMessageFactory.randomize = function(limit) {
 	}
 	return randomized;
 };
+
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
 
 AdditionalMessageFactory.Session = function(count, limit) {
 	if (count !== undefined) this.setCount(count);
@@ -245,7 +244,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("ModdingTools: impossible to attach session to null or undefined");
+		MCSystem.throwException("ModdingTools: Aborted attach AdditionalMessageFactory session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

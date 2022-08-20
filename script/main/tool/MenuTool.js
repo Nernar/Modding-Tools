@@ -14,6 +14,19 @@ MenuTool.prototype.reset = function() {
 			tool.onMenuClick.apply(tool, args);
 		}
 	};
+	let self = this;
+	descriptor.elements = [{
+		type: "header"
+	}, {
+		type: "message",
+		icon: "menuProjectLeave",
+		message: translate("Dev Editor") + ": " + translate("Leave"),
+		click: function() {
+			attachProjectTool(undefined, function() {
+				self.deattach();
+			});
+		}
+	}];
 	descriptor.closeable = false;
 	this.menuDescriptor = descriptor;
 };
@@ -55,7 +68,7 @@ MenuTool.prototype.hide = function() {
 	let menu = this.getMenuWindow();
 	if (menu == null) return;
 	InteractionTool.prototype.hide.apply(this, arguments);
-	menu.hide();
+	menu.dismiss();
 };
 
 MenuTool.prototype.menu = function() {
@@ -64,9 +77,9 @@ MenuTool.prototype.menu = function() {
 	let control = this.getControlWindow();
 	if (control == null) return;
 	this.state = MenuTool.State.CONTROLLING;
-	control.hide();
+	control.dismiss();
 	this.hideInteraction();
-	menu.show();
+	menu.attach();
 };
 
 MenuTool.prototype.isControlling = function() {
@@ -84,21 +97,21 @@ MenuTool.prototype.onMenuClick = function(menu) {
 MenuTool.prototype.control = function() {
 	let menu = this.getMenuWindow();
 	if (menu == null) return;
-	menu.hide();
+	menu.dismiss();
 	InteractionTool.prototype.control.apply(this, arguments);
 };
 
 MenuTool.prototype.collapse = function() {
 	let menu = this.getMenuWindow();
 	if (menu == null) return;
-	menu.hide();
+	menu.dismiss();
 	InteractionTool.prototype.collapse.apply(this, arguments);
 };
 
 MenuTool.prototype.queue = function(sequence) {
 	let menu = this.getMenuWindow();
 	if (menu == null) return;
-	menu.hide();
+	menu.dismiss();
 	InteractionTool.prototype.queue.apply(this, arguments);
 };
 

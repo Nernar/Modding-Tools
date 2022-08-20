@@ -163,13 +163,28 @@ LayoutFragment.prototype.addCounter = function(value, change, modifiers, modifie
 	return fragment;
 };
 
-LayoutFragment.prototype.addPropertyInput = function(text, hint) {
+LayoutFragment.prototype.addPropertyInput = function(hint, text) {
 	let fragment = new PropertyInputFragment();
+	if (hint !== undefined) {
+		fragment.setHint(hint);
+	}
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addAutoCompleteInput = function(hint, text, adapter) {
+	let fragment = new AutoCompleteInputFragment();
 	if (hint !== undefined) {
 		fragment.setHint(hint);
+	}
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	if (adapter !== undefined) {
+		fragment.setAdapter(adapter);
 	}
 	this.addElementFragment(fragment);
 	return fragment;

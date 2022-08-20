@@ -6,7 +6,7 @@ const updateAndReattach = function() {
 		snack.setMaximumStacked(5);
 		snack.setConsoleMode(true);
 		snack.setStackable(true);
-		snack.show();
+		snack.attach();
 	});
 };
 

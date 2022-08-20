@@ -608,7 +608,7 @@ let reportTrace = function(error) {
 		return;
 	}
 	if (error instanceof java.lang.Object) {
-		MCSystem.throwException("Stacktrace: unsupported report trace type: " + error);
+		MCSystem.throwException("" + error);
 	}
 	if (reportTrace.isReporting) {
 		if (!Array.isArray(reportTrace.handled)) {

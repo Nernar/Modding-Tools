@@ -17,11 +17,12 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-27.06.2022-0";
+const REVISION = "develop-alpha-0.4-19.08.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
+const API_VERSION = parseFloat(REVISION.split("-")[2]);
 
 // Configurable: autosave
 let autosave = true;
@@ -66,14 +67,6 @@ if (this.isInstant === undefined) {
 }
 
 IMPORT("Retention");
-
-const tryoutSafety = function(action, report, basic) {
-	return tryout.call(this, action, function(e) {
-		REVISION.startsWith("develop") && reportError(e);
-		if (typeof report == "function") return report.apply(this, arguments);
-	}, report !== undefined && typeof report != "function" ? report : basic);
-};
-
 IMPORT("Stacktrace");
 
 const prepareDebugInfo = function() {
@@ -129,7 +122,7 @@ toComplexUnitSp = function(value) {
 
 IMPORT("Drawable");
 
-const INNERCORE_PACKAGE = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
+const InnerCorePackages = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
 IMPORT("Action");
 IMPORT("Sequence");
@@ -149,8 +142,8 @@ $.importClass(android.widget.ImageView);
 $.importClass(android.widget.LinearLayout);
 $.importClass(android.widget.ListView);
 $.importClass(java.util.concurrent.TimeUnit);
-$.importClass(INNERCORE_PACKAGE.utils.FileTools);
-$.importClass(INNERCORE_PACKAGE.api.runtime.LevelInfo);
+$.importClass(InnerCorePackages.utils.FileTools);
+$.importClass(InnerCorePackages.api.runtime.LevelInfo);
 
 const isCoreEngineLoaded = function() {
 	return CoreEngine.CORE_ENGINE_API_LEVEL != 0;

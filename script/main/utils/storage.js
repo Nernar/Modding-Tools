@@ -11,78 +11,76 @@ const stringifyObject = function(obj, identate, callback) {
 		if (callback.onUpdate) {
 			callback.onUpdate();
 		}
-		return tryout(function() {
-			if (obj === null) {
-				return "null";
-			}
-			switch (typeof obj) {
-				case "undefined":
-					return "undefined";
-				case "string":
-					obj = new java.lang.String(obj);
-					obj = obj.replaceAll("\"", "\\\\\"");
-					obj = obj.replaceAll("\t", "\\\\t");
-					obj = obj.replaceAll("\n", "\\\\n");
-					return "\"" + obj + "\"";
-				case "number":
-					return String(preround(obj));
-				case "boolean":
-					return String(obj);
-				case "object":
-					if (Array.isArray(obj)) {
-						let array = [],
-							tabbed = false;
-						for (let i = 0; i < obj.length; i++) {
-							let result = recursiveStringify(obj[i], tabs);
-							if (result && result.length > 0) {
-								if (identate) {
-									if (result.indexOf("\n") != -1 || result.length > 48) {
-										if (!tabbed) {
-											tabbed = true;
-											tabs += "\t";
-										}
-										array.push(result + (i < obj.length ? "\n" + tabs : String()));
-									} else if (i != 0) {
-										array.push(" " + result);
-									} else array.push(result);
+		if (obj === null) {
+			return "null";
+		}
+		switch (typeof obj) {
+			case "undefined":
+				return "undefined";
+			case "string":
+				obj = new java.lang.String(obj);
+				obj = obj.replaceAll("\"", "\\\\\"");
+				obj = obj.replaceAll("\t", "\\\\t");
+				obj = obj.replaceAll("\n", "\\\\n");
+				return "\"" + obj + "\"";
+			case "number":
+				return String(preround(obj));
+			case "boolean":
+				return String(obj);
+			case "object":
+				if (Array.isArray(obj)) {
+					let array = [],
+						tabbed = false;
+					for (let i = 0; i < obj.length; i++) {
+						let result = recursiveStringify(obj[i], tabs);
+						if (result && result.length > 0) {
+							if (identate) {
+								if (result.indexOf("\n") != -1 || result.length > 48) {
+									if (!tabbed) {
+										tabbed = true;
+										tabs += "\t";
+									}
+									array.push(result + (i < obj.length ? "\n" + tabs : String()));
+								} else if (i != 0) {
+									array.push(" " + result);
 								} else array.push(result);
-							}
+							} else array.push(result);
 						}
-						return "[" + array.join(",") + "]";
-					} else {
-						let array = [],
-							tabbed = false,
-							last, count = 0;
-						for (let counted in obj) {
-							last = counted;
-							count++;
-						}
-						for (let item in obj) {
-							let result = recursiveStringify(obj[item], tabs);
-							if (result && result.length > 0) {
-								if (identate) {
-									if (result.indexOf("\n") != -1 || result.length > 8) {
-										if (!tabbed) {
-											tabbed = true;
-											tabs += "\t";
-										}
-										array.push(item + ": " + result + (item != last ? "\n" + tabs : String()));
-									} else if (item != 0) {
-										array.push(" " + item + ": " + result);
-									} else array.push(result);
-								} else array.push("\"" + item + "\":" + result);
-							}
-						}
-						let joined = array.join(",");
-						return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
-							(identate ? tabbed ? tabs.replace("\t", String()) + "\n}" : " }" : "}");
 					}
-					default:
-						if (callback.onPassed) {
-							callback.onPassed(obj, typeof obj);
+					return "[" + array.join(",") + "]";
+				} else {
+					let array = [],
+						tabbed = false,
+						last, count = 0;
+					for (let counted in obj) {
+						last = counted;
+						count++;
+					}
+					for (let item in obj) {
+						let result = recursiveStringify(obj[item], tabs);
+						if (result && result.length > 0) {
+							if (identate) {
+								if (result.indexOf("\n") != -1 || result.length > 8) {
+									if (!tabbed) {
+										tabbed = true;
+										tabs += "\t";
+									}
+									array.push(item + ": " + result + (item != last ? "\n" + tabs : String()));
+								} else if (item != 0) {
+									array.push(" " + item + ": " + result);
+								} else array.push(result);
+							} else array.push("\"" + item + "\":" + result);
 						}
-			}
-		});
+					}
+					let joined = array.join(",");
+					return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
+						(identate ? tabbed ? tabs.replace("\t", String()) + "\n}" : " }" : "}");
+				}
+			default:
+				if (callback.onPassed) {
+					callback.onPassed(obj, typeof obj);
+				}
+		}
 	};
 	return recursiveStringify(obj, String());
 };
@@ -103,13 +101,20 @@ const exportProject = function(object, isAutosave, path, action) {
 };
 
 const compileData = function(text, type, additional) {
-	if (type == "string") text = "\"" + text + "\"";
+	if (type == "string") {
+		text = new java.lang.String(text);
+		text = text.replaceAll("\"", "\\\\\"");
+		text = text.replaceAll("\t", "\\\\t");
+		text = text.replaceAll("\n", "\\\\n");
+		text = "\"" + text + "\"";
+	}
 	let code = "(function() { return " + text + "; })();",
 		scope = runAtScope(code, additional, "compile.js");
 	return scope.error ? scope.error : !type ? scope.result :
-		type == "string" ? String(scope.result) :
-		type == "number" ? parseInt(scope.result) :
-		type == "float" ? parseFloat(scope.result) :
+		type == "boolean" ? !!scope.result :
+		type == "string" ? "" + scope.result :
+		type == "number" ? parseFloat(scope.result) :
+		type == "integer" ? parseInt(scope.result) :
 		type == "object" ? scope.result : null;
 };
 
@@ -130,12 +135,15 @@ const importProject = function(path, action) {
 	readFile(path, true, function(bytes) {
 		let result = decompileFromProduce(bytes),
 			data = compileData(result, "object");
-		if (data && !(data.lineNumber === undefined)) {
+		if (data && data.lineNumber === undefined) {
 			handle(function() {
 				action && (data.length !== undefined ?
 					action(data) : action([data]));
 			});
 		} else {
+			if (REVISION.startsWith("develop")) {
+				reportError(data);
+			}
 			confirm(translate("Impossible open file"),
 				translate("Looks like, project is damaged. Check project and following exception information:") +
 				" " + (data ? formatExceptionReport(data) : translate("empty project.")) + "\n\n" +
@@ -146,6 +154,11 @@ const importProject = function(path, action) {
 		}
 	});
 };
+
+/**
+ * DEPRECATED SECTION
+ * All this will be removed as soon as possible.
+ */
 
 const importScript = function(path, action) {
 	readFile(path, false, function(text) {

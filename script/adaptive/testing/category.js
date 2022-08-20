@@ -18,7 +18,7 @@ return function() {
 			DEBUG_TEST_TOOL.menu();
 		});
 		attachCategoriedIcons(control);
-		control.show();
+		control.attach();
 	}, function(e) {
 		traceOrReport(e);
 		DEBUG_TEST_TOOL.menu();

@@ -1,15 +1,16 @@
 const assign = function(target, source) {
 	if (source === null || source === undefined) {
-		if (target instanceof Object || target instanceof Function) {
-			source = {};
-		} else if (target instanceof Array) {
-			source = [];
+		source = target;
+		target = null;
+	}
+	if (target === null || target === undefined) {
+		if (source instanceof Object || source instanceof Function) {
+			target = {};
+		} else if (source instanceof Array) {
+			target = [];
 		}
 	}
-	if (source instanceof Object || source instanceof Array || source instanceof Function) {
-		return Object.assign(source, target);
-	}
-	return source;
+	return Object.assign(target, source);
 };
 
 const merge = function(target, source) {
@@ -71,7 +72,7 @@ const isEmpty = function(obj) {
 };
 
 const calloutOrParse = function(scope, value, args) {
-	return tryout(function() {
+	try {
 		if (typeof value == "function") {
 			if (args === undefined) {
 				args = [];
@@ -81,11 +82,18 @@ const calloutOrParse = function(scope, value, args) {
 			return value.apply(scope, args);
 		}
 		return value;
-	}, null);
+	} catch (e) {
+		if (REVISION.indexOf("develop") != -1) {
+			reportError(e);
+		} else {
+			log("ModdingTools: calloutOrParse: " + e);
+		}
+	}
+	return null;
 };
 
 const parseCallback = function(scope, value, args) {
-	return tryout(function() {
+	try {
 		if (args === undefined) {
 			args = [];
 		} else if (!Array.isArray(args)) {
@@ -98,5 +106,12 @@ const parseCallback = function(scope, value, args) {
 				return value.apply(scope, argArray);
 			};
 		}
-	}, null);
+	} catch (e) {
+		if (REVISION.indexOf("develop") != -1) {
+			reportError(e);
+		} else {
+			log("ModdingTools: parseCallback: " + e);
+		}
+	}
+	return null;
 };

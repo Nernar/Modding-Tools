@@ -108,6 +108,22 @@ Translation.addTranslation("Console", {
 	ru: "Консоль",
 	en: "Console"
 });
+Translation.addTranslation("Manager", {
+	ru: "Проводник",
+	en: "Manager"
+});
+Translation.addTranslation("Pack", {
+	ru: "Иконки",
+	en: "Pack"
+});
+Translation.addTranslation("Locale", {
+	ru: "Переводы",
+	en: "Locale"
+});
+Translation.addTranslation("Compile", {
+	ru: "Скрипты",
+	en: "Compile"
+});
 
 // Panels & basics
 Translation.addTranslation("Go", {
@@ -524,7 +540,7 @@ Translation.addTranslation("Nothing to remove", {
 Translation.addTranslation("Not developed yet", {
 	ru: "Пока не реализовано",
 	en: "Not developed yet"
-}); // DEPRECATED
+});
 Translation.addTranslation("Worker has been removed", {
 	ru: "Редактор был удален",
 	en: "Worker has been removed"
@@ -610,11 +626,11 @@ Translation.addTranslation("Preparing", {
 Translation.addTranslation("Stringify", {
 	ru: "Преобразование",
 	en: "Stringify"
-}); // DEPRECATED
+});
 Translation.addTranslation("Indexating", {
 	ru: "Индексация",
 	en: "Indexating"
-}); // DEPRECATED
+});
 Translation.addTranslation("Compilation", {
 	ru: "Компиляция",
 	en: "Compilation"
@@ -834,7 +850,7 @@ Translation.addTranslation("Modules", {
 Translation.addTranslation("Module will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
 	ru: "Модуль будет удален со всеми прилежащими данными, пожалуйста убедитесь в сохранности своих файлов.",
 	en: "Module will be uninstalled with all content inside, please notice that's you're data may be deleted."
-});
+}); // DEPRECATED
 Translation.addTranslation("Restart game for better stability", {
 	ru: "Перезапустите игру для наилучшей стабильности",
 	en: "Restart game for better stability"
@@ -879,6 +895,26 @@ Translation.addTranslation("Modules isn't supported and disabled", {
 	ru: "Модули не поддерживаются и отключены",
 	en: "Modules isn't supported and disabled"
 }); // DEPRECATED
+Translation.addTranslation("Unreachable type %s", {
+	ru: "Недостижимый тип %s",
+	en: "Unreachable type %s"
+});
+Translation.addTranslation("Not found %s source", {
+	ru: "Не найден исходник %s",
+	en: "Not found %s source"
+});
+Translation.addTranslation("Unsupported module", {
+	ru: "Неподдерживаемый модуль"
+});
+Translation.addTranslation("not installed or loaded", {
+	ru: "не загружен или установлен"
+});
+Translation.addTranslation("Entry removal", {
+	ru: "Удаление элемента"
+});
+Translation.addTranslation("Entry contents will be removed.", {
+	ru: "Контент элемента будет удален."
+});
 
 // Fails
 Translation.addTranslation("Something went wrong", {
@@ -889,6 +925,10 @@ Translation.addTranslation("Non-assigment", {
 	ru: "Не является деревом",
 	en: "Non-assigment"
 }); // DEPRECATED
+Translation.addTranslation("Bridge might be reloaded after restart", {
+	ru: "Мост будет перезагружен после рестарта",
+	en: "Bridge might be reloaded after restart"
+});
 Translation.addTranslation("Impossible find opened editor at %s position", {
 	ru: "Не удается найти открытый редактор под индексом %s",
 	en: "Impossible find opened editor at %s position"
@@ -900,15 +940,15 @@ Translation.addTranslation("Compilation failed", {
 Translation.addTranslation("An error occurred while executing modification.", {
 	ru: "Произошла ошибка во время работы модификации.",
 	en: "An error occurred while executing modification."
-});
+}); // DEPRECATED
 Translation.addTranslation("If your developing process is affected, try export all non-saved data.", {
 	ru: "Если процесс разработки пострадал, попробуйте сохранить все несохраненные данные.",
 	en: "If your developing process is affected, try export all non-saved data."
-});
+}); // DEPRECATED
 Translation.addTranslation("Send a screenshot of error to our group or save error in internal storage.", {
 	ru: "Отправьте скриншот ошибки в нашу группу или сохраните ошибку во внутреннее хранилище.",
 	en: "Send a screenshot of error to our group or save error in internal storage."
-});
+}); // DEPRECATED
 Translation.addTranslation("Looks like, project is damaged. Check project and following exception information:", {
 	ru: "По всей видимости, проект поврежден. Проверьте проект и следующую информацию об ошибке:",
 	en: "Looks like, project is damaged. Check project and following exception information:"
@@ -962,10 +1002,26 @@ Translation.addTranslation("Checkout reports below to see more details.", {
 	en: "Checkout reports below to see more details."
 });
 
-// Deprecated tutorial sequence
+// Project manipulation
 Translation.addTranslation("Howdy and welcome to Dev Editor!", {
 	ru: "Приветствую и добро пожаловать в Dev Editor!",
 	en: "Howdy and welcome to Dev Editor!"
+});
+Translation.addTranslation("Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
+	en: "Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.",
+	ru: "Интеграция будет удалена вместе со всем контентом внутри, пожалуйста, учтите, что ваши данные могут быть утеряны."
+});
+Translation.addTranslation("Do you wish to continue?", {
+	en: "Do you wish to continue?",
+	ru: "Вы действительно хотите продолжить?"
+});
+Translation.addTranslation("Unfortunately, you didn't install any module to start something bewitching.", {
+	en: "Unfortunately, you didn't install any module to start something bewitching.",
+	ru: "К сожалению, вы не установили ни одного модуля чтобы начать что-то грандиозное."
+});
+Translation.addTranslation("Come back here when you find something worthwhile in Mod Browser.", {
+	en: "Come back here when you find something worthwhile in Mod Browser.",
+	ru: "Возвращайтесь сюда как только найдете что нибудь стоящее в браузере модов."
 });
 Translation.addTranslation("Tool from developers to developers.", {
 	ru: "Инструмент от разработчиков разработчикам.",
@@ -975,141 +1031,9 @@ Translation.addTranslation("Let's see, what's we're prepared here.", {
 	ru: "Давайте посмотрим, что мы приготовили здесь.",
 	en: "Let's see, what's we're prepared here."
 });
-Translation.addTranslation("That button is key to start process.", {
-	ru: "Эта кнопка - ключ к началу процесса.",
-	en: "That button is key to start process."
-});
-Translation.addTranslation("It's contains many tools inside.", {
-	ru: "Она содержит множество инструментов внутри.",
-	en: "It's contains many tools inside."
-});
-Translation.addTranslation("Let's click it and look to abilities.", {
-	ru: "Давайте нажмем и посмотрим на возможности.",
-	en: "Let's click it and look to abilities."
-});
-Translation.addTranslation("That's menu created to control content.", {
-	ru: "Это меню создано для работы с инструментами.",
-	en: "That's menu created to control content."
-});
-Translation.addTranslation("Your spot between code and interface.", {
-	ru: "Ваш мост между кодом и интерфейсом.",
-	en: "Your spot between code and interface."
-});
-Translation.addTranslation("Editors section exists for adding workers.", {
-	ru: "Секция с редакторами существует для добавления обработчиков.",
-	en: "Editors section exists for adding workers."
-});
-Translation.addTranslation("You may create, remove, load and export them.", {
-	ru: "Вы можете создавать, удалять, загружать и сохранять их.",
-	en: "You may create, remove, load and export them."
-});
-Translation.addTranslation("Horewer, it's not all exiting abilities.", {
-	ru: "Однако, это не все существующие возможности.",
-	en: "Horewer, it's not all exiting abilities."
-});
-Translation.addTranslation("Dev Editor handles content inside projects.", {
-	ru: "Dev Editor обрабатывает контент внутри проектов.",
-	en: "Dev Editor handles content inside projects."
-});
-Translation.addTranslation("Project filled with created editors.", {
-	ru: "Проекты наполнены созданными редакторами.",
-	en: "Project filled with created editors."
-});
-Translation.addTranslation("And editor is adding by us for this time.", {
-	ru: "И редактор добавляется нами на этот раз.",
-	en: "And editor is adding by us for this time."
-});
-Translation.addTranslation("But that's ability beholds to you.", {
-	ru: "Но эта возможность пренадлежит Вам.",
-	en: "But that's ability beholds to you."
-});
-Translation.addTranslation("Well, with button we're have there sidebar.", {
-	ru: "Что ж, вместе с кнопкой мы поимели панель навигации.",
-	en: "Well, with button we're have there sidebar."
-});
-Translation.addTranslation("Currently it collapsed, so we're must open it.", {
-	ru: "Сейчас она свернута, так что мы откроем ее.",
-	en: "Currently it collapsed, so we're must open it."
-});
-Translation.addTranslation("Sidebar designed to pleasant working with environment.", {
-	ru: "Панель навигации создана для приятной работы с окружением.",
-	en: "Sidebar designed to pleasant working with environment."
-});
-Translation.addTranslation("We're mean, most of editors handles in-world.", {
-	ru: "Мы имеем ввиду, многие редакторы оперируют миром.",
-	en: "We're mean, most of editors handles in-world."
-});
-Translation.addTranslation("So, that menu requires smallest space on screen.", {
-	ru: "Так что, это меню не требует много места на экране.",
-	en: "So, that menu requires smallest space on screen."
-});
-Translation.addTranslation("This fact gives your ability to interact with world.", {
-	ru: "Этот факт дает Вам возможность взаимодействовать с миром.",
-	en: "This fact gives your ability to interact with world."
-});
-Translation.addTranslation("Currently selected tab is main for most editors.", {
-	ru: "Текущая выбранная вкладка - основная для многих редакторов.",
-	en: "Currently selected tab is main for most editors."
-});
-Translation.addTranslation("There's collected identifiers, variations, etc.", {
-	ru: "Здесь собраны идентификаторы, вариации и т.п.",
-	en: "There's collected identifiers, variations, etc."
-});
-Translation.addTranslation("You may have a logical question:", {
-	ru: "Возможно, может возникнуть резонный вопрос:",
-	en: "You may have a logical question:"
-});
-Translation.addTranslation("how to recognize what hides behind every icon?", {
-	ru: "как понять, что скрывается за той или иной иконкой?",
-	en: "how to recognize what hides behind every icon?"
-});
-Translation.addTranslation("Every sidebar filled with holdable elements.", {
-	ru: "Каждая панель навигации наполнена удерживаемыми элементами.",
-	en: "Every sidebar filled with holdable elements."
-});
-Translation.addTranslation("Let's try hold any element right now.", {
-	ru: "Давайте попробуем удержать любой элемент прямо сейчас.",
-	en: "Let's try hold any element right now."
-});
-Translation.addTranslation("You may checkout that self later inside editors.", {
-	ru: "Вы сможете проверить это сами чуть позже в редакторах.",
-	en: "You may checkout that self later inside editors."
-});
-Translation.addTranslation("Every tab may be holded too.", {
-	ru: "Каждую вкладку также можно удерживать.",
-	en: "Every tab may be holded too."
-});
-Translation.addTranslation("So, there's must be element description.", {
-	ru: "Вообще, здесь должно быть описание элемента.",
-	en: "So, there's must be element description."
-});
-Translation.addTranslation("But we're just learning and there's nothing.", {
-	ru: "Но пока мы только учимся и здесь ничего нет.",
-	en: "But we're just learning and there's nothing."
-});
 Translation.addTranslation("You're sure want to review basics tutorial?", {
 	ru: "Вы уверены, что хотите пройти базовое обучение еще раз?",
 	en: "You're sure want to review basics tutorial?"
-});
-Translation.addTranslation("You must click it to open control menu.", {
-	ru: "Вы должны нажать на нее для открытия меню.",
-	en: "You must click it to open control menu."
-});
-Translation.addTranslation("And editor may be added by your wish.", {
-	ru: "И редактор может быть добавлен по желанию.",
-	en: "And editor may be added by your wish."
-});
-Translation.addTranslation("It will be helpful to add define information.", {
-	ru: "Это будет полезно для добавления информации о объявлении.",
-	en: "It will be helpful to add define information."
-});
-Translation.addTranslation("Let's change sidebar tab to second.", {
-	ru: "Давайте изменим вкладку панели навигации на вторую.",
-	en: "Let's change sidebar tab to second."
-});
-Translation.addTranslation("Every element may be holded too.", {
-	ru: "Каждый элемент также можно удерживать.",
-	en: "Every element may be holded too."
 });
 
 // Deprecated translations
@@ -1141,10 +1065,10 @@ Translation.addTranslation("Couldn't connect to validate right now", {
 	ru: "Не удается подключиться к серверам прямо сейчас",
 	en: "Couldn't connect to validate right now"
 }); // NO-TRANSLATE
-Translation.addTranslation("", {
+Translation.addTranslation("Render rotated at %s angle", {
 	ru: "Модель повернута на %s градусов",
 	en: "Render rotated at %s angle"
-});
+}); // DEPRECATED
 Translation.addTranslation("Thanks for attentiveness!", {
 	ru: "Спасибо за внимательность!",
 	en: "Thanks for attentiveness!"
@@ -1189,3 +1113,36 @@ Translation.addTranslation("Ignore", {
 // Non-organized content
 
 // Not localized content will be appear here
+Translation.addTranslation("That button is key to start process.", {});
+Translation.addTranslation("It's contains many tools inside.", {});
+Translation.addTranslation("Let's click it and look to abilities.", {});
+Translation.addTranslation("You must click it to open control menu.", {});
+Translation.addTranslation("That's menu created to control content.", {});
+Translation.addTranslation("Your spot between code and interface.", {});
+Translation.addTranslation("Editors section exists for adding workers.", {});
+Translation.addTranslation("You may create, remove, load and export them.", {});
+Translation.addTranslation("Horewer, it's not all exiting abilities.", {});
+Translation.addTranslation("Dev Editor handles content inside projects.", {});
+Translation.addTranslation("Project filled with created editors.", {});
+Translation.addTranslation("And editor is adding by us for this time.", {});
+Translation.addTranslation("But that's ability beholds to you.", {});
+Translation.addTranslation("And editor may be added by your wish.", {});
+Translation.addTranslation("Well, with button we're have there sidebar.", {});
+Translation.addTranslation("Currently it collapsed, so we're must open it.", {});
+Translation.addTranslation("Sidebar designed to pleasant working with environment.", {});
+Translation.addTranslation("We're mean, most of editors handles in-world.", {});
+Translation.addTranslation("So, that menu requires smallest space on screen.", {});
+Translation.addTranslation("This fact gives your ability to interact with world.", {});
+Translation.addTranslation("Currently selected tab is main for most editors.", {});
+Translation.addTranslation("There's collected identifiers, variations, etc.", {});
+Translation.addTranslation("It will be helpful to add define information.", {});
+Translation.addTranslation("Let's change sidebar tab to second.", {});
+Translation.addTranslation("You may have a logical question:", {});
+Translation.addTranslation("how to recognize what hides behind every icon?", {});
+Translation.addTranslation("Every sidebar filled with holdable elements.", {});
+Translation.addTranslation("Let's try hold any element right now.", {});
+Translation.addTranslation("Every element may be holded too.", {});
+Translation.addTranslation("Every tab may be holded too.", {});
+Translation.addTranslation("You may checkout that self later inside editors.", {});
+Translation.addTranslation("So, there's must be element description.", {});
+Translation.addTranslation("But we're just learning and there's nothing.", {});
