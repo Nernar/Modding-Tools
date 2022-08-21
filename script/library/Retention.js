@@ -1,4 +1,15 @@
 /*
+BUILD INFO:
+  dir: Retention
+  target: out/Retention.js
+  files: 2
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2017-2022 Nernar (github.com/nernar)
 
@@ -23,10 +34,15 @@ LIBRARY({
 	shared: true
 });
 
-let launchTime = Date.now();
+
+
+
+// file: integration.js
+
+launchTime = Date.now();
 EXPORT("launchTime", launchTime);
 
-let isHorizon = (function() {
+isHorizon = (function() {
 	let version = MCSystem.getInnerCoreVersion();
 	return parseInt(version.toString()[0]) >= 2;
 })();
@@ -37,7 +53,7 @@ EXPORT("minecraftVersion", (function() {
 	return parseInt(version.toString().split(".")[1]);
 })());
 
-let getContext = function() {
+getContext = function() {
 	return UI.getContext();
 };
 
@@ -48,7 +64,7 @@ EXPORT("getContext", getContext);
  * useful for visualizing and debugging problems.
  * @param {Object} error fallback exception
  */
-let reportError = (function(what) {
+reportError = (function(what) {
 	EXPORT("registerReportAction", function(when) {
 		what = when;
 	});
@@ -354,3 +370,7 @@ EXPORT("vibrate", (function() {
 		return service.vibrate(ms);
 	};
 })());
+
+
+
+

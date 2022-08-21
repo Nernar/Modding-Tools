@@ -1,13 +1,24 @@
 /*
+BUILD INFO:
+  dir: Stacktrace
+  target: out/Stacktrace.js
+  files: 8
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2021-2022 Nernar (github.com/nernar)
-   
+
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-   
+
       http://www.apache.org/licenses/LICENSE-2.0
-   
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,20 +34,336 @@ LIBRARY({
 	shared: true
 });
 
-let launchTime = Date.now();
-let isHorizon = (function() {
+launchTime = Date.now();
+isHorizon = (function() {
 	let version = MCSystem.getInnerCoreVersion();
 	return parseInt(version.toString()[0]) >= 2;
 })();
-let innercorePackage = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
+InnerCorePackages = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
-let addTranslation = function(prefix, who, translation) {
+isValidFile = function(file) {
+	if (file instanceof java.io.File) {
+		return file.isFile();
+	}
+	return false;
+};
+
+
+
+
+// file: translation.js
+
+Translation.addTranslation("Oh nose everything broke", {
+	ru: "Ох нет, все сломалось"
+});
+Translation.addTranslation("Preparing report", {
+	ru: "Подготовка отчета"
+});
+Translation.addTranslation("Milliseconds estimated after launch", {
+	ru: "Миллисекунды, прошедшие с запуска"
+});
+Translation.addTranslation("Defined at", {
+	ru: "Объявлено в"
+});
+Translation.addTranslation("at line", {
+	ru: "на строке"
+});
+Translation.addTranslation("from", {
+	ru: "из"
+});
+Translation.addTranslation("Source may be incorrectly", {
+	ru: "Источник может быть некорректным"
+});
+Translation.addTranslation("Understand", {
+	ru: "Понятно"
+});
+Translation.addTranslation("Leave", {
+	ru: "Выход"
+});
+Translation.addTranslation("Saved as", {
+	ru: "Сохранено как"
+});
+Translation.addTranslation("Wouldn't fetch modification sources", {
+	ru: "Не удалось получить исходники модификации"
+});
+Translation.addTranslation("Couldn't save trace", {
+	ru: "Не удается сохранить сводку"
+});
+
+
+
+
+// file: data/sources.js
+
+getLoadedModList = function() {
+	try {
+		let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
+		let sorted = new java.util.ArrayList();
+		for (let i = 0; i < mods.size(); i++) {
+			let mod = mods.get(i);
+			if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
+				sorted.add(mod.getLegacyModInstance());
+			}
+		}
+		return sorted;
+	} catch (e) {
+		return InnerCorePackages.mod.build.ModLoader.instance.modsList;
+	}
+};
+
+fetchScriptSources = function(mod) {
+	let founded = {};
+	let buildConfig = mod.buildConfig;
+	let sources = buildConfig.sourcesToCompile;
+	for (let i = 0; i < sources.size(); i++) {
+		let source = sources.get(i);
+		founded[source.path] = source.sourceName;
+	}
+	let directory = buildConfig.defaultConfig.libDir;
+	if (directory != null) {
+		let folder = new java.io.File(mod.dir, directory);
+		if (folder.exists() && folder.isDirectory()) {
+			let libraries = folder.listFiles();
+			for (let i = 0; i < libraries.length; i++) {
+				let library = libraries[i].getName();
+				founded[directory + library] = library;
+			}
+		}
+	}
+	return founded;
+};
+
+setupLoadedSources = function(mods) {
+	for (let i = 0; i < mods.size(); i++) {
+		let source = mods.get(i);
+		setupLoadedSources.mods[source] = fetchScriptSources(source);
+		setupLoadedSources.sources[source] = source;
+	}
+};
+
+setupLoadedSources.mods = {};
+setupLoadedSources.sources = {};
+
+getModName = function(id) {
+	if (setupLoadedSources.sources.hasOwnProperty(id)) {
+		let source = setupLoadedSources.sources[id];
+		if (source) {
+			return "" + source.getName();
+		}
+	}
+	return "";
+};
+
+findAvailabledMods = function(name) {
+	let array = [];
+	for (let element in setupLoadedSources.mods) {
+		let mod = getModName(element);
+		if (mod == name) {
+			array.unshift(element);
+		} else if (!name || mod.startsWith(name)) {
+			array.push(element);
+		}
+		let source = setupLoadedSources.sources[element];
+		if (source.dir.endsWith("/" + name + "/")) {
+			array.unshift(element);
+		} else if (source.dir.indexOf("/" + name) != -1) {
+			array.push(element);
+		}
+	}
+	return array;
+};
+
+findRelatedSources = function(name, file) {
+	let sources = findAvailabledMods(name);
+	if (sources.length == 0) {
+		return {};
+	}
+	let related = {};
+	for (let i = 0; i < sources.length; i++) {
+		let mod = sources[i],
+			source = setupLoadedSources.mods[mod];
+		for (let path in source) {
+			let name = source[path];
+			if (name == file) {
+				if (!related.hasOwnProperty(mod)) {
+					related[mod] = [];
+				}
+				related[mod].unshift(path);
+			} else if (name.endsWith(file)) {
+				if (!related.hasOwnProperty(mod)) {
+					related[mod] = [];
+				}
+				related[mod].push(path);
+			}
+		}
+	}
+	return related;
+};
+
+
+
+
+// file: data/parser.js
+
+reformatSpecial = function(element) {
+	element = "" + element;
+	element = element.replace(/\+/g, "\\+");
+	element = element.replace(/\(/g, "\\(");
+	element = element.replace(/\)/g, "\\)");
+	element = element.replace(/\[/g, "\\[");
+	element = element.replace(/\]/g, "\\]");
+	element = element.replace(/\{/g, "\\{");
+	element = element.replace(/\}/g, "\\}");
+	return element.replace(/\./g, "\\.");
+};
+
+requireFormat = function(message) {
+	for (let element in addTranslation.messages) {
+		let exp = reformatSpecial(element);
+		exp = exp.replace(/%s/g, "(.*)");
+		try {
+			let regexp = new RegExp(exp, "m");
+			if (regexp.test(message)) {
+				return {
+					message: "" + element,
+					exec: regexp.exec(message)
+				};
+			}
+		} catch (e) {
+			// Must be detected if regexp fail
+		}
+	}
+	return {
+		message: message
+	};
+};
+
+translateMessage = function(message) {
+	if (typeof message != "string") {
+		message = "" + message;
+	}
+	let format = requireFormat(message);
+	if (addTranslation.messages.hasOwnProperty(format.message)) {
+		message = Translation.translate(format.message);
+		if (format.exec && format.exec.length > 1) {
+			format.exec.shift();
+			try {
+				return java.lang.String.format(message, format.exec);
+			} catch (e) {
+				format.exec.forEach(function(who) {
+					message = message.replace("%s", who);
+				});
+			}
+		}
+	}
+	return message;
+};
+
+resolveTraceSource = function(line) {
+	if (typeof line != "string") {
+		line = "" + line;
+	}
+	let at = line.indexOf("at ");
+	if (at == -1) {
+		return null;
+	}
+	line = line.substring(at + 3);
+	let resolved = {};
+	resolved.trace = line;
+	if (line.endsWith(")")) {
+		let index = line.lastIndexOf("(");
+		resolved.where = line.slice(index + 1, line.length - 1);
+		line = line.substring(0, index - 1);
+	}
+	let semi = line.lastIndexOf(":");
+	if (semi != -1) {
+		resolved.line = line.slice(semi + 1, line.length);
+		line = line.substring(0, semi);
+	}
+	let name = line.indexOf("$");
+	if (name != -1) {
+		resolved.source = line.slice(0, name);
+		line = line.substring(name + 1);
+	}
+	resolved.file = line;
+	return resolved;
+};
+
+sliceMessageWithoutTrace = function(message, line) {
+	if (typeof message != "string") {
+		message = "" + message;
+	}
+	let trace = resolveTraceSource(line);
+	if (trace === null) {
+		return message;
+	}
+	trace = trace.trace.replace(":", "#");
+	let index = message.lastIndexOf(trace);
+	if (index != -1) {
+		return message.slice(0, index - 2);
+	}
+	return message;
+};
+
+retraceToArray = function(trace) {
+	if (trace === null || trace === undefined) {
+		return [];
+	}
+	if (typeof trace != "string") {
+		trace = "" + trace;
+	}
+	return trace.split("\n");
+};
+
+fetchErrorMessage = function(error) {
+	if (error === null) {
+		return "" + error;
+	}
+	if (typeof error == "object") {
+		if (error.hasOwnProperty("message")) {
+			return "" + error.message;
+		}
+		return null;
+	}
+	return "" + error;
+};
+
+fetchErrorName = function(error) {
+	if (error && typeof error == "object") {
+		if (error.name !== undefined) {
+			return "" + error.name;
+		}
+	}
+	return Translation.translate("Oh nose everything broke");
+};
+
+saveOrRewrite = function(path, text) {
+	text = new java.lang.String(text);
+	let file = new java.io.File(__dir__ + ".logging", path + ".trace");
+	file.getParentFile().mkdirs();
+	if (!file.isDirectory()) {
+		file.createNewFile();
+		let stream = new java.io.FileOutputStream(file);
+		stream.write(text.getBytes());
+		stream.close();
+		print(Translation.translate("Saved as") + " " + path);
+		return;
+	}
+	print(Translation.translate("Couldn't save trace"));
+};
+
+
+
+
+// file: stacktrace/addTranslation.js
+
+addTranslation = function(prefix, who, translation) {
 	if (!addTranslation.messages.hasOwnProperty(who)) {
 		Object.defineProperty(addTranslation.messages, who, {
 			enumerable: true
 		});
 	}
-	innercorePackage.api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
+	InnerCorePackages.api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
 };
 
 addTranslation.messages = {};
@@ -325,233 +652,10 @@ addTranslation("ru", "Yield from closing generator", "Задержка с зак
 addTranslation("ru", "%s.prototype.%s method called on null or undefined", "%s.prototype.%s метод вызван на null или undefined");
 addTranslation("ru", "First argument to %s.prototype.%s must not be a regular expression", "Первый аргумент для %s.prototype.%s не должен быть обычным выражением.");
 
-let getLoadedModList = function() {
-	try {
-		let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
-		let sorted = new java.util.ArrayList();
-		for (let i = 0; i < mods.size(); i++) {
-			let mod = mods.get(i);
-			if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
-				sorted.add(mod.getLegacyModInstance());
-			}
-		}
-		return sorted;
-	} catch (e) {
-		return innercorePackage.mod.build.ModLoader.instance.modsList;
-	}
-};
 
-let fetchScriptSources = function(mod) {
-	let founded = {};
-	let buildConfig = mod.buildConfig;
-	let sources = buildConfig.sourcesToCompile;
-	for (let i = 0; i < sources.size(); i++) {
-		let source = sources.get(i);
-		founded[source.path] = source.sourceName;
-	}
-	let directory = buildConfig.defaultConfig.libDir;
-	if (directory != null) {
-		let folder = new java.io.File(mod.dir, directory);
-		if (folder.exists() && folder.isDirectory()) {
-			let libraries = folder.listFiles();
-			for (let i = 0; i < libraries.length; i++) {
-				let library = libraries[i].getName();
-				founded[directory + library] = library;
-			}
-		}
-	}
-	return founded;
-};
 
-let setupLoadedSources = function(mods) {
-	for (let i = 0; i < mods.size(); i++) {
-		let source = mods.get(i);
-		setupLoadedSources.mods[source] = fetchScriptSources(source);
-		setupLoadedSources.sources[source] = source;
-	}
-};
 
-setupLoadedSources.mods = {};
-setupLoadedSources.sources = {};
-
-let getModName = function(id) {
-	if (setupLoadedSources.sources.hasOwnProperty(id)) {
-		let source = setupLoadedSources.sources[id];
-		if (source) {
-			return "" + source.getName();
-		}
-	}
-	return "";
-};
-
-let findAvailabledMods = function(name) {
-	let array = [];
-	for (let element in setupLoadedSources.mods) {
-		let mod = getModName(element);
-		if (mod == name) {
-			array.unshift(element);
-		} else if (!name || mod.startsWith(name)) {
-			array.push(element);
-		}
-		let source = setupLoadedSources.sources[element];
-		if (source.dir.endsWith("/" + name + "/")) {
-			array.unshift(element);
-		} else if (source.dir.indexOf("/" + name) != -1) {
-			array.push(element);
-		}
-	}
-	return array;
-};
-
-let findRelatedSources = function(name, file) {
-	let sources = findAvailabledMods(name);
-	if (sources.length == 0) {
-		return {};
-	}
-	let related = {};
-	for (let i = 0; i < sources.length; i++) {
-		let mod = sources[i],
-			source = setupLoadedSources.mods[mod];
-		for (let path in source) {
-			let name = source[path];
-			if (name == file) {
-				if (!related.hasOwnProperty(mod)) {
-					related[mod] = [];
-				}
-				related[mod].unshift(path);
-			} else if (name.endsWith(file)) {
-				if (!related.hasOwnProperty(mod)) {
-					related[mod] = [];
-				}
-				related[mod].push(path);
-			}
-		}
-	}
-	return related;
-};
-
-let reformatSpecial = function(element) {
-	element = "" + element;
-	element = element.replace(/\+/g, "\\+");
-	element = element.replace(/\(/g, "\\(");
-	element = element.replace(/\)/g, "\\)");
-	element = element.replace(/\[/g, "\\[");
-	element = element.replace(/\]/g, "\\]");
-	element = element.replace(/\{/g, "\\{");
-	element = element.replace(/\}/g, "\\}");
-	return element.replace(/\./g, "\\.");
-};
-
-let requireFormat = function(message) {
-	for (let element in addTranslation.messages) {
-		let exp = reformatSpecial(element);
-		exp = exp.replace(/%s/g, "(.*)");
-		try {
-			let regexp = new RegExp(exp, "m");
-			if (regexp.test(message)) {
-				return {
-					message: "" + element,
-					exec: regexp.exec(message)
-				};
-			}
-		} catch (e) {
-			// Must be detected if regexp fail
-		}
-	}
-	return {
-		message: message
-	};
-};
-
-let translateMessage = function(message) {
-	if (typeof message != "string") {
-		message = "" + message;
-	}
-	let format = requireFormat(message);
-	if (addTranslation.messages.hasOwnProperty(format.message)) {
-		message = Translation.translate(format.message);
-		if (format.exec && format.exec.length > 1) {
-			format.exec.shift();
-			try {
-				return java.lang.String.format(message, format.exec);
-			} catch (e) {
-				format.exec.forEach(function(who) {
-					message = message.replace("%s", who);
-				});
-			}
-		}
-	}
-	return message;
-};
-
-let resolveTraceSource = function(line) {
-	if (typeof line != "string") {
-		line = "" + line;
-	}
-	let at = line.indexOf("at ");
-	if (at == -1) {
-		return null;
-	}
-	line = line.substring(at + 3);
-	let resolved = {};
-	resolved.trace = line;
-	if (line.endsWith(")")) {
-		let index = line.lastIndexOf("(");
-		resolved.where = line.slice(index + 1, line.length - 1);
-		line = line.substring(0, index - 1);
-	}
-	let semi = line.lastIndexOf(":");
-	if (semi != -1) {
-		resolved.line = line.slice(semi + 1, line.length);
-		line = line.substring(0, semi);
-	}
-	let name = line.indexOf("$");
-	if (name != -1) {
-		resolved.source = line.slice(0, name);
-		line = line.substring(name + 1);
-	}
-	resolved.file = line;
-	return resolved;
-};
-
-let sliceMessageWithoutTrace = function(message, line) {
-	if (typeof message != "string") {
-		message = "" + message;
-	}
-	let trace = resolveTraceSource(line);
-	if (trace === null) {
-		return message;
-	}
-	trace = trace.trace.replace(":", "#");
-	let index = message.lastIndexOf(trace);
-	if (index != -1) {
-		return message.slice(0, index - 2);
-	}
-	return message;
-};
-
-let retraceToArray = function(trace) {
-	if (trace === null || trace === undefined) {
-		return [];
-	}
-	if (typeof trace != "string") {
-		trace = "" + trace;
-	}
-	return trace.split("\n");
-};
-
-let fetchErrorMessage = function(error) {
-	if (error === null) {
-		return "" + error;
-	}
-	if (typeof error == "object") {
-		if (error.hasOwnProperty("message")) {
-			return "" + error.message;
-		}
-		return null;
-	}
-	return "" + error;
-};
+// file: stacktrace/localizeError.js
 
 /**
  * Fetches error message and represent it
@@ -559,7 +663,7 @@ let fetchErrorMessage = function(error) {
  * @param {Error|string} error to localize
  * @returns {string} represented stroke
  */
-let localizeError = function(error) {
+localizeError = function(error) {
 	let message = fetchErrorMessage(error);
 	if (error instanceof java.lang.Object) {
 		MCSystem.throwException("Stacktrace: unsupported localize error type: " + error);
@@ -570,31 +674,10 @@ let localizeError = function(error) {
 	return translateMessage(error);
 };
 
-EXPORT("localizeError", localizeError);
 
-let fetchErrorName = function(error) {
-	if (error && typeof error == "object") {
-		if (error.name !== undefined) {
-			return "" + error.name;
-		}
-	}
-	return Translation.translate("Oh nose everything broke");
-};
 
-let saveOrRewrite = function(path, text) {
-	text = new java.lang.String(text);
-	let file = new java.io.File(__dir__ + ".logging", path + ".trace");
-	file.getParentFile().mkdirs();
-	if (!file.isDirectory()) {
-		file.createNewFile();
-		let stream = new java.io.FileOutputStream(file);
-		stream.write(text.getBytes());
-		stream.close();
-		print(Translation.translate("Saved as") + " " + path);
-		return;
-	}
-	print(Translation.translate("Couldn't save trace"));
-};
+
+// file: stacktrace/reportTrace.js
 
 /**
  * Reports catched modification errors,
@@ -603,7 +686,7 @@ let saveOrRewrite = function(path, text) {
  * on display with sources hieracly.
  * @param {Error|any} value to report
  */
-let reportTrace = function(error) {
+reportTrace = function(error) {
 	if (error === undefined) {
 		return;
 	}
@@ -738,13 +821,6 @@ reportTrace.postUpdate = function(dialog, error, date) {
 			}
 		}
 	};
-};
-
-let isValidFile = function(file) {
-	if (file instanceof java.io.File) {
-		return file.isFile();
-	}
-	return false;
 };
 
 reportTrace.processFile = function(file, where) {
@@ -909,44 +985,12 @@ reportTrace.reloadModifications = function() {
 	setupLoadedSources(getLoadedModList());
 };
 
-EXPORT("reportTrace", reportTrace);
 
-Translation.addTranslation("Oh nose everything broke", {
-	ru: "Ох нет, все сломалось"
-});
-Translation.addTranslation("Preparing report", {
-	ru: "Подготовка отчета"
-});
-Translation.addTranslation("Milliseconds estimated after launch", {
-	ru: "Миллисекунды, прошедшие с запуска"
-});
-Translation.addTranslation("Defined at", {
-	ru: "Объявлено в"
-});
-Translation.addTranslation("at line", {
-	ru: "на строке"
-});
-Translation.addTranslation("from", {
-	ru: "из"
-});
-Translation.addTranslation("Source may be incorrectly", {
-	ru: "Источник может быть некорректным"
-});
-Translation.addTranslation("Understand", {
-	ru: "Понятно"
-});
-Translation.addTranslation("Leave", {
-	ru: "Выход"
-});
-Translation.addTranslation("Saved as", {
-	ru: "Сохранено как"
-});
-Translation.addTranslation("Wouldn't fetch modification sources", {
-	ru: "Не удалось получить исходники модификации"
-});
-Translation.addTranslation("Couldn't save trace", {
-	ru: "Не удается сохранить сводку"
-});
+
+
+// file: integration.js
+
+EXPORT("localizeError", localizeError);
 
 Callback.addCallback("PreBlocksDefined", function() {
 	reportTrace.reloadModifications();
@@ -957,3 +1001,9 @@ Callback.addCallback("CorePreconfigured", function() {
 if (this.isInstant !== undefined) {
 	reportTrace.reloadModifications();
 }
+
+EXPORT("reportTrace", reportTrace);
+
+
+
+

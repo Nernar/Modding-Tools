@@ -1,4 +1,15 @@
 /*
+BUILD INFO:
+  dir: Action
+  target: out/Action.js
+  files: 2
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2019-2022 Nernar (github.com/nernar)
 
@@ -20,18 +31,23 @@ LIBRARY({
 	name: "Action",
 	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention"],
+	dependencies: ["Retention:1"],
 	shared: true
 });
 
-IMPORT("Retention");
+IMPORT("Retention:1");
+
+
+
+
+// file: integration.js
 
 /**
  * Allows you to create timers that will constantly
  * check the conditions for subsequent execution.
  * @param {object|number} [obj] merges with prototype or tick time
  */
-let Action = (function() {
+Action = (function() {
 	let identifier = 0;
 	return function(obj) {
 		if (typeof obj == "number") {
@@ -326,7 +342,7 @@ EXPORT("Action", Action);
  * @param {number} [time] tick waiting
  * @returns {Action} special event
  */
-let handleAction = function(action, condition, time) {
+handleAction = function(action, condition, time) {
 	let custom = new Action();
 	action && custom.setAction(action);
 	condition && custom.setCondition(condition);
@@ -336,3 +352,7 @@ let handleAction = function(action, condition, time) {
 };
 
 EXPORT("handleAction", handleAction);
+
+
+
+

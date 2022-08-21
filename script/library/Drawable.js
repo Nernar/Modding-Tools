@@ -1,4 +1,15 @@
 /*
+BUILD INFO:
+  dir: Drawable
+  target: Drawable.js
+  files: 15
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2022 Nernar (github.com/nernar)
 
@@ -20,13 +31,18 @@ LIBRARY({
 	name: "Drawable",
 	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention"],
+	dependencies: ["Retention:1"],
 	shared: true
 });
 
-IMPORT("Retention");
+IMPORT("Retention:1");
 
-let HashedDrawableMap = {};
+
+
+
+// file: factory/HashedDrawableMap.js
+
+HashedDrawableMap = {};
 HashedDrawableMap.attachedViews = {};
 HashedDrawableMap.attachedAsImage = {};
 HashedDrawableMap.attachedAsBackground = {};
@@ -134,448 +150,104 @@ HashedDrawableMap.deattachAsBackground = function(view) {
 	return this.deattachInMap(this.attachedAsBackground, view);
 };
 
-EXPORT("HashedDrawableMap", HashedDrawableMap);
 
-let Drawable = new Function();
 
-Drawable.prototype.isAttachedAsImage = function(view) {
-	if (!view) return HashedDrawableMap.getAsImageAttachedViews(this).length > 0;
-	return HashedDrawableMap.getDrawableAttachedToViewAsImage(view) == this;
+
+// file: factory/DrawableFactory.js
+
+DrawableFactory = {};
+
+DrawableFactory.setAlpha = function(drawable, alpha) {
+	drawable.setAlpha(Number(alpha));
 };
 
-Drawable.prototype.isAttachedAsBackground = function(view) {
-	if (!view) return HashedDrawableMap.getAsBackgroundAttachedViews(this).length > 0;
-	return HashedDrawableMap.getDrawableAttachedToViewAsBackground(view) == this;
+DrawableFactory.setAntiAlias = function(drawable, enabled) {
+	drawable.setAntiAlias(Boolean(enabled));
 };
 
-Drawable.prototype.isAttached = function(view) {
-	if (!view) return HashedDrawableMap.getAttachedViews(this).length > 0;
-	return HashedDrawableMap.getDrawablesAttachedToView(view).indexOf(this) != -1;
+DrawableFactory.setAutoMirrored = function(drawable, enabled) {
+	drawable.setAutoMirrored(Boolean(enabled));
 };
 
-Drawable.prototype.toDrawable = function() {
-	return null;
+DrawableFactory.setFilterBitmap = function(drawable, enabled) {
+	drawable.setFilterBitmap(Boolean(enabled));
 };
 
-Drawable.prototype.attachAsImage = function(view, force) {
-	if (view && view.setImageDrawable !== undefined) {
-		if (force || HashedDrawableMap.attachAsImage(view, this)) {
-			view.setImageDrawable(this.toDrawable());
-			return true;
-		}
-	}
-	return false;
-};
-
-Drawable.prototype.deattachAsImage = function(view) {
-	if (view && view.setImageDrawable !== undefined) {
-		if (HashedDrawableMap.getDrawableAttachedToViewAsImage(view) == this) {
-			if (HashedDrawableMap.deattachAsImage(view)) {
-				view.setImageDrawable(null);
-				return true;
-			}
-		}
-		return false;
-	}
-	let attached = HashedDrawableMap.getAsImageAttachedViews(this);
-	for (let i = 0; i < attached.length; i++) {
-		this.deattachAsImage(attached[i]);
-	}
-	return attached.length > 0;
-};
-
-Drawable.prototype.attachAsBackground = function(view, force) {
-	if (view && view.setBackgroundDrawable !== undefined) {
-		if (force || HashedDrawableMap.attachAsBackground(view, this)) {
-			view.setBackgroundDrawable(this.toDrawable());
-			return true;
-		}
-	}
-	return false;
-};
-
-Drawable.prototype.deattachAsBackground = function(view) {
-	if (view && view.setBackgroundDrawable !== undefined) {
-		if (HashedDrawableMap.getDrawableAttachedToViewAsBackground(view) == this) {
-			if (HashedDrawableMap.deattachAsBackground(view)) {
-				view.setBackgroundDrawable(null);
-				return true;
-			}
-		}
-		return false;
-	}
-	let attached = HashedDrawableMap.getAsBackgroundAttachedViews(this);
-	for (let i = 0; i < attached.length; i++) {
-		this.deattachAsBackground(attached[i]);
-	}
-	return attached.length > 0;
-};
-
-Drawable.prototype.requestDeattach = function(view) {
-	let deattached = this.deattachAsImage(view);
-	return this.deattachAsBackground(view) || deattached;
-};
-
-Drawable.prototype.reattachAsImage = function(view) {
-	if (view && view.setImageDrawable !== undefined) {
-		return this.attachAsImage(view, true);
-	}
-	let attached = HashedDrawableMap.getAsImageAttachedViews(this);
-	for (let i = 0; i < attached.length; i++) {
-		this.attachAsImage(attached[i], true);
-	}
-	return attached.length > 0;
-};
-
-Drawable.prototype.reattachAsBackground = function(view) {
-	if (view && view.setBackgroundDrawable !== undefined) {
-		return this.attachAsBackground(view, true);
-	}
-	let attached = HashedDrawableMap.getAsBackgroundAttachedViews(this);
-	for (let i = 0; i < attached.length; i++) {
-		this.attachAsBackground(attached[i], true);
-	}
-	return attached.length > 0;
-};
-
-Drawable.prototype.requestReattach = function(view) {
-	let attached = this.reattachAsImage(view);
-	return this.reattachAsBackground(view) || attached;
-};
-
-Drawable.prototype.toString = function() {
-	return "[Drawable " + this.toDrawable() + "]";
-};
-
-EXPORT("Drawable", Drawable);
-
-let CachedDrawable = function() {
-	Drawable.call(this);
-	if (this.cacheWhenCreate) {
-		this.toDrawable();
-	}
-};
-
-CachedDrawable.prototype = new Drawable;
-
-CachedDrawable.prototype.cacheWhenCreate = false;
-
-CachedDrawable.prototype.toDrawable = function() {
-	if (!this.isProcessed()) {
-		try {
-			let drawable = this.process();
-			if (!this.isProcessed()) {
-				if (drawable) this.describe(drawable);
-				this.source = drawable;
-			}
-		} catch (e) {
-			Logger.Log("Drawable: exception in CachedDrawable.process: " + e, "WARNING");
-		}
-	}
-	return this.source || null;
-};
-
-CachedDrawable.prototype.isProcessed = function() {
-	return this.source !== undefined;
-};
-
-CachedDrawable.prototype.process = function() {
-	MCSystem.throwException("Drawable: CachedDrawable.process must be implemented");
-};
-
-CachedDrawable.prototype.getDescriptor = function() {
-	return this.descriptor || null;
-};
-
-CachedDrawable.prototype.setDescriptor = function(descriptor) {
-	if (descriptor != null && typeof descriptor == "object") {
-		this.descriptor = descriptor;
-		this.requireDescribe();
-	} else delete this.descriptor;
-};
-
-CachedDrawable.prototype.describe = function(drawable) {
-	let descriptor = this.getDescriptor();
-	if (descriptor != null) {
-		Drawable.applyDescribe.call(this, drawable, descriptor);
-	}
-};
-
-CachedDrawable.prototype.requireDescribe = function() {
-	if (this.isProcessed()) {
-		let drawable = this.toDrawable();
-		if (drawable) this.describe(drawable);
+DrawableFactory.setTintColor = function(drawable, color) {
+	color = ColorDrawable.parseColor(color);
+	if (android.os.Build.VERSION.SDK_INT >= 29) {
+		let filter = new android.graphics.BlendModeColorFilter(color, android.graphics.BlendMode.SRC_ATOP);
+		drawable.setColorFilter(filter);
 		return;
 	}
-	this.toDrawable();
+	drawable.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP);
 };
 
-CachedDrawable.prototype.invalidate = function() {
-	delete this.source;
-	if (this.cacheWhenCreate) {
-		this.toDrawable();
+DrawableFactory.setMipMap = function(drawable, enabled) {
+	drawable.setMipMap(Boolean(enabled));
+};
+
+DrawableFactory.setColorFilter = function(drawable, filter) {
+	drawable.setColorFilter(filter);
+};
+
+DrawableFactory.setTileMode = function(drawable, modesOrX, y) {
+	if (Array.isArray(modesOrX)) {
+		y = modesOrX[1];
+		modesOrX = modesOrX[0];
 	}
-	this.requestReattach();
-};
-
-EXPORT("CachedDrawable", CachedDrawable);
-
-let ScheduledDrawable = function() {
-	CachedDrawable.call(this);
-};
-
-ScheduledDrawable.prototype = new CachedDrawable;
-
-ScheduledDrawable.prototype.toDrawable = function() {
-	let self = this;
-	if (!this.isProcessed() && !this.isProcessing()) {
-		let thread = this.thread = handleThread(function() {
-			if (self.getThread() == thread) {
-				self.toDrawableInThread();
-			}
-			if (self.getThread() == thread) {
-				handle(function() {
-					if (self.isProcessed()) {
-						self.requestReattach();
-					}
-				});
-				delete self.thread;
-			}
-		});
+	if (modesOrX === undefined) {
+		modesOrX = android.graphics.Shader.TileMode.CLAMP;
 	}
-	return this.source || null;
-};
-
-ScheduledDrawable.prototype.toDrawableInThread = function() {
-	return CachedDrawable.prototype.toDrawable.call(this);
-};
-
-ScheduledDrawable.prototype.getThread = function() {
-	return this.thread || null;
-};
-
-ScheduledDrawable.prototype.isProcessing = function() {
-	return this.thread !== undefined;
-};
-
-ScheduledDrawable.prototype.invalidate = function() {
-	if (this.isProcessing()) {
-		this.getThread().interrupt();
-		delete this.thread;
+	if (y !== undefined) {
+		drawable.setTileModeX(modesOrX);
+		drawable.setTileModeY(y);
+		return;
 	}
-	CachedDrawable.prototype.invalidate.apply(this, arguments);
+	drawable.setTileModeXY(modesOrX);
 };
 
-ScheduledDrawable.prototype.toString = function() {
-	return "[ScheduledDrawable object]";
+DrawableFactory.setGravity = function(drawable, gravity) {
+	drawable.setGravity(Number(gravity));
 };
 
-EXPORT("ScheduledDrawable", ScheduledDrawable);
+DrawableFactory.setLayoutDirection = function(drawable, direction) {
+	drawable.setLayoutDirection(Number(direction));
+};
 
-let LayerDrawable = function(layers) {
-	this.clearLayers();
-	if (layers !== undefined) {
-		this.addLayers(layers);
+DrawableFactory.setXfermode = function(drawable, mode) {
+	drawable.setXfermode(mode);
+};
+
+DrawableFactory.setLevel = function(drawable, level) {
+	return drawable.setLevel(Number(level));
+};
+
+DrawableFactory.setState = function(drawable, states) {
+	if (!Array.isArray(states)) states = [states];
+	states = states.map(function(state) {
+		return Number(state);
+	});
+	return drawable.setState(states);
+};
+
+DrawableFactory.setVisible = function(drawable, first, second) {
+	if (Array.isArray(first)) {
+		second = first[1];
+		first = first[0];
 	}
-	ScheduledDrawable.call(this);
-};
-
-LayerDrawable.prototype = new ScheduledDrawable;
-
-LayerDrawable.prototype.process = function() {
-	let layers = [];
-	for (let i = 0; i < this.getLayerCount(); i++) {
-		let drawable = this.getLayerAt(i);
-		if (drawable instanceof ScheduledDrawable) {
-			if (!drawable.isProcessed()) {
-				drawable.toDrawable();
-				while (drawable.isProcessing()) {
-					java.lang.Thread.yield();
-				}
-			}
-		}
-		if (drawable instanceof Drawable) {
-			layers.push(drawable.toDrawable());
-		} else layers.push(drawable);
+	if (second === undefined) {
+		second = first;
 	}
-	return new android.graphics.drawable.LayerDrawable(layers);
+	return drawable.setVisible(Boolean(first), Boolean(second));
 };
 
-LayerDrawable.prototype.clearLayers = function() {
-	this.layers = [];
-	this.invalidate();
-};
 
-LayerDrawable.prototype.getLayers = function() {
-	return this.layers;
-};
 
-LayerDrawable.prototype.getLayerCount = function() {
-	return this.getLayers().length;
-};
 
-LayerDrawable.prototype.indexOfLayer = function(layer) {
-	return this.getLayers().indexOf(layer);
-};
+// file: factory/BitmapFactory.js
 
-LayerDrawable.prototype.getLayerAt = function(index) {
-	return this.getLayers()[index] || null;
-};
-
-LayerDrawable.prototype.addLayer = function(layer) {
-	this.getLayers().push(layer);
-	this.invalidate();
-};
-
-LayerDrawable.prototype.addLayers = function(layers) {
-	if (!Array.isArray(layers)) layers = [layers];
-	this.layers = this.getLayers().concat(layers);
-	this.invalidate();
-};
-
-LayerDrawable.prototype.hasLayer = function(layer) {
-	return this.getLayers().indexOf(layer) != -1;
-};
-
-LayerDrawable.prototype.removeLayer = function(layer) {
-	let layers = this.getLayers(),
-		index = layers.indexOf(layer);
-	if (index == -1) return;
-	layers.splice(index, 1);
-	this.invalidate();
-};
-
-LayerDrawable.prototype.toString = function() {
-	return "[LayerDrawable " + this.getLayers() + "]";
-};
-
-EXPORT("LayerDrawable", LayerDrawable);
-
-let ClipDrawable = function(drawable, location, side) {
-	if (drawable !== undefined) {
-		this.setDrawable(drawable);
-	}
-	if (location !== undefined) {
-		this.setLocation(location);
-	}
-	if (side !== undefined) {
-		this.setSide(side);
-	}
-	ScheduledDrawable.call(this);
-};
-
-ClipDrawable.prototype = new ScheduledDrawable;
-
-ClipDrawable.prototype.process = function() {
-	let drawable = this.getDrawable();
-	if (drawable !== undefined) {
-		if (drawable instanceof ScheduledDrawable) {
-			if (!drawable.isProcessed()) {
-				drawable.toDrawable();
-				while (drawable.isProcessing()) {
-					java.lang.Thread.yield();
-				}
-			}
-		}
-		if (drawable instanceof Drawable) {
-			drawable = drawable.toDrawable();
-		}
-	}
-	return new android.graphics.drawable.ClipDrawable(drawable, this.getLocation(), this.getSide());
-};
-
-ClipDrawable.prototype.getDrawable = function() {
-	return this.drawable !== undefined ? this.drawable : null;
-};
-
-ClipDrawable.prototype.setDrawable = function(drawable) {
-	if (drawable !== undefined) {
-		this.drawable = drawable;
-	} else delete this.drawable;
-	this.invalidate();
-};
-
-ClipDrawable.prototype.getLocation = function() {
-	return this.location !== undefined ? this.location : android.view.Gravity.LEFT;
-};
-
-ClipDrawable.prototype.setLocation = function(location) {
-	this.location = Number(location);
-	this.invalidate();
-};
-
-ClipDrawable.prototype.getSide = function() {
-	return this.side !== undefined ? this.side : ClipDrawable.Side.HORIZONTAL;
-};
-
-ClipDrawable.prototype.setSide = function(side) {
-	if (typeof side == "string") {
-		if (ClipDrawable.Side.hasOwnProperty(side)) {
-			side = ClipDrawable.Side[side];
-		}
-	}
-	this.side = Number(side);
-	this.invalidate();
-};
-
-ClipDrawable.prototype.toString = function() {
-	return "[ClipDrawable " + this.getDrawable() + "@" + this.getLocation() + ":" + this.getSide() + "]";
-};
-
-ClipDrawable.Side = {};
-ClipDrawable.Side.HORIZONTAL = 1;
-ClipDrawable.Side.VERTICAL = 2;
-
-EXPORT("ClipDrawable", ClipDrawable);
-
-let ColorDrawable = function(color) {
-	if (color !== undefined) {
-		this.setColor(color);
-	}
-	Drawable.call(this);
-};
-
-ColorDrawable.prototype = new Drawable;
-
-ColorDrawable.prototype.toDrawable = function() {
-	return new android.graphics.drawable.ColorDrawable(this.getColor());
-};
-
-ColorDrawable.prototype.getColor = function() {
-	return this.color !== undefined ? this.color : android.graphics.Color.TRANSPARENT;
-};
-
-ColorDrawable.prototype.setColor = function(color) {
-	if (color !== undefined) {
-		this.color = ColorDrawable.parseColor(color);
-	} else delete this.color;
-	this.requestReattach();
-};
-
-ColorDrawable.prototype.toString = function() {
-	return "[ColorDrawable " + this.getColor() + "]";
-};
-
-ColorDrawable.parseColor = function(value) {
-	if (typeof value == "number") {
-		return value;
-	} else if (value) {
-		let stroke = String(value);
-		if (stroke.startsWith("#")) {
-			return android.graphics.Color.parseColor(stroke);
-		}
-		stroke = stroke.toUpperCase();
-		try {
-			return android.graphics.Color[stroke];
-		} catch (e) {
-			// Not found
-		}
-	}
-};
-
-EXPORT("ColorDrawable", ColorDrawable);
-
-let BitmapFactory = {};
+BitmapFactory = {};
 
 BitmapFactory.decodeBytes = function(bytes, options) {
 	try {
@@ -624,9 +296,12 @@ BitmapFactory.createScaled = function(bitmap, dx, dy) {
 	return android.graphics.Bitmap.createScaledBitmap(bitmap, dx, dy, false);
 };
 
-EXPORT("BitmapFactory", BitmapFactory);
 
-let BitmapDrawableFactory = {};
+
+
+// file: factory/BitmapDrawableFactory.js
+
+BitmapDrawableFactory = {};
 BitmapDrawableFactory.required = {};
 BitmapDrawableFactory.mapped = {};
 
@@ -643,7 +318,7 @@ BitmapDrawableFactory.requireByKey = function(key, options) {
 		this.required[key] = BitmapFactory.decodeFile(file, options);
 		return this.requireByKey(key);
 	}
-	log("Drawable: bitmap " + key + " not found or mapped incorrecly");
+	log("Drawable: Bitmap " + key + " not found or mapped incorrecly");
 	return null;
 };
 
@@ -837,14 +512,493 @@ BitmapDrawableFactory.recycleRequired = function() {
 	}
 };
 
-EXPORT("BitmapDrawableFactory", BitmapDrawableFactory);
 
-let BitmapDrawable = function(bitmap, options) {
-	if (bitmap !== undefined) {
-		this.setBitmap(bitmap);
+
+
+// file: factory/AnimationDrawableFactory.js
+
+AnimationDrawableFactory = {};
+
+AnimationDrawableFactory.setEnterFadeDuration = function(drawable, duration) {
+	drawable.setEnterFadeDuration(Number(duration));
+};
+
+AnimationDrawableFactory.setExitFadeDuration = function(drawable, duration) {
+	drawable.setExitFadeDuration(Number(duration));
+};
+
+AnimationDrawableFactory.setOneShot = function(drawable, enabled) {
+	drawable.setOneShot(Boolean(enabled));
+};
+
+
+
+
+// file: drawable/Drawable.js
+
+Drawable = new Function();
+
+Drawable.prototype.isAttachedAsImage = function(view) {
+	if (!view) return HashedDrawableMap.getAsImageAttachedViews(this).length > 0;
+	return HashedDrawableMap.getDrawableAttachedToViewAsImage(view) == this;
+};
+
+Drawable.prototype.isAttachedAsBackground = function(view) {
+	if (!view) return HashedDrawableMap.getAsBackgroundAttachedViews(this).length > 0;
+	return HashedDrawableMap.getDrawableAttachedToViewAsBackground(view) == this;
+};
+
+Drawable.prototype.isAttached = function(view) {
+	if (!view) return HashedDrawableMap.getAttachedViews(this).length > 0;
+	return HashedDrawableMap.getDrawablesAttachedToView(view).indexOf(this) != -1;
+};
+
+Drawable.prototype.toDrawable = function() {
+	return null;
+};
+
+Drawable.prototype.attachAsImage = function(view, force) {
+	if (view && view.setImageDrawable !== undefined) {
+		if (force || HashedDrawableMap.attachAsImage(view, this)) {
+			view.setImageDrawable(this.toDrawable());
+			return true;
+		}
 	}
+	return false;
+};
+
+Drawable.prototype.deattachAsImage = function(view) {
+	if (view && view.setImageDrawable !== undefined) {
+		if (HashedDrawableMap.getDrawableAttachedToViewAsImage(view) == this) {
+			if (HashedDrawableMap.deattachAsImage(view)) {
+				view.setImageDrawable(null);
+				return true;
+			}
+		}
+		return false;
+	}
+	let attached = HashedDrawableMap.getAsImageAttachedViews(this);
+	for (let i = 0; i < attached.length; i++) {
+		this.deattachAsImage(attached[i]);
+	}
+	return attached.length > 0;
+};
+
+Drawable.prototype.attachAsBackground = function(view, force) {
+	if (view && view.setBackgroundDrawable !== undefined) {
+		if (force || HashedDrawableMap.attachAsBackground(view, this)) {
+			view.setBackgroundDrawable(this.toDrawable());
+			return true;
+		}
+	}
+	return false;
+};
+
+Drawable.prototype.deattachAsBackground = function(view) {
+	if (view && view.setBackgroundDrawable !== undefined) {
+		if (HashedDrawableMap.getDrawableAttachedToViewAsBackground(view) == this) {
+			if (HashedDrawableMap.deattachAsBackground(view)) {
+				view.setBackgroundDrawable(null);
+				return true;
+			}
+		}
+		return false;
+	}
+	let attached = HashedDrawableMap.getAsBackgroundAttachedViews(this);
+	for (let i = 0; i < attached.length; i++) {
+		this.deattachAsBackground(attached[i]);
+	}
+	return attached.length > 0;
+};
+
+Drawable.prototype.requestDeattach = function(view) {
+	let deattached = this.deattachAsImage(view);
+	return this.deattachAsBackground(view) || deattached;
+};
+
+Drawable.prototype.reattachAsImage = function(view) {
+	if (view && view.setImageDrawable !== undefined) {
+		return this.attachAsImage(view, true);
+	}
+	let attached = HashedDrawableMap.getAsImageAttachedViews(this);
+	for (let i = 0; i < attached.length; i++) {
+		this.attachAsImage(attached[i], true);
+	}
+	return attached.length > 0;
+};
+
+Drawable.prototype.reattachAsBackground = function(view) {
+	if (view && view.setBackgroundDrawable !== undefined) {
+		return this.attachAsBackground(view, true);
+	}
+	let attached = HashedDrawableMap.getAsBackgroundAttachedViews(this);
+	for (let i = 0; i < attached.length; i++) {
+		this.attachAsBackground(attached[i], true);
+	}
+	return attached.length > 0;
+};
+
+Drawable.prototype.requestReattach = function(view) {
+	let attached = this.reattachAsImage(view);
+	return this.reattachAsBackground(view) || attached;
+};
+
+Drawable.prototype.toString = function() {
+	return "[Drawable " + this.toDrawable() + "]";
+};
+
+
+
+
+// file: drawable/CachedDrawable.js
+
+CachedDrawable = function() {
+	Drawable.call(this);
+	if (this.cacheWhenCreate) {
+		this.toDrawable();
+	}
+};
+
+CachedDrawable.prototype = new Drawable;
+
+CachedDrawable.prototype.cacheWhenCreate = false;
+
+CachedDrawable.prototype.toDrawable = function() {
+	if (!this.isProcessed()) {
+		try {
+			let drawable = this.process();
+			if (!this.isProcessed()) {
+				if (drawable) this.describe(drawable);
+				this.source = drawable;
+			}
+		} catch (e) {
+			Logger.Log("Drawable: CachedDrawable.toDrawable: " + e, "WARNING");
+		}
+	}
+	return this.source || null;
+};
+
+CachedDrawable.prototype.isProcessed = function() {
+	return this.source !== undefined;
+};
+
+CachedDrawable.prototype.process = function() {
+	MCSystem.throwException("Drawable: CachedDrawable.process must be implemented");
+};
+
+CachedDrawable.prototype.getDescriptor = function() {
+	return this.descriptor || null;
+};
+
+CachedDrawable.prototype.setDescriptor = function(descriptor) {
+	if (descriptor != null && typeof descriptor == "object") {
+		this.descriptor = descriptor;
+		this.requireDescribe();
+	} else delete this.descriptor;
+};
+
+CachedDrawable.prototype.describe = function(drawable) {
+	let descriptor = this.getDescriptor();
+	if (descriptor != null) {
+		Drawable.applyDescribe.call(this, drawable, descriptor);
+	}
+};
+
+CachedDrawable.prototype.requireDescribe = function() {
+	if (this.isProcessed()) {
+		let drawable = this.toDrawable();
+		if (drawable) this.describe(drawable);
+		return;
+	}
+	this.toDrawable();
+};
+
+CachedDrawable.prototype.invalidate = function() {
+	delete this.source;
+	if (this.cacheWhenCreate) {
+		this.toDrawable();
+	}
+	this.requestReattach();
+};
+
+
+
+
+// file: drawable/ColorDrawable.js
+
+ColorDrawable = function(color) {
+	if (color !== undefined) {
+		this.setColor(color);
+	}
+	Drawable.call(this);
+};
+
+ColorDrawable.prototype = new Drawable;
+
+ColorDrawable.prototype.toDrawable = function() {
+	return new android.graphics.drawable.ColorDrawable(this.getColor());
+};
+
+ColorDrawable.prototype.getColor = function() {
+	return this.color !== undefined ? this.color : android.graphics.Color.TRANSPARENT;
+};
+
+ColorDrawable.prototype.setColor = function(color) {
+	if (color !== undefined) {
+		this.color = ColorDrawable.parseColor(color);
+	} else delete this.color;
+	this.requestReattach();
+};
+
+ColorDrawable.prototype.toString = function() {
+	return "[ColorDrawable " + this.getColor() + "]";
+};
+
+ColorDrawable.parseColor = function(value) {
+	if (typeof value == "number") {
+		return value;
+	} else if (value) {
+		let stroke = String(value);
+		if (stroke.startsWith("#")) {
+			return android.graphics.Color.parseColor(stroke);
+		}
+		stroke = stroke.toUpperCase();
+		try {
+			return android.graphics.Color[stroke];
+		} catch (e) {
+			// Not found
+		}
+	}
+};
+
+
+
+
+// file: drawable/ScheduledDrawable.js
+
+ScheduledDrawable = function() {
+	CachedDrawable.call(this);
+};
+
+ScheduledDrawable.prototype = new CachedDrawable;
+
+ScheduledDrawable.prototype.toDrawable = function() {
+	let self = this;
+	if (!this.isProcessed() && !this.isProcessing()) {
+		let thread = this.thread = handleThread(function() {
+			if (self.getThread() == thread) {
+				self.toDrawableInThread();
+			}
+			if (self.getThread() == thread) {
+				handle(function() {
+					if (self.isProcessed()) {
+						self.requestReattach();
+					}
+				});
+				delete self.thread;
+			}
+		});
+	}
+	return this.source || null;
+};
+
+ScheduledDrawable.prototype.toDrawableInThread = function() {
+	return CachedDrawable.prototype.toDrawable.call(this);
+};
+
+ScheduledDrawable.prototype.getThread = function() {
+	return this.thread || null;
+};
+
+ScheduledDrawable.prototype.isProcessing = function() {
+	return this.thread !== undefined;
+};
+
+ScheduledDrawable.prototype.invalidate = function() {
+	if (this.isProcessing()) {
+		this.getThread().interrupt();
+		delete this.thread;
+	}
+	CachedDrawable.prototype.invalidate.apply(this, arguments);
+};
+
+ScheduledDrawable.prototype.toString = function() {
+	return "[ScheduledDrawable object]";
+};
+
+
+
+
+// file: drawable/LayerDrawable.js
+
+LayerDrawable = function(layers) {
+	this.clearLayers();
+	if (layers !== undefined) {
+		this.addLayers(layers);
+	}
+	ScheduledDrawable.call(this);
+};
+
+LayerDrawable.prototype = new ScheduledDrawable;
+
+LayerDrawable.prototype.process = function() {
+	let layers = [];
+	for (let i = 0; i < this.getLayerCount(); i++) {
+		let drawable = this.getLayerAt(i);
+		if (drawable instanceof ScheduledDrawable) {
+			if (!drawable.isProcessed()) {
+				drawable.toDrawable();
+				while (drawable.isProcessing()) {
+					java.lang.Thread.yield();
+				}
+			}
+		}
+		if (drawable instanceof Drawable) {
+			layers.push(drawable.toDrawable());
+		} else layers.push(drawable);
+	}
+	return new android.graphics.drawable.LayerDrawable(layers);
+};
+
+LayerDrawable.prototype.clearLayers = function() {
+	this.layers = [];
+	this.invalidate();
+};
+
+LayerDrawable.prototype.getLayers = function() {
+	return this.layers;
+};
+
+LayerDrawable.prototype.getLayerCount = function() {
+	return this.getLayers().length;
+};
+
+LayerDrawable.prototype.indexOfLayer = function(layer) {
+	return this.getLayers().indexOf(layer);
+};
+
+LayerDrawable.prototype.getLayerAt = function(index) {
+	return this.getLayers()[index] || null;
+};
+
+LayerDrawable.prototype.addLayer = function(layer) {
+	this.getLayers().push(layer);
+	this.invalidate();
+};
+
+LayerDrawable.prototype.addLayers = function(layers) {
+	if (!Array.isArray(layers)) layers = [layers];
+	this.layers = this.getLayers().concat(layers);
+	this.invalidate();
+};
+
+LayerDrawable.prototype.hasLayer = function(layer) {
+	return this.getLayers().indexOf(layer) != -1;
+};
+
+LayerDrawable.prototype.removeLayer = function(layer) {
+	let layers = this.getLayers(),
+		index = layers.indexOf(layer);
+	if (index == -1) return;
+	layers.splice(index, 1);
+	this.invalidate();
+};
+
+LayerDrawable.prototype.toString = function() {
+	return "[LayerDrawable " + this.getLayers() + "]";
+};
+
+
+
+
+// file: drawable/ClipDrawable.js
+
+ClipDrawable = function(drawable, location, side) {
+	if (drawable !== undefined) {
+		this.setDrawable(drawable);
+	}
+	if (location !== undefined) {
+		this.setLocation(location);
+	}
+	if (side !== undefined) {
+		this.setSide(side);
+	}
+	ScheduledDrawable.call(this);
+};
+
+ClipDrawable.prototype = new ScheduledDrawable;
+
+ClipDrawable.prototype.process = function() {
+	let drawable = this.getDrawable();
+	if (drawable !== undefined) {
+		if (drawable instanceof ScheduledDrawable) {
+			if (!drawable.isProcessed()) {
+				drawable.toDrawable();
+				while (drawable.isProcessing()) {
+					java.lang.Thread.yield();
+				}
+			}
+		}
+		if (drawable instanceof Drawable) {
+			drawable = drawable.toDrawable();
+		}
+	}
+	return new android.graphics.drawable.ClipDrawable(drawable, this.getLocation(), this.getSide());
+};
+
+ClipDrawable.prototype.getDrawable = function() {
+	return this.drawable !== undefined ? this.drawable : null;
+};
+
+ClipDrawable.prototype.setDrawable = function(drawable) {
+	if (drawable !== undefined) {
+		this.drawable = drawable;
+	} else delete this.drawable;
+	this.invalidate();
+};
+
+ClipDrawable.prototype.getLocation = function() {
+	return this.location !== undefined ? this.location : android.view.Gravity.LEFT;
+};
+
+ClipDrawable.prototype.setLocation = function(location) {
+	this.location = Number(location);
+	this.invalidate();
+};
+
+ClipDrawable.prototype.getSide = function() {
+	return this.side !== undefined ? this.side : ClipDrawable.Side.HORIZONTAL;
+};
+
+ClipDrawable.prototype.setSide = function(side) {
+	if (typeof side == "string") {
+		if (ClipDrawable.Side.hasOwnProperty(side)) {
+			side = ClipDrawable.Side[side];
+		}
+	}
+	this.side = Number(side);
+	this.invalidate();
+};
+
+ClipDrawable.prototype.toString = function() {
+	return "[ClipDrawable " + this.getDrawable() + "@" + this.getLocation() + ":" + this.getSide() + "]";
+};
+
+ClipDrawable.Side = {};
+ClipDrawable.Side.HORIZONTAL = 1;
+ClipDrawable.Side.VERTICAL = 2;
+
+
+
+
+// file: drawable/BitmapDrawable.js
+
+BitmapDrawable = function(bitmap, options) {
 	if (options !== undefined) {
 		this.setOptions(options);
+	}
+	if (bitmap !== undefined) {
+		this.setBitmap(bitmap);
 	}
 	ScheduledDrawable.call(this);
 };
@@ -855,7 +1009,6 @@ BitmapDrawable.prototype.process = function() {
 	let bitmap = this.getBitmap(),
 		options = this.getOptions();
 	if (bitmap != null) {
-		let who = bitmap;
 		bitmap = BitmapDrawableFactory.wrap(bitmap, options);
 		if (!(bitmap instanceof android.graphics.Bitmap)) {
 			bitmap = this.getCorruptedThumbnail();
@@ -866,7 +1019,7 @@ BitmapDrawable.prototype.process = function() {
 		this.wrapped = bitmap;
 	}
 	if (bitmap == null) {
-		return null;
+		return (this.wrapped = null);
 	}
 	return new android.graphics.drawable.BitmapDrawable(bitmap);
 };
@@ -942,9 +1095,12 @@ BitmapDrawable.prototype.toString = function() {
 	return "[BitmapDrawable " + this.getBitmap() + "]";
 };
 
-EXPORT("BitmapDrawable", BitmapDrawable);
 
-let AnimationDrawable = function(frames) {
+
+
+// file: drawable/AnimationDrawable.js
+
+AnimationDrawable = function(frames) {
 	this.clearFrames();
 	if (frames !== undefined) {
 		this.addFrames(frames);
@@ -1142,109 +1298,25 @@ AnimationDrawable.Frame.prototype.toString = function() {
 	return "[Frame " + this.getDrawable() + "@" + this.getDuration() + "]";
 };
 
+
+
+
+// file: integration.js
+
+EXPORT("HashedDrawableMap", HashedDrawableMap); 
+EXPORT("DrawableFactory", DrawableFactory);
+EXPORT("BitmapFactory", BitmapFactory);
+EXPORT("BitmapDrawableFactory", BitmapDrawableFactory); 
+EXPORT("AnimationDrawableFactory", AnimationDrawableFactory);
+EXPORT("Drawable", Drawable);
+EXPORT("CachedDrawable", CachedDrawable);
+EXPORT("ColorDrawable", ColorDrawable);
+EXPORT("ScheduledDrawable", ScheduledDrawable);
+EXPORT("LayerDrawable", LayerDrawable);
+EXPORT("ClipDrawable", ClipDrawable);
+EXPORT("BitmapDrawable", BitmapDrawable);
 EXPORT("AnimationDrawable", AnimationDrawable);
 
-let AnimationDrawableFactory = {};
 
-AnimationDrawableFactory.setEnterFadeDuration = function(drawable, duration) {
-	drawable.setEnterFadeDuration(Number(duration));
-};
 
-AnimationDrawableFactory.setExitFadeDuration = function(drawable, duration) {
-	drawable.setExitFadeDuration(Number(duration));
-};
 
-AnimationDrawableFactory.setOneShot = function(drawable, enabled) {
-	drawable.setOneShot(Boolean(enabled));
-};
-
-EXPORT("AnimationDrawableFactory", AnimationDrawableFactory);
-
-let DrawableFactory = {};
-
-DrawableFactory.setAlpha = function(drawable, alpha) {
-	drawable.setAlpha(Number(alpha));
-};
-
-DrawableFactory.setAntiAlias = function(drawable, enabled) {
-	drawable.setAntiAlias(Boolean(enabled));
-};
-
-DrawableFactory.setAutoMirrored = function(drawable, enabled) {
-	drawable.setAutoMirrored(Boolean(enabled));
-};
-
-DrawableFactory.setFilterBitmap = function(drawable, enabled) {
-	drawable.setFilterBitmap(Boolean(enabled));
-};
-
-DrawableFactory.setTintColor = function(drawable, color) {
-	color = ColorDrawable.parseColor(color);
-	if (android.os.Build.VERSION.SDK_INT >= 29) {
-		let filter = new android.graphics.BlendModeColorFilter(color, android.graphics.BlendMode.SRC_ATOP);
-		drawable.setColorFilter(filter);
-		return;
-	}
-	drawable.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP);
-};
-
-DrawableFactory.setMipMap = function(drawable, enabled) {
-	drawable.setMipMap(Boolean(enabled));
-};
-
-DrawableFactory.setColorFilter = function(drawable, filter) {
-	drawable.setColorFilter(filter);
-};
-
-DrawableFactory.setTileMode = function(drawable, modesOrX, y) {
-	if (Array.isArray(modesOrX)) {
-		y = modesOrX[1];
-		modesOrX = modesOrX[0];
-	}
-	if (modesOrX === undefined) {
-		modesOrX = android.graphics.Shader.TileMode.CLAMP;
-	}
-	if (y !== undefined) {
-		drawable.setTileModeX(modesOrX);
-		drawable.setTileModeY(y);
-		return;
-	}
-	drawable.setTileModeXY(modesOrX);
-};
-
-DrawableFactory.setGravity = function(drawable, gravity) {
-	drawable.setGravity(Number(gravity));
-};
-
-DrawableFactory.setLayoutDirection = function(drawable, direction) {
-	drawable.setLayoutDirection(Number(direction));
-};
-
-DrawableFactory.setXfermode = function(drawable, mode) {
-	drawable.setXfermode(mode);
-};
-
-DrawableFactory.setLevel = function(drawable, level) {
-	return drawable.setLevel(Number(level));
-};
-
-DrawableFactory.setState = function(drawable, states) {
-	if (!Array.isArray(states)) states = [states];
-	states = states.map(function(state) {
-		return Number(state);
-	});
-	return drawable.setState(states);
-};
-
-DrawableFactory.setVisible = function(drawable, first, second) {
-	if (Array.isArray(first)) {
-		second = first[1];
-		first = first[0];
-	}
-	if (second === undefined) {
-		second = first;
-	}
-	return drawable.setVisible(Boolean(first), Boolean(second));
-};
-
-EXPORT("DrawableFactory", DrawableFactory);

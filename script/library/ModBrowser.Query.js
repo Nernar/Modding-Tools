@@ -1,4 +1,15 @@
 /*
+BUILD INFO:
+  dir: ModBrowser.Query
+  target: out/ModBrowser.Query.js
+  files: 9
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2020-2022 Nernar (github.com/nernar)
 
@@ -20,19 +31,24 @@ LIBRARY({
 	name: "ModBrowser.Query",
 	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Network"],
+	dependencies: ["Connectivity:1"],
 	shared: true
 });
 
-IMPORT("Network");
+IMPORT("Connectivity:1");
 
-let ModBrowser = {};
+ModBrowser = {};
+
+
+
+
+// file: network/Query.js
 
 ModBrowser.Query = function() {
 	this.query = {};
 };
 
-ModBrowser.Query.prototype = new Network.Reader;
+ModBrowser.Query.prototype = new Connectivity.Reader;
 
 ModBrowser.Query.prototype.getQuery = function() {
 	return this.query || null;
@@ -79,11 +95,21 @@ ModBrowser.Query.Sort.NEW = "new";
 ModBrowser.Query.Sort.REDACTION = "redaction";
 ModBrowser.Query.Sort.UPDATED = "updated";
 
+
+
+
+// file: network/Count.js
+
 ModBrowser.Query.Count = function() {
 	this.setAddressRelative("count");
 };
 
 ModBrowser.Query.Count.prototype = new ModBrowser.Query;
+
+
+
+
+// file: network/Version.js
 
 ModBrowser.Query.Version = function(id) {
 	if (id !== undefined) {
@@ -111,6 +137,11 @@ ModBrowser.Query.Version.prototype.setId = function(id) {
 	}
 	this.updateAddress();
 };
+
+
+
+
+// file: network/List.js
 
 ModBrowser.Query.List = function() {
 	this.setLanguage("en");
@@ -238,6 +269,11 @@ ModBrowser.Query.List.prototype.setIds = function(ids) {
 	this.updateAddress();
 };
 
+
+
+
+// file: network/Description.js
+
 ModBrowser.Query.Description = function(id) {
 	this.setLanguage("en");
 	if (id !== undefined) {
@@ -295,6 +331,11 @@ ModBrowser.Query.Description.prototype.setCommentLimit = function(limit) {
 	}
 	this.updateAddress();
 };
+
+
+
+
+// file: network/Recommendation.js
 
 ModBrowser.Query.Recommendation = function(id) {
 	this.setLanguage("en");
@@ -354,6 +395,11 @@ ModBrowser.Query.Recommendation.prototype.setLimit = function(limit) {
 	}
 	this.updateAddress();
 };
+
+
+
+
+// file: network/Search.js
 
 ModBrowser.Query.Search = function(query) {
 	this.setLanguage("en");
@@ -446,11 +492,16 @@ ModBrowser.Query.Search.prototype.setTag = function(tag) {
 	this.updateAddress();
 };
 
+
+
+
+// file: integration.js
+
 ModBrowser.getDownloader = function(id, isHorizon) {
 	if (id == undefined || id == null) {
 		return null;
 	}
-	let downloader = new Network.Downloader();
+	let downloader = new Connectivity.Downloader();
 	if (isHorizon || isHorizon === undefined) {
 		downloader.setAddress("https://icmods.mineprogramming.org/api/download?horizon&id=" + id);
 	} else downloader.setAddress("https://icmods.mineprogramming.org/api/download?id=" + id);
@@ -458,3 +509,7 @@ ModBrowser.getDownloader = function(id, isHorizon) {
 };
 
 EXPORT("ModBrowser", ModBrowser);
+
+
+
+

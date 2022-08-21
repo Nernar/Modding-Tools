@@ -1,13 +1,24 @@
 /*
+BUILD INFO:
+  dir: Connectivity
+  target: Connectivity.js
+  files: 6
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2020-2022 Nernar (github.com/nernar)
-   
+
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-   
+
        http://www.apache.org/licenses/LICENSE-2.0
-   
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,21 +28,23 @@
 */
 
 LIBRARY({
-	name: "Network",
+	name: "Connectivity",
 	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention"],
 	shared: true
 });
 
-IMPORT("Retention");
+
+
+
+// file: network/Connectivity.js
 
 /**
  * @constructor
  * Creates a connection to specific remote address.
  * @param {string} [address] address
  */
-let Network = function(address) {
+Connectivity = function(address) {
 	this.callback = {};
 	address && this.setAddress(address);
 };
@@ -40,7 +53,7 @@ let Network = function(address) {
  * Returns url was set by connection.
  * @returns {Object|null} java url
  */
-Network.prototype.getUrl = function() {
+Connectivity.prototype.getUrl = function() {
 	return this.url || null;
 };
 
@@ -49,9 +62,9 @@ Network.prototype.getUrl = function() {
  * If you need set address, use appropriate method.
  * @param {Object|null} url java url
  */
-Network.prototype.setUrl = function(url) {
-	if (String(url) === url) {
-		Logger.Log("Network: you should use Network.setAddress instead of Network.setUrl for string values", "WARNING");
+Connectivity.prototype.setUrl = function(url) {
+	if ("" + url == url) {
+		Logger.Log("Connectivity: You should use Connectivity.setAddress instead of Connectivity.setUrl for string values", "WARNING");
 		this.setAddress(url);
 		return;
 	}
@@ -65,7 +78,7 @@ Network.prototype.setUrl = function(url) {
  * Use to specify remote address as a string.
  * @param {string} address address
  */
-Network.prototype.setAddress = function(address) {
+Connectivity.prototype.setAddress = function(address) {
 	this.setUrl(new java.net.URL(address));
 };
 
@@ -73,7 +86,7 @@ Network.prototype.setAddress = function(address) {
  * Event receiver, use to track actions.
  * @param {Object} callback callback
  */
-Network.prototype.setCallback = function(callback) {
+Connectivity.prototype.setCallback = function(callback) {
 	if (callback && callback instanceof Object) {
 		this.callback = callback;
 		return;
@@ -86,7 +99,7 @@ Network.prototype.setCallback = function(callback) {
  * If url isn't specified, [[null]] is returned.
  * @returns {Object|null} java stream
  */
-Network.prototype.getStream = function() {
+Connectivity.prototype.getStream = function() {
 	try {
 		return this.url ? this.url.openStream() : null;
 	} catch (e) {
@@ -98,8 +111,8 @@ Network.prototype.getStream = function() {
 /**
  * If connection doesn't exist, creates a new one.
  */
-Network.prototype.validateConnection = function() {
-	if (this.connection === null || this.connection === undefined) {
+Connectivity.prototype.validateConnection = function() {
+	if (this.connection == null || this.connection === undefined) {
 		this.connection = this.url ? this.url.openConnection() : null;
 		if (this.callback.hasOwnProperty("onCreateConnection")) {
 			this.callback.onCreateConnection.call(this, this.connection);
@@ -112,7 +125,7 @@ Network.prototype.validateConnection = function() {
  * @param {boolean} [force] if [[true]], willn't open a new connection
  * @returns {Object|null} java connection
  */
-Network.prototype.getConnection = function(force) {
+Connectivity.prototype.getConnection = function(force) {
 	if (!force) this.validateConnection();
 	return this.connection || null;
 };
@@ -121,7 +134,7 @@ Network.prototype.getConnection = function(force) {
  * Returns true if connection exists.
  * @returns {boolean} has connection
  */
-Network.prototype.hasConnection = function() {
+Connectivity.prototype.hasConnection = function() {
 	return this.getConnection(true) !== null;
 };
 
@@ -129,10 +142,10 @@ Network.prototype.hasConnection = function() {
  * Connects to created url if it's created.
  * @throws if connection creation failed
  */
-Network.prototype.connect = function() {
+Connectivity.prototype.connect = function() {
 	let connection = this.getConnection();
 	if (connection) connection.connect();
-	else MCSystem.throwException("Network: impossible to find any opened connection to connect");
+	else MCSystem.throwException("Connectivity: Couldn't find any opened connection to connect");
 	if (this.callback.hasOwnProperty("onConnect")) {
 		this.callback.onConnect.call(this, connection);
 	}
@@ -142,7 +155,7 @@ Network.prototype.connect = function() {
  * Disconnects from existing connection.
  * If connection doesn't exist, nothing happens.
  */
-Network.prototype.disconnect = function() {
+Connectivity.prototype.disconnect = function() {
 	let connection = this.getConnection();
 	if (!connection) return;
 	connection.disconnect();
@@ -157,7 +170,7 @@ Network.prototype.disconnect = function() {
  * If connection failed, returns [[-1]].
  * @returns {number} bytes count
  */
-Network.prototype.getLength = function() {
+Connectivity.prototype.getLength = function() {
 	let connected = this.hasConnection();
 	if (!connected) this.connect();
 	let connection = this.getConnection(),
@@ -173,35 +186,40 @@ Network.prototype.getLength = function() {
  * Checks if there's has internet connection.
  * @returns {boolean} has connection
  */
-Network.isOnline = function() {
-	let service = getContext().getSystemService("connectivity");
-	if (service === null) {
+Connectivity.isOnline = function() {
+	let service = UI.getContext().getSystemService("connectivity");
+	if (service == null) {
 		return false;
 	}
 	let network = service.getActiveNetworkInfo();
-	if (network === null || !network.isConnectedOrConnecting()) {
+	if (network == null || !network.isConnectedOrConnecting()) {
 		return false;
 	}
 	return true;
 };
+
+
+
+
+// file: network/Reader.js
 
 /**
  * @constructor
  * Creates a connection to read text data.
  * @param {string} [address] address
  */
-Network.Reader = function(address) {
+Connectivity.Reader = function(address) {
 	address && this.setAddress(address);
 };
 
-Network.Reader.prototype = new Network;
-Network.Reader.prototype.charset = "UTF-8";
+Connectivity.Reader.prototype = new Connectivity;
+Connectivity.Reader.prototype.charset = "UTF-8";
 
 /**
  * Returns current charset of being read data.
  * @returns {string|null} charset
  */
-Network.Reader.prototype.getCharset = function() {
+Connectivity.Reader.prototype.getCharset = function() {
 	return this.charset || null;
 };
 
@@ -211,7 +229,7 @@ Network.Reader.prototype.getCharset = function() {
  * @param {string|null} character encoding
  * See {@link https://wikipedia.org/wiki/Character_encoding|character encoding} for more details.
  */
-Network.Reader.prototype.setCharset = function(charset) {
+Connectivity.Reader.prototype.setCharset = function(charset) {
 	if (charset) {
 		this.charset = charset;
 	} else delete this.charset;
@@ -224,7 +242,7 @@ Network.Reader.prototype.setCharset = function(charset) {
  * Returns stream reader, or [[null]] if create failed.
  * @returns {Object|null} java stream reader
  */
-Network.Reader.prototype.getStreamReader = function() {
+Connectivity.Reader.prototype.getStreamReader = function() {
 	let stream = this.getStream();
 	if (!stream) return null;
 	let charset = this.getCharset();
@@ -238,7 +256,7 @@ Network.Reader.prototype.getStreamReader = function() {
  * Returns [[true]] if read process is running.
  * @returns {boolean} in process
  */
-Network.Reader.prototype.inProcess = function() {
+Connectivity.Reader.prototype.inProcess = function() {
 	return !!this.processing;
 };
 
@@ -247,7 +265,7 @@ Network.Reader.prototype.inProcess = function() {
  * Returns [[null]] if read process hasn't been started.
  * @returns {Object|null} readed array
  */
-Network.Reader.prototype.getCurrentlyReaded = function() {
+Connectivity.Reader.prototype.getCurrentlyReaded = function() {
 	return this.result || null;
 };
 
@@ -256,7 +274,7 @@ Network.Reader.prototype.getCurrentlyReaded = function() {
  * Returns [[-1]] if there is no connection.
  * @returns {number} readed lines count
  */
-Network.Reader.prototype.getReadedCount = function() {
+Connectivity.Reader.prototype.getReadedCount = function() {
 	let readed = this.getCurrentlyReaded();
 	return readed ? readed.length : -1;
 };
@@ -265,7 +283,7 @@ Network.Reader.prototype.getReadedCount = function() {
  * Returns readed result, or [[null]] if none.
  * @returns {string|null} result
  */
-Network.Reader.prototype.getResult = function() {
+Connectivity.Reader.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
 	if (!readed) return null;
 	return readed.join("\n");
@@ -277,10 +295,10 @@ Network.Reader.prototype.getResult = function() {
  * @throws error will occur if there's no connection
  * @returns {string} read lines
  */
-Network.Reader.prototype.read = function() {
+Connectivity.Reader.prototype.read = function() {
 	let stream = this.getStreamReader();
 	if (!stream) {
-		MCSystem.throwException("Network: impossible to read stream, because one of params is missing");
+		MCSystem.throwException("Connectivity: Couldn't read stream, because one of params is missing");
 	}
 	let result = this.result = [],
 		reader = new java.io.BufferedReader(stream);
@@ -304,6 +322,11 @@ Network.Reader.prototype.read = function() {
 	return this.getResult();
 };
 
+
+
+
+// file: network/Writer.js
+
 /**
  * @constructor
  * Loads a data stream into specified stream.
@@ -311,19 +334,19 @@ Network.Reader.prototype.read = function() {
  * See [[getOutputStream()]] method for details.
  * @param {string} [address] address
  */
-Network.Writer = function(address) {
+Connectivity.Writer = function(address) {
 	address && this.setAddress(address);
 };
 
-Network.Writer.prototype = new Network;
-Network.Writer.prototype.size = 8192;
+Connectivity.Writer.prototype = new Connectivity;
+Connectivity.Writer.prototype.size = 8192;
 
 /**
  * Returns buffer size for reading data.
  * Returns [[-1]] if default value setted.
  * @returns {number} buffer size
  */
-Network.Writer.prototype.getBufferSize = function() {
+Connectivity.Writer.prototype.getBufferSize = function() {
 	return this.size || -1;
 };
 
@@ -331,7 +354,7 @@ Network.Writer.prototype.getBufferSize = function() {
  * Sets read buffer size.
  * @param {number|null} size buffer size
  */
-Network.Writer.prototype.setBufferSize = function(size) {
+Connectivity.Writer.prototype.setBufferSize = function(size) {
 	if (size) this.size = size;
 	else delete this.size;
 };
@@ -341,7 +364,7 @@ Network.Writer.prototype.setBufferSize = function(size) {
  * Returns [[-1]] if there is no connection.
  * @returns {number} readed data length
  */
-Network.Writer.prototype.getReadedCount = function() {
+Connectivity.Writer.prototype.getReadedCount = function() {
 	return this.count ? this.count : this.inProcess() ? 0 : -1;
 };
 
@@ -349,7 +372,7 @@ Network.Writer.prototype.getReadedCount = function() {
  * Returns a stream reader, can be overwritten in prototypes.
  * @returns {Object|null} java input stream
  */
-Network.Writer.prototype.getStreamReader = function() {
+Connectivity.Writer.prototype.getStreamReader = function() {
 	let stream = this.getStream();
 	if (!stream) return null;
 	let size = this.getBufferSize();
@@ -363,15 +386,15 @@ Network.Writer.prototype.getStreamReader = function() {
  * Returns output stream, must be overwritten by any prototype.
  * @throws error if not overwritten by prototype
  */
-Network.Writer.prototype.getOutputStream = function() {
-	MCSystem.throwException("Network: Network.Writer.getOutputStream must be implemented");
+Connectivity.Writer.prototype.getOutputStream = function() {
+	MCSystem.throwException("Connectivity: Connectivity.Writer.getOutputStream must be implemented");
 };
 
 /**
  * Returns [[true]] if download process is running.
  * @returns {boolean} in process
  */
-Network.Writer.prototype.inProcess = function() {
+Connectivity.Writer.prototype.inProcess = function() {
 	return !!this.processing;
 };
 
@@ -380,14 +403,14 @@ Network.Writer.prototype.inProcess = function() {
  * @throws error will occur if there's no connection
  * @throws error if output stream is invalid
  */
-Network.Writer.prototype.download = function() {
+Connectivity.Writer.prototype.download = function() {
 	let stream = this.getStreamReader(),
 		output = this.getOutputStream();
 	if (!stream) {
-		MCSystem.throwException("Network: impossible to download stream, because input stream is missing");
+		MCSystem.throwException("Connectivity: Couldn't download stream, because input stream is missing");
 	}
 	if (!output) {
-		MCSystem.throwException("Network: impossible to download stream, because output stream is missing");
+		MCSystem.throwException("Connectivity: Couldn't download stream, because output stream is missing");
 	}
 	this.connect(), this.count = 0;
 	this.processing = true;
@@ -418,24 +441,29 @@ Network.Writer.prototype.download = function() {
 	stream.close();
 };
 
+
+
+
+// file: network/Downloader.js
+
 /**
  * @constructor
  * Loads a stream to file.
  * @param {string} [address] address
  * @param {string} [path] file path
  */
-Network.Downloader = function(address, path) {
+Connectivity.Downloader = function(address, path) {
 	address && this.setAddress(address);
 	path && this.setPath(path);
 };
 
-Network.Downloader.prototype = new Network.Writer;
+Connectivity.Downloader.prototype = new Connectivity.Writer;
 
 /**
  * Returns currently specified file.
  * @returns {Object|null} java file
  */
-Network.Downloader.prototype.getFile = function() {
+Connectivity.Downloader.prototype.getFile = function() {
 	return this.file || null;
 };
 
@@ -444,7 +472,7 @@ Network.Downloader.prototype.getFile = function() {
  * If argument isn't given, removes it.
  * @param {Object|null} file java file
  */
-Network.Downloader.prototype.setFile = function(file) {
+Connectivity.Downloader.prototype.setFile = function(file) {
 	if (file) {
 		this.file = file;
 	} else delete this.file;
@@ -458,7 +486,7 @@ Network.Downloader.prototype.setFile = function(file) {
  * Returns [[null]] if file isn't specified.
  * @returns {string|null} specified path
  */
-Network.Downloader.prototype.getPath = function() {
+Connectivity.Downloader.prototype.getPath = function() {
 	let file = this.getFile();
 	return file ? file.getPath() : null;
 };
@@ -467,7 +495,7 @@ Network.Downloader.prototype.getPath = function() {
  * Sets path to file, replaces current file.
  * @param {string} path file path
  */
-Network.Downloader.prototype.setPath = function(path) {
+Connectivity.Downloader.prototype.setPath = function(path) {
 	let file = new java.io.File(path);
 	if (file) this.setFile(file);
 };
@@ -477,7 +505,7 @@ Network.Downloader.prototype.setPath = function(path) {
  * If file isn't specified, will return [[null]].
  * @returns {Object|null} output stream
  */
-Network.Downloader.prototype.getOutputStream = function() {
+Connectivity.Downloader.prototype.getOutputStream = function() {
 	let file = this.getFile();
 	if (!file) return null;
 	if (!file.exists()) {
@@ -489,6 +517,11 @@ Network.Downloader.prototype.getOutputStream = function() {
 	return new java.io.BufferedOutputStream(stream);
 };
 
+
+
+
+// file: integration.js
+
 /**
  * A quick way to create thread, errors are handled.
  * @param {Function} action action to handle
@@ -496,9 +529,9 @@ Network.Downloader.prototype.getOutputStream = function() {
  * @param {any} connect will be passed into callback
  * @throws error if action isn't specified
  */
-Network.handle = function(action, callback, connect) {
+Connectivity.handle = function(action, callback, connect) {
 	if (!(action instanceof Function)) {
-		MCSystem.throwException("Network: nothing to network handle");
+		MCSystem.throwException("Connectivity: Nothing to network handle");
 	}
 	handleThread(function() {
 		try {
@@ -513,11 +546,10 @@ Network.handle = function(action, callback, connect) {
 				} else if (callback instanceof Function) {
 					callback.call(connect);
 				}
-				Logger.Log("Failed to read network data from a server", "WARNING");
+				Logger.Log("Connectivity: Failed to read network data from a server", "WARNING");
 			} catch (t) {
-				Logger.Log("A fatal error occurred while trying to network connect", "ERROR");
+				Logger.Log("Connectivity: A fatal error occurred while trying to network connect", "ERROR");
 			}
-			reportError(e);
 		}
 	});
 };
@@ -528,8 +560,8 @@ Network.handle = function(action, callback, connect) {
  * @param {Object|Function} callback action or callback
  * @returns {boolean} has process started
  */
-Network.lengthUrl = function(address, callback) {
-	if (!Network.isOnline()) {
+Connectivity.lengthUrl = function(address, callback) {
+	if (!Connectivity.isOnline()) {
 		if (callback && callback instanceof Object) {
 			if (callback.hasOwnProperty("isNotConnected")) {
 				callback.isNotConnected();
@@ -537,7 +569,7 @@ Network.lengthUrl = function(address, callback) {
 		}
 		return false;
 	}
-	let connect = new Network.Connect(address);
+	let connect = new Connectivity.Connect(address);
 	if (callback && callback instanceof Object) {
 		callback && connect.setCallback(callback);
 	}
@@ -547,7 +579,7 @@ Network.lengthUrl = function(address, callback) {
 				connect.getLength();
 			} else callback(connect.getLength());
 		} else {
-			Logger.Log("Network action after doing stream length is missed", "WARNING")
+			Logger.Log("Connectivity: Network action after doing stream length is missed", "WARNING")
 			connect.getLength();
 		}
 	}, callback, connect);
@@ -560,8 +592,8 @@ Network.lengthUrl = function(address, callback) {
  * @param {Object|Function} callback action or callback
  * @returns {boolean} has process started
  */
-Network.readUrl = function(address, callback) {
-	if (!Network.isOnline()) {
+Connectivity.readUrl = function(address, callback) {
+	if (!Connectivity.isOnline()) {
 		if (callback && callback instanceof Object) {
 			if (callback.hasOwnProperty("isNotConnected")) {
 				callback.isNotConnected();
@@ -569,7 +601,7 @@ Network.readUrl = function(address, callback) {
 		}
 		return false;
 	}
-	let reader = new Network.Reader(address);
+	let reader = new Connectivity.Reader(address);
 	if (callback && callback instanceof Object) {
 		callback && reader.setCallback(callback);
 	}
@@ -579,7 +611,7 @@ Network.readUrl = function(address, callback) {
 				reader.read();
 			} else callback(reader.read());
 		} else {
-			Logger.Log("Network action after doing stream reading is missed", "WARNING")
+			Logger.Log("Connectivity: Network action after doing stream reading is missed", "WARNING")
 			reader.read();
 		}
 	}, callback, reader);
@@ -593,8 +625,8 @@ Network.readUrl = function(address, callback) {
  * @param {Object|Function} [callback] action or callback
  * @returns {boolean} has process started
  */
-Network.downloadUrl = function(address, path, callback) {
-	if (!Network.isOnline()) {
+Connectivity.downloadUrl = function(address, path, callback) {
+	if (!Connectivity.isOnline()) {
 		if (callback && callback instanceof Object) {
 			if (callback.hasOwnProperty("isNotConnected")) {
 				callback.isNotConnected();
@@ -602,7 +634,7 @@ Network.downloadUrl = function(address, path, callback) {
 		}
 		return false;
 	}
-	let writer = new Network.Downloader(address, path);
+	let writer = new Connectivity.Downloader(address, path);
 	if (callback && callback instanceof Object) {
 		callback && writer.setCallback(callback);
 	}
@@ -616,4 +648,8 @@ Network.downloadUrl = function(address, path, callback) {
 	return true;
 };
 
-EXPORT("Network", Network);
+EXPORT("Connectivity", Connectivity);
+
+
+
+

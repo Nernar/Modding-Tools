@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-19.08.2022-0";
+const REVISION = "develop-alpha-0.4-21.08.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -60,7 +60,7 @@ let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = android.graphics.Typeface.MONOSPACE;
 let typefaceJetBrains = android.graphics.Typeface.MONOSPACE;
 
-IMPORT("JsonIo");
+IMPORT("Files");
 
 if (this.isInstant === undefined) {
 	this.isInstant = false;
@@ -156,4 +156,4 @@ getPlayerEnt = function() {
 	return 0;
 };
 
-IMPORT("Network");
+IMPORT("Connectivity");

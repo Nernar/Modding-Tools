@@ -1,4 +1,15 @@
 /*
+BUILD INFO:
+  dir: Sequence
+  target: out/Sequence.js
+  files: 2
+*/
+
+
+
+// file: header.js
+
+/*
 
    Copyright 2021-2022 Nernar (github.com/nernar)
 
@@ -20,11 +31,16 @@ LIBRARY({
 	name: "Sequence",
 	version: 1,
 	api: "AdaptedScript",
-	dependencies: ["Retention"],
+	dependencies: ["Retention:1"],
 	shared: true
 });
 
-IMPORT("Retention");
+IMPORT("Retention:1");
+
+
+
+
+// file: integration.js
 
 /**
  * @constructor
@@ -34,7 +50,7 @@ IMPORT("Retention");
  * by [[next()]] besides [[execute()]] passed value.
  * @param {object} [obj] merges with prototype
  */
-let Sequence = (function() {
+Sequence = (function() {
 	let identifier = 0;
 	return function(obj) {
 		if (obj !== undefined) {
@@ -242,3 +258,7 @@ Sequence.prototype.assureYield = function(thread) {
 };
 
 EXPORT("Sequence", Sequence);
+
+
+
+
