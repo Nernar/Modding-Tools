@@ -56,6 +56,7 @@ SliderFragment.prototype.resetContainer = function() {
 			}
 			// TODO: return self.holdDefault()
 		}
+		view.getParent().requestDisallowInterceptTouchEvent(true);
 		return true;
 	});
 	view.setTextSize(toComplexUnitSp(8));

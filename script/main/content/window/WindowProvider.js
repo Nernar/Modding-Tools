@@ -45,7 +45,7 @@ WindowProvider.getFlagsForWindow = function(window) {
 })();
 
 WindowProvider.hasOpenedPopup = function(window) {
-	return Boolean(window.popupId == -1 || this.getByPopupId(window.popupId));
+	return !!(window.popupId == -1 || this.getByPopupId(window.popupId));
 };
 
 WindowProvider.getByPopupId = function(popupId) {
@@ -66,9 +66,8 @@ WindowProvider.openWindow = function(window) {
 				content.setSystemUiVisibility(5894);
 			}
 		}
-		let popup = content ? new android.widget.PopupWindow(content,
-				window.getWidth(), window.getHeight()) :
-				new android.widget.PopupWindow(window.getWidth(), window.getHeight()),
+		let popup = content ? new android.widget.PopupWindow(content, window.getWidth(), window.getHeight())
+				: new android.widget.PopupWindow(window.getWidth(), window.getHeight()),
 			popupId = this.prepareIdentifier(window);
 		this.attached[popupId] = popup;
 		popup.setAttachedInDecor(isHorizon && !isInstant);
@@ -79,8 +78,7 @@ WindowProvider.openWindow = function(window) {
 		if (window.exitTransition) {
 			this.setExitTransition(popupId, window.exitTransition);
 		}
-		popup.showAtLocation(getDecorView(), window.getGravity(),
-			window.getX(), window.getY());
+		popup.showAtLocation(getDecorView(), window.getGravity(), window.getX(), window.getY());
 		return;
 	}
 	window.popupId = -1;

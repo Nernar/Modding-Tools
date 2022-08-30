@@ -15,8 +15,8 @@ ThinButtonFragment.prototype.resetContainer = function() {
 	view.setGravity($.Gravity.CENTER);
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
-	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
+	view.setLayoutParams(new android.view.ViewGroup.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 	this.setContainerView(view);
 };
 

@@ -752,7 +752,7 @@ MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
 	views.params.setPadding(0, toComplexUnitDip(3), 0, 0);
 	views.params.setTextSize(toComplexUnitSp(8));
 	views.params.setTextColor($.Color.LTGRAY);
-	views.params.setSingleLine();
+	views.params.setMaxLines(3);
 	views.more.addView(views.params);
 };
 

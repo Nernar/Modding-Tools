@@ -100,6 +100,18 @@ LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 	return instanceOrJson;
 };
 
+LayoutFragment.prototype.addScroll = function() {
+	let fragment = new ScrollFragment();
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addHorizontalScroll = function() {
+	let fragment = new HorizontalScrollFragment();
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
 LayoutFragment.prototype.addCategoryTitle = function(text) {
 	let fragment = new CategoryTitleFragment();
 	if (text !== undefined) {
@@ -158,6 +170,18 @@ LayoutFragment.prototype.addCounter = function(value, change, modifiers, modifie
 	}
 	if (modifier !== undefined) {
 		fragment.setModifier(modifier);
+	}
+	this.addElementFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addAngleCircle = function(value, change) {
+	let fragment = new AngleCircleFragment();
+	if (value !== undefined) {
+		fragment.setValue(value);
+	}
+	if (change !== undefined) {
+		fragment.setOnChangeListener(change);
 	}
 	this.addElementFragment(fragment);
 	return fragment;

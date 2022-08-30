@@ -92,7 +92,7 @@ TransitionWindow.prototype.getContainerOfScene = function() {
 };
 
 TransitionWindow.prototype.hasContainerScene = function() {
-	return Boolean(this.containerScene);
+	return !!this.containerScene;
 };
 
 TransitionWindow.prototype.makeRoot = function() {

@@ -52,8 +52,8 @@ ControlFragment.CollapsedButton.prototype = new ControlFragment.Button;
 
 ControlFragment.CollapsedButton.prototype.setOffset = function(x, y) {
 	let layout = this.getContainerRoot();
-	if (x !== undefined) layout.setX(-Number(x));
-	if (y !== undefined) layout.setY(-Number(y));
+	if (x !== undefined) layout.setX(-x);
+	if (y !== undefined) layout.setY(-y);
 };
 
 ControlFragment.Logotype = function() {
@@ -65,7 +65,7 @@ ControlFragment.Logotype.prototype = new ControlFragment;
 ControlFragment.Logotype.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	container.setLayoutParams(new android.widget.FrameLayout.LayoutParams
-			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	this.setContainerView(container);
 	
 	let layout = new android.widget.LinearLayout(getContext());
@@ -74,7 +74,8 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	layout.setMinimumWidth(getDisplayWidth());
 	layout.setMinimumHeight(getDisplayHeight());
 	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
-	container.addView(layout);
+	container.addView(layout, new android.widget.FrameLayout.LayoutParams
+		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotypeForeground");

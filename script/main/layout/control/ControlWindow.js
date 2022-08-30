@@ -3,6 +3,7 @@ const ControlWindow = function() {
 	window.setFragment(new FrameFragment());
 	window.resetContent();
 	window.setButtonBackground("popupButton");
+	window.setLogotypeBackground("popupControl");
 	return window;
 };
 
@@ -288,7 +289,7 @@ ControlWindow.prototype.isHideableInside = function() {
 };
 
 ControlWindow.prototype.setHideableInside = function(enabled) {
-	this.unclose = Boolean(enabled);
+	this.unclose = !!enabled;
 };
 
 ControlWindow.prototype.transformButton = function() {
