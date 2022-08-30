@@ -108,7 +108,7 @@ MenuTool.prototype.collapse = function() {
 	InteractionTool.prototype.collapse.apply(this, arguments);
 };
 
-MenuTool.prototype.queue = function(sequence) {
+MenuTool.prototype.queue = function(what) {
 	let menu = this.getMenuWindow();
 	if (menu == null) return;
 	menu.dismiss();

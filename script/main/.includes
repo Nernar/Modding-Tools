@@ -21,6 +21,7 @@ content/fragment/BaseFragment.js
 content/fragment/LayoutFragment.js
 content/fragment/FrameFragment.js
 content/fragment/ScrollFragment.js
+content/fragment/HorizontalScrollFragment.js
 content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
 content/adapter/ListHolderAdapter.js
@@ -62,6 +63,7 @@ layout/fragment/PropertyInputFragment.js
 layout/fragment/AutoCompleteInputFragment.js
 layout/fragment/SliderFragment.js
 layout/fragment/CounterFragment.js
+layout/fragment/AngleCircleFragment.js
 layout/fragment/AxisGroupFragment.js
 
 tool/Tool.js

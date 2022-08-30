@@ -114,6 +114,30 @@ EditorTool.prototype.hasParser = function() {
 	return false;
 };
 
+EditorTool.prototype.getInteractionDescriptor = function() {
+	if (this.worker === undefined) {
+		return null;
+	}
+	return SidebarTool.prototype.getInteractionDescriptor.apply(this, arguments);
+};
+
+EditorTool.prototype.getMenuDescriptor = function() {
+	if (this.worker === undefined) {
+		return null;
+	}
+	return SidebarTool.prototype.getMenuDescriptor.apply(this, arguments);
+};
+
+EditorTool.prototype.getSidebarDescriptor = function() {
+	if (this.worker === undefined) {
+		return null;
+	}
+	return SidebarTool.prototype.getSidebarDescriptor.apply(this, arguments);
+};
+
+// Control descriptor will be obtained in any case,
+// even if project has not yet been loaded.
+
 EditorTool.prototype.open = function(source) {
 	let index = (function() {
 		if (source !== undefined) {
@@ -127,12 +151,15 @@ EditorTool.prototype.open = function(source) {
 	delete this.worker;
 	let worker = this.getWorkerFor(source);
 	let project = worker.getProject();
-	if ((index = ProjectProvider.indexOf(project)) == -1) {
+	let location = ProjectProvider.indexOf(project);
+	if (location != -1) {
+		ProjectProvider.opened.object.splice(location, 1);
+		if (index > location) {
+			index--;
+		}
+	}
+	if (index == -1) {
 		ProjectProvider.setupEditor(ProjectProvider.opened.object.push(project) - 1, worker);
-		// TODO: Project will be crashed if old-type rebuildable data is used
-		// if ((index = ProjectProvider.indexOf(project)) == -1) {
-			// return false;
-		// }
 	} else {
 		ProjectProvider.setupEditor(index, worker);
 	}
@@ -248,11 +275,11 @@ EditorTool.prototype.export = function(file) {
 
 EditorTool.prototype.leave = function() {
 	this.deattach();
-	let instance = this;
-	delete instance.worker;
+	delete this.worker;
+	let self = this;
 	attachProjectTool(undefined, function(tool) {
-		tool.toProject().callAutosave();
-		instance.unselect(true);
+		tool.getProject().callAutosave();
+		self.unselect(true);
 	});
 };
 
@@ -296,3 +323,5 @@ EditorTool.ExtensionType = {};
 EditorTool.ExtensionType.REPLACE = 0;
 EditorTool.ExtensionType.MERGE = 1;
 EditorTool.ExtensionType.EXPORT = 2;
+
+EditorTool.State = clone(SidebarTool.State);

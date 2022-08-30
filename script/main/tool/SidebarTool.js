@@ -122,7 +122,7 @@ SidebarTool.prototype.isCollapsedWithoutSidebar = function() {
 	return this.state == SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
 };
 
-SidebarTool.prototype.queue = function(sequence) {
+SidebarTool.prototype.queue = function(what) {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	sidebar.dismiss();

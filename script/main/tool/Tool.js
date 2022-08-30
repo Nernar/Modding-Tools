@@ -7,6 +7,7 @@ const Tool = function(object) {
 
 Tool.prototype.reset = function() {
 	let descriptor = {};
+	descriptor.logotypeBackground = "popupControl";
 	descriptor.buttonBackground = "popupButton";
 	descriptor.logotypeProgress = function(tool, control) {
 		return calloutOrParse(this, this.logotype, Array.prototype.slice.call(arguments));
@@ -128,7 +129,7 @@ Tool.prototype.isCollapsed = function() {
 	return this.state == Tool.State.COLLAPSED;
 };
 
-Tool.prototype.queue = function() {
+Tool.prototype.queue = function(what) {
 	let control = this.getControlWindow();
 	if (control == null) return;
 	this.state = Tool.State.QUEUED;

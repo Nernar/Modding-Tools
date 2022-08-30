@@ -62,7 +62,7 @@ Project.prototype.callAutosave = function() {
 		this.isAutosaving = true;
 		this.updateCurrentWorker();
 		exportProject(autosaveProjectable ? this.getAll() : this.getCurrentObject(), true,
-			Dirs.PROJECT_AUTOSAVE + this.getProjectTime() + ".dnp",
+				Dirs.PROJECT_AUTOSAVE + this.getProjectTime() + ".dnp",
 			function(result) {
 				delete scope.isAutosaving;
 			});
