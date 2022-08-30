@@ -223,8 +223,14 @@ ProjectTool.prototype.export = function(file) {
 	}
 };
 
-ProjectTool.prototype.toProject = function() {
+ProjectTool.prototype.getProject = function() {
 	return ProjectProvider.getProject() || null;
+};
+
+ProjectTool.prototype.toProject = function() {
+	let project = this.getProject();
+	if (!project) MCSystem.throwException("ModdingTools: Not found attached Project, toProject is not availabled");
+	return project.getAll() || null;
 };
 
 ProjectTool.prototype.fromProject = function(source) {
@@ -266,6 +272,10 @@ ProjectTool.MenuFactory.prototype.getBadgeText = function() {
 };
 
 ProjectTool.MenuFactory.prototype.getBadgeOverlay = function() {
+	return null;
+};
+
+ProjectTool.MenuFactory.prototype.getEntriesCategory = function() {
 	return null;
 };
 

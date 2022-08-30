@@ -32,6 +32,9 @@ const PROJECT_TOOL = (function() {
 						continue;
 					}
 					let factory = PROJECT_TOOL.tools[type];
+					if (categories[type].title == type) {
+						categories[type].title = factory.getEntriesCategory() || type;
+					}
 					let descriptor = {
 						icon: factory.getImage(),
 						title: factory.getTitle(),
@@ -186,7 +189,7 @@ const attachEditorTool = function(who, what, post) {
 		who.attach();
 	}
 	PROJECT_TOOL.deattach();
-	who.queue();
+	who.queue(what);
 	handleThread(function() {
 		try {
 			who.sequence();
@@ -202,11 +205,13 @@ const attachEditorTool = function(who, what, post) {
 					if (accepted) {
 						try {
 							who.describe();
-							post && post(PROJECT_TOOL);
+							post && post(who);
 							who.unqueue();
 							accepted = false;
 						} catch (e) {
-							reportError(e);
+							if (e != null) {
+								reportError(e);
+							}
 						}
 					}
 					if (accepted) {
@@ -219,8 +224,16 @@ const attachEditorTool = function(who, what, post) {
 				}
 			});
 		} catch (e) {
-			reportError(e);
+			// Throw null when startup interrupted, nothing will be reported
+			if (e != null) {
+				reportError(e);
+			}
 			acquire(function() {
+				try {
+					who.deattach();
+				} catch (e) {
+					Logger.Log("ModdingTools: EditorTool.deattach: " + e, "WARNING");
+				}
 				attachProjectTool();
 			});
 		}
