@@ -327,6 +327,14 @@ Translation.addTranslation("All", {
 	ru: "Все",
 	en: "All"
 });
+Translation.addTranslation("Edit JSON", {
+	ru: "Изменить JSON",
+	en: "Edit JSON"
+}); // DEPRECATED
+Translation.addTranslation("Apply", {
+	ru: "Применить",
+	en: "Apply"
+}); // DEPRECATED
 
 // Files
 Translation.addTranslation("Explorer", {
@@ -556,6 +564,10 @@ Translation.addTranslation("Warning!", {
 Translation.addTranslation("Error stack saved into internal storage", {
 	ru: "Информация об ошибке сохранена в хранилище",
 	en: "Error stack saved into internal storage"
+}); // DEPRECATED
+Translation.addTranslation("Something unexpected happened", {
+	ru: "Произошло что-то неожиданное",
+	en: "Something unexpected happened"
 }); // DEPRECATED
 Translation.addTranslation("Option successfully changed", {
 	ru: "Настройка успешно изменена",
@@ -1035,6 +1047,18 @@ Translation.addTranslation("You're sure want to review basics tutorial?", {
 	ru: "Вы уверены, что хотите пройти базовое обучение еще раз?",
 	en: "You're sure want to review basics tutorial?"
 });
+Translation.addTranslation("Choose a template", {
+	ru: "Выберите шаблон",
+	en: "Choose a template"
+}); // DEPRECATED
+Translation.addTranslation("Maybe you should also try", {
+	ru: "Возможно вы захотите попробовать",
+	en: "Maybe you should also try"
+}); // DEPRECATED
+Translation.addTranslation("Don't use a template, I want to create everything manually", {
+	ru: "Не использовать шаблон, я хочу создать все вручную",
+	en: "Don't use a template, I want to create everything manually"
+}); // DEPRECATED
 
 // Deprecated translations
 Translation.addTranslation("Deprecated translation", {

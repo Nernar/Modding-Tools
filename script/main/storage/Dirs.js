@@ -16,7 +16,7 @@ Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";
 if (isHorizon) {
 	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + getContext().getPackageName() + "/";
 	try {
-		Dirs.MOD = __modpack__.getDirectoryOfType("MODS");
+		Dirs.MOD = __packdir__ + __modpack__.getDirectoryOfType("MODS") + "/";
 	} catch (e) {
 		Dirs.MOD = __packdir__ + "innercore/mods/";
 	}

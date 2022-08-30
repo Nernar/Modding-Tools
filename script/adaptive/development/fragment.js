@@ -49,6 +49,8 @@ return function() {
 	frame.addElementFragment(new SliderFragment().setValue("gg"));
 	frame.addElementFragment(new CounterFragment().setModifiers([16, 32, 64]).setValue(1));
 	
+	frame.addElementFragment(new AngleCircleFragment());
+	
 	let group = new AxisGroupFragment().setAxis("nope");
 	group.addElementFragment(new SliderFragment());
 	group.addElementFragment(new SolidButtonFragment().setText("Item 1"));
