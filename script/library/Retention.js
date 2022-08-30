@@ -1,7 +1,7 @@
 /*
 BUILD INFO:
   dir: Retention
-  target: out/Retention.js
+  target: Retention.js
   files: 2
 */
 
@@ -74,10 +74,18 @@ reportError = (function(what) {
 		}
 	};
 })(function(error) {
-	if (isHorizon) {
-		Packages.com.zhekasmirnov.innercore.api.log.ICLog.i("WARNING", Packages.com.zhekasmirnov.innercore.api.log.ICLog.getStackTrace(error));
-	} else {
-		Packages.zhekasmirnov.launcher.api.log.ICLog.i("WARNING", Packages.zhekasmirnov.launcher.api.log.ICLog.getStackTrace(error));
+	try {
+		if (isHorizon) {
+			Packages.com.zhekasmirnov.innercore.api.log.ICLog.i("WARNING", Packages.com.zhekasmirnov.innercore.api.log.ICLog.getStackTrace(error));
+		} else {
+			Packages.zhekasmirnov.launcher.api.log.ICLog.i("WARNING", Packages.zhekasmirnov.launcher.api.log.ICLog.getStackTrace(error));
+		}
+	} catch (shit) {
+		try {
+			Logger.Log(typeof error == "object" ? error.name + ": " + error.message + "\n" + error.stack : "" + error, "WARNING");
+		} catch (sad) {
+			Logger.Log("" + error, "WARNING");
+		}
 	}
 });
 

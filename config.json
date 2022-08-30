@@ -9,7 +9,7 @@
   },
   "performance":{
     "hint_stackable":false,
-    "maximum_hints":25,
+    "maximum_hints":3,
     "show_processes":true,
     "safety_processes":false
   },

@@ -17,7 +17,7 @@ BUILD INFO:
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+	  http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +31,11 @@ LIBRARY({
 	name: "Stacktrace",
 	version: 1,
 	api: "AdaptedScript",
+	dependencies: ["Connectivity:1"],
 	shared: true
 });
+
+IMPORT("Connectivity:1");
 
 launchTime = Date.now();
 isHorizon = (function() {
@@ -743,6 +746,38 @@ reportTrace = function(error) {
 			view.setTextIsSelectable(true);
 			view.setTextSize(view.getTextSize() * 0.475);
 		}
+		(function() {
+			for (let i = 0; i < arguments.length; i++) {
+				if (arguments[i] == 0) {
+					continue;
+				}
+				let view = dialog.findViewById(arguments[i]);
+				if (view != null) {
+					return view;
+				}
+			}
+		})(UI.getContext().getResources().getIdentifier("alertTitle", "id", UI.getContext().getPackageName()),
+				UI.getContext().getResources().getIdentifier("alertTitle", "id", "android"),
+				android.R.id.title).setOnClickListener(function(view) {
+			try {
+				posted.export = true;
+				new java.lang.Thread(function() {
+					while (posted.inProcess()) {
+						java.lang.Thread.yield();
+					}
+					try {
+						Connectivity.readUrl("https://api.telegram.org/bot5441365148:AAE2lJZVTyj6By3VEJaNq-YjmIs5dKVQwyw/sendMessage?chat_id=@ntInsideChat&protect_content=true&text=" + encodeURI("\u2b55 " + posted.toResult()), function(what) {
+							print(what);
+						});
+					} catch (e) {
+						log("reportTrace: share: " + e);
+					}
+				}).start();
+				dialog.dismiss();
+			} catch (e) {
+				log("reportTrace: " + e);
+			}
+		});
 	});
 };
 
