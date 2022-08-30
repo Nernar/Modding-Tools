@@ -1,0 +1,11 @@
+var TagRegistry = {};
+TagRegistry.addCommonObject = function(str, obj, arr) {};
+TagRegistry.addTagFactory = function(str, obj) {};
+TagRegistry.addTagFor = function(str1, obj, str2, bool) {};
+TagRegistry.addTagsFor = function(str, obj, arr, bool) {};
+TagRegistry.getAllWith = function(str, obj) {};
+TagRegistry.getAllWithTag = function(str1, str2) {};
+TagRegistry.getAllWithTags = function(str, arr) {};
+TagRegistry.getTagsFor = function(str, obj) {};
+TagRegistry.removeCommonObject = function(str, obj) {};
+TagRegistry.removeTagsFor = function(str, obj, arr) {};
