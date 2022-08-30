@@ -83,6 +83,7 @@ const API = {
 	assign: assign,
 	merge: merge,
 	clone: clone,
+	sameAs: sameAs,
 	preround: preround,
 	calloutOrParse: calloutOrParse,
 	parseCallback: parseCallback,
@@ -142,6 +143,7 @@ const API = {
 	LayoutFragment: LayoutFragment,
 	FrameFragment: FrameFragment,
 	ScrollFragment: ScrollFragment,
+	HorizontalScrollFragment: HorizontalScrollFragment,
 	TextFragment: TextFragment,
 	ImageFragment: ImageFragment,
 	

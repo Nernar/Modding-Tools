@@ -64,6 +64,26 @@ const clone = function(source) {
 	return source;
 };
 
+const sameAs = function(left, right) {
+	if (left != null && typeof left == "object") {
+		if (right != null && typeof right == "object") {
+			for (let element in left) {
+				if (!sameAs(left[element], right[element])) {
+					return false;
+				}
+			}
+			for (let element in right) {
+				if (!sameAs(left[element], right[element])) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	return left == right;
+};
+
 const isEmpty = function(obj) {
 	for (let item in obj) {
 		return false;
