@@ -1,0 +1,11 @@
+var ETileEntityType = {};
+ETileEntityType.DISPENSER = 13;
+ETileEntityType.CHEST = 0;
+ETileEntityType.BEACON = 21;
+ETileEntityType.FURNACE = 1;
+ETileEntityType.LECTERN = 37;
+ETileEntityType.JUKEBOX = 33;
+ETileEntityType.BREWING_STAND = 8;
+ETileEntityType.CAULDRON = 16;
+ETileEntityType.NONE = -1;
+ETileEntityType.HOPPER = 2;

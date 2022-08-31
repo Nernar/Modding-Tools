@@ -1,0 +1,12 @@
+var EBlockRenderLayer = {};
+EBlockRenderLayer.OPAQUE_SEASONS = 5;
+EBlockRenderLayer.OPAQUE = 2;
+EBlockRenderLayer.ALPHA_SEASONS = 6;
+EBlockRenderLayer.BARRIER = 9;
+EBlockRenderLayer.ALPHA_SINGLE_SIDE = 7;
+EBlockRenderLayer.BLEND = 1;
+EBlockRenderLayer.ALPHA_TEST = 4;
+EBlockRenderLayer.STRUCTURE_VOID = 10;
+EBlockRenderLayer.DOUBLE_SIDE = 0;
+EBlockRenderLayer.ALPHA = 3;
+EBlockRenderLayer.END_PORTAL = 8;

@@ -1,0 +1,13 @@
+var EntityEventController = {};
+EntityEventController.update = function() {};
+EntityEventController.tick = function() {};
+EntityEventController.removed = function() {};
+EntityEventController.created = function(extra) {};
+EntityEventController.loaded = function() {};
+EntityEventController.unloaded = function() {};
+EntityEventController.attackedBy = function(attacker) {};
+EntityEventController.hurtBy = function(attacker, damage) {};
+EntityEventController.death = function(attacker) {};
+EntityEventController.projectileHit = function(projectile) {};
+EntityEventController.save = function() {};
+EntityEventController.read = function() {};

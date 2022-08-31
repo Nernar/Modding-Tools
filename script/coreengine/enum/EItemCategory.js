@@ -1,0 +1,11 @@
+var EItemCategory = {};
+EItemCategory.INTERNAL = 5;
+EItemCategory.MATERIAL = 4;
+EItemCategory.NATURE = 2;
+EItemCategory.COMMAND_ONLY = 5;
+EItemCategory.CONSTRUCTION = 1;
+EItemCategory.EQUIPMENT = 3;
+EItemCategory.ITEMS = 4;
+EItemCategory.DECORATION = 2;
+EItemCategory.FOOD = 4;
+EItemCategory.TOOL = 3;

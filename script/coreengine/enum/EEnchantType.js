@@ -1,0 +1,16 @@
+var EEnchantType = {};
+EEnchantType.FISHING_ROD = 4096;
+EEnchantType.ALL = 16383;
+EEnchantType.PICKAXE = 1024;
+EEnchantType.BOOK = 16383;
+EEnchantType.SHOVEL = 2048;
+EEnchantType.BOW = 32;
+EEnchantType.AXE = 512;
+EEnchantType.WEAPON = 16;
+EEnchantType.CHESTPLATE = 8;
+EEnchantType.SHEARS = 128;
+EEnchantType.HELMET = 1;
+EEnchantType.BOOTS = 4;
+EEnchantType.FLINT_AND_STEEL = 256;
+EEnchantType.LEGGINGS = 2;
+EEnchantType.HOE = 64;

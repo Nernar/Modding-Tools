@@ -1,0 +1,13 @@
+var ENbtDataType = {};
+ENbtDataType.TYPE_DOUBLE = 6;
+ENbtDataType.TYPE_END_TAG = 0;
+ENbtDataType.TYPE_BYTE = 1;
+ENbtDataType.TYPE_FLOAT = 5;
+ENbtDataType.TYPE_STRING = 8;
+ENbtDataType.TYPE_LIST = 9;
+ENbtDataType.TYPE_BYTE_ARRAY = 7;
+ENbtDataType.TYPE_INT64 = 4;
+ENbtDataType.TYPE_COMPOUND = 10;
+ENbtDataType.TYPE_INT_ARRAY = 11;
+ENbtDataType.TYPE_SHORT = 2;
+ENbtDataType.TYPE_INT = 3;

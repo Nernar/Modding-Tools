@@ -1,0 +1,13 @@
+var NbtDataType = {};
+NbtDataType.TYPE_BYTE = 1;
+NbtDataType.TYPE_BYTE_ARRAY = 7;
+NbtDataType.TYPE_COMPOUND = 10;
+NbtDataType.TYPE_DOUBLE = 6;
+NbtDataType.TYPE_END_TAG = 0;
+NbtDataType.TYPE_FLOAT = 5;
+NbtDataType.TYPE_INT = 3;
+NbtDataType.TYPE_INT64 = 4;
+NbtDataType.TYPE_INT_ARRAY = 11;
+NbtDataType.TYPE_LIST = 9;
+NbtDataType.TYPE_SHORT = 2;
+NbtDataType.TYPE_STRING = 8;

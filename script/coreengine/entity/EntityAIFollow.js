@@ -1,0 +1,46 @@
+var EntityAIFollow = {};
+EntityAIFollow.getDefaultPriority = function() {
+	return 1;
+};
+EntityAIFollow.getDefaultName = function() {
+	return "basic-entity-ai";
+};
+EntityAIFollow.params = {};
+EntityAIFollow.params.speed = 0.2;
+EntityAIFollow.params.jumpVel = 0.45;
+EntityAIFollow.params.rotateSpeed = 0.4;
+EntityAIFollow.params.rotateRatio = 0.5;
+EntityAIFollow.params.rotateHead = true;
+EntityAIFollow.params.denyY = true;
+EntityAIFollow.setParams = function(params) {};
+EntityAIFollow.executionStarted = function() {};
+EntityAIFollow.executionEnded = function() {};
+EntityAIFollow.executionPaused = function() {};
+EntityAIFollow.executionResumed = function() {};
+EntityAIFollow.execute = function() {};
+EntityAIFollow.__execute = function() {};
+EntityAIFollow.setExecutionTimer = function(timer) {};
+EntityAIFollow.removeExecutionTimer = function() {};
+EntityAIFollow.data = {};
+EntityAIFollow.data.target = null;
+EntityAIFollow.data.targetEntity = null;
+EntityAIFollow.data.movingYaw = 0;
+EntityAIFollow.data.executionTimer = -1;
+EntityAIFollow.isInstance = false;
+EntityAIFollow.parent = null;
+EntityAIFollow.entity = null;
+EntityAIFollow.instantiate = function(parent, name) {
+	return null;
+};
+EntityAIFollow.aiEntityChanged = function(entity) {};
+EntityAIFollow.finishExecution = function() {};
+EntityAIFollow.changeSelfPriority = function(priority) {};
+EntityAIFollow.enableAI = function(name, priority, extra) {};
+EntityAIFollow.disableAI = function(name) {};
+EntityAIFollow.setPriority = function(name, priority) {};
+EntityAIFollow.getAI = function(name) {};
+EntityAIFollow.getPriority = function(name) {};
+EntityAIFollow.attackedBy = function(entity) {};
+EntityAIFollow.hurtBy = function(entity) {};
+EntityAIFollow.projectileHit = function(projectile) {};
+EntityAIFollow.death = function(entity) {};

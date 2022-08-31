@@ -1,0 +1,42 @@
+var EntityAIPanicWatcher = {};
+EntityAIPanicWatcher.parent = null;
+EntityAIPanicWatcher.getDefaultPriority = function() {
+	return -1;
+};
+EntityAIPanicWatcher.getDefaultName = function() {
+	return "basic-entity-ai";
+};
+EntityAIPanicWatcher.params = {};
+EntityAIPanicWatcher.params.panic_time = 200;
+EntityAIPanicWatcher.params.priority_panic = 5;
+EntityAIPanicWatcher.params.priority_default = 1;
+EntityAIPanicWatcher.params.name = "panic";
+EntityAIPanicWatcher.setParams = function(params) {};
+EntityAIPanicWatcher.executionStarted = function() {};
+EntityAIPanicWatcher.executionEnded = function() {};
+EntityAIPanicWatcher.executionPaused = function() {};
+EntityAIPanicWatcher.executionResumed = function() {};
+EntityAIPanicWatcher.execute = function() {};
+EntityAIPanicWatcher.__execute = function() {};
+EntityAIPanicWatcher.setExecutionTimer = function(timer) {};
+EntityAIPanicWatcher.removeExecutionTimer = function() {};
+EntityAIPanicWatcher.data = {};
+EntityAIPanicWatcher.data.timer = -1;
+EntityAIPanicWatcher.data.executionTimer = -1;
+EntityAIPanicWatcher.isInstance = false;
+EntityAIPanicWatcher.entity = null;
+EntityAIPanicWatcher.instantiate = function(parent, name) {
+	return null;
+};
+EntityAIPanicWatcher.aiEntityChanged = function(entity) {};
+EntityAIPanicWatcher.finishExecution = function() {};
+EntityAIPanicWatcher.changeSelfPriority = function(priority) {};
+EntityAIPanicWatcher.enableAI = function(name, priority, extra) {};
+EntityAIPanicWatcher.disableAI = function(name) {};
+EntityAIPanicWatcher.setPriority = function(name, priority) {};
+EntityAIPanicWatcher.getAI = function(name) {};
+EntityAIPanicWatcher.getPriority = function(name) {};
+EntityAIPanicWatcher.attackedBy = function(entity) {};
+EntityAIPanicWatcher.hurtBy = function() {};
+EntityAIPanicWatcher.projectileHit = function(projectile) {};
+EntityAIPanicWatcher.death = function(entity) {};

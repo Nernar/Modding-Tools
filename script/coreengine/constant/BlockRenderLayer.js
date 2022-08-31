@@ -1,0 +1,12 @@
+var BlockRenderLayer = {};
+BlockRenderLayer.alpha = 4;
+BlockRenderLayer.alpha_seasons = 7;
+BlockRenderLayer.alpha_single_side = 8;
+BlockRenderLayer.blend = 2;
+BlockRenderLayer.doubleside = 0;
+BlockRenderLayer.far = 3;
+BlockRenderLayer.opaque = 3;
+BlockRenderLayer.opaque_seasons = 6;
+BlockRenderLayer.seasons_far = 6;
+BlockRenderLayer.seasons_far_alpha = 7;
+BlockRenderLayer.water = 1;
