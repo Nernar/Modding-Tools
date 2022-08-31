@@ -1,5 +1,9 @@
-function ModelWatcher(entity, model) {}
-function ModelAPI(parentModel) {}
+function ModelWatcher(entity, model) {
+	return null;
+}
+function ModelAPI(parentModel) {
+	return null;
+}
 
 var ce_default_entity_render = {};
 ce_default_entity_render.getRenderType = function() {
@@ -11,10 +15,18 @@ ce_default_entity_render.getId = function() {
 ce_default_entity_render.getID = function() {
 	return 4097;
 };
-ce_default_entity_render.init = function(params) {};
-ce_default_entity_render.initModel = function() {};
-ce_default_entity_render.checkChangeable = function() {};
-ce_default_entity_render.rebuild = function() {};
+ce_default_entity_render.init = function(params) {
+	return null;
+};
+ce_default_entity_render.initModel = function() {
+	return null;
+};
+ce_default_entity_render.checkChangeable = function() {
+	return null;
+};
+ce_default_entity_render.rebuild = function() {
+	return null;
+};
 ce_default_entity_render.getModel = function() {};
 ce_default_entity_render.transform = function() {};
 ce_default_entity_render.getPart = function(name) {
@@ -29,18 +41,28 @@ ce_default_entity_render.setPartParams = function(name, params) {
 ce_default_entity_render.setPart = function(name, data, params) {
 	/* JavaException: java.lang.RuntimeException: setPart got invalid part name test */
 };
-ce_default_entity_render._setPartRecursive = function(part, data, coords) {};
-ce_default_entity_render.localCache = {};
-ce_default_entity_render.fromCache = function(data) {};
-ce_default_entity_render.toCache = function() {
+ce_default_entity_render._setPartRecursive = function(part, data, coords) {
 	return null;
 };
-ce_default_entity_render.saveState = function(name, isLocal) {};
+ce_default_entity_render.localCache = {};
+ce_default_entity_render.fromCache = function(data) {
+	return null;
+};
+ce_default_entity_render.toCache = function() {
+	return {};
+};
+ce_default_entity_render.saveState = function(name, isLocal) {
+	return null;
+};
 ce_default_entity_render.loadState = function(name, isLocal) {
 	return true;
 };
-ce_default_entity_render.loadInitialState = function(name) {};
-ce_default_entity_render.saveToNext = function(name, isLocal) {};
+ce_default_entity_render.loadInitialState = function(name) {
+	return null;
+};
+ce_default_entity_render.saveToNext = function(name, isLocal) {
+	return null;
+};
 ce_default_entity_render.isEmpty = true;
 ce_default_entity_render.isChangeable = true;
 ce_default_entity_render.renderer = {};
@@ -73,7 +95,7 @@ ce_default_entity_render.renderer.model.clearAllParts = function() {};
 ce_default_entity_render.renderer.setFinalizeable = function() {};
 ce_default_entity_render.renderer.renderType = 4099;
 ce_default_entity_render.renderer.getModel = function() {};
-ce_default_entity_render.renderer.pointer = -1828105568;
+ce_default_entity_render.renderer.pointer = -1406729568;
 ce_default_entity_render.renderer.setScale = function() {};
 ce_default_entity_render.renderer.getPointer = function() {};
 ce_default_entity_render.renderer.setSkin = function() {};
@@ -209,7 +231,9 @@ ce_default_entity_render.parts.headwear.addPart = function() {};
 ce_default_entity_render.parts.headwear.mesh = null;
 ce_default_entity_render.parts.headwear.addBox = function() {};
 ce_default_entity_render.renderId = 4099;
-ce_default_entity_render.setTextureResolution = function() {};
+ce_default_entity_render.setTextureResolution = function() {
+	return null;
+};
 
 var BASIC_NULL_RENDER = {};
 BASIC_NULL_RENDER.getRenderType = function() {
@@ -221,10 +245,18 @@ BASIC_NULL_RENDER.getId = function() {
 BASIC_NULL_RENDER.getID = function() {
 	return 4096;
 };
-BASIC_NULL_RENDER.init = function(params) {};
-BASIC_NULL_RENDER.initModel = function() {};
-BASIC_NULL_RENDER.checkChangeable = function() {};
-BASIC_NULL_RENDER.rebuild = function() {};
+BASIC_NULL_RENDER.init = function(params) {
+	return null;
+};
+BASIC_NULL_RENDER.initModel = function() {
+	return null;
+};
+BASIC_NULL_RENDER.checkChangeable = function() {
+	return null;
+};
+BASIC_NULL_RENDER.rebuild = function() {
+	return null;
+};
 BASIC_NULL_RENDER.getModel = function() {};
 BASIC_NULL_RENDER.transform = function() {};
 BASIC_NULL_RENDER.getPart = function(name) {
@@ -239,18 +271,28 @@ BASIC_NULL_RENDER.setPartParams = function(name, params) {
 BASIC_NULL_RENDER.setPart = function(name, data, params) {
 	/* JavaException: java.lang.RuntimeException: setPart got invalid part name test */
 };
-BASIC_NULL_RENDER._setPartRecursive = function(part, data, coords) {};
-BASIC_NULL_RENDER.localCache = {};
-BASIC_NULL_RENDER.fromCache = function(data) {};
-BASIC_NULL_RENDER.toCache = function() {
+BASIC_NULL_RENDER._setPartRecursive = function(part, data, coords) {
 	return null;
 };
-BASIC_NULL_RENDER.saveState = function(name, isLocal) {};
+BASIC_NULL_RENDER.localCache = {};
+BASIC_NULL_RENDER.fromCache = function(data) {
+	return null;
+};
+BASIC_NULL_RENDER.toCache = function() {
+	return {};
+};
+BASIC_NULL_RENDER.saveState = function(name, isLocal) {
+	return null;
+};
 BASIC_NULL_RENDER.loadState = function(name, isLocal) {
 	return true;
 };
-BASIC_NULL_RENDER.loadInitialState = function(name) {};
-BASIC_NULL_RENDER.saveToNext = function(name, isLocal) {};
+BASIC_NULL_RENDER.loadInitialState = function(name) {
+	return null;
+};
+BASIC_NULL_RENDER.saveToNext = function(name, isLocal) {
+	return null;
+};
 BASIC_NULL_RENDER.isEmpty = true;
 BASIC_NULL_RENDER.isChangeable = true;
 BASIC_NULL_RENDER.renderer = {};
@@ -283,7 +325,7 @@ BASIC_NULL_RENDER.renderer.model.clearAllParts = function() {};
 BASIC_NULL_RENDER.renderer.setFinalizeable = function() {};
 BASIC_NULL_RENDER.renderer.renderType = 4101;
 BASIC_NULL_RENDER.renderer.getModel = function() {};
-BASIC_NULL_RENDER.renderer.pointer = -1828105120;
+BASIC_NULL_RENDER.renderer.pointer = -1406729120;
 BASIC_NULL_RENDER.renderer.setScale = function() {};
 BASIC_NULL_RENDER.renderer.getPointer = function() {};
 BASIC_NULL_RENDER.renderer.setSkin = function() {};
@@ -419,7 +461,9 @@ BASIC_NULL_RENDER.parts.headwear.addPart = function() {};
 BASIC_NULL_RENDER.parts.headwear.mesh = null;
 BASIC_NULL_RENDER.parts.headwear.addBox = function() {};
 BASIC_NULL_RENDER.renderId = 4101;
-BASIC_NULL_RENDER.setTextureResolution = function() {};
+BASIC_NULL_RENDER.setTextureResolution = function() {
+	return null;
+};
 
 var ce_missing_entity_texture = {};
 ce_missing_entity_texture.path = "images/mob/ce_missing_entity_texture.png";
@@ -429,21 +473,39 @@ ce_missing_entity_texture.animator.animation = [];
 ce_missing_entity_texture.animator.animationDelay = 1;
 ce_missing_entity_texture.animator.animationOffsets = {};
 ce_missing_entity_texture.animator.animationOffsets[0] = 0;
-ce_missing_entity_texture.animator.getOffset = function(token) {};
-ce_missing_entity_texture.animator.setOffset = function(token, offset) {};
+ce_missing_entity_texture.animator.getOffset = function(token) {
+	return 0;
+};
+ce_missing_entity_texture.animator.setOffset = function(token, offset) {
+	return null;
+};
 ce_missing_entity_texture.animator.getGlobalTime = function() {
-	return 33236038520.82;
+	return 33238090895.08;
 };
 ce_missing_entity_texture.animator.getTime = function(token) {
-	return 33236038520.96;
+	return 33238090895.22;
 };
-ce_missing_entity_texture.animator.resetAnimation = function(token) {};
-ce_missing_entity_texture.animator.getFrameNumber = function(token) {};
-ce_missing_entity_texture.animator.setDelay = function(delay) {};
-ce_missing_entity_texture.animator.setAnimation = function(arr) {};
-ce_missing_entity_texture.animator.clearAnimation = function() {};
-ce_missing_entity_texture.animator.addFrame = function(frame) {};
-ce_missing_entity_texture.animator.getFrame = function(token) {};
+ce_missing_entity_texture.animator.resetAnimation = function(token) {
+	return null;
+};
+ce_missing_entity_texture.animator.getFrameNumber = function(token) {
+	return NaN;
+};
+ce_missing_entity_texture.animator.setDelay = function(delay) {
+	return null;
+};
+ce_missing_entity_texture.animator.setAnimation = function(arr) {
+	return null;
+};
+ce_missing_entity_texture.animator.clearAnimation = function() {
+	return null;
+};
+ce_missing_entity_texture.animator.addFrame = function(frame) {
+	return null;
+};
+ce_missing_entity_texture.animator.getFrame = function(token) {
+	return null;
+};
 ce_missing_entity_texture.animator.inherit = function(animator) {
 	/* TypeError: Cannot read property "animationDelay" from undefined */
 };
@@ -451,26 +513,195 @@ ce_missing_entity_texture.resolution = {};
 ce_missing_entity_texture.resolution.w = 64;
 ce_missing_entity_texture.resolution.h = 32;
 ce_missing_entity_texture.setTexture = function(path) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: false,
+		animator: {
+			animation: [],
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090895.34
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 64,
+			h: 32
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 1,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_missing_entity_texture.setResolution = function(w, h) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: false,
+		animator: {
+			animation: [],
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090895.34
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 1,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_missing_entity_texture.setAnimation = function(animation, delay) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090895.34
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 1,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_missing_entity_texture.resetAnimation = function(token) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090897.2
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 1,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_missing_entity_texture.getTexture = function(token) {
 	/* TypeError: Cannot read property "length" from undefined */
 };
 ce_missing_entity_texture.getResolution = function() {
-	return null;
+	return {
+		w: 0.8,
+		h: 1.6
+	};
 };
 ce_missing_entity_texture.pixelScale = 1;
 ce_missing_entity_texture.setPixelScale = function(scale) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090897.2
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 
 var ce_default_entity_texture = {};
@@ -481,21 +712,39 @@ ce_default_entity_texture.animator.animation = [];
 ce_default_entity_texture.animator.animationDelay = 1;
 ce_default_entity_texture.animator.animationOffsets = {};
 ce_default_entity_texture.animator.animationOffsets[0] = 0;
-ce_default_entity_texture.animator.getOffset = function(token) {};
-ce_default_entity_texture.animator.setOffset = function(token, offset) {};
+ce_default_entity_texture.animator.getOffset = function(token) {
+	return 0;
+};
+ce_default_entity_texture.animator.setOffset = function(token, offset) {
+	return null;
+};
 ce_default_entity_texture.animator.getGlobalTime = function() {
-	return 33236038524.48;
+	return 33238090898.56;
 };
 ce_default_entity_texture.animator.getTime = function(token) {
-	return 33236038524.6;
+	return 33238090898.68;
 };
-ce_default_entity_texture.animator.resetAnimation = function(token) {};
-ce_default_entity_texture.animator.getFrameNumber = function(token) {};
-ce_default_entity_texture.animator.setDelay = function(delay) {};
-ce_default_entity_texture.animator.setAnimation = function(arr) {};
-ce_default_entity_texture.animator.clearAnimation = function() {};
-ce_default_entity_texture.animator.addFrame = function(frame) {};
-ce_default_entity_texture.animator.getFrame = function(token) {};
+ce_default_entity_texture.animator.resetAnimation = function(token) {
+	return null;
+};
+ce_default_entity_texture.animator.getFrameNumber = function(token) {
+	return NaN;
+};
+ce_default_entity_texture.animator.setDelay = function(delay) {
+	return null;
+};
+ce_default_entity_texture.animator.setAnimation = function(arr) {
+	return null;
+};
+ce_default_entity_texture.animator.clearAnimation = function() {
+	return null;
+};
+ce_default_entity_texture.animator.addFrame = function(frame) {
+	return null;
+};
+ce_default_entity_texture.animator.getFrame = function(token) {
+	return null;
+};
 ce_default_entity_texture.animator.inherit = function(animator) {
 	/* TypeError: Cannot read property "animationDelay" from undefined */
 };
@@ -503,24 +752,193 @@ ce_default_entity_texture.resolution = {};
 ce_default_entity_texture.resolution.w = 64;
 ce_default_entity_texture.resolution.h = 32;
 ce_default_entity_texture.setTexture = function(path) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: false,
+		animator: {
+			animation: [],
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090898.8
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 64,
+			h: 32
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 8,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_default_entity_texture.setResolution = function(w, h) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: false,
+		animator: {
+			animation: [],
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090898.8
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 8,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_default_entity_texture.setAnimation = function(animation, delay) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090898.8
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 8,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_default_entity_texture.resetAnimation = function(token) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090900.7
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		pixelScale: 8,
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };
 ce_default_entity_texture.getTexture = function(token) {
 	/* TypeError: Cannot read property "length" from undefined */
 };
 ce_default_entity_texture.getResolution = function() {
-	return null;
+	return {
+		w: 6.4,
+		h: 12.8
+	};
 };
 ce_default_entity_texture.pixelScale = 8;
 ce_default_entity_texture.setPixelScale = function(scale) {
-	return null;
+	return {
+		path: "test",
+		isAnimated: true,
+		animator: {
+			animationDelay: 1,
+			animationOffsets: {
+				0: 33238090900.7
+			},
+			getOffset: (function (token) {return this.animationOffsets[token || 0] || 0;}),
+			setOffset: (function (token, offset) {this.animationOffsets[token || 0] = offset;}),
+			getGlobalTime: (function () {return java.lang.System.currentTimeMillis() / 50;}),
+			getTime: (function (token) {return this.getGlobalTime() - this.getOffset(token);}),
+			resetAnimation: (function (token) {this.setOffset(token, this.getGlobalTime());}),
+			getFrameNumber: (function (token) {return parseInt(this.getTime(token) / this.animationDelay) % this.animation.length;}),
+			setDelay: (function (delay) {this.animationDelay = delay || 1;}),
+			setAnimation: (function (arr) {this.animation = arr;}),
+			clearAnimation: (function () {this.animation = [];}),
+			addFrame: (function (frame) {this.animation.push(frame);}),
+			getFrame: (function (token) {return this.animation[this.getFrameNumber(token)];}),
+			inherit: (function (animator) {this.clearAnimation();this.setDelay(animator.animationDelay);for (var i in animator.animation) {this.addFrame(animator.animation[i]);}})
+		},
+		resolution: {
+			w: 0.8,
+			h: 1.6
+		},
+		setTexture: (function (path) {this.path = path;this.isAnimated = false;return this;}),
+		setResolution: (function (w, h) {h = h || w;this.resolution.w = w;this.resolution.h = h;return this;}),
+		setAnimation: (function (animation, delay) {this.animator.setDelay(delay);this.animator.setAnimation(animation);this.isAnimated = true;return this;}),
+		resetAnimation: (function (token) {this.animator.resetAnimation(token);return this;}),
+		getTexture: (function (token) {if (this.isAnimated) {return this.animator.getFrame(token);} else {return this.path;}}),
+		getResolution: (function () {return {w: this.resolution.w * this.pixelScale, h: this.resolution.h * this.pixelScale};}),
+		setPixelScale: (function (scale) {this.pixelScale = scale;return this;})
+	};
 };

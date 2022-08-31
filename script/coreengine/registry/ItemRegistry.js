@@ -8,19 +8,27 @@ ItemRegistry.getNumericId = function(id) {
 ItemRegistry.getItemById = function(id) {
 	return null;
 };
-ItemRegistry.createItem = function(namedID, name, texture, params) {};
+ItemRegistry.createItem = function(namedID, name, texture, params) {
+	return false;
+};
 ItemRegistry.createFoodItem = function(namedID, name, texture, params) {
 	return null;
 };
 ItemRegistry.createFuelItem = function(namedID, name, texture, params) {
 	/* JavaException: java.lang.RuntimeException: creation of fuel items is not yet supported */
 };
-ItemRegistry.createArmorItem = function(namedID, name, texture, params) {};
-ItemRegistry.createThrowableItem = function(namedID, name, texture, params) {};
+ItemRegistry.createArmorItem = function(namedID, name, texture, params) {
+	return null;
+};
+ItemRegistry.createThrowableItem = function(namedID, name, texture, params) {
+	return false;
+};
 ItemRegistry.isNativeItem = function(id) {
 	return true;
 };
-ItemRegistry.getMaxDamage = function(id) {};
+ItemRegistry.getMaxDamage = function(id) {
+	return 0;
+};
 ItemRegistry.getMaxStack = function(id, data) {
 	return 64;
 };
@@ -30,19 +38,27 @@ ItemRegistry.getName = function(id, data, extra) {
 ItemRegistry.isValid = function(id, data) {
 	return true;
 };
-ItemRegistry.addToCreative = function(id, count, data, extra) {};
-ItemRegistry.addCreativeGroup = function(name, displayedName, ids) {};
+ItemRegistry.addToCreative = function(id, count, data, extra) {
+	return null;
+};
+ItemRegistry.addCreativeGroup = function(name, displayedName, ids) {
+	return null;
+};
 ItemRegistry.describeItem = function(numericID, description) {
 	/* TypeError: Cannot call method "setHandEquipped" of null */
 };
-ItemRegistry.setCategory = function(id, category) {};
+ItemRegistry.setCategory = function(id, category) {
+	return null;
+};
 ItemRegistry.setEnchantType = function(id, enchant, value) {
 	/* TypeError: Cannot call method "setEnchantType" of null */
 };
 ItemRegistry.setArmorDamageable = function(id, val) {
 	/* TypeError: Cannot call method "setArmorDamageable" of null */
 };
-ItemRegistry.addRepairItemIds = function(id, items) {};
+ItemRegistry.addRepairItemIds = function(id, items) {
+	return null;
+};
 ItemRegistry.setToolRender = function(id, enabled) {
 	/* TypeError: Cannot call method "setHandEquipped" of null */
 };
@@ -73,39 +89,76 @@ ItemRegistry.setMaxUseDuration = function(id, duration) {
 ItemRegistry.registerUseFunctionForID = function(numericID, useFunc) {
 	return true;
 };
-ItemRegistry.registerUseFunction = function(namedID, useFunc) {};
-ItemRegistry.onItemUsed = function(coords, item, block, player) {};
+ItemRegistry.registerUseFunction = function(namedID, useFunc) {
+	return false;
+};
+ItemRegistry.onItemUsed = function(coords, item, block, player) {
+	return null;
+};
 ItemRegistry.registerThrowableFunctionForID = function(numericID, useFunc) {
 	return true;
 };
-ItemRegistry.registerThrowableFunction = function(namedID, useFunc) {};
-ItemRegistry.onProjectileHit = function(projectile, item, target) {};
+ItemRegistry.registerThrowableFunction = function(namedID, useFunc) {
+	return false;
+};
+ItemRegistry.onProjectileHit = function(projectile, item, target) {
+	return null;
+};
 ItemRegistry.iconOverrideFunctions = {};
-ItemRegistry.registerIconOverrideFunction = function(namedID, func) {};
-ItemRegistry.onIconOverride = function(item, isModUi) {};
+ItemRegistry.registerIconOverrideFunction = function(namedID, func) {
+	return false;
+};
+ItemRegistry.onIconOverride = function(item, isModUi) {
+	return null;
+};
 ItemRegistry.nameOverrideFunctions = {};
 ItemRegistry.setItemNameOverrideCallbackForced = function() {};
-ItemRegistry.registerNameOverrideFunction = function(namedID, func, preventForcing) {};
-ItemRegistry.onNameOverride = function(item, name, translation) {};
+ItemRegistry.registerNameOverrideFunction = function(namedID, func, preventForcing) {
+	return false;
+};
+ItemRegistry.onNameOverride = function(item, name, translation) {
+	return null;
+};
 ItemRegistry.noTargetUseFunctions = {};
-ItemRegistry.registerNoTargetUseFunction = function(namedID, func) {};
-ItemRegistry.onUseNoTarget = function(item, player) {};
+ItemRegistry.registerNoTargetUseFunction = function(namedID, func) {
+	return false;
+};
+ItemRegistry.onUseNoTarget = function(item, player) {
+	return null;
+};
 ItemRegistry.usingReleasedFunctions = {};
-ItemRegistry.registerUsingReleasedFunction = function(namedID, func) {};
-ItemRegistry.onUsingReleased = function(item, ticks, player) {};
+ItemRegistry.registerUsingReleasedFunction = function(namedID, func) {
+	return false;
+};
+ItemRegistry.onUsingReleased = function(item, ticks, player) {
+	return null;
+};
 ItemRegistry.usingCompleteFunctions = {};
-ItemRegistry.registerUsingCompleteFunction = function(namedID, func) {};
-ItemRegistry.onUsingComplete = function(item, player) {};
+ItemRegistry.registerUsingCompleteFunction = function(namedID, func) {
+	return false;
+};
+ItemRegistry.onUsingComplete = function(item, player) {
+	return null;
+};
 ItemRegistry.dispenseFunctions = {};
-ItemRegistry.registerDispenseFunction = function(namedID, func) {};
-ItemRegistry.onDispense = function(coords, item, region, slot) {};
+ItemRegistry.registerDispenseFunction = function(namedID, func) {
+	return false;
+};
+ItemRegistry.onDispense = function(coords, item, region, slot) {
+	return null;
+};
 ItemRegistry.TYPE_BASE = "createItem";
 ItemRegistry.TYPE_FOOD = "createFoodItem";
 ItemRegistry.TYPE_ARMOR = "createArmorItem";
 ItemRegistry.TYPE_THROWABLE = "createThrowableItem";
-ItemRegistry.setPrototype = function(namedID, Prototype) {};
-ItemRegistry.invokeItemUseOn = function(coords, item, noModCallback, entity) {};
+ItemRegistry.setPrototype = function(namedID, Prototype) {
+	return null;
+};
+ItemRegistry.invokeItemUseOn = function(coords, item, noModCallback, entity) {
+	return null;
+};
 ItemRegistry.invokeItemUseNoTarget = function(item, noModCallback) {};
+ItemRegistry.__func = null;
 
 var ITEM_BASE_PROTOTYPE = {};
 ITEM_BASE_PROTOTYPE.__validItemTypes = {};
@@ -113,9 +166,15 @@ ITEM_BASE_PROTOTYPE.__validItemTypes.createItem = true;
 ITEM_BASE_PROTOTYPE.__validItemTypes.createFoodItem = true;
 ITEM_BASE_PROTOTYPE.__validItemTypes.createArmorItem = true;
 ITEM_BASE_PROTOTYPE.__validItemTypes.createThrowableItem = true;
-ITEM_BASE_PROTOTYPE.__define = function(item) {};
-ITEM_BASE_PROTOTYPE.__describe = function(item) {};
-ITEM_BASE_PROTOTYPE.init = function() {};
+ITEM_BASE_PROTOTYPE.__define = function(item) {
+	return null;
+};
+ITEM_BASE_PROTOTYPE.__describe = function(item) {
+	return null;
+};
+ITEM_BASE_PROTOTYPE.init = function() {
+	return null;
+};
 ITEM_BASE_PROTOTYPE.getName = function(item) {
 	return null;
 };
@@ -164,6 +223,12 @@ ITEM_BASE_PROTOTYPE.getToolPrototype = function() {
 ITEM_BASE_PROTOTYPE.getArmorFuncs = function() {
 	return null;
 };
-ITEM_BASE_PROTOTYPE.onUsed = function(coords, item, block) {};
-ITEM_BASE_PROTOTYPE.onTick = function(item) {};
-ITEM_BASE_PROTOTYPE.onThrowableImpact = function(projectile, item, target) {};
+ITEM_BASE_PROTOTYPE.onUsed = function(coords, item, block) {
+	return null;
+};
+ITEM_BASE_PROTOTYPE.onTick = function(item) {
+	return null;
+};
+ITEM_BASE_PROTOTYPE.onThrowableImpact = function(projectile, item, target) {
+	return null;
+};

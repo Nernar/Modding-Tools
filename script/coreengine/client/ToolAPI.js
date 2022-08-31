@@ -61,29 +61,58 @@ ToolAPI.toolMaterials.netherite.name = "netherite";
 ToolAPI.toolData = {};
 ToolAPI.blockData = {};
 ToolAPI.needDamagableItemFix = false;
-ToolAPI.addBlockMaterial = function(name, breakingMultiplier) {};
-ToolAPI.addToolMaterial = function(name, material) {};
+ToolAPI.addBlockMaterial = function(name, breakingMultiplier) {
+	return null;
+};
+ToolAPI.addToolMaterial = function(name, material) {
+	return null;
+};
 ToolAPI.registerTool = function(id, toolMaterial, blockMaterials, params) {
 	/* TypeError: Cannot call method "setMaxDamage" of null */
 };
 ToolAPI.registerSword = function(id, toolMaterial, params) {
 	/* TypeError: Cannot call method "setMaxDamage" of null */
 };
-ToolAPI.registerBlockMaterial = function(uid, materialName, level, isNative) {};
-ToolAPI.registerBlockDiggingLevel = function(uid, level) {};
-ToolAPI.registerBlockMaterialAsArray = function(materialName, UIDs, isNative) {};
-ToolAPI.refresh = function() {};
-ToolAPI.getBlockData = function(blockID) {
+ToolAPI.registerBlockMaterial = function(uid, materialName, level, isNative) {
 	return null;
 };
-ToolAPI.getBlockMaterial = function(blockID) {
+ToolAPI.registerBlockDiggingLevel = function(uid, level) {
 	return null;
+};
+ToolAPI.registerBlockMaterialAsArray = function(materialName, UIDs, isNative) {
+	return null;
+};
+ToolAPI.refresh = function() {
+	return null;
+};
+ToolAPI.getBlockData = function(blockID) {
+	return {
+		material: {
+			multiplier: 3.3333333333333335,
+			name: "stone"
+		},
+		level: 1,
+		isNative: true
+	};
+};
+ToolAPI.getBlockMaterial = function(blockID) {
+	return {
+		multiplier: 3.3333333333333335,
+		name: "stone"
+	};
 };
 ToolAPI.getBlockDestroyLevel = function(blockID) {
 	return 1;
 };
 ToolAPI.getEnchantExtraData = function(extra) {
-	return null;
+	return {
+		silk: false,
+		fortune: 0,
+		efficiency: 0,
+		unbreaking: 0,
+		experience: 0,
+		all: {}
+	};
 };
 ToolAPI.fortuneDropModifier = function(drop, level) {
 	return 1;
@@ -94,21 +123,52 @@ ToolAPI.getDestroyTimeViaTool = function(fullBlock, toolItem, coords, ignoreNati
 ToolAPI.getToolData = function(itemID) {
 	return null;
 };
-ToolAPI.getToolLevel = function(itemID) {};
-ToolAPI.getToolLevelViaBlock = function(itemID, blockID) {};
+ToolAPI.getToolLevel = function(itemID) {
+	return 0;
+};
+ToolAPI.getToolLevelViaBlock = function(itemID, blockID) {
+	return 0;
+};
 ToolAPI.getCarriedToolData = function() {
-	return null;
+	return {
+		brokenId: 0,
+		damage: 0,
+		toolMaterial: {
+			level: 3,
+			durability: 251,
+			damage: 4,
+			efficiency: 6,
+			name: "iron"
+		},
+		blockMaterials: {
+			fibre: true
+		},
+		calcDestroyTime: (function (tool, coords, block, timeData, defaultTime) {return defaultTime;}),
+		isWeapon: true
+	};
 };
 ToolAPI.getCarriedToolLevel = function() {
 	return 3;
 };
-ToolAPI.startDestroyHook = function(coords, block, carried) {};
-ToolAPI.destroyBlockHook = function(coords, block, item, player) {};
+ToolAPI.startDestroyHook = function(coords, block, carried) {
+	return null;
+};
+ToolAPI.destroyBlockHook = function(coords, block, item, player) {
+	return null;
+};
 ToolAPI.LastAttackTime = 0;
-ToolAPI.playerAttackHook = function(attacker, victim, item) {};
-ToolAPI.resetEngine = function() {};
-ToolAPI.dropExpOrbs = function(x, y, z, value) {};
-ToolAPI.dropOreExp = function(coords, minVal, maxVal, modifier, blockSource) {};
+ToolAPI.playerAttackHook = function(attacker, victim, item) {
+	return null;
+};
+ToolAPI.resetEngine = function() {
+	return null;
+};
+ToolAPI.dropExpOrbs = function(x, y, z, value) {
+	return null;
+};
+ToolAPI.dropOreExp = function(coords, minVal, maxVal, modifier, blockSource) {
+	return null;
+};
 ToolAPI.getBlockMaterialName = function(blockID) {
 	return "stone";
 };

@@ -1,1 +1,3 @@
-function GameObject(name, Prototype) {}
+function GameObject(name, Prototype) {
+	return null;
+}

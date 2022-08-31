@@ -26,11 +26,21 @@ AddonEntityRegistry.data[-55834574844].execAt = function(command, x, y, z) {
 };
 AddonEntityRegistry.awaitCallback = null;
 AddonEntityRegistry.spawn = function(x, y, z, nameID) {
-	return null;
+	return {
+		id: -55834574843,
+		type: "minecraft:pig",
+		getCommandCondition: (function () {var position = EntityAPI.getPosition(this.id);return "@e[x=" + position.x + ",y=" + position.y + ",z=" + position.z + ",r=0.0001]";}),
+		exec: (function (command) {return Commands.exec("execute " + this.getCommandCondition() + " ~ ~ ~ " + command);}),
+		execAt: (function (command, x, y, z) {return Commands.exec("execute " + this.getCommandCondition() + " " + x + " " + y + " " + z + " " + command);})
+	};
 };
 AddonEntityRegistry.getEntityData = function(entity) {
 	return null;
 };
-AddonEntityRegistry.onEntityAdded = function(entity) {};
+AddonEntityRegistry.onEntityAdded = function(entity) {
+	return null;
+};
 
-function AddonEntity(id, type) {}
+function AddonEntity(id, type) {
+	return null;
+}

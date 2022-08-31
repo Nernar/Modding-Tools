@@ -1,12 +1,22 @@
 var GameAPI = {};
-GameAPI.prevent = function() {};
+GameAPI.prevent = function() {
+	return null;
+};
 GameAPI.isActionPrevented = function() {
 	return true;
 };
-GameAPI.message = function(msg) {};
-GameAPI.tipMessage = function(msg) {};
-GameAPI.dialogMessage = function(message, title) {};
-GameAPI.setDifficulty = function(difficulty) {};
+GameAPI.message = function(msg) {
+	return null;
+};
+GameAPI.tipMessage = function(msg) {
+	return null;
+};
+GameAPI.dialogMessage = function(message, title) {
+	return null;
+};
+GameAPI.setDifficulty = function(difficulty) {
+	return null;
+};
 GameAPI.getDifficulty = function() {
 	return 2;
 };
@@ -24,5 +34,9 @@ GameAPI.getEngineVersion = function() {
 };
 GameAPI.spendItemsInCreative = false;
 GameAPI.isDeveloperMode = false;
-GameAPI.isItemSpendingAllowed = function(player) {};
-GameAPI.simulateBackPressed = function() {};
+GameAPI.isItemSpendingAllowed = function(player) {
+	return false;
+};
+GameAPI.simulateBackPressed = function() {
+	return null;
+};

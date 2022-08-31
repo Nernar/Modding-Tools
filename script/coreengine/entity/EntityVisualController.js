@@ -1,28 +1,3 @@
-var EntityVisualController = {};
-EntityVisualController.modelWatchers = {};
-EntityVisualController.modelWatcherStack = [];
-EntityVisualController.getModels = function() {
-	/* ReferenceError: "ce_default_entity_model" is not defined. */
-};
-EntityVisualController.createModelWatchers = function() {
-	/* ReferenceError: "ce_default_entity_model" is not defined. */
-};
-EntityVisualController.getModelWatcher = function(name) {};
-EntityVisualController.setModel = function(name, ticks) {};
-EntityVisualController.resetModel = function() {};
-EntityVisualController.resetAllAnimations = function() {};
-EntityVisualController.getCurrentModelName = function() {
-	return null;
-};
-EntityVisualController.loaded = function() {
-	/* ReferenceError: "ce_default_entity_model" is not defined. */
-};
-EntityVisualController.update = function() {};
-EntityVisualController.save = function() {
-	return null;
-};
-EntityVisualController.read = function(data) {};
-
 var EntityRenderGlobalCache = {};
 EntityRenderGlobalCache.globalCache = {};
 EntityRenderGlobalCache.globalCache.test = {};
@@ -36,4 +11,44 @@ EntityRenderGlobalCache.saveRenderAPI = function(api, name, isLocal) {
 };
 EntityRenderGlobalCache.loadRenderAPI = function(api, name, isLocal) {
 	/* TypeError: Cannot find function fromCache in object CoreEngine. */
+};
+
+var EntityVisualController = {};
+EntityVisualController.modelWatchers = {};
+EntityVisualController.modelWatcherStack = [];
+EntityVisualController.getModels = function() {
+	/* ReferenceError: "ce_default_entity_model" is not defined. */
+};
+EntityVisualController.createModelWatchers = function() {
+	/* ReferenceError: "ce_default_entity_model" is not defined. */
+};
+EntityVisualController.getModelWatcher = function(name) {
+	return null;
+};
+EntityVisualController.setModel = function(name, ticks) {
+	return null;
+};
+EntityVisualController.resetModel = function() {
+	return null;
+};
+EntityVisualController.resetAllAnimations = function() {
+	return null;
+};
+EntityVisualController.getCurrentModelName = function() {
+	return {
+		name: "main",
+		ticks: -1
+	};
+};
+EntityVisualController.loaded = function() {
+	/* ReferenceError: "ce_default_entity_model" is not defined. */
+};
+EntityVisualController.update = function() {
+	return null;
+};
+EntityVisualController.save = function() {
+	return [];
+};
+EntityVisualController.read = function(data) {
+	return null;
 };

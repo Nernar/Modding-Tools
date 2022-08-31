@@ -59,7 +59,7 @@ function getPlayerY() {
 	return -0.17998993396759033;
 }
 function getPlayerX() {
-	return -0.17998993396759033;
+	return 0;
 }
 function getMcContext() {
 	return {};
@@ -79,7 +79,9 @@ function getMCPEVersion() {
 }
 
 var GuiUtils = {};
-GuiUtils.Run = function(func) {};
+GuiUtils.Run = function(func) {
+	return null;
+};
 
 var nonSavesObjectSaver = 859053837;
 
@@ -114,7 +116,9 @@ function __targetAngle(angle, target, speed) {
 	return __targetValue(angle, target, speed);
 }
 
-function setPlayerItem(id, count, data, extra) {}
+function setPlayerItem(id, count, data, extra) {
+	return null;
+}
 
 function NativeAPI_getData() {}
 function NativeAPI_getTile() {}
@@ -124,4 +128,6 @@ function NativeAPI_setTile() {}
 function Particle_addFarParticle() {}
 function Particle_addParticle() {}
 
-function ResetInGameAPIs() {}
+function ResetInGameAPIs() {
+	return null;
+}

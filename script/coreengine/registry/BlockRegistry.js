@@ -12,7 +12,9 @@ BlockRegistry.getNumericId = function(id) {
 BlockRegistry.createBlock = function(namedID, defineData, blockType) {
 	return true;
 };
-BlockRegistry.createLiquidBlock = function(nameID, defineData, blockType) {};
+BlockRegistry.createLiquidBlock = function(nameID, defineData, blockType) {
+	return null;
+};
 BlockRegistry.createBlockWithRotation = function(namedID, defineData, blockType) {
 	/* TypeError: Cannot read property "0" from undefined */
 };
@@ -67,16 +69,24 @@ BlockRegistry.registerNeighbourChangeFunction = function(nameID, func) {
 BlockRegistry.getDropFunction = function(id) {
 	return 3;
 };
-BlockRegistry.setDestroyLevelForID = function(id, level, resetData) {};
-BlockRegistry.setDestroyLevel = function(namedID, level, resetData) {};
-BlockRegistry.setDestroyTime = function(namedID, time) {};
+BlockRegistry.setDestroyLevelForID = function(id, level, resetData) {
+	return null;
+};
+BlockRegistry.setDestroyLevel = function(namedID, level, resetData) {
+	return null;
+};
+BlockRegistry.setDestroyTime = function(namedID, time) {
+	return null;
+};
 BlockRegistry.getMaterial = function(numericID) {
 	return 3;
 };
 BlockRegistry.isSolid = function(numericID) {
 	return true;
 };
-BlockRegistry.canContainLiquid = function(numericID) {};
+BlockRegistry.canContainLiquid = function(numericID) {
+	return false;
+};
 BlockRegistry.canBeExtraBlock = function(numericID) {
 	return true;
 };
@@ -89,52 +99,101 @@ BlockRegistry.getExplosionResistance = function(numericID) {
 BlockRegistry.getFriction = function(numericID) {
 	return 0.6000000238418579;
 };
-BlockRegistry.getTranslucency = function(numericID) {};
-BlockRegistry.getLightLevel = function(numericID) {};
+BlockRegistry.getTranslucency = function(numericID) {
+	return 0;
+};
+BlockRegistry.getLightLevel = function(numericID) {
+	return 0;
+};
 BlockRegistry.getLightOpacity = function(numericID) {
 	return 15;
 };
 BlockRegistry.getRenderLayer = function(numericID) {
 	return 3;
 };
-BlockRegistry.getRenderType = function(numericID) {};
+BlockRegistry.getRenderType = function(numericID) {
+	return 0;
+};
 BlockRegistry.getBlockAtlasTextureCoords = function(name, id) {
+	return {
+		u1: 0.66015625,
+		v1: 0.0390625,
+		u2: 0.66796875,
+		v2: 0.0546875
+	};
+};
+BlockRegistry.setTempDestroyTime = function(numericID, time) {
 	return null;
 };
-BlockRegistry.setTempDestroyTime = function(numericID, time) {};
 BlockRegistry.setBlockMaterial = function(namedID, material, level) {
 	return true;
 };
-BlockRegistry.getMapColor = function(numericID) {};
-BlockRegistry.setRedstoneTile = function(namedID, data, isRedstone) {};
-BlockRegistry.setupAsRedstoneReceiver = function(namedID, connectToRedstone) {};
-BlockRegistry.setupAsRedstoneEmitter = function(namedID, connectToRedstone) {};
-BlockRegistry.setupAsNonRedstoneTile = function(namedID) {};
-BlockRegistry.onBlockClicked = function(coords, item, block, player) {};
-BlockRegistry.onBlockDestroyed = function(coords, fullTile, byHand, isDropAllowed, blockSource, player, item) {};
-BlockRegistry.onBlockPoppedResources = function(coords, block, region, f, i) {};
-BlockRegistry.onEventEntityInside = function(coords, block, entity) {};
-BlockRegistry.onEventEntityStepOn = function(coords, block, entity) {};
-BlockRegistry.onEventNeigbourChanged = function(coords, block, changeCoords, region) {};
+BlockRegistry.getMapColor = function(numericID) {
+	return 0;
+};
+BlockRegistry.setRedstoneTile = function(namedID, data, isRedstone) {
+	return null;
+};
+BlockRegistry.setupAsRedstoneReceiver = function(namedID, connectToRedstone) {
+	return null;
+};
+BlockRegistry.setupAsRedstoneEmitter = function(namedID, connectToRedstone) {
+	return null;
+};
+BlockRegistry.setupAsNonRedstoneTile = function(namedID) {
+	return null;
+};
+BlockRegistry.onBlockClicked = function(coords, item, block, player) {
+	return null;
+};
+BlockRegistry.onBlockDestroyed = function(coords, fullTile, byHand, isDropAllowed, blockSource, player, item) {
+	return null;
+};
+BlockRegistry.onBlockPoppedResources = function(coords, block, region, f, i) {
+	return null;
+};
+BlockRegistry.onEventEntityInside = function(coords, block, entity) {
+	return null;
+};
+BlockRegistry.onEventEntityStepOn = function(coords, block, entity) {
+	return null;
+};
+BlockRegistry.onEventNeigbourChanged = function(coords, block, changeCoords, region) {
+	return null;
+};
 BlockRegistry.getBlockDropViaItem = function(block, item, coords, blockSource) {
 	return null;
 };
 BlockRegistry.placeFuncs = [];
-BlockRegistry.registerPlaceFunctionForID = function(block, func) {};
-BlockRegistry.registerPlaceFunction = function(namedID, func) {};
+BlockRegistry.registerPlaceFunctionForID = function(block, func) {
+	return null;
+};
+BlockRegistry.registerPlaceFunction = function(namedID, func) {
+	return null;
+};
 BlockRegistry.getPlaceFunc = function(block) {
 	return function() {};
 };
-BlockRegistry.setBlockShape = function(id, pos1, pos2, data) {};
-BlockRegistry.setShape = function(id, x1, y1, z1, x2, y2, z2, data) {};
+BlockRegistry.setBlockShape = function(id, pos1, pos2, data) {
+	return null;
+};
+BlockRegistry.setShape = function(id, x1, y1, z1, x2, y2, z2, data) {
+	return null;
+};
 BlockRegistry.createSpecialType = function(description, nameKey) {
 	return "key";
 };
-BlockRegistry.setRandomTickCallback = function(id, callback) {};
-BlockRegistry.setAnimateTickCallback = function(id, callback) {};
+BlockRegistry.setRandomTickCallback = function(id, callback) {
+	return null;
+};
+BlockRegistry.setAnimateTickCallback = function(id, callback) {
+	return null;
+};
 BlockRegistry.TYPE_BASE = "createBlock";
 BlockRegistry.TYPE_ROTATION = "createBlockWithRotation";
-BlockRegistry.setPrototype = function(namedID, Prototype) {};
+BlockRegistry.setPrototype = function(namedID, Prototype) {
+	return null;
+};
 BlockRegistry.__func = function(blockCoords, blockID, blockData, diggingLevel) {
 	return null;
 };
@@ -143,9 +202,15 @@ var BLOCK_BASE_PROTOTYPE = {};
 BLOCK_BASE_PROTOTYPE.__validBlockTypes = {};
 BLOCK_BASE_PROTOTYPE.__validBlockTypes.createBlock = true;
 BLOCK_BASE_PROTOTYPE.__validBlockTypes.createBlockWithRotation = true;
-BLOCK_BASE_PROTOTYPE.__define = function(item) {};
-BLOCK_BASE_PROTOTYPE.__describe = function(item) {};
-BLOCK_BASE_PROTOTYPE.init = function() {};
+BLOCK_BASE_PROTOTYPE.__define = function(item) {
+	return null;
+};
+BLOCK_BASE_PROTOTYPE.__describe = function(item) {
+	return null;
+};
+BLOCK_BASE_PROTOTYPE.init = function() {
+	return null;
+};
 BLOCK_BASE_PROTOTYPE.getVariations = function(item) {
 	return null;
 };
@@ -170,7 +235,9 @@ BLOCK_BASE_PROTOTYPE.isEnchanted = function(item) {
 BLOCK_BASE_PROTOTYPE.getMaterial = function(item) {
 	return null;
 };
-BLOCK_BASE_PROTOTYPE.getDestroyLevel = function(item) {};
+BLOCK_BASE_PROTOTYPE.getDestroyLevel = function(item) {
+	return 0;
+};
 BLOCK_BASE_PROTOTYPE.getShape = function(item) {
 	return null;
 };

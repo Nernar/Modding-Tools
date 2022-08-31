@@ -2,8 +2,12 @@ var TileEntity = {};
 TileEntity.tileEntityPrototypes = {};
 TileEntity.tileEntityList = [];
 TileEntity.tileEntityCacheMap = {};
-TileEntity.resetEngine = function() {};
-TileEntity.registerPrototype = function(blockID, customPrototype) {};
+TileEntity.resetEngine = function() {
+	return null;
+};
+TileEntity.registerPrototype = function(blockID, customPrototype) {
+	return null;
+};
 TileEntity.getPrototype = function() {};
 TileEntity.isTileEntityBlock = function(blockID) {
 	return true;
@@ -12,14 +16,18 @@ TileEntity.createTileEntityForPrototype = function() {};
 TileEntity.addTileEntity = function(x, y, z, blockSource) {
 	return null;
 };
-TileEntity.addUpdatableAsTileEntity = function(updatable) {};
+TileEntity.addUpdatableAsTileEntity = function(updatable) {
+	return null;
+};
 TileEntity.getTileEntity = function(x, y, z, blockSource) {
 	return null;
 };
 TileEntity.destroyTileEntity = function(tileEntity, fromDestroyBlock, isDropAllowed) {
 	/* TypeError: Cannot call method "destroy" of null */
 };
-TileEntity.destroyTileEntityAtCoords = function(x, y, z, blockSource, isDropAllowed) {};
+TileEntity.destroyTileEntityAtCoords = function(x, y, z, blockSource, isDropAllowed) {
+	return false;
+};
 TileEntity.isTileEntityLoaded = function(tileEntity) {
 	/* TypeError: Cannot read property "blockSource" from null */
 };
@@ -35,7 +43,6 @@ TileEntity.DeployDestroyChecker = function(tileEntity) {
 };
 
 var TILE_ENTITY_CHECKER_ITERATIONS = 10;
-
 var TileEntityBasePrototype = {};
 TileEntityBasePrototype.remove = false;
 TileEntityBasePrototype.isLoaded = false;
@@ -46,20 +53,42 @@ TileEntityBasePrototype.defaultValues = {};
 TileEntityBasePrototype._runInit = function() {
 	/* JavaException: java.lang.IllegalArgumentException: no saver found for id 0 use only registerObjectSaver return values */
 };
-TileEntityBasePrototype.update = function() {};
+TileEntityBasePrototype.update = function() {
+	return null;
+};
 TileEntityBasePrototype._to_string = function() {
 	return "TileEntity{undefined pos=(undefined, undefined, undefined), dimension=undefined}";
 };
-TileEntityBasePrototype.created = function() {};
-TileEntityBasePrototype.load = function() {};
-TileEntityBasePrototype.unload = function() {};
-TileEntityBasePrototype.init = function() {};
-TileEntityBasePrototype.onCheckerTick = function(isInitialized, isLoaded, wasLoaded) {};
-TileEntityBasePrototype.click = function(id, count, data, coords) {};
-TileEntityBasePrototype.destroyBlock = function(coords, player) {};
-TileEntityBasePrototype.redstone = function(params) {};
-TileEntityBasePrototype.projectileHit = function(coords, projectile) {};
-TileEntityBasePrototype.destroy = function() {};
+TileEntityBasePrototype.created = function() {
+	return null;
+};
+TileEntityBasePrototype.load = function() {
+	return null;
+};
+TileEntityBasePrototype.unload = function() {
+	return null;
+};
+TileEntityBasePrototype.init = function() {
+	return null;
+};
+TileEntityBasePrototype.onCheckerTick = function(isInitialized, isLoaded, wasLoaded) {
+	return null;
+};
+TileEntityBasePrototype.click = function(id, count, data, coords) {
+	return false;
+};
+TileEntityBasePrototype.destroyBlock = function(coords, player) {
+	return null;
+};
+TileEntityBasePrototype.redstone = function(params) {
+	return null;
+};
+TileEntityBasePrototype.projectileHit = function(coords, projectile) {
+	return null;
+};
+TileEntityBasePrototype.destroy = function() {
+	return false;
+};
 TileEntityBasePrototype.getGuiScreen = function() {
 	return null;
 };
@@ -72,7 +101,9 @@ TileEntityBasePrototype.onItemClick = function(id, count, data, coords, player, 
 TileEntityBasePrototype.selfDestroy = function() {
 	/* TypeError: Cannot call method "close" of undefined */
 };
-TileEntityBasePrototype.requireMoreLiquid = function(liquid, amount) {};
+TileEntityBasePrototype.requireMoreLiquid = function(liquid, amount) {
+	return null;
+};
 TileEntityBasePrototype.sendPacket = function(name, data) {
 	/* TypeError: Cannot call method "send" of null */
 };
