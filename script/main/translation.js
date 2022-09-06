@@ -27,7 +27,7 @@ Translation.addTranslation("Editor", {
 Translation.addTranslation("Remove", {
 	ru: "Удалить",
 	en: "Remove"
-});
+}); // DEPRECATED
 Translation.addTranslation("Editors", {
 	ru: "Редакторы",
 	en: "Editors"
@@ -157,7 +157,7 @@ Translation.addTranslation("Nope", {
 Translation.addTranslation("OK", {
 	ru: "ОК",
 	en: "OK"
-});
+}); // DEPRECATED
 Translation.addTranslation("Send", {
 	ru: "Отправить",
 	en: "Send"
@@ -667,6 +667,10 @@ Translation.addTranslation("Something happened", {
 	ru: "Что-то произошло",
 	en: "Something happened"
 });
+Translation.addTranslation("Evaluator", {
+	ru: "Исполнитель",
+	en: "Evaluator"
+});
 Translation.addTranslation("Report", {
 	ru: "Отчет",
 	en: "Report"
@@ -866,39 +870,39 @@ Translation.addTranslation("Module will be uninstalled with all content inside, 
 Translation.addTranslation("Restart game for better stability", {
 	ru: "Перезапустите игру для наилучшей стабильности",
 	en: "Restart game for better stability"
-});
+}); // DEPRECATED
 Translation.addTranslation("Developer: %s", {
 	ru: "Разработчик: %s",
 	en: "Developer: %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("Unknown", {
 	ru: "Неизвестно",
 	en: "Unknown"
-});
+}); // DEPRECATED
 Translation.addTranslation("State: %s", {
 	ru: "Состояние: %s",
 	en: "State: %s"
-});
+}); // DEPRECATED
 Translation.addTranslation("ACTIVE", {
 	ru: "АКТИВЕН",
 	en: "ACTIVE"
-});
+}); // DEPRECATED
 Translation.addTranslation("OUTDATED", {
 	ru: "УСТАРЕЛ",
 	en: "OUTDATED"
-});
+}); // DEPRECATED
 Translation.addTranslation("FAILED", {
 	ru: "ОШИБКА",
 	en: "FAILED"
-});
+}); // DEPRECATED
 Translation.addTranslation("DISABLED", {
 	ru: "ОТКЛЮЧЕН",
 	en: "DISABLED"
-});
+}); // DEPRECATED
 Translation.addTranslation("UNKNOWN", {
 	ru: "НЕИЗВЕСТНО",
 	en: "UNKNOWN"
-});
+}); // DEPRECATED
 Translation.addTranslation("Unknown mod", {
 	ru: "Неизвестный мод",
 	en: "Unknown mod"
@@ -1022,7 +1026,7 @@ Translation.addTranslation("Howdy and welcome to Dev Editor!", {
 Translation.addTranslation("Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
 	en: "Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.",
 	ru: "Интеграция будет удалена вместе со всем контентом внутри, пожалуйста, учтите, что ваши данные могут быть утеряны."
-});
+}); // DEPRECATED
 Translation.addTranslation("Do you wish to continue?", {
 	en: "Do you wish to continue?",
 	ru: "Вы действительно хотите продолжить?"

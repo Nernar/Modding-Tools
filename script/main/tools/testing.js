@@ -44,10 +44,9 @@ const DEBUG_TEST_TOOL = (function() {
 					icon: information.icon || "support",
 					message: translate(information.title || "Test"),
 					click: function() {
-						confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."),
-							function() {
-								instance.evaluateTest(path + ".dns", information.mobility || information.counter);
-							});
+						confirm(translate("Test") + ": " + path, translate(information.description || "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."), function() {
+							instance.evaluateTest(path + ".dns", information.mobility || information.counter);
+						});
 					}
 				};
 			}
@@ -56,7 +55,7 @@ const DEBUG_TEST_TOOL = (function() {
 		fetchInformation: function(path) {
 			try {
 				let file = new java.io.File(Dirs.SCRIPT_TESTING, path + ".json");
-				if (!file.exists()) throw new java.lang.IllegalArgumentException("ModdingTools: Testing script " + path + " not found");
+				if (!file.exists()) MCSystem.throwException("ModdingTools: Testing script " + path + " not found");
 				return compileData(Files.read(file));
 			} catch (e) {
 				reportError(e);
@@ -86,7 +85,9 @@ const DEBUG_TEST_TOOL = (function() {
 })();
 
 const attachDebugTestTool = function(post) {
-	DEBUG_TEST_TOOL.attach();
+	if (!DEBUG_TEST_TOOL.isAttached()) {
+		DEBUG_TEST_TOOL.attach();
+	}
 	if (!DEBUG_TEST_TOOL.completedRequest) {
 		FetchTestsSequence.execute(DEBUG_TEST_TOOL.tests);
 		DEBUG_TEST_TOOL.completedRequest = true;
@@ -118,15 +119,9 @@ const attachDebugTestTool = function(post) {
 const FetchTestsSequence = new LogotypeSequence({
 	uncount: function(value) {
 		if (value === undefined) return 0;
-		let files = Files.listFileNames(Dirs.SCRIPT_TESTING, true),
-			scripts = Files.checkFormats(files, ".dns"),
-			index = scripts.indexOf("attach.dns");
-		if (index > -1) {
-			scripts.splice(index, 1)
-			REQUIRE("attach.dns");
-		}
-		this.targeted = scripts;
-		return scripts.length;
+		let files = Files.listFileNames(Dirs.SCRIPT_TESTING, true);
+		this.targeted = Files.checkFormats(files, ".json");
+		return this.targeted.length;
 	},
 	next: function(value, index) {
 		return this.targeted[index];

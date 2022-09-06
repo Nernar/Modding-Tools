@@ -50,12 +50,13 @@ import io.github.rosemoe.sora.widget.component.EditorBuiltinComponent;
  *
  * @author Rosemoe
  */
-public class Magnifier implements EditorBuiltinComponent {
+public class Magnifier extends io.github.rosemoe.sora.widget.component.Magnifier implements EditorBuiltinComponent {
 
     private final CodeEditor view;
     private final PopupWindow popup;
     private final ImageView image;
     private final Paint paint;
+    private View mParentView;
     private int x, y;
     private final float maxTextSize;
     private long expectedRequestTime;
@@ -68,10 +69,12 @@ public class Magnifier implements EditorBuiltinComponent {
     private final float scaleFactor;
 
     public Magnifier(CodeEditor editor, View content, ImageView magnifier) {
-        view = editor;
+        super(editor);
+		view = editor;
         popup = new PopupWindow(editor);
         popup.setElevation(view.getDpUnit() * 8);
         image = magnifier;
+        mParentView = editor;
         popup.setHeight((int) (editor.getDpUnit() * 70));
         popup.setWidth((int) (editor.getDpUnit() * 100));
         popup.setContentView(content);
@@ -140,7 +143,7 @@ public class Magnifier implements EditorBuiltinComponent {
         if (popup.isShowing()) {
             popup.update(left, top, popup.getWidth(), popup.getHeight());
         } else {
-            popup.showAsDropDown(view, left, top, Gravity.START | Gravity.TOP);
+            popup.showAtLocation(mParentView, left, top, Gravity.START | Gravity.TOP);
         }
         updateDisplay();
     }
@@ -289,4 +292,15 @@ public class Magnifier implements EditorBuiltinComponent {
         image.setImageBitmap(dest);
     }
 
+    /**
+     * Set parent view of popup.
+     * @param view View for {@link PopupWindow#showAtLocation(View, int, int, int)}
+     */
+    public void setParentView(View view) {
+        mParentView = view;
+    }
+
+    public View getParentView() {
+        return mParentView;
+    }
 }

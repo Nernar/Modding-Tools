@@ -155,37 +155,74 @@ const importProject = function(path, action) {
 	});
 };
 
+const findBuildConfigLocation = function(path) {
+	try {
+		let file = new java.io.File(path);
+		do {
+			let config = new java.io.File(file, "build.config");
+			if (config.exists()) return config;
+			file = file.getParentFile();
+		} while (file && file.exists());
+	} catch (e) {
+		Logger.Log("ModdingTools: findBuildConfigLocation: " + e, "WARNING");
+	}
+	return null;
+};
+
+const findSourceInBuildConfigLocation = function(buildConfig, path) {
+	 let highestPath = null;
+	 let sourcePath = null;
+	 for (let i = 0; i < buildConfig.buildDirs.length; i++) {
+	 	let dir = buildConfig.buildDirs[i];
+	 	// Same path as final one, no duplicate is needed here
+	 	if (path == dir.targetSource) {
+	 		return null;
+	 	}
+	 	if (path.indexOf(dir.dir) == 0 || path.indexOf(dir.dir) == 1) {
+	 		if (highestPath == null || dir.dir.length > highestPath.length) {
+	 			highestPath = dir.dir;
+	 			sourcePath = dir.targetSource;
+	 		}
+	 	}
+	 }
+	 return sourcePath;
+};
+
+const getSourceInBuildConfigDescription = function(path) {
+	try {
+		let buildConfigFile = findBuildConfigLocation(path);
+		if (buildConfigFile == null) throw null;
+		let location = Files.shrinkPathes(buildConfigFile.getParentFile(), path);
+		let buildConfig = compileData(Files.read(buildConfigFile), "object");
+		// If source is not found, only main path will be used
+		let sourcePath = findSourceInBuildConfigLocation(buildConfig, location);
+		let api = buildConfig.defaultConfig.api;
+		for (let i = 0; i < buildConfig.compile.length; i++) {
+			let source = buildConfig.compile[i];
+			if (source.path == sourcePath) {
+				api = source.api || api;
+			}
+		}
+		return sourcePath == null ? {
+			api: api
+		} : {
+			api: api,
+			source: new java.io.File(buildConfigFile.getParentFile(), sourcePath).getPath()
+		};
+	} catch (e) {
+		if (e != null) {
+			Logger.Log("ModdingTools: getSourceInBuildConfigDescription: " + e, "WARNING");
+		}
+	}
+	return {
+		api: "CoreEngine"
+	};
+};
+
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
-
-const importScript = function(path, action) {
-	readFile(path, false, function(text) {
-		let result = compileScript(text);
-		if (result !== null) {
-			action && handle(function() {
-				action(result);
-			});
-		}
-	});
-};
-
-const compileScript = function(text) {
-	let code = "(function() { try { " + text + "\n\t} catch (e) {" +
-		"\n\t\t__data__.error = e;\n\t}\n\treturn __data__;\n})();",
-		scope = runAtScope(code, getScriptScope(), "import.js");
-	if (noImportedScripts) {
-		noImportedScripts = false;
-		loadSetting("user_login.imported_script", "boolean", true);
-		__config__.save();
-	}
-	if (scope.error) reportError(scope.error);
-	else if (scope.result && scope.result.error) {
-		reportError(scope.result.error);
-	}
-	return scope.result || null;
-};
 
 const getScriptScope = function() {
 	let scope = {

@@ -27,6 +27,7 @@ import android.annotation.SuppressLint;
 import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import io.github.rosemoe.sora.event.EventReceiver;
@@ -45,7 +46,7 @@ import io.github.rosemoe.sora.widget.component.EditorBuiltinComponent;
  *
  * @author Rosemoe
  */
-public class EditorTextActionWindow extends EditorPopupWindow implements EventReceiver<SelectionChangeEvent>, EditorBuiltinComponent {
+public class EditorTextActionWindow extends io.github.rosemoe.sora.widget.component.EditorTextActionWindow implements EventReceiver<SelectionChangeEvent>, EditorBuiltinComponent {
     private final CodeEditor mEditor;
     private final Button mPasteBtn;
     private final View mCopyBtn;
@@ -63,28 +64,15 @@ public class EditorTextActionWindow extends EditorPopupWindow implements EventRe
      * @param editor Target editor
      */
     public EditorTextActionWindow(CodeEditor editor, View root, Button pasteBtn, View copyBtn, View cutBtn) {
-        super(editor, FEATURE_SHOW_OUTSIDE_VIEW_ALLOWED);
+        super(editor);
         mEditor = editor;
         mHandler = editor.getEventHandler();
         mPasteBtn = pasteBtn;
         mCopyBtn = copyBtn;
         mCutBtn = cutBtn;
         setContentView(root);
-        setSize(0, (int) (mEditor.getDpUnit() * 60));
+        setSize(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mRootView = root;
-        editor.subscribeEvent(SelectionChangeEvent.class, this);
-        editor.subscribeEvent(ScrollEvent.class, ((event, unsubscribe) -> {
-            long last = mLastScroll;
-            mLastScroll = System.currentTimeMillis();
-            if (mLastScroll - last < DELAY) {
-                postDisplay();
-            }
-        }));
-        editor.subscribeEvent(HandleStateChangeEvent.class, ((event, unsubscribe) -> {
-            if (event.isHeld()) {
-                postDisplay();
-            }
-        }));
     }
 
     @Override
@@ -193,8 +181,8 @@ public class EditorTextActionWindow extends EditorPopupWindow implements EventRe
         mPasteBtn.setEnabled(mEditor.hasClip() && mEditor.isEditable());
         mCopyBtn.setVisibility(mEditor.getCursor().isSelected() ? View.VISIBLE : View.GONE);
         mCutBtn.setVisibility(mEditor.getCursor().isSelected() && mEditor.isEditable() ? View.VISIBLE : View.GONE);
-        mRootView.measure(View.MeasureSpec.makeMeasureSpec(1000000, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(100000, View.MeasureSpec.AT_MOST));
-        setSize(Math.min(mRootView.getMeasuredWidth(), (int) (mEditor.getDpUnit() * 230)), getHeight());
+        // mRootView.measure(View.MeasureSpec.makeMeasureSpec(1000000, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(100000, View.MeasureSpec.AT_MOST));
+        // setSize(mRootView.getMeasuredWidth(), getHeight());
     }
 
     @Override

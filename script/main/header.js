@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-21.08.2022-0";
+const REVISION = "develop-alpha-0.4-06.09.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -40,7 +40,6 @@ let projectHeaderBackground = false;
 let hintStackableDenied = false;
 let maximumHints = 25;
 let showProcesses = true;
-let safetyProcesses = true;
 
 // Configurable: modules
 let currentEnvironment = __name__;
@@ -144,6 +143,14 @@ $.importClass(android.widget.ListView);
 $.importClass(java.util.concurrent.TimeUnit);
 $.importClass(InnerCorePackages.utils.FileTools);
 $.importClass(InnerCorePackages.api.runtime.LevelInfo);
+
+const CONTEXT = (function() {
+	try {
+		return InnerCorePackages.mod.executable.Compiler.assureContextForCurrentThread();
+	} catch (e) {
+		return __mod__.compiledModSources.get(0).parentContext;
+	}
+})();
 
 const isCoreEngineLoaded = function() {
 	return CoreEngine.CORE_ENGINE_API_LEVEL != 0;

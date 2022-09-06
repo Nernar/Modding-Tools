@@ -1,35 +1,120 @@
+const compileString = function(source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (isHorizon) {
+		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileString(CONTEXT, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
+	}
+	return CONTEXT.compileString(source, sourceName, lineno, securityDomain);
+};
+
+const compileReader = function(reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (isHorizon) {
+		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileReader(CONTEXT, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
+	}
+	return CONTEXT.compileReader(reader, sourceName, lineno, securityDomain);
+};
+
+const compileFunction = function(scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (isHorizon) {
+		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileFunction(CONTEXT, scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
+	}
+	return CONTEXT.compileFunction(scope, source, sourceName, lineno, securityDomain);
+};
+
+const compileUniversal = function(what, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (what instanceof java.io.Reader) {
+		return compileReader.apply(this, arguments);
+	}
+	return compileString.apply(this, arguments);
+};
+
+const evaluateString = function(scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (isHorizon) {
+		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateString(CONTEXT, scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
+	}
+	return CONTEXT.evaluateString(scope, source, sourceName, lineno, securityDomain);
+};
+
+const evaluateReader = function(scope, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (isHorizon) {
+		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateReader(CONTEXT, scope, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
+	}
+	return CONTEXT.evaluateReader(scope, reader, sourceName, lineno, securityDomain);
+};
+
+const evaluateUniversal = function(scope, what, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+	if (what instanceof java.io.Reader) {
+		return evaluateReader.apply(this, arguments);
+	}
+	return evaluateString.apply(this, arguments);
+};
+
 /**
- * Runs code in a separate data stream.
- * @param {string} code something to evaluate
+ * Runs code/reader in a separate data stream.
+ * @param {string|java.io.Reader} what something to evaluate
  * @param {Object} [scope] fo resolve
  * @param {string} [name] of script
+ * @param {boolean} [isFatal] syntax error will be fatal or not
  * @returns evaluate [[result]] or [[error]]
  */
-const runAtScope = function(code, scope, name) {
-	let source = name ? NAME + "$" + name : "<no name>",
-		executable = __mod__.compiledModSources.get(0);
-	source = source.replace(/[^\w\$\<\>\.\-\s]/gi, "$");
+const runAtScope = function(what, scope, name, isFatal) {
+	let source = name ? NAME + "$" + name : "<no name>";
 	if (scope == null || typeof scope != "object") {
-		scope = executable.parentContext.newObject(executable.getScope());
+		let executable = __mod__.compiledModSources.get(0);
+		scope = CONTEXT.newObject(executable.getScope());
 	}
-	return resolveThrowable.invoke(function() {
-		return {
-			source: source,
-			scope: scope,
-			context: executable.parentContext,
-			result: executable.parentContext.evaluateString(scope, code, source, 0, null)
-		};
-	}, function(th) {
-		Logger.Log(source + ": " + InnerCorePackages.api.log.ICLog.getStackTrace(th), "WARNING");
-		if (th instanceof org.mozilla.javascript.JavaScriptException) {
-			return {
-				error: th.getValue()
-			};
+	let result = {
+		source: source.replace(/[^\w\$\<\>\.\-\s]/gi, "$")
+	};
+	resolveThrowable.invoke(function() {
+		if (isHorizon) {
+			result.compilationErrorReporter = newLoggingErrorReporter(result.source, isFatal);
+			result.compilerEnvirons = newRuntimeCompilerEnvirons(result.compilationErrorReporter);
 		}
-		return {
-			error: new Error(th != null ? th.toString() : "null")
-		};
+		result.result = evaluateUniversal(scope, what, result.source, 0, null, null, result.compilationErrorReporter || null, result.compilerEnvirons || null);
+	}, function(th) {
+		Logger.Log(result.source + ": " + InnerCorePackages.api.log.ICLog.getStackTrace(th), isFatal ? "ERROR" : "WARNING");
+		if (th instanceof org.mozilla.javascript.JavaScriptException) {
+			result.error = th.getValue();
+			return;
+		}
+		try {
+			MCSystem.throwException(th != null ? th.toString() : "null");
+		} catch (e) {
+			result.error = e;
+		}
 	});
+	return result;
+};
+
+const newLoggingErrorReporter = function(name, isFatal, collector) {
+	return new org.mozilla.javascript.ErrorReporter({
+		error: function(message, sourceURI, line, lineText, lineOffset) {
+			Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "ERROR" : "WARNING");
+			Logger.Log(name + ": " + lineText, isFatal ? "ERROR" : "WARNING");
+			Logger.Log(name + ": " + String(" ").repeat(lineOffset) + "^", isFatal ? "ERROR" : "WARNING");
+			if (collector && collector.error) collector.error.apply(this, arguments);
+		},
+		warning: function(message, sourceURI, line, lineText, lineOffset) {
+			Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "WARNING" : "INFO");
+			Logger.Log(name + ": " + lineText, isFatal ? "WARNING" : "INFO");
+			Logger.Log(name + ": " + String(" ").repeat(lineOffset) + "^", isFatal ? "WARNING" : "INFO");
+			if (collector && collector.warning) collector.warning.apply(this, arguments);
+		},
+		runtimeError: function(message, sourceURI, line, lineText, lineOffset) {
+			return new org.mozilla.javascript.EvaluatorException(message, sourceURI, line, lineText, lineOffset);
+		}
+	});
+};
+
+const newRuntimeCompilerEnvirons = function(reporter) {
+	let compilerEnv = new org.mozilla.javascript.CompilerEnvirons();
+	compilerEnv.initFromContext(CONTEXT);
+	compilerEnv.setErrorReporter(reporter);
+	compilerEnv.setGenerateDebugInfo(false);
+	compilerEnv.setGeneratingSource(false);
+	compilerEnv.setRecoverFromErrors(true);
+	// Requires setGeneratingSource(true)
+	// compilerEnv.setIdeMode(true);
+	return compilerEnv;
 };
 
 const findWrappedScript = function(path) {
@@ -38,6 +123,8 @@ const findWrappedScript = function(path) {
 	file = new java.io.File(Dirs.EVALUATE, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
+	if (file.exists()) return file;
+	file = new java.io.File(Dirs.SCRIPT_TESTING, path);
 	if (file.exists()) return file;
 	return null;
 };
@@ -50,35 +137,17 @@ const UNWRAP = function(path, scope) {
 	let file = findWrappedScript(path);
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 		if (file == null) {
-			MCSystem.throwException("ModdingTools: not found " + path + " script");
+			MCSystem.throwException("ModdingTools: Not found " + path + " script");
 		}
-		log("ModdingTools: wrapping " + file + " script");
+		log("ModdingTools: Wrapping " + file + " script");
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
 		if (scope.error) throw scope.error;
 		return scope.result;
-	} else if (file == null && REVISION.indexOf("alpha") != -1) {
-		let file = new java.io.File(Dirs.SCRIPT_TESTING, path);
-		if (!file.exists()) {
-			MCSystem.throwException("ModdingTools: not found " + path + " testing executable");
-		}
-		log("ModdingTools: wnwrapping " + file + " source");
-		try {
-			let source = decompileExecuteable(Files.readBytes(file)),
-				code = "(function() {\n" + source + "\n})();",
-				scope = runAtScope(code, who, path);
-			if (scope.error) throw scope.error;
-			return scope.result;
-		} catch (e) {
-			if (REVISION.indexOf("develop") != -1) {
-				reportError(e);
-			}
-		}
-		return null;
 	}
 	if (file == null) {
-		MCSystem.throwException("ModdingTools: not found " + path + " executable");
+		MCSystem.throwException("ModdingTools: Not found " + path + " executable");
 	}
 	try {
 		let source = decompileExecuteable(Files.readBytes(file)),

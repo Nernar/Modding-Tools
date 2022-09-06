@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package net.agilob.filter;
+package net.agilob.jhlabs.filter;
 
 import net.agilob.jhlabs.filter.util.PixelUtils;
 

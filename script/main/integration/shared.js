@@ -7,6 +7,7 @@ const API = {
 	USER_ID: "unknown",
 	API_VERSION: API_VERSION,
 	PRODUCT_REVISION: REVISION,
+	CONTEXT: CONTEXT,
 	InnerCorePackage: InnerCorePackages, // Code bug
 	InnerCorePackages: InnerCorePackages,
 	isCoreEngineLoaded: isCoreEngineLoaded,
@@ -165,7 +166,7 @@ const API = {
 	// Under-refactored fragments
 	OverlayFragment: OverlayFragment,
 	ControlFragment: ControlFragment,
-	LogotypeFragment: LogotypeFragment,
+	LogotypeFragment: LogotypeFragment, // DEPRECATED
 	SidebarFragment: SidebarFragment,
 	
 	// Window prototypes
@@ -224,10 +225,21 @@ const API = {
 		return Popups.getOpened();
 	},
 	
+	// Rhino evaluation
+	compileReader: compileReader,
+	compileString: compileString,
+	compileFunction: compileFunction,
+	compileUniversal: compileUniversal,
+	evaluateReader: evaluateReader,
+	evaluateString: evaluateString,
+	evaluateUniversal: evaluateUniversal,
+	runAtScope: runAtScope,
+	newLoggingErrorReporter: newLoggingErrorReporter,
+	newRuntimeCompilerEnvirons: newRuntimeCompilerEnvirons,
+	
 	// Project
 	compileScript: compileScript,
 	compileData: compileData,
-	getScriptScope: getScriptScope,
 	exportProject: exportProject,
 	importProject: importProject,
 	importScript: importScript,
@@ -236,6 +248,7 @@ const API = {
 	Project: Project,
 	ProjectProvider: ProjectProvider,
 	ScriptConverter: ScriptConverter,
+	ScriptImporter: ScriptImporter,
 	
 	// Tools
 	Action: Action,
@@ -273,15 +286,7 @@ const API = {
 		sendBackstageStatus: function() {
 			restart();
 		}
-	},
-	showModuleInformation: showModuleInfo,
-	
-	// Deprecated way to add additional information
-	registerAdditionalInformation: registerAdditionalInformation,
-	attachAdditionalInformation: attachAdditionalInformation,
-	attachWarningInformation: attachWarningInformation,
-	prepareAdditionalInformation: prepareAdditionalInformation,
-	finishAttachAdditionalInformation: finishAttachAdditionalInformation
+	}
 };
 
 (function(who) {

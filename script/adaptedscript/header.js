@@ -35,3 +35,10 @@ function runOnClientThread(what) {}
 function runOnMainThread(what) {}
 function setTile(x, y, z, id, data) {}
 function tipMessage(message) {}
+
+function importLib() {}
+function IMPORT() {}
+function IMPORT_NATIVE() {}
+function WRAP_NATIVE() {}
+function WRAP_JAVA() {}
+function __debug_typecheck__() {}

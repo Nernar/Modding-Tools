@@ -63,7 +63,7 @@ const loadSetting = function(key, type) {
 
 const setSetting = function(where, key, type) {
 	if (!this.hasOwnProperty(where)) {
-		Logger.Log("ModdingTools: unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
+		Logger.Log("ModdingTools: Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
 	}
 	this[where] = loadSetting.apply(this, Array.prototype.slice.call(arguments, 1));
 };

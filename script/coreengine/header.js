@@ -17,6 +17,7 @@
 */
 
 try {
+	// Not working yet...
 	runCustomSource("script/adaptedscript.js");
 	let scope = __mod__.compiledCustomSources.get("script/adaptedscript.js").scriptScope;
 	for (let anything in scope) {
@@ -39,13 +40,7 @@ var CORE_ENGINE_VERSION = "2.1";
 var BlockID = {};
 var ItemID = {};
 
-function importLib() {}
-function IMPORT() {}
-function IMPORT_NATIVE() {}
-function WRAP_NATIVE() {}
-function WRAP_JAVA() {}
 function print() {}
-function __debug_typecheck__() {}
 
 function runVersionDependentDataScript(name) {}
 function getVersionDependentDataScript(name) {
