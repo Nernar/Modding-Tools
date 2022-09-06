@@ -1,7 +1,7 @@
 /*
 BUILD INFO:
   dir: Action
-  target: out/Action.js
+  target: Action.js
   files: 2
 */
 

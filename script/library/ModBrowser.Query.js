@@ -1,7 +1,7 @@
 /*
 BUILD INFO:
   dir: ModBrowser.Query
-  target: out/ModBrowser.Query.js
+  target: ModBrowser.Query.js
   files: 9
 */
 

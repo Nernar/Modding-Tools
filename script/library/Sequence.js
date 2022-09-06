@@ -1,7 +1,7 @@
 /*
 BUILD INFO:
   dir: Sequence
-  target: out/Sequence.js
+  target: Sequence.js
   files: 2
 */
 
