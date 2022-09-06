@@ -1,24 +1,11 @@
-const launchModification = function(additionalScope) {
-	if (this.isInstant !== undefined) {
-		return;
-	}
-	if (additionalScope !== undefined) {
-		__mod__.RunMod(additionalScope);
-		return;
-	}
+if (this.isInstant === undefined) {
 	Launch();
-};
+}
 
-(function() {
-	try {
-		ConfigureMultiplayer({
-			isClientOnly: true
-		});
-	} catch (e) {
-		launchModification({
-			isOutdated: true
-		});
-		return;
-	}
-	launchModification();
-})();
+try {
+	ConfigureMultiplayer({
+		isClientOnly: true
+	});
+} catch (e) {
+	log("ModdingTools: Client outdated, this may create unexpected behavior! Please, upgrade Inner Core to Horizon.");
+}

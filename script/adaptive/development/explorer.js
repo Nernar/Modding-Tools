@@ -713,7 +713,7 @@ const openSupportedFileIfMay = function(file, extension) {
 				}
 				handleThread(function() {
 					try {
-						Archives.unpack(file, output.getPath());
+						Files.unpackZip(file, output.getPath());
 					} catch (e) {
 						if (e.message == "java.io.util.ZipFile: Not a zip archive") {
 							return;

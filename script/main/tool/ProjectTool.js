@@ -75,13 +75,9 @@ ProjectTool.prototype.reset = function() {
 		}, {
 			icon: "menuProjectManual",
 			title: translate("Tutorial"),
+			background: "popupSelectionQueued",
 			click: function(tool, item) {
-				if (REVISION.indexOf("alpha") != -1) {
-					confirm(translate(NAME) + " " + translate(VERSION), translate("You're sure want to review basics tutorial?"), function() {
-						TutorialSequence.Welcome.execute();
-						tool.deattach();
-					});
-				} else showHint(translate("This content will be availabled soon"));
+				showHint(translate("This content will be availabled soon"));
 			}
 		}, {
 			icon: "menuProjectStar",

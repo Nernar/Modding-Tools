@@ -66,24 +66,6 @@ ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	return LayerDrawable.parseJson([background, foreground]);
 };
 
-const AssetFactory = {};
-
-AssetFactory.loaded = {};
-
-AssetFactory.loadAsset = function(key, path) {
-	return (this.loaded[key] = new java.io.File(Dirs.ASSET, path));
-};
-
-AssetFactory.createFont = function(key) {
-	let loaded = this.getFile(key + "Font"),
-		exists = loaded && loaded.exists();
-	return exists ? android.graphics.Typeface.createFromFile(loaded) : android.graphics.Typeface.MONOSPACE;
-};
-
-AssetFactory.getFile = function(key) {
-	return this.loaded[key] || null;
-};
-
 LayerDrawable.parseJson = function(instanceOrJson, json) {
 	if (!(instanceOrJson instanceof LayerDrawable)) {
 		json = instanceOrJson;

@@ -5,7 +5,7 @@
 		InnerCorePackages.mod.executable.Compiler.enter(-1);
 		merge(this, InnerCorePackages.mod.executable.Compiler.loadScriptFromDex(internal)());
 	} else {
-		Logger.Log("ModdingTools: not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
+		Logger.Log("ModdingTools: Not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
 	}
 })();
 

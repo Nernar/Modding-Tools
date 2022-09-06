@@ -22,10 +22,8 @@ const LaunchSequence = new LogotypeSequence({
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 			$.FileTools.assureDir(Dirs.PROJECT);
 		} else if (index == 2) {
-			AssetFactory.loadAsset("minecraftFont", "font.ttf");
-			typeface = AssetFactory.createFont("minecraft");
-			AssetFactory.loadAsset("jetBrainsMonoFont", "JetBrainsMono-Regular.ttf");
-			typefaceJetBrains = AssetFactory.createFont("jetBrainsMono");
+			typeface = Files.createTypefaceWithFallback(Dirs.ASSET + "font.ttf");
+			typefaceJetBrains = Files.createTypefaceWithFallback(Dirs.ASSET + "JetBrainsMono-Regular.ttf");
 			registerAdditionalInformation();
 		} else if (index == 3) {
 			try {
@@ -55,9 +53,9 @@ const LaunchSequence = new LogotypeSequence({
 	},
 	complete: function(active) {
 		LogotypeSequence.prototype.complete.apply(this, arguments);
-		if (firstLaunchTutorial && isFirstLaunch()) {
-			TutorialSequence.Welcome.execute();
-		} else {
+		// if (firstLaunchTutorial && isFirstLaunch()) {
+			// What is a tutorial?
+		// } else {
 			try {
 				prepareEnvironmentIfNeeded();
 			} catch (e) {
@@ -74,7 +72,7 @@ const LaunchSequence = new LogotypeSequence({
 					LevelProvider.show();
 				}
 			});
-		}
+		// }
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();
 	}

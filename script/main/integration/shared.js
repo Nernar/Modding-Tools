@@ -118,12 +118,9 @@ const API = {
 	Dirs: Dirs,
 	MediaTypes: MediaTypes,
 	Files: Files,
-	Archives: Archives,
-	Options: Options,
 	
 	// Decoding resources
-	ImageFactory: ImageFactory,
-	AssetFactory: AssetFactory,
+	ImageFactory: ImageFactory, // DEPRECATED
 	HashedDrawableMap: HashedDrawableMap,
 	Drawable: Drawable,
 	CachedDrawable: CachedDrawable,
@@ -263,8 +260,7 @@ const API = {
 	
 	// Sequence
 	Sequence: Sequence,
-	LogotypeSequence: LogotypeSequence,
-	TutorialSequence: TutorialSequence,
+	LogotypeSequence: LogotypeSequence, // DEPRECATED
 	SnackSequence: SnackSequence,
 	StackedSnackSequence: StackedSnackSequence,
 	AsyncSnackSequence: AsyncSnackSequence,

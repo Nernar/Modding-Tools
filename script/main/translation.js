@@ -35,11 +35,11 @@ Translation.addTranslation("Editors", {
 Translation.addTranslation("Import", {
 	ru: "Импорт",
 	en: "Import"
-});
+}); // DEPRECATED
 Translation.addTranslation("Manage", {
 	ru: "Изменить",
 	en: "Manage"
-});
+}); // DEPRECATED
 Translation.addTranslation("Reset", {
 	ru: "Сброс",
 	en: "Reset"
@@ -72,10 +72,6 @@ Translation.addTranslation("Debug & testing", {
 	ru: "Отладка и тестирование",
 	en: "Debug & testing"
 });
-Translation.addTranslation("Script report", {
-	ru: "Отчет скрипта",
-	en: "Script report"
-}); // DEPRECATED
 Translation.addTranslation("Creating project", {
 	ru: "Создание проекта",
 	en: "Creating project"
@@ -153,7 +149,7 @@ Translation.addTranslation("No", {
 Translation.addTranslation("Nope", {
 	ru: "Неа",
 	en: "Nope"
-});
+}); // DEPRECATED
 Translation.addTranslation("OK", {
 	ru: "ОК",
 	en: "OK"
@@ -554,7 +550,7 @@ Translation.addTranslation("Worker has been removed", {
 	en: "Worker has been removed"
 }); // DEPRECATED
 Translation.addTranslation("This content will be availabled soon", {
-	ru: "Этот контент станет скоро доступен",
+	ru: "Этот контент скоро станет доступен",
 	en: "This content will be availabled soon"
 });
 Translation.addTranslation("Warning!", {
@@ -566,7 +562,7 @@ Translation.addTranslation("Error stack saved into internal storage", {
 	en: "Error stack saved into internal storage"
 }); // DEPRECATED
 Translation.addTranslation("Something unexpected happened", {
-	ru: "Произошло что-то неожиданное",
+	ru: "Произошло что-то непредвиденное",
 	en: "Something unexpected happened"
 }); // DEPRECATED
 Translation.addTranslation("Option successfully changed", {
@@ -588,11 +584,11 @@ Translation.addTranslation("Hi, I'm evaluate stroke", {
 Translation.addTranslation("Perfectly!", {
 	ru: "Прекрасно!",
 	en: "Perfectly!"
-});
+}); // DEPRECATED
 Translation.addTranslation("Well done!", {
 	ru: "Отлично!",
 	en: "Well done!"
-});
+}); // DEPRECATED
 
 // Processes
 Translation.addTranslation("Imported success", {
@@ -693,14 +689,6 @@ Translation.addTranslation("There's no availabled entry to export", {
 });
 
 // Confirmations dialogs
-Translation.addTranslation("Converter generated invalid script, they can't be runned.", {
-	ru: "Конвертер сгенерировал неправильный скрипт, он не может быть запущен.",
-	en: "Converter generated invalid script, they can't be runned."
-}); // DEPRECATED
-Translation.addTranslation("Retry compile with another converted model.", {
-	ru: "Попробуйте скомпилировать другую конвертированную модель.",
-	en: "Retry compile with another converted model."
-}); // DEPRECATED
 Translation.addTranslation("Do you want to review report?", {
 	ru: "Вы хотите пересмотреть готовый отчет?",
 	en: "Do you want to review report?"
@@ -709,18 +697,10 @@ Translation.addTranslation("Do you want to switch modification build type in bui
 	ru: "Вы хотите сменить тип сборки модификации в build.config?",
 	en: "Do you want to switch modification build type in build.config?"
 });
-Translation.addTranslation("Save exported result?", {
-	ru: "Сохранить экспортированный результат?",
-	en: "Save exported result?"
-}); // DEPRECATED
 Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
 	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны.",
 	en: "Current project will be erased, all unsaved data will be lost."
 });
-Translation.addTranslation("Script logging have several messages:", {
-	ru: "Отладка скрипта записала несколько сообщений:",
-	en: "Script logging have several messages:"
-}); // DEPRECATED
 Translation.addTranslation("Launch sequence interrupted or handled exception.", {
 	ru: "Цепочка запуска прервалась или привела к ошибке.",
 	en: "Launch sequence interrupted or handled exception."
@@ -841,10 +821,6 @@ Translation.addTranslation("Before key expires: %s days", {
 	ru: "До истечения срока ключа: %s дня",
 	en: "Before key expires: %s days"
 }); // DEPRECATED
-Translation.addTranslation("Modification will be uninstalled.", {
-	ru: "Модификация будет удалена.",
-	en: "Modification will be uninstalled."
-}); // DEPRECATED
 Translation.addTranslation("To complete modification installation connect to any network, at current moment mod deactivated it's abilities to develop content.", {
 	ru: "Для завершения установки модификации, подключитесь к любой сети. На данный момент мод отключил свои средства для разработки.",
 	en: "To complete modification installation connect to any network, at current moment mod deactivated it's abilities to develop content."
@@ -902,10 +878,6 @@ Translation.addTranslation("DISABLED", {
 Translation.addTranslation("UNKNOWN", {
 	ru: "НЕИЗВЕСТНО",
 	en: "UNKNOWN"
-}); // DEPRECATED
-Translation.addTranslation("Unknown mod", {
-	ru: "Неизвестный мод",
-	en: "Unknown mod"
 }); // DEPRECATED
 Translation.addTranslation("Modules isn't supported and disabled", {
 	ru: "Модули не поддерживаются и отключены",
@@ -1033,7 +1005,7 @@ Translation.addTranslation("Do you wish to continue?", {
 });
 Translation.addTranslation("Unfortunately, you didn't install any module to start something bewitching.", {
 	en: "Unfortunately, you didn't install any module to start something bewitching.",
-	ru: "К сожалению, вы не установили ни одного модуля чтобы начать что-то грандиозное."
+	ru: "К сожалению, вы не установили ни одного модуля чтобы начать свой путь здесь."
 });
 Translation.addTranslation("Come back here when you find something worthwhile in Mod Browser.", {
 	en: "Come back here when you find something worthwhile in Mod Browser.",
@@ -1042,15 +1014,15 @@ Translation.addTranslation("Come back here when you find something worthwhile in
 Translation.addTranslation("Tool from developers to developers.", {
 	ru: "Инструмент от разработчиков разработчикам.",
 	en: "Tool from developers to developers."
-});
+}); // DEPRECATED
 Translation.addTranslation("Let's see, what's we're prepared here.", {
 	ru: "Давайте посмотрим, что мы приготовили здесь.",
 	en: "Let's see, what's we're prepared here."
-});
+}); // DEPRECATED
 Translation.addTranslation("You're sure want to review basics tutorial?", {
 	ru: "Вы уверены, что хотите пройти базовое обучение еще раз?",
 	en: "You're sure want to review basics tutorial?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Choose a template", {
 	ru: "Выберите шаблон",
 	en: "Choose a template"
@@ -1090,13 +1062,9 @@ Translation.addTranslation("Previous user key is deprecated, you should to conne
 	en: "Previous user key is deprecated, you should to connect any network for check your abilities. Anyway, your projects is always safe."
 }); // NO-TRANSLATE
 Translation.addTranslation("Couldn't connect to validate right now", {
-	ru: "Не удается подключиться к серверам прямо сейчас",
+	ru: "Не удается подключиться к серверу прямо сейчас",
 	en: "Couldn't connect to validate right now"
 }); // NO-TRANSLATE
-Translation.addTranslation("Render rotated at %s angle", {
-	ru: "Модель повернута на %s градусов",
-	en: "Render rotated at %s angle"
-}); // DEPRECATED
 Translation.addTranslation("Thanks for attentiveness!", {
 	ru: "Спасибо за внимательность!",
 	en: "Thanks for attentiveness!"
@@ -1139,38 +1107,4 @@ Translation.addTranslation("Ignore", {
 }); // DEPRECATED
 
 // Non-organized content
-
 // Not localized content will be appear here
-Translation.addTranslation("That button is key to start process.", {});
-Translation.addTranslation("It's contains many tools inside.", {});
-Translation.addTranslation("Let's click it and look to abilities.", {});
-Translation.addTranslation("You must click it to open control menu.", {});
-Translation.addTranslation("That's menu created to control content.", {});
-Translation.addTranslation("Your spot between code and interface.", {});
-Translation.addTranslation("Editors section exists for adding workers.", {});
-Translation.addTranslation("You may create, remove, load and export them.", {});
-Translation.addTranslation("Horewer, it's not all exiting abilities.", {});
-Translation.addTranslation("Dev Editor handles content inside projects.", {});
-Translation.addTranslation("Project filled with created editors.", {});
-Translation.addTranslation("And editor is adding by us for this time.", {});
-Translation.addTranslation("But that's ability beholds to you.", {});
-Translation.addTranslation("And editor may be added by your wish.", {});
-Translation.addTranslation("Well, with button we're have there sidebar.", {});
-Translation.addTranslation("Currently it collapsed, so we're must open it.", {});
-Translation.addTranslation("Sidebar designed to pleasant working with environment.", {});
-Translation.addTranslation("We're mean, most of editors handles in-world.", {});
-Translation.addTranslation("So, that menu requires smallest space on screen.", {});
-Translation.addTranslation("This fact gives your ability to interact with world.", {});
-Translation.addTranslation("Currently selected tab is main for most editors.", {});
-Translation.addTranslation("There's collected identifiers, variations, etc.", {});
-Translation.addTranslation("It will be helpful to add define information.", {});
-Translation.addTranslation("Let's change sidebar tab to second.", {});
-Translation.addTranslation("You may have a logical question:", {});
-Translation.addTranslation("how to recognize what hides behind every icon?", {});
-Translation.addTranslation("Every sidebar filled with holdable elements.", {});
-Translation.addTranslation("Let's try hold any element right now.", {});
-Translation.addTranslation("Every element may be holded too.", {});
-Translation.addTranslation("Every tab may be holded too.", {});
-Translation.addTranslation("You may checkout that self later inside editors.", {});
-Translation.addTranslation("So, there's must be element description.", {});
-Translation.addTranslation("But we're just learning and there's nothing.", {});
