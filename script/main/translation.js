@@ -59,15 +59,15 @@ Translation.addTranslation("Tutorial", {
 Translation.addTranslation("Tests", {
 	ru: "Тесты",
 	en: "Tests"
-});
+}); // DEPRECATED
 Translation.addTranslation("Mods", {
 	ru: "Моды",
 	en: "Mods"
-});
+}); // DEPRECATED
 Translation.addTranslation("Debug", {
 	ru: "Отладка",
 	en: "Debug"
-});
+}); // DEPRECATED
 Translation.addTranslation("Debug & testing", {
 	ru: "Отладка и тестирование",
 	en: "Debug & testing"
@@ -79,7 +79,7 @@ Translation.addTranslation("Creating project", {
 Translation.addTranslation("Test", {
 	ru: "Тест",
 	en: "Test"
-});
+}); // DEPRECATED
 Translation.addTranslation("Evaluate", {
 	ru: "Выполнить",
 	en: "Evaluate"
@@ -205,7 +205,7 @@ Translation.addTranslation("Confirmation", {
 Translation.addTranslation("Switch build type", {
 	ru: "Смена типа сборки",
 	en: "Switch build type"
-});
+}); // DEPRECATED
 
 // Worlds content
 Translation.addTranslation("World", {
@@ -464,7 +464,7 @@ Translation.addTranslation("File is already created, that process will be rewrit
 Translation.addTranslation("Which modification will be changed?", {
 	ru: "Какая модификация должна быть изменена?",
 	en: "Which modification will be changed?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Impossible open file", {
 	ru: "Нельзя открыть файл",
 	en: "Impossible open file"
@@ -572,11 +572,11 @@ Translation.addTranslation("Option successfully changed", {
 Translation.addTranslation("Build type %s is unsupported", {
 	ru: "Тип сборки %s не поддерживается",
 	en: "Build type %s is unsupported"
-});
+}); // DEPRECATED
 Translation.addTranslation("Founded sources count", {
 	ru: "Найденное количество исходников",
 	en: "Founded sources count"
-});
+}); // DEPRECATED
 Translation.addTranslation("Hi, I'm evaluate stroke", {
 	ru: "Привет, я строка исполнения",
 	en: "Hi, I'm evaluate stroke"
@@ -642,11 +642,11 @@ Translation.addTranslation("Indexating", {
 Translation.addTranslation("Compilation", {
 	ru: "Компиляция",
 	en: "Compilation"
-});
+}); // DEPRECATED
 Translation.addTranslation("Decompilation", {
 	ru: "Декомпиляция",
 	en: "Decompilation"
-});
+}); // DEPRECATED
 Translation.addTranslation("Done", {
 	ru: "Готово",
 	en: "Done"
@@ -670,7 +670,7 @@ Translation.addTranslation("Evaluator", {
 Translation.addTranslation("Report", {
 	ru: "Отчет",
 	en: "Report"
-});
+}); // DEPRECATED
 Translation.addTranslation("as %ss", {
 	ru: "за %sс",
 	en: "as %ss"
@@ -692,11 +692,11 @@ Translation.addTranslation("There's no availabled entry to export", {
 Translation.addTranslation("Do you want to review report?", {
 	ru: "Вы хотите пересмотреть готовый отчет?",
 	en: "Do you want to review report?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Do you want to switch modification build type in build.config?", {
 	ru: "Вы хотите сменить тип сборки модификации в build.config?",
 	en: "Do you want to switch modification build type in build.config?"
-});
+}); // DEPRECATED
 Translation.addTranslation("Current project will be erased, all unsaved data will be lost.", {
 	ru: "Текущий проект будет сброшен, все несохраненные данные будут утеряны.",
 	en: "Current project will be erased, all unsaved data will be lost."
@@ -712,23 +712,23 @@ Translation.addTranslation("Do you want to retry modification launch?", {
 Translation.addTranslation("Modification will be dexed and switched to release type.", {
 	ru: "Модификация будет одексирована и перейдет к релизному типу сборки.",
 	en: "Modification will be dexed and switched to release type."
-});
+}); // DEPRECATED
 Translation.addTranslation("Modification currently was compiled into dexes.", {
 	ru: "Модификация сейчас скомпилирована и одексирована.",
 	en: "Modification currently was compiled into dexes."
-});
+}); // DEPRECATED
 Translation.addTranslation("If you're developer, it may be decompiled.", {
 	ru: "Если вы разработчик, она может быть декомпилирована.",
 	en: "If you're developer, it may be decompiled."
-});
+}); // DEPRECATED
 Translation.addTranslation("Modification successfully compiled.", {
 	ru: "Модификация успешно скомпилирована.",
 	en: "Modification successfully compiled."
-});
+}); // DEPRECATED
 Translation.addTranslation("You can switch build type in next window.", {
 	ru: "Вы можете сменить тип сборки в следующем окне.",
 	en: "You can switch build type in next window."
-});
+}); // DEPRECATED
 
 // Messages
 Translation.addTranslation("Load or create your first editor, it'll appear here.", {
@@ -742,7 +742,7 @@ Translation.addTranslation("Use scripts from your mods to import, simply find th
 Translation.addTranslation("This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe.", {
 	ru: "Этот процесс может занять некоторое время, не выходите до его завершения. В любом случае, ваши проекты всегда в безопасности.",
 	en: "This process may takes some time, don't leave before process is fully completed. Anyway, your projects is always safe."
-});
+}); // DEPRECATED
 Translation.addTranslation("Modification still in development state, so something may not work properly.", {
 	ru: "Модификация все еще находится в разработке, так что что-то может работать неправильно.",
 	en: "Modification still in development state, so something may not work properly."
@@ -798,7 +798,7 @@ Translation.addTranslation("Have troubles with interface scales? Try to reset it
 Translation.addTranslation("Developer hasn't provided any test for that build. Please, checkout that section for next time.", {
 	ru: "Разработчик не предоставил тесты для этой сборки. Пожалуйта, проверьте эту секцию в следующий раз.",
 	en: "Developer hasn't provided any test for that build. Please, checkout that section for next time."
-});
+}); // DEPRECATED
 Translation.addTranslation("Do you want to see new abilities before it released? Join reopened testing team right now!", {
 	ru: "Хотите увидеть новые возможности до того, как они будут готовы? Присоединяйтесь к новой команде тестеров прямо сейчас!",
 	en: "Do you want to see new abilities before it released? Join reopened testing team right now!"
@@ -960,7 +960,7 @@ Translation.addTranslation("Selected worker will be removed, including all it's 
 Translation.addTranslation("There's we can't find any modification. Please, consider developer about that cause.", {
 	ru: "Мы не смогли найти список модификаций. Пожалуйста, сообщите разработчику об этой проблеме.",
 	en: "There's we can't find any modification. Please, consider developer about that cause."
-});
+}); // DEPRECATED
 Translation.addTranslation("Do you want to retry?", {
 	ru: "Вы хотите попробовать еще раз?",
 	en: "Do you want to retry?"
@@ -984,11 +984,11 @@ Translation.addTranslation("That's isn't array", {
 Translation.addTranslation("Something went wrong during compilation process.", {
 	ru: "Что-то пошло не так во время процесса компиляции.",
 	en: "Something went wrong during compilation process."
-});
+}); // DEPRECATED
 Translation.addTranslation("Checkout reports below to see more details.", {
 	ru: "Просмотрите отчеты за этим окном для уточнения деталей.",
 	en: "Checkout reports below to see more details."
-});
+}); // DEPRECATED
 
 // Project manipulation
 Translation.addTranslation("Howdy and welcome to Dev Editor!", {

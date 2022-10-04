@@ -14,16 +14,15 @@ MenuTool.prototype.reset = function() {
 			tool.onMenuClick.apply(tool, args);
 		}
 	};
-	let self = this;
 	descriptor.elements = [{
 		type: "header"
 	}, {
 		type: "message",
 		icon: "menuProjectLeave",
 		message: translate("Dev Editor") + ": " + translate("Leave"),
-		click: function() {
+		click: function(tool, menu, message) {
 			attachProjectTool(undefined, function() {
-				self.deattach();
+				tool.deattach();
 			});
 		}
 	}];

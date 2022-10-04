@@ -19,7 +19,7 @@ const PROJECT_TOOL = (function() {
 					}
 					if (!PROJECT_TOOL.tools.hasOwnProperty(type)) {
 						if (Tools.hasOwnProperty(type)) {
-							log("ModdingTools: Try registering tool " + type + " in menu if you need to interact with project");
+							Logger.Log("ModdingTools: Try registering tool " + type + " in menu if you need to interact with project", "WARNING");
 						}
 						categories[type].items.push({
 							icon: "inspectorObject",
@@ -49,7 +49,7 @@ const PROJECT_TOOL = (function() {
 						factory.observeEntry(entry, descriptor, i);
 					} catch (e) {
 						descriptor.description = formatExceptionReport(e, false);
-						log("ModdingTools: contentProjectDescriptor: " + e);
+						Logger.Log("ModdingTools: contentProjectDescriptor: " + e, "WARNING");
 					}
 					categories[type].items.push(descriptor);
 				}
@@ -91,14 +91,6 @@ const PROJECT_TOOL = (function() {
 						title: translate("Debug & testing"),
 						background: "popupSelectionQueued",
 						items: [{
-							icon: "menuBoardConfig",
-							title: translate("Tests"),
-							click: function(tool, item) {
-								attachDebugTestTool(function() {
-									tool.deattach();
-								});
-							}
-						}, {
 							icon: "menuBoardInsert",
 							title: translate("Console"),
 							click: function(tool, item) {
@@ -110,13 +102,6 @@ const PROJECT_TOOL = (function() {
 							title: translate("Log"),
 							click: function(tool, item) {
 								LogViewer.show();
-							}
-						}, {
-							icon: "support",
-							title: translate("Mods"),
-							click: function(tool, item) {
-								tool.deattach();
-								ModificationSource.selector();
 							}
 						}, {
 							icon: "explorer",
@@ -159,7 +144,7 @@ const attachProjectTool = function(source, post) {
 	handleThread(function() {
 		PROJECT_TOOL.sequence();
 		let accepted = PROJECT_TOOL.open(source);
-		acquire(function() {
+		handle(function() {
 			if (!accepted) {
 				if (source !== undefined) {
 					return attachProjectTool(undefined, post);
@@ -197,7 +182,7 @@ const attachEditorTool = function(who, what, post) {
 			if (who instanceof EditorTool) {
 				accepted = who.open(what);
 			}
-			acquire(function() {
+			handle(function() {
 				try {
 					if (!accepted) {
 						MCSystem.throwException("ModdingTools: Target project is not validated, aborting!");
@@ -228,11 +213,11 @@ const attachEditorTool = function(who, what, post) {
 			if (e != null) {
 				reportError(e);
 			}
-			acquire(function() {
+			handle(function() {
 				try {
 					who.deattach();
 				} catch (e) {
-					Logger.Log("ModdingTools: EditorTool.deattach: " + e, "WARNING");
+					Logger.Log("ModdingTools: Tool.deattach: " + e, "WARNING");
 				}
 				attachProjectTool();
 			});

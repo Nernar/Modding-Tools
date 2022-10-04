@@ -76,7 +76,6 @@ project/ScriptConverter.js
 project/ScriptImporter.js
 
 debug/LogViewer.js
-debug/ModificationSource.js
 debug/RuntimeCodeEvaluate.js
 
 sequence/LogotypeSequence.js
@@ -86,7 +85,6 @@ sequence/LaunchSequence.js
 
 tools/project.js
 tools/console.js
-tools/testing.js
 
 algorithm/config.js
 algorithm/auxiliary.js

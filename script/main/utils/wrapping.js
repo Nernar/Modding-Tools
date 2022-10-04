@@ -118,13 +118,13 @@ const newRuntimeCompilerEnvirons = function(reporter) {
 };
 
 const findWrappedScript = function(path) {
-	let file = new java.io.File(Dirs.SCRIPT_REVISION, path);
+	let file = new java.io.File(path);
+	if (file.exists()) return file;
+	file = new java.io.File(Dirs.SCRIPT_REVISION, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.EVALUATE, path);
 	if (file.exists()) return file;
 	file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
-	if (file.exists()) return file;
-	file = new java.io.File(Dirs.SCRIPT_TESTING, path);
 	if (file.exists()) return file;
 	return null;
 };

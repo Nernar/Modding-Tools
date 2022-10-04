@@ -9,6 +9,15 @@ BitmapFactory.createCompressed = function(bitmap, min, max) {
 	return this.createScaled(bitmap, dx, dy);
 };
 
+BitmapFactory.getUpscaleRatio = function(width, height, dx, dy) {
+	if (width > dx || height > dy) {
+		let rx = Math.round(width / dx);
+		let ry = Math.round(height / dy);
+		return rx < ry ? rx : ry;
+	}
+	return 1;
+};
+
 BitmapFactory.getBoundsDecodeOptions = function() {
 	let options = new android.graphics.BitmapFactory.Options();
 	options.inJustDecodeBounds = true;
@@ -29,7 +38,7 @@ const registerBitsetUi = function(json) {
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
-			Logger.Log("ModdingTools: bitset " + element + " is already registered", "WARNING");
+			Logger.Log("ModdingTools: Bitset " + element + " is already registered", "WARNING");
 			continue;
 		}
 		BITSET_PATCH[element] = "" + json[element];

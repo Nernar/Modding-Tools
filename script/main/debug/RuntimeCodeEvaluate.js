@@ -166,8 +166,24 @@ RuntimeCodeEvaluate.resolveSpecifiedModificationSources = function(modification)
 	return someone;
 };
 
+RuntimeCodeEvaluate.getModListImpl = function() {
+	try {
+		let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
+		let sorted = new java.util.ArrayList();
+		for (let i = 0; i < mods.size(); i++) {
+			let mod = mods.get(i);
+			if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
+				sorted.add(mod.getLegacyModInstance());
+			}
+		}
+		return sorted;
+	} catch (e) {
+		return InnerCorePackages.mod.build.ModLoader.instance.modsList;
+	}
+};
+
 RuntimeCodeEvaluate.resolveAvailabledExecutables = function(callback) {
-	let sources = ModificationSource.findModList(),
+	let sources = this.getModListImpl(),
 		modByName = [];
 	for (let i = 0; i < sources.size(); i++) {
 		let modification = sources.get(i);

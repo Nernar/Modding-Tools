@@ -8,7 +8,6 @@ Dirs.LOGGING = __dir__ + ".logging/";
 Dirs.SCRIPT = __dir__ + "script/";
 Dirs.SCRIPT_ADAPTIVE = Dirs.SCRIPT + "adaptive/";
 Dirs.SCRIPT_REVISION = Dirs.SCRIPT + "revision/";
-Dirs.SCRIPT_TESTING = Dirs.SCRIPT + "testing/";
 Dirs.EVALUATE = __dir__ + ".eval/";
 Dirs.TODO = __dir__ + ".todo/";
 Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";

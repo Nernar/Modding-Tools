@@ -8,7 +8,7 @@ const API = {
 	API_VERSION: API_VERSION,
 	PRODUCT_REVISION: REVISION,
 	CONTEXT: CONTEXT,
-	InnerCorePackage: InnerCorePackages, // Code bug
+	InnerCorePackage: InnerCorePackages, // DEPRECATED
 	InnerCorePackages: InnerCorePackages,
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
@@ -55,7 +55,7 @@ const API = {
 			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
-		log("ModdingTools: Registered custom adaptive tool " + id);
+		log("ModdingTools: Registered tool " + id + " shortcut");
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
@@ -234,6 +234,11 @@ const API = {
 	newLoggingErrorReporter: newLoggingErrorReporter,
 	newRuntimeCompilerEnvirons: newRuntimeCompilerEnvirons,
 	
+	// Adaptive evaluation
+	UNWRAP: UNWRAP,
+	REQUIRE: REQUIRE,
+	CHECKOUT: CHECKOUT,
+	
 	// Project
 	compileScript: compileScript,
 	compileData: compileData,
@@ -257,6 +262,13 @@ const API = {
 	EditorTool: EditorTool,
 	attachProjectTool: attachProjectTool,
 	attachEditorTool: attachEditorTool,
+	attachTool: function(id, when) {
+		if (!Tools.hasOwnProperty(id)) {
+			Logger.Log("ModdingTools: Not found tool " + id + ", consider have you registered it", "WARNING");
+			return;
+		}
+		attachEditorTool(Tools[id], undefined, when);
+	},
 	
 	// Sequence
 	Sequence: Sequence,
@@ -267,7 +279,6 @@ const API = {
 	
 	// Specific content
 	LogViewer: LogViewer,
-	ModificationSource: ModificationSource,
 	LevelProvider: LevelProvider,
 	RuntimeCodeEvaluate: RuntimeCodeEvaluate,
 	
@@ -291,7 +302,7 @@ const API = {
 			API[element] = who[element];
 		}
 	}
-})("USER_ID", "Network", "JsonIo", "ModBrowser", "Mehwrap");
+})("USER_ID", "Connectivity", "ModBrowser", "Mehwrap");
 
 const notifyCoreEngineLoaded = function() {
 	CoreEngine.ModAPI.registerAPI("ModdingTools", API);
