@@ -76,7 +76,7 @@ const prepareDebugInfo = function() {
 registerReportAction((function() {
 	let alreadyHasDate = false;
 	return function(error) {
-		error && Logger.Log("ModdingTools: " + error, "WARNING");
+		error && Logger.Log("Dev Editor: " + error, "WARNING");
 		reportTrace(error);
 		let message = reportTrace.toCode(error) + ": " + error + "\n" +
 				(error ? error.stack : null),

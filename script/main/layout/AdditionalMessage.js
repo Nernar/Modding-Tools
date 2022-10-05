@@ -42,7 +42,7 @@ AdditionalMessage.prototype.getChance = function() {
 
 AdditionalMessage.prototype.setChance = function(chance) {
 	if (chance < 0 || chance > 1) {
-		MCSystem.throwException("ModdingTools: AdditionalMessage.setChance can't use values outside [0; 1]");
+		MCSystem.throwException("Dev Editor: AdditionalMessage.setChance can't use values outside [0; 1]");
 	}
 	this.chance = chance;
 };
@@ -53,7 +53,7 @@ AdditionalMessage.prototype.getCondition = function() {
 
 AdditionalMessage.prototype.setCondition = function(condition) {
 	if (typeof condition != "function") {
-		MCSystem.throwException("ModdingTools: AdditionalMessage.setCondition can take functions only");
+		MCSystem.throwException("Dev Editor: AdditionalMessage.setCondition can take functions only");
 	}
 	this.condition = condition;
 };
@@ -85,7 +85,7 @@ AdditionalClickableMessage.prototype.getAction = function() {
 
 AdditionalClickableMessage.prototype.setAction = function(action) {
 	if (!action instanceof Function) {
-		MCSystem.throwException("ModdingTools: AdditionalClickableMessage.setAction only can take functions");
+		MCSystem.throwException("Dev Editor: AdditionalClickableMessage.setAction only can take functions");
 	}
 	this.action = action;
 };
@@ -244,7 +244,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("ModdingTools: Aborted attach AdditionalMessageFactory session to null or undefined");
+		MCSystem.throwException("Dev Editor: Aborted attach AdditionalMessageFactory session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

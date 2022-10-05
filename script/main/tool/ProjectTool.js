@@ -201,7 +201,7 @@ ProjectTool.prototype.export = function(file) {
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
 		if (!this.hasConverter()) {
-			MCSystem.throwException("ModdingTools: no converter, try override ProjectTool.hasConverter");
+			MCSystem.throwException("Dev Editor: no converter, try override ProjectTool.hasConverter");
 		}
 		let active = Date.now();
 		try {
@@ -225,7 +225,7 @@ ProjectTool.prototype.getProject = function() {
 
 ProjectTool.prototype.toProject = function() {
 	let project = this.getProject();
-	if (!project) MCSystem.throwException("ModdingTools: Not found attached Project, toProject is not availabled");
+	if (!project) MCSystem.throwException("Dev Editor: Not found attached Project, toProject is not availabled");
 	return project.getAll() || null;
 };
 

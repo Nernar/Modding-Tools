@@ -157,7 +157,7 @@ if (isHorizon) {
 				}
 				holder = convertView.getTag();
 			} catch (e) {
-				log("ModdingTools: EditorFragment.COMPLETION_ADAPTER.getItem: " + e);
+				log("Dev Editor: EditorFragment.COMPLETION_ADAPTER.getItem: " + e);
 				return convertView;
 			}
 			let completion = this.getItem(position);

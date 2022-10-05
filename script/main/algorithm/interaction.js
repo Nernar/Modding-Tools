@@ -61,7 +61,7 @@ const confirm = function(title, message, action, button) {
 
 const select = function(title, items, action, multiple, approved) {
 	handle(function() {
-		if (!Array.isArray(items)) MCSystem.throwException("ModdingTools: nothing to select inside select");
+		if (!Array.isArray(items)) MCSystem.throwException("Dev Editor: nothing to select inside select");
 		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		if (title !== undefined) builder.setTitle(title || translate("Selection"));

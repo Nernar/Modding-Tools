@@ -6,7 +6,7 @@ const ExpandablePopup = function(id) {
 		try {
 			return !!self.handleTouch(event);
 		} catch (e) {
-			log("ModdingTools: ExpandablePopup.onTouch: " + e);
+			log("Dev Editor: ExpandablePopup.onTouch: " + e);
 		}
 		return false;
 	});

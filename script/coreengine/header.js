@@ -24,7 +24,7 @@ try {
 		this[anything] = scope[anything];
 	}
 } catch (e) {
-	Logger.Log("ModdingTools: CoreEngine API: " + e, "ERROR");
+	Logger.Log("Dev Editor: CoreEngine API: " + e, "ERROR");
 }
 
 var __version__ = 16;

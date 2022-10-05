@@ -168,8 +168,8 @@ Files.createTypefaceWithFallback = function(path) {
 	try {
 		return android.graphics.Typeface.createFromFile(file);
 	} catch (e) {
-		Logger.Log("ModdingTools: Not found " + file.getName() + " typeface, or was failed to load", "WARNING");
-		Logger.Log("ModdingTools: Files.createTypefaceWithFallback: " + e, "WARNING");
+		Logger.Log("Dev Editor: Not found " + file.getName() + " typeface, or was failed to load", "WARNING");
+		Logger.Log("Dev Editor: Files.createTypefaceWithFallback: " + e, "WARNING");
 	}
 	return typeface || android.graphics.Typeface.MONOSPACE;
 };

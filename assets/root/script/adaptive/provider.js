@@ -49,7 +49,7 @@ SHARE("attachEvalButton", function() {
 					return "\"" + who + "\"";
 			}
 		} catch (e) {
-		    log("ModdingTools: toStringSafety: " + e);
+		    log("Dev Editor: toStringSafety: " + e);
 		}
 		return "undefined";
 	};
@@ -108,7 +108,7 @@ SHARE("attachEvalButton", function() {
 			    }
 			}
 			if (who.length == 0) {
-				MCSystem.throwException("ModdingTools: Target object is empty");
+				MCSystem.throwException("Dev Editor: Target object is empty");
 			}
 			select(type == "class" ? toStringSafety(where, type) : serialized, who, function(index, name) {
 				evaluateScope(where instanceof java.util.List ? where.get(self[index]) : where[self[index]],

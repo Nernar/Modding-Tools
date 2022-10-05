@@ -164,7 +164,7 @@ const findBuildConfigLocation = function(path) {
 			file = file.getParentFile();
 		} while (file && file.exists());
 	} catch (e) {
-		Logger.Log("ModdingTools: findBuildConfigLocation: " + e, "WARNING");
+		Logger.Log("Dev Editor: findBuildConfigLocation: " + e, "WARNING");
 	}
 	return null;
 };
@@ -211,7 +211,7 @@ const getSourceInBuildConfigDescription = function(path) {
 		};
 	} catch (e) {
 		if (e != null) {
-			Logger.Log("ModdingTools: getSourceInBuildConfigDescription: " + e, "WARNING");
+			Logger.Log("Dev Editor: getSourceInBuildConfigDescription: " + e, "WARNING");
 		}
 	}
 	return {

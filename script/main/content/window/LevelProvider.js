@@ -91,6 +91,6 @@ Callback.addCallback("tick", function() {
 			TPSMeter.onTick();
 		}
 	} catch (e) {
-		log("ModdingTools: tick: " + e);
+		log("Dev Editor: tick: " + e);
 	}
 });

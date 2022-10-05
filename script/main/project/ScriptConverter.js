@@ -36,7 +36,7 @@ ScriptConverter.prototype.isAttached = function() {
 ScriptConverter.prototype.validate = function(obj) {
 	try {
 		if (this.TYPE === undefined) {
-			MCSystem.throwException("ModdingTools: Cannot resolve project type for ScriptConverter");
+			MCSystem.throwException("Dev Editor: Cannot resolve project type for ScriptConverter");
 		}
 		if (obj == null) {
 			return ScriptConverter.State.ILLEGAL;
@@ -90,7 +90,7 @@ ScriptConverter.prototype.assureYield = function() {
 		}
 		return this.isConverted();
 	} catch (e) {
-		log("ModdingTools: ScriptConverter.assureYield: " + e);
+		log("Dev Editor: ScriptConverter.assureYield: " + e);
 	}
 	return false;
 };
@@ -102,10 +102,10 @@ ScriptConverter.prototype.getThread = function() {
 ScriptConverter.prototype.execute = function() {
 	try {
 		if (typeof this.process != "function") {
-			MCSystem.throwException("ModdingTools: ScriptConverter.process(what) must be implemented");
+			MCSystem.throwException("Dev Editor: ScriptConverter.process(what) must be implemented");
 		}
 		if (!this.isValid() || this.inProcess()) {
-			Logger.Log("ModdingTools: ScriptConverter is not validated required object or already processing something", "WARNING");
+			Logger.Log("Dev Editor: ScriptConverter is not validated required object or already processing something", "WARNING");
 			return;
 		}
 		if (this.isAttached()) {

@@ -709,7 +709,7 @@ const openSupportedFileIfMay = function(file, extension) {
 				if (name == file.getName()) name += " unpacked";
 				let output = new java.io.File(file.getParent(), name);
 				if (output.exists()) {
-					MCSystem.throwException("ModdingTools: Output file is already exists");
+					MCSystem.throwException("Dev Editor: Output file is already exists");
 				}
 				handleThread(function() {
 					try {

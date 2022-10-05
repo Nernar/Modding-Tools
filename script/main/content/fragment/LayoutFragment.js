@@ -16,7 +16,7 @@ LayoutFragment.prototype.getFragments = function() {
 
 LayoutFragment.prototype.addElementFragment = function(fragment, params) {
 	if (!(fragment instanceof Fragment)) {
-		Logger.Log("ModdingTools: trying adding non-fragment element passed to addElementFragment", "WARNING");
+		Logger.Log("Dev Editor: trying adding non-fragment element passed to addElementFragment", "WARNING");
 		return -1;
 	}
 	if (params === undefined) {
@@ -39,7 +39,7 @@ LayoutFragment.prototype.getElementCount = function() {
 
 LayoutFragment.prototype.getElementFragment = function(index) {
 	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: not found LayoutFragment element at index " + index);
+		log("Dev Editor: not found LayoutFragment element at index " + index);
 		return null;
 	}
 	return this.fragments[index];
@@ -51,7 +51,7 @@ LayoutFragment.prototype.indexOfElement = function(fragment) {
 
 LayoutFragment.prototype.removeElementAt = function(index) {
 	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: not found LayoutFragment element at index " + index);
+		log("Dev Editor: not found LayoutFragment element at index " + index);
 		return false;
 	}
 	let fragment = this.fragments[index];

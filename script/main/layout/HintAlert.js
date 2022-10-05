@@ -59,7 +59,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 				background = new BitmapDrawable("popup");
 			}
 		} catch (e) {
-			log("ModdingTools: HintAlert.attachMessage: " + e);
+			log("Dev Editor: HintAlert.attachMessage: " + e);
 		}
 		if (background) background.attachAsBackground(layout);
 		layout.setOrientation($.LinearLayout.VERTICAL);
@@ -72,7 +72,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let text = new android.widget.TextView(getContext());
 		text.setTextSize(toComplexUnitSp(8));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
-		log("ModdingTools: hint: " + text.getText());
+		log("Dev Editor: hint: " + text.getText());
 		if (!this.inConsoleMode()) text.setGravity($.Gravity.CENTER);
 		text.setTextColor(color || $.Color.WHITE);
 		typeface && text.setTypeface(typeface);
@@ -260,7 +260,7 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
 	view.setVisibility($.View.VISIBLE);
-	log("ModdingTools: flash hint: " + hint);
+	log("Dev Editor: flash hint: " + hint);
 	this.reawait();
 	return true;
 };

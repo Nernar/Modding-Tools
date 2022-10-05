@@ -34,11 +34,11 @@ let BITSET_PATCH = {};
 
 const registerBitsetUi = function(json) {
 	if (json == null || typeof json != "object") {
-		MCSystem.throwException("ModdingTools: Registered bitset must be object { moduleBitset: .. }");
+		MCSystem.throwException("Dev Editor: Registered bitset must be object { moduleBitset: .. }");
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
-			Logger.Log("ModdingTools: Bitset " + element + " is already registered", "WARNING");
+			Logger.Log("Dev Editor: Bitset " + element + " is already registered", "WARNING");
 			continue;
 		}
 		BITSET_PATCH[element] = "" + json[element];
@@ -169,7 +169,7 @@ BitmapDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 AnimationDrawable.applyDescribe = function(drawable, json) {
-	if (drawable == null) MCSystem.throwException("ModdingTools: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable == null) MCSystem.throwException("Dev Editor: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("enterFadeDuration")) {
 		AnimationDrawableFactory.setEnterFadeDuration(drawable, calloutOrParse(json, json.enterFadeDuration, this));
 	}
@@ -230,7 +230,7 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 Drawable.applyDescribe = function(drawable, json) {
-	if (drawable === null) MCSystem.throwException("ModdingTools: Drawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable === null) MCSystem.throwException("Dev Editor: Drawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("alpha")) {
 		DrawableFactory.setAlpha(drawable, calloutOrParse(json, json.alpha, this));
 	}

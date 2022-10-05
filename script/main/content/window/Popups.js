@@ -21,7 +21,7 @@ Popups.getOpened = function() {
 
 Popups.open = function(widget, id) {
 	if (widget === undefined || widget === null) {
-		Logger.Log("ModdingTools: passed widget to openPopup " + id + " is undefined or not considered", "WARNING");
+		Logger.Log("Dev Editor: passed widget to openPopup " + id + " is undefined or not considered", "WARNING");
 		return;
 	}
 	let opened = this.closeIfOpened(id);

@@ -10,7 +10,7 @@ Frame.prototype.getFragment = function() {
 
 Frame.prototype.setFragment = function(fragment) {
 	let already = this.getFragment();
-	if (already != null) MCSystem.throwException("ModdingTools: Frame already has fragment");
+	if (already != null) MCSystem.throwException("Dev Editor: Frame already has fragment");
 	this.fragment = fragment;
 };
 
@@ -36,7 +36,7 @@ Frame.prototype.getContainer = function() {
 	Frame.prototype.obtain = function(when, what) {
 		let fragment = this.getFragment();
 		if (fragment == null) {
-			log("ModdingTools: Frame.obtain called before any fragment attached");
+			log("Dev Editor: Frame.obtain called before any fragment attached");
 			return;
 		}
 		obtain(fragment, when, what);

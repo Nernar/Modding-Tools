@@ -71,21 +71,21 @@ const registerFragmentJson = (function() {
 		if (fragments.hasOwnProperty(json.type)) {
 			return fragments[json.type].parseJson.call(this, instanceOrJson || new fragments[json.type](), json, preferredElement);
 		}
-		log("ModdingTools: unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
+		log("Dev Editor: unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
 		return instanceOrJson;
 	};
 	
 	return function(id, fragment) {
 		if (fragments.hasOwnProperty(id)) {
-			log("ModdingTools: fragment json " + id + " is already occupied");
+			log("Dev Editor: fragment json " + id + " is already occupied");
 			return false;
 		}
 		if (typeof fragment != "function" || !(fragment.prototype instanceof Fragment)) {
-			Logger.Log("ModdingTools: passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
+			Logger.Log("Dev Editor: passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
 			return false;
 		}
 		if (typeof fragment.parseJson != "function") {
-			Logger.Log("ModdingTools: nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
+			Logger.Log("Dev Editor: nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
 			return false;
 		}
 		fragments[id] = fragment;

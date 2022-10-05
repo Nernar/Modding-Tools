@@ -1521,7 +1521,7 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 					} else if (element.type == "message") {
 						element = MenuWindow.Message.parseJson.call(this, element);
 					} else {
-						Logger.Log("ModdingTools: MenuWindow unable to parse " + element.type, "WARNING");
+						Logger.Log("Dev Editor: MenuWindow unable to parse " + element.type, "WARNING");
 						continue;
 					}
 					element.setWindow(instanceOrJson);

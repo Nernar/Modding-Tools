@@ -1,7 +1,7 @@
 const launchIfSupported = function(who, api, prototype, cancel) {
 	if (API_VERSION >= api) {
 		if (Math.ceil(API_VERSION) > Math.ceil(api)) {
-			Logger.Log("ModdingTools: Api " + api + " downgraded, please check " + who.getName() + " for updates", "WARNING");
+			Logger.Log("Dev Editor: Api " + api + " downgraded, please check " + who.getName() + " for updates", "WARNING");
 		}
 		try {
 			if (prototype !== undefined && prototype !== null) {
@@ -14,11 +14,11 @@ const launchIfSupported = function(who, api, prototype, cancel) {
 			reportError(e);
 		}
 	} else {
-		Logger.Log("ModdingTools: Unsupported module " + who.getName() + ", minimum version might be " + API_VERSION + ", got " + api, "WARNING");
+		Logger.Log("Dev Editor: Unsupported module " + who.getName() + ", minimum version might be " + API_VERSION + ", got " + api, "WARNING");
 	}
 	try {
 		cancel && cancel();
 	} catch (e) {
-		log("ModdingTools: launchIfSupported: " + e);
+		log("Dev Editor: launchIfSupported: " + e);
 	}
 };

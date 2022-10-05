@@ -69,7 +69,7 @@ EditorTool.prototype.reset = function() {
 		enumerable: true,
 		get: function() {
 			if (self.worker === undefined) {
-				MCSystem.throwException("ModdingTools: EditorTool data associated with worker was not found, are you sure that any project opened?");
+				MCSystem.throwException("Dev Editor: EditorTool data associated with worker was not found, are you sure that any project opened?");
 			}
 			return self.worker.data;
 		}
@@ -192,7 +192,7 @@ EditorTool.prototype.replace = function(file) {
 		});
 	} else if (name.endsWith(".js")) {
 		if (!this.hasParser()) {
-			MCSystem.throwException("ModdingTools: No parser, try override EditorTool.hasParser");
+			MCSystem.throwException("Dev Editor: No parser, try override EditorTool.hasParser");
 		}
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
@@ -210,7 +210,7 @@ EditorTool.prototype.replace = function(file) {
 EditorTool.prototype.merge = function(file) {
 	let merger = this.getMerger();
 	if (!this.hasMerger()) {
-		MCSystem.throwException("ModdingTools: No merger, try override EditorTool.hasMerger");
+		MCSystem.throwException("Dev Editor: No merger, try override EditorTool.hasMerger");
 	}
 	let name = file.getName(),
 		project = this.toProject(),
@@ -231,7 +231,7 @@ EditorTool.prototype.merge = function(file) {
 			});
 		});
 	} else if (name.endsWith(".js")) {
-		if (!this.hasParser()) MCSystem.throwException("ModdingTools: Requested js parsing, but there is no parser!");
+		if (!this.hasParser()) MCSystem.throwException("Dev Editor: Requested js parsing, but there is no parser!");
 		let active = Date.now();
 		importScript(file.getPath(), function(result) {
 			active = Date.now() - active;
@@ -256,7 +256,7 @@ EditorTool.prototype.export = function(file) {
 		exportProject(project, false, file.getPath());
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
-		if (!this.hasConverter()) MCSystem.throwException("ModdingTools: Requested js converter, but there is no converter!");
+		if (!this.hasConverter()) MCSystem.throwException("Dev Editor: Requested js converter, but there is no converter!");
 		let active = Date.now();
 		try {
 			converter.attach(project);
@@ -303,13 +303,13 @@ EditorTool.prototype.getWorkerFor = function(source) {
 
 EditorTool.prototype.toProject = function() {
 	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException("ModdingTools: EditorTool.toProject: No attached worker, are you sure that project prepared?");
+	if (!worker) MCSystem.throwException("Dev Editor: EditorTool.toProject: No attached worker, are you sure that project prepared?");
 	return worker.getProject();
 };
 
 EditorTool.prototype.fromProject = function(source) {
 	let worker = this.getWorker();
-	if (!worker) MCSystem.throwException("ModdingTools: EditorTool.fromProject: No attached worker, are you sure that project prepared?");
+	if (!worker) MCSystem.throwException("Dev Editor: EditorTool.fromProject: No attached worker, are you sure that project prepared?");
 	worker.loadProject(source);
 	this.unselect(true);
 	this.describe();

@@ -6,7 +6,7 @@ ImageFragment.prototype = new BaseFragment;
 ImageFragment.prototype.TYPE = "ImageFragment";
 
 ImageFragment.prototype.getImageView = function() {
-	MCSystem.throwException("ModdingTools: " + this.TYPE + ".getImageView must be implemented");
+	MCSystem.throwException("Dev Editor: " + this.TYPE + ".getImageView must be implemented");
 };
 
 ImageFragment.prototype.getImage = function() {

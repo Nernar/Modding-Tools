@@ -40,7 +40,7 @@ SliderFragment.prototype.resetContainer = function() {
 					moved = Math.abs(raw) > toComplexUnitDip(8);
 				}
 			} catch (e) {
-				log("ModdingTools: SliderFragment.onTouch: " + e);
+				log("Dev Editor: SliderFragment.onTouch: " + e);
 			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
@@ -80,7 +80,7 @@ SliderFragment.prototype.getValue = function() {
 SliderFragment.prototype.setValue = function(value) {
 	value = parseFloat(value);
 	if (isNaN(value)) {
-		Logger.Log("ModdingTools: slider value passed NaN or incorrect value, it may be string or number", "WARNING");
+		Logger.Log("Dev Editor: slider value passed NaN or incorrect value, it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;
@@ -102,7 +102,7 @@ SliderFragment.prototype.setModifier = function(modifier) {
 
 SliderFragment.prototype.setModifiers = function(modifiers) {
 	if (!Array.isArray(modifiers) || modifiers.length == 0) {
-		Logger.Log("ModdingTools: slider modifiers passed in incorrect format, please consider that it must be [..]", "WARNING");
+		Logger.Log("Dev Editor: slider modifiers passed in incorrect format, please consider that it must be [..]", "WARNING");
 		return this;
 	}
 	this.modifier = 0;

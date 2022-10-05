@@ -1,19 +1,20 @@
-# Dev Editor
+# Dev Editor — Inner Core
 
-![Версия](https://img.shields.io/badge/dynamic/json?label=version&query=version&url=https://raw.githubusercontent.com/nernar/modding-tools/master/mod.info&color=D19121&logoColor=white&logo=clockify&style=flat-square)
-![Количество строк](https://img.shields.io/tokei/lines/github/nernar/modding-tools?color=2727E3&logoColor=white&logo=sourcegraph&style=flat-square)
-![Лицензия](https://img.shields.io/github/license/nernar/modding-tools?color=D22128&logoColor=white&logo=apache&style=flat-square)
+![Версия](https://img.shields.io/badge/dynamic/json?label=version&query=info.version&url=https://raw.githubusercontent.com/nernar/dev-editor/master/make.json&color=D19121&logoColor=white&logo=clockify&style=flat-square)
+![Количество строк](https://img.shields.io/tokei/lines/github/nernar/dev-editor?color=2727E3&logoColor=white&logo=sourcegraph&style=flat-square)
+![Лицензия](https://img.shields.io/github/license/nernar/dev-editor?color=D22128&logoColor=white&logo=apache&style=flat-square)
 [![Telegram](https://img.shields.io/badge/channel-gray?logo=telegram&style=flat-square)](https://t.me/ntInsideChat)
 
 ![Лого](.preview/header.png)
 
-**Этот проект на стадии глобального переосмысления логики текущего кода, пожалуйста, временно не используйте API до конца рефакторинга.**
+**Этот пакет совместно с репозиторием более не поддерживаются, пожалуйста подумайте о перемещении на кросс-платформенные Средства для моддинга.**
 
 ## Вступление
 
 Мы создали его для Вас, таких же разработчиков как и мы. *Создавать контент прямо в игре — основная задача данной связи API.* Кнопка меню откроет обширные возможности визуальной части модификации, специальные средства для разработчиков и модельеров.
 
 На данный момент имеются следующие возможности:
+
 - Моделирование статичных моделей `ICRender`
 - Создание специальных переходов `Transition`
 - Моделирование объектных моделей `Render`

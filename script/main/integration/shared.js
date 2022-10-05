@@ -52,24 +52,24 @@ const API = {
 	// Global registry
 	registerTool: function(id, tool) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("Dev Editor: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
-		log("ModdingTools: Registered tool " + id + " shortcut");
+		log("Dev Editor: Registered tool " + id + " shortcut");
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("Dev Editor: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
 		if (entry === undefined) {
 			entry = new ProjectTool.MenuFactory();
 		}
 		if (!(entry instanceof ProjectTool.MenuFactory)) {
-			MCSystem.throwException("ModdingTools: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
+			MCSystem.throwException("Dev Editor: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
 		}
-		log("ModdingTools: Registered tool " + id + " into menu entry");
+		log("Dev Editor: Registered tool " + id + " into menu entry");
 		PROJECT_TOOL.tools[id] = entry;
 		Tools[id] = tool;
 	},
@@ -264,7 +264,7 @@ const API = {
 	attachEditorTool: attachEditorTool,
 	attachTool: function(id, when) {
 		if (!Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Not found tool " + id + ", consider have you registered it", "WARNING");
+			Logger.Log("Dev Editor: Not found tool " + id + ", consider have you registered it", "WARNING");
 			return;
 		}
 		attachEditorTool(Tools[id], undefined, when);

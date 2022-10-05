@@ -198,7 +198,7 @@ FocusableWindow.prototype.attach = function() {
 		this.onAttach && this.onAttach();
 		return true;
 	} else {
-		Logger.Log("ModdingTools: Attaching window " + this.TYPE + " called on already opened window", "INFO");
+		Logger.Log("Dev Editor: Attaching window " + this.TYPE + " called on already opened window", "INFO");
 	}
 	return false;
 };
@@ -217,7 +217,7 @@ FocusableWindow.prototype.dismiss = function() {
 		WindowProvider.closeWindow(this);
 		this.onClose && this.onClose();
 	} else {
-		Logger.Log("ModdingTools: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
+		Logger.Log("Dev Editor: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
 	}
 };
 

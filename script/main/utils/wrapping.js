@@ -137,9 +137,9 @@ const UNWRAP = function(path, scope) {
 	let file = findWrappedScript(path);
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 		if (file == null) {
-			MCSystem.throwException("ModdingTools: Not found " + path + " script");
+			MCSystem.throwException("Dev Editor: Not found " + path + " script");
 		}
-		log("ModdingTools: Wrapping " + file + " script");
+		log("Dev Editor: Wrapping " + file + " script");
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
@@ -147,7 +147,7 @@ const UNWRAP = function(path, scope) {
 		return scope.result;
 	}
 	if (file == null) {
-		MCSystem.throwException("ModdingTools: Not found " + path + " executable");
+		MCSystem.throwException("Dev Editor: Not found " + path + " executable");
 	}
 	try {
 		let source = decompileExecuteable(Files.readBytes(file)),
@@ -201,7 +201,7 @@ const CHECKOUT = function(path, scope, post) {
 		post && post(something);
 		return something;
 	} catch (e) {
-		Logger.Log("ModdingTools: CHECKOUT: " + e, "WARNING");
+		Logger.Log("Dev Editor: CHECKOUT: " + e, "WARNING");
 	}
 	return null;
 };
@@ -240,7 +240,7 @@ const translateCode = function(hash, args, fallback) {
 		}
 		return String(text);
 	} catch (e) {
-		log("ModdingTools: translateCode: " + e);
+		log("Dev Editor: translateCode: " + e);
 	}
 	return "...";
 };

@@ -66,7 +66,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 		case "function":
 			return what.toSource().trim();
 	}
-	log("ModdingTools: Unresolved property " + what + " with type " + typeof what);
+	log("Dev Editor: Unresolved property " + what + " with type " + typeof what);
 	return null;
 };
 

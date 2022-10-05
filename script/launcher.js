@@ -7,5 +7,5 @@ try {
 		isClientOnly: true
 	});
 } catch (e) {
-	log("ModdingTools: Client outdated, this may create unexpected behavior! Please, upgrade Inner Core to Horizon.");
+	log("Dev Editor: Client outdated, this may create unexpected behavior! Please, upgrade Inner Core to Horizon.");
 }

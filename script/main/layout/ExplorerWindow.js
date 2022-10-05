@@ -884,7 +884,7 @@ ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.
 					object.filesCount = list.length;
 				} else object.size = Files.prepareSize(file);
 			} catch (e) {
-				log("ModdingTools: ExplorerAdapter.getItem: " + e);
+				log("Dev Editor: ExplorerAdapter.getItem: " + e);
 			}
 		} catch (e) {
 			showHint(position + ": " + e);

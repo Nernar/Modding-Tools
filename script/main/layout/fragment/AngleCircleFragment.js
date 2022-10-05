@@ -37,7 +37,7 @@ AngleCircleFragment.prototype.resetContainer = function() {
 					moved = Math.abs(rawX) > toComplexUnitDip(8);
 				}
 			} catch (e) {
-				log("ModdingTools: AngleCircleFragment.onTouch: " + e);
+				log("Dev Editor: AngleCircleFragment.onTouch: " + e);
 			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
@@ -76,7 +76,7 @@ AngleCircleFragment.prototype.getValue = function() {
 AngleCircleFragment.prototype.setValue = function(value) {
 	value = parseFloat(value);
 	if (isNaN(value)) {
-		Logger.Log("ModdingTools: Angle circle value passed NaN or incorrect value, it may be string or number", "WARNING");
+		Logger.Log("Dev Editor: Angle circle value passed NaN or incorrect value, it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;

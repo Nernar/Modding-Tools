@@ -33,7 +33,7 @@ const LaunchSequence = new LogotypeSequence({
 					Callback.invokeCallback("ModdingTools", API);
 				}
 			} catch (e) {
-				Logger.Log("ModdingTools: Modules initialization aborted due to Callback.invoke", "ERROR");
+				Logger.Log("Dev Editor: Modules initialization aborted due to Callback.invoke", "ERROR");
 				reportError(e);
 			}
 		}
