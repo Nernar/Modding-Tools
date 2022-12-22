@@ -16,7 +16,26 @@ Translation.addTranslation("Check", {
 
 MenuWindow.__parseJson = MenuWindow.parseJson;
 
+const getDebugScripts = function() {
+	let files = Files.listFileNames(Dirs.EVALUATE, true),
+		more = Files.listFileNames(Dirs.SCRIPT_ADAPTIVE, true);
+	files = Files.checkFormats(files.concat(more), ".js");
+	for (let i = 0; i < files.length; i++) {
+		let file = files[i];
+		if (REQUIRE.loaded.indexOf(file) != -1) {
+			if (REQUIRE.results[file] === undefined) {
+				files.splice(i, 1);
+				i--;
+			}
+		}
+	}
+	return files;
+};
+
+SHARE("getDebugScripts", getDebugScripts);
+
 let debugAttachControlTools = true;
+
 MenuWindow.parseJson = function() {
 	let instanceOrJson = MenuWindow.__parseJson.apply(this, arguments);
 	if (debugAttachControlTools && REVISION.startsWith("develop")) {
@@ -33,19 +52,7 @@ MenuWindow.parseJson = function() {
 			RuntimeCodeEvaluate.loadEvaluate();
 		});
 		category.addItem("inspectorObject", translate("Require"), function() {
-			let files = Files.listFileNames(Dirs.EVALUATE, true),
-				more = Files.listFileNames(Dirs.SCRIPT_ADAPTIVE, true);
-			files = Files.checkFormats(files.concat(more), ".js");
-			for (let i = 0; i < files.length; i++) {
-				let file = files[i];
-				if (REQUIRE.loaded.indexOf(file) != -1) {
-					if (REQUIRE.results[file] === undefined) {
-						files.splice(i, 1);
-						i--;
-					}
-				}
-			}
-			select(translate("What's need to require?"), files, function(index, path) {
+			select(translate("What's need to require?"), getDebugScripts(), function(index, path) {
 				let output = REQUIRE(path);
 				if (typeof output == "function") {
 					output();
@@ -95,7 +102,7 @@ MenuWindow.parseJson = function() {
 					return;
 				}
 				let reader = new java.io.FileReader(internal);
-				InnerCorePackages.mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.jar");
+				InnerCorePackages.mod.executable.Compiler.compileScriptToFile(reader, "bridge", Dirs.SCRIPT_REVISION + "bridge.dex");
 				showHint(translate("Bridge might be reloaded after restart"));
 			});
 		});

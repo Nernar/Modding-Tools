@@ -1,4 +1,4 @@
-const SnackSequence = function(obj) {
+function SnackSequence(obj) {
 	Sequence.apply(this, arguments);
 };
 
@@ -177,7 +177,7 @@ SnackSequence.interruptAll = function() {
 	return true;
 };
 
-const StackedSnackSequence = function(obj) {
+function StackedSnackSequence(obj) {
 	Sequence.apply(this, arguments);
 };
 

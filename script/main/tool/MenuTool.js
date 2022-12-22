@@ -1,4 +1,4 @@
-const MenuTool = function(object) {
+function MenuTool(object) {
 	InteractionTool.apply(this, arguments);
 };
 
@@ -19,7 +19,7 @@ MenuTool.prototype.reset = function() {
 	}, {
 		type: "message",
 		icon: "menuProjectLeave",
-		message: translate("Dev Editor") + ": " + translate("Leave"),
+		message: translate("Modding Tools") + ": " + translate("Leave"),
 		click: function(tool, menu, message) {
 			attachProjectTool(undefined, function() {
 				tool.deattach();

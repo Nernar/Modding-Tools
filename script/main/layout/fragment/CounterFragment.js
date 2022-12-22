@@ -1,4 +1,4 @@
-const CounterFragment = function() {
+function CounterFragment() {
 	SliderFragment.apply(this, arguments);
 };
 
@@ -9,13 +9,13 @@ CounterFragment.prototype.resetContainer = function() {
 	SliderFragment.prototype.resetContainer.apply(this, arguments);
 	let modifier = this.getContainer();
 	let self = this;
-	
+
 	let content = new android.widget.LinearLayout(getContext());
 	content.setPadding(toComplexUnitDip(8), toComplexUnitDip(8),
 		toComplexUnitDip(8), toComplexUnitDip(8));
 	content.setGravity($.Gravity.CENTER);
 	this.setContainerView(content);
-	
+
 	let subtract = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterMinus").attachAsImage(subtract);
 	subtract.setOnClickListener(function() {
@@ -32,7 +32,7 @@ CounterFragment.prototype.resetContainer = function() {
 	let params = new android.widget.LinearLayout.
 		LayoutParams(toComplexUnitDip(40), toComplexUnitDip(40))
 	content.addView(subtract, params);
-	
+
 	modifier.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
 	modifier.setOnClickListener(function() {
 		try {
@@ -54,7 +54,7 @@ CounterFragment.prototype.resetContainer = function() {
 	modifier.setTag("counterText");
 	content.addView(modifier, new android.widget.LinearLayout.
 		LayoutParams(toComplexUnitDip(104), $.ViewGroup.LayoutParams.MATCH_PARENT));
-	
+
 	let add = new android.widget.ImageView(getContext());
 	new BitmapDrawable("controlAdapterPlus").attachAsImage(add);
 	add.setOnClickListener(function() {

@@ -1,20 +1,26 @@
-const ExpandablePopup = function(id) {
-	let self = this;
+/**
+ * @requires `isAndroid()`
+ */
+function ExpandablePopup(id) {
+	this.setFragment(new ExpandableFragment());
 	FocusablePopup.apply(this, arguments);
-	let fragment = new ExpandableFragment();
-	fragment.getTitleView().setOnTouchListener(function(view, event) {
-		try {
-			return !!self.handleTouch(event);
-		} catch (e) {
-			log("Dev Editor: ExpandablePopup.onTouch: " + e);
-		}
-		return false;
-	});
-	this.setFragment(fragment);
 };
 
 ExpandablePopup.prototype = new FocusablePopup;
 ExpandablePopup.prototype.TYPE = "ExpandablePopup";
+
+ExpandablePopup.prototype.resetWindow = function() {
+	FocusablePopup.prototype.resetWindow.apply(this, arguments);
+	let self = this;
+	fragment.getTitleView().setOnTouchListener(function(view, event) {
+		try {
+			return !!self.handleTouch(event);
+		} catch (e) {
+			log("ModdingTools: ExpandablePopup.onTouch: " + e);
+		}
+		return false;
+	});
+};
 
 ExpandablePopup.prototype.setTitle = function(title) {
 	this.getFragment().getTitleView().setText(title);

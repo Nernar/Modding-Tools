@@ -1,26 +1,10 @@
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
+ * @requires `isAndroid()`
  */
-
-const LogotypeWindow = function(foreground, background) {
+function LogotypeWindow(foreground, background) {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity($.Gravity.CENTER);
-	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setFragment(new LogotypeFragment());
-	window.setTouchable(false);
-	
-	let enter = new android.transition.Fade();
-	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	enter.setDuration(2000);
-	window.setEnterTransition(enter);
-	
-	let exit = new android.transition.Fade();
-	exit.setInterpolator(new android.view.animation.AccelerateInterpolator());
-	exit.setDuration(500);
-	window.setExitTransition(exit);
-	
 	if (foreground !== undefined) window.setForegroundImage(foreground);
 	if (background !== undefined) window.setBackgroundImage(background);
 	return window;
@@ -31,6 +15,26 @@ LogotypeWindow.prototype.TYPE = "LogotypeWindow";
 
 LogotypeWindow.prototype.level = 10000;
 LogotypeWindow.prototype.orientate = 2;
+
+
+OverlayWindow.prototype.resetWindow = function() {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setGravity($.Gravity.CENTER);
+	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setFragment(new LogotypeFragment());
+	this.setTouchable(false);
+
+	let enter = new android.transition.Fade();
+	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
+	enter.setDuration(2000);
+	this.setEnterTransition(enter);
+
+	let exit = new android.transition.Fade();
+	exit.setInterpolator(new android.view.animation.AccelerateInterpolator());
+	exit.setDuration(500);
+	this.setExitTransition(exit);
+};
 
 LogotypeWindow.prototype.getLevel = function() {
 	return this.level !== undefined ? this.level : 10000;

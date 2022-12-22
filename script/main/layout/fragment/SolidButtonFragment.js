@@ -1,4 +1,4 @@
-const SolidButtonFragment = function() {
+function SolidButtonFragment() {
 	ThinButtonFragment.apply(this, arguments);
 };
 

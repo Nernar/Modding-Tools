@@ -1,17 +1,29 @@
 {
 	"info": {
-		"name": "Dev Editor",
-		"version": "0.4-snapshot1",
+		"name": "Modding Tools",
+		"version": "0.4-snapshot2",
 		"author": "Nernar",
 		"description": "Develop your mods with in-game tools.",
 		"clientOnly": true,
 		"instantLaunch": true
 	},
 	"api": "AdaptedScript",
-	"resources": [],
+	"target": {
+		"source": "script"
+	},
 	"sources": [
 		{
-			"source": "lib/*",
+			"type": "custom",
+			"language": "javascript",
+			"source": "script/adaptedscript"
+		},
+		{
+			"type": "custom",
+			"language": "javascript",
+			"source": "script/coreengine"
+		},
+		{
+			"source": "library/*",
 			"type": "library",
 			"language": "javascript"
 		},
@@ -22,33 +34,19 @@
 		},
 		{
 			"type": "main",
-			"language": "javascript",
-			"source": "script/main",
-			"target": "script/main.js"
+			"language": "typescript",
+			"source": "script/main"
 		},
 		{
 			"type": "custom",
 			"language": "javascript",
-			"source": "script/runtime",
-			"target": "script/runtime.js"
+			"source": "script/runtime"
 		},
 		{
 			"type": "custom",
 			"language": "javascript",
 			"api": "Instant",
 			"source": "script/instant.js"
-		},
-		{
-			"type": "custom",
-			"language": "javascript",
-			"source": "script/adaptedscript",
-			"target": "script/adaptedscript.js"
-		},
-		{
-			"type": "custom",
-			"language": "javascript",
-			"source": "script/coreengine",
-			"target": "script/coreengine.js"
 		}
 	],
 	"compile": [
@@ -61,6 +59,10 @@
 		{
 			"source": "assets/root/*",
 			"targetDir": "."
+		},
+		{
+			"source": "java/modding-tools/classes2.dex",
+			"targetDir": "java/modding-tools"
 		}
 	]
 }

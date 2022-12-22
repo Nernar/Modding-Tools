@@ -1,15 +1,4 @@
 /*
-BUILD INFO:
-  dir: Stacktrace
-  target: Stacktrace.js
-  files: 8
-*/
-
-
-
-// file: header.js
-
-/*
 
    Copyright 2021-2022 Nernar (github.com/nernar)
 
@@ -26,348 +15,310 @@ BUILD INFO:
    limitations under the License.
 
 */
-
 LIBRARY({
-	name: "Stacktrace",
-	version: 1,
-	api: "AdaptedScript",
-	shared: true
+    name: "Stacktrace",
+    version: 1,
+    api: "AdaptedScript",
+    shared: true
 });
-
 launchTime = Date.now();
-isHorizon = (function() {
-	let version = MCSystem.getInnerCoreVersion();
-	return parseInt(version.toString()[0]) >= 2;
+isHorizon = (function () {
+    var version = MCSystem.getInnerCoreVersion();
+    return parseInt(version.toString()[0]) >= 2;
 })();
 InnerCorePackages = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
-
-isValidFile = function(file) {
-	if (file instanceof java.io.File) {
-		return file.isFile();
-	}
-	return false;
+isValidFile = function (file) {
+    if (file instanceof java.io.File) {
+        return file.isFile();
+    }
+    return false;
 };
-
-
-
-
-// file: translation.js
-
 Translation.addTranslation("Oh nose everything broke", {
-	ru: "Ох нет, все сломалось"
+    ru: "Ох нет, все сломалось"
 });
 Translation.addTranslation("Preparing report", {
-	ru: "Подготовка отчета"
+    ru: "Подготовка отчета"
 });
 Translation.addTranslation("Milliseconds estimated after launch", {
-	ru: "Миллисекунды, прошедшие с запуска"
+    ru: "Миллисекунды, прошедшие с запуска"
 });
 Translation.addTranslation("Defined at", {
-	ru: "Объявлено в"
+    ru: "Объявлено в"
 });
 Translation.addTranslation("at line", {
-	ru: "на строке"
+    ru: "на строке"
 });
 Translation.addTranslation("from", {
-	ru: "из"
+    ru: "из"
 });
 Translation.addTranslation("Source may be incorrectly", {
-	ru: "Источник может быть некорректным"
+    ru: "Источник может быть некорректным"
 });
 Translation.addTranslation("Understand", {
-	ru: "Понятно"
+    ru: "Понятно"
 });
 Translation.addTranslation("Leave", {
-	ru: "Выход"
+    ru: "Выход"
 });
 Translation.addTranslation("Saved as", {
-	ru: "Сохранено как"
+    ru: "Сохранено как"
 });
 Translation.addTranslation("Wouldn't fetch modification sources", {
-	ru: "Не удалось получить исходники модификации"
+    ru: "Не удалось получить исходники модификации"
 });
 Translation.addTranslation("Couldn't save trace", {
-	ru: "Не удается сохранить сводку"
+    ru: "Не удается сохранить сводку"
 });
-
-
-
-
-// file: data/sources.js
-
-getLoadedModList = function() {
-	try {
-		let mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
-		let sorted = new java.util.ArrayList();
-		for (let i = 0; i < mods.size(); i++) {
-			let mod = mods.get(i);
-			if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
-				sorted.add(mod.getLegacyModInstance());
-			}
-		}
-		return sorted;
-	} catch (e) {
-		return InnerCorePackages.mod.build.ModLoader.instance.modsList;
-	}
+getLoadedModList = function () {
+    try {
+        var mods = Packages.com.zhekasmirnov.apparatus.modloader.ApparatusModLoader.getSingleton().getAllMods();
+        var sorted = new java.util.ArrayList();
+        for (var i = 0; i < mods.size(); i++) {
+            var mod = mods.get(i);
+            if (mod instanceof Packages.com.zhekasmirnov.apparatus.modloader.LegacyInnerCoreMod) {
+                sorted.add(mod.getLegacyModInstance());
+            }
+        }
+        return sorted;
+    }
+    catch (e) {
+        return InnerCorePackages.mod.build.ModLoader.instance.modsList;
+    }
 };
-
-fetchScriptSources = function(mod) {
-	let founded = {};
-	let buildConfig = mod.buildConfig;
-	let sources = buildConfig.sourcesToCompile;
-	for (let i = 0; i < sources.size(); i++) {
-		let source = sources.get(i);
-		founded[source.path] = source.sourceName;
-	}
-	let directory = buildConfig.defaultConfig.libDir;
-	if (directory != null) {
-		let folder = new java.io.File(mod.dir, directory);
-		if (folder.exists() && folder.isDirectory()) {
-			let libraries = folder.listFiles();
-			for (let i = 0; i < libraries.length; i++) {
-				let library = libraries[i].getName();
-				founded[directory + library] = library;
-			}
-		}
-	}
-	return founded;
+fetchScriptSources = function (mod) {
+    var founded = {};
+    var buildConfig = mod.buildConfig;
+    var sources = buildConfig.sourcesToCompile;
+    for (var i = 0; i < sources.size(); i++) {
+        var source = sources.get(i);
+        founded[source.path] = source.sourceName;
+    }
+    var directory = buildConfig.defaultConfig.libDir;
+    if (directory != null) {
+        var folder = new java.io.File(mod.dir, directory);
+        if (folder.exists() && folder.isDirectory()) {
+            var libraries = folder.listFiles();
+            for (var i = 0; i < libraries.length; i++) {
+                var library = libraries[i].getName();
+                founded[directory + library] = library;
+            }
+        }
+    }
+    return founded;
 };
-
-setupLoadedSources = function(mods) {
-	for (let i = 0; i < mods.size(); i++) {
-		let source = mods.get(i);
-		setupLoadedSources.mods[source] = fetchScriptSources(source);
-		setupLoadedSources.sources[source] = source;
-	}
+setupLoadedSources = function (mods) {
+    for (var i = 0; i < mods.size(); i++) {
+        var source = mods.get(i);
+        setupLoadedSources.mods[source] = fetchScriptSources(source);
+        setupLoadedSources.sources[source] = source;
+    }
 };
-
 setupLoadedSources.mods = {};
 setupLoadedSources.sources = {};
-
-getModName = function(id) {
-	if (setupLoadedSources.sources.hasOwnProperty(id)) {
-		let source = setupLoadedSources.sources[id];
-		if (source) {
-			return "" + source.getName();
-		}
-	}
-	return "";
+getModName = function (id) {
+    if (setupLoadedSources.sources.hasOwnProperty(id)) {
+        var source = setupLoadedSources.sources[id];
+        if (source) {
+            return "" + source.getName();
+        }
+    }
+    return "";
 };
-
-findAvailabledMods = function(name) {
-	let array = [];
-	for (let element in setupLoadedSources.mods) {
-		let mod = getModName(element);
-		if (mod == name) {
-			array.unshift(element);
-		} else if (!name || mod.startsWith(name)) {
-			array.push(element);
-		}
-		let source = setupLoadedSources.sources[element];
-		if (source.dir.endsWith("/" + name + "/")) {
-			array.unshift(element);
-		} else if (source.dir.indexOf("/" + name) != -1) {
-			array.push(element);
-		}
-	}
-	return array;
+findAvailabledMods = function (name) {
+    var array = [];
+    for (var element in setupLoadedSources.mods) {
+        var mod = getModName(element);
+        if (mod == name) {
+            array.unshift(element);
+        }
+        else if (!name || mod.startsWith(name)) {
+            array.push(element);
+        }
+        var source = setupLoadedSources.sources[element];
+        if (source.dir.endsWith("/" + name + "/")) {
+            array.unshift(element);
+        }
+        else if (source.dir.indexOf("/" + name) != -1) {
+            array.push(element);
+        }
+    }
+    return array;
 };
-
-findRelatedSources = function(name, file) {
-	let sources = findAvailabledMods(name);
-	if (sources.length == 0) {
-		return {};
-	}
-	let related = {};
-	for (let i = 0; i < sources.length; i++) {
-		let mod = sources[i],
-			source = setupLoadedSources.mods[mod];
-		for (let path in source) {
-			let name = source[path];
-			if (name == file) {
-				if (!related.hasOwnProperty(mod)) {
-					related[mod] = [];
-				}
-				related[mod].unshift(path);
-			} else if (name.endsWith(file)) {
-				if (!related.hasOwnProperty(mod)) {
-					related[mod] = [];
-				}
-				related[mod].push(path);
-			}
-		}
-	}
-	return related;
+findRelatedSources = function (name, file) {
+    var sources = findAvailabledMods(name);
+    if (sources.length == 0) {
+        return {};
+    }
+    var related = {};
+    for (var i = 0; i < sources.length; i++) {
+        var mod = sources[i], source = setupLoadedSources.mods[mod];
+        for (var path in source) {
+            var name_1 = source[path];
+            if (name_1 == file) {
+                if (!related.hasOwnProperty(mod)) {
+                    related[mod] = [];
+                }
+                related[mod].unshift(path);
+            }
+            else if (name_1.endsWith(file)) {
+                if (!related.hasOwnProperty(mod)) {
+                    related[mod] = [];
+                }
+                related[mod].push(path);
+            }
+        }
+    }
+    return related;
 };
-
-
-
-
-// file: data/parser.js
-
-reformatSpecial = function(element) {
-	element = "" + element;
-	element = element.replace(/\+/g, "\\+");
-	element = element.replace(/\(/g, "\\(");
-	element = element.replace(/\)/g, "\\)");
-	element = element.replace(/\[/g, "\\[");
-	element = element.replace(/\]/g, "\\]");
-	element = element.replace(/\{/g, "\\{");
-	element = element.replace(/\}/g, "\\}");
-	return element.replace(/\./g, "\\.");
+reformatSpecial = function (element) {
+    element = "" + element;
+    element = element.replace(/\+/g, "\\+");
+    element = element.replace(/\(/g, "\\(");
+    element = element.replace(/\)/g, "\\)");
+    element = element.replace(/\[/g, "\\[");
+    element = element.replace(/\]/g, "\\]");
+    element = element.replace(/\{/g, "\\{");
+    element = element.replace(/\}/g, "\\}");
+    return element.replace(/\./g, "\\.");
 };
-
-requireFormat = function(message) {
-	for (let element in addTranslation.messages) {
-		let exp = reformatSpecial(element);
-		exp = exp.replace(/%s/g, "(.*)");
-		try {
-			let regexp = new RegExp(exp, "m");
-			if (regexp.test(message)) {
-				return {
-					message: "" + element,
-					exec: regexp.exec(message)
-				};
-			}
-		} catch (e) {
-			// Must be detected if regexp fail
-		}
-	}
-	return {
-		message: message
-	};
+requireFormat = function (message) {
+    for (var element in addTranslation.messages) {
+        var exp = reformatSpecial(element);
+        exp = exp.replace(/%s/g, "(.*)");
+        try {
+            var regexp = new RegExp(exp, "m");
+            if (regexp.test(message)) {
+                return {
+                    message: "" + element,
+                    exec: regexp.exec(message)
+                };
+            }
+        }
+        catch (e) {
+            // Must be detected if regexp fail
+        }
+    }
+    return {
+        message: message
+    };
 };
-
-translateMessage = function(message) {
-	if (typeof message != "string") {
-		message = "" + message;
-	}
-	let format = requireFormat(message);
-	if (addTranslation.messages.hasOwnProperty(format.message)) {
-		message = Translation.translate(format.message);
-		if (format.exec && format.exec.length > 1) {
-			format.exec.shift();
-			try {
-				return java.lang.String.format(message, format.exec);
-			} catch (e) {
-				format.exec.forEach(function(who) {
-					message = message.replace("%s", who);
-				});
-			}
-		}
-	}
-	return message;
+translateMessage = function (message) {
+    if (typeof message != "string") {
+        message = "" + message;
+    }
+    var format = requireFormat(message);
+    if (addTranslation.messages.hasOwnProperty(format.message)) {
+        message = Translation.translate(format.message);
+        if (format.exec && format.exec.length > 1) {
+            format.exec.shift();
+            try {
+                return java.lang.String.format(message, format.exec);
+            }
+            catch (e) {
+                format.exec.forEach(function (who) {
+                    message = message.replace("%s", who);
+                });
+            }
+        }
+    }
+    return message;
 };
-
-resolveTraceSource = function(line) {
-	if (typeof line != "string") {
-		line = "" + line;
-	}
-	let at = line.indexOf("at ");
-	if (at == -1) {
-		return null;
-	}
-	line = line.substring(at + 3);
-	let resolved = {};
-	resolved.trace = line;
-	if (line.endsWith(")")) {
-		let index = line.lastIndexOf("(");
-		resolved.where = line.slice(index + 1, line.length - 1);
-		line = line.substring(0, index - 1);
-	}
-	let semi = line.lastIndexOf(":");
-	if (semi != -1) {
-		resolved.line = line.slice(semi + 1, line.length);
-		line = line.substring(0, semi);
-	}
-	let name = line.indexOf("$");
-	if (name != -1) {
-		resolved.source = line.slice(0, name);
-		line = line.substring(name + 1);
-	}
-	resolved.file = line;
-	return resolved;
+resolveTraceSource = function (line) {
+    if (typeof line != "string") {
+        line = "" + line;
+    }
+    var at = line.indexOf("at ");
+    if (at == -1) {
+        return null;
+    }
+    line = line.substring(at + 3);
+    var resolved = {};
+    resolved.trace = line;
+    if (line.endsWith(")")) {
+        var index = line.lastIndexOf("(");
+        resolved.where = line.slice(index + 1, line.length - 1);
+        line = line.substring(0, index - 1);
+    }
+    var semi = line.lastIndexOf(":");
+    if (semi != -1) {
+        resolved.line = line.slice(semi + 1, line.length);
+        line = line.substring(0, semi);
+    }
+    var name = line.indexOf("$");
+    if (name != -1) {
+        resolved.source = line.slice(0, name);
+        line = line.substring(name + 1);
+    }
+    resolved.file = line;
+    return resolved;
 };
-
-sliceMessageWithoutTrace = function(message, line) {
-	if (typeof message != "string") {
-		message = "" + message;
-	}
-	let trace = resolveTraceSource(line);
-	if (trace === null) {
-		return message;
-	}
-	trace = trace.trace.replace(":", "#");
-	let index = message.lastIndexOf(trace);
-	if (index != -1) {
-		return message.slice(0, index - 2);
-	}
-	return message;
+sliceMessageWithoutTrace = function (message, line) {
+    if (typeof message != "string") {
+        message = "" + message;
+    }
+    var trace = resolveTraceSource(line);
+    if (trace === null) {
+        return message;
+    }
+    trace = trace.trace.replace(":", "#");
+    var index = message.lastIndexOf(trace);
+    if (index != -1) {
+        return message.slice(0, index - 2);
+    }
+    return message;
 };
-
-retraceToArray = function(trace) {
-	if (trace === null || trace === undefined) {
-		return [];
-	}
-	if (typeof trace != "string") {
-		trace = "" + trace;
-	}
-	return trace.split("\n");
+retraceToArray = function (trace) {
+    if (trace === null || trace === undefined) {
+        return [];
+    }
+    if (typeof trace != "string") {
+        trace = "" + trace;
+    }
+    return trace.split("\n");
 };
-
-fetchErrorMessage = function(error) {
-	if (error === null) {
-		return "" + error;
-	}
-	if (typeof error == "object") {
-		if (error.hasOwnProperty("message")) {
-			return "" + error.message;
-		}
-		return null;
-	}
-	return "" + error;
+fetchErrorMessage = function (error) {
+    if (error === null) {
+        return "" + error;
+    }
+    if (typeof error == "object") {
+        if (error.hasOwnProperty("message")) {
+            return "" + error.message;
+        }
+        return null;
+    }
+    return "" + error;
 };
-
-fetchErrorName = function(error) {
-	if (error && typeof error == "object") {
-		if (error.name !== undefined) {
-			return "" + error.name;
-		}
-	}
-	return Translation.translate("Oh nose everything broke");
+fetchErrorName = function (error) {
+    if (error && typeof error == "object") {
+        if (error.name !== undefined) {
+            return "" + error.name;
+        }
+    }
+    return Translation.translate("Oh nose everything broke");
 };
-
-saveOrRewrite = function(path, text) {
-	text = new java.lang.String(text);
-	let file = new java.io.File(__dir__ + ".logging", path + ".trace");
-	file.getParentFile().mkdirs();
-	if (!file.isDirectory()) {
-		file.createNewFile();
-		let stream = new java.io.FileOutputStream(file);
-		stream.write(text.getBytes());
-		stream.close();
-		print(Translation.translate("Saved as") + " " + path);
-		return;
-	}
-	print(Translation.translate("Couldn't save trace"));
+saveOrRewrite = function (path, text) {
+    text = new java.lang.String(text);
+    var file = new java.io.File(__dir__ + ".logging", path + ".trace");
+    file.getParentFile().mkdirs();
+    if (!file.isDirectory()) {
+        file.createNewFile();
+        var stream = new java.io.FileOutputStream(file);
+        stream.write(text.getBytes());
+        stream.close();
+        print(Translation.translate("Saved as") + " " + path);
+        return;
+    }
+    print(Translation.translate("Couldn't save trace"));
 };
-
-
-
-
-// file: stacktrace/addTranslation.js
-
-addTranslation = function(prefix, who, translation) {
-	if (!addTranslation.messages.hasOwnProperty(who)) {
-		Object.defineProperty(addTranslation.messages, who, {
-			enumerable: true
-		});
-	}
-	InnerCorePackages.api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
+addTranslation = function (prefix, who, translation) {
+    if (!addTranslation.messages.hasOwnProperty(who)) {
+        Object.defineProperty(addTranslation.messages, who, {
+            enumerable: true
+        });
+    }
+    InnerCorePackages.api.runtime.other.NameTranslation.addSingleTranslation(prefix, who, translation);
 };
-
 addTranslation.messages = {};
-
 // Codegen
 addTranslation("ru", "Duplicate parameter name \"%s\".", "Дублируется название параметра \"%s\".");
 addTranslation("ru", "Program too complex: too big jump offset.", "Программа слишком большая: слишком большое расстояние между кодом.");
@@ -651,34 +602,23 @@ addTranslation("ru", "StopIteration may not be changed to an arbitrary object.",
 addTranslation("ru", "Yield from closing generator", "Задержка с закрывающей конструкции");
 addTranslation("ru", "%s.prototype.%s method called on null or undefined", "%s.prototype.%s метод вызван на null или undefined");
 addTranslation("ru", "First argument to %s.prototype.%s must not be a regular expression", "Первый аргумент для %s.prototype.%s не должен быть обычным выражением.");
-
-
-
-
-// file: stacktrace/localizeError.js
-
 /**
  * Fetches error message and represent it
  * into localized string without source.
  * @param {Error|string} error to localize
  * @returns {string} represented stroke
  */
-localizeError = function(error) {
-	let message = fetchErrorMessage(error);
-	if (error instanceof java.lang.Object) {
-		MCSystem.throwException("Stacktrace: unsupported localize error type: " + error);
-	} else if (error && typeof error == "object") {
-		let retraced = retraceToArray(error.stack)[0];
-		error = sliceMessageWithoutTrace(message, retraced);
-	}
-	return translateMessage(error);
+localizeError = function (error) {
+    var message = fetchErrorMessage(error);
+    if (error instanceof java.lang.Object) {
+        MCSystem.throwException("Stacktrace: unsupported localize error type: " + error);
+    }
+    else if (error && typeof error == "object") {
+        var retraced = retraceToArray(error.stack)[0];
+        error = sliceMessageWithoutTrace(message, retraced);
+    }
+    return translateMessage(error);
 };
-
-
-
-
-// file: stacktrace/reportTrace.js
-
 /**
  * Reports catched modification errors,
  * may used in [[catch]]-block when any throw
@@ -686,324 +626,287 @@ localizeError = function(error) {
  * on display with sources hieracly.
  * @param {Error|any} value to report
  */
-reportTrace = function(error) {
-	if (error === undefined) {
-		return;
-	}
-	if (error instanceof java.lang.Object) {
-		MCSystem.throwException("" + error);
-	}
-	if (reportTrace.isReporting) {
-		if (!Array.isArray(reportTrace.handled)) {
-			reportTrace.handled = [];
-		}
-		reportTrace.handled.push(error);
-		if (reportTrace.handled.length > 8) {
-			reportTrace.handled.shift();
-		}
-		return;
-	}
-	let date = reportTrace.fetchTime();
-	reportTrace.isReporting = true;
-	UI.getContext().runOnUiThread(function() {
-		let builder = new android.app.AlertDialog.Builder(UI.getContext(),
-			android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-		builder.setTitle(fetchErrorName(error));
-		builder.setCancelable(false);
-		builder.setMessage(Translation.translate("Preparing report"));
-		builder.setPositiveButton(Translation.translate("Understand"), null);
-		builder.setNeutralButton(Translation.translate("Leave"), function() {
-			delete reportTrace.handled;
-		});
-		let code = reportTrace.toCode(error);
-		builder.setNegativeButton(code, function() {
-			posted.export = true;
-			new java.lang.Thread(function() {
-				while (posted.inProcess()) {
-					java.lang.Thread.yield();
-				}
-				saveOrRewrite(code, posted.toResult());
-			}).start();
-		});
-		let dialog = builder.create();
-		dialog.setOnDismissListener(function() {
-			delete reportTrace.isReporting;
-			let next = reportTrace.findNextTrace();
-			next !== null && reportTrace(next);
-			!posted.export && posted.cancel();
-		});
-		let popup = dialog.getWindow();
-		popup.setLayout(UI.getContext().getWindowManager().getDefaultDisplay().getWidth() / 1.35,
-			android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-		popup.clearFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		let posted = reportTrace.postUpdate(dialog, error, date);
-		dialog.show();
-		let view = popup.findViewById(android.R.id.message);
-		if (view != null) {
-			view.setTextIsSelectable(true);
-			view.setTextSize(view.getTextSize() * 0.475);
-		}
-	});
+reportTrace = function (error) {
+    if (error === undefined) {
+        return;
+    }
+    if (error instanceof java.lang.Object) {
+        MCSystem.throwException("" + error);
+    }
+    if (reportTrace.isReporting) {
+        if (!Array.isArray(reportTrace.handled)) {
+            reportTrace.handled = [];
+        }
+        reportTrace.handled.push(error);
+        if (reportTrace.handled.length > 8) {
+            reportTrace.handled.shift();
+        }
+        return;
+    }
+    var date = reportTrace.fetchTime();
+    reportTrace.isReporting = true;
+    UI.getContext().runOnUiThread(function () {
+        var builder = new android.app.AlertDialog.Builder(UI.getContext(), android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+        builder.setTitle(fetchErrorName(error));
+        builder.setCancelable(false);
+        builder.setMessage(Translation.translate("Preparing report"));
+        builder.setPositiveButton(Translation.translate("Understand"), null);
+        builder.setNeutralButton(Translation.translate("Leave"), function () {
+            delete reportTrace.handled;
+        });
+        var code = reportTrace.toCode(error);
+        builder.setNegativeButton(code, function () {
+            posted.export = true;
+            new java.lang.Thread(function () {
+                while (posted.inProcess()) {
+                    java.lang.Thread.yield();
+                }
+                saveOrRewrite(code, posted.toResult());
+            }).start();
+        });
+        var dialog = builder.create();
+        dialog.setOnDismissListener(function () {
+            delete reportTrace.isReporting;
+            var next = reportTrace.findNextTrace();
+            next !== null && reportTrace(next);
+            !posted.export && posted.cancel();
+        });
+        var popup = dialog.getWindow();
+        popup.setLayout(UI.getContext().getWindowManager().getDefaultDisplay().getWidth() / 1.35, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        popup.clearFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        var posted = reportTrace.postUpdate(dialog, error, date);
+        dialog.show();
+        var view = popup.findViewById(android.R.id.message);
+        if (view != null) {
+            view.setTextIsSelectable(true);
+            view.setTextSize(view.getTextSize() * 0.475);
+        }
+    });
 };
-
 reportTrace.handled = [];
-
-reportTrace.postUpdate = function(dialog, error, date) {
-	let handler = android.os.Handler.createAsync(dialog.getContext().getMainLooper(), new android.os.Handler.Callback() {
-			handleMessage: function(message) {
-				return false;
-			}
-		}),
-		completed = false,
-		formatted,
-		update;
-	new java.lang.Thread(function() {
-		let message = fetchErrorMessage(error),
-			retraced = retraceToArray(error ? error.stack : null);
-		retraced.length > 0 && retraced.pop();
-		let sliced = sliceMessageWithoutTrace(message, retraced[0]),
-			localized = translateMessage(sliced);
-		update = new java.lang.Runnable(function() {
-			let additional = [];
-			if (message != null) {
-				let entry = "<font color=\"#CCCC33\">";
-				if (localized != sliced) {
-					entry += localized + "<br/>";
-				}
-				entry += sliced + "</font>";
-				additional.push(entry);
-			}
-			for (let i = 0; i < retraced.length; i++) {
-				let element = requested.formatted[i];
-				if (element !== undefined) {
-					additional.push(element);
-					continue;
-				}
-				if (additional.length < 2) {
-					additional.push("");
-				}
-				additional.push(retraced[i]);
-			}
-			let attached = [];
-			if (additional.length > 0) {
-				attached.push(additional.join("<br/>"));
-			}
-			let marked = "";
-			marked += new Date(launchTime).toString();
-			if (date > 0) {
-				marked += "<br/>" + new Date(launchTime + date).toString();
-				marked += "<br/>" + Translation.translate("Milliseconds estimated after launch") + ": " + date;
-			}
-			attached.push(marked);
-			if (requested.error) {
-				attached.push("<font color=\"#DD3333\">" + Translation.translate("Wouldn't fetch modification sources") +
-					": " + localizeError(requested.error) + "</font>");
-			}
-			formatted = android.text.Html.fromHtml(attached.join("<br/><br/>"));
-			dialog.setMessage(formatted);
-			if (requested.completed) {
-				completed = true;
-			}
-		});
-		let requested = reportTrace.handleRequest(handler, update, retraced);
-		handler.post(update);
-	}).start();
-	return {
-		inProcess: function() {
-			return !completed;
-		},
-		toResult: function() {
-			return formatted !== undefined ? formatted.toString() : "";
-		},
-		cancel: function() {
-			if (update !== undefined) {
-				handler.removeCallbacks(update);
-			}
-		}
-	};
+reportTrace.postUpdate = function (dialog, error, date) {
+    var handler = android.os.Handler.createAsync(dialog.getContext().getMainLooper(), new android.os.Handler.Callback({
+        handleMessage: function (message) {
+            return false;
+        }
+    })), completed = false, formatted, update;
+    new java.lang.Thread(function () {
+        var message = fetchErrorMessage(error), retraced = retraceToArray(error ? error.stack : null);
+        retraced.length > 0 && retraced.pop();
+        var sliced = sliceMessageWithoutTrace(message, retraced[0]), localized = translateMessage(sliced);
+        update = new java.lang.Runnable(function () {
+            var additional = [];
+            if (message != null) {
+                var entry = "<font color=\"#CCCC33\">";
+                if (localized != sliced) {
+                    entry += localized + "<br/>";
+                }
+                entry += sliced + "</font>";
+                additional.push(entry);
+            }
+            for (var i = 0; i < retraced.length; i++) {
+                var element = requested.formatted[i];
+                if (element !== undefined) {
+                    additional.push(element);
+                    continue;
+                }
+                if (additional.length < 2) {
+                    additional.push("");
+                }
+                additional.push(retraced[i]);
+            }
+            var attached = [];
+            if (additional.length > 0) {
+                attached.push(additional.join("<br/>"));
+            }
+            var marked = "";
+            marked += new Date(launchTime).toString();
+            if (date > 0) {
+                marked += "<br/>" + new Date(launchTime + date).toString();
+                marked += "<br/>" + Translation.translate("Milliseconds estimated after launch") + ": " + date;
+            }
+            attached.push(marked);
+            if (requested.error) {
+                attached.push("<font color=\"#DD3333\">" + Translation.translate("Wouldn't fetch modification sources") +
+                    ": " + localizeError(requested.error) + "</font>");
+            }
+            formatted = android.text.Html.fromHtml(attached.join("<br/><br/>"));
+            dialog.setMessage(formatted);
+            if (requested.completed) {
+                completed = true;
+            }
+        });
+        var requested = reportTrace.handleRequest(handler, update, retraced);
+        handler.post(update);
+    }).start();
+    return {
+        inProcess: function () {
+            return !completed;
+        },
+        toResult: function () {
+            return formatted !== undefined ? formatted.toString() : "";
+        },
+        cancel: function () {
+            if (update !== undefined) {
+                handler.removeCallbacks(update);
+            }
+        }
+    };
 };
-
-reportTrace.processFile = function(file, where) {
-	if (typeof where != "number" || where === NaN) {
-		return null;
-	}
-	let strokes = [];
-	if (!isValidFile(file)) {
-		return strokes;
-	}
-	let scanner = new java.io.FileReader(file),
-		reader = java.io.BufferedReader(scanner),
-		wasErrorLines = false,
-		encounted = 0,
-		hieracly = 0,
-		count = 0,
-		included,
-		another,
-		line;
-	// Up to 3 lines before and 4 after throw place
-	while (count < where + 3 && (line = reader.readLine())) {
-		count++;
-		encounted++;
-		line = "" + line;
-		if (line.startsWith("// file: ")) {
-			included = line.substring(9);
-			encounted = -1;
-		}
-		if (count > where - 3) {
-			if (count == where) {
-				wasErrorLines = true;
-				another = encounted;
-			} else if (/\}|\]/.test(line)) {
-				// Simple construction detection
-				if (hieracly > 0) {
-					hieracly--;
-				} else if (wasErrorLines) {
-					wasErrorLines = false;
-				}
-			}
-			if (count >= where && /\{|\[/.test(line)) {
-				hieracly++;
-			}
-			strokes.push("<font face=\"monospace\"><small>" + count + "</small> " +
-				(wasErrorLines ? "<font color=\"#DD3333\">" + line + "</font>" : line) + "</font>");
-		}
-	}
-	if (strokes.length >= 3) {
-		if (included !== undefined) {
-			strokes.push("<i>" + Translation.translate("Defined at") + " " + included + ":" + another + "</i>");
-		}
-		return strokes;
-	}
-	// No exception found here
-	return [];
+reportTrace.processFile = function (file, where) {
+    if (typeof where != "number" || where === NaN) {
+        return null;
+    }
+    var strokes = [];
+    if (!isValidFile(file)) {
+        return strokes;
+    }
+    var scanner = new java.io.FileReader(file), reader = java.io.BufferedReader(scanner), wasErrorLines = false, encounted = 0, hieracly = 0, count = 0, included, another, line;
+    // Up to 3 lines before and 4 after throw place
+    while (count < where + 3 && (line = reader.readLine())) {
+        count++;
+        encounted++;
+        line = "" + line;
+        if (line.startsWith("// file: ")) {
+            included = line.substring(9);
+            encounted = -1;
+        }
+        if (count > where - 3) {
+            if (count == where) {
+                wasErrorLines = true;
+                another = encounted;
+            }
+            else if (/\}|\]/.test(line)) {
+                // Simple construction detection
+                if (hieracly > 0) {
+                    hieracly--;
+                }
+                else if (wasErrorLines) {
+                    wasErrorLines = false;
+                }
+            }
+            if (count >= where && /\{|\[/.test(line)) {
+                hieracly++;
+            }
+            strokes.push("<font face=\"monospace\"><small>" + count + "</small> " +
+                (wasErrorLines ? "<font color=\"#DD3333\">" + line + "</font>" : line) + "</font>");
+        }
+    }
+    if (strokes.length >= 3) {
+        if (included !== undefined) {
+            strokes.push("<i>" + Translation.translate("Defined at") + " " + included + ":" + another + "</i>");
+        }
+        return strokes;
+    }
+    // No exception found here
+    return [];
 };
-
-reportTrace.processSources = function(related, resolved, where) {
-	if (typeof where != "number" || where === NaN) {
-		return null;
-	}
-	let strokes = [];
-	if (related == null || typeof related != "object") {
-		return strokes;
-	}
-	for (let mod in related) {
-		let sources = related[mod],
-			directory = setupLoadedSources.sources[mod].dir;
-		for (let i = 0; i < sources.length; i++) {
-			let file = new java.io.File(directory, sources[i]),
-				result = reportTrace.processFile(file, where);
-			if (result && result.length > 0) {
-				strokes = strokes.concat(result);
-				break;
-			}
-		}
-		if (strokes.length > 0) {
-			if (!(getModName(mod) == resolved.source || setupLoadedSources.sources[mod].dir.endsWith("/" + resolved.source + "/"))) {
-				strokes.push("<small><font color=\"#CCCC33\">" + Translation.translate("Source may be incorrectly") + "</font></small>");
-			}
-			break;
-		}
-	}
-	return strokes;
+reportTrace.processSources = function (related, resolved, where) {
+    if (typeof where != "number" || where === NaN) {
+        return null;
+    }
+    var strokes = [];
+    if (related == null || typeof related != "object") {
+        return strokes;
+    }
+    for (var mod in related) {
+        var sources = related[mod], directory = setupLoadedSources.sources[mod].dir;
+        for (var i = 0; i < sources.length; i++) {
+            var file = new java.io.File(directory, sources[i]), result = reportTrace.processFile(file, where);
+            if (result && result.length > 0) {
+                strokes = strokes.concat(result);
+                break;
+            }
+        }
+        if (strokes.length > 0) {
+            if (!(getModName(mod) == resolved.source || setupLoadedSources.sources[mod].dir.endsWith("/" + resolved.source + "/"))) {
+                strokes.push("<small><font color=\"#CCCC33\">" + Translation.translate("Source may be incorrectly") + "</font></small>");
+            }
+            break;
+        }
+    }
+    return strokes;
 };
-
-reportTrace.processStack = function(resolved) {
-	let strokes = [],
-		where = parseInt(resolved.line) + 1;
-	strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : "") + resolved.file +
-		(resolved.where ? " (" + resolved.where + ")" : "") + " " + Translation.translate("at line") + " " + where);
-	let sources = findRelatedSources(resolved.source, resolved.file),
-		processed = reportTrace.processSources(sources, resolved, where);
-	if (processed != null && processed.length > 0) {
-		strokes[0] = "<br/>" + strokes[0];
-		strokes = strokes.concat(processed);
-	}
-	return strokes.join("<br/>");
+reportTrace.processStack = function (resolved) {
+    var strokes = [], where = parseInt(resolved.line) + 1;
+    strokes.push((resolved.source ? resolved.source + " " + Translation.translate("from") + " " : "") + resolved.file +
+        (resolved.where ? " (" + resolved.where + ")" : "") + " " + Translation.translate("at line") + " " + where);
+    var sources = findRelatedSources(resolved.source, resolved.file), processed = reportTrace.processSources(sources, resolved, where);
+    if (processed != null && processed.length > 0) {
+        strokes[0] = "<br/>" + strokes[0];
+        strokes = strokes.concat(processed);
+    }
+    return strokes.join("<br/>");
 };
-
-reportTrace.handleRequest = function(handler, update, trace) {
-	let requested = {};
-	requested.formatted = [];
-	new java.lang.Thread(function() {
-		try {
-			for (let i = 0; i < trace.length; i++) {
-				let resolved = resolveTraceSource(trace[i]);
-				if (resolved === null) continue;
-				let processed = reportTrace.processStack(resolved);
-				requested.formatted.push(processed);
-				handler.post(update);
-			}
-		} catch (e) {
-			requested.error = e;
-			try {
-				handler.post(update);
-			} catch (e) {
-				print(e.message);
-			}
-		}
-		requested.completed = true;
-	}).start();
-	return requested;
+reportTrace.handleRequest = function (handler, update, trace) {
+    var requested = {};
+    requested.formatted = [];
+    new java.lang.Thread(function () {
+        try {
+            for (var i = 0; i < trace.length; i++) {
+                var resolved = resolveTraceSource(trace[i]);
+                if (resolved === null)
+                    continue;
+                var processed = reportTrace.processStack(resolved);
+                requested.formatted.push(processed);
+                handler.post(update);
+            }
+        }
+        catch (e) {
+            requested.error = e;
+            try {
+                handler.post(update);
+            }
+            catch (e) {
+                print(e.message);
+            }
+        }
+        requested.completed = true;
+    }).start();
+    return requested;
 };
-
-reportTrace.findNextTrace = function() {
-	let handled = this.handled;
-	if (!Array.isArray(handled)) {
-		return null;
-	}
-	if (handled.length > 0) {
-		return handled.shift();
-	}
-	return null;
+reportTrace.findNextTrace = function () {
+    var handled = this.handled;
+    if (!Array.isArray(handled)) {
+        return null;
+    }
+    if (handled.length > 0) {
+        return handled.shift();
+    }
+    return null;
 };
-
-reportTrace.fetchTime = function() {
-	return Date.now() - launchTime;
+reportTrace.fetchTime = function () {
+    return Date.now() - launchTime;
 };
-
-reportTrace.toCode = function(error) {
-	let message = "" + error;
-	if (error && typeof error == "object") {
-		let fetched = fetchErrorMessage(error.message);
-		fetched !== null && (message = fetched);
-		if (error.stack !== undefined) {
-			message += "\n" + error.stack;
-		}
-	}
-	let encoded = new java.lang.String(message);
-	return "NE-" + Math.abs(encoded.hashCode());
+reportTrace.toCode = function (error) {
+    var message = "" + error;
+    if (error && typeof error == "object") {
+        var fetched = fetchErrorMessage(error.message);
+        fetched !== null && (message = fetched);
+        if (error.stack !== undefined) {
+            message += "\n" + error.stack;
+        }
+    }
+    var encoded = new java.lang.String(message);
+    return "NE-" + Math.abs(encoded.hashCode());
 };
-
-reportTrace.setupPrint = function(action) {
-	if (typeof action != "function") {
-		return delete print;
-	}
-	return !!(print = action);
+reportTrace.setupPrint = function (action) {
+    if (typeof action != "function") {
+        return delete print;
+    }
+    return !!(print = action);
 };
-
-reportTrace.reloadModifications = function() {
-	setupLoadedSources(getLoadedModList());
+reportTrace.reloadModifications = function () {
+    setupLoadedSources(getLoadedModList());
 };
-
-
-
-
-// file: integration.js
-
 EXPORT("localizeError", localizeError);
-
-Callback.addCallback("PreBlocksDefined", function() {
-	reportTrace.reloadModifications();
+Callback.addCallback("PreBlocksDefined", function () {
+    reportTrace.reloadModifications();
 });
-Callback.addCallback("CorePreconfigured", function() {
-	reportTrace.reloadModifications();
+Callback.addCallback("CorePreconfigured", function () {
+    reportTrace.reloadModifications();
 });
 if (this.isInstant !== undefined) {
-	reportTrace.reloadModifications();
+    reportTrace.reloadModifications();
 }
-
 EXPORT("reportTrace", reportTrace);
-
-
-
-

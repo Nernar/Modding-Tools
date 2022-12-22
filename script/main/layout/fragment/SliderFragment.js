@@ -1,6 +1,8 @@
-const SliderFragment = function() {
+function SliderFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 	this.modifier = 0;
 	this.modifiers = [16, 1];
 	this.setValue(0);
@@ -40,7 +42,7 @@ SliderFragment.prototype.resetContainer = function() {
 					moved = Math.abs(raw) > toComplexUnitDip(8);
 				}
 			} catch (e) {
-				log("Dev Editor: SliderFragment.onTouch: " + e);
+				log("ModdingTools: SliderFragment.onTouch: " + e);
 			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
@@ -80,7 +82,7 @@ SliderFragment.prototype.getValue = function() {
 SliderFragment.prototype.setValue = function(value) {
 	value = parseFloat(value);
 	if (isNaN(value)) {
-		Logger.Log("Dev Editor: slider value passed NaN or incorrect value, it may be string or number", "WARNING");
+		Logger.Log("ModdingTools: Passed NaN to SliderFragment.setValue(*), it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;
@@ -102,7 +104,7 @@ SliderFragment.prototype.setModifier = function(modifier) {
 
 SliderFragment.prototype.setModifiers = function(modifiers) {
 	if (!Array.isArray(modifiers) || modifiers.length == 0) {
-		Logger.Log("Dev Editor: slider modifiers passed in incorrect format, please consider that it must be [..]", "WARNING");
+		Logger.Log("ModdingTools: SliderFragment.setModifiers(*) in incorrect format, please consider that it must be [..]", "WARNING");
 		return this;
 	}
 	this.modifier = 0;

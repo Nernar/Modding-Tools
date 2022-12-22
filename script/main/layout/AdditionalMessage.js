@@ -1,4 +1,4 @@
-const AdditionalMessage = function(src, message, chance, condition) {
+function AdditionalMessage(src, message, chance, condition) {
 	if (src !== undefined) this.setImage(src);
 	if (message !== undefined) this.setMessage(message);
 	if (chance !== undefined) this.setChance(chance);
@@ -42,7 +42,7 @@ AdditionalMessage.prototype.getChance = function() {
 
 AdditionalMessage.prototype.setChance = function(chance) {
 	if (chance < 0 || chance > 1) {
-		MCSystem.throwException("Dev Editor: AdditionalMessage.setChance can't use values outside [0; 1]");
+		MCSystem.throwException("ModdingTools: AdditionalMessage.setChance outside [0; 1]");
 	}
 	this.chance = chance;
 };
@@ -53,7 +53,7 @@ AdditionalMessage.prototype.getCondition = function() {
 
 AdditionalMessage.prototype.setCondition = function(condition) {
 	if (typeof condition != "function") {
-		MCSystem.throwException("Dev Editor: AdditionalMessage.setCondition can take functions only");
+		MCSystem.throwException("ModdingTools: AdditionalMessage.setCondition can take functions only");
 	}
 	this.condition = condition;
 };
@@ -72,7 +72,7 @@ AdditionalMessage.prototype.tryToDisplay = function() {
 	return true;
 };
 
-const AdditionalClickableMessage = function(src, message, chance, action, condition) {
+function AdditionalClickableMessage(src, message, chance, action, condition) {
 	AdditionalMessage.call(this, src, message, chance, condition);
 	if (action !== undefined) this.setAction(action);
 };
@@ -85,7 +85,7 @@ AdditionalClickableMessage.prototype.getAction = function() {
 
 AdditionalClickableMessage.prototype.setAction = function(action) {
 	if (!action instanceof Function) {
-		MCSystem.throwException("Dev Editor: AdditionalClickableMessage.setAction only can take functions");
+		MCSystem.throwException("ModdingTools: AdditionalClickableMessage.setAction only can take functions");
 	}
 	this.action = action;
 };
@@ -161,6 +161,7 @@ AdditionalMessageFactory.randomize = function(limit) {
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
+AdditionalMessageFactory.Session = new Function();
 
 AdditionalMessageFactory.Session = function(count, limit) {
 	if (count !== undefined) this.setCount(count);
@@ -244,7 +245,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("Dev Editor: Aborted attach AdditionalMessageFactory session to null or undefined");
+		MCSystem.throwException("ModdingTools: Aborted attach AdditionalMessageFactory session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

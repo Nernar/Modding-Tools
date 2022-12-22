@@ -1,6 +1,8 @@
-const PropertyInputFragment = function() {
+function PropertyInputFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 PropertyInputFragment.prototype = new TextFragment;

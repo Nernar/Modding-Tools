@@ -1,4 +1,4 @@
-const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
+function resetSettingIfNeeded(key, value, minOrIteratorOrValue, maxOrValues, filter, exclude) {
 	if (minOrIteratorOrValue === undefined) {
 		return value;
 	}
@@ -41,7 +41,7 @@ const resetSettingIfNeeded = function(key, value, minOrIteratorOrValue, maxOrVal
 	return value;
 };
 
-const loadSetting = function(key, type) {
+function loadSetting(key, type) {
 	let args = Array.prototype.slice.call(arguments);
 	let config = this.__config__ || __config__;
 	switch (type) {
@@ -61,9 +61,9 @@ const loadSetting = function(key, type) {
 	return resetSettingIfNeeded.apply(this, args);
 };
 
-const setSetting = function(where, key, type) {
+function setSetting(where, key, type) {
 	if (!this.hasOwnProperty(where)) {
-		Logger.Log("Dev Editor: Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
+		Logger.Log("ModdingTools: Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
 	}
 	this[where] = loadSetting.apply(this, Array.prototype.slice.call(arguments, 1));
 };
@@ -71,7 +71,7 @@ const setSetting = function(where, key, type) {
 /**
  * Update settings from config.
  */
-const updateSettings = function() {
+function updateSettings() {
 	try {
 		setSetting("uiScaler", "interface.interface_scale", "number", .75, 1.5);
 		setSetting("fontScale", "interface.font_scale", "number", .75, 1.5);

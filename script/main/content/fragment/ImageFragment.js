@@ -1,4 +1,4 @@
-const ImageFragment = function() {
+function ImageFragment() {
 	BaseFragment.apply(this, arguments);
 };
 
@@ -6,7 +6,23 @@ ImageFragment.prototype = new BaseFragment;
 ImageFragment.prototype.TYPE = "ImageFragment";
 
 ImageFragment.prototype.getImageView = function() {
-	MCSystem.throwException("Dev Editor: " + this.TYPE + ".getImageView must be implemented");
+	MCSystem.throwException("ModdingTools: " + this.TYPE + ".getImageView must be implemented");
+};
+
+/**
+ * @requires `isCLI()`
+ */
+ImageFragment.prototype.render = function(hovered) {
+	let image = this.getImage();
+	if (!(image instanceof Drawable)) {
+		let color = ColorDrawable.parseColor(image, false);
+		if (color != null) {
+			return color + " ";
+		}
+		return BitmapDrawableFactory.requireByKey(image)
+			|| BitmapDrawableFactory.requireByKey("menuBoardWarning") || "";
+	}
+	return "";
 };
 
 ImageFragment.prototype.getImage = function() {
@@ -14,13 +30,15 @@ ImageFragment.prototype.getImage = function() {
 };
 
 ImageFragment.prototype.setImage = function(src) {
-	let image = this.getImageView();
-	if (image == null) return this;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let image = this.getImageView();
+		if (image == null) return this;
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		$.ViewCompat.setTransitionName(image, src);
+		src.attachAsImage(image);
 	}
-	$.ViewCompat.setTransitionName(image, src);
-	src.attachAsImage(image);
 	this.image = src;
 	return this;
 };

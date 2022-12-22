@@ -74,21 +74,21 @@ MathUtils.mathDivider = function(who) {
 const Base64 = {};
 
 Base64.encode = function(bytes) {
-	if (android.os.Build.VERSION.SDK_INT >= 26) {
+	if (isCLI() || android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getEncoder().encode(bytes);
 	}
 	return android.util.Base64.encode(bytes, android.util.Base64.NO_WRAP);
 };
 
 Base64.encodeToString = function(bytes) {
-	if (android.os.Build.VERSION.SDK_INT >= 26) {
+	if (isCLI() || android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getEncoder().encodeToString(bytes);
 	}
 	return android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP);
 };
 
 Base64.decode = function(bytes) {
-	if (android.os.Build.VERSION.SDK_INT >= 26) {
+	if (isCLI() || android.os.Build.VERSION.SDK_INT >= 26) {
 		return java.util.Base64.getDecoder().decode(bytes);
 	}
 	return android.util.Base64.decode(bytes, android.util.Base64.NO_WRAP);
@@ -113,7 +113,7 @@ const requireInvertedLogotype = function() {
 	if (logotype == "logoAlpha") return "logoPreview";
 	if (logotype == "logoBeta") return "logo";
 	if (logotype == "logoPreview") return "logoAlpha";
-	Logger.Log("Dev Editor: Not found inverted logotype for " + logotype, "WARNING");
+	Logger.Log("ModdingTools: Not found inverted logotype for " + logotype, "WARNING");
 };
 
 const isInvertedLogotype = function() {

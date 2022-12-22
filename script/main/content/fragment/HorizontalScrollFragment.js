@@ -1,4 +1,7 @@
-const HorizontalScrollFragment = function() {
+/**
+ * @requires `isAndroid()`
+ */
+function HorizontalScrollFragment() {
 	FrameFragment.apply(this, arguments);
 };
 
@@ -10,7 +13,7 @@ HorizontalScrollFragment.prototype.resetContainer = function() {
 	let scroll = new android.widget.HorizontalScrollView(getContext());
 	scroll.setTag("containerScroll");
 	this.getContainer().addView(scroll);
-	
+
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setTag("containerLayout");
 	scroll.addView(layout);

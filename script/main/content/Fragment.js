@@ -1,6 +1,7 @@
-const Fragment = function() {
+function Fragment() {
 	this.views = {};
 	this.selectable = false;
+	this.hoverable = true;
 };
 
 Fragment.prototype.getContainer = function() {
@@ -10,6 +11,27 @@ Fragment.prototype.getContainer = function() {
 Fragment.prototype.setContainerView = function(view) {
 	this.container = view;
 	return this;
+};
+
+/**
+ * @requires `isCLI()`
+ */
+Fragment.prototype.draw = function(hovered) {
+	return "";
+};
+
+/**
+ * @requires `isCLI()`
+ */
+Fragment.prototype.observe = function(keys) {
+	return false;
+};
+
+/**
+ * @requires `isCLI()`
+ */
+Fragment.prototype.hover = function() {
+	return this.isHoverable();
 };
 
 Fragment.prototype.getViews = function() {
@@ -22,12 +44,18 @@ Fragment.prototype.findViewByKey = function(key) {
 	return views[key] || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 Fragment.prototype.findViewById = function(id) {
 	let container = this.getContainer();
 	if (container == null) return null;
 	return container.findViewById(id) || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 Fragment.prototype.findViewByTag = function(tag) {
 	let container = this.getContainer();
 	if (container == null) return null;
@@ -35,9 +63,28 @@ Fragment.prototype.findViewByTag = function(tag) {
 };
 
 Fragment.prototype.findView = function(stroke) {
-	return this.findViewByKey(stroke) ||
-		this.findViewById(stroke) ||
-		this.findViewByTag(stroke);
+	let byKey = this.findViewByKey(stroke);
+	if (isAndroid()) {
+		return byKey ||
+			this.findViewById(stroke) ||
+			this.findViewByTag(stroke);
+	}
+	return byKey;
+};
+
+/**
+ * @requires `isCLI()`
+ */
+Fragment.prototype.isHoverable = function() {
+	return !!this.hoverable;
+};
+
+/**
+ * @requires `isCLI()`
+ */
+Fragment.prototype.setIsHoverable = function(hoverable) {
+	this.hoverable = !!hoverable;
+	return this;
 };
 
 Fragment.prototype.isSelectable = function() {
@@ -49,13 +96,16 @@ Fragment.prototype.setIsSelectable = function(selectable) {
 	return this;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 Fragment.prototype.isRequiresFocusable = function() {
 	return false;
 };
 
 const registerFragmentJson = (function() {
 	let fragments = {};
-	
+
 	Fragment.parseJson = function(instanceOrJson, json, preferredElement) {
 		if (!(instanceOrJson instanceof Fragment)) {
 			json = instanceOrJson;
@@ -71,21 +121,21 @@ const registerFragmentJson = (function() {
 		if (fragments.hasOwnProperty(json.type)) {
 			return fragments[json.type].parseJson.call(this, instanceOrJson || new fragments[json.type](), json, preferredElement);
 		}
-		log("Dev Editor: unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
+		log("ModdingTools: Unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
 		return instanceOrJson;
 	};
-	
+
 	return function(id, fragment) {
 		if (fragments.hasOwnProperty(id)) {
-			log("Dev Editor: fragment json " + id + " is already occupied");
+			log("ModdingTools: Fragment json " + id + " is already occupied");
 			return false;
 		}
 		if (typeof fragment != "function" || !(fragment.prototype instanceof Fragment)) {
-			Logger.Log("Dev Editor: passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
+			Logger.Log("ModdingTools: Passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
 			return false;
 		}
 		if (typeof fragment.parseJson != "function") {
-			Logger.Log("Dev Editor: nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
+			Logger.Log("ModdingTools: Nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
 			return false;
 		}
 		fragments[id] = fragment;

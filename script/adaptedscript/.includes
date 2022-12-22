@@ -1,2 +1,7 @@
+# skipLibCheck
+# noResolve
+# declaration
+# removeComments
+
 header.js
 api/.

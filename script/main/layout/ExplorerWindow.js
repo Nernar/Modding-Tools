@@ -1,25 +1,10 @@
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
+ * @requires `isAndroid()`
  */
-
-const ExplorerWindow = function(mayWrap) {
-	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity($.Gravity.CENTER);
-	window.setWidth(mayWrap ?
-		$.ViewGroup.LayoutParams.WRAP_CONTENT :
-		$.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setHeight(mayWrap ?
-		$.ViewGroup.LayoutParams.WRAP_CONTENT :
-		$.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setFocusable(true);
-	window.file = new java.io.File(__dir__);
-	window.resetContent();
-	window.setRootDirectory();
-	window.resetAdapter();
-	window.setBackground("popupControl");
-	window.elements = [];
-	return window;
+function ExplorerWindow(mayWrap) {
+	return UniqueWindow.apply(this, arguments);
 };
 
 ExplorerWindow.prototype = new UniqueWindow;
@@ -27,6 +12,24 @@ ExplorerWindow.prototype.TYPE = "ExplorerWindow";
 
 ExplorerWindow.prototype.multiple = false;
 ExplorerWindow.prototype.single = false;
+
+ExplorerWindow.prototype.resetWindow = function(mayWrap) {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setGravity($.Gravity.CENTER);
+	this.setWidth(mayWrap ?
+		$.ViewGroup.LayoutParams.WRAP_CONTENT :
+		$.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setHeight(mayWrap ?
+		$.ViewGroup.LayoutParams.WRAP_CONTENT :
+		$.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setFocusable(true);
+	this.file = new java.io.File(__dir__);
+	this.resetContent();
+	this.setRootDirectory();
+	this.resetAdapter();
+	this.setBackground("popupControl");
+	this.elements = [];
+};
 
 ExplorerWindow.prototype.resetContent = function() {
 	let scope = this,
@@ -49,19 +52,19 @@ ExplorerWindow.prototype.resetContent = function() {
 	});
 	views.layout.addView(views.files, new android.widget.RelativeLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
-	
+
 	views.empty = new android.widget.LinearLayout(getContext());
 	views.empty.setOrientation($.LinearLayout.VERTICAL);
 	views.empty.setGravity($.Gravity.CENTER);
 	views.empty.setId(android.R.id.empty);
 	views.layout.addView(views.empty, new android.widget.RelativeLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
-	
+
 	views.icon = new android.widget.ImageView(getContext());
 	new BitmapDrawable("explorerFolder").attachAsImage(views.icon);
 	views.empty.addView(views.icon, new android.widget.LinearLayout.LayoutParams
 		(toComplexUnitDip(120), toComplexUnitDip(120)));
-	
+
 	views.info = new android.widget.TextView(getContext());
 	typeface && views.info.setTypeface(typeface);
 	views.info.setText(translate("Void itself."));
@@ -78,11 +81,13 @@ ExplorerWindow.prototype.getBackground = function() {
 };
 
 ExplorerWindow.prototype.setBackground = function(src) {
-	let content = this.getContainer();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContainer();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(content);
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -281,8 +286,12 @@ ExplorerWindow.prototype.setOnUnselectListener = function(listener) {
 	});
 };
 
+ExplorerWindow.Approve = new Function();
+
 ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrSrc instanceof ExplorerWindow) {
 		this.setWindow(parentOrSrc);
 		srcOrAction && this.setImage(srcOrAction);
@@ -295,7 +304,7 @@ ExplorerWindow.Approve = function(parentOrSrc, srcOrAction, action) {
 	this.setBackground("popupButton");
 };
 
-ExplorerWindow.Approve.prototype.reset = function() {
+ExplorerWindow.Approve.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.ImageView(getContext());
@@ -347,11 +356,13 @@ ExplorerWindow.Approve.prototype.getBackground = function() {
 };
 
 ExplorerWindow.Approve.prototype.setBackground = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContent();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(content);
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -361,11 +372,13 @@ ExplorerWindow.Approve.prototype.getImage = function() {
 };
 
 ExplorerWindow.Approve.prototype.setImage = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContent();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsImage(content);
 	}
-	src.attachAsImage(content);
 	this.icon = src;
 	return this;
 };
@@ -411,8 +424,12 @@ ExplorerWindow.prototype.addApprove = function(srcOrApprove, actionOrSrc, action
 	return approve;
 };
 
+ExplorerWindow.Path = new Function();
+
 ExplorerWindow.Path = function(parentOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrAction instanceof ExplorerWindow) {
 		this.setWindow(parentOrAction);
 		action && this.setOnExploreListener(action);
@@ -421,7 +438,7 @@ ExplorerWindow.Path = function(parentOrAction, action) {
 	this.pathes = [];
 };
 
-ExplorerWindow.Path.prototype.reset = function() {
+ExplorerWindow.Path.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
@@ -481,11 +498,13 @@ ExplorerWindow.Path.prototype.getBackground = function() {
 };
 
 ExplorerWindow.Path.prototype.setBackground = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContent();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(content);
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -603,8 +622,12 @@ ExplorerWindow.prototype.addPath = function(actionOrPath, action) {
 	return path;
 };
 
+ExplorerWindow.Rename = new Function();
+
 ExplorerWindow.Rename = function(parentOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrAction instanceof ExplorerWindow) {
 		this.setWindow(parentOrAction);
 		action && this.setOnApproveListener(action);
@@ -617,7 +640,7 @@ ExplorerWindow.Rename = function(parentOrAction, action) {
 
 ExplorerWindow.Rename.prototype.formatIndex = -1;
 
-ExplorerWindow.Rename.prototype.reset = function() {
+ExplorerWindow.Rename.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.RelativeLayout(getContext());
@@ -714,11 +737,13 @@ ExplorerWindow.Rename.prototype.getBackground = function() {
 };
 
 ExplorerWindow.Rename.prototype.setBackground = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContent();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(content);
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -846,290 +871,292 @@ const ExplorerAdapter = function(array, external, mode) {
 	mode !== undefined && this.setMode(mode);
 };
 
-ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, {
-	array: [],
-	getCount: function() {
-		return this.array.length;
-	},
-	getItemId: function(position) {
-		return position;
-	},
-	getItems: function() {
-		return this.array;
-	},
-	getItem: function(position) {
-		let object = {};
-		try {
-			object.isApproved = this.isApproved(position) == true;
-			let file = this.getFile(position);
-			object.file = file;
-			object.isDirectory = file.isDirectory();
-			let item = this.array[position];
-			if (!object.isDirectory) {
-				let extension = Files.getExtension(file);
-				object.name = extension ? Files.getNameWithoutExtension(item) : item;
-				if (extension) object.extension = extension.toUpperCase();
-			} else object.name = item;
-			object.type = Files.getExtensionType(file);
-			let date = new java.util.Date(file.lastModified()),
-				format = new java.text.SimpleDateFormat();
-			format.applyPattern("d MMM, yyyy")
-			object.date = format.format(date);
-			format.applyPattern("k:mm")
-			object.time = format.format(date);
+if (isAndroid()) {
+	ExplorerAdapter.prototype = new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, {
+		array: [],
+		getCount: function() {
+			return this.array.length;
+		},
+		getItemId: function(position) {
+			return position;
+		},
+		getItems: function() {
+			return this.array;
+		},
+		getItem: function(position) {
+			let object = {};
 			try {
-				if (object.isDirectory) {
-					let list = file.list();
-					if (list == null) return;
-					object.filesCount = list.length;
-				} else object.size = Files.prepareSize(file);
+				object.isApproved = this.isApproved(position) == true;
+				let file = this.getFile(position);
+				object.file = file;
+				object.isDirectory = file.isDirectory();
+				let item = this.array[position];
+				if (!object.isDirectory) {
+					let extension = Files.getExtension(file);
+					object.name = extension ? Files.getNameWithoutExtension(item) : item;
+					if (extension) object.extension = extension.toUpperCase();
+				} else object.name = item;
+				object.type = Files.getExtensionType(file);
+				let date = new java.util.Date(file.lastModified()),
+					format = new java.text.SimpleDateFormat();
+				format.applyPattern("d MMM, yyyy")
+				object.date = format.format(date);
+				format.applyPattern("k:mm")
+				object.time = format.format(date);
+				try {
+					if (object.isDirectory) {
+						let list = file.list();
+						if (list == null) return;
+						object.filesCount = list.length;
+					} else object.size = Files.prepareSize(file);
+				} catch (e) {
+					log("ModdingTools: ExplorerAdapter.getItem: " + e);
+				}
 			} catch (e) {
-				log("Dev Editor: ExplorerAdapter.getItem: " + e);
+				showHint(position + ": " + e);
 			}
-		} catch (e) {
-			showHint(position + ": " + e);
-		}
-		return object;
-	},
-	getApproved: function() {
-		return this.approves;
-	},
-	getApprovedCount: function() {
-		return this.approves.length;
-	},
-	getMode: function() {
-		return this.mode;
-	},
-	getUnselectMode: function() {
-		return this.basicMode;
-	},
-	getFile: function(position) {
-		position = parseInt(position);
-		return new java.io.File(this.direct, this.array[position]);
-	},
-	getApprovedFiles: function() {
-		let files = [],
-			approves = this.getApproved();
-		for (let i = 0; i < this.getApprovedCount(); i++) {
-			files.push(this.getFile(approves[i]));
-		}
-		return files;
-	},
-	getView: function(position, convertView, parent) {
-		let holder;
-		try {
-			if (convertView == null) {
-				let tag = {};
-				convertView = this.makeItemLayout();
-				tag.name = convertView.findViewWithTag("fileName");
-				tag.bound = convertView.findViewWithTag("fileSize");
-				tag.date = convertView.findViewWithTag("fileDate");
-				tag.property = convertView.findViewWithTag("fileInfo");
-				tag.icon = convertView.findViewWithTag("fileIcon");
-				tag.drawable = new BitmapDrawable();
-				tag.drawable.setCorruptedThumbnail("explorerFileCorrupted");
-				tag.drawable.attachAsImage(tag.icon);
-				convertView.setTag(tag);
+			return object;
+		},
+		getApproved: function() {
+			return this.approves;
+		},
+		getApprovedCount: function() {
+			return this.approves.length;
+		},
+		getMode: function() {
+			return this.mode;
+		},
+		getUnselectMode: function() {
+			return this.basicMode;
+		},
+		getFile: function(position) {
+			position = parseInt(position);
+			return new java.io.File(this.direct, this.array[position]);
+		},
+		getApprovedFiles: function() {
+			let files = [],
+				approves = this.getApproved();
+			for (let i = 0; i < this.getApprovedCount(); i++) {
+				files.push(this.getFile(approves[i]));
 			}
-			holder = convertView.getTag();
-		} catch (e) {
-			reportError(e);
+			return files;
+		},
+		getView: function(position, convertView, parent) {
+			let holder;
+			try {
+				if (convertView == null) {
+					let tag = {};
+					convertView = this.makeItemLayout();
+					tag.name = convertView.findViewWithTag("fileName");
+					tag.bound = convertView.findViewWithTag("fileSize");
+					tag.date = convertView.findViewWithTag("fileDate");
+					tag.property = convertView.findViewWithTag("fileInfo");
+					tag.icon = convertView.findViewWithTag("fileIcon");
+					tag.drawable = new BitmapDrawable();
+					tag.drawable.setCorruptedThumbnail("explorerFileCorrupted");
+					tag.drawable.attachAsImage(tag.icon);
+					convertView.setTag(tag);
+				}
+				holder = convertView.getTag();
+			} catch (e) {
+				reportError(e);
+				return convertView;
+			}
+			let item = this.getItem(position);
+			try {
+				(item.isApproved ? new BitmapDrawable("popupSelectionSelected") : new Drawable()).attachAsBackground(convertView);
+				holder.name.setText(item.name);
+				holder.bound.setText((item.extension ? item.extension : String()) +
+					(item.extension && item.size ? " / " : String()) + (item.size ? item.size : String()) +
+					(item.isDirectory && item.filesCount !== undefined ? translateCounter(item.filesCount, "no files",
+					"%s1 file", "%s" + (item.filesCount % 10) + " files", "%s files") : String()));
+				holder.drawable.setOptions();
+				holder.date.setText(item.date);
+				if (item.type == "image") {
+					let size = Files.prepareBounds(item.file);
+					if (size[0] + size[1] == -2) {
+						holder.property.setText(item.time);
+						holder.drawable.setBitmap("explorerFileCorrupted");
+						return;
+					}
+					holder.property.setText(size.join("x") + " / " + item.time);
+					if (size[0] <= maximumAllowedBounds && size[1] <= maximumAllowedBounds) {
+						let options = Files.getThumbnailOptions(maximumThumbnailBounds, size);
+						holder.drawable.setOptions(options);
+						holder.drawable.setBitmap(item.file);
+						return;
+					}
+				} else holder.property.setText(item.time);
+				holder.drawable.setBitmap(item.isDirectory ? "explorerFolder" : item.type != "none" ?
+					"explorerExtension" + item.type.charAt(0).toUpperCase() + item.type.substring(1) : "explorerFile");
+			} catch (e) {
+				showHint(item + ": " + e);
+			}
 			return convertView;
-		}
-		let item = this.getItem(position);
-		try {
-			(item.isApproved ? new BitmapDrawable("popupSelectionSelected") : new Drawable()).attachAsBackground(convertView);
-			holder.name.setText(item.name);
-			holder.bound.setText((item.extension ? item.extension : String()) +
-				(item.extension && item.size ? " / " : String()) + (item.size ? item.size : String()) +
-				(item.isDirectory && item.filesCount !== undefined ? translateCounter(item.filesCount, "no files",
-				"%s1 file", "%s" + (item.filesCount % 10) + " files", "%s files") : String()));
-			holder.drawable.setOptions();
-			holder.date.setText(item.date);
-			if (item.type == "image") {
-				let size = Files.prepareBounds(item.file);
-				if (size[0] + size[1] == -2) {
-					holder.property.setText(item.time);
-					holder.drawable.setBitmap("explorerFileCorrupted");
-					return;
+		},
+		isApproved: function(position) {
+			position = parseInt(position);
+			return this.approves.indexOf(position) != -1;
+		},
+		isCanBeApproved: function() {
+			return this.getApprovedCount() > 0;
+		},
+		isDirectory: function(position) {
+			return this.getFile(position).isDirectory();
+		},
+		makeItemLayout: function() {
+			let layout = new android.widget.RelativeLayout(getContext());
+			layout.setLayoutParams(new android.view.ViewGroup.LayoutParams
+				($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
+
+			let icon = new android.widget.ImageView(getContext());
+			icon.setPadding(toComplexUnitDip(14), toComplexUnitDip(14),
+				toComplexUnitDip(14), toComplexUnitDip(14));
+			icon.setScaleType($.ImageView.ScaleType.CENTER_CROP);
+			icon.setTag("fileIcon");
+			icon.setId(java.lang.String("fileIcon").hashCode());
+			let params = new android.widget.RelativeLayout.LayoutParams
+				(toComplexUnitDip(50), toComplexUnitDip(66));
+			params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
+			params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
+			params.rightMargin = toComplexUnitDip(10);
+			layout.addView(icon, params);
+
+			let additional = new android.widget.LinearLayout(getContext());
+			additional.setOrientation($.LinearLayout.VERTICAL);
+			additional.setGravity($.Gravity.RIGHT);
+			additional.setPadding(toComplexUnitDip(20), 0, toComplexUnitDip(20), 0);
+			additional.setTag("additionalInfo");
+			additional.setId(java.lang.String("additionalInfo").hashCode());
+			params = new android.widget.RelativeLayout.LayoutParams
+				($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+			params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
+			params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
+			layout.addView(additional, params);
+
+			let date = new android.widget.TextView(getContext());
+			typeface && date.setTypeface(typeface);
+			date.setGravity($.Gravity.RIGHT);
+			date.setTextSize(toComplexUnitSp(8));
+			date.setTextColor($.Color.LTGRAY);
+			date.setTag("fileDate");
+			additional.addView(date);
+
+			let info = new android.widget.TextView(getContext());
+			typeface && info.setTypeface(typeface);
+			info.setGravity($.Gravity.RIGHT);
+			info.setTextSize(toComplexUnitSp(8));
+			info.setTextColor($.Color.LTGRAY);
+			info.setTag("fileInfo");
+			additional.addView(info);
+
+			let uniqal = new android.widget.LinearLayout(getContext());
+			uniqal.setOrientation($.LinearLayout.VERTICAL);
+			uniqal.setTag("uniqalInfo");
+			uniqal.setId(java.lang.String("uniqalInfo").hashCode());
+			params = new android.widget.RelativeLayout.LayoutParams
+				($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
+			params.addRule(android.widget.RelativeLayout.LEFT_OF, additional.getId());
+			params.addRule(android.widget.RelativeLayout.RIGHT_OF, icon.getId());
+			params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
+			uniqal.post(function() { uniqal.requestLayout(); });
+			layout.addView(uniqal, params);
+
+			let name = new android.widget.TextView(getContext());
+			typeface && name.setTypeface(typeface);
+			name.setTextSize(toComplexUnitSp(9));
+			name.setTextColor($.Color.WHITE);
+			name.setTag("fileName");
+			name.setMaxLines(3);
+			uniqal.addView(name);
+
+			let size = new android.widget.TextView(getContext());
+			typeface && size.setTypeface(typeface);
+			size.setTextSize(toComplexUnitSp(8));
+			size.setTextColor($.Color.LTGRAY);
+			size.setTag("fileSize");
+			uniqal.addView(size);
+			return layout;
+		},
+		setItems: function(array) {
+			this.array = array;
+			this.unselectAll();
+		},
+		setMode: function(mode) {
+			this.choice = mode;
+		},
+		setUnselectMode: function(mode) {
+			this.basicMode = mode;
+		},
+		returnToBasic: function() {
+			this.basicMode !== undefined && this.setMode(this.basicMode);
+		},
+		setRoot: function(external) {
+			this.direct = external;
+		},
+		setOnSelectListener: function(listener) {
+			this.__select = listener;
+		},
+		setOnUnselectListener: function(listener) {
+			this.__unselect = listener;
+		},
+		selectItem: function(position) {
+			position = parseInt(position);
+			if (this.previous !== undefined) {
+				let last = this.approves.indexOf(this.previous);
+				if (last != -1 && this.choice == $.ListView.CHOICE_MODE_SINGLE) {
+					this.approves.splice(last, 1);
 				}
-				holder.property.setText(size.join("x") + " / " + item.time);
-				if (size[0] <= maximumAllowedBounds && size[1] <= maximumAllowedBounds) {
-					let options = Files.getThumbnailOptions(maximumThumbnailBounds, size);
-					holder.drawable.setOptions(options);
-					holder.drawable.setBitmap(item.file);
-					return;
+			}
+			if (position !== undefined) {
+				let selected = this.approves.indexOf(position);
+				if (this.choice == $.ListView.CHOICE_MODE_SINGLE) {
+					this.approves.push(position);
+					this.previous = position;
+					this.__select && this.__select(position, selected);
+				} else if (selected != -1) {
+					this.approves.splice(selected, 1);
+					this.getApprovedCount() == 0 && this.returnToBasic();
+					this.__unselect && this.__unselect(position, selected);
+				} else if (this.choice == $.ListView.CHOICE_MODE_NONE) {
+					let index = this.approves.push(position) - 1;
+					this.__select && this.__select(position, selected);
+					this.approves.splice(index, 1);
+				} else {
+					this.approves.push(position);
+					this.__select && this.__select(position, selected);
 				}
-			} else holder.property.setText(item.time);
-			holder.drawable.setBitmap(item.isDirectory ? "explorerFolder" : item.type != "none" ?
-				"explorerExtension" + item.type.charAt(0).toUpperCase() + item.type.substring(1) : "explorerFile");
-		} catch (e) {
-			showHint(item + ": " + e);
-		}
-		return convertView;
-	},
-	isApproved: function(position) {
-		position = parseInt(position);
-		return this.approves.indexOf(position) != -1;
-	},
-	isCanBeApproved: function() {
-		return this.getApprovedCount() > 0;
-	},
-	isDirectory: function(position) {
-		return this.getFile(position).isDirectory();
-	},
-	makeItemLayout: function() {
-		let layout = new android.widget.RelativeLayout(getContext());
-		layout.setLayoutParams(new android.view.ViewGroup.LayoutParams
-			($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
-
-		let icon = new android.widget.ImageView(getContext());
-		icon.setPadding(toComplexUnitDip(14), toComplexUnitDip(14),
-			toComplexUnitDip(14), toComplexUnitDip(14));
-		icon.setScaleType($.ImageView.ScaleType.CENTER_CROP);
-		icon.setTag("fileIcon");
-		icon.setId(java.lang.String("fileIcon").hashCode());
-		let params = new android.widget.RelativeLayout.LayoutParams
-			(toComplexUnitDip(50), toComplexUnitDip(66));
-		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
-		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-		params.rightMargin = toComplexUnitDip(10);
-		layout.addView(icon, params);
-
-		let additional = new android.widget.LinearLayout(getContext());
-		additional.setOrientation($.LinearLayout.VERTICAL);
-		additional.setGravity($.Gravity.RIGHT);
-		additional.setPadding(toComplexUnitDip(20), 0, toComplexUnitDip(20), 0);
-		additional.setTag("additionalInfo");
-		additional.setId(java.lang.String("additionalInfo").hashCode());
-		params = new android.widget.RelativeLayout.LayoutParams
-			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-		params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
-		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-		layout.addView(additional, params);
-
-		let date = new android.widget.TextView(getContext());
-		typeface && date.setTypeface(typeface);
-		date.setGravity($.Gravity.RIGHT);
-		date.setTextSize(toComplexUnitSp(8));
-		date.setTextColor($.Color.LTGRAY);
-		date.setTag("fileDate");
-		additional.addView(date);
-
-		let info = new android.widget.TextView(getContext());
-		typeface && info.setTypeface(typeface);
-		info.setGravity($.Gravity.RIGHT);
-		info.setTextSize(toComplexUnitSp(8));
-		info.setTextColor($.Color.LTGRAY);
-		info.setTag("fileInfo");
-		additional.addView(info);
-
-		let uniqal = new android.widget.LinearLayout(getContext());
-		uniqal.setOrientation($.LinearLayout.VERTICAL);
-		uniqal.setTag("uniqalInfo");
-		uniqal.setId(java.lang.String("uniqalInfo").hashCode());
-		params = new android.widget.RelativeLayout.LayoutParams
-			($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
-		params.addRule(android.widget.RelativeLayout.LEFT_OF, additional.getId());
-		params.addRule(android.widget.RelativeLayout.RIGHT_OF, icon.getId());
-		params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
-		uniqal.post(function() { uniqal.requestLayout(); });
-		layout.addView(uniqal, params);
-
-		let name = new android.widget.TextView(getContext());
-		typeface && name.setTypeface(typeface);
-		name.setTextSize(toComplexUnitSp(9));
-		name.setTextColor($.Color.WHITE);
-		name.setTag("fileName");
-		name.setMaxLines(3);
-		uniqal.addView(name);
-
-		let size = new android.widget.TextView(getContext());
-		typeface && size.setTypeface(typeface);
-		size.setTextSize(toComplexUnitSp(8));
-		size.setTextColor($.Color.LTGRAY);
-		size.setTag("fileSize");
-		uniqal.addView(size);
-		return layout;
-	},
-	setItems: function(array) {
-		this.array = array;
-		this.unselectAll();
-	},
-	setMode: function(mode) {
-		this.choice = mode;
-	},
-	setUnselectMode: function(mode) {
-		this.basicMode = mode;
-	},
-	returnToBasic: function() {
-		this.basicMode !== undefined && this.setMode(this.basicMode);
-	},
-	setRoot: function(external) {
-		this.direct = external;
-	},
-	setOnSelectListener: function(listener) {
-		this.__select = listener;
-	},
-	setOnUnselectListener: function(listener) {
-		this.__unselect = listener;
-	},
-	selectItem: function(position) {
-		position = parseInt(position);
-		if (this.previous !== undefined) {
-			let last = this.approves.indexOf(this.previous);
-			if (last != -1 && this.choice == $.ListView.CHOICE_MODE_SINGLE) {
-				this.approves.splice(last, 1);
 			}
-		}
-		if (position !== undefined) {
-			let selected = this.approves.indexOf(position);
-			if (this.choice == $.ListView.CHOICE_MODE_SINGLE) {
-				this.approves.push(position);
-				this.previous = position;
-				this.__select && this.__select(position, selected);
-			} else if (selected != -1) {
-				this.approves.splice(selected, 1);
-				this.getApprovedCount() == 0 && this.returnToBasic();
-				this.__unselect && this.__unselect(position, selected);
-			} else if (this.choice == $.ListView.CHOICE_MODE_NONE) {
-				let index = this.approves.push(position) - 1;
-				this.__select && this.__select(position, selected);
-				this.approves.splice(index, 1);
-			} else {
-				this.approves.push(position);
-				this.__select && this.__select(position, selected);
+			this.notifyDataSetChanged();
+		},
+		selectAll: function() {
+			this.approves = [];
+			for (let i = 0; i < this.getCount(); i++) {
+				this.approves.push(this.getItemId(i));
 			}
+			this.notifyDataSetChanged();
+		},
+		invertSelection: function() {
+			let approves = [];
+			for (let i = 0; i < this.getCount(); i++) {
+				approves.push(approves.indexOf(this.getItemId(i)) == -1);
+			}
+			this.approves = approves;
+			this.notifyDataSetChanged();
+		},
+		unselectAll: function() {
+			this.approves = [];
+			this.returnToBasic();
+			this.notifyDataSetChanged();
+		},
+		resetAndClear: function() {
+			this.__select = undefined;
+			this.__unselect = undefined;
+			this.direct = __dir__;
+			this.array = [];
+			this.choice = $.ListView.CHOICE_MODE_NONE;
+			this.basicMode = $.ListView.CHOICE_MODE_NONE;
+			this.unselectAll();
 		}
-		this.notifyDataSetChanged();
-	},
-	selectAll: function() {
-		this.approves = [];
-		for (let i = 0; i < this.getCount(); i++) {
-			this.approves.push(this.getItemId(i));
-		}
-		this.notifyDataSetChanged();
-	},
-	invertSelection: function() {
-		let approves = [];
-		for (let i = 0; i < this.getCount(); i++) {
-			approves.push(approves.indexOf(this.getItemId(i)) == -1);
-		}
-		this.approves = approves;
-		this.notifyDataSetChanged();
-	},
-	unselectAll: function() {
-		this.approves = [];
-		this.returnToBasic();
-		this.notifyDataSetChanged();
-	},
-	resetAndClear: function() {
-		this.__select = undefined;
-		this.__unselect = undefined;
-		this.direct = __dir__;
-		this.array = [];
-		this.choice = $.ListView.CHOICE_MODE_NONE;
-		this.basicMode = $.ListView.CHOICE_MODE_NONE;
-		this.unselectAll();
-	}
-});
+	});
+}

@@ -33,7 +33,7 @@ SHARE("attachEvalButton", function() {
 			return "unknown";
 		}
 	};
-	
+
 	const toStringSafety = function(who, type) {
 		try {
 			if (who == null) {
@@ -49,11 +49,11 @@ SHARE("attachEvalButton", function() {
 					return "\"" + who + "\"";
 			}
 		} catch (e) {
-		    log("Dev Editor: toStringSafety: " + e);
+		    log("ModdingTools: toStringSafety: " + e);
 		}
 		return "undefined";
 	};
-	
+
 	const evaluateScope = function(where, serialized) {
 		let noActualTitle = false;
 		if (serialized === undefined || serialized === null) {
@@ -108,7 +108,7 @@ SHARE("attachEvalButton", function() {
 			    }
 			}
 			if (who.length == 0) {
-				MCSystem.throwException("Dev Editor: Target object is empty");
+				MCSystem.throwException("ModdingTools: Target object is empty");
 			}
 			select(type == "class" ? toStringSafety(where, type) : serialized, who, function(index, name) {
 				evaluateScope(where instanceof java.util.List ? where.get(self[index]) : where[self[index]],
@@ -122,6 +122,6 @@ SHARE("attachEvalButton", function() {
 			}
 		}
 	};
-	
+
 	SHARE("evaluateScope", evaluateScope);
 })();

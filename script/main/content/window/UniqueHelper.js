@@ -2,7 +2,6 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
-
 const UniqueHelper = {};
 
 UniqueHelper.opened = {};

@@ -1,4 +1,4 @@
-const SidebarTool = function(object) {
+function SidebarTool(object) {
 	MenuTool.apply(this, arguments);
 };
 

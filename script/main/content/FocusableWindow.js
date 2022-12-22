@@ -1,14 +1,17 @@
-const FocusableWindow = new Function();
+function FocusableWindow() {};
 
 FocusableWindow.prototype.TYPE = "FocusableWindow";
 
 FocusableWindow.prototype.touchable = true;
 FocusableWindow.prototype.focusable = false;
-FocusableWindow.prototype.gravity = $.Gravity.NO_GRAVITY;
-FocusableWindow.prototype.width = $.ViewGroup.LayoutParams.WRAP_CONTENT;
-FocusableWindow.prototype.height = $.ViewGroup.LayoutParams.WRAP_CONTENT;
 FocusableWindow.prototype.x = 0;
 FocusableWindow.prototype.y = 0;
+
+if (isAndroid()) {
+	FocusableWindow.prototype.gravity = $.Gravity.NO_GRAVITY;
+	FocusableWindow.prototype.width = $.ViewGroup.LayoutParams.WRAP_CONTENT;
+	FocusableWindow.prototype.height = $.ViewGroup.LayoutParams.WRAP_CONTENT;
+}
 
 FocusableWindow.prototype.reattach = function() {
 	if (this.isOpened()) {
@@ -24,11 +27,6 @@ FocusableWindow.prototype.getContent = function() {
 		let container = fragment.getContainer();
 		if (container != null) return container;
 	}
-	let frame = this.getFrame();
-	if (frame != null) {
-		let container = frame.getContainer();
-		if (container != null) return container;
-	}
 	return null;
 };
 
@@ -38,26 +36,15 @@ FocusableWindow.prototype.setContent = function(content) {
 };
 
 FocusableWindow.prototype.getFragment = function() {
-	if (this.fragment) return this.fragment;
-	let frame = this.getFrame();
-	if (frame == null) return null;
-	return frame.getFragment();
+	return this.fragment || null;
 };
 
 FocusableWindow.prototype.setFragment = function(fragment) {
+	let content = this.getContent();
 	this.fragment = fragment;
-	let content = this.getContent();
-	if (this.isOpened()) this.update();
-};
-
-FocusableWindow.prototype.getFrame = function() {
-	return this.frame || null;
-};
-
-FocusableWindow.prototype.setFrame = function(frame) {
-	this.frame = frame;
-	let content = this.getContent();
-	if (this.isOpened()) this.update();
+	if (this.isOpened() && content != this.getContent()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -83,6 +70,9 @@ FocusableWindow.prototype.isFullscreen = function() {
 		(this.height == $.ViewGroup.LayoutParams.MATCH_PARENT || this.height == getDisplayHeight());
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 FocusableWindow.prototype.getParams = function(flags) {
 	let params = new android.view.WindowManager.LayoutParams
 		(this.width, this.height, this.x, this.y, 1000, flags || WindowProvider.BASE_WINDOW_FLAGS, -3);
@@ -159,30 +149,48 @@ FocusableWindow.prototype.setOnDismissListener = function(listener) {
 };
 
 FocusableWindow.prototype.isOpened = function() {
-	return WindowProvider.hasOpenedPopup(this);
+	if (isAndroid()) {
+		return WindowProvider.hasOpenedPopup(this);
+	}
+	return ShellObserver.includes(this);
 };
 
 FocusableWindow.prototype.getPopup = function() {
-	return WindowProvider.getByPopupId(this.popupId);
+	if (isAndroid()) {
+		return WindowProvider.getByPopupId(this.popupId);
+	}
+	return ShellObserver.layers.indexOf(this);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 FocusableWindow.prototype.getEnterTransition = function() {
 	return this.enterTransition || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 FocusableWindow.prototype.setEnterTransition = function(actor) {
-	if (this.isOpened()) {
+	if (isAndroid() && this.isOpened()) {
 		WindowProvider.setEnterTransition(this.popupId, actor);
 	}
 	this.enterTransition = actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 FocusableWindow.prototype.getExitTransition = function() {
 	return this.exitTransition || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 FocusableWindow.prototype.setExitTransition = function(actor) {
-	if (this.isOpened()) {
+	if (isAndroid() && this.isOpened()) {
 		WindowProvider.setExitTransition(this.popupId, actor);
 	}
 	this.exitTransition = actor;
@@ -194,11 +202,15 @@ FocusableWindow.prototype.attach = function() {
 		if (fragment != null && fragment.isRequiresFocusable()) {
 			this.focusable = true;
 		}
-		WindowProvider.openWindow(this);
+		if (isAndroid()) {
+			WindowProvider.openWindow(this);
+		} else {
+			ShellObserver.push(this);
+		}
 		this.onAttach && this.onAttach();
 		return true;
 	} else {
-		Logger.Log("Dev Editor: Attaching window " + this.TYPE + " called on already opened window", "INFO");
+		Logger.Log("ModdingTools: Attaching window " + this.TYPE + " called on already opened window", "INFO");
 	}
 	return false;
 };
@@ -209,15 +221,21 @@ FocusableWindow.prototype.update = function() {
 		this.focusable = true;
 	}
 	this.onUpdate && this.onUpdate();
-	WindowProvider.updateWindow(this);
+	if (isAndroid()) {
+		WindowProvider.updateWindow(this);
+	}
 };
 
 FocusableWindow.prototype.dismiss = function() {
 	if (this.isOpened()) {
-		WindowProvider.closeWindow(this);
+		if (isAndroid()) {
+			WindowProvider.closeWindow(this);
+		} else {
+			ShellObserver.dismiss(this);
+		}
 		this.onClose && this.onClose();
 	} else {
-		Logger.Log("Dev Editor: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
+		Logger.Log("ModdingTools: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
 	}
 };
 
@@ -256,9 +274,6 @@ FocusableWindow.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("fragment")) {
 		instanceOrJson.setFragment(calloutOrParse(json, json.fragment, [this, instanceOrJson]));
-	}
-	if (json.hasOwnProperty("frame")) {
-		instanceOrJson.setFrame(calloutOrParse(json, json.frame, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("onAttach")) {
 		instanceOrJson.setOnAttachListener(parseCallback(json, json.onAttach, [this, instanceOrJson]));

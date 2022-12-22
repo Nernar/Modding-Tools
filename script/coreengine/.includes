@@ -1,3 +1,8 @@
+# skipLibCheck
+# noResolve
+# declaration
+# removeComments
+
 header.js
 constant/.
 enum/.

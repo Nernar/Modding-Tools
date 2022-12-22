@@ -18,20 +18,20 @@ package net.npe.tga;
 import java.io.IOException;
 
 public final class TGAReader {
-	
+
 	public static final Order ARGB = new Order(16, 8, 0, 24);
 	public static final Order ABGR = new Order(0, 8, 16, 24);
-	
+
 	public static int getWidth(byte [] buffer) {
 		return (buffer[12] & 0xFF) | (buffer[13] & 0xFF) << 8;
 	}
-	
+
 	public static int getHeight(byte [] buffer) {
 		return (buffer[14] & 0xFF) | (buffer[15] & 0xFF) << 8;
 	}
-	
+
 	public static int [] read(byte [] buffer, Order order) throws IOException {
-		
+
 		// header
 //		int idFieldLength = buffer[0] & 0xFF;
 //		int colormapType = buffer[1] & 0xFF;
@@ -45,9 +45,9 @@ public final class TGAReader {
 		int height = getHeight(buffer);
 		int depth = buffer[16] & 0xFF;
 		int descriptor = buffer[17] & 0xFF;
-	    
+
 		int [] pixels = null;
-		
+
 		// data
 		switch(type) {
 		case COLORMAP: {
@@ -76,21 +76,21 @@ public final class TGAReader {
 		default:
 			throw new IOException("Unsupported image type: "+type);
 		}
-		
+
 		return pixels;
-		
+
 	}
-	
+
 	private static final int COLORMAP = 1;
 	private static final int RGB = 2;
 	private static final int GRAYSCALE = 3;
 	private static final int COLORMAP_RLE = 9;
 	private static final int RGB_RLE = 10;
 	private static final int GRAYSCALE_RLE = 11;
-	
+
 	private static final int RIGHT_ORIGIN = 0x10;
 	private static final int UPPER_ORIGIN = 0x20;
-	
+
 	private static byte [] decodeRLE(int width, int height, int depth, byte [] buffer, int offset) {
 		int elementCount = depth/8;
 		byte [] elements = new byte[elementCount];
@@ -119,7 +119,7 @@ public final class TGAReader {
 		}
 		return decodeBuffer;
 	}
-	
+
 	private static int [] createPixelsFromColormap(int width, int height, int depth, byte [] bytes, int offset, byte [] palette, int colormapOrigin, int descriptor, Order order) throws IOException {
 		int [] pixels = null;
 		int rs = order.redShift;
@@ -290,7 +290,7 @@ public final class TGAReader {
 		}
 		return pixels;
 	}
-	
+
 	private static int [] createPixelsFromRGB(int width, int height, int depth, byte [] bytes, int offset, int descriptor, Order order) throws IOException {
 		int [] pixels = null;
 		int rs = order.redShift;
@@ -421,7 +421,7 @@ public final class TGAReader {
 		}
 		return pixels;
 	}
-	
+
 	private static int [] createPixelsFromGrayscale(int width, int height, int depth, byte [] bytes, int offset, int descriptor, Order order) throws IOException {
 		int [] pixels = null;
 		int rs = order.redShift;
@@ -528,9 +528,9 @@ public final class TGAReader {
 		}
 		return pixels;
 	}
-	
+
 	private TGAReader() {}
-	
+
 	static final class Order {
 		Order(int redShift, int greenShift, int blueShift, int alphaShift) {
 			this.redShift = redShift;
@@ -543,5 +543,5 @@ public final class TGAReader {
 		public int blueShift;
 		public int alphaShift;
 	}
-	
+
 }

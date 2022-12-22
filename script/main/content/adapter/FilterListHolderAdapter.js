@@ -1,4 +1,7 @@
-const FilterListHolderAdapter = function(proto) {
+/**
+ * @requires `isAndroid()`
+ */
+function FilterListHolderAdapter(proto) {
 	return new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, android.widget.Filterable, merge(merge(this, proto), {
 		getCount: function() {
 			// No Context associated with current Thread

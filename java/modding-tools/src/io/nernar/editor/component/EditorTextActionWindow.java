@@ -23,38 +23,29 @@
  */
 package io.nernar.editor.component;
 
-import android.annotation.SuppressLint;
 import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import io.github.rosemoe.sora.event.EventReceiver;
-import io.github.rosemoe.sora.event.HandleStateChangeEvent;
-import io.github.rosemoe.sora.event.ScrollEvent;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.event.Unsubscribe;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorTouchEventHandler;
-import io.github.rosemoe.sora.widget.base.EditorPopupWindow;
-import io.github.rosemoe.sora.widget.component.EditorBuiltinComponent;
 
 /**
  * This window will show when selecting text to present text actions.
  *
  * @author Rosemoe
  */
-public class EditorTextActionWindow extends io.github.rosemoe.sora.widget.component.EditorTextActionWindow implements EventReceiver<SelectionChangeEvent>, EditorBuiltinComponent {
+public class EditorTextActionWindow extends io.github.rosemoe.sora.widget.component.EditorTextActionWindow {
     private final CodeEditor mEditor;
     private final Button mPasteBtn;
     private final View mCopyBtn;
     private final View mCutBtn;
-    private final View mRootView;
     private final EditorTouchEventHandler mHandler;
-    private final static long DELAY = 200;
-    private long mLastScroll;
     private int mLastPosition;
     private boolean mEnabled = true;
 
@@ -72,7 +63,6 @@ public class EditorTextActionWindow extends io.github.rosemoe.sora.widget.compon
         mCutBtn = cutBtn;
         setContentView(root);
         setSize(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        mRootView = root;
     }
 
     @Override
@@ -96,27 +86,6 @@ public class EditorTextActionWindow extends io.github.rosemoe.sora.widget.compon
      */
     public ViewGroup getView() {
         return (ViewGroup) getPopup().getContentView();
-    }
-
-    private void postDisplay() {
-        if (!isShowing()) {
-            return;
-        }
-        dismiss();
-        if (!mEditor.getCursor().isSelected()) {
-            return;
-        }
-        mEditor.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!mHandler.hasAnyHeldHandle() && System.currentTimeMillis() - mLastScroll > DELAY
-                        && mEditor.getScroller().isFinished()) {
-                    displayWindow();
-                } else {
-                    mEditor.postDelayed(this, DELAY);
-                }
-            }
-        }, DELAY);
     }
 
     @Override

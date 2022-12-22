@@ -1,6 +1,12 @@
-const OverlayFragment = function() {
+
+/**
+ * @requires `isAndroid()`
+ */
+function OverlayFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 OverlayFragment.prototype = new TextFragment;
@@ -8,7 +14,7 @@ OverlayFragment.prototype = new TextFragment;
 OverlayFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
-	
+
 	let text = new android.widget.TextView(getContext());
 	text.setTextSize(toComplexUnitSp(8));
 	text.setGravity($.Gravity.CENTER);

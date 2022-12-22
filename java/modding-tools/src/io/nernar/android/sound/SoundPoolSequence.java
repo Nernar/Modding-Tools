@@ -1,13 +1,13 @@
 /*
 
    Copyright 2021 Nernar (github.com/nernar)
-   
+
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-   
+
 	   http://www.apache.org/licenses/LICENSE-2.0
-   
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,39 +32,39 @@ public class SoundPoolSequence {
 	private final ArrayList<Integer> mLoaded = new ArrayList<>();
 	private final ArrayList<Integer> mPlaying = new ArrayList<>();
 	private final HashMap<Integer, ArrayList<Integer>> mAssociated = new HashMap<>();
-	
+
 	public SoundPoolSequence(SoundPool target) {
 		if (target == null) {
 			throw new NullPointerException();
 		}
 		mPool = target;
 	}
-	
+
 	@Deprecated
 	public SoundPoolSequence(int maxStreams, int streamType, int srcQuality) {
 		this(new SoundPool(maxStreams, streamType, srcQuality));
 	}
-	
+
 	public SoundPoolSequence(SoundPool.Builder builder) {
 		this(builder.build());
 	}
-	
+
 	public SoundPoolSequence(int maxStreams, AudioAttributes attrs) {
 		this(new SoundPool.Builder().setMaxStreams(maxStreams).setAudioAttributes(attrs));
 	}
-	
+
 	public SoundPoolSequence(int maxStreams) {
 		this(new SoundPool.Builder().setMaxStreams(maxStreams));
 	}
-	
+
 	public SoundPoolSequence() {
 		this(new SoundPool.Builder());
 	}
-	
+
 	public final SoundPool getSoundPool() {
 		return mPool;
 	}
-	
+
 	public void release() {
 		mPool.release();
 		synchronized (mLoaded) {
@@ -77,22 +77,22 @@ public class SoundPoolSequence {
 			mAssociated.clear();
 		}
 	}
-	
+
 	public int getUid(int index) {
 		if (!isLoaded(index)) {
 			throw new IndexOutOfBoundsException("Sound " + index + " out of range [0.." + mLoaded.size() + "]");
 		}
 		return mLoaded.get(index).intValue();
 	}
-	
+
 	public boolean isLoaded(int index) {
 		return index >= 0 && index < mLoaded.size();
 	}
-	
+
 	public int getCount() {
 		return mLoaded.size();
 	}
-	
+
 	public int load(String path, int priority) {
 		int uid = mPool.load(path, priority);
 		synchronized (mLoaded) {
@@ -100,7 +100,7 @@ public class SoundPoolSequence {
 			return mLoaded.lastIndexOf(uid);
 		}
 	}
-	
+
 	public int load(Context context, int resId, int priority) {
 		int uid = mPool.load(context, resId, priority);
 		synchronized (mLoaded) {
@@ -108,7 +108,7 @@ public class SoundPoolSequence {
 			return mLoaded.lastIndexOf(uid);
 		}
 	}
-	
+
 	public int load(AssetFileDescriptor afd, int priority) {
 		int uid = mPool.load(afd, priority);
 		synchronized (mLoaded) {
@@ -116,7 +116,7 @@ public class SoundPoolSequence {
 			return mLoaded.lastIndexOf(uid);
 		}
 	}
-	
+
 	public int load(FileDescriptor fd, long offset, long length, int priority) {
 		int uid = mPool.load(fd, offset, length, priority);
 		synchronized (mLoaded) {
@@ -124,7 +124,7 @@ public class SoundPoolSequence {
 			return mLoaded.lastIndexOf(uid);
 		}
 	}
-	
+
 	public boolean unload(int index) {
 		int uid = getUid(index);
 		synchronized (mLoaded) {
@@ -135,7 +135,7 @@ public class SoundPoolSequence {
 		}
 		return mPool.unload(uid);
 	}
-	
+
 	public boolean unloadEverything() {
 		boolean yep = false;
 		synchronized (mLoaded) {
@@ -145,7 +145,7 @@ public class SoundPoolSequence {
 		}
 		return yep;
 	}
-	
+
 	public int play(int index, float leftVolume, float rightVolume, int priority, int loop, float rate) {
 		if (!isLoaded(index)) {
 			Log.w("SoundPoolSequence", "Track with index " + index + " not found!");
@@ -164,7 +164,7 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public int[] playEverything(float leftVolume, float rightVolume, int priority, int loop, float rate) {
 		int[] loaded = new int[getCount()];
 		for (int i = 0; i < loaded.length; i++) {
@@ -172,36 +172,36 @@ public class SoundPoolSequence {
 		}
 		return loaded;
 	}
-	
+
 	public int getStreamUid(int stream) {
 		if (!isActive(stream)) {
 			throw new IndexOutOfBoundsException("Stream " + stream + " out of range [0.." + mPlaying.size() + "]");
 		}
 		return mPlaying.get(stream).intValue();
 	}
-	
+
 	public boolean isActive(int stream) {
 		return stream >= 0 && stream < mPlaying.size();
 	}
-	
+
 	public int getStreamCount() {
 		return mPlaying.size();
 	}
-	
+
 	public int getStreamCountByIndex(int index) {
 		return getStreamsByIndex(index).size();
 	}
-	
+
 	protected ArrayList<Integer> getStreamsByIndex(int index) {
 		synchronized (mAssociated) {
 			return isAssociated(index) ? mAssociated.get(Integer.valueOf(index)) : new ArrayList<Integer>();
 		}
 	}
-	
+
 	public boolean isAssociated(int index) {
 		return mAssociated.containsKey(Integer.valueOf(index));
 	}
-	
+
 	public int getIndexByStream(int stream) {
 		synchronized (mAssociated) {
 			for (Map.Entry<Integer, ArrayList<Integer>> associated : mAssociated.entrySet()) {
@@ -211,18 +211,18 @@ public class SoundPoolSequence {
 		}
 		return -1;
 	}
-	
+
 	public void pause(int stream) {
 		mPool.pause(getStreamUid(stream));
 	}
-	
+
 	public synchronized void pauseAll(int index) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			pause(streams.get(i).intValue());
 		}
 	}
-	
+
 	public void pauseEverything() {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -230,18 +230,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void resume(int stream) {
 		mPool.resume(getStreamUid(stream));
 	}
-	
+
 	public synchronized void resumeAll(int index) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			resume(streams.get(i).intValue());
 		}
 	}
-	
+
 	public void resumeEverything() {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -249,15 +249,15 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void autoPause() {
 		mPool.autoPause();
 	}
-	
+
 	public void autoResume() {
 		mPool.autoResume();
 	}
-	
+
 	public void stop(int stream) {
 		if (!isActive(stream)) {
 			Log.w("SoundPoolSequence", "Stream " + stream + " already stopped!");
@@ -279,14 +279,14 @@ public class SoundPoolSequence {
 		}
 		mPool.stop(uid);
 	}
-	
+
 	public synchronized void stopAll(int index) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			stop(streams.get(0));
 		}
 	}
-	
+
 	public void stopEverything() {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -294,18 +294,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void setVolume(int stream, float leftVolume, float rightVolume) {
 		mPool.setVolume(getStreamUid(stream), leftVolume, rightVolume);
 	}
-	
+
 	public synchronized void setVolumeAll(int index, float leftVolume, float rightVolume) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			setVolume(streams.get(i).intValue(), leftVolume, rightVolume);
 		}
 	}
-	
+
 	public void setVolumeEverything(float leftVolume, float rightVolume) {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -313,18 +313,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void setPriority(int stream, int priority) {
 		mPool.setPriority(getStreamUid(stream), priority);
 	}
-	
+
 	public synchronized void setPriorityAll(int index, int priority) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			setPriority(streams.get(i).intValue(), priority);
 		}
 	}
-	
+
 	public void setPriorityEverything(int priority) {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -332,18 +332,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void setLoop(int stream, int loop) {
 		mPool.setLoop(getStreamUid(stream), loop);
 	}
-	
+
 	public synchronized void setLoopAll(int index, int lopp) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			setLoop(streams.get(i).intValue(), lopp);
 		}
 	}
-	
+
 	public void setLoopEverything(int loop) {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -351,18 +351,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void setRate(int stream, float rate) {
 		mPool.setRate(getStreamUid(stream), rate);
 	}
-	
+
 	public synchronized void setRateAll(int index, float rate) {
 		ArrayList<Integer> streams = getStreamsByIndex(index);
 		for (int i = 0; i < streams.size(); i++) {
 			setRate(streams.get(i).intValue(), rate);
 		}
 	}
-	
+
 	public void setRateEverything(float rate) {
 		synchronized (mPlaying) {
 			for (int i = 0; i < mPlaying.size(); i++) {
@@ -370,18 +370,18 @@ public class SoundPoolSequence {
 			}
 		}
 	}
-	
+
 	public void setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener listener) {
 		mPool.setOnLoadCompleteListener(new OnLoadCompleteListener(listener));
 	}
-	
+
 	private final class OnLoadCompleteListener implements SoundPool.OnLoadCompleteListener {
 		private final SoundPool.OnLoadCompleteListener listener;
-		
+
 		public OnLoadCompleteListener(SoundPool.OnLoadCompleteListener listener) {
 			this.listener = listener;
 		}
-		
+
 		public void onLoadComplete(SoundPool pool, int uid, int stream) {
 			if (listener != null) {
 				listener.onLoadComplete(pool, mLoaded.indexOf(Integer.valueOf(uid)), mPlaying.indexOf(Integer.valueOf(stream)));

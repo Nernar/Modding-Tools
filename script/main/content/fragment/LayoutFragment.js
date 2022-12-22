@@ -1,4 +1,4 @@
-const LayoutFragment = function() {
+function LayoutFragment() {
 	BaseFragment.apply(this, arguments);
 	this.fragments = [];
 };
@@ -16,17 +16,22 @@ LayoutFragment.prototype.getFragments = function() {
 
 LayoutFragment.prototype.addElementFragment = function(fragment, params) {
 	if (!(fragment instanceof Fragment)) {
-		Logger.Log("Dev Editor: trying adding non-fragment element passed to addElementFragment", "WARNING");
+		Logger.Log("ModdingTools: Trying adding non-fragment element passed to addElementFragment", "WARNING");
 		return -1;
 	}
-	if (params === undefined) {
-		this.getContainerLayout().addView(fragment.getContainer());
-	} else {
-		this.getContainerLayout().addView(fragment.getContainer(), params);
+	if (isAndroid()) {
+		if (params === undefined) {
+			this.getContainerLayout().addView(fragment.getContainer());
+		} else {
+			this.getContainerLayout().addView(fragment.getContainer(), params);
+		}
 	}
 	return this.fragments.push(fragment) - 1;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 LayoutFragment.prototype.addElementView = function(container, params) {
 	let fragment = new Fragment();
 	fragment.setContainerView(container);
@@ -39,7 +44,7 @@ LayoutFragment.prototype.getElementCount = function() {
 
 LayoutFragment.prototype.getElementFragment = function(index) {
 	if (this.fragments.length > index || index < 0) {
-		log("Dev Editor: not found LayoutFragment element at index " + index);
+		log("ModdingTools: Not found LayoutFragment element at index " + index);
 		return null;
 	}
 	return this.fragments[index];
@@ -49,13 +54,32 @@ LayoutFragment.prototype.indexOfElement = function(fragment) {
 	return this.fragments.indexOf(fragment);
 };
 
+LayoutFragment.prototype.obtain = (function() {
+	let obtain = function(on, when, what) {
+		if (on instanceof LayoutFragment) {
+			let fragments = on.getFragments();
+			for (let i = 0; i < fragments.length; i++) {
+				obtain(fragments[i], when, what);
+			}
+		}
+		if (typeof when != "function" || when(on)) {
+			what(on);
+		}
+	};
+	return function(when, what) {
+		obtain(this, when, what);
+	};
+})();
+
 LayoutFragment.prototype.removeElementAt = function(index) {
 	if (this.fragments.length > index || index < 0) {
-		log("Dev Editor: not found LayoutFragment element at index " + index);
+		log("ModdingTools: Not found LayoutFragment element at index " + index);
 		return false;
 	}
 	let fragment = this.fragments[index];
-	this.getContainerLayout().removeView(fragment.getContainer());
+	if (isAndroid()) {
+		this.getContainerLayout().removeView(fragment.getContainer());
+	}
 	this.fragments.splice(index, 1);
 	return true;
 };

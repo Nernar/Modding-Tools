@@ -137,9 +137,9 @@ const UNWRAP = function(path, scope) {
 	let file = findWrappedScript(path);
 	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
 		if (file == null) {
-			MCSystem.throwException("Dev Editor: Not found " + path + " script");
+			MCSystem.throwException("ModdingTools: Not found " + path + " script");
 		}
-		log("Dev Editor: Wrapping " + file + " script");
+		log("ModdingTools: Wrapping " + file + " script");
 		let source = Files.read(file).toString(),
 			code = "(function() {\n" + source + "\n})();",
 			scope = runAtScope(code, who, path);
@@ -147,7 +147,7 @@ const UNWRAP = function(path, scope) {
 		return scope.result;
 	}
 	if (file == null) {
-		MCSystem.throwException("Dev Editor: Not found " + path + " executable");
+		MCSystem.throwException("ModdingTools: Not found " + path + " executable");
 	}
 	try {
 		let source = decompileExecuteable(Files.readBytes(file)),
@@ -201,21 +201,24 @@ const CHECKOUT = function(path, scope, post) {
 		post && post(something);
 		return something;
 	} catch (e) {
-		Logger.Log("Dev Editor: CHECKOUT: " + e, "WARNING");
+		Logger.Log("ModdingTools: CHECKOUT: " + e, "WARNING");
 	}
 	return null;
 };
 
+let currentLanguageTranslations;
+let defaultLanguageTranslations;
+
 const findTranslationByHash = function(hash, fallback) {
 	hash = java.lang.Integer.valueOf(hash);
-	if (translateCode.currentLanguageTranslations) {
-		let translation = translateCode.currentLanguageTranslations.get(null).get(hash);
+	if (currentLanguageTranslations) {
+		let translation = currentLanguageTranslations.get(null).get(hash);
 		if (translation) {
 			return translation;
 		}
 	}
-	if (translateCode.defaultLanguageTranslations) {
-		let translation = translateCode.defaultLanguageTranslations.get(null).get(hash);
+	if (defaultLanguageTranslations) {
+		let translation = defaultLanguageTranslations.get(null).get(hash);
 		if (translation) {
 			return translation;
 		}
@@ -240,7 +243,7 @@ const translateCode = function(hash, args, fallback) {
 		}
 		return String(text);
 	} catch (e) {
-		log("Dev Editor: translateCode: " + e);
+		log("ModdingTools: translateCode: " + e);
 	}
 	return "...";
 };
@@ -250,11 +253,11 @@ try {
 		clazz = $.NameTranslation.__javaObject__,
 		field = clazz.getDeclaredField("currentLanguageTranslations");
 	field.setAccessible(true);
-	translateCode.currentLanguageTranslations = field;
+	currentLanguageTranslations = field;
 	if (isHorizon) {
 		let proto = clazz.getDeclaredField("defaultLanguageTranslations");
 		proto.setAccessible(true);
-		translateCode.defaultLanguageTranslations = proto;
+		defaultLanguageTranslations = proto;
 	}
 } catch (e) {
 	if (REVISION.indexOf("develop") != -1) {

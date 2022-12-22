@@ -20,7 +20,7 @@ Object.defineProperties(GLOBAL, {
 		enumerable: true,
 		configurable: false
 	},
-	
+
 	/** MANAGEMENT */
 	IMMOBILE: {
 		get: function() {

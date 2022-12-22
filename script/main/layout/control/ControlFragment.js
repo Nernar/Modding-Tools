@@ -1,6 +1,11 @@
-const ControlFragment = function() {
+/**
+ * @requires `isAndroid()`
+ */
+function ControlFragment() {
 	ImageFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 ControlFragment.prototype = new ImageFragment;
@@ -15,6 +20,8 @@ ControlFragment.prototype.getContainerRoot = function() {
 	return this.findViewByTag("logotypeBackground");
 };
 
+ControlFragment.Button = new Function();
+
 ControlFragment.Button = function() {
 	ControlFragment.apply(this, arguments);
 };
@@ -24,7 +31,7 @@ ControlFragment.Button.prototype = new ControlFragment;
 ControlFragment.Button.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
-	
+
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setOrientation($.LinearLayout.VERTICAL);
 	layout.setTag("logotypeBackground");
@@ -33,7 +40,7 @@ ControlFragment.Button.prototype.resetContainer = function() {
 		($.ViewGroup.LayoutParams.WRAP_CONTENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	params.setMargins(toComplexUnitDip(12), toComplexUnitDip(12), 0, 0);
 	container.addView(layout, params);
-	
+
 	let button = new android.widget.ImageView(getContext());
 	button.setPadding(toComplexUnitDip(10), toComplexUnitDip(10),
 		toComplexUnitDip(10), toComplexUnitDip(10));
@@ -42,6 +49,8 @@ ControlFragment.Button.prototype.resetContainer = function() {
 	layout.addView(button, new android.widget.LinearLayout.LayoutParams
 		(toComplexUnitDip(60), toComplexUnitDip(60)));
 };
+
+ControlFragment.CollapsedButton = new Function();
 
 ControlFragment.CollapsedButton = function() {
 	ControlFragment.Button.apply(this, arguments);
@@ -56,6 +65,8 @@ ControlFragment.CollapsedButton.prototype.setOffset = function(x, y) {
 	if (y !== undefined) layout.setY(-y);
 };
 
+ControlFragment.Logotype = new Function();
+
 ControlFragment.Logotype = function() {
 	ControlFragment.apply(this, arguments);
 };
@@ -67,7 +78,7 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	container.setLayoutParams(new android.widget.FrameLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
 	this.setContainerView(container);
-	
+
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setGravity($.Gravity.CENTER);
 	layout.setTag("logotypeBackground");
@@ -76,7 +87,7 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 	$.ViewCompat.setTransitionName(layout, "logotypeBackground");
 	container.addView(layout, new android.widget.FrameLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT));
-	
+
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotypeForeground");
 	$.ViewCompat.setTransitionName(logotype, "logotypeForeground");
@@ -92,5 +103,5 @@ ControlFragment.Logotype.prototype.setLevel = function(level) {
 };
 
 ControlFragment.prototype.resetContainer = function() {
-	MCSystem.throwException("Dev Editor: ControlFragment must be superclass only");
+	MCSystem.throwException("ModdingTools: ControlFragment must be superclass only");
 };

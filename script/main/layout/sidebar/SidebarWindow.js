@@ -1,22 +1,9 @@
-const SidebarWindow = function() {
-	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity($.Gravity.RIGHT);
-	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setFragment(new SidebarFragment());
-	window.groups = [];
-	window.setBackground("popup");
-	if (!menuDividers) window.setTabBackground("popup");
 
-	let enter = new android.transition.Slide($.Gravity.RIGHT);
-	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	enter.setDuration(400);
-	window.setEnterTransition(enter);
-	
-	let exit = new android.transition.Slide($.Gravity.RIGHT);
-	exit.setInterpolator(new android.view.animation.BounceInterpolator());
-	exit.setDuration(1000);
-	window.setExitTransition(exit);
-	return window;
+/**
+ * @requires `isAndroid()`
+ */
+function SidebarWindow() {
+	return UniqueWindow.apply(this, arguments);
 };
 
 SidebarWindow.NOTHING_SELECTED = -1;
@@ -25,6 +12,26 @@ SidebarWindow.prototype = new UniqueWindow;
 SidebarWindow.prototype.TYPE = "SidebarWindow";
 
 SidebarWindow.prototype.selected = SidebarWindow.NOTHING_SELECTED;
+
+SidebarWindow.prototype.resetWindow = function() {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setGravity($.Gravity.RIGHT);
+	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setFragment(new SidebarFragment());
+	this.groups = [];
+	this.setBackground("popup");
+	if (!menuDividers) this.setTabBackground("popup");
+
+	let enter = new android.transition.Slide($.Gravity.RIGHT);
+	enter.setInterpolator(new android.view.animation.DecelerateInterpolator());
+	enter.setDuration(400);
+	this.setEnterTransition(enter);
+
+	let exit = new android.transition.Slide($.Gravity.RIGHT);
+	exit.setInterpolator(new android.view.animation.BounceInterpolator());
+	exit.setDuration(1000);
+	this.setExitTransition(exit);
+}
 
 SidebarWindow.prototype.getGroups = function(index) {
 	return this.groups || null;
@@ -218,6 +225,8 @@ SidebarWindow.prototype.setOnItemFetchListener = function(listener) {
 	return this;
 };
 
+SidebarWindow.Group = new Function();
+
 SidebarWindow.Group = function(parentOrSrc, srcOrAction, action) {
 	SidebarFragment.Group.apply(this, arguments);
 	let scope = this;
@@ -258,9 +267,9 @@ SidebarWindow.Group.prototype.getWindow = function() {
 };
 
 SidebarWindow.Group.prototype.attachToWindow = function(window) {
-	if (!window) MCSystem.throwException("Dev Editor: window can't be illegal or undefined state!");
+	if (!window) MCSystem.throwException("ModdingTools: Window can not be null or undefined!");
 	let attached = this.getWindow();
-	if (attached != null) MCSystem.throwException("Dev Editor: you're must deattach sidebar group firstly!");
+	if (attached != null) MCSystem.throwException("ModdingTools: You are must deattach sidebar group firstly!");
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(200);
 	window.beginDelayedTransition(actor);
@@ -526,9 +535,9 @@ SidebarWindow.Group.Item.prototype.getGroup = function() {
 };
 
 SidebarWindow.Group.Item.prototype.attachToGroup = function(group) {
-	if (!group) MCSystem.throwException("Dev Editor: group can't be illegal or undefined state!");
+	if (!group) MCSystem.throwException("ModdingTools: Group can not be null or undefined!");
 	let attached = this.getGroup();
-	if (attached !== null) MCSystem.throwException("Dev Editor: you're must deattach sidebar item firstly!");
+	if (attached !== null) MCSystem.throwException("ModdingTools: You are must deattach sidebar item firstly!");
 	let window = group.getWindow();
 	if (window !== null) {
 		let actor = new android.transition.ChangeBounds();

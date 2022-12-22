@@ -40,6 +40,9 @@ const selectProjectData = function(result, action, type, single) {
 	}, !single, selected);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 const confirm = function(title, message, action, button) {
 	handle(function() {
 		let builder = new android.app.AlertDialog.Builder(getContext(),
@@ -59,9 +62,52 @@ const confirm = function(title, message, action, button) {
 	});
 };
 
+const willBeDeletedSoonSoYouShouldntUseIt = function() {
+	let files = getDebugScripts();
+	ShellObserver.trim();
+	java.lang.System.out.println(ColorToCLI.DIM + "Requireable scripts: " + files.join(", ") + ColorToCLI.RESET);
+	let selected = 0;
+	while (ShellObserver.isInteractive()) {
+		java.lang.System.out.print("\r" + " ".repeat(80));
+		java.lang.System.out.print("\rWhat's need to require? " + ColorToCLI.INVERSE + files[selected] + ColorToCLI.RESET);
+		let keys = ShellObserver.read();
+		if (keys[0] == 27 && keys[2] == 91) {
+			if (keys[4] == 65) {
+				selected = selected <= 0 ? files.length - 1 : selected - 1;
+			} else if (keys[4] == 66) {
+				selected = selected < files.length - 1 ? selected + 1 : 0;
+			}
+		} else if (keys[0] == 3) {
+			java.lang.System.out.print("\r" + " ".repeat(80));
+			ShellObserver.leave();
+			break;
+		} else if (keys[0] == 10) {
+			java.lang.System.out.println("\rWhat's need to require? " + ColorToCLI.DIM + files[selected] + ColorToCLI.RESET);
+			try {
+				let output = REQUIRE(files[selected]);
+				if (typeof output == "function") {
+					output();
+				} else if (output !== undefined) {
+					java.lang.System.out.println(ColorToCLI.ITALIC + files[selected] + ": " + output + ColorToCLI.RESET);
+				}
+			} catch (e) {
+				reportError(e);
+			}
+		} else if (keys[0] == 9) {
+			java.lang.System.out.print("\r");
+			willBeDeletedSoonSoYouShouldntUseIt();
+			return;
+		}
+	}
+	java.lang.System.out.println("\r" + NAME + " " + VERSION + " (" + REVISION + ")");
+};
+
+/**
+ * @requires `isAndroid()`
+ */
 const select = function(title, items, action, multiple, approved) {
 	handle(function() {
-		if (!Array.isArray(items)) MCSystem.throwException("Dev Editor: nothing to select inside select");
+		if (!Array.isArray(items)) MCSystem.throwException("ModdingTools: Nothing to select inside select()!");
 		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		if (title !== undefined) builder.setTitle(title || translate("Selection"));
@@ -108,6 +154,9 @@ const select = function(title, items, action, multiple, approved) {
 	});
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 const selectFile = function(availabled, action, outside, directory) {
 	handle(function() {
 		let explorer = new ExplorerWindow();
@@ -126,6 +175,9 @@ const selectFile = function(availabled, action, outside, directory) {
 	});
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 const saveFile = function(name, availabled, action, outside, directory) {
 	handle(function() {
 		let explorer = new ExplorerWindow();

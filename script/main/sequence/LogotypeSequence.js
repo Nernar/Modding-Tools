@@ -1,4 +1,4 @@
-const LogotypeSequence = function(obj) {
+function LogotypeSequence(obj) {
 	Sequence.apply(this, arguments);
 };
 

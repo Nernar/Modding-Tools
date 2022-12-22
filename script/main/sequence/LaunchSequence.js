@@ -1,7 +1,7 @@
 const LaunchSequence = new LogotypeSequence({
 	count: 3,
 	create: function(value) {
-		if (REVISION.startsWith("develop") || isFirstLaunch()) {
+		if (isAndroid() && (REVISION.startsWith("develop") || isFirstLaunch())) {
 			if (REVISION.startsWith("develop") && $.FileTools.exists(Dirs.INTERNAL_UI)) {
 				BitmapDrawableFactory.mapDirectory(Dirs.INTERNAL_UI, true);
 			}
@@ -22,8 +22,10 @@ const LaunchSequence = new LogotypeSequence({
 			BitmapDrawableFactory.mapDirectory(Dirs.ASSET, true);
 			$.FileTools.assureDir(Dirs.PROJECT);
 		} else if (index == 2) {
-			typeface = Files.createTypefaceWithFallback(Dirs.ASSET + "font.ttf");
-			typefaceJetBrains = Files.createTypefaceWithFallback(Dirs.ASSET + "JetBrainsMono-Regular.ttf");
+			if (isAndroid()) {
+				typeface = Files.createTypefaceWithFallback(Dirs.ASSET + "font.ttf");
+				typefaceJetBrains = Files.createTypefaceWithFallback(Dirs.ASSET + "JetBrainsMono-Regular.ttf");
+			}
 			registerAdditionalInformation();
 		} else if (index == 3) {
 			try {
@@ -33,7 +35,7 @@ const LaunchSequence = new LogotypeSequence({
 					Callback.invokeCallback("ModdingTools", API);
 				}
 			} catch (e) {
-				Logger.Log("Dev Editor: Modules initialization aborted due to Callback.invoke", "ERROR");
+				Logger.Log("ModdingTools: Modules initialization aborted due to Callback.invoke", "ERROR");
 				reportError(e);
 			}
 		}
@@ -48,7 +50,7 @@ const LaunchSequence = new LogotypeSequence({
 					sequence.execute();
 				}, sequence.getExpirationTime() * 2);
 			});
-		if (!isFirstLaunch()) LogotypeSequence.prototype.create.call(this);
+		if (isAndroid() && !isFirstLaunch()) LogotypeSequence.prototype.create.call(this);
 		LogotypeSequence.prototype.cancel.apply(this, arguments);
 	},
 	complete: function(active) {
@@ -75,5 +77,8 @@ const LaunchSequence = new LogotypeSequence({
 		// }
 		loadSetting("user_login.first_launch", "boolean", false);
 		__config__.save();
+		if (isCLI()) {
+			willBeDeletedSoonSoYouShouldntUseIt();
+		}
 	}
 });

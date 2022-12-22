@@ -1,5 +1,23 @@
-const FocusablePopup = function(id) {
+/**
+ * @requires `isAndroid()`
+ */
+function FocusablePopup(id) {
 	TransitionWindow.apply(this, arguments);
+	if (isAndroid()) {
+		this.resetWindow();
+	}
+	this.setFragment(new FocusableFragment());
+	this.fragments = [];
+
+	if (id !== undefined) {
+		this.setId(id);
+	}
+};
+
+FocusablePopup.prototype = new TransitionWindow;
+FocusablePopup.prototype.TYPE = "FocusablePopup";
+
+FocusablePopup.prototype.resetWindow = function() {
 	let fadeIn = new android.transition.Fade(),
 		fadeOut = new android.transition.Fade();
 	fadeIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
@@ -8,23 +26,14 @@ const FocusablePopup = function(id) {
 	fadeOut.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
 	fadeOut.setDuration(400);
 	this.setExitTransition(fadeOut);
-	
+
 	let place = Popups.getAvailablePlace();
 	if (place != null) {
 		this.setX(place.x);
 		this.setY(place.y);
 	}
 	this.setGravity($.Gravity.LEFT | $.Gravity.TOP);
-	this.setFragment(new FocusableFragment());
-	this.fragments = [];
-	
-	if (id !== undefined) {
-		this.setId(id);
-	}
 };
-
-FocusablePopup.prototype = new TransitionWindow;
-FocusablePopup.prototype.TYPE = "FocusablePopup";
 
 FocusablePopup.prototype.mayDismissed = true;
 

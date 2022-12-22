@@ -1,6 +1,8 @@
-const CategoryTitleFragment = function() {
+function CategoryTitleFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 CategoryTitleFragment.prototype = new TextFragment;

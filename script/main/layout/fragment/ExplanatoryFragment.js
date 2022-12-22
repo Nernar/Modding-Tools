@@ -1,6 +1,8 @@
-const ExplanatoryFragment = function() {
+function ExplanatoryFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 ExplanatoryFragment.prototype = new TextFragment;

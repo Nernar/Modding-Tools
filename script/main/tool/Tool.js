@@ -1,4 +1,4 @@
-const Tool = function(object) {
+function Tool(object) {
 	this.reset();
 	if (typeof object == "object") {
 		object && merge(this, object);
@@ -16,7 +16,7 @@ Tool.prototype.reset = function() {
 		let drawable = calloutOrParse(this, this.logotypeProgress, Array.prototype.slice.call(arguments));
 		return {
 			bitmap: drawable,
-			tint: $.Color.LTGRAY
+			tint: ColorDrawable.parseColor("LTGRAY")
 		};
 	};
 	descriptor.logotype = function(tool, control) {
@@ -75,7 +75,7 @@ Tool.prototype.describe = function() {
 
 Tool.prototype.attach = function() {
 	if (this.isAttached()) {
-		MCSystem.throwException("Dev Editor: You're must deattach tool firstly!");
+		MCSystem.throwException("ModdingTools: You are must deattach tool firstly!");
 	}
 	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;

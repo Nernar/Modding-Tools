@@ -1,6 +1,6 @@
 // Modifications information
-Translation.addTranslation("Dev Editor", {
-	en: "Dev Editor"
+Translation.addTranslation("Modding Tools", {
+	en: "Modding Tools"
 });
 Translation.addTranslation("Alpha 0.4", {
 	ru: "Альфа 0.4",
@@ -825,9 +825,9 @@ Translation.addTranslation("To complete modification installation connect to any
 	ru: "Для завершения установки модификации, подключитесь к любой сети. На данный момент мод отключил свои средства для разработки.",
 	en: "To complete modification installation connect to any network, at current moment mod deactivated it's abilities to develop content."
 }); // DEPRECATED
-Translation.addTranslation("You can't use this modification without access for testing abilities. Contact with developer, it's may takes result.", {
+Translation.addTranslation("You can not use this modification without access for testing abilities. Contact with developer, it's may takes result.", {
 	ru: "Вы не можете использовать эту модификацию без доступа к тестированию. Свяжитесь с разработчиком, это может дать результат.",
-	en: "You can't use this modification without access for testing abilities. Contact with developer, it's may takes result."
+	en: "You can not use this modification without access for testing abilities. Contact with developer, it's may takes result."
 }); // DEPRECATED
 Translation.addTranslation("Unknown exception is catched, please retry modification installation or try later.", {
 	ru: "Произошла неизвестная ошибка, пожалуйста повторите попытку установки или повторите позже.",
@@ -957,9 +957,9 @@ Translation.addTranslation("Selected worker will be removed, including all it's 
 	ru: "Выбранный редактор будет удален без возможности восстановления.",
 	en: "Selected worker will be removed, including all it's data."
 }); // DEPRECATED
-Translation.addTranslation("There's we can't find any modification. Please, consider developer about that cause.", {
+Translation.addTranslation("There's we can not find any modification. Please, consider developer about that cause.", {
 	ru: "Мы не смогли найти список модификаций. Пожалуйста, сообщите разработчику об этой проблеме.",
-	en: "There's we can't find any modification. Please, consider developer about that cause."
+	en: "There's we can not find any modification. Please, consider developer about that cause."
 }); // DEPRECATED
 Translation.addTranslation("Do you want to retry?", {
 	ru: "Вы хотите попробовать еще раз?",
@@ -991,9 +991,9 @@ Translation.addTranslation("Checkout reports below to see more details.", {
 }); // DEPRECATED
 
 // Project manipulation
-Translation.addTranslation("Howdy and welcome to Dev Editor!", {
-	ru: "Приветствую и добро пожаловать в Dev Editor!",
-	en: "Howdy and welcome to Dev Editor!"
+Translation.addTranslation("Howdy and welcome to Modding Tools!", {
+	ru: "Приветствую и добро пожаловать в Modding Tools!",
+	en: "Howdy and welcome to Modding Tools!"
 });
 Translation.addTranslation("Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.", {
 	en: "Integration will be uninstalled with all content inside, please notice that's you're data may be deleted.",

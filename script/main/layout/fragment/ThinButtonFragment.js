@@ -1,6 +1,8 @@
-const ThinButtonFragment = function() {
+function ThinButtonFragment() {
 	TextFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 	this.setIsSelectable(true);
 };
 

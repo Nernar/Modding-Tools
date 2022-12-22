@@ -1,4 +1,4 @@
-const Project = function(obj) {
+function Project(obj) {
 	this.object = Array.isArray(obj) ? obj : [];
 };
 

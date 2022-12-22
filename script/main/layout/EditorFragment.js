@@ -1,9 +1,14 @@
-const EditorFragment = function() {
+/**
+ * @requires `isAndroid()`
+ */
+function EditorFragment() {
 	Fragment.apply(this, arguments);
-	if (isHorizon && android.os.Build.VERSION.SDK_INT >= 21) {
-		this.resetContainer();
-	} else {
-		this.resetLegacyContainer();
+	if (isAndroid()) {
+		if (isHorizon && android.os.Build.VERSION.SDK_INT >= 21) {
+			this.resetContainer();
+		} else {
+			this.resetLegacyContainer();
+		}
 	}
 };
 
@@ -12,7 +17,7 @@ EditorFragment.prototype = new Fragment;
 EditorFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
-	
+
 	let text = new Packages.io.github.rosemoe.sora.widget.CodeEditor(getContext());
 	text.setTypefaceText(typefaceJetBrains);
 	/*
@@ -97,7 +102,7 @@ EditorFragment.prototype.resetContainer = function() {
 EditorFragment.prototype.resetLegacyContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
-	
+
 	let text = new android.widget.EditText(getContext());
 	text.setHint(translate("Hi, I'm evaluate stroke"));
 	text.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
@@ -136,7 +141,7 @@ EditorFragment.prototype.isLegacyEditor = function() {
 	return isHorizon;
 };
 
-if (isHorizon) {
+if (isHorizon && isAndroid()) {
 	EditorFragment.COMPLETION_ADAPTER = new JavaAdapter(Packages.io.github.rosemoe.sora.widget.component.EditorCompletionAdapter, {
 		getItemHeight: function() {
 			return toComplexUnitDip(45);
@@ -157,7 +162,7 @@ if (isHorizon) {
 				}
 				holder = convertView.getTag();
 			} catch (e) {
-				log("Dev Editor: EditorFragment.COMPLETION_ADAPTER.getItem: " + e);
+				log("ModdingTools: EditorFragment.COMPLETION_ADAPTER.getItem: " + e);
 				return convertView;
 			}
 			let completion = this.getItem(position);
@@ -177,30 +182,30 @@ if (isHorizon) {
 			}
 		}
 	});
-	
+
 	EditorFragment.COMPLETION_ADAPTER.newItem = function() {
 		let layout = new android.widget.LinearLayout(getContext());
 		layout.setGravity($.Gravity.CENTER_VERTICAL);
 		layout.setPadding(0, toComplexUnitDip(2), 0, toComplexUnitDip(2));
-		
+
 		let icon = new android.widget.ImageView(getContext());
 		icon.setTag("itemIcon");
 		let params = new android.widget.LinearLayout.LayoutParams
 			(toComplexUnitDip(24), toComplexUnitDip(24));
 		params.leftMargin = params.rightMargin = toComplexUnitDip(4);
 		layout.addView(icon, params);
-		
+
 		let descriptor = new android.widget.LinearLayout(getContext());
 		descriptor.setOrientation($.LinearLayout.VERTICAL);
 		descriptor.setGravity($.Gravity.CENTER_VERTICAL);
 		descriptor.setPadding(toComplexUnitDip(8), 0, toComplexUnitDip(8), 0);
 		layout.addView(descriptor);
-		
+
 		let label = new android.widget.TextView(getContext());
 		label.setTextSize(toComplexUnitSp(12));
 		label.setTag("itemLabel");
 		descriptor.addView(label);
-		
+
 		let description = new android.widget.TextView(getContext());
 		description.setTextSize(toComplexUnitSp(9));
 		description.setTag("itemDescription");

@@ -1,7 +1,9 @@
-const ControlWindow = function() {
+function ControlWindow() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setFragment(new FrameFragment());
-	window.resetContent();
+	if (isAndroid()) {
+		window.resetContent();
+	}
 	window.setButtonBackground("popupButton");
 	window.setLogotypeBackground("popupControl");
 	return window;
@@ -58,28 +60,43 @@ ControlWindow.prototype.getCollapsedButtonFragment = function() {
 };
 
 ControlWindow.prototype.getButtonFragments = function() {
-	let array = [];
-	array.push(this.getButtonFragment());
-	array.push(this.getCollapsedButtonFragment());
+	let array = [], button;
+	(button = this.getButtonFragment()) && array.push(button);
+	(button = this.getCollapsedButtonFragment()) && array.push(button);
 	return array;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getLogotypeFragment = function() {
 	return this.queued || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getBeholdScene = function() {
 	return this.behold || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getCollapseScene = function() {
 	return this.collapse || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getQueueScene = function() {
 	return this.queue || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.makeContainerScene = function() {
 	let fragment = this.getFragment();
 	if (fragment == this.getButtonFragment()) {
@@ -92,6 +109,9 @@ ControlWindow.prototype.makeContainerScene = function() {
 	return UniqueWindow.prototype.makeContainerScene.apply(this, arguments);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getButtonEnterTransition = function() {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
@@ -99,6 +119,9 @@ ControlWindow.prototype.getButtonEnterTransition = function() {
 	return actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getButtonExitTransition = function() {
 	let actor = new android.transition.Slide($.Gravity.LEFT);
 	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
@@ -106,6 +129,9 @@ ControlWindow.prototype.getButtonExitTransition = function() {
 	return actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getLogotypeEnterTransition = function() {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.DecelerateInterpolator());
@@ -113,6 +139,9 @@ ControlWindow.prototype.getLogotypeEnterTransition = function() {
 	return actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getLogotypeExitTransition = function() {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
@@ -120,6 +149,9 @@ ControlWindow.prototype.getLogotypeExitTransition = function() {
 	return actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getTransformTransition = function() {
 	let actor = new android.transition.TransitionSet(),
 		bounds = new android.transition.ChangeBounds();
@@ -133,6 +165,9 @@ ControlWindow.prototype.getTransformTransition = function() {
 	return actor;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getCollapseTransition = function() {
 	let actor = new android.transition.ChangeTransform();
 	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
@@ -293,20 +328,26 @@ ControlWindow.prototype.setHideableInside = function(enabled) {
 };
 
 ControlWindow.prototype.transformButton = function() {
-	this.setEnterTransition(this.getButtonEnterTransition());
-	this.setExitTransition(this.getButtonExitTransition());
+	if (isAndroid()) {
+		this.setEnterTransition(this.getButtonEnterTransition());
+		this.setExitTransition(this.getButtonExitTransition());
+	}
 	this.setFragment(this.getButtonFragment());
 };
 
 ControlWindow.prototype.transformCollapsedButton = function() {
-	this.setEnterTransition(this.getButtonEnterTransition());
-	this.setExitTransition(this.getButtonExitTransition());
+	if (isAndroid()) {
+		this.setEnterTransition(this.getButtonEnterTransition());
+		this.setExitTransition(this.getButtonExitTransition());
+	}
 	this.setFragment(this.getCollapsedButtonFragment());
 };
 
 ControlWindow.prototype.transformLogotype = function() {
-	this.setEnterTransition(this.getLogotypeEnterTransition());
-	this.setExitTransition(this.getLogotypeExitTransition());
+	if (isAndroid()) {
+		this.setEnterTransition(this.getLogotypeEnterTransition());
+		this.setExitTransition(this.getLogotypeExitTransition());
+	}
 	this.setFragment(this.getLogotypeFragment());
 };
 

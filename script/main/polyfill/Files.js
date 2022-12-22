@@ -1,5 +1,9 @@
 const Dirs = {};
-Dirs.EXTERNAL = android.os.Environment.getExternalStorageDirectory() + "/";
+if (isAndroid()) {
+	Dirs.EXTERNAL = android.os.Environment.getExternalStorageDirectory() + "/";
+} else {
+	Dirs.EXTERNAL = Packages.com.zhekasmirnov.horizon.compiler.packages.Environment.getSdCardDir() + "/";
+}
 Dirs.INTERNAL_UI = __dir__ + "textures/";
 Dirs.ASSET = __dir__ + "assets/";
 Dirs.PROJECT = __dir__ + "projects/";
@@ -12,8 +16,12 @@ Dirs.EVALUATE = __dir__ + ".eval/";
 Dirs.TODO = __dir__ + ".todo/";
 Dirs.BACKUP = Dirs.EXTERNAL + "Nernar/" + __name__ + "/";
 
-if (isHorizon) {
-	Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + getContext().getPackageName() + "/";
+if (isHorizon || isCLI()) {
+	if (isAndroid()) {
+		Dirs.DATA = android.os.Environment.getDataDirectory() + "/data/" + getContext().getPackageName() + "/";
+	} else {
+		Dirs.DATA = Packages.com.zhekasmirnov.horizon.compiler.packages.Environment.getDataDirFile() + "/";
+	}
 	try {
 		Dirs.MOD = __packdir__ + __modpack__.getDirectoryOfType("MODS") + "/";
 	} catch (e) {
@@ -163,13 +171,16 @@ Files.sendMail = function(file) {
 	getContext().startActivity(intent);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 Files.createTypefaceWithFallback = function(path) {
 	let file = new java.io.File(path);
 	try {
 		return android.graphics.Typeface.createFromFile(file);
 	} catch (e) {
-		Logger.Log("Dev Editor: Not found " + file.getName() + " typeface, or was failed to load", "WARNING");
-		Logger.Log("Dev Editor: Files.createTypefaceWithFallback: " + e, "WARNING");
+		Logger.Log("ModdingTools: Not found " + file.getName() + " typeface, or it was failed to load", "WARNING");
+		Logger.Log("ModdingTools: Files.createTypefaceWithFallback: " + e, "WARNING");
 	}
 	return typeface || android.graphics.Typeface.MONOSPACE;
 };

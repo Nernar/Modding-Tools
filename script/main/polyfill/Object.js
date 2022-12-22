@@ -2,7 +2,7 @@ if (typeof Object.assign != "function") {
 	Object.assign = function(target, varArgs) {
 		"use strict";
 		if (target === null || target === undefined) {
-			MCSystem.throwException("Can't convert undefined or null to object");
+			return target;
 		}
 		var to = Object(target);
 		for (var index = 1; index < arguments.length; index++) {

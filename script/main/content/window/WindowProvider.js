@@ -1,8 +1,8 @@
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
+ * @requires `isAndroid()`
  */
-
 const WindowProvider = {};
 
 WindowProvider.BASE_WINDOW_FLAGS = isHorizon ? 256 : 0;

@@ -40,6 +40,7 @@ showHint.unstackLaunch = function() {
  * plays at the system level, it will not be recorded by
  * built-in recorder on screen during recording, it is used
  * exclusively for debugging purposes.
+ * @requires `isAndroid()`
  */
 const playTuneDirectly = function() {
 	let buffsize = android.media.AudioTrack.getMinBufferSize(4000,

@@ -1,6 +1,8 @@
-const SidebarFragment = function() {
+function SidebarFragment() {
 	BaseFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 SidebarFragment.prototype = new BaseFragment;
@@ -82,12 +84,14 @@ SidebarFragment.prototype.getTabBackground = function() {
 };
 
 SidebarFragment.prototype.setTabBackground = function(src) {
-	let container = this.getTabContainer();
-	if (container == null) return this;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let container = this.getTabContainer();
+		if (container == null) return this;
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(container);
 	}
-	src.attachAsBackground(container);
 	this.tabBackground = src;
 	return this;
 };
@@ -133,9 +137,13 @@ SidebarFragment.prototype.getTabCount = function() {
 	return tabs.getChildCount();
 };
 
+SidebarFragment.Group = new Function();
+
 SidebarFragment.Group = function() {
 	ImageFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 SidebarFragment.Group.prototype = new ImageFragment;
@@ -174,7 +182,9 @@ SidebarFragment.Group.prototype.setImage = function(src) {
 
 SidebarFragment.Group.Item = function() {
 	ImageFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 SidebarFragment.Group.Item.prototype = new ImageFragment;

@@ -19,7 +19,7 @@ const PROJECT_TOOL = (function() {
 					}
 					if (!PROJECT_TOOL.tools.hasOwnProperty(type)) {
 						if (Tools.hasOwnProperty(type)) {
-							Logger.Log("Dev Editor: Try registering tool " + type + " in menu if you need to interact with project", "WARNING");
+							Logger.Log("ModdingTools: Try registering tool " + type + " in menu if you need to interact with project", "WARNING");
 						}
 						categories[type].items.push({
 							icon: "inspectorObject",
@@ -49,7 +49,7 @@ const PROJECT_TOOL = (function() {
 						factory.observeEntry(entry, descriptor, i);
 					} catch (e) {
 						descriptor.description = formatExceptionReport(e, false);
-						Logger.Log("Dev Editor: contentProjectDescriptor: " + e, "WARNING");
+						Logger.Log("ModdingTools: contentProjectDescriptor: " + e, "WARNING");
 					}
 					categories[type].items.push(descriptor);
 				}
@@ -60,7 +60,7 @@ const PROJECT_TOOL = (function() {
 				return items;
 			}
 		},
-		
+
 		contentEntryDescriptor: function(tool) {
 			if (!isEmpty(tool.tools)) {
 				let items = [];
@@ -82,7 +82,7 @@ const PROJECT_TOOL = (function() {
 				}
 			}
 		},
-		
+
 		menuDescriptor: {
 			elements: [function(tool) {
 				if (REVISION.indexOf("alpha") != -1) {
@@ -121,7 +121,7 @@ const PROJECT_TOOL = (function() {
 				}
 			}]
 		},
-		
+
 		confirmProjectEntryRemoval: function(index, title) {
 			confirm(title || translate("Entry removal"),
 				translate("Entry contents will be removed.") + "\n" + translate("Do you wish to continue?"),
@@ -149,7 +149,7 @@ const attachProjectTool = function(source, post) {
 				if (source !== undefined) {
 					return attachProjectTool(undefined, post);
 				}
-				MCSystem.throwException("Dev Editor: Something went wrong, try again later");
+				MCSystem.throwException("ModdingTools: Something went wrong, try again later");
 			}
 			if (accepted) {
 				try {
@@ -185,7 +185,7 @@ const attachEditorTool = function(who, what, post) {
 			handle(function() {
 				try {
 					if (!accepted) {
-						MCSystem.throwException("Dev Editor: Target project is not validated, aborting!");
+						MCSystem.throwException("ModdingTools: Target project is not validated, aborting!");
 					}
 					if (accepted) {
 						try {
@@ -217,7 +217,7 @@ const attachEditorTool = function(who, what, post) {
 				try {
 					who.deattach();
 				} catch (e) {
-					Logger.Log("Dev Editor: Tool.deattach: " + e, "WARNING");
+					Logger.Log("ModdingTools: Tool.deattach: " + e, "WARNING");
 				}
 				attachProjectTool();
 			});

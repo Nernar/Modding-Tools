@@ -1,4 +1,7 @@
-const ScrollFragment = function() {
+/**
+ * @requires `isAndroid()`
+ */
+function ScrollFragment() {
 	FrameFragment.apply(this, arguments);
 };
 
@@ -10,7 +13,7 @@ ScrollFragment.prototype.resetContainer = function() {
 	let scroll = new android.widget.ScrollView(getContext());
 	scroll.setTag("containerScroll");
 	this.getContainer().addView(scroll);
-	
+
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setOrientation($.LinearLayout.VERTICAL);
 	layout.setTag("containerLayout");

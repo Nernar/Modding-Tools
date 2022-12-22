@@ -1,4 +1,4 @@
-const ProjectTool = function(object) {
+function ProjectTool(object) {
 	MenuTool.apply(this, arguments);
 };
 
@@ -16,11 +16,11 @@ ProjectTool.prototype.reset = function() {
 		}
 	}, function(tool) {
 		let items = calloutOrParse(this, tool.contentEntryDescriptor, Array.prototype.slice.call(arguments));
-		if (items.length == 0) {
+		if (!items || items.length == 0) {
 			return {
 				type: "message",
 				icon: "entitySelect",
-				message: translate("Howdy and welcome to Dev Editor!") + "\n" + translate("Unfortunately, you didn't install any module to start something bewitching.") + " " + translate("Come back here when you find something worthwhile in Mod Browser.")
+				message: translate("Howdy and welcome to Modding Tools!") + "\n" + translate("Unfortunately, you didn't install any module to start something bewitching.") + " " + translate("Come back here when you find something worthwhile in Mod Browser.")
 			};
 		}
 		return {
@@ -91,6 +91,15 @@ ProjectTool.prototype.reset = function() {
 			}
 		}]
 	}];
+};
+
+ProjectTool.prototype.unqueue = function() {
+	if (isAndroid()) {
+		return MenuTool.prototype.unqueue.apply(this, arguments);
+	}
+	if (ShellObserver.isInteractive()) {
+		this.menu();
+	}
 };
 
 ProjectTool.prototype.getExplorerLastName = function() {
@@ -201,7 +210,7 @@ ProjectTool.prototype.export = function(file) {
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
 		if (!this.hasConverter()) {
-			MCSystem.throwException("Dev Editor: no converter, try override ProjectTool.hasConverter");
+			MCSystem.throwException("ModdingTools: No converter, try override ProjectTool.hasConverter!");
 		}
 		let active = Date.now();
 		try {
@@ -225,7 +234,7 @@ ProjectTool.prototype.getProject = function() {
 
 ProjectTool.prototype.toProject = function() {
 	let project = this.getProject();
-	if (!project) MCSystem.throwException("Dev Editor: Not found attached Project, toProject is not availabled");
+	if (!project) MCSystem.throwException("ModdingTools: Not found attached Project, toProject is not availabled");
 	return project.getAll() || null;
 };
 
@@ -241,6 +250,8 @@ ProjectTool.ExtensionType = {};
 ProjectTool.ExtensionType.REPLACE = 0;
 ProjectTool.ExtensionType.MERGE = 1;
 ProjectTool.ExtensionType.EXPORT = 2;
+
+ProjectTool.MenuFactory = new Function();
 
 ProjectTool.MenuFactory = function(object, type) {
 	if (object != null && typeof object == "object") {

@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ErrorReporter;
@@ -27,7 +28,7 @@ import org.mozilla.javascript.debug.Debugger;
 public class EvaluatorFactory {
 	private static final Class<?> codegenClass = Kit.classOrNull("org.mozilla.javascript.optimizer.Codegen");
     private static final Class<?> interpreterClass = Kit.classOrNull("org.mozilla.javascript.Interpreter");
-	
+
     public static Evaluator createCompiler(Context cx) {
         if (cx.getOptimizationLevel() >= 0 && codegenClass != null) {
             try {
@@ -36,14 +37,14 @@ public class EvaluatorFactory {
         }
         return createInterpreter();
     }
-	
+
 	public static Evaluator createInterpreter() {
 		try {
 			return (Evaluator) interpreterClass.newInstance();
 		} catch (SecurityException | LinkageError | InstantiationException | IllegalAccessException x) {}
 		return null;
 	}
-	
+
 	public static ScriptNode parse(Reader sourceReader, String sourceString, String sourceName, int lineno, CompilerEnvirons compilerEnv, ErrorReporter compilationErrorReporter, boolean returnFunction) throws IOException {
 		Parser p = new Parser(compilerEnv, compilationErrorReporter);
 		if (returnFunction) {
@@ -55,7 +56,7 @@ public class EvaluatorFactory {
 				throw new IllegalStateException(x);
 			}
         }
-        
+
         AstRoot ast;
 		if (sourceString == null) {
 			ast = p.parse(sourceReader, sourceName, lineno);
@@ -64,22 +65,28 @@ public class EvaluatorFactory {
 		}
 		if (returnFunction) {
 			// parser no longer adds function to script node
-			if (!(ast.getFirstChild() != null && ast.getFirstChild().getType() == Token.FUNCTION)) {
-				// XXX: the check just looks for the first child
-				// and allows for more nodes after it for compatibility
-				// with sources like function() {};;;
-				throw new IllegalArgumentException("compileFunction only accepts source with single JS function: " + sourceString);
+			try {
+				Method getFirstChild = AstRoot.class.getMethod("getFirstChild");
+				Object firstNode = getFirstChild.invoke(ast);
+				if (!(firstNode != null && ((int) firstNode.getClass().getMethod("getType").invoke(ast)) == Token.FUNCTION)) {
+					// XXX: the check just looks for the first child
+					// and allows for more nodes after it for compatibility
+					// with sources like function() {};;;
+					throw new IllegalArgumentException("compileFunction only accepts source with single JS function: " + sourceString);
+				}
+			} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+				throw new UnsupportedOperationException(e);
 			}
 		}
-		
+
 		return new IRFactory(compilerEnv, compilationErrorReporter).transformTree(ast);
 	}
-	
+
 	public static Object compileImpl(Context cx, Scriptable scope, Reader sourceReader, String sourceString, String sourceName, int lineno, Object securityDomain, boolean returnFunction, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) throws IOException {
 		if (sourceName == null) {
 			sourceName = "unnamed script";
 		}
-		
+
 		try {
 			Method getSecurityControllerMethod = cx.getClass().getDeclaredMethod("getSecurityController");
 			getSecurityControllerMethod.setAccessible(true);
@@ -89,10 +96,10 @@ public class EvaluatorFactory {
 		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException x) {
 			throw new IllegalStateException(x);
 		}
-		
+
 		// scope should be given if and only if compiling function
 		if (!(scope == null ^ returnFunction)) Kit.codeBug();
-		
+
 		if (compilerEnv == null) {
 			compilerEnv = new CompilerEnvirons();
 			compilerEnv.initFromContext(cx);
@@ -100,19 +107,23 @@ public class EvaluatorFactory {
 		if (compilationErrorReporter == null) {
 			compilationErrorReporter = compilerEnv.getErrorReporter();
 		}
-		
+
 		Debugger debugger = cx.getDebugger();
 		if (!(debugger == null || sourceReader == null)) {
 			sourceString = Kit.readReader(sourceReader);
 			sourceReader = null;
 		}
-		
+
 		ScriptNode tree = parse(sourceReader, sourceString, sourceName, lineno, compilerEnv, compilationErrorReporter, returnFunction);
 		if (compiler == null) {
 			compiler = createCompiler(cx);
 		}
-		Object bytecode = compiler.compile(compilerEnv, tree, tree.getEncodedSource(), returnFunction);
-		
+		String encodedSource = null;
+		try {
+			encodedSource = (String) ScriptNode.class.getMethod("getEncodedSource").invoke(tree);
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {}
+		Object bytecode = compiler.compile(compilerEnv, tree, encodedSource, returnFunction);
+
 		if (debugger != null) {
 			if (sourceString == null) Kit.codeBug();
 			if (bytecode instanceof DebuggableScript) {
@@ -122,24 +133,24 @@ public class EvaluatorFactory {
 				throw new RuntimeException("NOT SUPPORTED");
 			}
 		}
-		
+
 		if (returnFunction) {
             return compiler.createFunctionObject(cx, scope, bytecode, securityDomain);
         }
 		return compiler.createScriptObject(bytecode, securityDomain);
 	}
-	
+
 	private static void notifyCompilationDone(Context cx, DebuggableScript dscript, String debugSource) {
 		cx.getDebugger().handleCompilationDone(cx, dscript, debugSource);
 		for (int i = 0; i != dscript.getFunctionCount(); ++i) {
 			notifyCompilationDone(cx, dscript.getFunction(i), debugSource);
 		}
 	}
-	
+
 	public static Script compileReader(Context cx, Reader in, String sourceName, int lineno, Object securityDomain, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) throws IOException {
 		return (Script) compileImpl(cx, null, in, null, sourceName, lineno, securityDomain, false, compiler, compilationErrorReporter, compilerEnv);
 	}
-	
+
 	public static Object evaluateReader(Context cx, Scriptable scope, Reader in, String sourceName, int lineno, Object securityDomain, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) throws IOException {
 		Script script = compileReader(cx, in, sourceName, lineno, securityDomain, compiler, compilationErrorReporter, compilerEnv);
 		if (script != null) {
@@ -147,7 +158,7 @@ public class EvaluatorFactory {
 		}
 		return null;
 	}
-	
+
 	public static Script compileString(Context cx, String source, String sourceName, int lineno, Object securityDomain, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) {
 		try {
 			return (Script) compileImpl(cx, null, null, source, sourceName, lineno, securityDomain, false, compiler, compilationErrorReporter, compilerEnv);
@@ -156,7 +167,7 @@ public class EvaluatorFactory {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static Object evaluateString(Context cx, Scriptable scope, String source, String sourceName, int lineno, Object securityDomain, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) {
 		Script script = compileString(cx, source, sourceName, lineno, securityDomain, compiler, compilationErrorReporter, compilerEnv);
 		if (script != null) {
@@ -164,7 +175,7 @@ public class EvaluatorFactory {
 		}
 		return null;
 	}
-	
+
 	public static Function compileFunction(Context cx, Scriptable scope, String source, String sourceName, int lineno, Object securityDomain, Evaluator compiler, ErrorReporter compilationErrorReporter, CompilerEnvirons compilerEnv) {
 		try {
 			return (Function) compileImpl(cx, scope, null, source, sourceName, lineno, securityDomain, true, compiler, compilationErrorReporter, compilerEnv);
@@ -174,7 +185,7 @@ public class EvaluatorFactory {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static String getClassName(String in) {
 		char[] chars = in.toCharArray();
 		if (!Character.isJavaIdentifierStart(chars[0])) {
@@ -190,7 +201,7 @@ public class EvaluatorFactory {
 		}
 		return String.valueOf(chars).trim();
 	}
-	
+
 	@Deprecated
 	public static Script evaluateReaderWithCorruptions(Context cx, Scriptable scope, Reader in, String sourceName, int lineno, Object securityDomain) throws IOException {
 		Script script = cx.compileReader(in, sourceName, lineno, securityDomain);
@@ -204,7 +215,7 @@ public class EvaluatorFactory {
 				throw new RuntimeException(th);
 			}
 			CorruptedScript frame = new CorruptedScript();
-			// Not working yet... Script just returning second stack line
+			// XXX: Not working yet... Script just returning second stack line
 			// int lineNumber = ((RhinoException) th).lineNumber() - lineno;
 			int lineNumber = lineno + 1;
 			frame.captureCorruption(lineNumber, th);
@@ -256,7 +267,7 @@ public class EvaluatorFactory {
 			return frame;
 		}
 	}
-	
+
 	@Deprecated
 	public static Script evaluateStringWithCorruptions(Context cx, Scriptable scope, String source, String sourceName, int lineno, Object securityDomain) {
 		try {

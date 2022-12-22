@@ -1,11 +1,13 @@
-const Worker = function() {
+function Worker() {
 	this.data = {
 		type: "unknown"
 	};
-	this.getProject = function() {
-		return this.data;
-	};
-	this.loadProject = function(what) {
-		this.data = what;
-	};
+};
+
+Worker.prototype.getProject = function() {
+	return this.data;
+};
+
+Worker.prototype.loadProject = function(what) {
+	this.data = what;
 };

@@ -1,6 +1,8 @@
-const TransitionWindow = function() {
+function TransitionWindow() {
 	FocusableWindow.apply(this, arguments);
-	this.resetWindow();
+	if (isAndroid()) {
+		this.resetWindow.apply(this, arguments);
+	}
 };
 
 TransitionWindow.prototype = new FocusableWindow;
@@ -12,14 +14,23 @@ TransitionWindow.prototype.resetWindow = function() {
 	this.nothing = this.makeRootScene();
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.hasScene = function(scene) {
 	return this.manager.hasScene(scene);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.setTransition = function(sceneFromOrTo, sceneToOrTransition, actor) {
 	return this.manager.setTransition(sceneFromOrTo, sceneToOrTransition, actor);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.transitionTo = function(scene, actor) {
 	if (actor) {
 		android.transition.TransitionManager.go(scene, actor);
@@ -29,16 +40,25 @@ TransitionWindow.prototype.transitionTo = function(scene, actor) {
 	} else delete this.scene;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getCurrentlyScene = function() {
 	return this.scene || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.beginDelayedTransition = function(containerOrTransition, actor) {
 	let content = this.getContent();
 	if (content == null) return;
 	android.transition.TransitionManager.beginDelayedTransition(actor ? containerOrTransition : content, actor || containerOrTransition);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.endTransitions = function(container) {
 	if (android.os.Build.VERSION.SDK_INT >= 23) {
 		let content = this.getContent();
@@ -47,12 +67,18 @@ TransitionWindow.prototype.endTransitions = function(container) {
 	}
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.makeScene = function(rootOrContainer, container) {
 	let content = this.getContent();
 	if (content == null) return null;
 	return new android.transition.Scene(container ? rootOrContainer : content, container || rootOrContainer);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.findScene = function(container) {
 	if (android.os.Build.VERSION.SDK_INT >= 29) {
 		let scene = this.getRootScene();
@@ -66,10 +92,14 @@ TransitionWindow.prototype.getContent = function() {
 	return this.root || null;
 };
 
+
 TransitionWindow.prototype.getContainer = function() {
 	return FocusableWindow.prototype.getContent.apply(this, arguments);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.makeContainerScene = function() {
 	let container = this.getContainer();
 	if (container === null) return container;
@@ -78,6 +108,9 @@ TransitionWindow.prototype.makeContainerScene = function() {
 	return this.makeScene(root, container);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getContainerScene = function() {
 	let container = this.getContainer();
 	if (!this.hasContainerScene() || this.getContainerOfScene() != container) {
@@ -87,28 +120,46 @@ TransitionWindow.prototype.getContainerScene = function() {
 	return this.containerScene || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getContainerOfScene = function() {
 	return this.containerOfScene || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.hasContainerScene = function() {
 	return !!this.containerScene;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.makeRoot = function() {
 	return new FrameFragment().getContainer();
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.makeRootScene = function() {
 	let container = this.getContent();
 	if (container === null) return container;
 	return this.makeScene(this.makeRoot());
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getRootScene = function() {
 	return this.nothing || null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getCurrentlyContainer = function() {
 	let content = this.getContent();
 	if (content !== null) {
@@ -121,6 +172,9 @@ TransitionWindow.prototype.getCurrentlyContainer = function() {
 	return null;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 TransitionWindow.prototype.getAvailabledScene = function() {
 	return this.getContainerScene() || this.getCurrentlyScene() || null;
 };

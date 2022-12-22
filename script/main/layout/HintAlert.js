@@ -1,29 +1,10 @@
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
+ * @requires `isAndroid()`
  */
-
-const HintAlert = function() {
+function HintAlert() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setGravity($.Gravity.LEFT | $.Gravity.BOTTOM);
-	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setTouchable(false);
-
-	let actor = new android.transition.Slide($.Gravity.BOTTOM),
-		interpolator = new android.view.animation.DecelerateInterpolator();
-	actor.setInterpolator(interpolator);
-	actor.setDuration(window.getTime() / 6);
-	window.setEnterTransition(actor);
-
-	actor = new android.transition.TransitionSet();
-	let slide = new android.transition.Slide($.Gravity.BOTTOM),
-		fade = new android.transition.Fade(android.transition.Visibility.MODE_OUT);
-	actor.addTransition(slide);
-	actor.addTransition(fade);
-	actor.setDuration(window.getTime() / 6);
-	window.setExitTransition(actor);
-
-	window.resetContent();
 	window.clearStack();
 	return window;
 };
@@ -37,6 +18,29 @@ HintAlert.prototype.consoleMode = false;
 HintAlert.prototype.stackable = true;
 HintAlert.prototype.forever = false;
 HintAlert.prototype.time = 3000;
+
+HintAlert.prototype.resetWindow = function() {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setGravity($.Gravity.LEFT | $.Gravity.BOTTOM);
+	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setTouchable(false);
+
+	let actor = new android.transition.Slide($.Gravity.BOTTOM),
+		interpolator = new android.view.animation.DecelerateInterpolator();
+	actor.setInterpolator(interpolator);
+	actor.setDuration(this.getTime() / 6);
+	this.setEnterTransition(actor);
+
+	actor = new android.transition.TransitionSet();
+	let slide = new android.transition.Slide($.Gravity.BOTTOM),
+		fade = new android.transition.Fade(android.transition.Visibility.MODE_OUT);
+	actor.addTransition(slide);
+	actor.addTransition(fade);
+	actor.setDuration(this.getTime() / 6);
+	this.setExitTransition(actor);
+
+	this.resetContent();
+}
 
 HintAlert.prototype.resetContent = function() {
 	let content = new android.widget.LinearLayout(getContext());
@@ -59,7 +63,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 				background = new BitmapDrawable("popup");
 			}
 		} catch (e) {
-			log("Dev Editor: HintAlert.attachMessage: " + e);
+			log("ModdingTools: HintAlert.attachMessage: " + e);
 		}
 		if (background) background.attachAsBackground(layout);
 		layout.setOrientation($.LinearLayout.VERTICAL);
@@ -72,7 +76,7 @@ HintAlert.prototype.attachMessage = function(hint, color, background) {
 		let text = new android.widget.TextView(getContext());
 		text.setTextSize(toComplexUnitSp(8));
 		text.setText(hint !== undefined ? String(hint) : translate("Nothing"));
-		log("Dev Editor: hint: " + text.getText());
+		log("ModdingTools: hint: " + text.getText());
 		if (!this.inConsoleMode()) text.setGravity($.Gravity.CENTER);
 		text.setTextColor(color || $.Color.WHITE);
 		typeface && text.setTypeface(typeface);
@@ -260,7 +264,7 @@ HintAlert.prototype.flashHint = function(hint, color) {
 	this.beginDelayedTransition(actor);
 	if (color !== undefined) view.setTextColor(color);
 	view.setVisibility($.View.VISIBLE);
-	log("Dev Editor: flash hint: " + hint);
+	log("ModdingTools: flashHint: " + hint);
 	this.reawait();
 	return true;
 };

@@ -2,7 +2,6 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
-
 const LevelProvider = {};
 
 LevelProvider.attach = function() {
@@ -91,6 +90,6 @@ Callback.addCallback("tick", function() {
 			TPSMeter.onTick();
 		}
 	} catch (e) {
-		log("Dev Editor: tick: " + e);
+		log("ModdingTools: tick: " + e);
 	}
 });

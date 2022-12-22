@@ -1,11 +1,10 @@
 (function() {
-	let internal = new java.io.File(Dirs.SCRIPT_REVISION + "bridge.jar");
-	if (internal.exists()) {
-		let reader = new java.io.FileReader(internal);
+	let internal = new java.io.File(Dirs.SCRIPT_REVISION + "bridge.dex");
+	if (internal.exists() && internal.isFile()) {
 		InnerCorePackages.mod.executable.Compiler.enter(-1);
 		merge(this, InnerCorePackages.mod.executable.Compiler.loadScriptFromDex(internal)());
 	} else {
-		Logger.Log("Dev Editor: Not found internal bridge, most functionality may not working, please reinstall " + REVISION, "WARNING");
+		Logger.Log("ModdingTools: Not found internal bridge, most functionality may NOT working, please reinstall " + REVISION, "WARNING");
 	}
 })();
 
@@ -29,7 +28,7 @@ const initialize = function() {
 			LaunchSequence.execute();
 		}
 	} catch (e) {
-		Logger.Log("Dev Editor: Initialization fatal: Unfortunately, we will not be able to run modification", "ERROR");
+		Logger.Log("ModdingTools: Initialization fatal: Unfortunately, we will not be able to run modification", "ERROR");
 		reportError(e);
 	}
 };

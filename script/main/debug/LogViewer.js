@@ -1,3 +1,6 @@
+/**
+ * @requires `isAndroid()`
+ */
 const LogViewer = {};
 
 LogViewer.span = function(text, color) {
@@ -22,20 +25,20 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 		return;
 	}
 	if (message.type.level == 3) {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.RED);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, ColorDrawable.parseColor("RED"));
 	}
 	if (message.strPrefix == "WARNING") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.YELLOW);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, ColorDrawable.parseColor("YELLOW"));
 	}
 	if (message.type.level == 2 || message.strPrefix == "INFO") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.GREEN);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, ColorDrawable.parseColor("GREEN"));
 	} else if (message.type.level == 1 || message.strPrefix == "DEBUG") {
-		return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.GRAY);
+		return this.append(text, scroll, horizontal, message.strPrefix, message.message, ColorDrawable.parseColor("GRAY"));
 	}
 	if (message.strPrefix == "MOD") {
 		return this.append(text, scroll, horizontal, message.strPrefix, message.message);
 	}
-	return this.append(text, scroll, horizontal, message.strPrefix, message.message, $.Color.LTGRAY);
+	return this.append(text, scroll, horizontal, message.strPrefix, message.message, ColorDrawable.parseColor("LTGRAY"));
 };
 
 LogViewer.show = function() {

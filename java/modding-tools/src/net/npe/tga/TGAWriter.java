@@ -16,27 +16,27 @@
 package net.npe.tga;
 
 public class TGAWriter {
-	
+
 	public enum EncodeType {
 		NONE,	// No RLE encoding
 		RLE,	// RLE encoding
 		AUTO,	// auto
 	}
-	
+
 	public static byte [] write(int [] pixels, int width, int height, TGAReader.Order order) {
 		return write(pixels, width, height, order, EncodeType.AUTO);
 	}
 
 	public static byte [] write(int [] pixels, int width, int height, TGAReader.Order order, EncodeType encodeType) {
-		
+
 		int elementCount = hasAlpha(pixels, order) ? 4 : 3;
-		
+
 		int rawSize = elementCount * pixels.length;
 		int rleSize = getEncodeSize(pixels, width, elementCount);
-		
+
 		boolean encoding;
 		int dataSize;
-		
+
 		switch(encodeType) {
 		case RLE:
 			encoding = true;
@@ -52,13 +52,13 @@ public class TGAWriter {
 			dataSize = rawSize;
 			break;
 		}
-		
+
 		int length = 18 + FOOTER.length + dataSize;
-		
+
 		byte [] buffer = new byte[length];
-		
+
 		int index = 0;
-		
+
 		// Header
 		buffer[index++] = 0; // idFieldLength
 		buffer[index++] = 0; // colormapType
@@ -74,23 +74,23 @@ public class TGAWriter {
 		buffer[index++] = (byte)((height >> 8) & 0xFF); // height
 		buffer[index++] = (byte)(8*elementCount); // depth
 		buffer[index++] = 0x20; // descriptor TODO alpha channel depth
-		
+
 		if(encoding) {
 			index = encodeRLE(pixels, width, elementCount, order, buffer, index);
 		}
 		else {
 			index = writeRaw(pixels, buffer, index, elementCount, order);
 		}
-		
+
 		// Copy Footer
 		for(int i=0; i<FOOTER.length; i++) {
 			buffer[index++] = FOOTER[i];
 		}
 
 		return buffer;
-		
+
 	}
-	
+
 	private static int writeRaw(int [] pixels, byte [] buffer, int index, int elementCount, TGAReader.Order order) {
 		if(elementCount == 3) {
 			// BGR
@@ -116,14 +116,14 @@ public class TGAWriter {
 	private static final int MODE_SELECT = 1;
 	private static final int MODE_SAME_COLOR = 2;
 	private static final int MODE_DIFFERENT_COLOR = 3;
-	
+
 	private static int getEncodeSize(int [] pixels, int width, int elementCount) {
-		
+
 		int size = 0;
 		int color = 0;
 		int mode = MODE_RESET;
 		int start = 0;
-		
+
 		for(int i=0; i<pixels.length; i++) {
 			if(mode == MODE_RESET) {
 				color = pixels[i];
@@ -160,7 +160,7 @@ public class TGAWriter {
 					mode = MODE_RESET;
 				}
 			}
-			
+
 			if((i+1)%width == 0 && mode != MODE_RESET) {
 				if(mode == MODE_SAME_COLOR) {
 					size += 1 + elementCount;
@@ -171,7 +171,7 @@ public class TGAWriter {
 				}
 				mode = MODE_RESET;
 			}
-			
+
 			// update color
 			color = pixels[i];
 		}
@@ -179,17 +179,17 @@ public class TGAWriter {
 		if(mode != MODE_RESET) {
 			System.out.println("Error!");
 		}
-		
+
 		return size;
-		
+
 	}
-	
+
 	private static int encodeRLE(int [] pixels, int width, int elementCount, TGAReader.Order order, byte [] buffer, int index) {
-		
+
 		int color = 0;
 		int mode = MODE_RESET;
 		int start = 0;
-		
+
 		for(int i=0; i<pixels.length; i++) {
 			if(mode == MODE_RESET) {
 				color = pixels[i];
@@ -226,7 +226,7 @@ public class TGAWriter {
 					mode = MODE_RESET;
 				}
 			}
-			
+
 			if((i+1)%width == 0 && mode != MODE_RESET) {
 				if(mode == MODE_SAME_COLOR) {
 					index = encodeRLE(buffer, index, color, i-start+1, elementCount, order);
@@ -237,7 +237,7 @@ public class TGAWriter {
 				}
 				mode = MODE_RESET;
 			}
-			
+
 			// update color
 			color = pixels[i];
 		}
@@ -245,11 +245,11 @@ public class TGAWriter {
 		if(mode != MODE_RESET) {
 			System.out.println("Error!");
 		}
-		
+
 		return index;
-		
+
 	}
-	
+
 	private static int encodeRLE(byte [] buffer, int index, int color, int count, int elementCount, TGAReader.Order order) {
 		buffer[index++] = (byte)(0x80 | (count-1));
 		buffer[index++] = (byte)((color >> order.blueShift) & 0xFF);
@@ -260,7 +260,7 @@ public class TGAWriter {
 		}
 		return index;
 	}
-	
+
 	private static int encodeRLE(byte [] buffer, int index, int [] pixels, int start, int count, int elementCount, TGAReader.Order order) {
 		buffer[index++] = (byte)(count-1);
 		for(int i=0; i<count; i++) {
@@ -274,7 +274,7 @@ public class TGAWriter {
 		}
 		return index;
 	}
-	
+
 	private static boolean hasAlpha(int [] pixels, TGAReader.Order order) {
 		int alphaShift = order.alphaShift;
 		for(int i=0; i<pixels.length; i++) {
@@ -283,7 +283,7 @@ public class TGAWriter {
 		}
 		return false;
 	}
-	
+
 	private static final byte [] FOOTER = {0,0,0,0,0,0,0,0,84,82,85,69,86,73,83,73,79,78,45,88,70,73,76,69,46,0}; // TRUEVISION-XFILE
-	
+
 }

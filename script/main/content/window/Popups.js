@@ -2,7 +2,6 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
-
 const Popups = {};
 
 Popups.widgets = [];
@@ -21,7 +20,7 @@ Popups.getOpened = function() {
 
 Popups.open = function(widget, id) {
 	if (widget === undefined || widget === null) {
-		Logger.Log("Dev Editor: passed widget to openPopup " + id + " is undefined or not considered", "WARNING");
+		Logger.Log("ModdingTools: Widget passed to openPopup " + id + " is undefined or null", "WARNING");
 		return;
 	}
 	let opened = this.closeIfOpened(id);
@@ -38,7 +37,7 @@ Popups.open = function(widget, id) {
 
 Popups.getAvailablePlace = function(root) {
 	if (toComplexUnitDip(160) > getDisplayHeight()) {
-		showHint("No place for open popup", $.Color.YELLOW);
+		showHint("No place for open popup", ColorDrawable.parseColor("YELLOW"));
 		return null;
 	}
 	return {

@@ -1,25 +1,28 @@
-const OverlayWindow = function() {
-	let window = UniqueWindow.apply(this, arguments);
-	window.setTouchable(false);
-	window.setX(toComplexUnitDip(96));
-	window.setFragment(new OverlayFragment());
-	
-	let slide = new android.transition.Slide($.Gravity.TOP);
-	slide.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	slide.setDuration(400);
-	window.setEnterTransition(slide);
-	
-	slide = new android.transition.Slide($.Gravity.TOP);
-	slide.setInterpolator(new android.view.animation.AccelerateInterpolator());
-	slide.setDuration(400);
-	window.setExitTransition(slide);
-	
-	window.setBackground("popup");
-	return window;
+function OverlayWindow() {
+	return UniqueWindow.apply(this, arguments);
 };
 
 OverlayWindow.prototype = new UniqueWindow;
 OverlayWindow.prototype.TYPE = "OverlayWindow";
+
+OverlayWindow.prototype.resetWindow = function() {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setTouchable(false);
+	this.setX(toComplexUnitDip(96));
+	this.setFragment(new OverlayFragment());
+
+	let slide = new android.transition.Slide($.Gravity.TOP);
+	slide.setInterpolator(new android.view.animation.DecelerateInterpolator());
+	slide.setDuration(400);
+	this.setEnterTransition(slide);
+
+	slide = new android.transition.Slide($.Gravity.TOP);
+	slide.setInterpolator(new android.view.animation.AccelerateInterpolator());
+	slide.setDuration(400);
+	this.setExitTransition(slide);
+
+	this.setBackground("popup");
+}
 
 OverlayWindow.prototype.appendText = function(text) {
 	this.getFragment().appendText(text);

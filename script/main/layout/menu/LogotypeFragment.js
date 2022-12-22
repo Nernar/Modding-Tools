@@ -2,10 +2,11 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
-
-const LogotypeFragment = function() {
+function LogotypeFragment() {
 	ImageFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 LogotypeFragment.prototype = new ImageFragment;
@@ -13,11 +14,11 @@ LogotypeFragment.prototype = new ImageFragment;
 LogotypeFragment.prototype.resetContainer = function() {
 	let container = new android.widget.FrameLayout(getContext());
 	this.setContainerView(container);
-	
+
 	let layout = new android.widget.LinearLayout(getContext());
 	layout.setGravity($.Gravity.CENTER);
 	container.addView(layout);
-	
+
 	let logotype = new android.widget.ImageView(getContext());
 	logotype.setTag("logotype");
 	let params = new android.widget.LinearLayout.LayoutParams

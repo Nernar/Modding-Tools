@@ -30,7 +30,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 import io.github.rosemoe.sora.widget.style.SelectionHandleStyle;
 

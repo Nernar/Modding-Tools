@@ -1,4 +1,4 @@
-const UniqueWindow = function() {
+function UniqueWindow() {
 	TransitionWindow.apply(this, arguments);
 	if (UniqueHelper.wasTypeAttached(this)) {
 		return UniqueHelper.getWindow(this);

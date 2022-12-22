@@ -1,13 +1,13 @@
 /*
 
    Copyright 2018-2022 Nernar (github.com/nernar)
-   
+
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-   
+
        http://www.apache.org/licenses/LICENSE-2.0
-   
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,12 +17,27 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-07.09.2022-0";
+const REVISION = "develop-alpha-0.4-28.10.2022-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
 const DESCRIPTION = __mod__.getInfoProperty("description");
 const API_VERSION = parseFloat(REVISION.split("-")[2]);
+const PLATFORM = this.hasOwnProperty("android") ? "android" : "cli";
+
+const isAndroid = function() {
+	return PLATFORM == "android";
+};
+const isCLI = function() {
+	return PLATFORM == "cli";
+};
+
+const SHELL = (function() {
+	if (isCLI()) {
+		return Packages.io.nernar.instant.cli.CLI.byPlatform();
+	}
+	return null;
+})();
 
 // Configurable: autosave
 let autosave = true;
@@ -56,8 +71,8 @@ let warningMessage = null;
 
 // Definitions for default values
 let firstLaunchTutorial = REVISION.startsWith("testing");
-let typeface = android.graphics.Typeface.MONOSPACE;
-let typefaceJetBrains = android.graphics.Typeface.MONOSPACE;
+let typeface = isAndroid() ? android.graphics.Typeface.MONOSPACE : null;
+let typefaceJetBrains = isAndroid() ? android.graphics.Typeface.MONOSPACE : null;
 
 IMPORT("Files");
 
@@ -70,14 +85,20 @@ IMPORT("Stacktrace");
 
 const prepareDebugInfo = function() {
 	return NAME + " " + VERSION + " by " + AUTHOR + " for " + (isHorizon ? "Horizon" : "Inner Core") + " " + minecraftVersion +
-		" Report Log\nREVISION " + REVISION.toUpperCase() + ", ANDROID " + android.os.Build.VERSION.SDK_INT;
+		" Report Log\nREVISION " + REVISION.toUpperCase() + (isAndroid() ? ", ANDROID " + android.os.Build.VERSION.SDK_INT : ", CLI");
 };
 
 registerReportAction((function() {
 	let alreadyHasDate = false;
 	return function(error) {
-		error && Logger.Log("Dev Editor: " + error, "WARNING");
-		reportTrace(error);
+		error && Logger.Log("ModdingTools: " + error + (
+			error.lineNumber ? " (#" + error.lineNumber + ")" : ""
+		) + (
+			error.stack ? "\n" + error.stack : ""
+		), "WARNING");
+		if (isAndroid()) {
+			reportTrace(error);
+		}
 		let message = reportTrace.toCode(error) + ": " + error + "\n" +
 				(error ? error.stack : null),
 			file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
@@ -131,15 +152,17 @@ const CoreEngine = {
 };
 
 let $ = new JavaImporter();
-$.importClass(android.view.ViewGroup);
-$.importClass(android.view.View);
-$.importClass(android.view.Gravity);
-$.importClass(android.graphics.Color);
-$.importClass(android.graphics.Shader);
-$.importClass(android.support.v4.view.ViewCompat);
-$.importClass(android.widget.ImageView);
-$.importClass(android.widget.LinearLayout);
-$.importClass(android.widget.ListView);
+if (isAndroid()) {
+	$.importClass(android.view.ViewGroup);
+	$.importClass(android.view.View);
+	$.importClass(android.view.Gravity);
+	$.importClass(android.graphics.Color);
+	$.importClass(android.graphics.Shader);
+	$.importClass(android.support.v4.view.ViewCompat);
+	$.importClass(android.widget.ImageView);
+	$.importClass(android.widget.LinearLayout);
+	$.importClass(android.widget.ListView);
+}
 $.importClass(java.util.concurrent.TimeUnit);
 $.importClass(InnerCorePackages.utils.FileTools);
 $.importClass(InnerCorePackages.api.runtime.LevelInfo);

@@ -216,7 +216,9 @@ Unicode.registerCharset("Specials", 65520, 65533);
 
 const ToolbarFragment = function() {
 	Fragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 	this.setBackground("popup");
 	this.setTitle(translate(NAME));
 	this.setBackButtonImage("controlBack");
@@ -233,7 +235,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
 	container.setLayoutParams(params);
 	this.setContainerView(container);
-	
+
 	let menu = new android.widget.LinearLayout(getContext());
 	menu.setId(java.lang.String("containerItems").hashCode());
 	menu.setTag("containerItems");
@@ -243,7 +245,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	params.leftMargin = toComplexUnitDip(32);
 	container.addView(menu, params);
-	
+
 	let button = new ToolbarFragment.Item();
 	this.views.backButton = button;
 	button = button.getContainer();
@@ -263,7 +265,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.addRule(android.widget.RelativeLayout.ALIGN_PARENT_LEFT);
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	container.addView(button, params);
-	
+
 	let bar = new android.widget.LinearLayout(getContext());
 	bar.setOrientation($.LinearLayout.VERTICAL);
 	bar.setId(java.lang.String("toolbarBar").hashCode());
@@ -275,7 +277,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	params.addRule(android.widget.RelativeLayout.CENTER_IN_PARENT);
 	params.leftMargin = toComplexUnitDip(24);
 	container.addView(bar, params);
-	
+
 	let title = new android.widget.TextView(getContext());
 	title.setVisibility($.View.GONE);
 	typeface && title.setTypeface(typeface);
@@ -285,7 +287,7 @@ ToolbarFragment.prototype.resetContainer = function() {
 	title.setTextSize(toComplexUnitSp(11));
 	title.setTag("toolbarTitle");
 	bar.addView(title);
-	
+
 	let subtitle = new android.widget.TextView(getContext());
 	subtitle.setVisibility($.View.GONE);
 	typeface && subtitle.setTypeface(typeface);
@@ -302,11 +304,13 @@ ToolbarFragment.prototype.getBackground = function() {
 };
 
 ToolbarFragment.prototype.setBackground = function(drawable) {
-	let container = this.getContainer();
-	if (!(drawable instanceof Drawable)) {
-		drawable = Drawable.parseJson.call(this, drawable);
+	if (isAndroid()) {
+		let container = this.getContainer();
+		if (!(drawable instanceof Drawable)) {
+			drawable = Drawable.parseJson.call(this, drawable);
+		}
+		drawable.attachAsBackground(container);
 	}
-	drawable.attachAsBackground(container);
 	this.background = drawable;
 };
 
@@ -425,6 +429,9 @@ ToolbarFragment.prototype.getItemCount = function() {
 	return items.getChildCount();
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 ToolbarFragment.prototype.actorIfMay = function(actor) {
 	let container = this.getContainer();
 	container = container.getParent();
@@ -472,14 +479,14 @@ ImageSourceFragment.prototype = new FrameFragment;
 ImageSourceFragment.prototype.resetContainer = function() {
 	FrameFragment.prototype.resetContainer.call(this);
 	let frame = this.getContainer();
-	
+
 	let source = new android.widget.ImageView(getContext());
 	source.setScaleType($.ImageView.ScaleType.CENTER);
 	source.setTag("sourceImage")
 	let params = new android.widget.FrameLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.MATCH_PARENT);
 	frame.addView(source, params);
-	
+
 	let toolbar = new ToolbarFragment();
 	this.views.toolbar = toolbar;
 	toolbar.setBackButtonEnabled(true);
@@ -605,7 +612,7 @@ const ImageSourceWindow = function() {
 		}
 		return $.ImageView.ScaleType.CENTER;
 	});
-	this.getFragment().setBackground($.Color.BLACK);
+	this.getFragment().setBackground(ColorDrawable.parseColor("BLACK"));
 	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
 	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 };
@@ -709,7 +716,7 @@ const openSupportedFileIfMay = function(file, extension) {
 				if (name == file.getName()) name += " unpacked";
 				let output = new java.io.File(file.getParent(), name);
 				if (output.exists()) {
-					MCSystem.throwException("Dev Editor: Output file is already exists");
+					MCSystem.throwException("ModdingTools: Output file is already exists");
 				}
 				handleThread(function() {
 					try {

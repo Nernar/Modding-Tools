@@ -1,26 +1,11 @@
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
+ * @requires `isAndroid()`
  */
-
-const MenuWindow = function() {
+function MenuWindow() {
 	let window = UniqueWindow.apply(this, arguments);
-	window.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
-	window.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
 	window.elements = [];
-	window.resetContent();
-	window.setBackground("popupControl");
-	
-	let slideIn = new android.transition.Slide(),
-		slideOut = new android.transition.Slide();
-	slideIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	slideIn.setSlideEdge($.Gravity.TOP);
-	slideIn.setDuration(1000);
-	window.setEnterTransition(slideIn);
-	slideOut.setInterpolator(new android.view.animation.AnticipateInterpolator());
-	slideOut.setSlideEdge($.Gravity.TOP);
-	slideOut.setDuration(800);
-	window.setExitTransition(slideOut);
 	return window;
 };
 
@@ -28,6 +13,26 @@ MenuWindow.prototype = new UniqueWindow;
 MenuWindow.prototype.TYPE = "MenuWindow";
 
 MenuWindow.prototype.outside = true;
+
+MenuWindow.prototype.resetWindow = function() {
+	UniqueWindow.prototype.resetWindow.apply(this, arguments);
+	this.setWidth($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.setHeight($.ViewGroup.LayoutParams.MATCH_PARENT);
+	this.elements = [];
+	this.resetContent();
+	this.setBackground("popupControl");
+
+	let slideIn = new android.transition.Slide(),
+		slideOut = new android.transition.Slide();
+	slideIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
+	slideIn.setSlideEdge($.Gravity.TOP);
+	slideIn.setDuration(1000);
+	this.setEnterTransition(slideIn);
+	slideOut.setInterpolator(new android.view.animation.AnticipateInterpolator());
+	slideOut.setSlideEdge($.Gravity.TOP);
+	slideOut.setDuration(800);
+	this.setExitTransition(slideOut);
+}
 
 MenuWindow.prototype.resetContent = function() {
 	let scope = this,
@@ -61,11 +66,13 @@ MenuWindow.prototype.getBackground = function() {
 };
 
 MenuWindow.prototype.setBackground = function(src) {
-	let content = this.getContainer();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		let content = this.getContainer();
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(content);
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -93,46 +100,51 @@ MenuWindow.prototype.indexOfElement = function(item) {
 };
 
 MenuWindow.prototype.scrollTo = function(y, duration) {
-	let content = this.getContainer(),
-		views = this.views;
-	let actor = new android.transition.ChangeScroll();
-	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-	if (duration !== undefined) actor.setDuration(duration);
-	this.beginDelayedTransition(actor);
-	views.scroll.scrollTo(views.scroll.getScrollX(), y);
+	if (isAndroid()) {
+		let actor = new android.transition.ChangeScroll();
+		actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+		if (duration !== undefined) actor.setDuration(duration);
+		this.beginDelayedTransition(actor);
+		this.views.scroll.scrollTo(this.views.scroll.getScrollX(), y);
+	}
 	return this;
 };
 
 MenuWindow.prototype.scrollToElement = function(elementOrIndex, duration) {
-	let index = typeof elementOrIndex == "object" ?
-		this.indexOfElement(elementOrIndex) : elementOrIndex;
-	let element = this.getElementAt(index);
-	let content = element.getContent();
-	this.scrollTo(content.getY(), duration);
+	if (isAndroid()) {
+		let index = typeof elementOrIndex == "object" ?
+			this.indexOfElement(elementOrIndex) : elementOrIndex;
+		let element = this.getElementAt(index);
+		let content = element.getContent();
+		this.scrollTo(content.getY(), duration);
+	}
 	return this;
 };
 
 MenuWindow.prototype.scrollDown = function(duration) {
-	let content = this.views.layout;
-	this.scrollTo(content.getMeasuredHeight(), duration);
+	if (isAndroid()) {
+		this.scrollTo(this.views.layout.getMeasuredHeight(), duration);
+	}
 	return this;
 };
 
 MenuWindow.prototype.removeElement = function(elementOrIndex) {
 	let index = typeof elementOrIndex == "object" ?
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
-	let element = this.getElementAt(index);
-	let content = element.getContent();
-	let set = new android.transition.TransitionSet(),
-		fade = new android.transition.Fade(),
-		bounds = new android.transition.ChangeBounds();
-	bounds.setInterpolator(new android.view.animation.AccelerateInterpolator());
-	bounds.setDuration(400);
-	set.addTransition(bounds);
-	fade.setDuration(200);
-	set.addTransition(fade);
-	this.beginDelayedTransition(set);
-	this.views.layout.removeView(content);
+	if (isAndroid()) {
+		let element = this.getElementAt(index);
+		let content = element.getContent();
+		let set = new android.transition.TransitionSet(),
+			fade = new android.transition.Fade(),
+			bounds = new android.transition.ChangeBounds();
+		bounds.setInterpolator(new android.view.animation.AccelerateInterpolator());
+		bounds.setDuration(400);
+		set.addTransition(bounds);
+		fade.setDuration(200);
+		set.addTransition(fade);
+		this.beginDelayedTransition(set);
+		this.views.layout.removeView(content);
+	}
 	this.getElements().splice(index, 1);
 	return this;
 };
@@ -157,17 +169,22 @@ MenuWindow.prototype.setOnClickListener = function(listener) {
 	return this;
 };
 
+MenuWindow.Header = new Function();
+
 MenuWindow.Header = function(parent) {
-	(this.reset(), this.setLogo(requireLogotype()));
-	parent && this.setWindow(parent);
-	this.setMaxScroll(toComplexUnitDip(320));
-	this.updateSlideProgress();
-	if (!isInvertedLogotype()) {
-		this.setCover("popupHeader");
-	} else this.setCover("popup");
+	if (isAndroid()) {
+		this.resetContent();
+		this.setLogo(requireLogotype());
+		parent && this.setWindow(parent);
+		this.setMaxScroll(toComplexUnitDip(320));
+		this.updateSlideProgress();
+		if (!isInvertedLogotype()) {
+			this.setCover("popupHeader");
+		} else this.setCover("popup");
+	}
 };
 
-MenuWindow.Header.prototype.reset = function() {
+MenuWindow.Header.prototype.resetContent = function() {
 	let views = this.views = {};
 	let content = new android.widget.FrameLayout(getContext());
 	let params = new android.widget.LinearLayout.LayoutParams
@@ -223,12 +240,12 @@ MenuWindow.Header.prototype.getCover = function() {
 };
 
 MenuWindow.Header.prototype.setCover = function(src) {
-	let content = this.getContent(),
-		slide = this.views.slide;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.views.slide);
 	}
-	src.attachAsBackground(slide);
 	this.cover = src;
 	return this;
 };
@@ -270,16 +287,18 @@ MenuWindow.Header.prototype.getSlideProgress = function() {
 
 MenuWindow.Header.prototype.setSlideProgress = function(procent) {
 	if (procent < 0 || procent > 100) return this;
-	let scope = this,
-		content = this.getContent(),
-		slide = this.views.slide,
-		logo = this.views.logo;
-	if (!content || !slide || !logo) return this;
-	this.progress = procent;
-	if (procent > 0) procent /= 100;
-	slide.setRotation(-8 + 8 * procent);
-	slide.setTranslationY(-slide.getHeight() + logo.getHeight() *
-		.1 + (scope.offset || 0) - logo.getHeight() * procent);
+	if (isAndroid()) {
+		let scope = this,
+			content = this.getContent(),
+			slide = this.views.slide,
+			logo = this.views.logo;
+		if (!content || !slide || !logo) return this;
+		this.progress = procent;
+		if (procent > 0) procent /= 100;
+		slide.setRotation(-8 + 8 * procent);
+		slide.setTranslationY(-slide.getHeight() + logo.getHeight() *
+			.1 + (scope.offset || 0) - logo.getHeight() * procent);
+	}
 	return this;
 };
 
@@ -297,12 +316,12 @@ MenuWindow.Header.prototype.getLogo = function() {
 };
 
 MenuWindow.Header.prototype.setLogo = function(src) {
-	let content = this.getContent(),
-		logo = this.views.logo;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsImage(this.views.logo);
 	}
-	src.attachAsImage(logo);
 	this.logo = src;
 	return this;
 };
@@ -338,25 +357,29 @@ MenuWindow.prototype.addHeader = function(header) {
 	return header;
 };
 
+MenuWindow.ProjectHeader = new Function();
+
 MenuWindow.ProjectHeader = function(parent) {
-	(this.reset(), this.setLogo(requireLogotype()));
-	parent && this.setWindow(parent);
-	projectHeaderBackground &&
-		this.setBackground("popupControl");
 	this.categories = [];
-	this.checkNothingNeedable();
-	this.setMaxScroll(toComplexUnitDip(320));
-	this.updateSlideProgress();
-	if (!isInvertedLogotype()) {
-		this.setCover("popupHeader");
-	} else this.setCover("popup");
+	if (isAndroid()) {
+		this.resetContent();
+		this.setLogo(requireLogotype());
+		parent && this.setWindow(parent);
+		projectHeaderBackground &&
+			this.setBackground("popupControl");
+		this.checkNothingNeedable();
+		this.setMaxScroll(toComplexUnitDip(320));
+		this.updateSlideProgress();
+		if (!isInvertedLogotype()) {
+			this.setCover("popupHeader");
+		} else this.setCover("popup");
+	}
 };
 
 MenuWindow.ProjectHeader.prototype = new MenuWindow.Header;
 
-MenuWindow.ProjectHeader.prototype.__resetCWH = MenuWindow.Header.prototype.reset;
-MenuWindow.ProjectHeader.prototype.reset = function() {
-	this.__resetCWH && this.__resetCWH();
+MenuWindow.ProjectHeader.prototype.resetContent = function() {
+	MenuWindow.Header.prototype.resetContent.apply(this, arguments);
 	let views = this.views;
 	views.background = new android.widget.LinearLayout(getContext());
 	let params = new android.widget.LinearLayout.LayoutParams
@@ -381,12 +404,12 @@ MenuWindow.ProjectHeader.prototype.getBackground = function() {
 };
 
 MenuWindow.ProjectHeader.prototype.setBackground = function(src) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.views.background);
 	}
-	src.attachAsBackground(views.background);
 	this.background = src;
 	return this;
 };
@@ -443,16 +466,18 @@ MenuWindow.ProjectHeader.prototype.indexOfCategory = function(category) {
 MenuWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	let index = categoryOrIndex instanceof MenuWindow.ProjectHeader.Category ?
 		this.indexOfCategory(categoryOrIndex) : categoryOrIndex;
-	let category = this.getCategoryAt(index);
-	let layout = this.views.project,
-		content = category.getContent();
-	let window = this.getWindow();
-	if (window) {
-		let actor = new android.transition.ChangeBounds();
-		actor.setDuration(200);
-		window.beginDelayedTransition(actor);
+	if (isAndroid()) {
+		let category = this.getCategoryAt(index);
+		let layout = this.views.project,
+			content = category.getContent();
+		let window = this.getWindow();
+		if (window) {
+			let actor = new android.transition.ChangeBounds();
+			actor.setDuration(200);
+			window.beginDelayedTransition(actor);
+		}
+		layout.removeView(content);
 	}
-	layout.removeView(content);
 	this.getCategories().splice(index, 1);
 	this.updateSlideProgress(),
 		this.checkNothingNeedable();
@@ -502,7 +527,9 @@ MenuWindow.prototype.addProjectHeader = function(header) {
 };
 
 MenuWindow.ProjectHeader.Category = function(parentOrName, name) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrName instanceof MenuWindow.ProjectHeader) {
 		this.setParentHeader(parentOrName);
 		name && this.setTitle(name);
@@ -512,7 +539,7 @@ MenuWindow.ProjectHeader.Category = function(parentOrName, name) {
 	this.items = [];
 };
 
-MenuWindow.ProjectHeader.Category.prototype.reset = function() {
+MenuWindow.ProjectHeader.Category.prototype.resetContent = function() {
 	let views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
 	content.setOrientation($.LinearLayout.VERTICAL);
@@ -571,16 +598,17 @@ MenuWindow.ProjectHeader.Category.prototype.indexOf = function() {
 };
 
 MenuWindow.ProjectHeader.Category.prototype.getTitle = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.title.getText();
+	if (isAndroid()) {
+		return this.views.title.getText();
+	}
+	return this.text || null;
 };
 
 MenuWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.title.setText(String(text));
+	if (isAndroid()) {
+		this.views.title.setText(String(text));
+	}
+	this.text = text;
 	return this;
 };
 
@@ -619,17 +647,19 @@ MenuWindow.ProjectHeader.Category.prototype.indexOfItem = function(item) {
 MenuWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
 	let index = itemOrIndex instanceof MenuWindow.ProjectHeader.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
-	let item = this.getItemAt(index);
-	let layout = this.views.layout,
-		content = item.getContent();
-	if (!layout || !content) return this;
-	let window = this.getWindow();
-	if (window) {
-		let actor = new android.transition.ChangeBounds();
-		actor.setDuration(200);
-		window.beginDelayedTransition(actor);
+	if (isAndroid()) {
+		let item = this.getItemAt(index);
+		let layout = this.views.layout,
+			content = item.getContent();
+		if (!layout || !content) return this;
+		let window = this.getWindow();
+		if (window) {
+			let actor = new android.transition.ChangeBounds();
+			actor.setDuration(200);
+			window.beginDelayedTransition(actor);
+		}
+		layout.removeView(content);
 	}
-	layout.removeView(content);
 	this.getItems().splice(index, 1);
 	this.getParentHeader() &&
 		this.getParentHeader().updateSlideProgress();
@@ -685,7 +715,9 @@ MenuWindow.ProjectHeader.Category.parseJson = function(instanceOrJson, json) {
 };
 
 MenuWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, titleOrDescription, descriptionOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrSrc instanceof MenuWindow.ProjectHeader.Category) {
 		this.setParentCategory(parentOrSrc);
 		srcOrTitle && this.setImage(srcOrTitle);
@@ -701,7 +733,7 @@ MenuWindow.ProjectHeader.Category.Item = function(parentOrSrc, srcOrTitle, title
 	this.setBackground("popup");
 };
 
-MenuWindow.ProjectHeader.Category.Item.prototype.reset = function() {
+MenuWindow.ProjectHeader.Category.Item.prototype.resetContent = function() {
 	let scope = this,
 		views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
@@ -796,11 +828,12 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getBackground = function() {
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.getContent());
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -810,41 +843,43 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getImage = function() {
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setImage = function(src) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsImage(this.views.icon);
 	}
-	src.attachAsImage(views.icon);
 	this.icon = src;
 	return this;
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.title.getText();
+	if (isAndroid()) {
+		return this.views.title.getText();
+	}
+	return this.text || null;
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.title.setText(String(text));
+	if (isAndroid()) {
+		this.views.title.setText(String(text));
+	}
+	this.text = text;
 	return this;
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.getDescription = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.params.getText();
+	if (isAndroid()) {
+		return this.views.params.getText();
+	}
+	return this.description || null;
 };
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.params.setText(String(text));
+	if (isAndroid()) {
+		this.views.params.setText(String(text));
+	}
+	this.description = text;
 	return this;
 };
 
@@ -907,8 +942,12 @@ MenuWindow.ProjectHeader.Category.Item.parseJson = function(instanceOrJson, json
 	return instanceOrJson;
 };
 
+MenuWindow.Category = new Function();
+
 MenuWindow.Category = function(parentOrName, name) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrName instanceof MenuWindow) {
 		this.setWindow(parentOrName);
 		name && this.setTitle(name);
@@ -916,7 +955,7 @@ MenuWindow.Category = function(parentOrName, name) {
 	this.items = [];
 };
 
-MenuWindow.Category.prototype.reset = function() {
+MenuWindow.Category.prototype.resetContent = function() {
 	let views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
 	content.setOrientation($.LinearLayout.VERTICAL);
@@ -970,16 +1009,17 @@ MenuWindow.Category.prototype.setWindow = function(window) {
 };
 
 MenuWindow.Category.prototype.getTitle = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.title.getText();
+	if (isAndroid()) {
+		return this.views.title.getText();
+	}
+	return this.text;
 };
 
 MenuWindow.Category.prototype.setTitle = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.title.setText(String(text));
+	if (isAndroid()) {
+		this.views.title.setText(String(text));
+	}
+	this.text = text;
 	return this;
 };
 
@@ -1011,17 +1051,19 @@ MenuWindow.Category.prototype.indexOfItem = function(item) {
 MenuWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	let index = itemOrIndex instanceof MenuWindow.Category.Item ?
 		this.indexOfItem(itemOrIndex) : itemOrIndex;
-	let item = this.getItemAt(index);
-	let layout = this.views.layout,
-		content = item.getContent();
-	if (!layout || !content) return this;
-	let window = this.getWindow();
-	if (window) {
-		let actor = new android.transition.ChangeBounds();
-		actor.setDuration(200);
-		window.beginDelayedTransition(actor);
+	if (isAndroid()) {
+		let item = this.getItemAt(index);
+		let layout = this.views.layout,
+			content = item.getContent();
+		if (!layout || !content) return this;
+		let window = this.getWindow();
+		if (window) {
+			let actor = new android.transition.ChangeBounds();
+			actor.setDuration(200);
+			window.beginDelayedTransition(actor);
+		}
+		layout.removeView(content);
 	}
-	layout.removeView(content);
 	this.getItems().splice(index, 1);
 	return this;
 };
@@ -1084,7 +1126,9 @@ MenuWindow.prototype.addCategory = function(nameOrCategory, name) {
 };
 
 MenuWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrSrc instanceof MenuWindow.Category) {
 		this.setParentCategory(parentOrSrc);
 		srcOrTitle && this.setImage(srcOrTitle);
@@ -1098,7 +1142,7 @@ MenuWindow.Category.Item = function(parentOrSrc, srcOrTitle, titleOrAction, acti
 	this.setBackground("popup");
 };
 
-MenuWindow.Category.Item.prototype.reset = function() {
+MenuWindow.Category.Item.prototype.resetContent = function() {
 	let layout = new android.widget.FrameLayout(getContext());
 	layout.setClipToPadding(false);
 	layout.setClipChildren(false);
@@ -1201,10 +1245,12 @@ MenuWindow.Category.Item.prototype.getBackground = function() {
 };
 
 MenuWindow.Category.Item.prototype.setBackground = function(src) {
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.views.content);
 	}
-	src.attachAsBackground(this.views.content);
 	this.background = src;
 	return this;
 };
@@ -1214,10 +1260,12 @@ MenuWindow.Category.Item.prototype.getImage = function() {
 };
 
 MenuWindow.Category.Item.prototype.setImage = function(src) {
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsImage(this.views.icon);
 	}
-	src.attachAsImage(this.views.icon);
 	this.icon = src;
 	return this;
 };
@@ -1227,29 +1275,43 @@ MenuWindow.Category.Item.prototype.getBadgeOverlay = function() {
 };
 
 MenuWindow.Category.Item.prototype.setBadgeOverlay = function(src) {
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsImage(this.views.badgeOverlay);
 	}
-	src.attachAsImage(this.views.badgeOverlay);
 	this.badgeOverlay = src;
 	return this;
 };
 
 MenuWindow.Category.Item.prototype.getTitle = function() {
-	return "" + this.views.title.getText();
+	if (isAndroid()) {
+		return this.views.title.getText();
+	}
+	return this.text;
 };
 
 MenuWindow.Category.Item.prototype.setTitle = function(text) {
-	this.views.title.setText(text ? "" + text : null);
+	if (isAndroid()) {
+		this.views.title.setText(text ? "" + text : null);
+	}
+	this.text = text;
 	return this;
 };
 
 MenuWindow.Category.Item.prototype.getBadgeText = function() {
-	return "" + this.views.badgeText.getText();
+	if (isAndroid()) {
+		return this.views.badgeText.getText();
+	}
+	return this.badgeText;
 };
 
 MenuWindow.Category.Item.prototype.setBadgeText = function(text) {
-	this.views.badgeText.setText(text ? "" + text : null);
+	if (isAndroid()) {
+		this.views.badgeText.setText(text ? "" + text : null);
+	}
+	this.badgeText = text;
 	return this;
 };
 
@@ -1315,8 +1377,12 @@ MenuWindow.Category.Item.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
+MenuWindow.Message = new Function();
+
 MenuWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action) {
-	this.reset();
+	if (isAndroid()) {
+		this.resetContent();
+	}
 	if (parentOrSrc instanceof MenuWindow) {
 		this.setWindow(parentOrSrc);
 		srcOrMessage && this.setImage(srcOrMessage);
@@ -1330,9 +1396,8 @@ MenuWindow.Message = function(parentOrSrc, srcOrMessage, messageOrAction, action
 	this.setBackground("popup");
 };
 
-MenuWindow.Message.prototype.reset = function() {
-	let scope = this,
-		views = this.views = {};
+MenuWindow.Message.prototype.resetContent = function() {
+	let scope = this, views = this.views = {};
 	let content = new android.widget.LinearLayout(getContext());
 	content.setPadding(toComplexUnitDip(84), toComplexUnitDip(8),
 		toComplexUnitDip(84), toComplexUnitDip(8));
@@ -1347,14 +1412,14 @@ MenuWindow.Message.prototype.reset = function() {
 		}
 	});
 	this.content = content;
-	
+
 	views.icon = new android.widget.ImageView(getContext());
 	let params = new android.widget.LinearLayout.LayoutParams
 		(toComplexUnitDip(42), toComplexUnitDip(42));
 	params.leftMargin = params.topMargin =
 		params.rightMargin = params.bottomMargin = toComplexUnitDip(8);
 	content.addView(views.icon, params);
-	
+
 	views.message = new android.widget.TextView(getContext());
 	typeface && views.message.setTypeface(typeface);
 	views.message.setTextSize(toComplexUnitSp(9));
@@ -1394,11 +1459,12 @@ MenuWindow.Message.prototype.getBackground = function() {
 };
 
 MenuWindow.Message.prototype.setBackground = function(src) {
-	let content = this.getContent();
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.getContent());
 	}
-	src.attachAsBackground(content);
 	this.background = src;
 	return this;
 };
@@ -1408,27 +1474,28 @@ MenuWindow.Message.prototype.getImage = function() {
 };
 
 MenuWindow.Message.prototype.setImage = function(src) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!(src instanceof Drawable)) {
-		src = Drawable.parseJson.call(this, src);
+	if (isAndroid()) {
+		if (!(src instanceof Drawable)) {
+			src = Drawable.parseJson.call(this, src);
+		}
+		src.attachAsBackground(this.views.icon);
 	}
-	src.attachAsBackground(views.icon);
 	this.icon = src;
 	return this;
 };
 
 MenuWindow.Message.prototype.getMessage = function() {
-	let views = this.views;
-	if (!views) return null;
-	return views.message.getText();
+	if (isAndroid()) {
+		return this.views.message.getText();
+	}
+	return this.text;
 };
 
 MenuWindow.Message.prototype.setMessage = function(text) {
-	let content = this.getContent(),
-		views = this.views;
-	if (!content || !views) return this;
-	views.message.setText(String(text));
+	if (isAndroid()) {
+		this.views.message.setText(String(text));
+	}
+	this.text = text;
 	return this;
 };
 
@@ -1521,7 +1588,7 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 					} else if (element.type == "message") {
 						element = MenuWindow.Message.parseJson.call(this, element);
 					} else {
-						Logger.Log("Dev Editor: MenuWindow unable to parse " + element.type, "WARNING");
+						Logger.Log("ModdingTools: MenuWindow unable to parse " + element.type, "WARNING");
 						continue;
 					}
 					element.setWindow(instanceOrJson);

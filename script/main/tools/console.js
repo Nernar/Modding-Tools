@@ -39,8 +39,8 @@ const CONSOLE_TOOL = (function() {
 					showHint(" > " + action);
 					let result = compileData(action);
 					if (result.lineNumber !== undefined) {
-						showHint(result.message, $.Color.RED);
-					} else showHint("" + result, $.Color.LTGRAY);
+						showHint(result.message, ColorDrawable.parseColor("RED"));
+					} else showHint("" + result, ColorDrawable.parseColor("LTGRAY"));
 				}
 			});
 			popup.setIsMayDismissed(false);

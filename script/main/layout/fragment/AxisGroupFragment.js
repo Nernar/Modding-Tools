@@ -1,6 +1,8 @@
-const AxisGroupFragment = function() {
+function AxisGroupFragment() {
 	LayoutFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 	this.setBackground("popup");
 };
 
@@ -12,7 +14,7 @@ AxisGroupFragment.prototype.resetContainer = function() {
 	content.setPadding(toComplexUnitDip(6), toComplexUnitDip(6),
 		toComplexUnitDip(6), toComplexUnitDip(6));
 	this.setContainerView(content);
-	
+
 	let axis = new android.widget.TextView(getContext());
 	axis.setPadding(toComplexUnitDip(10), toComplexUnitDip(6),
 		toComplexUnitDip(10), toComplexUnitDip(6));
@@ -22,7 +24,7 @@ AxisGroupFragment.prototype.resetContainer = function() {
 	axis.setMaxLines(1);
 	axis.setTag("groupAxis");
 	content.addView(axis);
-	
+
 	let container = new android.widget.LinearLayout(getContext());
 	container.setOrientation($.LinearLayout.VERTICAL);
 	container.setTag("containerGroup");

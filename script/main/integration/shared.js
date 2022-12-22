@@ -3,7 +3,7 @@
  * it's not deprecated or an environment internal feature.
  * Perhaps you should not interfere with itself work.
  */
-const API = {
+const API = assign({}, {
 	USER_ID: "unknown",
 	API_VERSION: API_VERSION,
 	PRODUCT_REVISION: REVISION,
@@ -13,7 +13,7 @@ const API = {
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
 	launchIfSupported: launchIfSupported,
-	
+
 	// Retention
 	isHorizon: isHorizon,
 	minecraftVersion: minecraftVersion,
@@ -30,7 +30,7 @@ const API = {
 	reportError: reportError,
 	reportTrace: reportTrace,
 	localizeError: localizeError,
-	
+
 	// Android Ui
 	getContext: getContext,
 	getTypeface: function() {
@@ -48,28 +48,28 @@ const API = {
 	toRawComplexUnitDip: toRawComplexUnitDip,
 	toComplexUnitSp: toComplexUnitSp,
 	toRawComplexUnitSp: toRawComplexUnitSp,
-	
+
 	// Global registry
 	registerTool: function(id, tool) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("Dev Editor: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
-		log("Dev Editor: Registered tool " + id + " shortcut");
+		log("ModdingTools: Registered tool " + id + " shortcut");
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("Dev Editor: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
 		if (entry === undefined) {
 			entry = new ProjectTool.MenuFactory();
 		}
 		if (!(entry instanceof ProjectTool.MenuFactory)) {
-			MCSystem.throwException("Dev Editor: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
+			MCSystem.throwException("ModdingTools: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
 		}
-		log("Dev Editor: Registered tool " + id + " into menu entry");
+		log("ModdingTools: Registered tool " + id + " into menu entry");
 		PROJECT_TOOL.tools[id] = entry;
 		Tools[id] = tool;
 	},
@@ -77,7 +77,7 @@ const API = {
 	registerFragmentJson: registerFragmentJson,
 	registerWindowJson: registerWindowJson,
 	registerKeyboardWatcher: registerKeyboardWatcher,
-	
+
 	// Helper functions
 	random: random,
 	isEmpty: isEmpty,
@@ -94,7 +94,7 @@ const API = {
 	playTuneDirectly: playTuneDirectly,
 	stopTune: stopTune,
 	getPlayerEnt: getPlayerEnt,
-	
+
 	// Dialogues
 	confirm: confirm,
 	select: select,
@@ -108,7 +108,7 @@ const API = {
 	stringifyJson: stringifyJson,
 	stringifyJsonIndented: stringifyJsonIndented,
 	isLightweightArray: isLightweightArray,
-	
+
 	// Storage utility
 	resetSettingIfNeeded: resetSettingIfNeeded,
 	loadSetting: loadSetting,
@@ -118,7 +118,7 @@ const API = {
 	Dirs: Dirs,
 	MediaTypes: MediaTypes,
 	Files: Files,
-	
+
 	// Decoding resources
 	ImageFactory: ImageFactory, // DEPRECATED
 	HashedDrawableMap: HashedDrawableMap,
@@ -134,7 +134,7 @@ const API = {
 	AnimationDrawable: AnimationDrawable,
 	AnimationDrawableFactory: AnimationDrawableFactory,
 	DrawableFactory: DrawableFactory,
-	
+
 	// Fragment prototypes
 	Fragment: Fragment,
 	BaseFragment: BaseFragment,
@@ -144,11 +144,11 @@ const API = {
 	HorizontalScrollFragment: HorizontalScrollFragment,
 	TextFragment: TextFragment,
 	ImageFragment: ImageFragment,
-	
+
 	// Adapters
 	ListHolderAdapter: ListHolderAdapter,
 	FilterListHolderAdapter: FilterListHolderAdapter,
-	
+
 	// Fragment variations
 	CategoryTitleFragment: CategoryTitleFragment,
 	ExplanatoryFragment: ExplanatoryFragment,
@@ -159,13 +159,13 @@ const API = {
 	CounterFragment: CounterFragment,
 	AxisGroupFragment: AxisGroupFragment,
 	EditorFragment: EditorFragment,
-	
+
 	// Under-refactored fragments
 	OverlayFragment: OverlayFragment,
 	ControlFragment: ControlFragment,
 	LogotypeFragment: LogotypeFragment, // DEPRECATED
 	SidebarFragment: SidebarFragment,
-	
+
 	// Window prototypes
 	WindowProxy: WindowProxy,
 	FocusableWindow: FocusableWindow,
@@ -178,7 +178,7 @@ const API = {
 	FocusablePopup: FocusablePopup,
 	ExpandableFragment: ExpandableFragment,
 	ExpandablePopup: ExpandablePopup,
-	
+
 	// Window variations
 	AdditionalMessage: AdditionalMessage,
 	AdditionalMessageFactory: AdditionalMessageFactory,
@@ -189,10 +189,7 @@ const API = {
 	LogotypeWindow: LogotypeWindow,
 	MenuWindow: MenuWindow,
 	SidebarWindow: SidebarWindow,
-	
-	// Frames (something thoughtless right now)
-	Frame: Frame,
-	
+
 	// Functions used inside popup prototypes
 	openPopup: function(id, popup) {
 		Popups.open(popup, id);
@@ -221,7 +218,7 @@ const API = {
 	getPopups: function() {
 		return Popups.getOpened();
 	},
-	
+
 	// Rhino evaluation
 	compileReader: compileReader,
 	compileString: compileString,
@@ -233,12 +230,12 @@ const API = {
 	runAtScope: runAtScope,
 	newLoggingErrorReporter: newLoggingErrorReporter,
 	newRuntimeCompilerEnvirons: newRuntimeCompilerEnvirons,
-	
+
 	// Adaptive evaluation
 	UNWRAP: UNWRAP,
 	REQUIRE: REQUIRE,
 	CHECKOUT: CHECKOUT,
-	
+
 	// Project
 	compileScript: compileScript,
 	compileData: compileData,
@@ -251,7 +248,7 @@ const API = {
 	ProjectProvider: ProjectProvider,
 	ScriptConverter: ScriptConverter,
 	ScriptImporter: ScriptImporter,
-	
+
 	// Tools
 	Action: Action,
 	Tool: Tool,
@@ -264,24 +261,24 @@ const API = {
 	attachEditorTool: attachEditorTool,
 	attachTool: function(id, when) {
 		if (!Tools.hasOwnProperty(id)) {
-			Logger.Log("Dev Editor: Not found tool " + id + ", consider have you registered it", "WARNING");
+			Logger.Log("ModdingTools: Not found tool " + id + ", consider have you registered it", "WARNING");
 			return;
 		}
 		attachEditorTool(Tools[id], undefined, when);
 	},
-	
+
 	// Sequence
 	Sequence: Sequence,
 	LogotypeSequence: LogotypeSequence, // DEPRECATED
 	SnackSequence: SnackSequence,
 	StackedSnackSequence: StackedSnackSequence,
 	AsyncSnackSequence: AsyncSnackSequence,
-	
+
 	// Specific content
 	LogViewer: LogViewer,
 	LevelProvider: LevelProvider,
 	RuntimeCodeEvaluate: RuntimeCodeEvaluate,
-	
+
 	// For internal support launching other modifications
 	Module: {
 		canLeaveAtMoment: function() {
@@ -294,7 +291,7 @@ const API = {
 			restart();
 		}
 	}
-};
+});
 
 (function(who) {
 	for (let element in who) {
@@ -326,6 +323,9 @@ const getCoreEngineAndInjectIfNeeded = function() {
 		let ceHandlerSingleton = field.get(instance);
 		if (ceHandlerSingleton != null) {
 			ceHandlerSingleton.injectCoreAPI(CoreEngine);
+		}
+		if (!isCoreEngineLoaded()) {
+			return null;
 		}
 		notifyCoreEngineLoaded();
 	} catch (e) {

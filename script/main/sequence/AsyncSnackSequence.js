@@ -1,13 +1,13 @@
-const AsyncSnackSequence = function(who) {
+function AsyncSnackSequence(who) {
 	Sequence.apply(this, arguments);
 };
 
 AsyncSnackSequence.prototype = new Sequence;
-AsyncSnackSequence.prototype.color = $.Color.WHITE;
 AsyncSnackSequence.prototype.background = "popup";
 AsyncSnackSequence.prototype.foreground = "popupSelectionSelected";
 AsyncSnackSequence.prototype.queueBackground = "popupSelectionQueued";
 AsyncSnackSequence.prototype.interruptBackground = "popupSelectionLocked";
+AsyncSnackSequence.prototype.color = ColorDrawable.parseColor("WHITE");
 
 AsyncSnackSequence.prototype.getProgressionHint = function(progress, index) {
 	return this.message + " (" + preround(progress, 1) + "%)";
@@ -132,7 +132,7 @@ AsyncSnackSequence.access = function(where, who, post) {
 	sequence.process = function(next, entry, index) {
 		encountedSequences++;
 		if (encountedSequences > 1) {
-			MCSystem.throwException("Dev Editor: invalid sequence length: " + index + ".." + sequence.getFixedCount());
+			MCSystem.throwException("ModdingTools: Invalid sequence length: " + index + ".." + sequence.getFixedCount());
 		}
 		let scriptable = AsyncSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);
@@ -221,15 +221,15 @@ AsyncSnackSequence.initScriptable = function(sequence, who) {
 	};
 };
 
-const AsyncStackedSnackSequence = function(obj) {
+function AsyncStackedSnackSequence(obj) {
 	Sequence.apply(this, arguments);
 };
 
 AsyncStackedSnackSequence.prototype = new AsyncSnackSequence;
 AsyncStackedSnackSequence.prototype.maximumStacked = 7;
-AsyncStackedSnackSequence.prototype.interruptColor = $.Color.RED;
-AsyncStackedSnackSequence.prototype.creationColor = $.Color.WHITE;
-AsyncStackedSnackSequence.prototype.completionColor = $.Color.WHITE;
+AsyncStackedSnackSequence.prototype.interruptColor = ColorDrawable.parseColor("RED");
+AsyncStackedSnackSequence.prototype.creationColor = ColorDrawable.parseColor("WHITE");
+AsyncStackedSnackSequence.prototype.completionColor = ColorDrawable.parseColor("WHITE");
 
 AsyncStackedSnackSequence.prototype.getProgressionBackground = function(progress, index) {
 	if (progress >= 100) {
@@ -372,7 +372,7 @@ AsyncStackedSnackSequence.access = function(where, who, post) {
 	sequence.process = function(next, entry, index) {
 		encountedSequences++;
 		if (encountedSequences > 1) {
-			MCSystem.throwException("Dev Editor: invalid sequence length: " + index + ".." + sequence.getFixedCount());
+			MCSystem.throwException("ModdingTools: Invalid sequence length: " + index + ".." + sequence.getFixedCount());
 		}
 		let scriptable = AsyncStackedSnackSequence.initScriptable(sequence, entry),
 			wrapped = UNWRAP("sequence/" + where, scriptable);

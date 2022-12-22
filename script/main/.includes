@@ -11,6 +11,9 @@ utils/math.js
 utils/wrapping.js
 utils/storage.js
 utils/stringifyJson.js
+utils/resolveThrowable.ts
+
+platform/colorize.js
 
 content/Fragment.js
 content/fragment/BaseFragment.js
@@ -22,9 +25,10 @@ content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
 content/adapter/ListHolderAdapter.js
 content/adapter/FilterListHolderAdapter.js
+content/shell/ShellObserver.js
+content/shell/ShellProcessor.js
 
 content/WindowProxy.js
-content/Frame.js
 content/FocusableWindow.js
 content/TransitionWindow.js
 content/UniqueWindow.js

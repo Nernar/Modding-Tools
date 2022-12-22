@@ -1,31 +1,52 @@
-const TextFragment = function() {
+function TextFragment() {
 	BaseFragment.apply(this, arguments);
+	if (!isAndroid()) {
+		this.text = "";
+	}
 };
 
 TextFragment.prototype = new BaseFragment;
 TextFragment.prototype.TYPE = "TextFragment";
 
 TextFragment.prototype.getTextView = function() {
-	MCSystem.throwException("Dev Editor: " + this.TYPE + ".getTextView must be implemented");
+	MCSystem.throwException("ModdingTools: " + this.TYPE + ".getTextView must be implemented");
+};
+
+/**
+ * @requires `isCLI()`
+ */
+TextFragment.prototype.render = function(hovered) {
+	return this.text;
 };
 
 TextFragment.prototype.getText = function() {
-	let view = this.getTextView();
-	if (view === null) return;
-	return "" + view.getText();
+	if (isAndroid()) {
+		let view = this.getTextView();
+		if (view === null) return null;
+		return "" + view.getText();
+	}
+	return this.text || null;
 };
 
 TextFragment.prototype.appendText = function(text) {
-	let view = this.getTextView();
-	if (view === null) return this;
-	view.append("" + text);
+	if (isAndroid()) {
+		let view = this.getTextView();
+		if (view === null) return this;
+		view.append("" + text);
+	} else {
+		this.text += text;
+	}
 	return this;
 };
 
 TextFragment.prototype.setText = function(text) {
-	let view = this.getTextView();
-	if (view === null) return this;
-	view.setText("" + text);
+	if (isAndroid()) {
+		let view = this.getTextView();
+		if (view === null) return this;
+		view.setText("" + text);
+	} else {
+		this.text = "" + text;
+	}
 	return this;
 };
 

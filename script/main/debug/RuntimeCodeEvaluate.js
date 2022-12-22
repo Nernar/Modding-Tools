@@ -1,3 +1,6 @@
+/**
+ * @requires `isAndroid()`
+ */
 const RuntimeCodeEvaluate = {};
 
 RuntimeCodeEvaluate.setupNewContext = function() {
@@ -6,7 +9,7 @@ RuntimeCodeEvaluate.setupNewContext = function() {
 		GLOBAL: somewhere
 	});
 	if (isEmpty(somewhere)) {
-		MCSystem.throwException("Dev Editor: Runtime couldn't be resolved");
+		MCSystem.throwException("ModdingTools: Runtime could not be resolved!");
 	}
 	return somewhere;
 };
@@ -30,7 +33,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	where === undefined && (where = RuntimeCodeEvaluate.lastExecutable);
 	location === undefined && (location = RuntimeCodeEvaluate.lastLocation);
 	if (source !== undefined) edit.setText(String(source));
-	
+
 	let dialog = new android.app.AlertDialog.Builder(getContext(),
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
 	dialog.setPositiveButton(translate("Evaluate"), function() {
@@ -77,7 +80,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 				return view;
 			}
 		}
-		MCSystem.throwException("Dev Editor: Not found actual android dialog title, using custom view");
+		MCSystem.throwException("ModdingTools: Not found actual android dialog title, using custom view");
 	})(getContext().getResources().getIdentifier("alertTitle", "id", getContext().getPackageName()),
 		getContext().getResources().getIdentifier("alertTitle", "id", "android"),
 		android.R.id.title);
@@ -145,7 +148,7 @@ RuntimeCodeEvaluate.putSpecifiedTypeSources = function(modification, someone, ty
 		let specified = this.resolveSpecifiedTypeSources(modification, type);
 		return specified && (someone[name] = specified) != null;
 	} catch (e) {
-		Logger.Log("Dev Editor: RuntimeCodeEvaluate.putSpecifiedTypeSources: " + e, "INFO");
+		Logger.Log("ModdingTools: RuntimeCodeEvaluate.putSpecifiedTypeSources: " + e, "INFO");
 	}
 	return false;
 };

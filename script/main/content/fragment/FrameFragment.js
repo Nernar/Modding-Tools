@@ -1,6 +1,11 @@
-const FrameFragment = function() {
+/**
+ * @requires `isAndroid()`
+ */
+function FrameFragment() {
 	LayoutFragment.apply(this, arguments);
-	this.resetContainer();
+	if (isAndroid()) {
+		this.resetContainer();
+	}
 };
 
 FrameFragment.prototype = new LayoutFragment;

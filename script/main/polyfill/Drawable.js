@@ -1,3 +1,6 @@
+/**
+ * @requires `isAndroid()`
+ */
 BitmapFactory.createCompressed = function(bitmap, min, max) {
 	if (max === undefined) max = min;
 	let size = getDisplayHeight() > 480 ? getDisplayHeight() < 1080 ?
@@ -9,6 +12,9 @@ BitmapFactory.createCompressed = function(bitmap, min, max) {
 	return this.createScaled(bitmap, dx, dy);
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 BitmapFactory.getUpscaleRatio = function(width, height, dx, dy) {
 	if (width > dx || height > dy) {
 		let rx = Math.round(width / dx);
@@ -18,12 +24,18 @@ BitmapFactory.getUpscaleRatio = function(width, height, dx, dy) {
 	return 1;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 BitmapFactory.getBoundsDecodeOptions = function() {
 	let options = new android.graphics.BitmapFactory.Options();
 	options.inJustDecodeBounds = true;
 	return options;
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 BitmapFactory.getPotatoOptions = function() {
 	let options = new android.graphics.BitmapFactory.Options();
 	options.inPreferredConfig = android.graphics.Bitmap.Config.ARGB_4444;
@@ -34,19 +46,25 @@ let BITSET_PATCH = {};
 
 const registerBitsetUi = function(json) {
 	if (json == null || typeof json != "object") {
-		MCSystem.throwException("Dev Editor: Registered bitset must be object { moduleBitset: .. }");
+		MCSystem.throwException("ModdingTools: Registered bitset must be object { moduleBitset: .. }");
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
-			Logger.Log("Dev Editor: Bitset " + element + " is already registered", "WARNING");
+			Logger.Log("ModdingTools: Bitset " + element + " is already registered", "WARNING");
 			continue;
 		}
 		BITSET_PATCH[element] = "" + json[element];
 	}
 };
 
+/**
+ * @requires `isAndroid()`
+ */
 const ImageFactory = {};
 
+/**
+ * @requires `isAndroid()`
+ */
 ImageFactory.clipAndMerge = function(background, foreground, level, orientate) {
 	if (!(foreground instanceof android.graphics.drawable.Drawable)) {
 		foreground = Drawable.parseJson(foreground);
@@ -169,7 +187,7 @@ BitmapDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 AnimationDrawable.applyDescribe = function(drawable, json) {
-	if (drawable == null) MCSystem.throwException("Dev Editor: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable == null) MCSystem.throwException("ModdingTools: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("enterFadeDuration")) {
 		AnimationDrawableFactory.setEnterFadeDuration(drawable, calloutOrParse(json, json.enterFadeDuration, this));
 	}
@@ -230,7 +248,7 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 Drawable.applyDescribe = function(drawable, json) {
-	if (drawable === null) MCSystem.throwException("Dev Editor: Drawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable === null) MCSystem.throwException("ModdingTools: Drawable.applyDescribe: Target drawable cannot be null!");
 	if (json.hasOwnProperty("alpha")) {
 		DrawableFactory.setAlpha(drawable, calloutOrParse(json, json.alpha, this));
 	}
@@ -284,7 +302,7 @@ Drawable.parseJson = function(instanceOrJson, json) {
 	if (json === null || typeof json != "object") {
 		if (json !== null && json !== undefined) {
 			let color = ColorDrawable.parseColor(json);
-			if (color !== undefined) return new ColorDrawable(color);
+			if (color != null) return new ColorDrawable(color);
 			return new BitmapDrawable(json);
 		}
 		return instanceOrJson;
@@ -319,6 +337,34 @@ Drawable.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setDescriptor(json);
 	}
 	return instanceOrJson;
+};
+
+ColorDrawable.parseColor = function(color, inBackground) {
+	if (typeof color == "number") {
+		if (isAndroid()) {
+			return color;
+		}
+		return null;
+	}
+	if (color) {
+		let cons = color.toUpperCase();
+		if (isAndroid()) {
+			if ($.Color[cons]) {
+				return $.Color[cons];
+			}
+			return $.Color.parseColor(color);
+		}
+		if (inBackground) {
+			if (BackgroundToCLI.hasOwnProperty(cons)) {
+				return BackgroundToCLI[cons];
+			}
+			return null;
+		}
+		if (ColorToCLI.hasOwnProperty(cons)) {
+			return ColorToCLI[cons];
+		}
+	}
+	return null;
 };
 
 BitmapFactory.__decodeFile = BitmapFactory.decodeFile;

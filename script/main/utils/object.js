@@ -106,7 +106,7 @@ const calloutOrParse = function(scope, value, args) {
 		if (REVISION.indexOf("develop") != -1) {
 			reportError(e);
 		} else {
-			log("Dev Editor: calloutOrParse: " + e);
+			log("ModdingTools: calloutOrParse: " + e);
 		}
 	}
 	return null;
@@ -130,7 +130,7 @@ const parseCallback = function(scope, value, args) {
 		if (REVISION.indexOf("develop") != -1) {
 			reportError(e);
 		} else {
-			log("Dev Editor: parseCallback: " + e);
+			log("ModdingTools: parseCallback: " + e);
 		}
 	}
 	return null;

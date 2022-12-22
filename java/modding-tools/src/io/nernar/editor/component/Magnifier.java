@@ -39,18 +39,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
-import androidx.annotation.RequiresApi;
+import android.support.annotation.RequiresApi;
 
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.EditorPainter;
-import io.github.rosemoe.sora.widget.component.EditorBuiltinComponent;
 
 /**
  * Magnifier specially designed for CodeEditor
  *
  * @author Rosemoe
  */
-public class Magnifier extends io.github.rosemoe.sora.widget.component.Magnifier implements EditorBuiltinComponent {
+public class Magnifier extends io.github.rosemoe.sora.widget.component.Magnifier {
 
     private final CodeEditor view;
     private final PopupWindow popup;
