@@ -220,11 +220,6 @@ const registerAdditionalInformation = function() {
 	AdditionalMessageFactory.register("explorerExtensionScript", translate("Use scripts from your mods to import, simply find them in internal exporer."), .5, function() {
 		return noImportedScripts;
 	});
-	AdditionalMessageFactory.registerClickable("menuBoard", translate("Have any suggestions to improve environment? Tell about it on our board in Trello!"), .2, function(message) {
-		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://trello.com/b/wzYtpA3W/dev-editor"));
-		getContext().startActivity(intent);
-	});
 	AdditionalMessageFactory.registerClickable("menuNetworkUser", translate("Want to follow modification updates? Checkout out VK community and starts to be part of it!"), .15, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
 			android.net.Uri.parse("https://vk.com/club168765348"));
@@ -237,12 +232,12 @@ const registerAdditionalInformation = function() {
 	});
 	AdditionalMessageFactory.registerClickable("menuNetworkConnect", translate("We're in search of developers for project. You may contribute and reshare our open source code."), .1, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://github.com/nernar/dev-editor"));
+			android.net.Uri.parse("https://github.com/nernar/modding-tools"));
 		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("renderDefineItem", translate("Do you want to see new abilities before it released? Join reopened testing team right now!"), .5, function(message) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
-			android.net.Uri.parse("https://vk.me/join/AJQ1d98l9x_XZG7T1qjlEBEf="));
+			android.net.Uri.parse("https://t.me/ntInsideChat"));
 		getContext().startActivity(intent);
 	});
 	AdditionalMessageFactory.registerClickable("menuBoardConfig", translate("Too much messages on screen? You may deny hint sequences and view only recents."), .25, function(message) {
