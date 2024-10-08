@@ -1,7 +1,7 @@
 /**
  * Used to import, load, replace or merge project
  * provider data. User may select any availabled
- * data or [[action]] willn't launched.
+ * data or {@link action} willn't launched.
  * @param {Array} result selectable data
  * @param {function} action to do with data
  * @param {string} type project required type
@@ -48,15 +48,18 @@ const confirm = function(title, message, action, button) {
 		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
 		if (title !== undefined) builder.setTitle(title || translate("Confirmation"));
-		if (message !== undefined) builder.setMessage(String(message));
-		builder.setNegativeButton(translate("Cancel"), null);
-		builder.setPositiveButton(button || translate("Yes"), action ? function() {
+		if (message !== undefined) builder.setMessage("" + message);
+		builder.setNegativeButton(translate("Cancel"), function() {
+			hideInsetsOnScreen();
+		});
+		builder.setPositiveButton(button || translate("Yes"), function() {
 			try {
 				action && action();
 			} catch (e) {
 				reportError(e);
 			}
-		} : null);
+			hideInsetsOnScreen();
+		});
 		builder.setCancelable(false);
 		builder.create().show();
 	});
@@ -107,21 +110,27 @@ const willBeDeletedSoonSoYouShouldntUseIt = function() {
  */
 const select = function(title, items, action, multiple, approved) {
 	handle(function() {
-		if (!Array.isArray(items)) MCSystem.throwException("ModdingTools: Nothing to select inside select()!");
+		if (!Array.isArray(items)) {
+			MCSystem.throwException("Modding Tools: Nothing to select inside select()!");
+		}
 		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
-		if (title !== undefined) builder.setTitle(title || translate("Selection"));
-		builder.setNegativeButton(translate("Cancel"), null);
+		if (title !== undefined) {
+			builder.setTitle(title || translate("Selection"));
+		}
+		builder.setNegativeButton(translate("Cancel"), function() {
+			hideInsetsOnScreen();
+		});
 		if (multiple) {
 			if (approved === undefined) approved = [];
 			builder.setMultiChoiceItems(items, approved, function(dialog, index, active) {
 				try {
-					approved[index] = Boolean(active);
+					approved[index] = !!active;
 				} catch (e) {
 					reportError(e);
 				}
 			});
-			builder.setNeutralButton(translate("All"), action ? function() {
+			builder.setNeutralButton(translate("All"), function() {
 				try {
 					for (let i = 0; i < approved.length; i++) {
 						approved[i] = true;
@@ -130,16 +139,20 @@ const select = function(title, items, action, multiple, approved) {
 				} catch (e) {
 					reportError(e);
 				}
-			} : null);
-			builder.setPositiveButton(translate("Select"), action ? function() {
+				hideInsetsOnScreen();
+			});
+			builder.setPositiveButton(translate("Select"), function() {
 				try {
 					if (approved.indexOf(true) == -1) {
 						select(title, items, action, multiple, approved);
-					} else action && action(approved, items);
+					} else {
+						action && action(approved, items);
+					}
 				} catch (e) {
 					reportError(e);
 				}
-			} : null);
+				hideInsetsOnScreen();
+			});
 		} else {
 			builder.setItems(items, function(dialog, index) {
 				try {
@@ -147,6 +160,7 @@ const select = function(title, items, action, multiple, approved) {
 				} catch (e) {
 					reportError(e);
 				}
+				hideInsetsOnScreen();
 			})
 		}
 		builder.setCancelable(false);
@@ -165,7 +179,9 @@ const selectFile = function(availabled, action, outside, directory) {
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.dismiss();
-			} else explorer.dismiss();
+			} else {
+				explorer.dismiss();
+			}
 		});
 		explorer.setOnSelectListener(function(popup, file) {
 			explorer.dismiss();
@@ -186,7 +202,9 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		bar.setOnOutsideListener(function(bar) {
 			if (outside !== undefined) {
 				outside && outside() !== false && explorer.dismiss();
-			} else explorer.dismiss();
+			} else {
+				explorer.dismiss();
+			}
 		});
 		let rename = explorer.addRename();
 		availabled && rename.setAvailabledTypes(availabled);
@@ -244,7 +262,7 @@ const registerAdditionalInformation = function() {
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean", false);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
-		control.removeElement(message);
+		control.removeFragment(message);
 		__config__.save();
 	}, function() {
 		return !hintStackableDenied;
@@ -253,7 +271,7 @@ const registerAdditionalInformation = function() {
 		hintStackableDenied = !loadSetting("performance.hint_stackable", "boolean", true);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
-		control.removeElement(message);
+		control.removeFragment(message);
 		__config__.save();
 	}, function() {
 		return hintStackableDenied;
@@ -263,7 +281,7 @@ const registerAdditionalInformation = function() {
 		fontScale = loadSetting("interface.font_scale", "number", 1., 1.);
 		showHint(translate("Option successfully changed"));
 		let control = message.getWindow();
-		control.removeElement(message);
+		control.removeFragment(message);
 		__config__.save();
 	}, function() {
 		return uiScaler != 1. || fontScale != 1.;
