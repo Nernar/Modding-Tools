@@ -18,7 +18,7 @@ const isKeyboardOnScreen = function() {
 const registerKeyboardWatcher = (function(state, watchers) {
 	if (isCLI()) {
 		return function() {
-			Logger.Log("Unsupported platform-dependent usage: registerKeyboardWatcher, requires isAndroid()", "WARNING");
+			MCSystem.throwException("Modding Tools: Keyboard watchers cannot be registered on CLI!");
 		};
 	}
 	getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(function() {
