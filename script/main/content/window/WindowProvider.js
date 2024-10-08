@@ -57,14 +57,14 @@ WindowProvider.openWindow = function(window) {
 	if (this.hasOpenedPopup(window)) {
 		return;
 	}
-	let content = window.getContent();
+	let content = window.getContainer();
 	if (!window.isFocusable()) {
 		if (content) {
-			if (isInstant) {
-				content.setFitsSystemWindows(true);
-			} else if (isHorizon) {
+			// if (isInstant) {
+				// content.setFitsSystemWindows(true);
+			// } else if (isHorizon) {
 				content.setSystemUiVisibility(5894);
-			}
+			// }
 		}
 		let popup = content ? new android.widget.PopupWindow(content, window.getWidth(), window.getHeight())
 				: new android.widget.PopupWindow(window.getWidth(), window.getHeight()),
@@ -98,7 +98,7 @@ WindowProvider.closeWindow = function(window) {
 	}
 	if (window.popupId != -1) return;
 	delete window.popupId;
-	this.manager.removeView(window.getContent());
+	this.manager.removeView(window.getContainer());
 };
 
 WindowProvider.setEnterTransition = function(popupId, actor, content) {
@@ -126,7 +126,7 @@ WindowProvider.updateWindow = function(window) {
 		if (enter !== null) this.setEnterTransition(popupId, enter);
 		let exit = window.getExitTransition();
 		if (exit !== null) this.setExitTransition(popupId, exit);
-		popup.setContentView(window.getContent());
+		popup.setContentView(window.getContainer());
 		popup.setTouchable(window.isTouchable());
 		popup.setFocusable(window.isFocusable());
 		popup.update(window.getX(), window.getY(),
@@ -135,7 +135,7 @@ WindowProvider.updateWindow = function(window) {
 	}
 	if (window.popupId != -1) return;
 	let flags = this.getFlagsForWindow(window);
-	this.manager.updateViewLayout(window.getContent(), window.getParams(flags));
+	this.manager.updateViewLayout(window.getContainer(), window.getParams(flags));
 };
 
 WindowProvider.destroy = function() {

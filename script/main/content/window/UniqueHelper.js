@@ -18,7 +18,7 @@ UniqueHelper.isAttached = function(window) {
 };
 
 UniqueHelper.wasTypeAttached = function(window) {
-	return Boolean(this.getWindow(window));
+	return !!this.getWindow(window);
 };
 
 UniqueHelper.prepareWindow = function(window) {
@@ -31,8 +31,8 @@ UniqueHelper.prepareWindow = function(window) {
 				return false;
 			}
 			if (updatable) {
-				let content = window.getContainer();
-				opened.setContent(content);
+				let content = window.getLayout();
+				opened.setLayout(content);
 				opened.update();
 				return false;
 			}

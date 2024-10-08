@@ -20,15 +20,15 @@ Popups.getOpened = function() {
 
 Popups.open = function(widget, id) {
 	if (widget === undefined || widget === null) {
-		Logger.Log("ModdingTools: Widget passed to openPopup " + id + " is undefined or null", "WARNING");
+		Logger.Log("Modding Tools: Widget passed to openPopup " + id + " is undefined or null", "WARNING");
 		return;
 	}
 	let opened = this.closeIfOpened(id);
 	if (!opened) {
-		let index = this.widgets.length;
-		if (index > maxWindows) {
-			this.closeFirst();
-		}
+		// let index = this.widgets.length;
+		// if (index > maxWindows) {
+			// this.closeFirst();
+		// }
 		this.widgets.push(widget);
 		widget.id = id;
 		widget.showInternal();
@@ -36,7 +36,7 @@ Popups.open = function(widget, id) {
 };
 
 Popups.getAvailablePlace = function(root) {
-	if (toComplexUnitDip(160) > getDisplayHeight()) {
+	if (toComplexUnitDip(192) > getDisplayHeight()) {
 		showHint("No place for open popup", ColorDrawable.parseColor("YELLOW"));
 		return null;
 	}
