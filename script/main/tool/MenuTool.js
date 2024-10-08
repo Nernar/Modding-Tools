@@ -40,6 +40,7 @@ MenuTool.prototype.getMenuDescriptor = function() {
 
 MenuTool.prototype.describeMenu = function() {
 	let menu = this.getMenuWindow();
+	if (menu == null) return;
 	MenuWindow.parseJson.call(this, menu, this.getMenuDescriptor());
 };
 
@@ -50,6 +51,7 @@ MenuTool.prototype.describe = function() {
 
 MenuTool.prototype.attach = function() {
 	if (this.isAttached()) {
+		// Just throw exception, nothing will happened anymore
 		InteractionTool.prototype.attach.apply(this, arguments);
 	}
 	this.menuWindow = new MenuWindow();
@@ -59,26 +61,25 @@ MenuTool.prototype.attach = function() {
 MenuTool.prototype.deattach = function() {
 	let menu = this.getMenuWindow();
 	InteractionTool.prototype.deattach.apply(this, arguments);
+	if (menu == null) return;
 	menu.dismiss();
 	delete this.menuWindow;
 };
 
 MenuTool.prototype.hide = function() {
 	let menu = this.getMenuWindow();
-	if (menu == null) return;
 	InteractionTool.prototype.hide.apply(this, arguments);
+	if (menu == null) return;
 	menu.dismiss();
 };
 
 MenuTool.prototype.menu = function() {
-	let menu = this.getMenuWindow();
-	if (menu == null) return;
-	let control = this.getControlWindow();
-	if (control == null) return;
 	this.state = MenuTool.State.CONTROLLING;
-	control.dismiss();
+	let control = this.getControlWindow();
+	if (control) control.dismiss();
 	this.hideInteraction();
-	menu.attach();
+	let menu = this.getMenuWindow();
+	if (menu) menu.attach();
 };
 
 MenuTool.prototype.isControlling = function() {
@@ -95,22 +96,19 @@ MenuTool.prototype.onMenuClick = function(menu) {
 
 MenuTool.prototype.control = function() {
 	let menu = this.getMenuWindow();
-	if (menu == null) return;
-	menu.dismiss();
+	if (menu) menu.dismiss();
 	InteractionTool.prototype.control.apply(this, arguments);
 };
 
 MenuTool.prototype.collapse = function() {
 	let menu = this.getMenuWindow();
-	if (menu == null) return;
-	menu.dismiss();
+	if (menu) menu.dismiss();
 	InteractionTool.prototype.collapse.apply(this, arguments);
 };
 
 MenuTool.prototype.queue = function(what) {
 	let menu = this.getMenuWindow();
-	if (menu == null) return;
-	menu.dismiss();
+	if (menu) menu.dismiss();
 	InteractionTool.prototype.queue.apply(this, arguments);
 };
 

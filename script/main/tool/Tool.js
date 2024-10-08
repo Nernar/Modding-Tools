@@ -75,7 +75,7 @@ Tool.prototype.describe = function() {
 
 Tool.prototype.attach = function() {
 	if (this.isAttached()) {
-		MCSystem.throwException("ModdingTools: You are must deattach tool firstly!");
+		MCSystem.throwException("Modding Tools: You are must deattach tool firstly!");
 	}
 	this.controlWindow = new ControlWindow();
 	this.state = Tool.State.ATTACHED;
@@ -87,17 +87,17 @@ Tool.prototype.isAttached = function() {
 };
 
 Tool.prototype.deattach = function() {
+	this.state = Tool.State.INACTIVE;
 	let control = this.getControlWindow();
 	if (control == null) return;
-	this.state = Tool.State.INACTIVE;
 	control.dismiss();
 	delete this.controlWindow;
 };
 
 Tool.prototype.hide = function() {
+	this.state = Tool.State.ATTACHED;
 	let control = this.getControlWindow();
 	if (control == null) return;
-	this.state = Tool.State.ATTACHED;
 	control.dismiss();
 };
 
@@ -106,11 +106,12 @@ Tool.prototype.isVisible = function() {
 };
 
 Tool.prototype.control = function() {
+	this.state = Tool.State.FACED;
 	let control = this.getControlWindow();
 	if (control == null) return;
-	this.state = Tool.State.FACED;
 	control.transformButton();
 	control.attach();
+	hideInsetsOnScreen();
 };
 
 Tool.prototype.isFaced = function() {
@@ -118,11 +119,12 @@ Tool.prototype.isFaced = function() {
 };
 
 Tool.prototype.collapse = function() {
+	this.state = Tool.State.COLLAPSED;
 	let control = this.getControlWindow();
 	if (control == null) return;
-	this.state = Tool.State.COLLAPSED;
 	control.transformCollapsedButton();
 	control.attach();
+	hideInsetsOnScreen();
 };
 
 Tool.prototype.isCollapsed = function() {
@@ -130,16 +132,25 @@ Tool.prototype.isCollapsed = function() {
 };
 
 Tool.prototype.queue = function(what) {
+	this.state = Tool.State.QUEUED;
 	let control = this.getControlWindow();
 	if (control == null) return;
-	this.state = Tool.State.QUEUED;
 	control.transformLogotype();
 	control.attach();
 };
 
 Tool.prototype.sequence = function(sequence) {
 	if (sequence instanceof Sequence) {
-		sequence.assureYield();
+		if (sequence.getThread() == null) {
+			if (sequence instanceof ControlSequence) {
+				sequence.execute(this, this.getControlWindow());
+			} else {
+				sequence.execute(this);
+			}
+		}
+		if (!sequence.assureYield()) {
+			MCSystem.throwException("Modding Tools: Tool sequence is cancelled, interrupted or not completed successfully!");
+		}
 	}
 };
 

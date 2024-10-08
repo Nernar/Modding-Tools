@@ -48,6 +48,7 @@ InteractionTool.prototype.attachInteraction = function(id) {
 		interaction = this.interactionWindows = [];
 	}
 	let descriptor = calloutOrParse(this, this.getInteractionDescriptor(), interaction);
+	if (descriptor == null) descriptor = {};
 	for (let i = 0; i < interaction.length; i++) {
 		let uid = interaction[i] instanceof FocusablePopup ?
 			interaction[i].getId() : interaction[i].TYPE;
@@ -65,7 +66,7 @@ InteractionTool.prototype.attachInteraction = function(id) {
 		if (interaction.length == 0) {
 			delete this.interactionWindows;
 		}
-		MCSystem.throwException("ModdingTools: Interaction window must be instance of FocusablePopup or UniqueWindow");
+		MCSystem.throwException("Modding Tools: Interaction window must be instance of FocusablePopup or UniqueWindow");
 	}
 	instance.attach();
 	interaction.push(instance);

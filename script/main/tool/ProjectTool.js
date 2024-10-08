@@ -16,10 +16,10 @@ ProjectTool.prototype.reset = function() {
 		}
 	}, function(tool) {
 		let items = calloutOrParse(this, tool.contentEntryDescriptor, Array.prototype.slice.call(arguments));
-		if (!items || items.length == 0) {
+		if (items == null || items.length == 0) {
 			return {
 				type: "message",
-				icon: "entitySelect",
+				icon: "menuProjectManual",
 				message: translate("Howdy and welcome to Modding Tools!") + "\n" + translate("Unfortunately, you didn't install any module to start something bewitching.") + " " + translate("Come back here when you find something worthwhile in Mod Browser.")
 			};
 		}
@@ -95,7 +95,8 @@ ProjectTool.prototype.reset = function() {
 
 ProjectTool.prototype.unqueue = function() {
 	if (isAndroid()) {
-		return MenuTool.prototype.unqueue.apply(this, arguments);
+		MenuTool.prototype.unqueue.apply(this, arguments);
+		return;
 	}
 	if (ShellObserver.isInteractive()) {
 		this.menu();
@@ -107,7 +108,7 @@ ProjectTool.prototype.getExplorerLastName = function() {
 };
 
 ProjectTool.prototype.setExplorerLastName = function(name) {
-	this.explorerLastName = String(name);
+	this.explorerLastName = "" + name;
 };
 
 ProjectTool.prototype.resetExplorerLastName = function() {
@@ -115,10 +116,15 @@ ProjectTool.prototype.resetExplorerLastName = function() {
 };
 
 ProjectTool.prototype.getExtensions = function(type) {
-	let formats = [".dnp"];
+	let formats = ["dnp"];
 	if (type == ProjectTool.ExtensionType.EXPORT) {
-		if (this.hasConverter()) formats.push(".js");
-	} else formats.push(".js");
+		if (this.hasConverter()) {
+			formats.push("js");
+		}
+	} else {
+		// TODO: Minimum one editor with parser required
+		formats.push("js");
+	}
 	return formats;
 };
 
@@ -210,7 +216,7 @@ ProjectTool.prototype.export = function(file) {
 	} else if (name.endsWith(".js")) {
 		let converter = this.getConverter();
 		if (!this.hasConverter()) {
-			MCSystem.throwException("ModdingTools: No converter, try override ProjectTool.hasConverter!");
+			MCSystem.throwException("Modding Tools: No converter, try override ProjectTool.hasConverter!");
 		}
 		let active = Date.now();
 		try {
@@ -234,7 +240,7 @@ ProjectTool.prototype.getProject = function() {
 
 ProjectTool.prototype.toProject = function() {
 	let project = this.getProject();
-	if (!project) MCSystem.throwException("ModdingTools: Not found attached Project, toProject is not availabled");
+	if (!project) MCSystem.throwException("Modding Tools: Not found attached Project, toProject is not availabled");
 	return project.getAll() || null;
 };
 
