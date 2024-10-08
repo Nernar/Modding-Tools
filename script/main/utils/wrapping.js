@@ -50,19 +50,23 @@ const evaluateUniversal = function(scope, what, sourceName, lineno, securityDoma
 /**
  * Runs code/reader in a separate data stream.
  * @param {string|java.io.Reader} what something to evaluate
- * @param {Object} [scope] fo resolve
- * @param {string} [name] of script
+ * @param {object} [scope] to resolve global variables
+ * @param {string} [name] of running script in debuggers
+ * @param {object} [prototype] to resolve this variables
  * @param {boolean} [isFatal] syntax error will be fatal or not
- * @returns evaluate [[result]] or [[error]]
+ * @returns evaluate `result` or `error`
  */
-const runAtScope = function(what, scope, name, isFatal) {
-	let source = name ? NAME + "$" + name : "<no name>";
+const runAtScope = function(what, scope, name, prototype, isFatal) {
+	name = name ? NAME + "$" + name : "<no name>";
 	if (scope == null || typeof scope != "object") {
 		let executable = __mod__.compiledModSources.get(0);
 		scope = CONTEXT.newObject(executable.getScope());
 	}
+	if (prototype != null) {
+		scope = org.mozilla.javascript.ScriptRuntime.enterWith(prototype, CONTEXT, scope);
+	}
 	let result = {
-		source: source.replace(/[^\w\$\<\>\.\-\s]/gi, "$")
+		source: name.replace(/[^\w\$\<\>\.\-\s]/gi, "$")
 	};
 	resolveThrowable.invoke(function() {
 		if (isHorizon) {
@@ -88,16 +92,22 @@ const runAtScope = function(what, scope, name, isFatal) {
 const newLoggingErrorReporter = function(name, isFatal, collector) {
 	return new org.mozilla.javascript.ErrorReporter({
 		error: function(message, sourceURI, line, lineText, lineOffset) {
-			Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "ERROR" : "WARNING");
-			Logger.Log(name + ": " + lineText, isFatal ? "ERROR" : "WARNING");
-			Logger.Log(name + ": " + String(" ").repeat(lineOffset) + "^", isFatal ? "ERROR" : "WARNING");
-			if (collector && collector.error) collector.error.apply(this, arguments);
+			if (collector == null || (collector.error != null && collector.error.apply(this, arguments) !== false)) {
+				Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "ERROR" : "WARNING");
+				if (lineText != null && lineText.length > 0) {
+					Logger.Log(name + ": " + lineText, isFatal ? "ERROR" : "WARNING");
+					Logger.Log(name + ": " + " ".repeat(lineOffset) + "^", isFatal ? "ERROR" : "WARNING");
+				}
+			}
 		},
 		warning: function(message, sourceURI, line, lineText, lineOffset) {
-			Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "WARNING" : "INFO");
-			Logger.Log(name + ": " + lineText, isFatal ? "WARNING" : "INFO");
-			Logger.Log(name + ": " + String(" ").repeat(lineOffset) + "^", isFatal ? "WARNING" : "INFO");
-			if (collector && collector.warning) collector.warning.apply(this, arguments);
+			if (collector == null || (collector.warning != null && collector.warning.apply(this, arguments) !== false)) {
+				Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "WARNING" : "INFO");
+				if (lineText != null && lineText.length > 0) {
+					Logger.Log(name + ": " + lineText, isFatal ? "WARNING" : "INFO");
+					Logger.Log(name + ": " + " ".repeat(lineOffset) + "^", isFatal ? "WARNING" : "INFO");
+				}
+			}
 		},
 		runtimeError: function(message, sourceURI, line, lineText, lineOffset) {
 			return new org.mozilla.javascript.EvaluatorException(message, sourceURI, line, lineText, lineOffset);
@@ -108,64 +118,69 @@ const newLoggingErrorReporter = function(name, isFatal, collector) {
 const newRuntimeCompilerEnvirons = function(reporter) {
 	let compilerEnv = new org.mozilla.javascript.CompilerEnvirons();
 	compilerEnv.initFromContext(CONTEXT);
-	compilerEnv.setErrorReporter(reporter);
-	compilerEnv.setGenerateDebugInfo(false);
+	if (reporter != null) {
+		compilerEnv.setErrorReporter(reporter);
+	}
+	compilerEnv.setGenerateDebugInfo(true);
 	compilerEnv.setGeneratingSource(false);
 	compilerEnv.setRecoverFromErrors(true);
-	// Requires setGeneratingSource(true)
-	// compilerEnv.setIdeMode(true);
+	compilerEnv.setIdeMode(true);
 	return compilerEnv;
 };
 
+const Wrappables = [
+	Dirs.SCRIPT_REVISION,
+	Dirs.SCRIPT_ADAPTIVE,
+	Dirs.EVALUATE
+];
+
 const findWrappedScript = function(path) {
-	let file = new java.io.File(path);
-	if (file.exists()) return file;
-	file = new java.io.File(Dirs.SCRIPT_REVISION, path);
-	if (file.exists()) return file;
-	file = new java.io.File(Dirs.EVALUATE, path);
-	if (file.exists()) return file;
-	file = new java.io.File(Dirs.SCRIPT_ADAPTIVE, path);
-	if (file.exists()) return file;
+	let offset = 0;
+	let filename = path;
+	do {
+		if (Files.isFile(filename)) {
+			return Files.of(filename);
+		}
+		filename = Files.join(Wrappables[offset++], path);
+	} while (offset <= Wrappables.length);
 	return null;
 };
 
-const UNWRAP = function(path, scope) {
-	let who = UNWRAP.initScriptable(path);
-	if (scope !== undefined && scope !== null) {
-		who = assign(who, scope);
-	}
+const UNWRAP = function(path, prototype, scope, mergeScriptables) {
 	let file = findWrappedScript(path);
-	if (REVISION.startsWith("develop") && path.endsWith(".js")) {
-		if (file == null) {
-			MCSystem.throwException("ModdingTools: Not found " + path + " script");
-		}
-		log("ModdingTools: Wrapping " + file + " script");
-		let source = Files.read(file).toString(),
-			code = "(function() {\n" + source + "\n})();",
-			scope = runAtScope(code, who, path);
-		if (scope.error) throw scope.error;
-		return scope.result;
-	}
 	if (file == null) {
-		MCSystem.throwException("ModdingTools: Not found " + path + " executable");
+		MCSystem.throwException("Modding Tools: Not found '" + path + "' " + (path.endsWith(".dns") ? "executable" : "script") + ", maybe you should try register it via modifying Wrappables?");
+	}
+	let name = path.substring(path.lastIndexOf("/") + 1);
+	if (scope == null || mergeScriptables) {
+		let scriptable = UNWRAP.initScriptable(path, name);
+		scope = mergeScriptables && scope != null ? assign(scriptable, scope) : scriptable;
 	}
 	try {
-		let source = decompileExecuteable(Files.readBytes(file)),
+		let source = path.endsWith(".dns") ? decompileExecuteable(Files.readAsBytes(file)) : Files.read(file),
 			code = "(function() {\n" + source + "\n})();",
-			scope = runAtScope(code, who, path);
-		if (scope.error) throw scope.error;
-		return scope.result;
+			result = runAtScope(code, scope, name, prototype);
+		if (result.error) throw result.error;
+		return result.result;
 	} catch (e) {
-		if (REVISION.indexOf("develop") != -1) {
+		if (!path.endsWith(".dns") || REVISION.indexOf("develop") != -1) {
 			reportError(e);
 		}
 	}
 	return null;
 };
 
-UNWRAP.initScriptable = function(name) {
+UNWRAP.initScriptable = function(path, name) {
 	let scope = __mod__.compiledModSources.get(0).getScope();
 	return {
+		__path__: path,
+		__name__: name,
+		log: function(message, prefix) {
+			Logger.Log(name + ": " + message, prefix || "SCRIPT");
+		},
+		raise: function(message) {
+			MCSystem.throwException(name + ": " + message);
+		},
 		SHARE: function(name, obj) {
 			if (REVISION.startsWith("develop")) {
 				if (typeof name == "object") {
@@ -174,18 +189,14 @@ UNWRAP.initScriptable = function(name) {
 					scope[name] = obj;
 				}
 			}
-		},
-		log: function(message) {
-			log(name + ": " + message);
-		},
-		__path__: name
+		}
 	};
 };
 
-const REQUIRE = function(path, scope) {
+const REQUIRE = function(path, prototype, scope) {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
 		MCSystem.setLoadingTip(NAME + ": Requiring " + path);
-		REQUIRE.results[path] = UNWRAP(path, scope);
+		REQUIRE.results[path] = UNWRAP(path, prototype, scope);
 		REQUIRE.loaded.push(path);
 		MCSystem.setLoadingTip(NAME);
 	}
@@ -195,13 +206,13 @@ const REQUIRE = function(path, scope) {
 REQUIRE.loaded = [];
 REQUIRE.results = {};
 
-const CHECKOUT = function(path, scope, post) {
+const CHECKOUT = function(path, then, prototype, scope) {
 	try {
-		let something = REQUIRE(path, scope);
-		post && post(something);
-		return something;
+		let result = REQUIRE(path, prototype, scope);
+		then && then(result);
+		return result;
 	} catch (e) {
-		Logger.Log("ModdingTools: CHECKOUT: " + e, "WARNING");
+		Logger.Log("Modding Tools: CHECKOUT: " + e, "WARNING");
 	}
 	return null;
 };
@@ -223,7 +234,7 @@ const findTranslationByHash = function(hash, fallback) {
 			return translation;
 		}
 	}
-	if (fallback) {
+	if (fallback !== undefined) {
 		return fallback;
 	}
 	return translate("Deprecated translation");
@@ -237,13 +248,13 @@ const translateCode = function(hash, args, fallback) {
 				args = [args];
 			}
 			args = args.map(function(value) {
-				return String(value);
+				return "" + value;
 			});
 			text = java.lang.String.format(text, args);
 		}
-		return String(text);
+		return "" + text;
 	} catch (e) {
-		log("ModdingTools: translateCode: " + e);
+		log("Modding Tools: translateCode: " + e);
 	}
 	return "...";
 };
