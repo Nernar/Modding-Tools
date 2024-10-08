@@ -1,15 +1,10 @@
-// @ts-nocheck
 /**
  * Directly redirects native rhino JavaScript {@link Error} to
  * {@link java.lang.Throwable} instances.
+ * @type {{ invoke(what: Function, raise: (th: java.lang.Throwable) => void): any, invokeRuntime(what: Function, raise: (th: java.lang.Throwable) => void): any, invokeRhino(what: Function, raise: (th: java.lang.Throwable) => void): any }}
  */
-const resolveThrowable = ((): {
-	invoke(what: Function, when: (th: java.lang.Throwable) => void): any
-	invokeRuntime(what: Function, when: (th: java.lang.Throwable) => void): any
-	invokeRhino(what: Function, when: (th: java.lang.Throwable) => void): any
-} => {
+const resolveThrowable = (function() {
 	if (isCLI()) {
-		// @ts-ignore
 		return Packages.io.nernar.rhino.ThrowableResolver;
 	}
 	let bytes = Base64.decode(new java.lang.String(
@@ -70,20 +65,15 @@ const resolveThrowable = ((): {
 		"KAAAAHAAAAACAAAAFAAAABABAAADAAAADAAAAGABAAAEAAAAAQAAAPABAAAFAAAA" +
 		"EwAAAPgBAAAGAAAAAQAAAJACAAACIAAAKAAAALACAAABEAAABwAAACwGAAADEAAA" +
 		"AQAAAGwGAAADIAAACQAAAHAGAAABIAAACQAAAMwGAAAAIAAAAQAAANwJAAAAEAAA" +
-		"AQAAAAwKAAA=").getBytes())
-	return java.lang.Class.forName("io.nernar.rhino.ThrowableResolver", false, (() => {
+		"AQAAAAwKAAA=").getBytes());
+	return java.lang.Class.forName("io.nernar.rhino.ThrowableResolver", false, (function() {
 		if (android.os.Build.VERSION.SDK_INT >= 26) {
-			let buffer = java.nio.ByteBuffer.wrap(bytes)
-			// @ts-ignore
-			return new Packages.dalvik.system.InMemoryDexClassLoader(buffer, getContext().getClassLoader())
+			let buffer = java.nio.ByteBuffer.wrap(bytes);
+			return new Packages.dalvik.system.InMemoryDexClassLoader(buffer, getContext().getClassLoader());
 		}
-		let dex = new java.io.File(__dir__ + ".dex/0")
-		dex.getParentFile().mkdirs()
-		dex.createNewFile()
-		let stream = new java.io.FileOutputStream(dex)
-		stream.write(bytes)
-		stream.close()
-		// @ts-ignore
-		return new Packages.dalvik.system.PathClassLoader(dex.getPath(), getContext().getClassLoader())
-	})()).newInstance()
-})()
+		let dex = Files.of(__dir__ + ".dex/0");
+		Files.ensureFile(dex);
+		Files.write(dex, bytes);
+		return new Packages.dalvik.system.PathClassLoader(dex.getPath(), getContext().getClassLoader());
+	})()).newInstance();
+})();
