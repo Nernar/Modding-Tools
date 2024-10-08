@@ -1,4 +1,4 @@
-function Fragment() {
+const Fragment = function() {
 	this.views = {};
 	this.selectable = false;
 	this.hoverable = true;
@@ -39,9 +39,7 @@ Fragment.prototype.getViews = function() {
 };
 
 Fragment.prototype.findViewByKey = function(key) {
-	let views = this.getViews();
-	if (views == null) return null;
-	return views[key] || null;
+	return this.views[key] || null;
 };
 
 /**
@@ -65,18 +63,77 @@ Fragment.prototype.findViewByTag = function(tag) {
 Fragment.prototype.findView = function(stroke) {
 	let byKey = this.findViewByKey(stroke);
 	if (isAndroid()) {
-		return byKey ||
-			this.findViewById(stroke) ||
-			this.findViewByTag(stroke);
+		return byKey || this.findViewById(stroke) || this.findViewByTag(stroke);
 	}
 	return byKey;
+};
+
+Fragment.prototype.getParent = function() {
+	return this.parent || null;
+};
+
+Fragment.prototype.getWindow = function() {
+	let fragment = this.getParent();
+	while (fragment instanceof Fragment) {
+		fragment = fragment.getParent();
+	}
+	return fragment;
+};
+
+Fragment.prototype.attach = function(parent) {
+	if (parent == null || parent == this.parent) {
+		if (parent == null) {
+			MCSystem.throwException("Modding Tools: Fragment.attach(*) was called with an invalid parent: " + parent);
+		}
+		return;
+	}
+	this.parent = parent;
+	this.onAttach && this.onAttach(parent);
+};
+
+Fragment.prototype.deattach = function() {
+	if (this.parent != null) {
+		this.onDeattach && this.onDeattach();
+	}
+	delete this.parent;
+};
+
+Fragment.prototype.update = function(flag) {
+	this.onUpdate && this.onUpdate(flag);
+};
+
+Fragment.prototype.setOnAttachListener = function(listener) {
+	if (listener != null) {
+		this.onAttach = listener.bind(this);
+	} else {
+		delete this.onAttach;
+	}
+	return this;
+};
+
+Fragment.prototype.setOnDeattachListener = function(listener) {
+	if (listener != null) {
+		this.onDeattach = listener.bind(this);
+	} else {
+		delete this.onDeattach;
+	}
+	return this;
+};
+
+Fragment.prototype.setOnUpdateListener = function(listener) {
+	if (listener != null) {
+		this.onUpdate = listener.bind(this);
+	} else {
+		delete this.onUpdate;
+	}
+	return this;
 };
 
 /**
  * @requires `isCLI()`
  */
 Fragment.prototype.isHoverable = function() {
-	return !!this.hoverable;
+	return this.hoverable;
 };
 
 /**
@@ -88,7 +145,7 @@ Fragment.prototype.setIsHoverable = function(hoverable) {
 };
 
 Fragment.prototype.isSelectable = function() {
-	return !!this.selectable;
+	return this.selectable;
 };
 
 Fragment.prototype.setIsSelectable = function(selectable) {
@@ -106,36 +163,32 @@ Fragment.prototype.isRequiresFocusable = function() {
 const registerFragmentJson = (function() {
 	let fragments = {};
 
-	Fragment.parseJson = function(instanceOrJson, json, preferredElement) {
+	Fragment.parseJson = function(instanceOrJson, json, preferredFragment) {
 		if (!(instanceOrJson instanceof Fragment)) {
 			json = instanceOrJson;
 			instanceOrJson = null;
 		}
-		json = calloutOrParse(this, json, instanceOrJson);
-		if (json === null || typeof json != "object") {
+		if (json != null && typeof json == "object" && json.type != null) {
+			preferredFragment = json.type;
+		}
+		if (preferredFragment == null || !fragments.hasOwnProperty(preferredFragment)) {
+			Logger.Log("Modding Tools: Unresolved fragment " + JSON.stringify(preferredFragment) + ", please make sure that \"type\" property is used anywhere...", "WARNING");
 			return instanceOrJson;
 		}
-		if (json.type === undefined && preferredElement !== undefined) {
-			json.type = preferredElement;
-		}
-		if (fragments.hasOwnProperty(json.type)) {
-			return fragments[json.type].parseJson.call(this, instanceOrJson || new fragments[json.type](), json, preferredElement);
-		}
-		log("ModdingTools: Unresolved fragment " + json.type + ", please make sure that \"type\" property is used anywhere");
-		return instanceOrJson;
+		return fragments[preferredFragment].parseJson.call(this, instanceOrJson || new fragments[preferredFragment](), json);
 	};
 
 	return function(id, fragment) {
 		if (fragments.hasOwnProperty(id)) {
-			log("ModdingTools: Fragment json " + id + " is already occupied");
+			Logger.Log("Modding Tools: Fragment json " + JSON.stringify(id) + " is already occupied!", "WARNING");
 			return false;
 		}
 		if (typeof fragment != "function" || !(fragment.prototype instanceof Fragment)) {
-			Logger.Log("ModdingTools: Passed fragment " + fragment + " for json " + id + " must contain prototype of Fragment", "WARNING");
+			Logger.Log("Modding Tools: Passed fragment " + fragment + " for json " + JSON.stringify(id) + " must contain prototype of Fragment!", "WARNING");
 			return false;
 		}
 		if (typeof fragment.parseJson != "function") {
-			Logger.Log("ModdingTools: Nothing to call by parseJson, please consider that your fragment contains required json property", "WARNING");
+			Logger.Log("Modding Tools: Nothing to call by parseJson, please consider that your fragment contains required json property!", "WARNING");
 			return false;
 		}
 		fragments[id] = fragment;
