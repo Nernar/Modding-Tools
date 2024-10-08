@@ -7,7 +7,7 @@ function MenuWindow() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.elements = [];
 	return window;
-};
+}
 
 MenuWindow.prototype = new UniqueWindow;
 MenuWindow.prototype.TYPE = "MenuWindow";
@@ -45,7 +45,7 @@ MenuWindow.prototype.resetContent = function() {
 			reportError(e);
 		}
 	});
-	this.setContent(content);
+	this.setLayout(content);
 
 	views.scroll = new android.widget.ScrollView(getContext());
 	content.addView(views.scroll, new android.widget.FrameLayout.LayoutParams
@@ -67,7 +67,7 @@ MenuWindow.prototype.getBackground = function() {
 
 MenuWindow.prototype.setBackground = function(src) {
 	if (isAndroid()) {
-		let content = this.getContainer();
+		let content = this.getLayout();
 		if (!(src instanceof Drawable)) {
 			src = Drawable.parseJson.call(this, src);
 		}
@@ -115,7 +115,7 @@ MenuWindow.prototype.scrollToElement = function(elementOrIndex, duration) {
 		let index = typeof elementOrIndex == "object" ?
 			this.indexOfElement(elementOrIndex) : elementOrIndex;
 		let element = this.getElementAt(index);
-		let content = element.getContent();
+		let content = element.getLayout();
 		this.scrollTo(content.getY(), duration);
 	}
 	return this;
@@ -133,7 +133,7 @@ MenuWindow.prototype.removeElement = function(elementOrIndex) {
 		this.indexOfElement(elementOrIndex) : elementOrIndex;
 	if (isAndroid()) {
 		let element = this.getElementAt(index);
-		let content = element.getContent();
+		let content = element.getLayout();
 		let set = new android.transition.TransitionSet(),
 			fade = new android.transition.Fade(),
 			bounds = new android.transition.ChangeBounds();
@@ -211,7 +211,7 @@ MenuWindow.Header.prototype.resetContent = function() {
 	views.layout.addView(views.logo, params);
 };
 
-MenuWindow.Header.prototype.getContent = function() {
+MenuWindow.Header.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -224,7 +224,7 @@ MenuWindow.Header.prototype.setWindow = function(window) {
 	window.elements && window.elements.indexOf(this) ==
 		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-		content = this.getContent();
+		content = this.getLayout();
 	if (!layout || !content) return this;
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(600);
@@ -270,8 +270,9 @@ MenuWindow.Header.prototype.setupScroll = function() {
 		scope.setSlideProgress(real > 100 ? 100 : real < 0 ? 0 : real);
 	});
 	window.setOnAttachListener(function() {
-		window.getContainer().post(function() {
+		window.getLayout().post(function() {
 			try {
+				// TODO: Sometimes not working at all
 				scope.updateSlideProgress();
 			} catch (e) {
 				reportError(e);
@@ -289,7 +290,7 @@ MenuWindow.Header.prototype.setSlideProgress = function(procent) {
 	if (procent < 0 || procent > 100) return this;
 	if (isAndroid()) {
 		let scope = this,
-			content = this.getContent(),
+			content = this.getLayout(),
 			slide = this.views.slide,
 			logo = this.views.logo;
 		if (!content || !slide || !logo) return this;
@@ -415,7 +416,7 @@ MenuWindow.ProjectHeader.prototype.setBackground = function(src) {
 };
 
 MenuWindow.ProjectHeader.prototype.checkNothingNeedable = function() {
-	let content = this.getContent(),
+	let content = this.getLayout(),
 		views = this.views;
 	if (!content || !views || !views.background) return this;
 	let window = this.getWindow();
@@ -469,7 +470,7 @@ MenuWindow.ProjectHeader.prototype.removeCategory = function(categoryOrIndex) {
 	if (isAndroid()) {
 		let category = this.getCategoryAt(index);
 		let layout = this.views.project,
-			content = category.getContent();
+			content = category.getLayout();
 		let window = this.getWindow();
 		if (window) {
 			let actor = new android.transition.ChangeBounds();
@@ -551,7 +552,7 @@ MenuWindow.ProjectHeader.Category.prototype.resetContent = function() {
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(toComplexUnitSp(10));
+	views.title.setTextSize(toComplexUnitDp(10));
 	views.title.setTextColor($.Color.LTGRAY);
 	views.title.setSingleLine();
 	params = new android.widget.LinearLayout.LayoutParams
@@ -561,7 +562,7 @@ MenuWindow.ProjectHeader.Category.prototype.resetContent = function() {
 	content.addView(views.title, params);
 };
 
-MenuWindow.ProjectHeader.Category.prototype.getContent = function() {
+MenuWindow.ProjectHeader.Category.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -575,7 +576,7 @@ MenuWindow.ProjectHeader.Category.prototype.setParentHeader = function(header) {
 	}
 	header.categories && header.categories.indexOf(this) ==
 		-1 && header.categories.push(this);
-	let content = this.getContent();
+	let content = this.getLayout();
 	if (!content) return this;
 	let layout = header.views.project;
 	if (!layout) return this;
@@ -606,7 +607,7 @@ MenuWindow.ProjectHeader.Category.prototype.getTitle = function() {
 
 MenuWindow.ProjectHeader.Category.prototype.setTitle = function(text) {
 	if (isAndroid()) {
-		this.views.title.setText(String(text));
+		this.views.title.setText("" + text);
 	}
 	this.text = text;
 	return this;
@@ -650,7 +651,7 @@ MenuWindow.ProjectHeader.Category.prototype.removeItem = function(itemOrIndex) {
 	if (isAndroid()) {
 		let item = this.getItemAt(index);
 		let layout = this.views.layout,
-			content = item.getContent();
+			content = item.getLayout();
 		if (!layout || !content) return this;
 		let window = this.getWindow();
 		if (window) {
@@ -774,7 +775,7 @@ MenuWindow.ProjectHeader.Category.Item.prototype.resetContent = function() {
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(toComplexUnitSp(9));
+	views.title.setTextSize(toComplexUnitDp(9));
 	views.title.setTextColor($.Color.WHITE);
 	views.title.setSingleLine();
 	views.more.addView(views.title);
@@ -782,13 +783,13 @@ MenuWindow.ProjectHeader.Category.Item.prototype.resetContent = function() {
 	views.params = new android.widget.TextView(getContext());
 	typeface && views.params.setTypeface(typeface);
 	views.params.setPadding(0, toComplexUnitDip(3), 0, 0);
-	views.params.setTextSize(toComplexUnitSp(8));
+	views.params.setTextSize(toComplexUnitDp(8));
 	views.params.setTextColor($.Color.LTGRAY);
 	views.params.setMaxLines(3);
 	views.more.addView(views.params);
 };
 
-MenuWindow.ProjectHeader.Category.Item.prototype.getContent = function() {
+MenuWindow.ProjectHeader.Category.Item.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -805,8 +806,8 @@ MenuWindow.ProjectHeader.Category.Item.prototype.setParentCategory = function(ca
 	if (!category || typeof category != "object") return this;
 	category.items && category.items.indexOf(this) == -1
 		&& category.items.push(this);
-	let layout = category.getContent(),
-		content = this.getContent();
+	let layout = category.getLayout(),
+		content = this.getLayout();
 	if (!content) return this;
 	let header = category.getParentHeader();
 	if (header) {
@@ -832,7 +833,7 @@ MenuWindow.ProjectHeader.Category.Item.prototype.setBackground = function(src) {
 		if (!(src instanceof Drawable)) {
 			src = Drawable.parseJson.call(this, src);
 		}
-		src.attachAsBackground(this.getContent());
+		src.attachAsBackground(this.getLayout());
 	}
 	this.background = src;
 	return this;
@@ -862,7 +863,7 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getTitle = function() {
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setTitle = function(text) {
 	if (isAndroid()) {
-		this.views.title.setText(String(text));
+		this.views.title.setText("" + text);
 	}
 	this.text = text;
 	return this;
@@ -877,7 +878,7 @@ MenuWindow.ProjectHeader.Category.Item.prototype.getDescription = function() {
 
 MenuWindow.ProjectHeader.Category.Item.prototype.setDescription = function(text) {
 	if (isAndroid()) {
-		this.views.params.setText(String(text));
+		this.views.params.setText("" + text);
 	}
 	this.description = text;
 	return this;
@@ -970,7 +971,7 @@ MenuWindow.Category.prototype.resetContent = function() {
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(toComplexUnitSp(12));
+	views.title.setTextSize(toComplexUnitDp(12));
 	views.title.setTextColor($.Color.LTGRAY);
 	params = new android.widget.LinearLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -979,13 +980,13 @@ MenuWindow.Category.prototype.resetContent = function() {
 	content.addView(views.title, params);
 
 	views.layout = new android.widget.GridLayout(getContext());
-	views.layout.setColumnCount(parseInt(5 / uiScaler));
+	views.layout.setColumnCount(Math.floor(getDisplayWidth() / toComplexUnitDip(168)));
 	views.layout.setClipToPadding(false);
 	views.layout.setClipChildren(false);
 	content.addView(views.layout);
 };
 
-MenuWindow.Category.prototype.getContent = function() {
+MenuWindow.Category.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -998,7 +999,7 @@ MenuWindow.Category.prototype.setWindow = function(window) {
 	window.elements && window.elements.indexOf(this) ==
 		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-		content = this.getContent();
+		content = this.getLayout();
 	if (!layout || !content) return this;
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(400);
@@ -1017,7 +1018,7 @@ MenuWindow.Category.prototype.getTitle = function() {
 
 MenuWindow.Category.prototype.setTitle = function(text) {
 	if (isAndroid()) {
-		this.views.title.setText(String(text));
+		this.views.title.setText("" + text);
 	}
 	this.text = text;
 	return this;
@@ -1054,7 +1055,7 @@ MenuWindow.Category.prototype.removeItem = function(itemOrIndex) {
 	if (isAndroid()) {
 		let item = this.getItemAt(index);
 		let layout = this.views.layout,
-			content = item.getContent();
+			content = item.getLayout();
 		if (!layout || !content) return this;
 		let window = this.getWindow();
 		if (window) {
@@ -1183,7 +1184,7 @@ MenuWindow.Category.Item.prototype.resetContent = function() {
 
 	views.title = new android.widget.TextView(getContext());
 	typeface && views.title.setTypeface(typeface);
-	views.title.setTextSize(toComplexUnitSp(11));
+	views.title.setTextSize(toComplexUnitDp(11));
 	views.title.setTextColor($.Color.WHITE);
 	views.title.setSingleLine();
 	params = new android.widget.LinearLayout.LayoutParams
@@ -1199,7 +1200,7 @@ MenuWindow.Category.Item.prototype.resetContent = function() {
 
     views.badgeText = new android.widget.TextView(getContext());
 	typeface && views.badgeText.setTypeface(typeface);
-	views.badgeText.setTextSize(toComplexUnitSp(11));
+	views.badgeText.setTextSize(toComplexUnitDp(11));
 	views.badgeText.setGravity($.Gravity.TOP | $.Gravity.CENTER);
 	views.badgeText.setTextColor($.Color.WHITE);
 	views.badgeText.setSingleLine();
@@ -1209,7 +1210,7 @@ MenuWindow.Category.Item.prototype.resetContent = function() {
 	views.badgeText.setY(toComplexUnitDip(7));
 };
 
-MenuWindow.Category.Item.prototype.getContent = function() {
+MenuWindow.Category.Item.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -1227,7 +1228,7 @@ MenuWindow.Category.Item.prototype.setParentCategory = function(category) {
 	category.items && category.items.indexOf(this) ==
 		-1 && category.items.push(this);
 	let layout = category.views ? category.views.layout : null,
-		content = this.getContent();
+		content = this.getLayout();
 	if (!layout || !content) return this;
 	let window = category.getWindow();
 	if (window) {
@@ -1422,7 +1423,7 @@ MenuWindow.Message.prototype.resetContent = function() {
 
 	views.message = new android.widget.TextView(getContext());
 	typeface && views.message.setTypeface(typeface);
-	views.message.setTextSize(toComplexUnitSp(9));
+	views.message.setTextSize(toComplexUnitDp(9));
 	views.message.setTextColor($.Color.WHITE);
 	params = new android.widget.LinearLayout.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1431,7 +1432,7 @@ MenuWindow.Message.prototype.resetContent = function() {
 	content.addView(views.message, params);
 };
 
-MenuWindow.Message.prototype.getContent = function() {
+MenuWindow.Message.prototype.getLayout = function() {
 	return this.content || null;
 };
 
@@ -1444,7 +1445,7 @@ MenuWindow.Message.prototype.setWindow = function(window) {
 	window.elements && window.elements.indexOf(this) ==
 		-1 && window.elements.push(this);
 	let layout = window.views ? window.views.layout : null,
-		content = this.getContent();
+		content = this.getLayout();
 	if (!layout || !content) return this;
 	let actor = new android.transition.ChangeBounds();
 	actor.setDuration(400);
@@ -1463,7 +1464,7 @@ MenuWindow.Message.prototype.setBackground = function(src) {
 		if (!(src instanceof Drawable)) {
 			src = Drawable.parseJson.call(this, src);
 		}
-		src.attachAsBackground(this.getContent());
+		src.attachAsBackground(this.getLayout());
 	}
 	this.background = src;
 	return this;
@@ -1493,7 +1494,7 @@ MenuWindow.Message.prototype.getMessage = function() {
 
 MenuWindow.Message.prototype.setMessage = function(text) {
 	if (isAndroid()) {
-		this.views.message.setText(String(text));
+		this.views.message.setText("" + text);
 	}
 	this.text = text;
 	return this;
@@ -1588,7 +1589,7 @@ MenuWindow.parseJson = function(instanceOrJson, json) {
 					} else if (element.type == "message") {
 						element = MenuWindow.Message.parseJson.call(this, element);
 					} else {
-						Logger.Log("ModdingTools: MenuWindow unable to parse " + element.type, "WARNING");
+						Logger.Log("Modding Tools: MenuWindow unable to parse " + element.type, "WARNING");
 						continue;
 					}
 					element.setWindow(instanceOrJson);
