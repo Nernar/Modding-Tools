@@ -15,7 +15,7 @@ const ScriptImporterFactory = {
 		} else if (source.api == "AdaptedScript") {
 			return this.buildAdaptedScript();
 		}
-		Logger.Log("ModdingTools: Api " + source.api + " is not supported or found", "WARNING");
+		Logger.Log("Modding Tools: Api " + source.api + " is not supported or found", "WARNING");
 		return null;
 	}
 };
@@ -37,28 +37,28 @@ function ScriptImporter(executable, scope, key) {
 			let corruptions = script.getCorruptions();
 			for (let i = 0; i < corruptions.size(); i++) {
 				let corruption = corruptions.get(i);
-				Logger.Log("ModdingTools: " + corruption.cause + " (" + corruption.startLineNumber + " -> " + corruption.endLineNumber + ")", "INFO");
+				Logger.Log("Modding Tools: " + corruption.cause + " (" + corruption.startLineNumber + " -> " + corruption.endLineNumber + ")", "INFO");
 			}
-			Logger.Log("ModdingTools: These " + corruptions.size() + " errors will be ignored, however, in normal case, they might not have occurred.", "INFO");
+			Logger.Log("Modding Tools: These " + corruptions.size() + " errors will be ignored, however, in normal case, they might not have occurred.", "INFO");
 		}
 		*/
 		let collectedMessages = [];
 		let compilationErrorReporter = null;
 		let compilerEnvirons = null;
 		if (isHorizon) {
-			compilationErrorReporter = newLoggingErrorReporter("ModdingTools", false, {
+			compilationErrorReporter = newLoggingErrorReporter("Modding Tools", false, {
 				error: function(message, sourceURI, line, lineText, lineOffset) {
 					collectedMessages.push("E/" + message + " (at " + sourceURI + "#" + line + ")");
 					if (lineText != null) {
 						collectedMessages.push("E/" + lineText);
-						collectedMessages.push("E/" + String(" ").repeat(lineOffset) + "^");
+						collectedMessages.push("E/" + " ".repeat(lineOffset) + "^");
 					}
 				},
 				warning: function(message, sourceURI, line, lineText, lineOffset) {
 					collectedMessages.push("W/" + message + " (at " + sourceURI + "#" + line + ")");
 					if (lineText != null) {
 						collectedMessages.push("W/" + lineText);
-						collectedMessages.push("W/" + String(" ").repeat(lineOffset) + "^");
+						collectedMessages.push("W/" + " ".repeat(lineOffset) + "^");
 					}
 				}
 			});
@@ -70,11 +70,11 @@ function ScriptImporter(executable, scope, key) {
 				continue;
 			}
 			resolveThrowable.invoke(function() {
-				let file = new java.io.File(element);
+				let file = Files.of(element);
 				evaluateUniversal(scope, new java.io.FileReader(file), file.getName(), 0, null, null, compilationErrorReporter, compilerEnvirons);
 			}, function(th) {
-				Logger.Log("ModdingTools: " + element, "WARNING");
-				Logger.Log("ModdingTools: " + InnerCorePackages.api.log.ICLog.getStackTrace(th), "WARNING");
+				Logger.Log("Modding Tools: " + element, "WARNING");
+				Logger.Log("Modding Tools: " + InnerCorePackages.api.log.ICLog.getStackTrace(th), "WARNING");
 				collectedMessages.push("E/" + element);
 				collectedMessages.push("E/" + th);
 			});
@@ -112,7 +112,7 @@ const registerScriptScope = (function(everything, byKey) {
 			try {
 				injected.push(who[i].call(where));
 			} catch (e) {
-				Logger.Log("ModdingTools: ScriptImporterFactory.inject#" + i + ": " + e, "WARNING");
+				Logger.Log("Modding Tools: ScriptImporterFactory.inject#" + i + ": " + e, "WARNING");
 			}
 		}
 		return injected;
@@ -123,7 +123,7 @@ const registerScriptScope = (function(everything, byKey) {
 				byKey[key] = [];
 			}
 			if (byKey[key].indexOf(who) != -1) {
-				Logger.Log("ModdingTools: Script scope " + key + " already has registered function, nothing will happened", "INFO");
+				Logger.Log("Modding Tools: Script scope " + key + " already has registered function, nothing will happened", "INFO");
 				return;
 			}
 			byKey[key].push(who);

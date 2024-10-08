@@ -9,5 +9,7 @@ Worker.prototype.getProject = function() {
 };
 
 Worker.prototype.loadProject = function(what) {
+	Logger.Log("Modding Tools: Loading project...", "INFO");
+	Logger.Log("Modding Tools: " + stringifyJson(what), "INFO");
 	this.data = what;
 };

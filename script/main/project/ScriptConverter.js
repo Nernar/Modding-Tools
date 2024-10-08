@@ -36,7 +36,7 @@ ScriptConverter.prototype.isAttached = function() {
 ScriptConverter.prototype.validate = function(obj) {
 	try {
 		if (this.TYPE === undefined) {
-			MCSystem.throwException("ModdingTools: Cannot resolve project type for ScriptConverter");
+			MCSystem.throwException("Modding Tools: Cannot resolve project type for ScriptConverter");
 		}
 		if (obj == null) {
 			return ScriptConverter.State.ILLEGAL;
@@ -90,7 +90,7 @@ ScriptConverter.prototype.assureYield = function() {
 		}
 		return this.isConverted();
 	} catch (e) {
-		log("ModdingTools: ScriptConverter.assureYield: " + e);
+		log("Modding Tools: ScriptConverter.assureYield: " + e);
 	}
 	return false;
 };
@@ -102,10 +102,10 @@ ScriptConverter.prototype.getThread = function() {
 ScriptConverter.prototype.execute = function() {
 	try {
 		if (typeof this.process != "function") {
-			MCSystem.throwException("ModdingTools: ScriptConverter.process(what) must be implemented");
+			MCSystem.throwException("Modding Tools: ScriptConverter.process(what) must be implemented");
 		}
 		if (!this.isValid() || this.inProcess()) {
-			Logger.Log("ModdingTools: ScriptConverter is not validated required object or already processing something", "WARNING");
+			Logger.Log("Modding Tools: ScriptConverter is not validated required object or already processing something", "WARNING");
 			return;
 		}
 		if (this.isAttached()) {
@@ -141,7 +141,8 @@ ScriptConverter.prototype.getCurrentlyReaded = function() {
 
 ScriptConverter.prototype.getResult = function() {
 	let readed = this.getCurrentlyReaded();
-	return Array.isArray(readed) ? readed.join("\n\n") : (readed || null);
+	return Array.isArray(readed) ? readed.join("\n\n") + "\n"
+		: readed != null ? readed + "\n" : null;
 };
 
 ScriptConverter.prototype.hasResult = function() {
@@ -150,4 +151,8 @@ ScriptConverter.prototype.hasResult = function() {
 
 ScriptConverter.prototype.resolvePrefix = function(suffix, obj, i) {
 	return obj.length <= 1 ? suffix : suffix + (i + 1);
+};
+
+ScriptConverter.prototype.indent = function(what, symbol) {
+	return what != null ? what.replace(/\n(?=[^\n])/g, "\n" + symbol) : null;
 };
