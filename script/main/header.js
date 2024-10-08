@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2018-2022 Nernar (github.com/nernar)
+   Copyright 2018-2024 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-28.10.2022-0";
+const REVISION = "develop-alpha-0.4-08.10.2024-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -74,12 +74,13 @@ let firstLaunchTutorial = REVISION.startsWith("testing");
 let typeface = isAndroid() ? android.graphics.Typeface.MONOSPACE : null;
 let typefaceJetBrains = isAndroid() ? android.graphics.Typeface.MONOSPACE : null;
 
-IMPORT("Files");
+IMPORT("inherit");
 
 if (this.isInstant === undefined) {
 	this.isInstant = false;
 }
 
+IMPORT("Files");
 IMPORT("Retention");
 IMPORT("Stacktrace");
 
@@ -91,7 +92,7 @@ const prepareDebugInfo = function() {
 registerReportAction((function() {
 	let alreadyHasDate = false;
 	return function(error) {
-		error && Logger.Log("ModdingTools: " + error + (
+		error && Logger.Log("Modding Tools: " + error + (
 			error.lineNumber ? " (#" + error.lineNumber + ")" : ""
 		) + (
 			error.stack ? "\n" + error.stack : ""
@@ -101,19 +102,16 @@ registerReportAction((function() {
 		}
 		let message = reportTrace.toCode(error) + ": " + error + "\n" +
 				(error ? error.stack : null),
-			file = new java.io.File(Dirs.LOGGING, REVISION + ".log");
-		if (file.isDirectory()) {
-			Files.deleteRecursive(file.getPath());
-		}
-		file.getParentFile().mkdirs();
-		if (!file.exists()) {
+			file = Files.of(Dirs.LOGGING, REVISION + ".log");
+		if (!Files.isFile(file)) {
+			Files.ensureFile(file);
 			Files.write(file, prepareDebugInfo());
 		}
 		if (!alreadyHasDate) {
-			Files.addText(file, "\n" + launchTime);
+			Files.append(file, new Date(launchTime).toString() + "\n", true);
 			alreadyHasDate = true;
 		}
-		Files.addText(file, "\n" + message);
+		Files.append(file, message);
 	};
 })());
 
@@ -131,7 +129,13 @@ toComplexUnitDip = function(value) {
 	return toRawComplexUnitDip(value) * uiScaler;
 };
 
-let toRawComplexUnitSp = toComplexUnitSp
+let toRawComplexUnitDp = toRawComplexUnitDip;
+
+let toComplexUnitDp = function(value) {
+	return toComplexUnitDip(value) * 0.625;
+};
+
+let toRawComplexUnitSp = toComplexUnitSp;
 
 /**
  * getFontSize -> sp = 0,38095
@@ -166,6 +170,10 @@ if (isAndroid()) {
 $.importClass(java.util.concurrent.TimeUnit);
 $.importClass(InnerCorePackages.utils.FileTools);
 $.importClass(InnerCorePackages.api.runtime.LevelInfo);
+// $.importClass(InnerCorePackages.mod.build.ExtractionHelper);
+$.importClass(InnerCorePackages.mod.build.BuildConfig);
+$.importClass(InnerCorePackages.mod.executable.Compiler);
+$.importClass(InnerCorePackages.ui.LoadingUI);
 
 const CONTEXT = (function() {
 	try {
