@@ -57,20 +57,20 @@ const MediaTypes = {
 	IMAGE: ["bmp", "gif", "jpg", "jpeg", "png", "webp", "heic", "heif", "ico"]
 };
 
-Files.getExtensionType = function(file) {
-	if (file.isDirectory()) {
+Files.typeof = function(pathOrFile) {
+	if ((pathOrFile = this.of(pathOrFile)).isDirectory()) {
 		return "folder";
 	}
-	let name = file.getName(),
-		type = this.getExtension(file);
-	if (type) type = String(type).toLowerCase();
+	let name = this.basename(pathOrFile),
+		type = this.extension(pathOrFile);
+	if (type) type = ("" + type).toLowerCase();
 	return (type == "zip" || type == "tar" || type == "rar" || type == "7z" ||
 			type == "mcpack" || type == "apk" || type == "aar" || type == "script" ||
 			type == "odex" || type == "vdex" || type == "zipp" || type == "rarr" ||
 			type == "gz" || type == "bz2" || type == "dex" || type == "jar" ||
 			type == "xz" || type == "icmod" || type == "mcworld") ? "archive" :
-		(type == "json" || type == "config" || type == "info" || type == "proguard-rules.pro" ||
-			name == "manifest" || name == ".staticids" || type == ".profig.os" ||
+		(type == "json" || type == "config" || type == "info" || name == "proguard-rules.pro" ||
+			name == "manifest" || name == ".staticids" || name == ".profig.os" ||
 			name == "saves-info" || name == ".installation_info" ||
 			name == "cfg" || name == "info" || type == "gradle") ? "json" :
 		(type == "txt" || type == "text" || type == "log" || type == "csv") ? "text" :
@@ -105,22 +105,21 @@ Files.ExtensionType.NONE = "none";
 /**
  * Used to display dimensions in explorer.
  */
-Files.prepareSize = function(file) {
-	let size = file.length();
-	return this.prepareFormattedSize(size);
+Files.prepareSize = function(pathOrFile) {
+	return this.prepareFormattedSize(this.of(pathOrFile).length());
 };
 
 Files.prepareFormattedSize = function(size) {
 	return size <= 0 ? translate("Empty") : size < 1024 ? translate("%s bytes", size) :
-		size < 1024 * 1024 ? translate("%s KB", formatSize(size / 1024)) :
-		size < 1024 * 1024 * 1024 ? translate("%s MB", formatSize(size / (1024 * 1024))) :
-		size < 1024 * 1024 * 1024 * 1024 ? translate("%s GB", formatSize(size / (1024 * 1024 * 1024))) :
-		translate("%s TB", formatSize(size / (1024 * 1024 * 1024 * 1024)));
+		size < 1024 * 1024 ? translate("%s KiB", formatSize(size / 1024)) :
+		size < 1024 * 1024 * 1024 ? translate("%s MiB", formatSize(size / (1024 * 1024))) :
+		size < 1024 * 1024 * 1024 * 1024 ? translate("%s GiB", formatSize(size / (1024 * 1024 * 1024))) :
+		translate("%s TiB", formatSize(size / (1024 * 1024 * 1024 * 1024)));
 };
 
-Files.prepareBounds = function(file) {
+Files.prepareBounds = function(pathOrFile) {
 	let options = BitmapFactory.getBoundsDecodeOptions();
-	BitmapFactory.decodeFile(file, options);
+	BitmapFactory.decodeFile(this.of(pathOrFile), options);
 	return [options.outWidth, options.outHeight];
 };
 
@@ -139,48 +138,16 @@ Files.getThumbnailOptions = function(required, real, file) {
 	return options;
 };
 
-Files.getFromAssets = function(name) {
-	let assets = getContext().getAssets();
-	return assets.open(name);
-};
-
-Files.readKey = function(file, separator) {
-	separator = separator || "=";
-	let text = this.read(file, true),
-		obj = {};
-	for (let i = 0; i < text.length; i++) {
-		let source = text[i].split(separator);
-		if (source.length == 2) obj[source[0]] = source[1];
-	}
-	return obj;
-};
-
-Files.writeKey = function(file, obj, separator) {
-	separator = separator || "=";
-	let result = [];
-	for (let item in obj) {
-		result.push(item + separator + obj[item]);
-	}
-	this.write(file, result.join("\n"));
-};
-
-Files.sendMail = function(file) {
-	let intent = new android.content.Intent("android.intent.action.SEND");
-	intent.setType("text/plain");
-	intent.putExtra("android.intent.extra.TEXT", Files.read(file));
-	getContext().startActivity(intent);
-};
-
 /**
  * @requires `isAndroid()`
  */
-Files.createTypefaceWithFallback = function(path) {
-	let file = new java.io.File(path);
+Files.createTypefaceWithFallback = function(pathOrFile) {
+	pathOrFile = this.of(pathOrFile);
 	try {
-		return android.graphics.Typeface.createFromFile(file);
+		return android.graphics.Typeface.createFromFile(pathOrFile);
 	} catch (e) {
-		Logger.Log("ModdingTools: Not found " + file.getName() + " typeface, or it was failed to load", "WARNING");
-		Logger.Log("ModdingTools: Files.createTypefaceWithFallback: " + e, "WARNING");
+		Logger.Log("Modding Tools: Not found '" + pathOrFile.getName() + "' typeface, or it was failed to load", "WARNING");
+		Logger.Log("Modding Tools: Files.createTypefaceWithFallback: " + e, "WARNING");
 	}
 	return typeface || android.graphics.Typeface.MONOSPACE;
 };
