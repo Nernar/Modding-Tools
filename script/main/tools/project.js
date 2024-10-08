@@ -19,12 +19,36 @@ const PROJECT_TOOL = (function() {
 					}
 					if (!PROJECT_TOOL.tools.hasOwnProperty(type)) {
 						if (Tools.hasOwnProperty(type)) {
-							Logger.Log("ModdingTools: Try registering tool " + type + " in menu if you need to interact with project", "WARNING");
+							Logger.Log("Modding Tools: Try registering tool " + type + " in menu if you need to interact with project", "WARNING");
 						}
 						categories[type].items.push({
 							icon: "inspectorObject",
-							title: translate("Unsupported module"),
-							description: translate("not installed or loaded"),
+							title: translate("Tool '%s'", type),
+							description: translate("%s bytes", JSON.stringify(entry).length),
+							click: function() {
+								if (type == "unknown") {
+									showHint(translate("Tool is not availabled"), $.Color.RED);
+									return;
+								}
+								confirm(translate("Tool is not availabled"), translate("Editors are provided in associated modifications, which extends Modding Tools with powerful APIs.") + " " + translate("Install it via ICMods, in most cases search for '%s' will do best.", type), function() {
+									IMPORT("ModBrowser.Query");
+									let request = new ModBrowser.Query.Search(/[^.]*/.exec(type)[0] + " assistant");
+									try {
+										let results = request.getJSON();
+										if (results.length > 0) {
+											let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
+												android.net.Uri.parse("https://icmods.mineprogrammng.org/mod?id=" + results[0].id));
+											getContext().startActivity(intent);
+											return;
+										}
+										request.setRequest(null);
+										request.setTag("moddingtools");
+									} catch (e) {}
+									let intent = new android.content.Intent(android.content.Intent.ACTION_VIEW,
+										android.net.Uri.parse("https://icmods.mineprogrammng.org/search?" + request.formatQuery()));
+									getContext().startActivity(intent);
+								}, translate("Open in web"));
+							},
 							hold: function() {
 								PROJECT_TOOL.confirmProjectEntryRemoval(longTermSupportIndex);
 							}
@@ -39,7 +63,7 @@ const PROJECT_TOOL = (function() {
 						icon: factory.getImage(),
 						title: factory.getTitle(),
 						click: function() {
-							attachEditorTool(Tools[type], entry);
+							attachEditorTool(type, entry);
 						},
 						hold: function() {
 							PROJECT_TOOL.confirmProjectEntryRemoval(longTermSupportIndex, descriptor.title);
@@ -49,7 +73,7 @@ const PROJECT_TOOL = (function() {
 						factory.observeEntry(entry, descriptor, i);
 					} catch (e) {
 						descriptor.description = formatExceptionReport(e, false);
-						Logger.Log("ModdingTools: contentProjectDescriptor: " + e, "WARNING");
+						Logger.Log("Modding Tools: contentProjectDescriptor: " + e, "WARNING");
 					}
 					categories[type].items.push(descriptor);
 				}
@@ -129,6 +153,19 @@ const PROJECT_TOOL = (function() {
 					ProjectProvider.getProject().getAll().splice(index, 1);
 					PROJECT_TOOL.describeMenu();
 				});
+		},
+
+		sequence: function(sequence) {
+			if (sequence instanceof Sequence) {
+				ProjectTool.prototype.sequence.call(this, sequence);
+			}
+			if (this.launchCompleted !== true) {
+				prelaunch();
+			}
+			if (showHint.launchStacked !== undefined) {
+				showHint.unstackLaunch();
+			}
+			this.launchCompleted = true;
 		}
 		// TODO: Register replace, merge, open actions in editors.
 		// Some realization implemented in previous commits, but
@@ -149,7 +186,7 @@ const attachProjectTool = function(source, post) {
 				if (source !== undefined) {
 					return attachProjectTool(undefined, post);
 				}
-				MCSystem.throwException("ModdingTools: Something went wrong, try again later");
+				MCSystem.throwException("Modding Tools: Something went wrong, try again later");
 			}
 			if (accepted) {
 				try {
@@ -170,11 +207,30 @@ const attachProjectTool = function(source, post) {
 };
 
 const attachEditorTool = function(who, what, post) {
-	if (!who.isAttached()) {
-		who.attach();
+	try {
+		if (!(who instanceof Tool)) {
+			who = Tools[who];
+		}
+		if (who == null) {
+			throw "Tool '" + who + "' is not registered, exists or availabled!";
+		}
+		PROJECT_TOOL.deattach();
+		if (!who.isAttached()) {
+			who.attach();
+		}
+		who.queue(what);
+	} catch (e) {
+		reportError(e);
+		try {
+			if (who != null) {
+				who.deattach();
+			}
+		} catch (e) {
+			Logger.Log("Modding Tools: Tool.deattach: " + e, "WARNING");
+		}
+		attachProjectTool();
+		return;
 	}
-	PROJECT_TOOL.deattach();
-	who.queue(what);
 	handleThread(function() {
 		try {
 			who.sequence();
@@ -185,13 +241,15 @@ const attachEditorTool = function(who, what, post) {
 			handle(function() {
 				try {
 					if (!accepted) {
-						MCSystem.throwException("ModdingTools: Target project is not validated, aborting!");
+						MCSystem.throwException("Modding Tools: Target project is not validated, aborting!");
 					}
 					if (accepted) {
 						try {
 							who.describe();
 							post && post(who);
-							who.unqueue();
+							handle(function() {
+								who.unqueue();
+							}, 1000);
 							accepted = false;
 						} catch (e) {
 							if (e != null) {
@@ -217,7 +275,7 @@ const attachEditorTool = function(who, what, post) {
 				try {
 					who.deattach();
 				} catch (e) {
-					Logger.Log("ModdingTools: Tool.deattach: " + e, "WARNING");
+					Logger.Log("Modding Tools: Tool.deattach: " + e, "WARNING");
 				}
 				attachProjectTool();
 			});
