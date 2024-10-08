@@ -10,6 +10,7 @@ const showHint = function(hint, color, reawait) {
 		});
 		return;
 	}
+	Logger.Log("Modding Tools: " + hint, "MOD/HINT");
 	handle(function() {
 		let window = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 		if (window === null) {
@@ -29,7 +30,6 @@ showHint.launchStacked = [];
 showHint.unstackLaunch = function() {
 	let stack = this.launchStacked;
 	delete this.launchStacked;
-	delete this.unstackLaunch;
 	for (let i = 0; i < stack.length; i++) {
 		showHint(stack[i].hint, stack[i].color, stack[i].reawait);
 	}
