@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2022 Nernar (github.com/nernar)
+   Copyright 2022-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -116,16 +116,16 @@ HashedDrawableMap.deattachAsBackground = function (view) {
 };
 DrawableFactory = {};
 DrawableFactory.setAlpha = function (drawable, alpha) {
-    drawable.setAlpha(Number(alpha));
+    drawable.setAlpha(alpha - 0);
 };
 DrawableFactory.setAntiAlias = function (drawable, enabled) {
-    drawable.setAntiAlias(Boolean(enabled));
+    drawable.setAntiAlias(!!enabled);
 };
 DrawableFactory.setAutoMirrored = function (drawable, enabled) {
-    drawable.setAutoMirrored(Boolean(enabled));
+    drawable.setAutoMirrored(!!enabled);
 };
 DrawableFactory.setFilterBitmap = function (drawable, enabled) {
-    drawable.setFilterBitmap(Boolean(enabled));
+    drawable.setFilterBitmap(!!enabled);
 };
 DrawableFactory.setTintColor = function (drawable, color) {
     color = ColorDrawable.parseColor(color);
@@ -137,7 +137,7 @@ DrawableFactory.setTintColor = function (drawable, color) {
     drawable.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP);
 };
 DrawableFactory.setMipMap = function (drawable, enabled) {
-    drawable.setMipMap(Boolean(enabled));
+    drawable.setMipMap(!!enabled);
 };
 DrawableFactory.setColorFilter = function (drawable, filter) {
     drawable.setColorFilter(filter);
@@ -158,22 +158,22 @@ DrawableFactory.setTileMode = function (drawable, modesOrX, y) {
     drawable.setTileModeXY(modesOrX);
 };
 DrawableFactory.setGravity = function (drawable, gravity) {
-    drawable.setGravity(Number(gravity));
+    drawable.setGravity(gravity - 0);
 };
 DrawableFactory.setLayoutDirection = function (drawable, direction) {
-    drawable.setLayoutDirection(Number(direction));
+    drawable.setLayoutDirection(direction - 0);
 };
 DrawableFactory.setXfermode = function (drawable, mode) {
     drawable.setXfermode(mode);
 };
 DrawableFactory.setLevel = function (drawable, level) {
-    return drawable.setLevel(Number(level));
+    return drawable.setLevel(level - 0);
 };
 DrawableFactory.setState = function (drawable, states) {
     if (!Array.isArray(states))
         states = [states];
     states = states.map(function (state) {
-        return Number(state);
+        return state - 0;
     });
     return drawable.setState(states);
 };
@@ -185,7 +185,7 @@ DrawableFactory.setVisible = function (drawable, first, second) {
     if (second === undefined) {
         second = first;
     }
-    return drawable.setVisible(Boolean(first), Boolean(second));
+    return drawable.setVisible(!!first, !!second);
 };
 BitmapFactory = {};
 BitmapFactory.decodeBytes = function (bytes, options) {
@@ -260,7 +260,7 @@ BitmapDrawableFactory.findMappedByTag = function (tag) {
             mapped.push(key);
             continue;
         }
-        var element = String(key).toLowerCase();
+        var element = ("" + key).toLowerCase();
         if (element.indexOf(tag) != -1) {
             mapped.push(key);
         }
@@ -280,12 +280,12 @@ BitmapDrawableFactory.isRequired = function (key) {
 BitmapDrawableFactory.generateKeyFor = function (path, root) {
     if (root === undefined) {
         var parent = new java.io.File(path).getParentFile();
-        root = String(parent.getPath());
+        root = "" + parent.getPath();
     }
     if (root != false) {
-        path = String(path).replace(String(root), String());
+        path = ("" + path).replace("" + root, "");
     }
-    var splited = String(path).split("/");
+    var splited = ("" + path).split("/");
     var key, previous;
     do {
         var next = splited.shift();
@@ -307,7 +307,7 @@ BitmapDrawableFactory.generateKeyFor = function (path, root) {
         previous = next;
     } while (splited.length > 0);
     if (key !== undefined) {
-        return key.replace(/\W/g, String());
+        return key.replace(/\W/g, "");
     }
     MCSystem.throwException("Drawable: invalid path provided in BitmapDrawableFactory: " + path);
 };
@@ -343,14 +343,14 @@ BitmapDrawableFactory.listFileNames = function (path, explore, root) {
     if (root === undefined)
         root = path;
     if (file.isFile())
-        return [String(path).replace(root, String())];
-    if (!String(root).endsWith("/") && String(root).length > 0) {
+        return [("" + path).replace(root, "")];
+    if (!("" + root).endsWith("/") && ("" + root).length > 0) {
         root += "/";
     }
     var list = file.listFiles() || [];
     for (var i = 0; i < list.length; i++) {
         if (list[i].isFile()) {
-            files.push(String(list[i]).replace(root, String()));
+            files.push(("" + list[i]).replace(root, ""));
         }
         else if (explore) {
             files = files.concat(BitmapDrawableFactory.listFileNames(list[i], explore, root));
@@ -388,13 +388,13 @@ BitmapDrawableFactory.require = function (value, options) {
             return this.required[value];
         return this.required[value] = value;
     }
-    else if (String(value).endsWith(".dnr")) {
+    else if (("" + value).endsWith(".dnr")) {
         if (this.isRequired(value))
             return this.required[value];
         var asset = BitmapFactory.decodeAsset(value, options);
         return this.required[value] = asset;
     }
-    else if (String(value).indexOf("/") != -1 || (value instanceof java.io.File)) {
+    else if (("" + value).indexOf("/") != -1 || (value instanceof java.io.File)) {
         if (this.isRequired(value))
             return this.required[value];
         var file = BitmapFactory.decodeFile(value, options);
@@ -439,13 +439,13 @@ BitmapDrawableFactory.recycleRequired = function () {
 };
 AnimationDrawableFactory = {};
 AnimationDrawableFactory.setEnterFadeDuration = function (drawable, duration) {
-    drawable.setEnterFadeDuration(Number(duration));
+    drawable.setEnterFadeDuration(duration - 0);
 };
 AnimationDrawableFactory.setExitFadeDuration = function (drawable, duration) {
-    drawable.setExitFadeDuration(Number(duration));
+    drawable.setExitFadeDuration(duration - 0);
 };
 AnimationDrawableFactory.setOneShot = function (drawable, enabled) {
-    drawable.setOneShot(Boolean(enabled));
+    drawable.setOneShot(!!enabled);
 };
 Drawable = new Function();
 Drawable.prototype.isAttachedAsImage = function (view) {
@@ -639,7 +639,7 @@ ColorDrawable.parseColor = function (value) {
         return value;
     }
     else if (value) {
-        var stroke = String(value);
+        var stroke = "" + value;
         if (stroke.startsWith("#")) {
             return android.graphics.Color.parseColor(stroke);
         }
@@ -806,7 +806,7 @@ ClipDrawable.prototype.getLocation = function () {
     return this.location !== undefined ? this.location : android.view.Gravity.LEFT;
 };
 ClipDrawable.prototype.setLocation = function (location) {
-    this.location = Number(location);
+    this.location = location - 0;
     this.invalidate();
 };
 ClipDrawable.prototype.getSide = function () {
@@ -818,7 +818,7 @@ ClipDrawable.prototype.setSide = function (side) {
             side = ClipDrawable.Side[side];
         }
     }
-    this.side = Number(side);
+    this.side = side - 0;
     this.invalidate();
 };
 ClipDrawable.prototype.toString = function () {
@@ -921,6 +921,9 @@ BitmapDrawable.prototype.requestDeattach = function () {
 BitmapDrawable.prototype.toString = function () {
     return "[BitmapDrawable " + this.getBitmap() + "]";
 };
+/**
+ * @todo Not working, check what is wrong here...
+ */
 AnimationDrawable = function (frames) {
     this.clearFrames();
     if (frames !== undefined) {
@@ -1025,7 +1028,7 @@ AnimationDrawable.prototype.getCurrentIndex = function () {
 };
 AnimationDrawable.prototype.setCurrentIndex = function (index) {
     if (this.isProcessed()) {
-        this.toDrawable().setCurrentIndex(Number(index));
+        this.toDrawable().setCurrentIndex(index - 0);
     }
 };
 AnimationDrawable.prototype.isRunning = function () {
@@ -1049,21 +1052,21 @@ AnimationDrawable.prototype.getDefaultDuration = function () {
     return this.duration > 0 ? this.duration : 1000;
 };
 AnimationDrawable.prototype.setDefaultDuration = function (duration) {
-    this.duration = Number(duration);
+    this.duration = duration - 0;
     this.requireDescribe();
 };
 AnimationDrawable.prototype.isStartingWhenProcess = function () {
     return this.starting != undefined ? this.starting : false;
 };
 AnimationDrawable.prototype.setIsStartingWhenProcess = function (enabled) {
-    this.starting = Boolean(enabled);
+    this.starting = !!enabled;
     this.requireDescribe();
 };
 AnimationDrawable.prototype.isStoppingWhenCompleted = function () {
     return this.stopping != undefined ? this.stopping : false;
 };
 AnimationDrawable.prototype.setIsStoppingWhenCompleted = function (enabled) {
-    this.stopping = Boolean(enabled);
+    this.stopping = !!enabled;
     this.requireDescribe();
 };
 AnimationDrawable.prototype.toString = function () {
@@ -1091,7 +1094,7 @@ AnimationDrawable.Frame.prototype.getDuration = function () {
     return this.duration || 0;
 };
 AnimationDrawable.Frame.prototype.setDuration = function (duration) {
-    this.duration = Number(duration);
+    this.duration = duration - 0;
 };
 AnimationDrawable.Frame.prototype.toString = function () {
     return "[Frame " + this.getDrawable() + "@" + this.getDuration() + "]";
