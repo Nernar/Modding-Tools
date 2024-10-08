@@ -14,74 +14,133 @@ LayoutFragment.prototype.getFragments = function() {
 	return this.fragments || null;
 };
 
-LayoutFragment.prototype.addElementFragment = function(fragment, params) {
+/**
+ * @requires `isAndroid()`
+ */
+LayoutFragment.prototype.addViewDirectly = function(view, params) {
+	let container = this.getContainerLayout();
+	if (container != null) {
+		if (params == null) {
+			container.addView(view);
+		} else {
+			container.addView(view, params);
+		}
+	}
+};
+
+LayoutFragment.prototype.addFragment = function(fragment, params) {
 	if (!(fragment instanceof Fragment)) {
-		Logger.Log("ModdingTools: Trying adding non-fragment element passed to addElementFragment", "WARNING");
+		Logger.Log("Modding Tools: You tried to add an element that is not a fragment to addFragment!", "WARNING");
 		return -1;
 	}
 	if (isAndroid()) {
-		if (params === undefined) {
-			this.getContainerLayout().addView(fragment.getContainer());
-		} else {
-			this.getContainerLayout().addView(fragment.getContainer(), params);
-		}
+		this.addViewDirectly(fragment.getContainer(), params);
 	}
-	return this.fragments.push(fragment) - 1;
+	let length = this.fragments.push(fragment);
+	fragment.attach(this);
+	return length - 1;
 };
 
 /**
  * @requires `isAndroid()`
  */
-LayoutFragment.prototype.addElementView = function(container, params) {
+LayoutFragment.prototype.addView = function(container, params) {
+	if (!(container instanceof android.view.View)) {
+		MCSystem.throwException("Modding Tools: Illegal view passed to LayoutFragment.addView!");
+	}
 	let fragment = new Fragment();
 	fragment.setContainerView(container);
-	return this.addElementFragment(fragment, params);
+	return this.addFragment(fragment, params);
 };
 
-LayoutFragment.prototype.getElementCount = function() {
+LayoutFragment.prototype.getFragmentCount = function() {
 	return this.fragments.length;
 };
 
-LayoutFragment.prototype.getElementFragment = function(index) {
-	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: Not found LayoutFragment element at index " + index);
+LayoutFragment.prototype.getFragmentAt = function(index) {
+	if (index >= this.fragments.length || index < 0) {
+		Logger.Log("Modding Tools: Not found LayoutFragment element at index " + index + "!", "WARNING");
 		return null;
 	}
 	return this.fragments[index];
 };
 
-LayoutFragment.prototype.indexOfElement = function(fragment) {
-	return this.fragments.indexOf(fragment);
+LayoutFragment.prototype.indexOf = function(fragmentOrView) {
+	if (fragmentOrView instanceof android.view.View) {
+		for (let index = 0; index < this.fragments.length; index++) {
+			let fragment = this.fragments[index];
+			if (fragment.getContainer() == fragmentOrView) {
+				return index;
+			}
+		}
+		return -1;
+	}
+	return this.fragments.indexOf(fragmentOrView);
 };
 
 LayoutFragment.prototype.obtain = (function() {
-	let obtain = function(on, when, what) {
+	let obtain = function(on, what, when) {
 		if (on instanceof LayoutFragment) {
 			let fragments = on.getFragments();
 			for (let i = 0; i < fragments.length; i++) {
-				obtain(fragments[i], when, what);
+				obtain(fragments[i], what, when);
 			}
 		}
 		if (typeof when != "function" || when(on)) {
 			what(on);
 		}
 	};
-	return function(when, what) {
-		obtain(this, when, what);
+	return function(what, when) {
+		obtain(this, what, when);
 	};
 })();
 
-LayoutFragment.prototype.removeElementAt = function(index) {
-	if (this.fragments.length > index || index < 0) {
-		log("ModdingTools: Not found LayoutFragment element at index " + index);
+LayoutFragment.prototype.updateLayout = function(flag) {
+	return BaseFragment.prototype.update.apply(this, arguments);
+};
+
+LayoutFragment.prototype.update = function(flag, when) {
+	this.obtain(function(fragment) {
+		if (fragment instanceof LayoutFragment) {
+			fragment.updateLayout(flag);
+		} else {
+			fragment.update(flag);
+		}
+	}, when);
+};
+
+LayoutFragment.prototype.removeViewDirectly = function(view) {
+	let container = this.getContainerLayout();
+	container != null && container.removeView(view);
+};
+
+LayoutFragment.prototype.removeFragment = function(indexOrFragment) {
+	if (indexOrFragment instanceof Fragment) {
+		indexOrFragment = this.indexOf(indexOrFragment);
+	}
+	if (typeof indexOrFragment != "number" || indexOrFragment >= this.fragments.length || indexOrFragment < 0) {
+		Logger.Log("Modding Tools: Not found LayoutFragment element at index " + indexOrFragment + "!", "WARNING");
 		return false;
 	}
-	let fragment = this.fragments[index];
+	let fragment = this.fragments[indexOrFragment];
 	if (isAndroid()) {
-		this.getContainerLayout().removeView(fragment.getContainer());
+		this.removeViewDirectly(fragment.getContainer());
 	}
-	this.fragments.splice(index, 1);
+	this.fragments.splice(indexOrFragment, 1);
+	fragment.deattach();
 	return true;
+};
+
+LayoutFragment.prototype.removeFragments = function(condition) {
+	if (condition != null) {
+		condition = condition.bind(this);
+	}
+	for (let index = this.fragments.length - 1; index >= 0; index--) {
+		let fragment = this.fragments[index];
+		if (condition == null || condition(fragment, index)) {
+			this.removeFragment(index);
+		}
+	}
 };
 
 LayoutFragment.prototype.isRequiresFocusable = function() {
@@ -90,49 +149,54 @@ LayoutFragment.prototype.isRequiresFocusable = function() {
 			return true;
 		}
 	}
-	return false;
+	return this.isLayoutRequiresFocusable && this.isLayoutRequiresFocusable();
 };
 
-LayoutFragment.parseJson = function(instanceOrJson, json, preferredElement) {
-	if (!(instanceOrJson instanceof LayoutFragment)) {
-		json = instanceOrJson;
-		instanceOrJson = new LayoutFragment();
-	}
-	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
-	json = calloutOrParse(this, json, instanceOrJson);
-	while (instanceOrJson.getElementCount() > 0) {
-		instanceOrJson.removeElementAt(0);
-	}
-	if (json === null || typeof json != "object") {
-		return instanceOrJson;
-	}
-	if (json.hasOwnProperty("elements")) {
-		let elements = calloutOrParse(json, json.elements, [this, instanceOrJson]);
-		if (elements !== null && typeof elements == "object") {
-			if (!Array.isArray(elements)) elements = [elements];
-			for (let i = 0; i < elements.length; i++) {
-				let item = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
-				if (item !== null && typeof item == "object") {
-					let fragment = Fragment.parseJson.call(this, item, item, preferredElement);
-					if (fragment != null) {
-						instanceOrJson.addElementFragment(fragment);
-					}
+LayoutFragment.parseLayoutJson = function(instanceOrJson, json, elements, preferredFragment) {
+	elements = calloutOrParse(json, elements, [this, instanceOrJson]);
+	if (elements != null && typeof elements == "object") {
+		Array.isArray(elements) || (elements = [elements]);
+		for (let offset = 0; offset < elements.length; offset++) {
+			let item = calloutOrParse(elements, elements[offset], [this, json, instanceOrJson]);
+			if (item != null && typeof item == "object") {
+				let fragment = Fragment.parseJson.call(this, item, item, preferredFragment);
+				if (fragment != null) {
+					instanceOrJson.addFragment(fragment);
 				}
 			}
 		}
+	}
+};
+
+LayoutFragment.parseJson = function(instanceOrJson, json, preferredFragment) {
+	if (!(instanceOrJson instanceof LayoutFragment)) {
+		json = instanceOrJson;
+		instanceOrJson = new LayoutFragment();
+	} else {
+		instanceOrJson.removeFragments();
+	}
+	instanceOrJson = BaseFragment.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json == null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	if (Array.isArray(json)) {
+		LayoutFragment.parseLayoutJson.call(this, instanceOrJson, json, json, preferredFragment);
+	} else if (json.hasOwnProperty("fragments") || json.hasOwnProperty("elements")) {
+		LayoutFragment.parseLayoutJson.call(this, instanceOrJson, json, json.fragments || json.elements, preferredFragment);
 	}
 	return instanceOrJson;
 };
 
 LayoutFragment.prototype.addScroll = function() {
 	let fragment = new ScrollFragment();
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
 LayoutFragment.prototype.addHorizontalScroll = function() {
 	let fragment = new HorizontalScrollFragment();
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -141,7 +205,7 @@ LayoutFragment.prototype.addCategoryTitle = function(text) {
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -150,7 +214,7 @@ LayoutFragment.prototype.addExplanatory = function(text) {
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -159,7 +223,7 @@ LayoutFragment.prototype.addAxisGroup = function(axis) {
 	if (axis !== undefined) {
 		fragment.setAxis(axis);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -177,7 +241,7 @@ LayoutFragment.prototype.addSlider = function(value, change, modifiers, modifier
 	if (modifier !== undefined) {
 		fragment.setModifier(modifier);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -195,7 +259,7 @@ LayoutFragment.prototype.addCounter = function(value, change, modifiers, modifie
 	if (modifier !== undefined) {
 		fragment.setModifier(modifier);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -207,7 +271,7 @@ LayoutFragment.prototype.addAngleCircle = function(value, change) {
 	if (change !== undefined) {
 		fragment.setOnChangeListener(change);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -219,7 +283,7 @@ LayoutFragment.prototype.addPropertyInput = function(hint, text) {
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
@@ -234,30 +298,53 @@ LayoutFragment.prototype.addAutoCompleteInput = function(hint, text, adapter) {
 	if (adapter !== undefined) {
 		fragment.setAdapter(adapter);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addButton = function(text, click) {
+	let fragment = new ButtonFragment();
+	if (text !== undefined) {
+		fragment.setText(text);
+	}
+	if (click !== undefined) {
+		fragment.setOnClickListener(click);
+	}
+	this.addFragment(fragment);
 	return fragment;
 };
 
 LayoutFragment.prototype.addSolidButton = function(text, click) {
-	let fragment = new SolidButtonFragment();
+	let fragment = new ButtonFragment("solid");
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
 	if (click !== undefined) {
 		fragment.setOnClickListener(click);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
 	return fragment;
 };
 
 LayoutFragment.prototype.addThinButton = function(text, click) {
-	let fragment = new ThinButtonFragment();
+	Logger.Log("Modding Tools: LayoutFragment.addThinButton has been deprecated! Use primary LayoutFragment.addButton instead.", "WARNING");
+	return this.addButton.apply(this, arguments);
+};
+
+LayoutFragment.prototype.addPopupButton = function(text, click) {
+	let fragment = new ButtonFragment("popup");
 	if (text !== undefined) {
 		fragment.setText(text);
 	}
 	if (click !== undefined) {
 		fragment.setOnClickListener(click);
 	}
-	this.addElementFragment(fragment);
+	this.addFragment(fragment);
+	return fragment;
+};
+
+LayoutFragment.prototype.addSegmentGroup = function() {
+	let fragment = new SegmentGroupFragment();
+	this.addFragment(fragment);
 	return fragment;
 };
