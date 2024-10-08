@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2017-2022 Nernar (github.com/nernar)
+   Copyright 2017-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 */
 LIBRARY({
     name: "Retention",
-    version: 1,
+    version: 99,
     api: "AdaptedScript",
     shared: true
 });
@@ -93,7 +93,7 @@ var reportAction = function (error) {
  */
 var reportError = function (error) {
     if (reportAction) {
-        reportAction(error);
+        reportAction.call(this, error);
     }
 };
 EXPORT("reportError", reportError);
@@ -137,24 +137,31 @@ EXPORT("showReportDialog", showReportDialog);
  * exceptions will cause crash.
  * @param action action
  * @param time expectation
- * @returns sheduled future when no associated context
+ * @returns scheduled future when no associated context
  */
 var handleOnThread = (function () {
-    if (getContext()) {
-        var HANDLER_1 = new android.os.Handler();
+    if (display != null) {
+        var handler_1 = null;
         return function (action, time) {
             var _a;
-            return (_a = getContext()) === null || _a === void 0 ? void 0 : _a.runOnUiThread(new java.lang.Runnable({
-                run: function () { return HANDLER_1.postDelayed(new java.lang.Runnable({
-                    run: action
-                }), time >= 0 ? time : 0); }
+            var self = this;
+            (_a = getContext()) === null || _a === void 0 ? void 0 : _a.runOnUiThread(new java.lang.Runnable({
+                run: function () {
+                    handler_1 = handler_1 || new android.os.Handler();
+                    handler_1.postDelayed(new java.lang.Runnable({
+                        run: function () { return action != null && action.apply(self); }
+                    }), time >= 0 ? time : 0);
+                }
             }));
         };
     }
     var EXECUTOR = java.util.concurrent.Executors.newScheduledThreadPool(10);
-    return function (action, time) { return EXECUTOR.schedule(new java.lang.Runnable({
-        run: action
-    }), time >= 0 ? time : 0, java.util.concurrent.TimeUnit.MILLISECONDS); };
+    return function (action, time) {
+        var self = this;
+        EXECUTOR.schedule(new java.lang.Runnable({
+            run: function () { return action != null && action.apply(self); }
+        }), time >= 0 ? time : 0, java.util.concurrent.TimeUnit.MILLISECONDS);
+    };
 })();
 EXPORT("handleOnThread", handleOnThread);
 /**
@@ -165,10 +172,11 @@ EXPORT("handleOnThread", handleOnThread);
  * @see {@link handleOnThread}
  */
 var handle = function (action, time) {
-    return handleOnThread(function () {
+    var _this = this;
+    return handleOnThread.call(this, function () {
         try {
             if (action) {
-                action();
+                action.apply(_this);
             }
         }
         catch (e) {
@@ -186,11 +194,12 @@ EXPORT("handle", handle);
  * @see {@link handleOnThread}
  */
 var acquire = function (action, fallback) {
+    var _this = this;
     var completed = false;
-    handleOnThread(function () {
+    handleOnThread.call(this, function () {
         try {
             if (action) {
-                var value = action();
+                var value = action.apply(_this);
                 if (value !== undefined) {
                     fallback = value;
                 }
@@ -227,11 +236,12 @@ EXPORT("interruptThreads", interruptThreads);
  * @param priority number between 1-10
  */
 var handleThread = function (action, priority) {
+    var self = this;
     var thread = new java.lang.Thread(new java.lang.Runnable({
         run: function () {
             try {
                 if (action) {
-                    action();
+                    action.apply(self);
                 }
             }
             catch (e) {
