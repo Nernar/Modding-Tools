@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2021-2022 Nernar (github.com/nernar)
+   Copyright 2021-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -621,7 +621,7 @@ localizeError = function (error) {
 };
 /**
  * Reports catched modification errors,
- * may used in [[catch]]-block when any throw
+ * may used in `catch`-block when any throw
  * code occurs. Stacktrace will be displayed
  * on display with sources hieracly.
  * @param {Error|any} value to report
@@ -685,59 +685,60 @@ reportTrace = function (error) {
 };
 reportTrace.handled = [];
 reportTrace.postUpdate = function (dialog, error, date) {
-    var handler = android.os.Handler.createAsync(dialog.getContext().getMainLooper(), new android.os.Handler.Callback({
-        handleMessage: function (message) {
-            return false;
-        }
-    })), completed = false, formatted, update;
+    var context = UI.getContext(), completed = false, formatted, request = {};
     new java.lang.Thread(function () {
         var message = fetchErrorMessage(error), retraced = retraceToArray(error ? error.stack : null);
         retraced.length > 0 && retraced.pop();
         var sliced = sliceMessageWithoutTrace(message, retraced[0]), localized = translateMessage(sliced);
-        update = new java.lang.Runnable(function () {
-            var additional = [];
-            if (message != null) {
-                var entry = "<font color=\"#CCCC33\">";
-                if (localized != sliced) {
-                    entry += localized + "<br/>";
+        request.update = function () {
+            context.runOnUiThread(function () {
+                if (completed) {
+                    return;
                 }
-                entry += sliced + "</font>";
-                additional.push(entry);
-            }
-            for (var i = 0; i < retraced.length; i++) {
-                var element = requested.formatted[i];
-                if (element !== undefined) {
-                    additional.push(element);
-                    continue;
+                var additional = [];
+                if (message != null) {
+                    var entry = "<font color=\"#CCCC33\">";
+                    if (localized != sliced) {
+                        entry += localized + "<br/>";
+                    }
+                    entry += sliced + "</font>";
+                    additional.push(entry);
                 }
-                if (additional.length < 2) {
-                    additional.push("");
+                for (var i = 0; i < retraced.length; i++) {
+                    var element = request.formatted[i];
+                    if (element !== undefined) {
+                        additional.push(element);
+                        continue;
+                    }
+                    if (additional.length < 2) {
+                        additional.push("");
+                    }
+                    additional.push(retraced[i]);
                 }
-                additional.push(retraced[i]);
-            }
-            var attached = [];
-            if (additional.length > 0) {
-                attached.push(additional.join("<br/>"));
-            }
-            var marked = "";
-            marked += new Date(launchTime).toString();
-            if (date > 0) {
-                marked += "<br/>" + new Date(launchTime + date).toString();
-                marked += "<br/>" + Translation.translate("Milliseconds estimated after launch") + ": " + date;
-            }
-            attached.push(marked);
-            if (requested.error) {
-                attached.push("<font color=\"#DD3333\">" + Translation.translate("Wouldn't fetch modification sources") +
-                    ": " + localizeError(requested.error) + "</font>");
-            }
-            formatted = android.text.Html.fromHtml(attached.join("<br/><br/>"));
-            dialog.setMessage(formatted);
-            if (requested.completed) {
-                completed = true;
-            }
-        });
-        var requested = reportTrace.handleRequest(handler, update, retraced);
-        handler.post(update);
+                var attached = [];
+                if (additional.length > 0) {
+                    attached.push(additional.join("<br/>"));
+                }
+                var marked = "";
+                marked += new Date(launchTime).toString();
+                if (date > 0) {
+                    marked += "<br/>" + new Date(launchTime + date).toString();
+                    marked += "<br/>" + Translation.translate("Milliseconds estimated after launch") + ": " + date;
+                }
+                attached.push(marked);
+                if (request.error) {
+                    attached.push("<font color=\"#DD3333\">" + Translation.translate("Wouldn't fetch modification sources") +
+                        ": " + localizeError(request.error) + "</font>");
+                }
+                formatted = android.text.Html.fromHtml(attached.join("<br/><br/>"));
+                dialog.setMessage(formatted);
+                if (request.completed) {
+                    completed = true;
+                }
+            });
+        };
+        reportTrace.handleRequest(request, retraced);
+        request.update();
     }).start();
     return {
         inProcess: function () {
@@ -747,9 +748,8 @@ reportTrace.postUpdate = function (dialog, error, date) {
             return formatted !== undefined ? formatted.toString() : "";
         },
         cancel: function () {
-            if (update !== undefined) {
-                handler.removeCallbacks(update);
-            }
+            request.cancelled = true;
+            completed = true;
         }
     };
 };
@@ -838,32 +838,37 @@ reportTrace.processStack = function (resolved) {
     }
     return strokes.join("<br/>");
 };
-reportTrace.handleRequest = function (handler, update, trace) {
-    var requested = {};
-    requested.formatted = [];
+reportTrace.handleRequest = function (request, trace) {
+    if (request == null) {
+        return null;
+    }
+    request.formatted = [];
     new java.lang.Thread(function () {
         try {
             for (var i = 0; i < trace.length; i++) {
+                if (request.cancelled)
+                    break;
                 var resolved = resolveTraceSource(trace[i]);
                 if (resolved === null)
                     continue;
                 var processed = reportTrace.processStack(resolved);
-                requested.formatted.push(processed);
-                handler.post(update);
+                request.formatted.push(processed);
+                if (request.cancelled)
+                    break;
+                request.update();
             }
         }
         catch (e) {
-            requested.error = e;
+            request.error = e;
             try {
-                handler.post(update);
+                request.update();
             }
             catch (e) {
                 print(e.message);
             }
         }
-        requested.completed = true;
+        request.completed = true;
     }).start();
-    return requested;
 };
 reportTrace.findNextTrace = function () {
     var handled = this.handled;
