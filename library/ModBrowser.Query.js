@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2020-2022 Nernar (github.com/nernar)
+   Copyright 2020-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ ModBrowser.Query.prototype.setIsHorizon = function (value) {
     }
 };
 ModBrowser.Query.prototype.getJSON = function () {
-    return JSON.parse(this.getResult());
+    return JSON.parse(this.toResult());
 };
 ModBrowser.Query.Sort = {};
 ModBrowser.Query.Sort.POPULAR = "popular";
@@ -268,7 +268,7 @@ ModBrowser.Query.Description.prototype.setId = function (id) {
 };
 ModBrowser.Query.Description.prototype.getCommentLimit = function () {
     var query = this.getQuery();
-    return query ? query.limit | 0 : 0;
+    return query ? query.comments_limit | 0 : 0;
 };
 ModBrowser.Query.Description.prototype.setCommentLimit = function (limit) {
     var query = this.getQuery();
