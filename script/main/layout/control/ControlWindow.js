@@ -7,7 +7,7 @@ function ControlWindow() {
 	window.setButtonBackground("popupButton");
 	window.setLogotypeBackground("popupControl");
 	return window;
-};
+}
 
 ControlWindow.prototype = new UniqueWindow;
 ControlWindow.prototype.TYPE = "ControlWindow";
@@ -42,11 +42,10 @@ ControlWindow.prototype.resetContent = function() {
 	let minimize = this.getCollapseTransition();
 	this.setTransition(behold, collapse, minimize);
 	this.setTransition(collapse, behold, minimize);
-	let transform = this.getTransformTransition();
+	let transform = this.getQueueTransition();
 	this.setTransition(behold, queue, transform);
-	this.setTransition(behold, collapse, transform);
-	// This is not an error, a new transition is being created
-	let unqueue = this.getTransformTransition();
+	this.setTransition(collapse, queue, transform);
+	let unqueue = this.getBeholdTransition();
 	this.setTransition(queue, behold, unqueue);
 	this.setTransition(queue, collapse, unqueue);
 };
@@ -90,6 +89,14 @@ ControlWindow.prototype.getCollapseScene = function() {
 /**
  * @requires `isAndroid()`
  */
+ControlWindow.prototype.getEntranceSide = function() {
+	return (this.gravity & $.Gravity.RIGHT) != 0 ?
+		$.Gravity.RIGHT : $.Gravity.LEFT;
+};
+
+/**
+ * @requires `isAndroid()`
+ */
 ControlWindow.prototype.getQueueScene = function() {
 	return this.queue || null;
 };
@@ -113,17 +120,17 @@ ControlWindow.prototype.makeContainerScene = function() {
  * @requires `isAndroid()`
  */
 ControlWindow.prototype.getButtonEnterTransition = function() {
-	let actor = new android.transition.Fade();
-	actor.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-	actor.setDuration(400);
-	return actor;
+	let slide = new android.transition.Slide(this.getEntranceSide());
+	slide.setInterpolator(new android.view.animation.DecelerateInterpolator());
+	slide.setDuration(600);
+	return slide;
 };
 
 /**
  * @requires `isAndroid()`
  */
 ControlWindow.prototype.getButtonExitTransition = function() {
-	let actor = new android.transition.Slide($.Gravity.LEFT);
+	let actor = new android.transition.Slide(this.getEntranceSide());
 	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
 	actor.setDuration(400);
 	return actor;
@@ -135,7 +142,7 @@ ControlWindow.prototype.getButtonExitTransition = function() {
 ControlWindow.prototype.getLogotypeEnterTransition = function() {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.DecelerateInterpolator());
-	actor.setDuration(2000);
+	actor.setDuration(800);
 	return actor;
 };
 
@@ -145,24 +152,27 @@ ControlWindow.prototype.getLogotypeEnterTransition = function() {
 ControlWindow.prototype.getLogotypeExitTransition = function() {
 	let actor = new android.transition.Fade();
 	actor.setInterpolator(new android.view.animation.AccelerateInterpolator());
-	actor.setDuration(500);
+	actor.setDuration(400);
 	return actor;
 };
 
 /**
  * @requires `isAndroid()`
  */
-ControlWindow.prototype.getTransformTransition = function() {
-	let actor = new android.transition.TransitionSet(),
-		bounds = new android.transition.ChangeBounds();
+ControlWindow.prototype.getQueueTransition = function() {
+	let bounds = new android.transition.ChangeBounds();
 	bounds.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-	bounds.setDuration(1000);
-	actor.addTransition(bounds);
-	let transform = new android.transition.ChangeTransform();
-	transform.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
-	transform.setDuration(1000);
-	actor.addTransition(transform);
-	return actor;
+	bounds.setDuration(800);
+	return bounds;
+};
+
+/**
+ * @requires `isAndroid()`
+ */
+ControlWindow.prototype.getBeholdTransition = function() {
+	let slide = this.getButtonEnterTransition();
+	slide.setMode(android.transition.Slide.MODE_IN);
+	return slide;
 };
 
 /**
@@ -248,7 +258,9 @@ ControlWindow.prototype.updateLevel = function() {
 		this.updateProgress(true);
 	} else if (this.getBackgroundImage() !== null) {
 		fragment.setLevel(10001 - this.getLevel());
-	} else fragment.setLevel(this.getLevel());
+	} else {
+		fragment.setLevel(this.getLevel());
+	}
 	return true;
 };
 

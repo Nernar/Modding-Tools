@@ -3,9 +3,6 @@
  */
 function ControlFragment() {
 	ImageFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 };
 
 ControlFragment.prototype = new ImageFragment;
@@ -96,12 +93,12 @@ ControlFragment.Logotype.prototype.resetContainer = function() {
 };
 
 ControlFragment.Logotype.prototype.setLevel = function(level) {
-	let logotype = this.getLogotypeView();
+	let logotype = this.getImageView();
 	if (logotype == null) return this;
 	logotype.setImageLevel(level);
 	return this;
 };
 
 ControlFragment.prototype.resetContainer = function() {
-	MCSystem.throwException("ModdingTools: ControlFragment must be superclass only");
+	MCSystem.throwException("Modding Tools: ControlFragment must be superclass only");
 };

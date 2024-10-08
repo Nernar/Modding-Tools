@@ -49,7 +49,7 @@ LogViewer.show = function() {
 	let horizontal = new android.widget.HorizontalScrollView(getContext());
 	let text = new android.widget.TextView(getContext());
 	text.setPadding(toComplexUnitDip(6), 0, toComplexUnitDip(6), 0);
-	text.setTextSize(toComplexUnitSp(5));
+	text.setTextSize(toComplexUnitDp(5));
    	text.setTextColor($.Color.WHITE);
 	text.setTypeface(android.graphics.Typeface.MONOSPACE);
 	text.setText(NAME + " " + REVISION);
