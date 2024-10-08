@@ -1,8 +1,5 @@
 function ExplanatoryFragment() {
 	TextFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 };
 
 ExplanatoryFragment.prototype = new TextFragment;
@@ -12,7 +9,7 @@ ExplanatoryFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
 	view.setPadding(toComplexUnitDip(14), toComplexUnitDip(10),
 		toComplexUnitDip(14), toComplexUnitDip(10));
-	view.setTextSize(toComplexUnitSp(6));
+	view.setTextSize(toComplexUnitDp(6));
 	view.setTextColor($.Color.LTGRAY);
 	view.setGravity($.Gravity.CENTER);
 	view.setTypeface(typeface);

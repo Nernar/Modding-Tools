@@ -1,8 +1,5 @@
 function SliderFragment() {
 	TextFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 	this.modifier = 0;
 	this.modifiers = [16, 1];
 	this.setValue(0);
@@ -42,7 +39,7 @@ SliderFragment.prototype.resetContainer = function() {
 					moved = Math.abs(raw) > toComplexUnitDip(8);
 				}
 			} catch (e) {
-				log("ModdingTools: SliderFragment.onTouch: " + e);
+				log("Modding Tools: SliderFragment.onTouch: " + e);
 			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
@@ -61,13 +58,14 @@ SliderFragment.prototype.resetContainer = function() {
 		view.getParent().requestDisallowInterceptTouchEvent(true);
 		return true;
 	});
-	view.setTextSize(toComplexUnitSp(8));
+	view.setTextSize(toComplexUnitDp(8));
 	view.setGravity($.Gravity.CENTER);
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setMaxLines(1);
-	view.setLayoutParams(new android.view.ViewGroup.
-		LayoutParams(toComplexUnitDip(188), toComplexUnitDip(40)));
+	view.setLayoutParams(new android.view.ViewGroup.LayoutParams
+		(toComplexUnitDip(188), toComplexUnitDip(40))
+	);
 	this.setContainerView(view);
 };
 
@@ -80,9 +78,9 @@ SliderFragment.prototype.getValue = function() {
 };
 
 SliderFragment.prototype.setValue = function(value) {
-	value = parseFloat(value);
+	value = value - 0;
 	if (isNaN(value)) {
-		Logger.Log("ModdingTools: Passed NaN to SliderFragment.setValue(*), it may be string or number", "WARNING");
+		Logger.Log("Modding Tools: Passed NaN to SliderFragment.setValue(*), it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;
@@ -91,7 +89,7 @@ SliderFragment.prototype.setValue = function(value) {
 };
 
 SliderFragment.prototype.setModifier = function(modifier) {
-	this.modifier = parseInt(modifier);
+	this.modifier = modifier - 0;
 	if (this.modifier < 0) {
 		this.modifier = 0;
 	}
@@ -104,7 +102,7 @@ SliderFragment.prototype.setModifier = function(modifier) {
 
 SliderFragment.prototype.setModifiers = function(modifiers) {
 	if (!Array.isArray(modifiers) || modifiers.length == 0) {
-		Logger.Log("ModdingTools: SliderFragment.setModifiers(*) in incorrect format, please consider that it must be [..]", "WARNING");
+		Logger.Log("Modding Tools: SliderFragment.setModifiers(*) in incorrect format, please consider that it must be [..]", "WARNING");
 		return this;
 	}
 	this.modifier = 0;

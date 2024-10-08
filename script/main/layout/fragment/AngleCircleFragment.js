@@ -1,8 +1,5 @@
 function AngleCircleFragment() {
 	TextFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 	this.setValue(0);
 };
 
@@ -39,7 +36,7 @@ AngleCircleFragment.prototype.resetContainer = function() {
 					moved = Math.abs(rawX) > toComplexUnitDip(8);
 				}
 			} catch (e) {
-				log("ModdingTools: AngleCircleFragment.onTouch: " + e);
+				log("Modding Tools: AngleCircleFragment.onTouch: " + e);
 			}
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
@@ -57,7 +54,7 @@ AngleCircleFragment.prototype.resetContainer = function() {
 		view.getParent().requestDisallowInterceptTouchEvent(true);
 		return true;
 	});
-	view.setTextSize(toComplexUnitSp(22));
+	view.setTextSize(toComplexUnitDp(22));
 	view.setGravity($.Gravity.CENTER);
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
@@ -76,9 +73,9 @@ AngleCircleFragment.prototype.getValue = function() {
 };
 
 AngleCircleFragment.prototype.setValue = function(value) {
-	value = parseFloat(value);
+	value = value - 0;
 	if (isNaN(value)) {
-		Logger.Log("ModdingTools: Angle circle value passed NaN or incorrect value, it may be string or number", "WARNING");
+		Logger.Log("Modding Tools: Angle circle value passed NaN or incorrect value, it may be string or number", "WARNING");
 		return this;
 	}
 	this.value = value;
@@ -137,4 +134,5 @@ AngleCircleFragment.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
+registerFragmentJson("angle_circle", AngleCircleFragment);
 registerFragmentJson("angleCircle", AngleCircleFragment);

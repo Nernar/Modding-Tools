@@ -58,7 +58,7 @@ FilterListHolderAdapter.prototype.bindView = function(position, parent) {
 		toComplexUnitDip(12), toComplexUnitDip(6));
 	typeface && view.setTypeface(typeface);
 	view.setTextColor($.Color.WHITE);
-	view.setTextSize(toComplexUnitSp(9));
+	view.setTextSize(toComplexUnitDp(9));
 	return view;
 };
 

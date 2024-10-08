@@ -1,8 +1,5 @@
 function PropertyInputFragment() {
 	TextFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 };
 
 PropertyInputFragment.prototype = new TextFragment;
@@ -18,7 +15,7 @@ PropertyInputFragment.prototype.resetContainer = function() {
 	view.setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
 		toComplexUnitDip(12), toComplexUnitDip(12));
 	view.setHintTextColor($.Color.LTGRAY);
-	view.setTextSize(toComplexUnitSp(7));
+	view.setTextSize(toComplexUnitDp(7));
 	view.setTextColor($.Color.WHITE);
 	view.setSingleLine(false);
 	view.setTypeface(typeface);
@@ -61,4 +58,5 @@ PropertyInputFragment.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
+registerFragmentJson("property_input", PropertyInputFragment);
 registerFragmentJson("propertyInput", PropertyInputFragment);

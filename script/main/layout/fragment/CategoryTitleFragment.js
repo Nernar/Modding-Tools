@@ -1,8 +1,5 @@
 function CategoryTitleFragment() {
 	TextFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 };
 
 CategoryTitleFragment.prototype = new TextFragment;
@@ -12,7 +9,7 @@ CategoryTitleFragment.prototype.resetContainer = function() {
 	let view = new android.widget.TextView(getContext());
 	view.setPadding(toComplexUnitDip(10), toComplexUnitDip(10),
 		toComplexUnitDip(10), toComplexUnitDip(5));
-	view.setTextSize(toComplexUnitSp(7));
+	view.setTextSize(toComplexUnitDp(7));
 	view.setTextColor($.Color.WHITE);
 	view.setTypeface(typeface);
 	view.setLayoutParams(new android.view.ViewGroup.
@@ -32,4 +29,5 @@ CategoryTitleFragment.parseJson = function(instanceOrJson, json) {
 	return TextFragment.parseJson.call(this, instanceOrJson, json);
 };
 
+registerFragmentJson("category_title", CategoryTitleFragment);
 registerFragmentJson("categoryTitle", CategoryTitleFragment);

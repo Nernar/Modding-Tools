@@ -14,7 +14,7 @@ AutoCompleteInputFragment.prototype.resetContainer = function() {
 	view.setPadding(toComplexUnitDip(12), toComplexUnitDip(12),
 		toComplexUnitDip(12), toComplexUnitDip(12));
 	view.setHintTextColor($.Color.LTGRAY);
-	view.setTextSize(toComplexUnitSp(7));
+	view.setTextSize(toComplexUnitDp(7));
 	view.setTextColor($.Color.WHITE);
 	view.setSingleLine(false);
 	view.setTypeface(typeface);
@@ -50,4 +50,5 @@ AutoCompleteInputFragment.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
+registerFragmentJson("auto_complete_input", AutoCompleteInputFragment);
 registerFragmentJson("autoCompleteInput", AutoCompleteInputFragment);

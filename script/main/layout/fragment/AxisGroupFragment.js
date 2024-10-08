@@ -1,8 +1,5 @@
 function AxisGroupFragment() {
 	LayoutFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 	this.setBackground("popup");
 };
 
@@ -13,12 +10,13 @@ AxisGroupFragment.prototype.resetContainer = function() {
 	let content = new android.widget.LinearLayout(getContext());
 	content.setPadding(toComplexUnitDip(6), toComplexUnitDip(6),
 		toComplexUnitDip(6), toComplexUnitDip(6));
+	content.setGravity($.Gravity.CENTER);
 	this.setContainerView(content);
 
 	let axis = new android.widget.TextView(getContext());
 	axis.setPadding(toComplexUnitDip(10), toComplexUnitDip(6),
 		toComplexUnitDip(10), toComplexUnitDip(6));
-	axis.setTextSize(toComplexUnitSp(12));
+	axis.setTextSize(toComplexUnitDp(12));
 	axis.setTextColor($.Color.WHITE);
 	axis.setTypeface(typeface);
 	axis.setMaxLines(1);
@@ -55,12 +53,12 @@ AxisGroupFragment.prototype.setAxis = function(text) {
 	return TextFragment.prototype.setText.apply(this, arguments);
 };
 
-AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredElement) {
+AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredFragment) {
 	if (!(instanceOrJson instanceof AxisGroupFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new AxisGroupFragment();
 	}
-	instanceOrJson = LayoutFragment.parseJson.call(this, instanceOrJson, json, preferredElement !== undefined ? preferredElement : "slider");
+	instanceOrJson = LayoutFragment.parseJson.call(this, instanceOrJson, json, preferredFragment !== undefined ? preferredFragment : "slider");
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
@@ -74,4 +72,5 @@ AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredElement) {
 	return instanceOrJson;
 };
 
+registerFragmentJson("axis_group", AxisGroupFragment);
 registerFragmentJson("axisGroup", AxisGroupFragment);
