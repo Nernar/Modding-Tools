@@ -3,9 +3,6 @@
  */
 function FrameFragment() {
 	LayoutFragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
 };
 
 FrameFragment.prototype = new LayoutFragment;
@@ -16,12 +13,12 @@ FrameFragment.prototype.resetContainer = function() {
 	this.setContainerView(container);
 };
 
-FrameFragment.parseJson = function(instanceOrJson, json) {
+FrameFragment.parseJson = function(instanceOrJson, json, preferredFragment) {
 	if (!(instanceOrJson instanceof FrameFragment)) {
 		json = instanceOrJson;
 		instanceOrJson = new FrameFragment();
 	}
-	return LayoutFragment.parseJson.call(this, instanceOrJson, json);
+	return LayoutFragment.parseJson.call(this, instanceOrJson, json, preferredFragment);
 };
 
 registerFragmentJson("frame", FrameFragment);

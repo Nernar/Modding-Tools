@@ -9,7 +9,7 @@ TextFragment.prototype = new BaseFragment;
 TextFragment.prototype.TYPE = "TextFragment";
 
 TextFragment.prototype.getTextView = function() {
-	MCSystem.throwException("ModdingTools: " + this.TYPE + ".getTextView must be implemented");
+	MCSystem.throwException("Modding Tools: " + this.TYPE + ".getTextView must be implemented");
 };
 
 /**
