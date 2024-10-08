@@ -4,11 +4,10 @@
  * Perhaps you should not interfere with itself work.
  */
 const API = assign({}, {
-	USER_ID: "unknown",
+	USER_ID: "none",
 	API_VERSION: API_VERSION,
 	PRODUCT_REVISION: REVISION,
 	CONTEXT: CONTEXT,
-	InnerCorePackage: InnerCorePackages, // DEPRECATED
 	InnerCorePackages: InnerCorePackages,
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
@@ -46,30 +45,32 @@ const API = assign({}, {
 	getDisplayDensity: getDisplayDensity,
 	toComplexUnitDip: toComplexUnitDip,
 	toRawComplexUnitDip: toRawComplexUnitDip,
+	toComplexUnitDp: toComplexUnitDp,
+	toRawComplexUnitDp: toRawComplexUnitDp,
 	toComplexUnitSp: toComplexUnitSp,
 	toRawComplexUnitSp: toRawComplexUnitSp,
 
 	// Global registry
 	registerTool: function(id, tool) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("Modding Tools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
-		log("ModdingTools: Registered tool " + id + " shortcut");
+		log("Modding Tools: Registered tool " + id + " shortcut");
 		Tools[id] = tool;
 	},
 	registerMenuTool: function(id, tool, entry) {
 		if (Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Id " + id + " is already occupied!", "WARNING");
+			Logger.Log("Modding Tools: Id " + id + " is already occupied!", "WARNING");
 			return;
 		}
 		if (entry === undefined) {
 			entry = new ProjectTool.MenuFactory();
 		}
 		if (!(entry instanceof ProjectTool.MenuFactory)) {
-			MCSystem.throwException("ModdingTools: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
+			MCSystem.throwException("Modding Tools: registerMenuTool(id, tool, *) entry must be instance of ProjectTool.MenuFactory");
 		}
-		log("ModdingTools: Registered tool " + id + " into menu entry");
+		log("Modding Tools: Registered tool " + id + " into menu entry");
 		PROJECT_TOOL.tools[id] = entry;
 		Tools[id] = tool;
 	},
@@ -112,8 +113,8 @@ const API = assign({}, {
 	// Storage utility
 	resetSettingIfNeeded: resetSettingIfNeeded,
 	loadSetting: loadSetting,
-	injectSetting: setSetting,
-	updateInternalConfig: updateSettings,
+	injectSetting: injectSetting,
+	updateInternalConfig: updateInternalConfig,
 	formatSize: formatSize,
 	Dirs: Dirs,
 	MediaTypes: MediaTypes,
@@ -152,18 +153,19 @@ const API = assign({}, {
 	// Fragment variations
 	CategoryTitleFragment: CategoryTitleFragment,
 	ExplanatoryFragment: ExplanatoryFragment,
-	ThinButtonFragment: ThinButtonFragment,
-	SolidButtonFragment: SolidButtonFragment,
+	ButtonFragment: ButtonFragment,
+	ThinButtonFragment: ThinButtonFragment, // DEPRECATED
+	SolidButtonFragment: SolidButtonFragment, // DEPRECATED
 	PropertyInputFragment: PropertyInputFragment,
 	SliderFragment: SliderFragment,
 	CounterFragment: CounterFragment,
 	AxisGroupFragment: AxisGroupFragment,
+	SegmentGroupFragment: SegmentGroupFragment,
 	EditorFragment: EditorFragment,
 
 	// Under-refactored fragments
 	OverlayFragment: OverlayFragment,
 	ControlFragment: ControlFragment,
-	LogotypeFragment: LogotypeFragment, // DEPRECATED
 	SidebarFragment: SidebarFragment,
 
 	// Window prototypes
@@ -186,7 +188,6 @@ const API = assign({}, {
 	ExplorerWindow: ExplorerWindow,
 	OverlayWindow: OverlayWindow,
 	ControlWindow: ControlWindow,
-	LogotypeWindow: LogotypeWindow,
 	MenuWindow: MenuWindow,
 	SidebarWindow: SidebarWindow,
 
@@ -232,6 +233,7 @@ const API = assign({}, {
 	newRuntimeCompilerEnvirons: newRuntimeCompilerEnvirons,
 
 	// Adaptive evaluation
+	Wrappables: Wrappables,
 	UNWRAP: UNWRAP,
 	REQUIRE: REQUIRE,
 	CHECKOUT: CHECKOUT,
@@ -261,7 +263,7 @@ const API = assign({}, {
 	attachEditorTool: attachEditorTool,
 	attachTool: function(id, when) {
 		if (!Tools.hasOwnProperty(id)) {
-			Logger.Log("ModdingTools: Not found tool " + id + ", consider have you registered it", "WARNING");
+			Logger.Log("Modding Tools: Not found tool " + id + ", consider have you registered it", "WARNING");
 			return;
 		}
 		attachEditorTool(Tools[id], undefined, when);
@@ -269,10 +271,7 @@ const API = assign({}, {
 
 	// Sequence
 	Sequence: Sequence,
-	LogotypeSequence: LogotypeSequence, // DEPRECATED
 	SnackSequence: SnackSequence,
-	StackedSnackSequence: StackedSnackSequence,
-	AsyncSnackSequence: AsyncSnackSequence,
 
 	// Specific content
 	LogViewer: LogViewer,
@@ -303,6 +302,44 @@ const API = assign({}, {
 
 const notifyCoreEngineLoaded = function() {
 	CoreEngine.ModAPI.registerAPI("ModdingTools", API);
+};
+
+const hideInsetsOnScreen = function() {
+	if (isHorizon) {
+		handle(function() {
+			let window = getContext().getWindow();
+			if (android.os.Build.VERSION.SDK_INT >= 28) {
+				// Content renders into the cutout area in both portrait and landscape modes.
+				window.getAttributes().layoutInDisplayCutoutMode =
+					android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+			}
+			if (android.os.Build.VERSION.SDK_INT >= 30) {
+				let controller = window.getInsetsController();
+				if (controller != null) {
+					controller.hide(
+						android.view.WindowInsets.Type.statusBars() |
+						android.view.WindowInsets.Type.navigationBars());
+					controller.setSystemBarsBehavior(
+						android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+				}
+			} else {
+				window.getDecorView().setSystemUiVisibility(
+					android.view.View.SYSTEM_UI_FLAG_LOW_PROFILE |
+					android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+					// Set the content to appear under the system bars so that the
+					// content doesn't resize when the system bars hide and show.
+					android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+					android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+					android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+					// Hide the navigation bar and status bar.
+					android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+					android.view.View.SYSTEM_UI_FLAG_FULLSCREEN);
+				window.setFlags(
+					android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
+					android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			}
+		});
+	}
 };
 
 const getCoreEngineAndInjectIfNeeded = function() {
