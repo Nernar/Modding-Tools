@@ -10,8 +10,9 @@ const CONSOLE_TOOL = (function() {
 			let snack = UniqueHelper.getWindow(HintAlert.prototype.TYPE);
 			if (snack !== null) snack.dismiss();
 			Popups.closeIfOpened("evaluate");
+			let self = this;
 			attachProjectTool(function() {
-				Tool.prototype.deattach.apply(this, arguments);
+				Tool.prototype.deattach.apply(self, arguments);
 			});
 		},
 		attach: function() {
@@ -50,7 +51,6 @@ const CONSOLE_TOOL = (function() {
 })();
 
 const attachConsoleTool = function(post) {
-	CONSOLE_TOOL.attach();
 	CONSOLE_TOOL.queue();
 	handle(function() {
 		CONSOLE_TOOL.collapse();
