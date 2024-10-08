@@ -20,7 +20,7 @@ AdditionalMessage.prototype.getLocalizedMessage = function() {
 
 AdditionalMessage.prototype.setMessage = function(message) {
 	if (!(message instanceof String)) {
-		message = String(message);
+		message = "" + message;
 	}
 	if (message.length > AdditionalMessage.MAX_MESSAGE_SYMBOLS) {
 		message = message.substring(AdditionalMessage.MAX_MESSAGE_SYMBOLS);
@@ -42,7 +42,7 @@ AdditionalMessage.prototype.getChance = function() {
 
 AdditionalMessage.prototype.setChance = function(chance) {
 	if (chance < 0 || chance > 1) {
-		MCSystem.throwException("ModdingTools: AdditionalMessage.setChance outside [0; 1]");
+		MCSystem.throwException("Modding Tools: AdditionalMessage.setChance outside [0; 1]");
 	}
 	this.chance = chance;
 };
@@ -53,7 +53,7 @@ AdditionalMessage.prototype.getCondition = function() {
 
 AdditionalMessage.prototype.setCondition = function(condition) {
 	if (typeof condition != "function") {
-		MCSystem.throwException("ModdingTools: AdditionalMessage.setCondition can take functions only");
+		MCSystem.throwException("Modding Tools: AdditionalMessage.setCondition can take functions only");
 	}
 	this.condition = condition;
 };
@@ -85,7 +85,7 @@ AdditionalClickableMessage.prototype.getAction = function() {
 
 AdditionalClickableMessage.prototype.setAction = function(action) {
 	if (!action instanceof Function) {
-		MCSystem.throwException("ModdingTools: AdditionalClickableMessage.setAction only can take functions");
+		MCSystem.throwException("Modding Tools: AdditionalClickableMessage.setAction only can take functions");
 	}
 	this.action = action;
 };
@@ -115,7 +115,7 @@ AdditionalMessageFactory.hasMessage = function(message) {
 };
 
 AdditionalMessageFactory.removeMessage = function(messageOrIndex) {
-	if (String(messageOrIndex) == "[object Object]") {
+	if ("" + messageOrIndex == "[object Object]") {
 		messageOrIndex = this.indexOf(messageOrIndex);
 	}
 	if (messageOrIndex == -1) return false;
@@ -245,7 +245,7 @@ AdditionalMessageFactory.Session.prototype.hasMore = function() {
 
 AdditionalMessageFactory.Session.prototype.attach = function(control, message) {
 	if (control === undefined || control === null) {
-		MCSystem.throwException("ModdingTools: Aborted attach AdditionalMessageFactory session to null or undefined");
+		MCSystem.throwException("Modding Tools: Aborted attach AdditionalMessageFactory session to null or undefined");
 	}
 	if (message === undefined || message === null) {
 		return false;

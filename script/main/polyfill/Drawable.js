@@ -46,11 +46,11 @@ let BITSET_PATCH = {};
 
 const registerBitsetUi = function(json) {
 	if (json == null || typeof json != "object") {
-		MCSystem.throwException("ModdingTools: Registered bitset must be object { moduleBitset: .. }");
+		MCSystem.throwException("Modding Tools: Registered bitset must be object { moduleBitset: .. }");
 	}
 	for (let element in json) {
 		if (BITSET_PATCH.hasOwnProperty(element)) {
-			Logger.Log("ModdingTools: Bitset " + element + " is already registered", "WARNING");
+			Logger.Log("Modding Tools: Bitset " + element + " is already registered", "WARNING");
 			continue;
 		}
 		BITSET_PATCH[element] = "" + json[element];
@@ -187,7 +187,9 @@ BitmapDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 AnimationDrawable.applyDescribe = function(drawable, json) {
-	if (drawable == null) MCSystem.throwException("ModdingTools: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable == null) {
+		MCSystem.throwException("Modding Tools: AnimationDrawable.applyDescribe: Target drawable cannot be null!");
+	}
 	if (json.hasOwnProperty("enterFadeDuration")) {
 		AnimationDrawableFactory.setEnterFadeDuration(drawable, calloutOrParse(json, json.enterFadeDuration, this));
 	}
@@ -221,7 +223,7 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 	if (json.hasOwnProperty("frames")) {
 		let frames = calloutOrParse(json, json.frames, [this, instanceOrJson]);
 		if (frames !== null && typeof frames == "object") {
-			if (!Array.isArray(frames)) frames = [frames];
+			frames = Array.isArray(frames) ? frames : [frames];
 			for (let i = 0; i < frames.length; i++) {
 				let frame = calloutOrParse(frames, frames[i], [this, json, instanceOrJson]);
 				if (frame !== null && typeof frame == "object") {
@@ -248,7 +250,9 @@ AnimationDrawable.parseJson = function(instanceOrJson, json) {
 };
 
 Drawable.applyDescribe = function(drawable, json) {
-	if (drawable === null) MCSystem.throwException("ModdingTools: Drawable.applyDescribe: Target drawable cannot be null!");
+	if (drawable === null) {
+		MCSystem.throwException("Modding Tools: Drawable.applyDescribe: Target drawable cannot be null!");
+	}
 	if (json.hasOwnProperty("alpha")) {
 		DrawableFactory.setAlpha(drawable, calloutOrParse(json, json.alpha, this));
 	}
@@ -339,45 +343,38 @@ Drawable.parseJson = function(instanceOrJson, json) {
 	return instanceOrJson;
 };
 
+ColorDrawable.__parseColor = ColorDrawable.parseColor;
 ColorDrawable.parseColor = function(color, inBackground) {
-	if (typeof color == "number") {
-		if (isAndroid()) {
-			return color;
-		}
-		return null;
+	if (isAndroid()) {
+		let drawable = ColorDrawable.__parseColor(color);
+		return drawable !== undefined ? drawable : null;
 	}
 	if (color) {
-		let cons = color.toUpperCase();
-		if (isAndroid()) {
-			if ($.Color[cons]) {
-				return $.Color[cons];
-			}
-			return $.Color.parseColor(color);
-		}
+		var stroke = ("" + color).toUpperCase();
 		if (inBackground) {
-			if (BackgroundToCLI.hasOwnProperty(cons)) {
-				return BackgroundToCLI[cons];
+			if (BackgroundToCLI.hasOwnProperty(stroke)) {
+				return BackgroundToCLI[stroke];
 			}
 			return null;
 		}
-		if (ColorToCLI.hasOwnProperty(cons)) {
-			return ColorToCLI[cons];
+		if (ColorToCLI.hasOwnProperty(stroke)) {
+			return ColorToCLI[stroke];
 		}
 	}
 	return null;
 };
 
 BitmapFactory.__decodeFile = BitmapFactory.decodeFile;
-BitmapFactory.decodeFile = function(path, options) {
-	let file = path instanceof java.io.File ? path : new java.io.File(path);
+BitmapFactory.decodeFile = function(pathOrFile, options) {
+	pathOrFile = Files.of(pathOrFile);
 	try {
-		if (file.getName().endsWith(".dnr")) {
-			let bytes = Files.readBytes(file);
+		if (Files.extension(pathOrFile) == "dnr") {
+			let bytes = Files.readAsBytes(pathOrFile);
 			return this.decodeResource(bytes, options);
 		}
 		return BitmapFactory.__decodeFile.apply(this, arguments);
 	} catch (e) {
-		Logger.Log("Drawable: BitmapFactory failed to decode file " + file.getName(), "WARNING");
+		Logger.Log("Drawable: BitmapFactory failed to decode file " + pathOrFile.getName(), "WARNING");
 	}
 	return null;
 };
@@ -396,7 +393,7 @@ BitmapFactory.decodeResource = function(bytes, options) {
 
 const fetchResourceOverridesIfNeeded = function(path) {
 	try {
-		let file = new java.io.File(path, "bitset.json");
+		let file = Files.of(path, "bitset.json");
 		if (file.exists()) {
 			let json = JSON.parse(Files.read(file));
 			for (let element in json) {

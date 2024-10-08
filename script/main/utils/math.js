@@ -113,7 +113,7 @@ const requireInvertedLogotype = function() {
 	if (logotype == "logoAlpha") return "logoPreview";
 	if (logotype == "logoBeta") return "logo";
 	if (logotype == "logoPreview") return "logoAlpha";
-	Logger.Log("ModdingTools: Not found inverted logotype for " + logotype, "WARNING");
+	Logger.Log("Modding Tools: Not found inverted logotype for " + logotype, "WARNING");
 };
 
 const isInvertedLogotype = function() {

@@ -1,5 +1,5 @@
 const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, key) {
-	tab = tab || "\t";
+	tab = tab ? "" + tab : "\t";
 	shifted = shifted || 0;
 	key = key || null;
 	if (typeof valueReplacer == "function") {
@@ -36,7 +36,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 			}
 			buffer.push(next);
 		}
-		return buffer.length > 0 ? "[\n" + String(tab).repeat(shifted + 1) + buffer.join(",\n" + String(tab).repeat(shifted + 1)) + "\n" + String(tab).repeat(shifted) + "]" : "[]";
+		return buffer.length > 0 ? "[\n" + tab.repeat(shifted + 1) + buffer.join(",\n" + tab.repeat(shifted + 1)) + "\n" + tab.repeat(shifted) + "]" : "[]";
 	}
 	if (typeof what == "object") {
 		let buffer = [];
@@ -54,7 +54,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 			}
 			buffer.push(to + ": " + next);
 		}
-		return buffer.length > 0 ? "{\n" + String(tab).repeat(shifted + 1) + buffer.join(",\n" + String(tab).repeat(shifted + 1)) + "\n" + String(tab).repeat(shifted) + "}" : "{}";
+		return buffer.length > 0 ? "{\n" + tab.repeat(shifted + 1) + buffer.join(",\n" + tab.repeat(shifted + 1)) + "\n" + tab.repeat(shifted) + "}" : "{}";
 	}
 	switch (typeof what) {
 		case "boolean":
@@ -66,7 +66,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 		case "function":
 			return what.toSource().trim();
 	}
-	log("ModdingTools: Unresolved property " + what + " with type " + typeof what);
+	log("Modding Tools: Unresolved property " + what + " with type " + typeof what);
 	return null;
 };
 
@@ -99,5 +99,7 @@ const isLightweightArray = function(what) {
 };
 
 const stringifyJsonIndented = function(what, keyReplacer, valueReplacer, tab, shifted, key) {
-	return String(tab || "\t").repeat(shifted || 0) + stringifyJson(what, keyReplacer, valueReplacer, tab, shifted, key);
+	tab = tab ? "" + tab : "\t";
+	shifted = shifted || 0;
+	return tab.repeat(shifted) + stringifyJson(what, keyReplacer, valueReplacer, tab, shifted, key);
 };
