@@ -9,7 +9,7 @@ RuntimeCodeEvaluate.setupNewContext = function() {
 		GLOBAL: somewhere
 	});
 	if (isEmpty(somewhere)) {
-		MCSystem.throwException("ModdingTools: Runtime could not be resolved!");
+		MCSystem.throwException("Modding Tools: Runtime could not be resolved!");
 	}
 	return somewhere;
 };
@@ -26,13 +26,25 @@ RuntimeCodeEvaluate.evaluateInRuntime = function(executable, what) {
 	return executable.parentContext.evaluateString(context || executable.scriptScope, what, executable.name, 0, null);
 };
 
+RuntimeCodeEvaluate.isChildInside = function(parent, child) {
+	if (child == null) {
+		return false;
+	}
+	let searching = child;
+	do {
+		if (parent == searching) return true;
+	}
+	while ((searching = searching.getParent()) != null);
+	return false;
+};
+
 RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	let fragment = new EditorFragment();
 	let edit = fragment.getEditorView();
 	source === undefined && (source = RuntimeCodeEvaluate.lastCode);
 	where === undefined && (where = RuntimeCodeEvaluate.lastExecutable);
 	location === undefined && (location = RuntimeCodeEvaluate.lastLocation);
-	if (source !== undefined) edit.setText(String(source));
+	if (source !== undefined) edit.setText("" + source);
 
 	let dialog = new android.app.AlertDialog.Builder(getContext(),
 		android.R.style.Theme_DeviceDefault_DialogWhenLarge);
@@ -66,7 +78,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 	});
 	dialog.setNegativeButton(translate("Cancel"), null);
 	dialog.setCancelable(false).setView(fragment.getContainer());
-	dialog.setTitle(location === undefined ? translate(NAME) + " " + translate(VERSION) : String(location));
+	dialog.setTitle(location === undefined ? translate(NAME) + " " + translate(VERSION) : "" + location);
 	let something = dialog.create();
 	something.getWindow().setLayout(getDisplayPercentWidth(70), android.view.WindowManager.LayoutParams.MATCH_PARENT);
 	something.show();
@@ -80,7 +92,7 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 				return view;
 			}
 		}
-		MCSystem.throwException("ModdingTools: Not found actual android dialog title, using custom view");
+		MCSystem.throwException("Modding Tools: Not found actual android dialog title, using custom view");
 	})(getContext().getResources().getIdentifier("alertTitle", "id", getContext().getPackageName()),
 		getContext().getResources().getIdentifier("alertTitle", "id", "android"),
 		android.R.id.title);
@@ -111,7 +123,11 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 		}
 	});
 	titleView = titleView.getParent();
-	let buttonLayout = something.getButton(android.app.Dialog.BUTTON_NEUTRAL).getParent().getParent();
+	let buttonLayout = something.getButton(android.app.Dialog.BUTTON_NEUTRAL).getParent();
+	if (!RuntimeCodeEvaluate.isChildInside(buttonLayout.getParent(), edit)) {
+		buttonLayout = buttonLayout.getParent();
+	}
+	// TODO: Remove it with closing!
 	registerKeyboardWatcher(function(onScreen) {
 		titleView.setVisibility(onScreen ? android.view.View.GONE : android.view.View.VISIBLE);
 		buttonLayout.setVisibility(onScreen ? android.view.View.GONE : android.view.View.VISIBLE);
@@ -119,13 +135,13 @@ RuntimeCodeEvaluate.showSpecifiedDialog = function(source, where, location) {
 };
 
 RuntimeCodeEvaluate.exportEvaluate = function() {
-	saveFile(undefined, ".js", function(file) {
+	saveFile(undefined, "js", function(file) {
 		Files.write(file, RuntimeCodeEvaluate.lastCode);
 	}, undefined, Dirs.EVALUATE);
 };
 
 RuntimeCodeEvaluate.loadEvaluate = function() {
-	selectFile(".js", function(file) {
+	selectFile("js", function(file) {
 		RuntimeCodeEvaluate.lastCode = Files.read(file);
 		RuntimeCodeEvaluate.showSpecifiedDialog();
 	}, undefined, Dirs.EVALUATE);
@@ -148,7 +164,7 @@ RuntimeCodeEvaluate.putSpecifiedTypeSources = function(modification, someone, ty
 		let specified = this.resolveSpecifiedTypeSources(modification, type);
 		return specified && (someone[name] = specified) != null;
 	} catch (e) {
-		Logger.Log("ModdingTools: RuntimeCodeEvaluate.putSpecifiedTypeSources: " + e, "INFO");
+		Logger.Log("Modding Tools: RuntimeCodeEvaluate.putSpecifiedTypeSources: " + e, "INFO");
 	}
 	return false;
 };
