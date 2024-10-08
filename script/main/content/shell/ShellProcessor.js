@@ -8,14 +8,16 @@ const ShellProcessor = {
 	},
 	normalize: function(who, space) {
 		let width = this.getWidth(who);
+		space = space ? "" + space : " ";
 		return who.map(function(value) {
-			return value.length < width ? value + String(space || " ").repeat(width - value.length) : value;
+			return value.length < width ? value + space.repeat(width - value.length) : value;
 		});
 	},
 	append: function(who, what, space) {
+		space = space ? "" + space : " ";
 		if (what.length > who.length) {
 			let width = this.getWidth(who);
-			space = String(space || " ").repeat(width);
+			space = space.repeat(width);
 			let i = 0;
 			for (; i < who.length; i++) {
 				who[i] += what[i];
