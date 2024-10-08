@@ -120,6 +120,18 @@ Translation.addTranslation("Compile", {
 	ru: "Скрипты",
 	en: "Compile"
 });
+Translation.addTranslation("Tool is not availabled", {
+	ru: "Инструментарий недоступен",
+	en: "Tool is not availabled"
+});
+Translation.addTranslation("Editors are provided in associated modifications, which extends Modding Tools with powerful APIs.", {
+	ru: "Редакторы предоставляются модификациями, которые расширяют Modding Tools новыми возможностями.",
+	en: "Editors are provided in associated modifications, which extends Modding Tools with powerful APIs."
+});
+Translation.addTranslation("Install it via ICMods, in most cases search for '%s' will do best.", {
+	ru: "Установите их с помощью ICMods, в большинстве случаев поиск '%s' будет достаточным.",
+	en: "Install it via ICMods, in most cases search for '%s' will do best."
+});
 
 // Panels & basics
 Translation.addTranslation("Go", {
@@ -218,6 +230,10 @@ Translation.addTranslation("Couldn't create engine TPS Meter", {
 });
 Translation.addTranslation("%stps", {
 	en: "%stps"
+});
+Translation.addTranslation("Open in web", {
+	ru: "Открыть в браузере",
+	en: "Open in web"
 });
 
 // Different tools
@@ -1009,7 +1025,7 @@ Translation.addTranslation("Unfortunately, you didn't install any module to star
 });
 Translation.addTranslation("Come back here when you find something worthwhile in Mod Browser.", {
 	en: "Come back here when you find something worthwhile in Mod Browser.",
-	ru: "Возвращайтесь сюда как только найдете что нибудь стоящее в браузере модов."
+	ru: "Возвращайтесь как только найдете что нибудь стоящее в браузере модов."
 });
 Translation.addTranslation("Tool from developers to developers.", {
 	ru: "Инструмент от разработчиков разработчикам.",
