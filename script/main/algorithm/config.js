@@ -47,13 +47,13 @@ function loadSetting(key, type) {
 	switch (type) {
 		case "bool":
 		case "boolean":
-			args[1] = Boolean(config.getBool(key));
+			args[1] = !!config.getBool(key);
 			break;
 		case "number":
 			args[1] = Number(config.getNumber(key));
 			break;
 		case "string":
-			args[1] = String(config.getString(key));
+			args[1] = "" + config.getString(key);
 			break;
 		default:
 			args[1] = config.get(key);
@@ -61,9 +61,9 @@ function loadSetting(key, type) {
 	return resetSettingIfNeeded.apply(this, args);
 };
 
-function setSetting(where, key, type) {
+function injectSetting(where, key, type) {
 	if (!this.hasOwnProperty(where)) {
-		Logger.Log("ModdingTools: Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
+		Logger.Log("Modding Tools: Unresolved property " + where + ", are you sure that it used anywhere?", "WARNING");
 	}
 	this[where] = loadSetting.apply(this, Array.prototype.slice.call(arguments, 1));
 };
@@ -71,36 +71,37 @@ function setSetting(where, key, type) {
 /**
  * Update settings from config.
  */
-function updateSettings() {
+function updateInternalConfig() {
 	try {
-		setSetting("uiScaler", "interface.interface_scale", "number", .75, 1.5);
-		setSetting("fontScale", "interface.font_scale", "number", .75, 1.5);
-		setSetting("maxWindows", "interface.max_windows", "number", 1, 15);
-		setSetting("menuDividers", "interface.show_dividers", "boolean");
-		setSetting("projectHeaderBackground", "interface.header_background", "boolean");
-		setSetting("maximumHints", "performance.maximum_hints", "number", 1, 100);
-		setSetting("hintStackableDenied", "performance.hint_stackable", "boolean", function(value) {
+		injectSetting("uiScaler", "interface.interface_scale", "number", .75, 1.5);
+		injectSetting("fontScale", "interface.font_scale", "number", .75, 1.5);
+		injectSetting("maxWindows", "interface.max_windows", "number", 1, 15);
+		injectSetting("menuDividers", "interface.show_dividers", "boolean");
+		injectSetting("projectHeaderBackground", "interface.header_background", "boolean");
+		injectSetting("maximumHints", "performance.maximum_hints", "number", 1, 100);
+		injectSetting("hintStackableDenied", "performance.hint_stackable", "boolean", function(value) {
 			return !value;
 		});
-		setSetting("showProcesses", "performance.show_processes", "boolean");
-		setSetting("safetyProcesses", "performance.safety_processes", "boolean");
-		setSetting("autosave", "autosave.enabled", "boolean");
-		setSetting("autosaveInterface", "autosave.with_interface", "boolean", false);
-		setSetting("autosavePeriod", "autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
-		setSetting("autosaveProjectable", "autosave.as_projectable");
-		setSetting("autosaveCount", "autosave.maximum_count", "number", 0, 50);
-		setSetting("noImportedScripts", "user_login.imported_script", "boolean", function(value) {
+		injectSetting("showProcesses", "performance.show_processes", "boolean");
+		injectSetting("safetyProcesses", "performance.safety_processes", "boolean");
+		injectSetting("autosave", "autosave.enabled", "boolean");
+		injectSetting("autosaveInterface", "autosave.with_interface", "boolean", false);
+		injectSetting("autosavePeriod", "autosave.between_period", "number", 0, 300, [1, 2, 3, 4], true);
+		injectSetting("autosaveProjectable", "autosave.as_projectable");
+		injectSetting("autosaveCount", "autosave.maximum_count", "number", 0, 50);
+		injectSetting("noImportedScripts", "user_login.imported_script", "boolean", function(value) {
 			return !value;
 		});
-		setSetting("sendAnalytics", "user_login.send_analytics", "boolean", true);
-		setSetting("importAutoselect", "other.import_autoselect", "boolean");
+		injectSetting("sendAnalytics", "user_login.send_analytics", "boolean", true);
+		injectSetting("importAutoselect", "other.import_autoselect", "boolean");
 		__config__.save();
 	} catch (e) {
 		reportError(e);
 	}
 };
 
-updateSettings();
+// TODO: Not fetches modpack config :(
+// updateInternalConfig();
 
 const isFirstLaunch = function() {
 	return loadSetting("user_login.first_launch", "boolean");
