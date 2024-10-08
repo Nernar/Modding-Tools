@@ -11,9 +11,7 @@ utils/math.js
 utils/wrapping.js
 utils/storage.js
 utils/stringifyJson.js
-utils/resolveThrowable.ts
-
-platform/colorize.js
+utils/resolveThrowable.js
 
 content/Fragment.js
 content/fragment/BaseFragment.js
@@ -23,10 +21,13 @@ content/fragment/ScrollFragment.js
 content/fragment/HorizontalScrollFragment.js
 content/fragment/TextFragment.js
 content/fragment/ImageFragment.js
+content/fragment/Mixins.js
+
 content/adapter/ListHolderAdapter.js
 content/adapter/FilterListHolderAdapter.js
 content/shell/ShellObserver.js
 content/shell/ShellProcessor.js
+content/shell/ToCLI.js
 
 content/WindowProxy.js
 content/FocusableWindow.js
@@ -49,22 +50,20 @@ layout/control/OverlayFragment.js
 layout/control/OverlayWindow.js
 layout/control/ControlFragment.js
 layout/control/ControlWindow.js
-layout/menu/LogotypeFragment.js
-layout/menu/LogotypeWindow.js
 layout/menu/MenuWindow.js
 layout/sidebar/SidebarFragment.js
 layout/sidebar/SidebarWindow.js
 
 layout/fragment/CategoryTitleFragment.js
 layout/fragment/ExplanatoryFragment.js
-layout/fragment/ThinButtonFragment.js
-layout/fragment/SolidButtonFragment.js
+layout/fragment/ButtonFragment.js
 layout/fragment/PropertyInputFragment.js
 layout/fragment/AutoCompleteInputFragment.js
 layout/fragment/SliderFragment.js
 layout/fragment/CounterFragment.js
 layout/fragment/AngleCircleFragment.js
 layout/fragment/AxisGroupFragment.js
+layout/fragment/SegmentGroupFragment.js
 
 tool/Tool.js
 tool/InteractionTool.js
@@ -82,10 +81,9 @@ project/ScriptImporter.js
 debug/LogViewer.js
 debug/RuntimeCodeEvaluate.js
 
-sequence/LogotypeSequence.js
+sequence/AsyncSequence.js
 sequence/SnackSequence.js
-sequence/AsyncSnackSequence.js
-sequence/LaunchSequence.js
+sequence/ControlSequence.js
 
 tools/project.js
 tools/console.js
@@ -99,4 +97,5 @@ algorithm/launcher.js
 integration/launcher.js
 integration/shared.js
 
-auxiliary/.
+auxiliary.js
+indev/.
