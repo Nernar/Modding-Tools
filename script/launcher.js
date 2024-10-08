@@ -1,5 +1,9 @@
 if (this.isInstant === undefined) {
 	Launch();
+} else if (!__mod__.isModRunning) {
+	__mod__.RunMod({
+		isInstant: false
+	});
 }
 
 try {
@@ -7,5 +11,5 @@ try {
 		isClientOnly: true
 	});
 } catch (e) {
-	log("ModdingTools: Client outdated, this may create unexpected behavior! Please, upgrade Inner Core to Horizon.");
+	Logger.Log("Modding Tools: Client outdated, this may create unexpected behavior! Please, upgrade Inner Core to Horizon.", "WARNING");
 }

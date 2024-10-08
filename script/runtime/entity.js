@@ -31,7 +31,7 @@ Object.defineProperties(GLOBAL, {
 });
 
 const defineItemByDescriptor = function(o, key, getter, setter) {
-	key = key && key.length > 0 ? key + "_" : String();
+	key = key && key.length > 0 ? key + "_" : "";
 	Object.defineProperty(o, key + "ID", {
 		get: function() {
 			return o[getter].id;
@@ -75,7 +75,7 @@ const defineItemByDescriptor = function(o, key, getter, setter) {
 };
 
 const defineEntityInventory = function(o, key, entity) {
-	key = key && key.length > 0 ? key + "_" : String();
+	key = key && key.length > 0 ? key + "_" : "";
 	Object.defineProperty(o, key + "CARRIED", {
 		get: function() {
 			return Entity.getCarriedItem(o[entity]);
@@ -109,7 +109,7 @@ const defineEntityInventory = function(o, key, entity) {
 };
 
 const defineEntityLocation = function(o, key, entity) {
-	key = key && key.length > 0 ? key + "_" : String();
+	key = key && key.length > 0 ? key + "_" : "";
 	Object.defineProperty(o, key + "X", {
 		get: function() {
 			return Entity.getX(o[entity]);
@@ -203,7 +203,7 @@ const defineEntityLocation = function(o, key, entity) {
 };
 
 const defineEntitySomewhereAround = function(o, key, entity) {
-	key = key && key.length > 0 ? key + "_" : String();
+	key = key && key.length > 0 ? key + "_" : "";
 	Object.defineProperty(o, key + "NEAREST", {
 		get: function() {
 			return findNearestEntityInRange(GLOBAL.ENTITIES, o[entity]);

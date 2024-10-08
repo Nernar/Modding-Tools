@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2022 Nernar (github.com/nernar)
+   Copyright 2022-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@
 */
 
 try {
-	// Not working yet...
+	// TODO: Not working yet...
 	runCustomSource("script/adaptedscript.js");
 	let scope = __mod__.compiledCustomSources.get("script/adaptedscript.js").scriptScope;
 	for (let anything in scope) {
 		this[anything] = scope[anything];
 	}
 } catch (e) {
-	Logger.Log("ModdingTools: CoreEngine API: " + e, "ERROR");
+	Logger.Log("Modding Tools: CoreEngine API: " + e, "ERROR");
 }
 
 var __version__ = 16;
