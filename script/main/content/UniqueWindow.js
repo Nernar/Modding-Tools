@@ -1,14 +1,20 @@
+/**
+ * EXTREMELLY UNSTABLE
+ * In future every window should equals to fragment
+ * container from itself, instance rewrites global
+ * window with specified container; window is untouched.
+ * @todo Do not use constructors to get attached container.
+ */
 function UniqueWindow() {
 	TransitionWindow.apply(this, arguments);
 	if (UniqueHelper.wasTypeAttached(this)) {
 		return UniqueHelper.getWindow(this);
 	}
 	return this;
-};
+}
 
 UniqueWindow.prototype = new TransitionWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";
-UniqueWindow.prototype.updatable = true;
 
 UniqueWindow.prototype.isAttached = function() {
 	return UniqueHelper.isAttached(this);
@@ -19,11 +25,15 @@ UniqueWindow.prototype.canBeOpened = function() {
 };
 
 UniqueWindow.prototype.isUpdatable = function() {
-	return this.updatable;
+	return this.updatable !== undefined ? this.updatable : true;
 };
 
 UniqueWindow.prototype.setIsUpdatable = function(enabled) {
-	this.updatable = !!enabled;
+	if (enabled !== undefined) {
+		this.updatable = !!enabled;
+	} else {
+		delete this.updatable;
+	}
 };
 
 UniqueWindow.prototype.attach = function() {

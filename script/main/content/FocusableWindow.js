@@ -1,4 +1,6 @@
-function FocusableWindow() {};
+function FocusableWindow() {
+	Logger.Log(this.TYPE + ".<constructor>", "FocusableWindow");
+};
 
 FocusableWindow.prototype.TYPE = "FocusableWindow";
 
@@ -14,14 +16,18 @@ if (isAndroid()) {
 }
 
 FocusableWindow.prototype.reattach = function() {
-	if (this.isOpened()) {
-		this.dismiss();
-	}
+	this.isOpened() && this.dismiss();
 	this.attach();
 };
 
-FocusableWindow.prototype.getContent = function() {
-	if (this.content) return this.content;
+FocusableWindow.prototype.getContainer = function() {
+	return this.getLayout();
+};
+
+FocusableWindow.prototype.getLayout = function() {
+	if (this.content != null) {
+		return this.content;
+	}
 	let fragment = this.getFragment();
 	if (fragment != null) {
 		let container = fragment.getContainer();
@@ -30,9 +36,12 @@ FocusableWindow.prototype.getContent = function() {
 	return null;
 };
 
-FocusableWindow.prototype.setContent = function(content) {
+FocusableWindow.prototype.setLayout = function(content) {
+	let currently = this.getLayout();
 	this.content = content;
-	if (this.isOpened()) this.update();
+	if (this.isOpened() && currently != this.getLayout()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.getFragment = function() {
@@ -40,11 +49,14 @@ FocusableWindow.prototype.getFragment = function() {
 };
 
 FocusableWindow.prototype.setFragment = function(fragment) {
-	let content = this.getContent();
-	this.fragment = fragment;
-	if (this.isOpened() && content != this.getContent()) {
-		this.update();
+	let currently = this.getFragment();
+	if (currently == fragment) {
+		return;
 	}
+	currently != null && currently.deattach();
+	this.fragment = fragment;
+	fragment != null && fragment.attach(this);
+	this.isOpened() && this.update();
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -53,16 +65,16 @@ FocusableWindow.prototype.isTouchable = function() {
 
 FocusableWindow.prototype.setTouchable = function(touchable) {
 	this.touchable = !!touchable;
-	if (this.isOpened()) this.update();
+	this.isOpened() && this.update();
 };
 
 FocusableWindow.prototype.isFocusable = function() {
-	return this.getContent() && this.focusable;
+	return this.focusable;
 };
 
 FocusableWindow.prototype.setFocusable = function(focusable) {
 	this.focusable = !!focusable;
-	if (this.isOpened()) this.update();
+	this.isOpened() && this.update();
 };
 
 FocusableWindow.prototype.isFullscreen = function() {
@@ -84,8 +96,11 @@ FocusableWindow.prototype.getGravity = function() {
 };
 
 FocusableWindow.prototype.setGravity = function(gravity) {
-	this.gravity = gravity;
-	if (this.isOpened()) this.update();
+	let currently = this.getGravity();
+	this.gravity = gravity - 0;
+	if (this.isOpened() && currently != this.getGravity()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.getX = function() {
@@ -97,13 +112,19 @@ FocusableWindow.prototype.getY = function() {
 };
 
 FocusableWindow.prototype.setX = function(x) {
-	this.x = parseInt(x);
-	if (this.isOpened()) this.update();
+	let currently = this.getX();
+	this.x = x - 0;
+	if (this.isOpened() && currently != this.getX()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.setY = function(y) {
-	this.y = parseInt(y);
-	if (this.isOpened()) this.update();
+	let currently = this.getY();
+	this.y = y - 0;
+	if (this.isOpened() && currently != this.getY()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.getWidth = function() {
@@ -115,13 +136,19 @@ FocusableWindow.prototype.getHeight = function() {
 };
 
 FocusableWindow.prototype.setWidth = function(width) {
-	this.width = parseInt(width);
-	if (this.isOpened()) this.update();
+	let currently = this.getWidth();
+	this.width = width - 0;
+	if (this.isOpened() && currently != this.getWidth()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.setHeight = function(height) {
-	this.height = parseInt(height);
-	if (this.isOpened()) this.update();
+	let currently = this.getHeight();
+	this.height = height - 0;
+	if (this.isOpened() && currently != this.getHeight()) {
+		this.update();
+	}
 };
 
 FocusableWindow.prototype.setOnAttachListener = function(listener) {
@@ -197,6 +224,7 @@ FocusableWindow.prototype.setExitTransition = function(actor) {
 };
 
 FocusableWindow.prototype.attach = function() {
+	Logger.Log(this.TYPE + ".attach", "FocusableWindow");
 	if (!this.isOpened()) {
 		let fragment = this.getFragment();
 		if (fragment != null && fragment.isRequiresFocusable()) {
@@ -210,23 +238,27 @@ FocusableWindow.prototype.attach = function() {
 		this.onAttach && this.onAttach();
 		return true;
 	} else {
-		Logger.Log("ModdingTools: Attaching window " + this.TYPE + " called on already opened window", "INFO");
+		Logger.Log("Modding Tools: Attaching window " + this.TYPE + " called on already opened window", "INFO");
 	}
 	return false;
 };
 
-FocusableWindow.prototype.update = function() {
+FocusableWindow.prototype.update = function(flag) {
 	let fragment = this.getFragment();
-	if (fragment != null && fragment.isRequiresFocusable()) {
-		this.focusable = true;
+	if (fragment != null) {
+		fragment.update(flag);
+		if (fragment.isRequiresFocusable()) {
+			this.focusable = true;
+		}
 	}
-	this.onUpdate && this.onUpdate();
+	this.onUpdate && this.onUpdate(flag);
 	if (isAndroid()) {
 		WindowProvider.updateWindow(this);
 	}
 };
 
 FocusableWindow.prototype.dismiss = function() {
+	Logger.Log(this.TYPE + ".dismiss", "FocusableWindow");
 	if (this.isOpened()) {
 		if (isAndroid()) {
 			WindowProvider.closeWindow(this);
@@ -235,7 +267,7 @@ FocusableWindow.prototype.dismiss = function() {
 		}
 		this.onClose && this.onClose();
 	} else {
-		Logger.Log("ModdingTools: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
+		Logger.Log("Modding Tools: Dismissing window " + this.TYPE + " called on already closed window", "INFO");
 	}
 };
 
@@ -270,7 +302,7 @@ FocusableWindow.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setY(calloutOrParse(json, json.y, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("content")) {
-		instanceOrJson.setContent(calloutOrParse(json, json.content, [this, instanceOrJson]));
+		instanceOrJson.setLayout(calloutOrParse(json, json.content, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("fragment")) {
 		instanceOrJson.setFragment(calloutOrParse(json, json.fragment, [this, instanceOrJson]));
