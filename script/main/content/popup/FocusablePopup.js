@@ -3,10 +3,6 @@
  */
 function FocusablePopup(id) {
 	TransitionWindow.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetWindow();
-	}
-	this.setFragment(new FocusableFragment());
 	this.fragments = [];
 
 	if (id !== undefined) {
@@ -18,6 +14,9 @@ FocusablePopup.prototype = new TransitionWindow;
 FocusablePopup.prototype.TYPE = "FocusablePopup";
 
 FocusablePopup.prototype.resetWindow = function() {
+	TransitionWindow.prototype.resetWindow.apply(this, arguments);
+	this.setFragment(new FocusableFragment());
+
 	let fadeIn = new android.transition.Fade(),
 		fadeOut = new android.transition.Fade();
 	fadeIn.setInterpolator(new android.view.animation.DecelerateInterpolator());
@@ -42,7 +41,7 @@ FocusablePopup.prototype.isMayDismissed = function() {
 };
 
 FocusablePopup.prototype.setIsMayDismissed = function(enabled) {
-	this.mayDismissed = Boolean(enabled);
+	this.mayDismissed = !!enabled;
 };
 
 FocusablePopup.prototype.getId = function() {
@@ -53,20 +52,24 @@ FocusablePopup.prototype.setId = function(id) {
 	this.id = "" + id;
 };
 
-FocusablePopup.prototype.addElement = function(fragment, params) {
-	return this.getFragment().addElementFragment(fragment, params);
+FocusablePopup.prototype.addFragment = function(fragment, params) {
+	return this.getFragment().addFragment(fragment, params);
 };
 
-FocusablePopup.prototype.getElementCount = function() {
-	return this.getFragment().getElementCount();
+FocusablePopup.prototype.getFragmentCount = function() {
+	return this.getFragment().getFragmentCount();
 };
 
-FocusablePopup.prototype.getElement = function(index) {
-	return this.getFragment().getElementFragment(index);
+FocusablePopup.prototype.indexOf = function(fragmentOrView) {
+	return this.getFragment().indexOf(fragmentOrView);
 };
 
-FocusablePopup.prototype.removeElementAt = function(index) {
-	return this.getFragment().removeElementAt(index);
+FocusablePopup.prototype.getFragmentAt = function(index) {
+	return this.getFragment().getFragmentAt(index);
+};
+
+FocusablePopup.prototype.removeFragment = function(indexOrFragment) {
+	return this.getFragment().removeFragment(indexOrFragment);
 };
 
 FocusablePopup.prototype.showInternal = function() {
@@ -87,17 +90,17 @@ FocusablePopup.prototype.dismiss = function() {
 	}
 };
 
-FocusablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
+FocusablePopup.parseJson = function(instanceOrJson, json, preferredFragment) {
 	if (!(instanceOrJson instanceof FocusablePopup)) {
 		json = instanceOrJson;
 		instanceOrJson = new FocusablePopup();
 	}
 	instanceOrJson = TransitionWindow.parseJson.call(this, instanceOrJson, json);
 	json = calloutOrParse(this, json, instanceOrJson);
-	while (instanceOrJson.getElementCount() > 0) {
-		instanceOrJson.removeElementAt(0);
+	while (instanceOrJson.getFragmentCount() > 0) {
+		instanceOrJson.removeFragment(0);
 	}
-	if (json === null || typeof json != "object") {
+	if (json == null || typeof json != "object") {
 		return instanceOrJson;
 	}
 	if (json.hasOwnProperty("id")) {
@@ -108,14 +111,14 @@ FocusablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
 	}
 	if (json.hasOwnProperty("elements")) {
 		let elements = calloutOrParse(json, json.elements, [this, instanceOrJson]);
-		if (elements !== null && typeof elements == "object") {
-			if (!Array.isArray(elements)) elements = [elements];
-			for (let i = 0; i < elements.length; i++) {
-				let item = calloutOrParse(elements, elements[i], [this, json, instanceOrJson]);
-				if (item !== null && typeof item == "object") {
-					let fragment = Fragment.parseJson.call(this, item, item, preferredElement);
+		if (elements != null && typeof elements == "object") {
+			Array.isArray(elements) || (elements = [elements]);
+			for (let offset = 0; offset < elements.length; offset++) {
+				let item = calloutOrParse(elements, elements[offset], [this, json, instanceOrJson]);
+				if (item != null && typeof item == "object") {
+					let fragment = Fragment.parseJson.call(this, item, item, preferredFragment);
 					if (fragment != null) {
-						instanceOrJson.addElement(fragment);
+						instanceOrJson.addFragment(fragment);
 					}
 				}
 			}

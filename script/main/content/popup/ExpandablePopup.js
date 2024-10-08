@@ -2,7 +2,6 @@
  * @requires `isAndroid()`
  */
 function ExpandablePopup(id) {
-	this.setFragment(new ExpandableFragment());
 	FocusablePopup.apply(this, arguments);
 };
 
@@ -11,12 +10,13 @@ ExpandablePopup.prototype.TYPE = "ExpandablePopup";
 
 ExpandablePopup.prototype.resetWindow = function() {
 	FocusablePopup.prototype.resetWindow.apply(this, arguments);
+	this.setFragment(new ExpandableFragment());
 	let self = this;
-	fragment.getTitleView().setOnTouchListener(function(view, event) {
+	this.getFragment().getTitleView().setOnTouchListener(function(view, event) {
 		try {
 			return !!self.handleTouch(event);
 		} catch (e) {
-			log("ModdingTools: ExpandablePopup.onTouch: " + e);
+			log("Modding Tools: ExpandablePopup.onTouch: " + e);
 		}
 		return false;
 	});
@@ -45,7 +45,7 @@ ExpandablePopup.prototype.handleTouch = function(event) {
 						this.expandable.destroy();
 					}
 					this.expandable = new Action(500);
-					this.expandable.create().run();
+					this.expandable.run();
 				}
 			}
 			if (this.isMayDismissed()) {
@@ -53,14 +53,14 @@ ExpandablePopup.prototype.handleTouch = function(event) {
 					this.closeable.destroy();
 				}
 				this.closeable = new Action(750);
-				this.closeable.create().run();
+				this.closeable.run();
 			}
 			break;
 		case 1:
 			if (this.isMayDismissed()) {
 				if (this.closeable && this.closeable.getThread() && this.closeable.getLeftTime() == 0) {
 					this.closeable.destroy();
-					Popups.closeIfOpened(this.name);
+					this.dismiss();
 				} // else ProjectProvider.getProject().updatePopupLocation(this.name, event.getRawX() - this.dx, event.getRawY() - this.dy);
 			}
 			break;
@@ -94,7 +94,9 @@ ExpandablePopup.prototype.isExpanded = function() {
 ExpandablePopup.prototype.expand = function() {
 	if (this.isExpanded()) {
 		this.minimize();
-	} else this.maximize();
+	} else {
+		this.maximize();
+	}
 };
 
 ExpandablePopup.prototype.minimize = function() {
@@ -120,7 +122,7 @@ ExpandablePopup.prototype.isMayCollapsed = function() {
 };
 
 ExpandablePopup.prototype.setIsMayCollapsed = function(enabled) {
-	this.mayCollapsed = Boolean(enabled);
+	this.mayCollapsed = !!enabled;
 };
 
 ExpandablePopup.prototype.mayDragged = true;
@@ -130,10 +132,10 @@ ExpandablePopup.prototype.isMayDragged = function() {
 };
 
 ExpandablePopup.prototype.setIsMayDragged = function(enabled) {
-	this.mayDragged = Boolean(enabled);
+	this.mayDragged = !!enabled;
 };
 
-ExpandablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
+ExpandablePopup.parseJson = function(instanceOrJson, json, preferredFragment) {
 	if (!(instanceOrJson instanceof ExpandablePopup)) {
 		json = instanceOrJson;
 		instanceOrJson = new ExpandablePopup();
@@ -156,7 +158,9 @@ ExpandablePopup.parseJson = function(instanceOrJson, json, preferredElement) {
 		let property = calloutOrParse(json, json.expanded, [this, instanceOrJson]);
 		if (property) {
 			instanceOrJson.maximize();
-		} else instanceOrJson.minimize();
+		} else {
+			instanceOrJson.minimize();
+		}
 	}
 	return instanceOrJson;
 };
