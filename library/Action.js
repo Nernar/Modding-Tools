@@ -1,6 +1,6 @@
 /*
 
-   Copyright 2019-2022 Nernar (github.com/nernar)
+   Copyright 2019-2023 Nernar (github.com/nernar)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,18 +19,19 @@ LIBRARY({
     name: "Action",
     version: 1,
     api: "AdaptedScript",
-    dependencies: ["Retention:1"],
     shared: true
 });
 IMPORT("Retention:1");
 /**
+ * @constructor
  * Allows you to create timers that will constantly
  * check the conditions for subsequent execution.
- * @param {object|number} [obj] merges with prototype or tick time
+ * @param {object|number} [obj] merges with prototype or tick
+ * @param {bool} [verbose] log actions that will be done
  */
 Action = (function () {
     var identifier = 0;
-    return function (obj) {
+    return function (obj, verbose) {
         if (typeof obj == "number") {
             this.setTickTime(obj);
         }
@@ -40,6 +41,7 @@ Action = (function () {
             }
         }
         this.id = "action" + (identifier++);
+        this.logging = verbose !== false;
     };
 })();
 Action.prototype.getThread = function () {
@@ -49,7 +51,7 @@ Action.prototype.getPriority = function () {
     return this.priority !== undefined ? this.priority : 1;
 };
 Action.prototype.setPriority = function (priority) {
-    this.priority = Number(priority);
+    this.priority = priority - 0;
     var thread = this.getThread();
     thread && thread.setPriority(this.getPriority());
 };
@@ -57,10 +59,10 @@ Action.prototype.mayCancelled = function () {
     return this.cancelable !== undefined ? this.cancelable : true;
 };
 Action.prototype.setIsMayCancelled = function (cancelable) {
-    this.cancelable = Boolean(cancelable);
+    this.cancelable = !!cancelable;
 };
 Action.prototype.setAwait = function (time) {
-    this.left = Number(time);
+    this.left = time - 0;
 };
 Action.prototype.makeInfinity = function () {
     this.setAwait(-1);
@@ -69,19 +71,19 @@ Action.prototype.getAwait = function () {
     return this.left !== undefined ? this.left : 1;
 };
 Action.prototype.setRealAwait = function (ms) {
-    this.left = Number(ms) / this.getTickTime();
+    this.left = (ms - 0) / this.getTickTime();
 };
 Action.prototype.getRealAwait = function () {
     return this.getAwait() * this.getTickTime();
 };
 Action.prototype.setTickTime = function (time) {
-    this.sleep = Number(time);
+    this.sleep = time - 0;
 };
 Action.prototype.getTickTime = function () {
     return this.sleep !== undefined ? this.sleep : 50;
 };
 Action.prototype.setCurrentTick = function (count) {
-    this.count = Number(count);
+    this.count = count - 0;
 };
 Action.prototype.getCurrentTick = function () {
     return this.count;
@@ -94,6 +96,12 @@ Action.prototype.getLeftTime = function () {
 };
 Action.prototype.isActive = function () {
     return this.active !== undefined ? this.active : false;
+};
+Action.prototype.setReportingEnabled = function (enabled) {
+    this.reporting = !!enabled;
+};
+Action.prototype.isReportingEnabled = function () {
+    return this.reporting !== undefined ? this.reporting : true;
 };
 Action.prototype.setAction = function (action) {
     if (action === undefined || action === null) {
@@ -110,40 +118,41 @@ Action.prototype.setCondition = function (action) {
     return true;
 };
 Action.prototype.create = function () {
-    if (this.thread !== undefined && this.thread !== null) {
-        MCSystem.throwException("Action: Action (id=" + this.id + ") is already called create()");
+    if (this.thread !== undefined) {
+        MCSystem.throwException("Action: Action (id=" + this.id + ") is already running");
     }
     this.count = this.real = 0;
-    this.thread = handleThread.call(this, function () {
+    var action = this;
+    this.thread = handleThread(function () {
         try {
-            while (this.thread !== undefined && this.thread !== null) {
-                if (this.isInterrupted()) {
+            while (action.thread !== undefined) {
+                if (action.isInterrupted()) {
                     break;
                 }
-                if (this.isActive()) {
-                    var currently = this.getCurrentTick();
+                if (action.isActive()) {
+                    var currently = action.getCurrentTick();
                     if (currently == 0) {
-                        java.lang.Thread.sleep(this.getTickTime());
+                        java.lang.Thread.sleep(action.getTickTime());
                     }
-                    var next = this.tick(currently);
-                    this.setCurrentTick(next);
-                    this.real += this.getTickTime();
-                    var left = this.getAwait();
+                    var next = action.tick(currently);
+                    action.setCurrentTick(next);
+                    action.real += action.getTickTime();
+                    var left = action.getAwait();
                     if (left >= 0 && next >= left) {
-                        this.complete();
+                        action.complete();
                     }
-                    else if (!this.isInterrupted()) {
-                        if (this.condition(next)) {
-                            java.lang.Thread.sleep(this.getTickTime());
+                    else if (!action.isInterrupted()) {
+                        if (action.condition(next)) {
+                            java.lang.Thread.sleep(action.getTickTime());
                         }
                         else
                             break;
                     }
-                    else if (this.mayCancelled()) {
-                        this.cancel();
+                    else if (action.mayCancelled()) {
+                        action.cancel();
                     }
                 }
-                else if (!this.isInterrupted()) {
+                else {
                     java.lang.Thread.yield();
                 }
             }
@@ -152,16 +161,19 @@ Action.prototype.create = function () {
             if (e == null) {
                 return;
             }
-            if (e.message == "java.lang.InterruptedException: null" ||
-                e.message == "Cannot call method \"isInterrupted\" of undefined") {
+            if (e.message == "java.lang.InterruptedException: null") {
                 return;
             }
-            reportError(e);
+            if (action.isReportingEnabled()) {
+                reportError(e);
+            }
+            else {
+                Logger.Log("Action: " + e, "ERROR");
+            }
         }
-        this.destroy();
+        action.destroy();
     }, this.getPriority());
-    this.onCreate && this.onCreate(this);
-    return this;
+    this.onCreate && this.onCreate.call(this);
 };
 Action.prototype.condition = function (currently) {
     try {
@@ -171,18 +183,24 @@ Action.prototype.condition = function (currently) {
         return true;
     }
     catch (e) {
-        Logger.Log("Action: Condition in action (id=" + this.id + ") experienced some troubles", "WARNING");
+        if (this.logging) {
+            Logger.Log("Action: Condition in action (id=" + this.id + ") experienced some troubles", "WARNING");
+            Logger.Log("Action: " + e, "WARNING");
+        }
     }
     return false;
 };
 Action.prototype.tick = function (currently) {
     try {
         if (this.onTick !== undefined) {
-            return this.onTick(this, currently);
+            return this.onTick.call(this, currently);
         }
     }
     catch (e) {
-        Logger.Log("Action: Tick in action (id=" + this.id + ") experienced some troubles", "WARNING");
+        if (this.logging) {
+            Logger.Log("Action: Tick in action (id=" + this.id + ") experienced some troubles", "WARNING");
+            Logger.Log("Action: " + e, "WARNING");
+        }
     }
     return ++currently;
 };
@@ -194,34 +212,53 @@ Action.prototype.run = function () {
         this.count = this.real = 0;
     }
     this.active = true;
-    log("Action: Action (id=" + this.id + ") started at " + getTime() + " ms");
-    this.onRun && this.onRun(this);
+    if (this.logging) {
+        log("Action: Action (id=" + this.id + ") started at " + getTime() + " ms");
+    }
+    this.onRun && this.onRun.call(this);
 };
 Action.prototype.complete = function () {
+    if (this.thread === undefined || this.active === undefined) {
+        return;
+    }
     delete this.active;
-    log("Action: Action (id=" + this.id + ") completed as " + this.real + " ms");
-    this.action && this.action(this, this.real, this.count);
+    if (this.logging) {
+        log("Action: Action (id=" + this.id + ") completed as " + this.real + " ms");
+    }
+    this.action && this.action.call(this, this.real, this.count);
     this.count = this.real = 0;
 };
 Action.prototype.pause = function (time) {
+    if (this.thread === undefined || this.active === undefined) {
+        return;
+    }
     delete this.active;
-    time && handle.call(this, function () {
-        this.active = true;
+    var action = this;
+    time && handle(function () {
+        action.active = true;
     }, time);
-    this.onPause && this.onPause(this);
+    this.onPause && this.onPause.call(this);
 };
 Action.prototype.cancel = function () {
+    if (this.thread === undefined || this.active === undefined) {
+        return;
+    }
     delete this.active;
-    log("Action: Action (id=" + this.id + ") cancelled at " + this.real + " ms");
-    this.onCancel && this.onCancel(this);
+    if (this.logging) {
+        log("Action: Action (id=" + this.id + ") cancelled at " + this.real + " ms");
+    }
+    this.onCancel && this.onCancel.call(this);
     this.count = this.real = 0;
 };
 Action.prototype.destroy = function () {
+    if (this.thread === undefined) {
+        return;
+    }
     delete this.active;
     this.interrupt();
     delete this.thread;
     this.count = this.real = 0;
-    this.onDestroy && this.onDestroy(this);
+    this.onDestroy && this.onDestroy.call(this);
 };
 Action.prototype.setOnCreateListener = function (action) {
     if (action === undefined || action === null) {
@@ -273,13 +310,13 @@ Action.prototype.interrupt = function () {
 };
 Action.prototype.isInterrupted = function () {
     var thread = this.getThread();
-    return thread && thread.isInterrupted();
+    return thread != null && thread.isInterrupted();
 };
 Action.prototype.assureYield = function (thread) {
-    if (this.thread === undefined || this.thread === null) {
+    if (this.thread === undefined) {
         return false;
     }
-    while (this.getThread() !== null) {
+    while (this.thread !== undefined) {
         if (thread === undefined) {
             java.lang.Thread.yield();
         }
@@ -302,7 +339,7 @@ handleAction = function (action, condition, time) {
     action && custom.setAction(action);
     condition && custom.setCondition(condition);
     time >= 0 && custom.setRealAwait(time);
-    custom.create().run();
+    custom.run();
     return custom;
 };
 EXPORT("handleAction", handleAction);
