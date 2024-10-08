@@ -3,101 +3,131 @@ const monthToName = function(number) {
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
 };
 
-const stringifyObject = function(obj, identate, callback) {
+const stringifyObject = function(obj, beautify, callback) {
 	if (callback === undefined) {
 		callback = {};
 	}
-	const recursiveStringify = function(obj, tabs) {
+
+	const recursiveStringify = function(obj, identation, depth) {
 		if (callback.onUpdate) {
 			callback.onUpdate();
 		}
-		if (obj === null) {
+
+		if (obj === null || obj === undefined) {
 			return "null";
 		}
+
 		switch (typeof obj) {
-			case "undefined":
-				return "undefined";
 			case "string":
 				obj = new java.lang.String(obj);
 				obj = obj.replaceAll("\"", "\\\\\"");
 				obj = obj.replaceAll("\t", "\\\\t");
 				obj = obj.replaceAll("\n", "\\\\n");
 				return "\"" + obj + "\"";
+
 			case "number":
-				return String(preround(obj));
+				return "" + preround(obj);
+
 			case "boolean":
-				return String(obj);
+				return "" + obj;
+
 			case "object":
-				if (Array.isArray(obj)) {
-					let array = [],
-						tabbed = false;
-					for (let i = 0; i < obj.length; i++) {
-						let result = recursiveStringify(obj[i], tabs);
-						if (result && result.length > 0) {
-							if (identate) {
-								if (result.indexOf("\n") != -1 || result.length > 48) {
-									if (!tabbed) {
-										tabbed = true;
-										tabs += "\t";
-									}
-									array.push(result + (i < obj.length ? "\n" + tabs : String()));
-								} else if (i != 0) {
-									array.push(" " + result);
-								} else array.push(result);
-							} else array.push(result);
-						}
-					}
-					return "[" + array.join(",") + "]";
-				} else {
-					let array = [],
-						tabbed = false,
-						last, count = 0;
-					for (let counted in obj) {
-						last = counted;
-						count++;
-					}
-					for (let item in obj) {
-						let result = recursiveStringify(obj[item], tabs);
-						if (result && result.length > 0) {
-							if (identate) {
-								if (result.indexOf("\n") != -1 || result.length > 8) {
-									if (!tabbed) {
-										tabbed = true;
-										tabs += "\t";
-									}
-									array.push(item + ": " + result + (item != last ? "\n" + tabs : String()));
-								} else if (item != 0) {
-									array.push(" " + item + ": " + result);
-								} else array.push(result);
-							} else array.push("\"" + item + "\":" + result);
-						}
-					}
-					let joined = array.join(",");
-					return (identate ? tabbed ? "{\n" + tabs : "{ " : "{") + joined +
-						(identate ? tabbed ? tabs.replace("\t", String()) + "\n}" : " }" : "}");
+				if (depth > 5) {
+					return null;
 				}
+
+				let entries = [];
+				let newLine = false;
+				let insertNewLineNow = false;
+
+				if (Array.isArray(obj)) {
+					for (let i = 0; i < obj.length; i++) {
+						let result = recursiveStringify(obj[i], identation, depth + 1);
+						if (result && result.length > 0) {
+							if (beautify) {
+								if (result.indexOf("\n") != -1 || result.length > 48 || result.charAt(0) == "{") {
+									entries.push((entries.length > 0 ? "\n" + identation.replace("\t", "") : "") + result);
+									newLine = insertNewLineNow = true;
+
+								} else if (insertNewLineNow) {
+									entries.push("\n" + identation.replace("\t", "") + result);
+									insertNewLineNow = false;
+
+								} else if (entries.length > 0) {
+									entries.push(" " + result);
+								} else {
+									entries.push(result);
+								}
+							} else {
+								entries.push(result);
+							}
+						}
+					}
+
+					return "[" + entries.join(",") + "]";
+				} else {
+					if (obj["class"] !== undefined) {
+						return;
+					}
+
+					for (let item in obj) {
+						let result = recursiveStringify(obj[item], identation + "\t", depth + 1);
+						if (result && result.length > 0) {
+							if (beautify) {
+								if (result.indexOf("\n") != -1 || result.length > 8) {
+									entries.push((entries.length > 0 ? "\n" + identation : "") + item + ": " + result);
+									newLine = insertNewLineNow = true;
+
+								} else if (insertNewLineNow) {
+									entries.push("\n" + identation + item + ": " + result);
+									insertNewLineNow = false;
+
+								} else if (entries.length > 0) {
+									entries.push(" " + item + ": " + result);
+								} else {
+									entries.push(item + ": " + result);
+								}
+							} else {
+								entries.push(item + ":" + result);
+							}
+						}
+					}
+
+					if (entries.length == 0) {
+						return "{}";
+					}
+
+					let before = beautify ? newLine ? "{\n" + identation : "{ " : "{";
+					let after = beautify ? newLine ? "\n" + identation.replace("\t", "") + "}" : " }" : "}";
+					return before + entries.join(",") + after;
+				}
+
 			default:
 				if (callback.onPassed) {
 					callback.onPassed(obj, typeof obj);
 				}
 		}
 	};
-	return recursiveStringify(obj, String());
+
+	if (typeof obj == "object" && !Array.isArray(obj)) {
+		return recursiveStringify(obj, "\t", 0);
+	}
+	return recursiveStringify(obj, "", 0);
 };
 
-const readFile = function(path, isBytes, action) {
+const readFile = function(path, asBytes, action) {
 	handleThread(function() {
-		let file = new java.io.File(String(path));
+		let file = Files.of(path);
 		if (!file.exists()) return;
-		let readed = isBytes ? Files.readBytes(file) : Files.read(file);
+		let readed = asBytes ? Files.readAsBytes(file) : Files.read(file);
 		if (typeof action == "function") action(readed);
 	});
 };
 
 const exportProject = function(object, isAutosave, path, action) {
-	return AsyncSnackSequence.access("internal.dns", [path, object, 30,
+	return AsyncSequence.access("internal.dns", [path, object, 30,
 		isAutosave ? translate("Autosaving") : translate("Exporting"),
-		isAutosave ? translate("Autosaved") : translate("Exported")], action);
+		isAutosave ? translate("Autosaved") : translate("Exported")], action, new SnackSequence());
 };
 
 const compileData = function(text, type, additional) {
@@ -157,14 +187,14 @@ const importProject = function(path, action) {
 
 const findBuildConfigLocation = function(path) {
 	try {
-		let file = new java.io.File(path);
+		let file = Files.of(path);
 		do {
-			let config = new java.io.File(file, "build.config");
+			let config = Files.of(file, "build.config");
 			if (config.exists()) return config;
 			file = file.getParentFile();
 		} while (file && file.exists());
 	} catch (e) {
-		Logger.Log("ModdingTools: findBuildConfigLocation: " + e, "WARNING");
+		Logger.Log("Modding Tools: findBuildConfigLocation: " + e, "WARNING");
 	}
 	return null;
 };
@@ -192,7 +222,7 @@ const getSourceInBuildConfigDescription = function(path) {
 	try {
 		let buildConfigFile = findBuildConfigLocation(path);
 		if (buildConfigFile == null) throw null;
-		let location = Files.shrinkPathes(buildConfigFile.getParentFile(), path);
+		let location = Files.relative(path, buildConfigFile.getParentFile());
 		let buildConfig = compileData(Files.read(buildConfigFile), "object");
 		// If source is not found, only main path will be used
 		let sourcePath = findSourceInBuildConfigLocation(buildConfig, location);
@@ -207,11 +237,11 @@ const getSourceInBuildConfigDescription = function(path) {
 			api: api
 		} : {
 			api: api,
-			source: new java.io.File(buildConfigFile.getParentFile(), sourcePath).getPath()
+			source: Files.of(buildConfigFile.getParentFile(), sourcePath).getPath()
 		};
 	} catch (e) {
 		if (e != null) {
-			Logger.Log("ModdingTools: getSourceInBuildConfigDescription: " + e, "WARNING");
+			Logger.Log("Modding Tools: getSourceInBuildConfigDescription: " + e, "WARNING");
 		}
 	}
 	return {
