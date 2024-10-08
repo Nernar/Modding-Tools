@@ -28,7 +28,11 @@ LevelProvider.update = function() {
 	if (overlay === null) return false;
 	if (!thereIsNoTPSMeter) {
 		let tps = this.getFormattedTps(); // 20.0
-		overlay.setText(Updatable.getSyncTime() + " / " + translate("%stps", tps) + " / " + Math.ceil((java.lang.Runtime.getRuntime().totalMemory() - java.lang.Runtime.getRuntime().freeMemory()) / 1048576) + "MiB");
+		let ticks = "?";
+		try {
+			ticks = Updatable.getSyncTime();
+		} catch (e) {}
+		overlay.setText(ticks + " / " + translate("%stps", tps) + " / " + Math.ceil((java.lang.Runtime.getRuntime().totalMemory() - java.lang.Runtime.getRuntime().freeMemory()) / 1048576) + "MiB");
 		return true;
 	}
 	return false;
@@ -84,12 +88,12 @@ try {
 	thereIsNoTPSMeter = true;
 }
 
-Callback.addCallback("tick", function() {
+Callback.addCallback("LocalTick", function() {
 	try {
 		if (!thereIsNoTPSMeter) {
 			TPSMeter.onTick();
 		}
 	} catch (e) {
-		log("ModdingTools: tick: " + e);
+		log("Modding Tools: LocalTick: " + e);
 	}
 });
