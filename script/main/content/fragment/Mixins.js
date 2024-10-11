@@ -193,3 +193,107 @@ SelectableFragment.parseJson = function(instanceOrJson, json) {
 	}
 };
 
+const SelectableLayoutFragment = function() {
+	MCSystem.throwException("Modding Tools: SelectableLayoutFragment is mixin abstraction!");
+};
+
+SelectableLayoutFragment.MODE_NONE = 0;
+SelectableLayoutFragment.MODE_SINGLE = 1;
+SelectableLayoutFragment.MODE_MULTIPLE = 2;
+
+SelectableLayoutFragment.prototype = {
+	getSelectionMode() {
+		return this.selectionMode || SelectableLayoutFragment.MODE_NONE;
+	},
+	setSelectionMode(mode) {
+		if (mode == null || this.getSelectionMode() == mode) {
+			return;
+		}
+		if (mode == SelectableLayoutFragment.MODE_MULTIPLE) {
+			this.selectionMode = mode;
+			return;
+		}
+		let fragments = this.getFragments();
+		for (let selected = false, offset = 0; offset < fragments.length; offset++) {
+			let fragment = fragments[offset];
+			if (fragment.isSelected && fragment.isSelected()) {
+				if (!selected && mode == SelectableLayoutFragment.MODE_SINGLE) {
+					selected = true;
+					continue;
+				}
+				fragment.unselect();
+			}
+		}
+		this.selectionMode = mode;
+	},
+	selectItem(itemOrIndex) {
+		if (!(itemOrIndex instanceof Fragment)) {
+			itemOrIndex = this.getFragmentAt(itemOrIndex);
+		}
+		if (itemOrIndex && itemOrIndex.select) {
+			return itemOrIndex.select();
+		}
+		return false;
+	},
+	unselectItem(itemOrIndex) {
+		if (!(itemOrIndex instanceof Fragment)) {
+			itemOrIndex = this.getFragmentAt(itemOrIndex);
+		}
+		if (itemOrIndex && itemOrIndex.unselect) {
+			return itemOrIndex.unselect();
+		}
+		return false;
+	},
+	canSelectItem(item) {
+		if (this.getSelectionMode() == SelectableLayoutFragment.MODE_NONE) {
+			return false;
+		}
+		if (this.getSelectionMode() == SelectableLayoutFragment.MODE_SINGLE) {
+			let fragments = this.getFragments();
+			for (let offset = 0; offset < fragments.length; offset++) {
+				let fragment = fragments[offset];
+				if (fragment.isSelected && fragment.isSelected() && !fragment.unselect()) {
+					return false;
+				}
+			}
+		}
+		return true;
+	},
+	canUnselectItem(item) {
+		return true;
+	},
+	selectItemLayout(item) {
+		this.onSelectItem && this.onSelectItem(item, item.getIndex());
+	},
+	unselectItemLayout(item) {
+		this.onUnselectItem && this.onUnselectItem(item, item.getIndex());
+	},
+	setOnSelectItemListener(listener) {
+		if (listener != null) {
+			this.onSelectItem = listener.bind(this);
+		} else {
+			delete this.onSelectItem;
+		}
+		return this;
+	},
+	setOnUnselectItemListener(listener) {
+		if (listener != null) {
+			this.onUnselectItem = listener.bind(this);
+		} else {
+			delete this.onUnselectItem;
+		}
+		return this;
+	}
+};
+
+SelectableLayoutFragment.parseJson = function(instanceOrJson, json) {
+	if (json.hasOwnProperty("selectionMode")) {
+		instanceOrJson.setSelectionMode(calloutOrParse(json, json.selectionMode, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("selectItem")) {
+		instanceOrJson.setOnSelectItemListener(parseCallback(json, json.selectItem, this));
+	}
+	if (json.hasOwnProperty("unselectItem")) {
+		instanceOrJson.setOnUnselectItemListener(parseCallback(json, json.unselectItem, this));
+	}
+};
