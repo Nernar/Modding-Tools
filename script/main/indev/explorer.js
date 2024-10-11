@@ -457,10 +457,10 @@ ToolbarFragment.prototype.show = function() {
 };
 
 ToolbarFragment.Item = function() {
-	SidebarFragment.Group.Item.apply(this, arguments);
+	SidebarFragment.Rail.Item.apply(this, arguments);
 };
 
-ToolbarFragment.Item.prototype = new SidebarFragment.Group.Item;
+ToolbarFragment.Item.prototype = new SidebarFragment.Rail.Item;
 
 const ImageSourceFragment = function() {
 	FrameFragment.apply(this, arguments);
