@@ -80,6 +80,14 @@ Fragment.prototype.getWindow = function() {
 	return fragment;
 };
 
+Fragment.prototype.getIndex = function() {
+	let parent = this.getParent();
+	if (parent && parent instanceof LayoutFragment) {
+		return parent.indexOf(this);
+	}
+	return -1;
+};
+
 Fragment.prototype.attach = function(parent) {
 	if (parent == null || parent == this.parent) {
 		if (parent == null) {
