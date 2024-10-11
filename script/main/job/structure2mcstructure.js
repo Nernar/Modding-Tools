@@ -1,3 +1,40 @@
+structureConversionPalette = function(target) {
+	let reader = new java.io.FileReader(Files.of(target));
+	reader = java.io.BufferedReader(reader);
+	let palette = {};
+	let line;
+	while (line = reader.readLine()) {
+		line = "" + line;
+		if (line.charAt(0) == "*") {
+			continue;
+		}
+		let index = line.indexOf("->");
+		if (index == -1) {
+			let what = line.trim();
+			if (what.length == 0) {
+				continue;
+			}
+			palette[what] = what;
+			continue;
+		}
+		let what = line.substring(0, index).trim();
+		let lastIndex = line.lastIndexOf("->");
+		let who = line.substring(lastIndex + 2, line.length).trim();
+		if (what.length == 0 || who.length == 0) {
+			log("structureConversionPalette: Palette line \"" + line + "\" malformed: object or subject identifier is empty");
+			continue;
+		}
+		if (palette.hasOwnProperty(what)) {
+			log("structureConversionPalette: Ppalette already has property " + what + ", it will be overriden");
+		}
+		palette[what] = who;
+	}
+	try {
+		reader.close();
+	} catch (e) {}
+	return palette;
+};
+
 structure2mcstructure = function(input, output, palette, internKeys, internValues) {
 	if (arguments.length < 3) {
 		MCSystem.throwException("structure2mcstructure: Usage: <inputFile> <outputFile> <palette> [internKeys] [internValues]");
