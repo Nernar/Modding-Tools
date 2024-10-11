@@ -1,3 +1,91 @@
+summarizeModpackLibraries = function(input, output, flattenedOutput) {
+	if (arguments.length < 2) {
+		MCSystem.throwException("summarizeModpackLibraries: Usage: <librariesJson> <outputLibrariesJson> [flattenedJson]");
+	}
+
+	let inputJson = Files.of(input);
+	if (inputJson.isDirectory() || !inputJson.exists()) {
+		MCSystem.throwException("summarizeModpackLibraries: Libraries file does not exists or directory");
+	}
+	let libraries = JSON.parse(Files.read(inputJson));
+
+	let outputJson = Files.of(output);
+	if (outputJson.isDirectory()) {
+		MCSystem.throwException("summarizeModpackLibraries: Output path is directory");
+	}
+	outputJson.getParentFile().mkdirs();
+
+	if (flattenedOutput != null) {
+		flattenedOutput = Files.of(flattenedOutput);
+		if (flattenedOutput.isDirectory()) {
+			MCSystem.throwException("summarizeModpackLibraries: Flattened output path is directory");
+		}
+		flattenedOutput.getParentFile().mkdirs();
+	}
+
+	let results = {};
+	for (let i = 0, l = libraries.length; i < l; i++) {
+		let library = libraries[i];
+		if (!results.hasOwnProperty(library.name)) {
+			results[library.name] = {
+				versions: {},
+				latest: library.version
+			};
+		}
+		let versions = results[library.name].versions;
+		if (!versions.hasOwnProperty(library.version)) {
+			versions[library.version] = {
+				path: library.path,
+				name: library.name,
+				version: library.version,
+				shared: library.shared,
+				dependencies: library.dependencies,
+				exports: library.exports,
+				references: []
+			};
+			if (library.error != null) {
+				versions[library.version].error = library.error;
+			}
+			if (library.version > results[library.name].latest) {
+				results[library.name].latest = library.version;
+			}
+		}
+		if (versions[library.version].references.indexOf(library.reference) == -1) {
+			versions[library.version].references.push(library.reference);
+		}
+	}
+
+	let summarized = [];
+	let libraryNames = Object.keys(results).sort();
+	for (let i = 0, l = libraryNames.length; i < l; i++) {
+		let flattened = results[libraryNames[i]];
+		let target = clone(flattened.versions[flattened.latest]);
+		for (let versionCode in flattened.versions) {
+			if (versionCode != flattened.latest) {
+				let version = flattened.versions[versionCode];
+				for (let j = 0, m = version.references.length; j < m; j++) {
+					if (target.references.indexOf(version.references[j]) == -1) {
+						target.references.push(version.references[j]);
+					}
+				}
+			}
+		}
+		target.references.sort();
+		target.exports.sort();
+		if (target.dependencies.length == 0) {
+			delete target.dependencies;
+		} else {
+			target.dependencies.sort();
+		}
+		summarized.push(target);
+	}
+
+	if (flattenedOutput != null) {
+		Files.write(flattenedOutput, JSON.stringify(results, null, "\t"));
+	}
+	Files.write(outputJson, JSON.stringify(summarized, null, "\t"));
+};
+
 collectModpackLibraries = function(modpack, output) {
 	if (arguments.length < 2) {
 		MCSystem.throwException("collectModpackLibraries: Usage: <modpackDirectory> <outputJson>");
