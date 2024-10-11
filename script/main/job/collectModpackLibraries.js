@@ -86,6 +86,49 @@ summarizeModpackLibraries = function(input, output, flattenedOutput) {
 	Files.write(outputJson, JSON.stringify(summarized, null, "\t"));
 };
 
+reassignModpackLibraries = function(input, modpack, repository) {
+	if (arguments.length < 3) {
+		MCSystem.throwException("reassignModpackLibraries: Usage: <librariesJson> <modpackDirectory> <outputRepositoryDirectory>");
+	}
+
+	let inputJson = Files.of(input);
+	if (inputJson.isDirectory() || !inputJson.exists()) {
+		MCSystem.throwException("reassignModpackLibraries: Libraries file does not exists or directory");
+	}
+	let libraries = JSON.parse(Files.read(inputJson));
+
+	let modpackDirectory = Files.of(modpack);
+	if (modpackDirectory.isFile() || !modpackDirectory.exists()) {
+		MCSystem.throwException("reassignModpackLibraries: Modpack directory does not exists or file");
+	}
+
+	let outputDirectory = Files.of(repository);
+	if (outputDirectory.isFile()) {
+		MCSystem.throwException("reassignModpackLibraries: Output libraries directory is file");
+	}
+	outputDirectory.mkdirs();
+
+	let outputJson = Files.of(outputDirectory, "libraries.json");
+	if (outputJson.isDirectory()) {
+		MCSystem.throwException("reassignModpackLibraries: Output json path is directory");
+	}
+	Files.ensureFile(outputJson);
+
+	for (let i = 0, l = libraries.length; i < l; i++) {
+		let json = libraries[i];
+		let library = Files.of(outputDirectory, Files.basename(json.path));
+		let offset = 1;
+		while (Files.is(library)) {
+			let extension = Files.extension(json.path);
+			library = Files.of(Files.dirname(library), Files.basename(json.path, extension) + "-" + (++offset) + "." + extension);
+		}
+		Files.copy(Files.of(modpackDirectory, json.path), library);
+		json.path = Files.relative(library, outputDirectory);
+	}
+
+	Files.write(outputJson, JSON.stringify(libraries, null, "\t"));
+};
+
 collectModpackLibraries = function(modpack, output) {
 	if (arguments.length < 2) {
 		MCSystem.throwException("collectModpackLibraries: Usage: <modpackDirectory> <outputJson>");
