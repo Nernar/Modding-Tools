@@ -1,19 +1,19 @@
 lang2json = function(input, output, beautify, delimiter) {
 	if (arguments.length < 2) {
-		throw new java.lang.IllegalArgumentException("lang2json: Usage: <langFile> <jsonFile> [beautify] [delimiter]");
+		MCSystem.throwException("lang2json: Usage: <langFile> <jsonFile> [beautify] [delimiter]");
 	}
 
 	log("lang2json: " + input + ".. -> " + output);
 
 	let inputFile = Files.of(input);
 	if (!Files.isFile(inputFile)) {
-		throw new java.lang.IllegalArgumentException("lang2json: Input path not exists or is directory");
+		MCSystem.throwException("lang2json: Input path not exists or is directory");
 	}
 	let lines = Files.readAsLinesUnsafe(inputFile);
 
 	let outputFile = Files.of(output);
 	if (!Files.isFileOrNew(outputFile)) {
-		throw new java.lang.IllegalArgumentException("lang2json: Output path is directory");
+		MCSystem.throwException("lang2json: Output path is directory");
 	}
 
 	delimiter = delimiter || "=";
@@ -45,14 +45,14 @@ lang2json = function(input, output, beautify, delimiter) {
 
 json2translation = function(input, output, skipUnderscores) {
 	if (arguments.length < 2) {
-		throw new java.lang.IllegalArgumentException("json2translation: Usage: <langDirectory> <translationFile> [skipUnderscores]");
+		MCSystem.throwException("json2translation: Usage: <langDirectory> <translationFile> [skipUnderscores]");
 	}
 
 	log("json2translation: " + input + ".. -> " + output);
 
 	let outputFile = Files.of(output);
 	if (outputFile.isDirectory()) {
-		throw new java.lang.IllegalArgumentException("json2translation: Output path is directory");
+		MCSystem.throwException("json2translation: Output path is directory");
 	}
 	outputFile.getParentFile().mkdirs();
 
@@ -95,14 +95,14 @@ json2translation = function(input, output, skipUnderscores) {
 
 json2translationNoKeys = function(input, output, defaultLanguage, insertDefaultTranslations, skipUnderscores) {
 	if (arguments.length < 2) {
-		throw new java.lang.IllegalArgumentException("json2translationNoKeys: Usage: <langDirectory> <translationFile> [defaultLanguage] [insertDefaultTranslations] [skipUnderscores]");
+		MCSystem.throwException("json2translationNoKeys: Usage: <langDirectory> <translationFile> [defaultLanguage] [insertDefaultTranslations] [skipUnderscores]");
 	}
 
 	log("json2translationNoKeys: " + input + ".. -> " + output);
 
 	let outputFile = Files.of(output);
 	if (outputFile.isDirectory()) {
-		throw new java.lang.IllegalArgumentException("json2translationNoKeys: Output path is directory");
+		MCSystem.throwException("json2translationNoKeys: Output path is directory");
 	}
 	outputFile.getParentFile().mkdirs();
 

@@ -97,5 +97,5 @@ algorithm/launcher.js
 integration/launcher.js
 integration/shared.js
 
-auxiliary.js
+job/.
 indev/.
