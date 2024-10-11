@@ -81,3 +81,71 @@ structure2json = function(inputPath, outputPath, internKeys, internValues, palet
 	}
 	$.FileTools.writeFileText(outputFile.getPath(), raw);
 };
+
+nbt2json = function(inputNbt, outputJson, internKeys, internValues) {
+	if (arguments.length < 2) {
+		MCSystem.throwException("nbt2json: Usage: <nbtFile> <outputJson> [internKeys] [internValues]");
+	}
+
+	log("nbt2json: " + inputNbt + " -> " + outputJson);
+
+	let nbts = Files.listFiles(inputNbt, "relative");
+	if (nbts == null || nbts.length == 0) {
+		MCSystem.throwException("nbt2json: Input NBTs directory does not exists or empty!");
+	}
+	outputJson = Files.of(outputJson);
+	if (Files.isFile(inputNbt) && Files.isDirectory(outputJson)) {
+		outputJson = Files.of(outputJson, Files.extension(Files.basename(inputNbt), "json"));
+	}
+	internKeys = !!internKeys;
+	internValues = !!internValues;
+
+	for (let i = 0, l = nbts.length; i < l; i++) {
+		let output = Files.of(outputJson, Files.extension(nbts[i], "json"));
+		let input = new java.io.FileInputStream(Files.of(inputNbt, nbts[i]));
+		let nbt = (function() {
+			try {
+				let stream = com.nukkitx.nbt.NbtUtils.createGZIPReader(input, internKeys, internValues);
+				try {
+					return stream.readTag();
+				} finally {
+					stream.close();
+				}
+			} catch (e) {
+				try {
+					let stream = com.nukkitx.nbt.NbtUtils.createReaderLE(input, internKeys, internValues);
+					try {
+						return stream.readTag();
+					} finally {
+						stream.close();
+					}
+				} catch (e) {
+					try {
+						let stream = com.nukkitx.nbt.NbtUtils.createReader(input, internKeys, internValues);
+						try {
+							return stream.readTag();
+						} finally {
+							stream.close();
+						}
+					} catch (e) {
+						try {
+							let stream = com.nukkitx.nbt.NbtUtils.createNetworkReader(input, internKeys, internValues);
+							try {
+								return stream.readTag();
+							} finally {
+								stream.close();
+							}
+						} catch (e) {
+							Logger.Log("nbt2json: Malformed NBT or format unsupported (" + nbts[i] + ")! " + e, "ERROR");
+							return null;
+						}
+					}
+				}
+			}
+		})();
+		if (nbt != null) {
+			Files.write(Files.extension(output, ".nbt.txt"), nbt.toString());
+			Files.write(output, deserializeNbt(nbt));
+		}
+	}
+};
