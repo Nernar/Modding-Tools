@@ -50,3 +50,17 @@ ninepatch2png = function(inputDirectory, outputDirectory, rescaleFunction) {
 		} catch (e) {}
 	}
 };
+
+/*
+ninepatch2png(__dir__ + "ninepatches", __dir__ + "images", function(relative, bitmap) {
+	if (relative == "background") {
+		return [748, 396];
+	} else if (relative == "frame") {
+		return [453, 258];
+	} else if (relative == "panel") {
+		return [195, 64];
+	} else if (relative == "button_normal" || relative == "button_normal_hover") {
+		return [236, 36];
+	}
+});
+*/

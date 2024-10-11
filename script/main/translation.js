@@ -1123,4 +1123,83 @@ Translation.addTranslation("Ignore", {
 }); // DEPRECATED
 
 // Non-organized content
+Translation.addTranslation("Skin scanned for %s parts", {
+	ru: "В скине найдено %s частей"
+});
+Translation.addTranslation("Skin builded at %s, %s, %s", {
+	ru: "Скин построен в %s, %s, %s"
+});
+Translation.addTranslation("Atlas converted to colormap", {
+	ru: "Атлас сохранен в карту цветов"
+});
+Translation.addTranslation("BitSet output parsed", {
+	ru: "Ряд битов успешно экспортирован"
+});
+Translation.addTranslation("BitSetBase64 output parsed", {
+	ru: "Ряд битов успешно экспортирован в Base64"
+});
+Translation.addTranslation("BitSetOfBitmap output parsed", {
+	ru: "Ряд битов из изображений успешно экспортирован"
+});
+Translation.addTranslation("BitSet output decoded", {
+	ru: "Ряд битов успешно декодирован"
+});
+Translation.addTranslation("Colormap converted to identifier list", {
+	ru: "Карта цветов конвертирована в список идентификаторов"
+});
+Translation.addTranslation("Atlas merged with ids", {
+	ru: "Атлас соединен с идентификаторами"
+});
+Translation.addTranslation("Developers everywhere now!", {
+	ru: "Теперь разработчики повсюду!"
+});
+Translation.addTranslation("Resorting associated files", {
+	ru: "Организация ассоциаций файлов"
+});
+Translation.addTranslation("Associated", {
+	ru: "Ассоциировано"
+});
+Translation.addTranslation("Sequential operation completed", {
+	ru: "Последовательная операция завершена"
+});
+Translation.addTranslation("Ninepatch saved", {
+	ru: "9-патч сохранен"
+});
+Translation.addTranslation("Preparing %s ninepatches", {
+	ru: "Подготовка %s 9-патчей"
+});
+Translation.addTranslation("Ninepatches saved", {
+	ru: "9-патчи сохранены"
+});
+Translation.addTranslation("Rescaling ninepatches", {
+	ru: "Изменение размера 9-патчей"
+});
+Translation.addTranslation("Parsed testing result", {
+	ru: "Обработан тестовый результат"
+});
+Translation.addTranslation("Fetching changes", {
+	ru: "Получение изменений"
+});
+Translation.addTranslation("Adding translations", {
+	ru: "Добавление переводов"
+});
+Translation.addTranslation("Changes will be detected and synced", {
+	ru: "Изменения найдены и синхронизированы"
+});
+Translation.addTranslation("Added new translations", {
+	ru: "Добавлены новые переводы"
+});
+Translation.addTranslation("Edited deprecated translations", {
+	ru: "Изменены устаревшие переводы"
+});
+Translation.addTranslation("Translations refetched", {
+	ru: "Переводы перепроверены"
+});
+Translation.addTranslation("Executeables compiled", {
+	ru: "Исполнительные файлы скомпилированы"
+});
+Translation.addTranslation("Textures compressed", {
+	ru: "Ресурсы упакованы"
+});
+
 // Not localized content will be appear here

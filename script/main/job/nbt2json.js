@@ -1,3 +1,46 @@
+deserializeNbt = function(what) {
+	if (what instanceof java.lang.Byte) {
+		return what == 1;
+	}
+	if (what instanceof java.lang.Short ||
+			what instanceof java.lang.Integer ||
+			what instanceof java.lang.Long ||
+			what instanceof java.lang.Float ||
+			what instanceof java.lang.Double) {
+		return what - 0;
+	}
+	if (what instanceof java.lang.String) {
+		return "" + what;
+	}
+	if (what instanceof com.nukkitx.nbt.NbtMap) {
+		let iterator = what.keySet().iterator();
+		let value = {};
+		while (iterator.hasNext()) {
+			let key = iterator.next();
+			value[key] = deserializeNbt(what.get(key));
+		}
+		return value;
+	}
+	if (what instanceof com.nukkitx.nbt.NbtList) {
+		let value = [];
+		for (let i = 0; i < what.size(); i++) {
+			let entry = what.get(i);
+			value.push(deserializeNbt(entry));
+		}
+		return value;
+	}
+	if (what != null && typeof what == "object") {
+		let isByte = "" + getClass(what) == "[JavaClass [B]" ||
+			"" + getClass(what) == "[JavaClass [b]";
+		let array = [];
+		for (let i = 0; i < what.length; i++) {
+			array.push(isByte ? what[i] == 1 : what[i] - 0);
+		}
+		return array;
+	}
+	return null;
+};
+
 structure2json = function(inputPath, outputPath, internKeys, internValues, palette) {
 	if (arguments.length < 2) {
 		MCSystem.throwException("structure2json: Usage: <inputFile> <outputFile> [internKeys] [internValues] [palette]");
