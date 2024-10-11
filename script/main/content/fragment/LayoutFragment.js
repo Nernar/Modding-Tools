@@ -80,14 +80,14 @@ LayoutFragment.prototype.indexOf = function(fragmentOrView) {
 
 LayoutFragment.prototype.obtain = (function() {
 	let obtain = function(on, what, when) {
+		if (typeof when != "function" || when(on)) {
+			what(on);
+		}
 		if (on instanceof LayoutFragment) {
 			let fragments = on.getFragments();
 			for (let i = 0; i < fragments.length; i++) {
 				obtain(fragments[i], what, when);
 			}
-		}
-		if (typeof when != "function" || when(on)) {
-			what(on);
 		}
 	};
 	return function(what, when) {
