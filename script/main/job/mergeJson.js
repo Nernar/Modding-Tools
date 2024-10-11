@@ -25,3 +25,27 @@ mergeJsonFiles = function(output, proto) {
 	}
 	Files.write(outputFile, stringifyObject(proto));
 };
+
+mergeJsonAtlases = function(atlas, input, output) {
+	if (arguments.length < 3) {
+		MCSystem.throwException("mergeJsonAtlases: Usage: <atlasName> <inputDirectoryOrFile> <outputFile>");
+	}
+
+	let outputFile = Files.of(output);
+	if (outputFile.isDirectory()) {
+		MCSystem.throwException("mergeJsonAtlases: Output path is directory");
+	}
+	outputFile.getParentFile().mkdirs();
+
+	let mergeable = Files.listFiles(input, "file", null, function(file) {
+		return file.getName() == atlas;
+	});
+	if (mergeable == null || mergeable.length == 0) {
+		MCSystem.throwException("mergeJsonAtlases: Directory is empty or atlas with given name does not exists");
+	}
+	mergeable.unshift(outputFile);
+
+	log("mergeJsonAtlases: " + input + ", " + atlas + " -> " + output);
+
+	mergeJsonFiles(mergeable);
+};
