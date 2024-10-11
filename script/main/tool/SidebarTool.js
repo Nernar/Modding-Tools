@@ -1,4 +1,4 @@
-function SidebarTool(object) {
+const SidebarTool = function(object) {
 	MenuTool.apply(this, arguments);
 };
 
@@ -8,32 +8,17 @@ SidebarTool.prototype.reset = function() {
 	MenuTool.prototype.reset.apply(this, arguments);
 	let descriptor = {};
 	descriptor.background = "popup";
-	if (!menuDividers) descriptor.tabBackground = "popup";
-	descriptor.selectGroup = function(tool, sidebar) {
-		if (typeof tool.onSelectGroup == "function") {
-			let args = Array.prototype.slice.call(arguments, 1);
-			tool.onSelectGroup.apply(tool, args);
-		}
-	};
-	descriptor.undockGroup = function(tool, sidebar) {
-		if (typeof tool.onUndockGroup == "function") {
-			let args = Array.prototype.slice.call(arguments, 1);
-			tool.onUndockGroup.apply(tool, args);
-		}
-		if (tool.isCollapsedWithoutSidebar()) {
-			tool.collapse();
-		}
-	};
-	descriptor.fetchGroup = function(tool, sidebar) {
-		if (typeof tool.onFetchGroup == "function") {
-			let args = Array.prototype.slice.call(arguments, 1);
-			return tool.onFetchGroup.apply(tool, args);
-		}
-	};
+	menuDividers || (descriptor.containerBackground = "popup");
 	descriptor.selectItem = function(tool, sidebar) {
 		if (typeof tool.onSelectItem == "function") {
 			let args = Array.prototype.slice.call(arguments, 1);
 			tool.onSelectItem.apply(tool, args);
+		}
+	};
+	descriptor.unselectItem = function(tool, sidebar) {
+		if (typeof tool.onUnselectItem == "function") {
+			let args = Array.prototype.slice.call(arguments, 1);
+			tool.onUnselectItem.apply(tool, args);
 		}
 	};
 	descriptor.fetchItem = function(tool, sidebar) {
@@ -57,7 +42,7 @@ SidebarTool.prototype.describeSidebar = function() {
 	let sidebar = this.getSidebarWindow();
 	if (sidebar == null) return;
 	SidebarWindow.parseJson.call(this, sidebar, this.getSidebarDescriptor());
-	if (sidebar.isSelected()) sidebar.reinflateLayout();
+	// if (sidebar.isSelected()) sidebar.reinflateLayout();
 };
 
 SidebarTool.prototype.describe = function() {
@@ -65,11 +50,11 @@ SidebarTool.prototype.describe = function() {
 	this.describeSidebar();
 };
 
-SidebarTool.prototype.getSelectedGroup = function() {
-	let sidebar = this.getSidebarWindow();
-	if (sidebar == null) return SidebarWindow.NOTHING_SELECTED;
-	return sidebar.getSelected();
-};
+// SidebarTool.prototype.getSelectedGroup = function() {
+	// let sidebar = this.getSidebarWindow();
+	// if (sidebar == null) return SidebarWindow.NOTHING_SELECTED;
+	// return sidebar.getSelected();
+// };
 
 SidebarTool.prototype.attach = function() {
 	if (this.isAttached()) {
@@ -110,9 +95,9 @@ SidebarTool.prototype.control = function() {
 
 SidebarTool.prototype.collapse = function() {
 	let sidebar = this.getSidebarWindow();
-	if (sidebar && !sidebar.isSelected()) sidebar.dismiss();
+	if (sidebar/* && !sidebar.isSelected()*/) sidebar.dismiss();
 	MenuTool.prototype.collapse.apply(this, arguments);
-	if (sidebar && sidebar.isSelected()) this.state = SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
+	// if (sidebar && sidebar.isSelected()) this.state = SidebarTool.State.COLLAPSED_WITHOUT_SIDEBAR;
 };
 
 SidebarTool.prototype.isCollapsedWithoutSidebar = function() {
