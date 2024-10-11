@@ -90,3 +90,87 @@ colormap2id = function(blocksJson, atlasJson, colormapJson, outputJson) {
 	}
 	Files.write(outputJson, JSON.stringify(ids, null, "\t"));
 };
+
+colormapMergeId = function(colormapDirectory, idsDirectory, outputJson, minifyJson) {
+	if (arguments.length < 3) {
+		MCSystem.throwException("colormapMergeId: Usage: <colormapDirectory> <idsDirectory> <outputJson> [minifyJson]");
+	}
+
+	log("colormapMergeId: " + idsJson + " -> " + outputJson);
+
+	let colormapJsons = Files.listFiles(colormapDirectory, "relative", "json");
+	if (colormapJsons == null || colormapJsons.length == 0) {
+		MCSystem.throwException("colormapMergeId: Input colormap directory does not exists or empty!");
+	}
+	let idsJsons = Files.listFiles(idsDirectory, "relative", "json");
+	if (idsJsons == null || idsJsons.length == 0) {
+		MCSystem.throwException("colormapMergeId: Input ids directory does not exists or empty!");
+	}
+
+	let colormap = {};
+	for (let i = 0, l = colormapJsons.length; i < l; i++) {
+		let json = JSON.parse(Files.read(Files.of(colormapDirectory, colormapJsons[i])));
+		if (json == null) {
+			Logger.Log("colormapMergeId: Malformed colormap " + colormapJsons[i], "WARNING");
+			continue;
+		}
+		for (let element in json) {
+			if (!colormap.hasOwnProperty(element)) {
+				colormap[element] = json[element];
+			} else {
+				for (let c = 0; c < json[element].length; c++) {
+					if (json[element][c] === undefined || json[element][c] === null) {
+						continue;
+					}
+					if (!(colormap[element][c] === undefined || colormap[element][c] === null)) {
+						log("colormapMergeId: Override " + element + ":" + c + " will be applied on " + colormapJsons[i]);
+					}
+					colormap[element][c] = json[element][c];
+				}
+			}
+		}
+	}
+
+	let merged = {};
+	for (let i = 0, l = idsJsons.length; i < l; i++) {
+		let json = JSON.parse(Files.read(Files.of(idsDirectory, idsJsons[i])));
+		if (json == null) {
+			Logger.Log("colormapMergeId: Malformed ids " + idsJsons[i], "WARNING");
+			continue;
+		}
+		for (let element in json) {
+			let result = [];
+			for (let r = 0, m = json[element].length; r < m; r++) {
+				if (json[element][r] == null) {
+					continue;
+				}
+				let atlas = parseTextureFile(json[element][r]);
+				if (colormap.hasOwnProperty(atlas[0])) {
+					result[r] = colormap[atlas[0]][atlas[1]];
+					if (typeof result[r] != "number") {
+						Logger.Log("colormapMergeId: Colormap " + atlas[0] + ":" + atlas[1] + " not found in " + element, "WARNING");
+						result[r] = -1;
+					}
+				}
+			}
+			if (merged.hasOwnProperty(element)) {
+				for (let r = 0; r < result.length; r++) {
+					if (typeof merged[element][r] == "number") {
+						if (result[r] == -1 || merged[element][r] == result[r]) {
+							continue;
+						}
+						log("colormapMergeId: Replacing " + merged[element][r] + " -> " + result[r] + " in " + element);
+					}
+					merged[element][r] = result[r];
+				}
+				continue;
+			}
+			if (result.length == 0) {
+				log("colormapMergeId: Not found any texture in " + element);
+				continue;
+			}
+			merged[element] = result;
+		}
+	}
+	Files.write(outputJson, minifyJson ? JSON.stringify(merged) : JSON.stringify(merged, null, "\t"));
+};
