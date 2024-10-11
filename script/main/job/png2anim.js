@@ -76,3 +76,19 @@ png2anim = function(input, output, meta) {
 		});
 	} catch (e) {}
 };
+
+mcmeta2anim = function(input, output) {
+	if (arguments.length < 2) {
+		MCSystem.throwException("mcmeta2anim: Usage: <inputMetaFile> <outputFile>");
+	}
+
+	log("mcmeta2anim: " + input + " -> " + output);
+
+	let inputFile = Files.of(input);
+	if (!inputFile.exists() || inputFile.isDirectory()) {
+		MCSystem.throwException("mcmeta2anim: Input path not exists or directory");
+	}
+
+	let mcmeta = JSON.parse("" + $.FileTools.readFileText(inputFile.getPath()));
+	return png2anim(Files.basename(inputFile, true), output, mcmeta);
+};
