@@ -2,7 +2,8 @@ const SegmentGroupFragment = function() {
 	HorizontalScrollFragment.apply(this, arguments);
 };
 
-SegmentGroupFragment.prototype = new HorizontalScrollFragment;
+__inherit__(SegmentGroupFragment, HorizontalScrollFragment, SelectableLayoutFragment.prototype);
+
 SegmentGroupFragment.prototype.TYPE = "SegmentGroupFragment";
 
 SegmentGroupFragment.prototype.resetContainer = function() {
@@ -30,7 +31,13 @@ SegmentGroupFragment.parseJson = function(instanceOrJson, json, preferredFragmen
 		json = instanceOrJson;
 		instanceOrJson = new SegmentGroupFragment();
 	}
-	return HorizontalScrollFragment.parseJson.call(this, instanceOrJson, json, preferredFragment !== undefined ? preferredFragment : "button");
+	instanceOrJson = HorizontalScrollFragment.parseJson.call(this, instanceOrJson, json, preferredFragment !== undefined ? preferredFragment : "button");
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	SelectableLayoutFragment.parseJson.call(this, instanceOrJson, json);
+	return instanceOrJson;
 };
 
 registerFragmentJson("segment_group", SegmentGroupFragment);
