@@ -88,6 +88,16 @@ SliderFragment.prototype.setValue = function(value) {
 	return this;
 };
 
+SliderFragment.prototype.setSuffix = function(suffix) {
+	if (suffix != null) {
+		this.suffix = "" + suffix;
+	} else {
+		delete this.suffix;
+	}
+	this.updateCounter();
+	return this;
+};
+
 SliderFragment.prototype.setModifier = function(modifier) {
 	this.modifier = modifier - 0;
 	if (this.modifier < 0) {
@@ -113,9 +123,9 @@ SliderFragment.prototype.setModifiers = function(modifiers) {
 
 SliderFragment.prototype.updateCounter = function() {
 	let current = this.modifiers[this.modifier];
-	this.setText(current == 1 ? "" + this.value :
+	this.setText((current == 1 ? "" + this.value :
 		current > 0 ? preround(this.value * current) + " : " + current :
-		preround(this.value / current) + " * " + (-current));
+		preround(this.value / current) + " * " + (-current)) + (this.suffix || ""));
 	return this;
 };
 
@@ -157,6 +167,9 @@ SliderFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("value")) {
 		instanceOrJson.setValue(calloutOrParse(json, json.value, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("suffix")) {
+		instanceOrJson.setSuffix(calloutOrParse(json, json.suffix, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("change")) {
 		instanceOrJson.setOnChangeListener(parseCallback(json, json.change, [this, instanceOrJson]));
