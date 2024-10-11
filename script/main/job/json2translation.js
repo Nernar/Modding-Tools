@@ -1,3 +1,48 @@
+lang2json = function(input, output, beautify, delimiter) {
+	if (arguments.length < 2) {
+		throw new java.lang.IllegalArgumentException("lang2json: Usage: <langFile> <jsonFile> [beautify] [delimiter]");
+	}
+
+	log("lang2json: " + input + ".. -> " + output);
+
+	let inputFile = Files.of(input);
+	if (!Files.isFile(inputFile)) {
+		throw new java.lang.IllegalArgumentException("lang2json: Input path not exists or is directory");
+	}
+	let lines = Files.readAsLinesUnsafe(inputFile);
+
+	let outputFile = Files.of(output);
+	if (!Files.isFileOrNew(outputFile)) {
+		throw new java.lang.IllegalArgumentException("lang2json: Output path is directory");
+	}
+
+	delimiter = delimiter || "=";
+
+	let json = {};
+	for (let i = 0, l = lines.length; i < l; i++) {
+		let line = lines[i].trimLeft();
+		if (line.substring(0, 1) == "#" || line.substring(0, 2) == "//" || line == "") {
+			continue;
+		}
+		let index = line.indexOf(delimiter);
+		if (index == -1) {
+			Logger.Log("lang2json: Invalid stroke " + stringifyObject(line) + " no key or accessor found", "WARNING");
+			continue;
+		}
+		let key = line.substring(0, index);
+		if (json.hasOwnProperty(key)) {
+			Logger.Log("lang2json: Duplicate key " + stringifyObject(key) + " in " + stringifyObject(line), "INFO");
+		}
+		let value = line.substring(index + delimiter.length);
+		if ((index = value.indexOf("#")) != -1 || (index = value.indexOf("//")) != -1) {
+			value = value.substring(0, index).trimRight();
+		}
+		json[key] = value;
+	}
+
+	Files.writeUnsafe(outputFile, JSON.stringify(json, null, beautify ? "\t" : null));
+};
+
 json2translation = function(input, output, skipUnderscores) {
 	if (arguments.length < 2) {
 		throw new java.lang.IllegalArgumentException("json2translation: Usage: <langDirectory> <translationFile> [skipUnderscores]");
