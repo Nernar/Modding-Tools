@@ -58,20 +58,30 @@ BaseFragment.prototype.resetListeners = function() {
 	}).bind(this));
 };
 
-BaseFragment.prototype.getBackground = function() {
-	return this.background || null;
+BaseFragment.prototype.getBackground = function(tag) {
+	if (tag == null || tag.length == 0) {
+		return this.background || null;
+	}
+	return this[tag + "Background"] || null;
 };
 
-BaseFragment.prototype.setBackground = function(src) {
+BaseFragment.prototype.setBackground = function(src, tag, layout) {
 	if (isAndroid()) {
-		let container = this.getContainerRoot();
-		if (container == null) return this;
-		if (!(src instanceof Drawable)) {
-			src = Drawable.parseJson.call(this, src);
+		if (layout == null) {
+			layout = this.getContainerRoot();
 		}
-		src.attachAsBackground(container);
+		if (layout != null) {
+			if (!(src instanceof Drawable)) {
+				src = Drawable.parseJson.call(this, src);
+			}
+			src.attachAsBackground(layout);
+		}
 	}
-	this.background = src;
+	if (tag == null || tag.length == 0) {
+		this.background = src;
+	} else {
+		this[tag + "Background"] = src;
+	}
 	return this;
 };
 
@@ -227,6 +237,15 @@ BaseFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("hold")) {
 		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("attach")) {
+		instanceOrJson.setOnAttachListener(parseCallback(json, json.attach, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("deattach")) {
+		instanceOrJson.setOnDeattachListener(parseCallback(json, json.deattach, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("update")) {
+		instanceOrJson.setOnUpdateListener(parseCallback(json, json.update, [this, instanceOrJson]));
 	}
 	return instanceOrJson;
 };
