@@ -3,7 +3,8 @@ const ButtonFragment = function() {
 	this.setIsSelectable(true);
 };
 
-ButtonFragment.prototype = new TextFragment;
+__inherit__(ButtonFragment, TextFragment, SelectableFragment.prototype);
+
 ButtonFragment.prototype.TYPE = "ButtonFragment";
 
 ButtonFragment.prototype.resetContainer = function() {
@@ -14,10 +15,16 @@ ButtonFragment.prototype.resetContainer = function() {
 	view.setLayoutParams(new android.view.ViewGroup.LayoutParams
 		($.ViewGroup.LayoutParams.MATCH_PARENT, $.ViewGroup.LayoutParams.WRAP_CONTENT));
 	this.setContainerView(view);
+	this.setSelectedBackground("popupSelectionSelected");
 };
 
 ButtonFragment.prototype.getTextView = function() {
 	return this.getContainer();
+};
+
+ButtonFragment.prototype.click = function() {
+	this.toggle();
+	TextFragment.prototype.click.apply(this, arguments);
 };
 
 ButtonFragment.prototype.remark = function() {
@@ -30,9 +37,9 @@ ButtonFragment.prototype.remark = function() {
 			toComplexUnitDip(16), toComplexUnitDip(6));
 	}
 	if (this.hasMark("filled") || this.hasMark("popup")) {
-		this.setBackground("popup");
+		this.setUnselectedBackground("popup");
 	} else {
-		this.setBackground(null);
+		this.setUnselectedBackground(null);
 	}
 	if (this.hasMark("popup")) {
 		text.setTextSize(toComplexUnitDp(9));
@@ -47,7 +54,13 @@ ButtonFragment.parseJson = function(instanceOrJson, json) {
 		json = instanceOrJson;
 		instanceOrJson = new ButtonFragment();
 	}
-	return TextFragment.parseJson.call(this, instanceOrJson, json);
+	instanceOrJson = TextFragment.parseJson.call(this, instanceOrJson, json);
+	json = calloutOrParse(this, json, instanceOrJson);
+	if (json === null || typeof json != "object") {
+		return instanceOrJson;
+	}
+	SelectableFragment.parseJson.call(this, instanceOrJson, json);
+	return instanceOrJson;
 };
 
 registerFragmentJson("button", ButtonFragment);
