@@ -33,14 +33,16 @@ UniqueHelper.prepareWindow = function(window) {
 			if (updatable) {
 				let content = window.getLayout();
 				opened.setLayout(content);
-				opened.update();
+				opened.updateWindow();
 				return false;
 			}
 			opened.dismiss();
 		}
 		this.shiftWindow(opened);
 		return this.prepareWindow(window);
-	} else this.stackWindow(window);
+	} else {
+		this.stackWindow(window);
+	}
 	return true;
 };
 

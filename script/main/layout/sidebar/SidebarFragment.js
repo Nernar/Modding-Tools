@@ -201,7 +201,7 @@ SidebarFragment.Rail.Item.prototype.expand = function() {
 
 SidebarFragment.Rail.Item.prototype.click = function() {
 	this.toggle();
-	ImageFragment.prototype.click.apply(this, arguments);
+	LayoutFragment.prototype.click.apply(this, arguments);
 };
 
 SidebarFragment.Rail.Item.prototype.hold = function() {
@@ -214,12 +214,12 @@ SidebarFragment.Rail.Item.prototype.hold = function() {
 			typeof text == "boolean" || showHint(text);
 		}
 	}
-	return ImageFragment.prototype.hold.apply(this, arguments) || !!text;
+	return LayoutFragment.prototype.hold.apply(this, arguments) || !!text;
 };
 
-SidebarFragment.Rail.Item.prototype.update = function() {
+SidebarFragment.Rail.Item.prototype.updateLayout = function() {
 	this.updateSelection();
-	return LayoutFragment.prototype.update.apply(this, arguments);
+	LayoutFragment.prototype.updateLayout.apply(this, arguments);
 };
 
 SidebarFragment.Rail.Item.prototype.setOnFetchListener = function(listener) {
@@ -272,7 +272,7 @@ SidebarFragment.Panel.prototype.resetContainer = function() {
 };
 
 SidebarFragment.Panel.prototype.addFragment = function() {
-	let index = LayoutFragment.prototype.addFragment.apply(this, arguments);
+	let index = ScrollFragment.prototype.addFragment.apply(this, arguments);
 	if (index >= 0) {
 		this.getContainerLayout().setMinimumWidth(toComplexUnitDip(300)); // 270
 	}
@@ -280,7 +280,7 @@ SidebarFragment.Panel.prototype.addFragment = function() {
 };
 
 SidebarFragment.Panel.prototype.removeFragment = function() {
-	let succeed = LayoutFragment.prototype.removeFragment.apply(this, arguments);
+	let succeed = ScrollFragment.prototype.removeFragment.apply(this, arguments);
 	if (succeed && this.getFragmentCount() == 0) {
 		this.getContainerLayout().setMinimumWidth(0);
 	}

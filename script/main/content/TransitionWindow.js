@@ -177,7 +177,7 @@ TransitionWindow.prototype.getCurrentlyContainer = function() {
 	return null;
 };
 
-TransitionWindow.prototype.update = function() {
+TransitionWindow.prototype.updateWindow = function() {
 	if (this.isOpened()) {
 		if (this.containerScene !== undefined) {
 			if (this.getLayout() != this.getContainerOfScene()) {
@@ -185,7 +185,7 @@ TransitionWindow.prototype.update = function() {
 			}
 		}
 	}
-	FocusableWindow.prototype.update.apply(this, arguments);
+	FocusableWindow.prototype.updateWindow.apply(this, arguments);
 };
 
 TransitionWindow.prototype.attach = function() {

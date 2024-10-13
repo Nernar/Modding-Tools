@@ -40,7 +40,7 @@ FocusableWindow.prototype.setLayout = function(content) {
 	let currently = this.getLayout();
 	this.content = content;
 	if (this.isOpened() && currently != this.getLayout()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -56,7 +56,7 @@ FocusableWindow.prototype.setFragment = function(fragment) {
 	currently != null && currently.deattach();
 	this.fragment = fragment;
 	fragment != null && fragment.attach(this);
-	this.isOpened() && this.update();
+	this.isOpened() && this.updateWindow();
 };
 
 FocusableWindow.prototype.isTouchable = function() {
@@ -65,7 +65,7 @@ FocusableWindow.prototype.isTouchable = function() {
 
 FocusableWindow.prototype.setTouchable = function(touchable) {
 	this.touchable = !!touchable;
-	this.isOpened() && this.update();
+	this.isOpened() && this.updateWindow();
 };
 
 FocusableWindow.prototype.isFocusable = function() {
@@ -74,7 +74,7 @@ FocusableWindow.prototype.isFocusable = function() {
 
 FocusableWindow.prototype.setFocusable = function(focusable) {
 	this.focusable = !!focusable;
-	this.isOpened() && this.update();
+	this.isOpened() && this.updateWindow();
 };
 
 FocusableWindow.prototype.isFullscreen = function() {
@@ -99,7 +99,7 @@ FocusableWindow.prototype.setGravity = function(gravity) {
 	let currently = this.getGravity();
 	this.gravity = gravity - 0;
 	if (this.isOpened() && currently != this.getGravity()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -115,7 +115,7 @@ FocusableWindow.prototype.setX = function(x) {
 	let currently = this.getX();
 	this.x = x - 0;
 	if (this.isOpened() && currently != this.getX()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -123,7 +123,7 @@ FocusableWindow.prototype.setY = function(y) {
 	let currently = this.getY();
 	this.y = y - 0;
 	if (this.isOpened() && currently != this.getY()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -139,7 +139,7 @@ FocusableWindow.prototype.setWidth = function(width) {
 	let currently = this.getWidth();
 	this.width = width - 0;
 	if (this.isOpened() && currently != this.getWidth()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -147,7 +147,7 @@ FocusableWindow.prototype.setHeight = function(height) {
 	let currently = this.getHeight();
 	this.height = height - 0;
 	if (this.isOpened() && currently != this.getHeight()) {
-		this.update();
+		this.updateWindow();
 	}
 };
 
@@ -187,6 +187,16 @@ FocusableWindow.prototype.getPopup = function() {
 		return WindowProvider.getByPopupId(this.popupId);
 	}
 	return ShellObserver.layers.indexOf(this);
+};
+
+FocusableWindow.prototype.updateWindow = function() {
+	let fragment = this.getFragment();
+	if (fragment != null && fragment.isRequiresFocusable()) {
+		this.focusable = true;
+	}
+	if (isAndroid()) {
+		WindowProvider.updateWindow(this);
+	}
 };
 
 /**
@@ -243,18 +253,20 @@ FocusableWindow.prototype.attach = function() {
 	return false;
 };
 
-FocusableWindow.prototype.update = function(flag) {
+FocusableWindow.prototype.update = function() {
 	let fragment = this.getFragment();
 	if (fragment != null) {
-		fragment.update(flag);
-		if (fragment.isRequiresFocusable()) {
-			this.focusable = true;
-		}
+		fragment.update.apply(fragment, arguments);
 	}
-	this.onUpdate && this.onUpdate(flag);
-	if (isAndroid()) {
-		WindowProvider.updateWindow(this);
+	this.onUpdate && this.onUpdate.apply(this, arguments);
+};
+
+FocusableWindow.prototype.updateWith = function(when) {
+	let fragment = this.getFragment();
+	if (fragment != null) {
+		fragment.updateWith.apply(fragment, arguments);
 	}
+	this.onUpdate && this.onUpdate.apply(this, Array.prototype.slice.call(arguments, 1));
 };
 
 FocusableWindow.prototype.dismiss = function() {

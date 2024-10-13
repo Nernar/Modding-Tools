@@ -106,8 +106,15 @@ Fragment.prototype.deattach = function() {
 	delete this.parent;
 };
 
-Fragment.prototype.update = function(flag) {
-	this.onUpdate && this.onUpdate(flag);
+Fragment.prototype.update = function() {
+	this.updateFragment && this.updateFragment.apply(this, arguments);
+	this.onUpdate && this.onUpdate.apply(this, arguments);
+};
+
+Fragment.prototype.updateWith = function(when) {
+	if (typeof when != "function" || when(this)) {
+		this.update.apply(this, Array.prototype.slice.call(arguments, 1));
+	}
 };
 
 Fragment.prototype.setOnAttachListener = function(listener) {

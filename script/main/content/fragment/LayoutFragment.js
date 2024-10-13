@@ -88,8 +88,8 @@ LayoutFragment.prototype.obtain = (function() {
 		}
 		if (on instanceof LayoutFragment) {
 			let fragments = on.getFragments();
-			for (let i = 0; i < fragments.length; i++) {
-				obtain(fragments[i], what, when);
+			for (let index = 0; index < fragments.length; index++) {
+				obtain(fragments[index], what, when);
 			}
 		}
 	};
@@ -98,16 +98,28 @@ LayoutFragment.prototype.obtain = (function() {
 	};
 })();
 
-LayoutFragment.prototype.updateLayout = function(flag) {
+LayoutFragment.prototype.updateLayout = function() {
 	return BaseFragment.prototype.update.apply(this, arguments);
 };
 
-LayoutFragment.prototype.update = function(flag, when) {
+LayoutFragment.prototype.update = function() {
+	let optionals = arguments;
 	this.obtain(function(fragment) {
 		if (fragment instanceof LayoutFragment) {
-			fragment.updateLayout(flag);
+			fragment.updateLayout.apply(fragment, optionals);
 		} else {
-			fragment.update(flag);
+			fragment.update.apply(fragment, optionals);
+		}
+	});
+};
+
+LayoutFragment.prototype.updateWith = function(when) {
+	let optionals = Array.prototype.slice.call(arguments, 1);
+	this.obtain(function(fragment) {
+		if (fragment instanceof LayoutFragment) {
+			fragment.updateLayout.apply(fragment, optionals);
+		} else {
+			fragment.update.apply(fragment, optionals);
 		}
 	}, when);
 };

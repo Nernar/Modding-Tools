@@ -71,7 +71,7 @@ ExpandablePopup.prototype.handleTouch = function(event) {
 			if (this.isMayDragged()) {
 				this.setX(event.getRawX() - this.dx);
 				this.setY(event.getRawY() - this.dy);
-				this.update();
+				this.updateWindow();
 			}
 			if (x > 0 || y > 0) {
 				if (this.closeable) {
