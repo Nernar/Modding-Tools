@@ -99,20 +99,27 @@ BaseFragment.prototype.draw = function(hovered) {
 	return "";
 };
 
-BaseFragment.prototype.isVisible = function() {
-	return this.visible || false;
-};
-
 BaseFragment.prototype.hover = function() {
 	return this.isHoverable() && this.isVisible();
 };
 
-BaseFragment.prototype.switchVisibility = function() {
-	if (isAndroid()) {
-		this.getContainer().setVisibility(this.visible ? $.View.GONE : $.View.VISIBLE);
+BaseFragment.prototype.isVisible = function() {
+	return this.visible || false;
+};
+
+BaseFragment.prototype.setVisibility = function(visible) {
+	if (this.visible == visible) {
+		return this;
 	}
-	this.visible = !this.visible;
+	if (isAndroid()) {
+		this.getContainer().setVisibility(visible ? $.View.VISIBLE : $.View.GONE);
+	}
+	this.visible = visible;
 	return this;
+};
+
+BaseFragment.prototype.switchVisibility = function() {
+	return this.setVisibility(!this.visible);
 };
 
 BaseFragment.prototype.observe = function(keys) {
@@ -223,6 +230,15 @@ BaseFragment.parseJson = function(instanceOrJson, json) {
 	if (json == null || typeof json != "object") {
 		return instanceOrJson;
 	}
+	if (json.hasOwnProperty("attach")) {
+		instanceOrJson.setOnAttachListener(parseCallback(json, json.attach, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("deattach")) {
+		instanceOrJson.setOnDeattachListener(parseCallback(json, json.deattach, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("update")) {
+		instanceOrJson.setOnUpdateListener(parseCallback(json, json.update, [this, instanceOrJson]));
+	}
 	if (json.hasOwnProperty("token")) {
 		instanceOrJson.setToken(calloutOrParse(json, json.token, [this, instanceOrJson]));
 	}
@@ -231,6 +247,9 @@ BaseFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("hoverable")) {
 		instanceOrJson.setIsHoverable(calloutOrParse(json, json.hoverable, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("visible")) {
+		instanceOrJson.setVisibility(calloutOrParse(json, json.visible, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("mark") || json.hasOwnProperty("marks")) {
 		instanceOrJson.mark(calloutOrParse(json, json.mark || json.marks, [this, instanceOrJson]));
@@ -243,15 +262,6 @@ BaseFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("hold")) {
 		instanceOrJson.setOnHoldListener(parseCallback(json, json.hold, [this, instanceOrJson]));
-	}
-	if (json.hasOwnProperty("attach")) {
-		instanceOrJson.setOnAttachListener(parseCallback(json, json.attach, [this, instanceOrJson]));
-	}
-	if (json.hasOwnProperty("deattach")) {
-		instanceOrJson.setOnDeattachListener(parseCallback(json, json.deattach, [this, instanceOrJson]));
-	}
-	if (json.hasOwnProperty("update")) {
-		instanceOrJson.setOnUpdateListener(parseCallback(json, json.update, [this, instanceOrJson]));
 	}
 	return instanceOrJson;
 };
