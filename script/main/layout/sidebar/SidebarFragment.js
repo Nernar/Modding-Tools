@@ -49,7 +49,7 @@ SidebarFragment.Rail.prototype.addViewDirectly = function(view, params) {
 	ScrollFragment.prototype.addViewDirectly.call(this, view, params);
 };
 
-SidebarFragment.Rail.prototype.selectItemLayout = function(item) {
+SidebarFragment.Rail.prototype.selectItemInLayout = function(item) {
 	let selection = this.getSelectionFragment();
 	if (item instanceof LayoutFragment) {
 		let fragments = item.getFragments();
@@ -60,10 +60,10 @@ SidebarFragment.Rail.prototype.selectItemLayout = function(item) {
 			}
 		}
 	}
-	SelectableLayoutFragment.prototype.selectItemLayout.apply(this, arguments);
+	SelectableLayoutFragment.prototype.selectItemInLayout.apply(this, arguments);
 };
 
-SidebarFragment.Rail.prototype.unselectItemLayout = function(item) {
+SidebarFragment.Rail.prototype.unselectItemInLayout = function(item) {
 	let selection = this.getSelectionFragment();
 	if (item instanceof LayoutFragment) {
 		let fragments = item.getFragments();
@@ -74,7 +74,7 @@ SidebarFragment.Rail.prototype.unselectItemLayout = function(item) {
 			}
 		}
 	}
-	SelectableLayoutFragment.prototype.unselectItemLayout.apply(this, arguments);
+	SelectableLayoutFragment.prototype.unselectItemInLayout.apply(this, arguments);
 };
 
 SidebarFragment.Rail.prototype.getContainerBackground = function() {
@@ -111,7 +111,7 @@ SidebarFragment.Rail.prototype.collapse = function(condition) {
 	}
 };
 
-SidebarFragment.Rail.prototype.fetchItemLayout = function(item) {
+SidebarFragment.Rail.prototype.fetchItemInLayout = function(item) {
 	return (this.onFetchItem && this.onFetchItem(item, item.getIndex())) || null;
 };
 
@@ -210,7 +210,7 @@ SidebarFragment.Rail.Item.prototype.hold = function() {
 		typeof text == "boolean" || showHint(text);
 	} else {
 		let parent = this.getParent();
-		if (parent && parent.fetchItemLayout && (text = parent.fetchItemLayout(this))) {
+		if (parent && parent.fetchItemInLayout && (text = parent.fetchItemInLayout(this))) {
 			typeof text == "boolean" || showHint(text);
 		}
 	}

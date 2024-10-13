@@ -107,7 +107,7 @@ SelectableFragment.prototype = {
 		}
 		this.selected = true;
 		this.onSelect && this.onSelect();
-		parent && parent.selectItemLayout && parent.selectItemLayout(this);
+		parent && parent.selectItemInLayout && parent.selectItemInLayout(this);
 		this.updateSelection();
 		return true;
 	},
@@ -123,7 +123,7 @@ SelectableFragment.prototype = {
 		}
 		this.selected = false;
 		this.onUnselect && this.onUnselect();
-		parent && parent.unselectItemLayout && parent.unselectItemLayout(this);
+		parent && parent.unselectItemInLayout && parent.unselectItemInLayout(this);
 		this.updateSelection();
 		return true;
 	},
@@ -262,10 +262,10 @@ SelectableLayoutFragment.prototype = {
 	canUnselectItem(item) {
 		return true;
 	},
-	selectItemLayout(item) {
+	selectItemInLayout(item) {
 		this.onSelectItem && this.onSelectItem(item, item.getIndex());
 	},
-	unselectItemLayout(item) {
+	unselectItemInLayout(item) {
 		this.onUnselectItem && this.onUnselectItem(item, item.getIndex());
 	},
 	setOnSelectItemListener(listener) {
