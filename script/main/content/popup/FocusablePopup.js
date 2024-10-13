@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function FocusablePopup(id) {
+const FocusablePopup = function(id) {
 	TransitionWindow.apply(this, arguments);
 	this.fragments = [];
 

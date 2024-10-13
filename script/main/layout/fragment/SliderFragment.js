@@ -1,4 +1,7 @@
-function SliderFragment() {
+/**
+ * @type
+ */
+const SliderFragment = function() {
 	TextFragment.apply(this, arguments);
 	this.modifier = 0;
 	this.modifiers = [16, 1];

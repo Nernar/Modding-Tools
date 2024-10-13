@@ -2,10 +2,11 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  * @requires `isAndroid()`
+ * @type
  */
-function ExplorerWindow(mayWrap) {
+const ExplorerWindow = function(mayWrap) {
 	return UniqueWindow.apply(this, arguments);
-}
+};
 
 ExplorerWindow.prototype = new UniqueWindow;
 ExplorerWindow.prototype.TYPE = "ExplorerWindow";

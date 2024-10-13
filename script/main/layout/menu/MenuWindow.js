@@ -2,12 +2,13 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  * @requires `isAndroid()`
+ * @type
  */
-function MenuWindow() {
+const MenuWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.elements = [];
 	return window;
-}
+};
 
 MenuWindow.prototype = new UniqueWindow;
 MenuWindow.prototype.TYPE = "MenuWindow";

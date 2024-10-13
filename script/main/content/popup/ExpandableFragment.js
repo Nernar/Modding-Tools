@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function ExpandableFragment() {
+const ExpandableFragment = function() {
 	FocusableFragment.apply(this, arguments);
 };
 

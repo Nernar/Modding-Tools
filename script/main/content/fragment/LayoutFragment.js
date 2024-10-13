@@ -1,4 +1,7 @@
-function LayoutFragment() {
+/**
+ * @type
+ */
+const LayoutFragment = function() {
 	BaseFragment.apply(this, arguments);
 	this.fragments = [];
 };

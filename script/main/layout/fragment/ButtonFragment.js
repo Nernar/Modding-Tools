@@ -1,3 +1,6 @@
+/**
+ * @type
+ */
 const ButtonFragment = function() {
 	TextFragment.apply(this, arguments);
 	this.setIsSelectable(true);

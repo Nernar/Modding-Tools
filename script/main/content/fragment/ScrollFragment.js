@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function ScrollFragment() {
+const ScrollFragment = function() {
 	FrameFragment.apply(this, arguments);
 };
 

@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function HorizontalScrollFragment() {
+const HorizontalScrollFragment = function() {
 	FrameFragment.apply(this, arguments);
 };
 

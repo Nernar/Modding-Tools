@@ -1,4 +1,7 @@
-function PropertyInputFragment() {
+/**
+ * @type
+ */
+const PropertyInputFragment = function() {
 	TextFragment.apply(this, arguments);
 };
 

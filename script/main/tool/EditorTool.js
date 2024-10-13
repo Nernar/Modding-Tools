@@ -1,4 +1,7 @@
-function EditorTool(object) {
+/**
+ * @type
+ */
+const EditorTool = function(object) {
 	SidebarTool.apply(this, arguments);
 };
 

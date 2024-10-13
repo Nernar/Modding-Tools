@@ -1,3 +1,6 @@
+/**
+ * @type
+ */
 const SidebarTool = function(object) {
 	MenuTool.apply(this, arguments);
 };

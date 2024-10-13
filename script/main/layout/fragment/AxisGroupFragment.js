@@ -1,4 +1,7 @@
-function AxisGroupFragment() {
+/**
+ * @type
+ */
+const AxisGroupFragment = function() {
 	LayoutFragment.apply(this, arguments);
 	this.setBackground("popup");
 };

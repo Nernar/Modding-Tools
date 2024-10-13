@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function ExpandablePopup(id) {
+const ExpandablePopup = function(id) {
 	FocusablePopup.apply(this, arguments);
 };
 

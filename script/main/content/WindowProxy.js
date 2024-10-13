@@ -1,4 +1,4 @@
-function WindowProxy() {
+const WindowProxy = function() {
 	MCSystem.throwException("Modding Tools: Stub!");
 };
 

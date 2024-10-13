@@ -1,4 +1,7 @@
-function BaseFragment() {
+/**
+ * @type
+ */
+const BaseFragment = function() {
 	Fragment.apply(this);
 	this.visible = true;
 	this.marks = [];

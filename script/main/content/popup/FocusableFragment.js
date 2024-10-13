@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function FocusableFragment() {
+const FocusableFragment = function() {
 	LayoutFragment.apply(this, arguments);
 	this.setBackground("popup");
 };

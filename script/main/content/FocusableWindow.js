@@ -1,4 +1,4 @@
-function FocusableWindow() {
+const FocusableWindow = function() {
 	Logger.Log(this.TYPE + ".<constructor>", "FocusableWindow");
 };
 

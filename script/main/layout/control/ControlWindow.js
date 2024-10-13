@@ -1,4 +1,7 @@
-function ControlWindow() {
+/**
+ * @type
+ */
+const ControlWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setFragment(new FrameFragment());
 	if (isAndroid()) {
@@ -7,7 +10,7 @@ function ControlWindow() {
 	window.setButtonBackground("popupButton");
 	window.setLogotypeBackground("popupControl");
 	return window;
-}
+};
 
 ControlWindow.prototype = new UniqueWindow;
 ControlWindow.prototype.TYPE = "ControlWindow";

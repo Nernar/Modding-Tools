@@ -1,3 +1,6 @@
+/**
+ * @type
+ */
 const SegmentGroupFragment = function() {
 	HorizontalScrollFragment.apply(this, arguments);
 };

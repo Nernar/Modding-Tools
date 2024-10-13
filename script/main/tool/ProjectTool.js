@@ -1,4 +1,7 @@
-function ProjectTool(object) {
+/**
+ * @type
+ */
+const ProjectTool = function(object) {
 	MenuTool.apply(this, arguments);
 };
 

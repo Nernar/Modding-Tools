@@ -1,6 +1,9 @@
-function AsyncSequence(obj) {
+/**
+ * @type
+ */
+const AsyncSequence = function(obj) {
 	Sequence.apply(this, arguments);
-}
+};
 
 AsyncSequence.prototype = new Sequence;
 

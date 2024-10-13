@@ -1,4 +1,7 @@
-function AutoCompleteInputFragment() {
+/**
+ * @type
+ */
+const AutoCompleteInputFragment = function() {
 	PropertyInputFragment.apply(this, arguments);
 };
 

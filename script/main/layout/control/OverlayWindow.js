@@ -1,4 +1,7 @@
-function OverlayWindow() {
+/**
+ * @type
+ */
+const OverlayWindow = function() {
 	return UniqueWindow.apply(this, arguments);
 };
 

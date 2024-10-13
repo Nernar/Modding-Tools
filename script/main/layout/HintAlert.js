@@ -2,8 +2,9 @@
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  * @requires `isAndroid()`
+ * @type
  */
-function HintAlert() {
+const HintAlert = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.clearStack();
 	return window;

@@ -1,4 +1,7 @@
-function Tool(object) {
+/**
+ * @type
+ */
+const Tool = function(object) {
 	this.reset();
 	if (typeof object == "object") {
 		object && merge(this, object);

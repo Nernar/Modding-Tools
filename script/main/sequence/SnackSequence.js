@@ -1,6 +1,9 @@
-function SnackSequence(obj) {
+/**
+ * @type
+ */
+const SnackSequence = function(obj) {
 	AsyncSequence.apply(this, arguments);
-}
+};
 
 SnackSequence.prototype = new AsyncSequence;
 

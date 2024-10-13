@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function FrameFragment() {
+const FrameFragment = function() {
 	LayoutFragment.apply(this, arguments);
 };
 

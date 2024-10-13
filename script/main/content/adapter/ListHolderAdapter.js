@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function ListHolderAdapter(proto) {
+const ListHolderAdapter = function(proto) {
 	return new JavaAdapter(android.widget.BaseAdapter, android.widget.Adapter, merge(merge(this, proto), {
 		getCount: function() {
 			// No Context associated with current Thread

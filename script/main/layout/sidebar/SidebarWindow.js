@@ -1,5 +1,6 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
 const SidebarWindow = function() {
 	return UniqueWindow.apply(this, arguments);

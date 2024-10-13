@@ -1,4 +1,7 @@
-function ScriptConverter(type, process) {
+/**
+ * @type 
+ */
+const ScriptConverter = function(type, process) {
 	if (type !== undefined) {
 		this.TYPE = type;
 	}

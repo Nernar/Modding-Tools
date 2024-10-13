@@ -1,4 +1,7 @@
-function ImageFragment() {
+/**
+ * @type
+ */
+const ImageFragment = function() {
 	BaseFragment.apply(this, arguments);
 };
 

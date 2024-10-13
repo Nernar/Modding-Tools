@@ -1,4 +1,7 @@
-function TextFragment() {
+/**
+ * @type
+ */
+const TextFragment = function() {
 	BaseFragment.apply(this, arguments);
 	if (!isAndroid()) {
 		this.text = "";

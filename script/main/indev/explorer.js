@@ -55,6 +55,9 @@ Unicode.pointsToString = function(points) {
 	return string;
 };
 
+/**
+ * @type
+ */
 Unicode.Charset = function(name, start, end) {
 	this.name = "" + name;
 	this.start = start - 0;
@@ -214,14 +217,11 @@ Unicode.registerCharset("Specials", 65279, 65279);
 Unicode.registerCharset("Halfwidth and Fullwidth Forms", 65280, 65519);
 Unicode.registerCharset("Specials", 65520, 65533);
 
+/**
+ * @type
+ */
 const ToolbarFragment = function() {
-	Fragment.apply(this, arguments);
-	if (isAndroid()) {
-		this.resetContainer();
-	}
-	this.setBackground("popup");
-	this.setTitle(translate(NAME));
-	this.setBackButtonImage("controlBack");
+	BaseFragment.apply(this, arguments);
 };
 
 ToolbarFragment.prototype = new Fragment;
@@ -297,21 +297,10 @@ ToolbarFragment.prototype.resetContainer = function() {
 	subtitle.setTextSize(toComplexUnitDp(9));
 	subtitle.setTag("toolbarSubtitle");
 	bar.addView(subtitle);
-};
 
-ToolbarFragment.prototype.getBackground = function() {
-	return this.background || null;
-};
-
-ToolbarFragment.prototype.setBackground = function(drawable) {
-	if (isAndroid()) {
-		let container = this.getContainer();
-		if (!(drawable instanceof Drawable)) {
-			drawable = Drawable.parseJson.call(this, drawable);
-		}
-		drawable.attachAsBackground(container);
-	}
-	this.background = drawable;
+	this.setBackground("popup");
+	this.setTitle(translate(NAME));
+	this.setBackButtonImage("controlBack");
 };
 
 ToolbarFragment.prototype.getBackButtonFragment = function() {
@@ -462,6 +451,9 @@ ToolbarFragment.Item = function() {
 
 ToolbarFragment.Item.prototype = new SidebarFragment.Rail.Item;
 
+/**
+ * @type
+ */
 const ImageSourceFragment = function() {
 	FrameFragment.apply(this, arguments);
 	let self = this;
@@ -591,6 +583,9 @@ ImageSourceFragment.prototype.setOnScaleChangeListener = function(listener) {
 	return true;
 };
 
+/**
+ * @type
+ */
 const ImageSourceWindow = function() {
 	let window = UniqueWindow.apply(this, arguments);
 	window.setFragment(new ImageSourceFragment());

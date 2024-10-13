@@ -1,4 +1,7 @@
-function AngleCircleFragment() {
+/**
+ * @type
+ */
+const AngleCircleFragment = function() {
 	TextFragment.apply(this, arguments);
 	this.setValue(0);
 };

@@ -1,3 +1,6 @@
+/**
+ * @type
+ */
 const SidebarFragment = function() {
 	MCSystem.throwException("Modding Tools: SidebarFragment cannot be instantiated!");
 };

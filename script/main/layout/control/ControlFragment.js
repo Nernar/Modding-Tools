@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function ControlFragment() {
+const ControlFragment = function() {
 	ImageFragment.apply(this, arguments);
 };
 

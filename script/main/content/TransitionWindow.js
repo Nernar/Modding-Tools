@@ -1,4 +1,7 @@
-function TransitionWindow() {
+/**
+ * @type
+ */
+const TransitionWindow = function() {
 	FocusableWindow.apply(this, arguments);
 	if (isAndroid()) {
 		this.resetWindow.apply(this, arguments);

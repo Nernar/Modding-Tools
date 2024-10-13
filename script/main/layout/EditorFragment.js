@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function EditorFragment() {
+const EditorFragment = function() {
 	Fragment.apply(this, arguments);
 	if (isAndroid()) {
 		if (isHorizon && android.os.Build.VERSION.SDK_INT >= 21) {

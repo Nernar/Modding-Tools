@@ -1,4 +1,7 @@
-function ExplanatoryFragment() {
+/**
+ * @type
+ */
+const ExplanatoryFragment = function() {
 	TextFragment.apply(this, arguments);
 };
 

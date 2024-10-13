@@ -1,4 +1,7 @@
-function MenuTool(object) {
+/**
+ * @type
+ */
+const MenuTool = function(object) {
 	InteractionTool.apply(this, arguments);
 };
 

@@ -1,4 +1,7 @@
-function Worker() {
+/**
+ * @type
+ */
+const Worker = function() {
 	this.data = {
 		type: "unknown"
 	};

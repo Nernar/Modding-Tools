@@ -4,14 +4,15 @@
  * container from itself, instance rewrites global
  * window with specified container; window is untouched.
  * @todo Do not use constructors to get attached container.
+ * @type
  */
-function UniqueWindow() {
+const UniqueWindow = function() {
 	TransitionWindow.apply(this, arguments);
 	if (UniqueHelper.wasTypeAttached(this)) {
 		return UniqueHelper.getWindow(this);
 	}
 	return this;
-}
+};
 
 UniqueWindow.prototype = new TransitionWindow;
 UniqueWindow.prototype.TYPE = "UniqueWindow";

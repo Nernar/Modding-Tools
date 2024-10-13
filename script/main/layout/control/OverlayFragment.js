@@ -1,7 +1,8 @@
 /**
  * @requires `isAndroid()`
+ * @type
  */
-function OverlayFragment() {
+const OverlayFragment = function() {
 	TextFragment.apply(this, arguments);
 };
 

@@ -1,4 +1,7 @@
-function CounterFragment() {
+/**
+ * @type
+ */
+const CounterFragment = function() {
 	SliderFragment.apply(this, arguments);
 };
 

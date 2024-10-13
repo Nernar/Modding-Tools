@@ -1,4 +1,7 @@
-function AdditionalMessage(src, message, chance, condition) {
+/**
+ * @type
+ */
+const AdditionalMessage = function(src, message, chance, condition) {
 	if (src !== undefined) this.setImage(src);
 	if (message !== undefined) this.setMessage(message);
 	if (chance !== undefined) this.setChance(chance);
@@ -72,7 +75,10 @@ AdditionalMessage.prototype.tryToDisplay = function() {
 	return true;
 };
 
-function AdditionalClickableMessage(src, message, chance, action, condition) {
+/**
+ * @type
+ */
+const AdditionalClickableMessage = function(src, message, chance, action, condition) {
 	AdditionalMessage.call(this, src, message, chance, condition);
 	if (action !== undefined) this.setAction(action);
 };

@@ -1,4 +1,7 @@
-function CategoryTitleFragment() {
+/**
+ * @type
+ */
+const CategoryTitleFragment = function() {
 	TextFragment.apply(this, arguments);
 };
 

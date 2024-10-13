@@ -1,4 +1,7 @@
-function InteractionTool(object) {
+/**
+ * @type
+ */
+const InteractionTool = function(object) {
 	Tool.apply(this, arguments);
 };
 

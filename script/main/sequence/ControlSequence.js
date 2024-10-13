@@ -1,6 +1,9 @@
-function ControlSequence(obj) {
+/**
+ * @type
+ */
+const ControlSequence = function(obj) {
 	Sequence.apply(this, arguments);
-}
+};
 
 ControlSequence.prototype = new Sequence;
 

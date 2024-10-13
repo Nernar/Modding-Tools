@@ -1,4 +1,7 @@
-function Project(obj) {
+/**
+ * @type
+ */
+const Project = function(obj) {
 	this.object = Array.isArray(obj) ? obj : [];
 };
 

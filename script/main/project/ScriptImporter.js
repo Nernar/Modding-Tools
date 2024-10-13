@@ -20,7 +20,10 @@ const ScriptImporterFactory = {
 	}
 };
 
-function ScriptImporter(executable, scope, key) {
+/**
+ * @type
+ */
+const ScriptImporter = function(executable, scope, key) {
 	this.inject = function(what) {
 		if (what !== undefined) {
 			key = what;
