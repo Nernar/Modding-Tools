@@ -81,6 +81,16 @@ LayoutFragment.prototype.indexOf = function(fragmentOrView) {
 	return this.fragments.indexOf(fragmentOrView);
 };
 
+LayoutFragment.prototype.findFragment = function(token) {
+	for (let index = 0; index < this.getFragmentCount(); index++) {
+		let fragment = this.getFragmentAt(index);
+		if (fragment.getToken() == token) {
+			return fragment;
+		}
+	}
+	return null;
+};
+
 LayoutFragment.prototype.obtain = (function() {
 	let obtain = function(on, what, when) {
 		if (typeof when != "function" || when(on)) {

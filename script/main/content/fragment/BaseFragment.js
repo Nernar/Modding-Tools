@@ -223,6 +223,9 @@ BaseFragment.parseJson = function(instanceOrJson, json) {
 	if (json == null || typeof json != "object") {
 		return instanceOrJson;
 	}
+	if (json.hasOwnProperty("token")) {
+		instanceOrJson.setToken(calloutOrParse(json, json.token, [this, instanceOrJson]));
+	}
 	if (json.hasOwnProperty("selectable")) {
 		instanceOrJson.setIsSelectable(calloutOrParse(json, json.selectable, [this, instanceOrJson]));
 	}

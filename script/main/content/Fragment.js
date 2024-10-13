@@ -88,6 +88,44 @@ Fragment.prototype.getIndex = function() {
 	return -1;
 };
 
+Fragment.prototype.getToken = function() {
+	return this.token || null;
+};
+
+Fragment.prototype.setToken = function(token) {
+	if (token != null) {
+		this.token = token;
+	} else {
+		delete this.token;
+	}
+	return this;
+};
+
+Fragment.prototype.findParentFragment = function(token) {
+	let parent = this.getParent();
+	if (parent instanceof Fragment) {
+		if (parent.getToken() == token) {
+			return parent;
+		}
+		return parent.findParentFragment(token);
+	}
+	return null;
+};
+
+Fragment.prototype.findFragmentInParent = function(token) {
+	let parent = this.getParent();
+	if (parent instanceof Fragment) {
+		if (parent instanceof LayoutFragment) {
+			let fragment = parent.findFragment(token);
+			if (fragment != null) {
+				return fragment;
+			}
+		}
+		return parent.findFragmentInParent(token);
+	}
+	return null;
+};
+
 Fragment.prototype.attach = function(parent) {
 	if (parent == null || parent == this.parent) {
 		if (parent == null) {
