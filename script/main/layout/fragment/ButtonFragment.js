@@ -30,6 +30,14 @@ ButtonFragment.prototype.click = function() {
 	TextFragment.prototype.click.apply(this, arguments);
 };
 
+ButtonFragment.prototype.hold = function() {
+	let parent = this.getParent();
+	if (parent && parent.holdItemInLayout && parent.holdItemInLayout(this)) {
+		return true;
+	}
+	return TextFragment.prototype.hold.apply(this, arguments);
+};
+
 ButtonFragment.prototype.remark = function() {
 	let text = this.getTextView();
 	if (this.hasMark("solid") || this.hasMark("popup")) {

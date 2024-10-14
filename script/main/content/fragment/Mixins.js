@@ -226,6 +226,45 @@ SelectableLayoutFragment.prototype = {
 		}
 		this.selectionMode = mode;
 	},
+	isHoldActivatesMultipleSelection() {
+		return this.holdActivatesMultipleSelection || false;
+	},
+	setHoldActivatesMultipleSelection(enabled) {
+		if (this.holdActivatesMultipleSelection == enabled) {
+			return;
+		}
+		this.holdActivatesMultipleSelection = !!enabled;
+	},
+	isItemSelected(itemOrIndex) {
+		if (!(itemOrIndex instanceof Fragment)) {
+			itemOrIndex = this.getFragmentAt(itemOrIndex);
+		}
+		if (itemOrIndex && itemOrIndex.isSelected) {
+			return itemOrIndex.isSelected();
+		}
+		return false;
+	},
+	getSelectedItem() {
+		let fragments = this.getFragments();
+		for (let index = 0; index < fragments.length; index++) {
+			let fragment = fragments[index];
+			if (fragment.isSelected && fragment.isSelected()) {
+				return index;
+			}
+		}
+		return -1;
+	},
+	getSelectedItems() {
+		let selected = [];
+		let fragments = this.getFragments();
+		for (let index = 0; index < fragments.length; index++) {
+			let fragment = fragments[index];
+			if (fragment.isSelected && fragment.isSelected()) {
+				selected.push(index);
+			}
+		}
+		return selected;
+	},
 	selectItem(itemOrIndex) {
 		if (!(itemOrIndex instanceof Fragment)) {
 			itemOrIndex = this.getFragmentAt(itemOrIndex);
@@ -268,6 +307,16 @@ SelectableLayoutFragment.prototype = {
 	unselectItemInLayout(item) {
 		this.onUnselectItem && this.onUnselectItem(item, item.getIndex());
 	},
+	holdItemInLayout(item) {
+		if (this.isHoldActivatesMultipleSelection && this.isHoldActivatesMultipleSelection()) {
+			this.setSelectionMode(SelectableLayoutFragment.MODE_MULTIPLE);
+			if (this.canSelectItem(item)) {
+				this.selectItem(position);
+			}
+			return true;
+		}
+		return false;
+	},
 	setOnSelectItemListener(listener) {
 		if (listener != null) {
 			this.onSelectItem = listener.bind(this);
@@ -289,6 +338,9 @@ SelectableLayoutFragment.prototype = {
 SelectableLayoutFragment.parseJson = function(instanceOrJson, json) {
 	if (json.hasOwnProperty("selectionMode")) {
 		instanceOrJson.setSelectionMode(calloutOrParse(json, json.selectionMode, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("holdActivatesMultipleSelection")) {
+		instanceOrJson.setHoldActivatesMultipleSelection(calloutOrParse(json, json.holdActivatesMultipleSelection, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("selectItem")) {
 		instanceOrJson.setOnSelectItemListener(parseCallback(json, json.selectItem, this));

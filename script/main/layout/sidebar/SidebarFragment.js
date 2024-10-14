@@ -214,7 +214,11 @@ SidebarFragment.Rail.Item.prototype.hold = function() {
 			typeof text == "boolean" || showHint(text);
 		}
 	}
-	return LayoutFragment.prototype.hold.apply(this, arguments) || !!text;
+	let parent = this.getParent();
+	if (parent && parent.holdItemInLayout && parent.holdItemInLayout(this)) {
+		return true;
+	}
+	return LayoutFragment.prototype.hold.apply(this, arguments) || text != null;
 };
 
 SidebarFragment.Rail.Item.prototype.updateLayout = function() {
