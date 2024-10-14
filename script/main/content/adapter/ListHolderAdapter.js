@@ -31,14 +31,23 @@ const ListHolderAdapter = function(proto) {
 			try {
 				let holder;
 				if (convertView == null) {
-					convertView = this.bindView(position, parent);
-					holder = this.bindHolder(convertView);
+					if (this.adapterFragment && this.adapterFragment.bindItemFragment) {
+						holder = this.adapterFragment.bindItemFragment(this, position, convertView, parent);
+						holder && (convertView = holder.getContainer());
+					}
+					if (holder == null) {
+						convertView = this.bindView(position, parent);
+						holder = this.bindHolder(convertView);
+					}
 					convertView.setTag(holder);
 				} else {
 					holder = convertView.getTag();
 				}
-				this.describe(holder, position, convertView, parent);
-				convertView.setTag(holder);
+				if (this.adapterFragment && this.adapterFragment.describeItemFragment) {
+					this.adapterFragment.describeItemFragment(this, this.getItem(position), position, convertView, parent);
+				} else {
+					this.describe(holder, position, convertView, parent);
+				}
 				return convertView;
 			} catch (e) {
 				reportError(e);
@@ -51,6 +60,15 @@ const ListHolderAdapter = function(proto) {
 			return view;
 		}
 	}));
+};
+
+ListHolderAdapter.prototype.setAdapterFragment = function(binder) {
+	if (typeof binder == "function") {
+		this.adapterFragment = binder.bind(this);
+	} else {
+		delete this.adapterFragment;
+	}
+	return this;
 };
 
 ListHolderAdapter.prototype.bindView = function(position, parent) {

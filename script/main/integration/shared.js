@@ -140,11 +140,14 @@ const API = assign({}, {
 	Fragment: Fragment,
 	BaseFragment: BaseFragment,
 	LayoutFragment: LayoutFragment,
+	SelectableFragment: SelectableFragment,
+	SelectableLayoutFragment: SelectableLayoutFragment,
 	FrameFragment: FrameFragment,
 	ScrollFragment: ScrollFragment,
 	HorizontalScrollFragment: HorizontalScrollFragment,
 	TextFragment: TextFragment,
 	ImageFragment: ImageFragment,
+	ListFragment: ListFragment,
 
 	// Adapters
 	ListHolderAdapter: ListHolderAdapter,
