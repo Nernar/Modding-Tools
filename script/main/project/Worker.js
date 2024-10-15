@@ -1,10 +1,15 @@
 /**
  * @type
  */
-const Worker = function() {
-	this.data = {
-		type: "unknown"
-	};
+const Worker = function(what) {
+	if (this.data == null || typeof this.data != "object") {
+		this.data = {
+			type: "unknown"
+		};
+	}
+	if (what !== undefined) {
+		this.loadProject(what);
+	}
 };
 
 Worker.prototype.getProject = function() {

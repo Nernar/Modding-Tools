@@ -315,7 +315,7 @@ SelectableLayoutFragment.prototype = {
 			}
 			return true;
 		}
-		return false;
+		return (this.onHoldItem && this.onHoldItem(item, item.getIndex())) || false;
 	},
 	setOnSelectItemListener(listener) {
 		if (listener != null) {
@@ -330,6 +330,14 @@ SelectableLayoutFragment.prototype = {
 			this.onUnselectItem = listener.bind(this);
 		} else {
 			delete this.onUnselectItem;
+		}
+		return this;
+	},
+	setOnHoldItemListener(listener) {
+		if (listener != null) {
+			this.onHoldItem = listener.bind(this);
+		} else {
+			delete this.onHoldItem;
 		}
 		return this;
 	}
@@ -347,5 +355,8 @@ SelectableLayoutFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("unselectItem")) {
 		instanceOrJson.setOnUnselectItemListener(parseCallback(json, json.unselectItem, this));
+	}
+	if (json.hasOwnProperty("holdItem")) {
+		instanceOrJson.setOnHoldItemListener(parseCallback(json, json.holdItem, this));
 	}
 };
