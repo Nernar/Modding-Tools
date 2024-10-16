@@ -51,11 +51,16 @@ const CONSOLE_TOOL = (function() {
 })();
 
 const attachConsoleTool = function(post) {
+	CONSOLE_TOOL.deattach();
+	if (!CONSOLE_TOOL.isAttached()) {
+		CONSOLE_TOOL.attach();
+	}
 	CONSOLE_TOOL.queue();
 	handle(function() {
 		CONSOLE_TOOL.collapse();
 		let accepted = true;
 		try {
+			CONSOLE_TOOL.describe();
 			post && post(CONSOLE_TOOL);
 			accepted = false;
 		} catch (e) {
