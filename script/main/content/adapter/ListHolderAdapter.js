@@ -31,20 +31,20 @@ const ListHolderAdapter = function(proto) {
 			try {
 				let holder;
 				if (convertView == null) {
-					if (this.adapterFragment && this.adapterFragment.bindItemFragment) {
-						holder = this.adapterFragment.bindItemFragment(this, position, convertView, parent);
+					if (this.fragmentAdapter && this.fragmentAdapter.bindItemFragment) {
+						holder = this.fragmentAdapter.bindItemFragment(this, position, parent);
 						holder && (convertView = holder.getContainer());
 					}
 					if (holder == null) {
 						convertView = this.bindView(position, parent);
-						holder = this.bindHolder(convertView);
+						holder = this.bindHolder(convertView, position);
 					}
 					convertView.setTag(holder);
 				} else {
 					holder = convertView.getTag();
 				}
-				if (this.adapterFragment && this.adapterFragment.describeItemFragment) {
-					this.adapterFragment.describeItemFragment(this, this.getItem(position), position, convertView, parent);
+				if (this.fragmentAdapter && this.fragmentAdapter.describeItemFragment) {
+					this.fragmentAdapter.describeItemFragment(this, this.getItem(position), position, parent);
 				} else {
 					this.describe(holder, position, convertView, parent);
 				}
@@ -62,11 +62,11 @@ const ListHolderAdapter = function(proto) {
 	}));
 };
 
-ListHolderAdapter.prototype.setAdapterFragment = function(binder) {
+ListHolderAdapter.prototype.setFragmentAdapter = function(binder) {
 	if (typeof binder == "function") {
-		this.adapterFragment = binder.bind(this);
+		this.fragmentAdapter = binder.bind(this);
 	} else {
-		delete this.adapterFragment;
+		delete this.fragmentAdapter;
 	}
 	return this;
 };
@@ -81,7 +81,7 @@ ListHolderAdapter.prototype.bindView = function(position, parent) {
 	return view;
 };
 
-ListHolderAdapter.prototype.bindHolder = function(view) {
+ListHolderAdapter.prototype.bindHolder = function(view, position) {
 	return {
 		text: view
 	};

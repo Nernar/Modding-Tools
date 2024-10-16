@@ -28,7 +28,7 @@ HorizontalScrollFragment.prototype.getContainerScroll = function() {
 	return this.findViewByTag("containerScroll");
 };
 
-ScrollFragment.prototype.scrollTo = function(x, y, duration) {
+HorizontalScrollFragment.prototype.scrollTo = function(x, y, duration) {
 	if (isAndroid()) {
 		if (duration != null) {
 			let actor = new android.transition.ChangeScroll();

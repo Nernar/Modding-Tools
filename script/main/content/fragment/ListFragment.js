@@ -48,20 +48,12 @@ ListFragment.prototype.getListView = function() {
 };
 
 ListFragment.prototype.getListAdapter = function() {
-	if (this.listAdapter == null) {
+	if (this.holderAdapter == null) {
 		let adapter = new ListHolderAdapter();
-		adapter.setAdapterFragment(this);
-		this.listAdapter = adapter;
+		adapter.setFragmentAdapter(this);
+		this.holderAdapter = adapter;
 	}
-	return this.listAdapter;
-};
-
-ListFragment.prototype.bindItemFragment = function(adapter, position, convertView, parent) {
-	// TODO
-};
-
-ListFragment.prototype.describeItemFragment = function(adapter, item, position, convertView, parent) {
-	// TODO
+	return this.holderAdapter;
 };
 
 ListFragment.prototype.setSelectionMode = function(mode) {
@@ -162,6 +154,32 @@ ListFragment.prototype.unselectItemInLayout = function(index) {
 	this.onUnselectItem && this.onUnselectItem(index);
 };
 
+ListFragment.prototype.bindItemFragment = function(adapter, position, parent) {
+	return (this.onBindItem && this.onBindItem(this, adapter, position, parent)) || null;
+};
+
+ListFragment.prototype.describeItemFragment = function(adapter, item, position, parent) {
+	this.onDescribeItem && this.onDescribeItem(this, adapter, item, position, parent);
+};
+
+ListFragment.prototype.setOnBindItemListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onBindItem = listener.bind(this);
+	} else {
+		delete this.onBindItem;
+	}
+	return this;
+};
+
+ListFragment.prototype.setOnDescribeItemListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onDescribeItem = listener.bind(this);
+	} else {
+		delete this.onDescribeItem;
+	}
+	return this;
+};
+
 ListFragment.parseJson = function(instanceOrJson, json) {
 	if (!(instanceOrJson instanceof ListFragment)) {
 		json = instanceOrJson;
@@ -171,6 +189,12 @@ ListFragment.parseJson = function(instanceOrJson, json) {
 	json = calloutOrParse(this, json, instanceOrJson);
 	if (json === null || typeof json != "object") {
 		return instanceOrJson;
+	}
+	if (json.hasOwnProperty("bindItem")) {
+		instanceOrJson.setOnBindItemListener(parseCallback(json, json.bindItem, this));
+	}
+	if (json.hasOwnProperty("describeItem")) {
+		instanceOrJson.setOnDescribeItemListener(parseCallback(json, json.describeItem, this));
 	}
 	SelectableLayoutFragment.parseJson.call(this, instanceOrJson, json);
 	return instanceOrJson;
