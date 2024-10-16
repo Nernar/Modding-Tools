@@ -24,9 +24,7 @@ CounterFragment.prototype.resetContainer = function() {
 	subtract.setOnClickListener(function() {
 		try {
 			let previous = self.value, current = self.modifiers[self.modifier];
-			self.value = preround(self.value - (current > 0 ? 1 / current : current));
-			self.onChange && self.onChange(self.value, self.value - previous);
-			self.updateCounter();
+			self.change(self.value - (current > 0 ? 1 / current : current), previous);
 		} catch (e) {
 			reportError(e);
 		}
@@ -48,7 +46,7 @@ CounterFragment.prototype.resetContainer = function() {
 	});
 	modifier.setOnLongClickListener(function() {
 		try {
-			return !!self.holdDefault();
+			return !!(self.reset && self.reset());
 		} catch (e) {
 			reportError(e);
 		}
@@ -63,9 +61,7 @@ CounterFragment.prototype.resetContainer = function() {
 	add.setOnClickListener(function() {
 		try {
 			let previous = self.value, current = self.modifiers[self.modifier];
-			self.value = preround(self.value + (current > 0 ? 1 / current : current));
-			self.onChange && self.onChange(self.value, self.value - previous);
-			self.updateCounter();
+			self.change(self.value + (current > 0 ? 1 / current : current), previous);
 		} catch (e) {
 			reportError(e);
 		}

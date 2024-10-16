@@ -47,14 +47,14 @@ SliderFragment.prototype.resetContainer = function() {
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
 				if (!moved) {
-					if (self.holdDefault && event.getDownTime() > 1000) {
-						return self.holdDefault();
+					if (self.reset && event.getDownTime() > 1000) {
+						return !!self.reset();
 					}
 					self.modifier++;
 					self.modifier >= self.modifiers.length && (self.modifier = 0);
 					self.updateCounter();
 				} else if (currently != previous) {
-					self.onChange && self.onChange(self.value, self.value - previous);
+					this.change(this.value, currently);
 				}
 			} catch (e) {
 				reportError(e);
@@ -134,25 +134,43 @@ SliderFragment.prototype.updateCounter = function() {
 	return this;
 };
 
-SliderFragment.prototype.setOnChangeListener = function(action) {
-	this.onChange = action;
-	return this;
+SliderFragment.prototype.change = function(value, previous) {
+	previous == null && (previous = this.value);
+	this.value = preround(value);
+	this.updateCounter();
+	let parent = this.getParent();
+	parent && parent.changeItemInLayout && parent.changeItemInLayout(this, value, value - previous);
+	self.onChange && self.onChange(value, value - previous);
 };
 
-SliderFragment.prototype.setOnResetListener = function(action) {
-	this.onReset = action;
-	return this;
-};
-
-SliderFragment.prototype.holdDefault = function() {
-	if (typeof this.onReset == "function") {
-		let previous = this.value;
-		this.value = preround(this.onReset() || 0);
-		this.onChange && this.onChange(this.value, this.value - previous);
-		this.updateCounter();
-		return true;
+SliderFragment.prototype.reset = function() {
+	let value = this.onReset && this.onReset(this.value);
+	if (value == null || isNaN(value)) {
+		let parent = this.getParent();
+		value = parent && parent.resetItemInLayout && parent.resetItemInLayout(this, value);
 	}
-	return false;
+	if (value == null || isNaN(value)) {
+		return;
+	}
+	this.change(value);
+};
+
+SliderFragment.prototype.setOnChangeListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onChange = listener.bind(this);
+	} else {
+		delete this.onChange;
+	}
+	return this;
+};
+
+SliderFragment.prototype.setOnResetListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onReset = listener.bind(this);
+	} else {
+		delete this.onReset;
+	}
+	return this;
 };
 
 SliderFragment.parseJson = function(instanceOrJson, json) {
