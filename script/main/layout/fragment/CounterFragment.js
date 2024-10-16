@@ -23,9 +23,9 @@ CounterFragment.prototype.resetContainer = function() {
 	new BitmapDrawable("controlAdapterMinus").attachAsImage(subtract);
 	subtract.setOnClickListener(function() {
 		try {
-			let current = self.modifiers[self.modifier];
+			let previous = self.value, current = self.modifiers[self.modifier];
 			self.value = preround(self.value - (current > 0 ? 1 / current : current));
-			self.onChange && self.onChange(self.value);
+			self.onChange && self.onChange(self.value, self.value - previous);
 			self.updateCounter();
 		} catch (e) {
 			reportError(e);
@@ -62,9 +62,9 @@ CounterFragment.prototype.resetContainer = function() {
 	new BitmapDrawable("controlAdapterPlus").attachAsImage(add);
 	add.setOnClickListener(function() {
 		try {
-			let current = self.modifiers[self.modifier];
+			let previous = self.value, current = self.modifiers[self.modifier];
 			self.value = preround(self.value + (current > 0 ? 1 / current : current));
-			self.onChange && self.onChange(self.value);
+			self.onChange && self.onChange(self.value, self.value - previous);
 			self.updateCounter();
 		} catch (e) {
 			reportError(e);

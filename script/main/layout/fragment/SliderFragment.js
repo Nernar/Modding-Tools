@@ -47,16 +47,18 @@ SliderFragment.prototype.resetContainer = function() {
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
 				if (!moved) {
+					if (self.holdDefault && event.getDownTime() > 1000) {
+						return self.holdDefault();
+					}
 					self.modifier++;
 					self.modifier >= self.modifiers.length && (self.modifier = 0);
 					self.updateCounter();
 				} else if (currently != previous) {
-					self.onChange && self.onChange(self.value);
+					self.onChange && self.onChange(self.value, self.value - previous);
 				}
 			} catch (e) {
 				reportError(e);
 			}
-			// TODO: return self.holdDefault()
 		}
 		view.getParent().requestDisallowInterceptTouchEvent(true);
 		return true;
@@ -144,8 +146,9 @@ SliderFragment.prototype.setOnResetListener = function(action) {
 
 SliderFragment.prototype.holdDefault = function() {
 	if (typeof this.onReset == "function") {
+		let previous = this.value;
 		this.value = preround(this.onReset() || 0);
-		this.onChange && this.onChange(this.value);
+		this.onChange && this.onChange(this.value, this.value - previous);
 		this.updateCounter();
 		return true;
 	}

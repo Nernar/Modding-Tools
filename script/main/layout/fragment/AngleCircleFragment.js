@@ -44,6 +44,9 @@ AngleCircleFragment.prototype.resetContainer = function() {
 		} else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
 			try {
 				if (!moved) {
+					if (self.holdDefault && event.getDownTime() > 1000) {
+						return self.holdDefault();
+					}
 					self.radians = !self.radians;
 					self.updateAngle();
 				} else if (currently != previous) {
@@ -52,7 +55,6 @@ AngleCircleFragment.prototype.resetContainer = function() {
 			} catch (e) {
 				reportError(e);
 			}
-			// TODO: return self.holdDefault()
 		}
 		view.getParent().requestDisallowInterceptTouchEvent(true);
 		return true;
@@ -108,7 +110,7 @@ AngleCircleFragment.prototype.setOnResetListener = function(action) {
 AngleCircleFragment.prototype.holdDefault = function() {
 	if (typeof this.onReset == "function") {
 		this.value = preround(this.onReset() || 0);
-		this.onChange && this.onChange(this.value);
+		this.onChange && this.onChange(this.value, this.value * 180 / Math.PI);
 		this.updateAngle();
 		return true;
 	}
