@@ -185,6 +185,9 @@ SelectableFragment.parseJson = function(instanceOrJson, json) {
 	if (json.hasOwnProperty("unselectedBackground")) {
 		instanceOrJson.setUnselectedBackground(calloutOrParse(json, json.unselectedBackground, [this, instanceOrJson]));
 	}
+	if (json.hasOwnProperty("selected") && calloutOrParse(json, json.selected, [this, instanceOrJson])) {
+		instanceOrJson.select();
+	}
 	if (json.hasOwnProperty("select")) {
 		instanceOrJson.setOnSelectListener(parseCallback(json, json.select, this));
 	}
@@ -349,6 +352,9 @@ SelectableLayoutFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("holdActivatesMultipleSelection")) {
 		instanceOrJson.setHoldActivatesMultipleSelection(calloutOrParse(json, json.holdActivatesMultipleSelection, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("selectedItem")) {
+		instanceOrJson.selectItem(calloutOrParse(json, json.selectedItem, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("selectItem")) {
 		instanceOrJson.setOnSelectItemListener(parseCallback(json, json.selectItem, this));
