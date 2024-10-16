@@ -56,6 +56,32 @@ AxisGroupFragment.prototype.setAxis = function(text) {
 	return TextFragment.prototype.setText.apply(this, arguments);
 };
 
+AxisGroupFragment.prototype.changeItemInLayout = function(item, value, difference) {
+	this.onChangeItem && this.onChangeItem(item, item.getIndex(), value, difference);
+};
+
+AxisGroupFragment.prototype.resetItemInLayout = function(item, value) {
+	return (this.onResetItem && this.onResetItem(item, item.getIndex(), value)) || false;
+};
+
+AxisGroupFragment.prototype.setOnChangeItemListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onChangeItem = listener.bind(this);
+	} else {
+		delete this.onChangeItem;
+	}
+	return this;
+};
+
+AxisGroupFragment.prototype.setOnResetItemListener = function(listener) {
+	if (typeof listener == "function") {
+		this.onResetItem = listener.bind(this);
+	} else {
+		delete this.onResetItem;
+	}
+	return this;
+};
+
 AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredFragment) {
 	if (!(instanceOrJson instanceof AxisGroupFragment)) {
 		json = instanceOrJson;
@@ -71,6 +97,12 @@ AxisGroupFragment.parseJson = function(instanceOrJson, json, preferredFragment) 
 	}
 	if (json.hasOwnProperty("append")) {
 		instanceOrJson.appendAxis(calloutOrParse(json, json.append, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("changeItem")) {
+		instanceOrJson.setOnChangeItemListener(parseCallback(json, json.changeItem, [this, instanceOrJson]));
+	}
+	if (json.hasOwnProperty("resetItem")) {
+		instanceOrJson.setOnResetItemListener(parseCallback(json, json.resetItem, [this, instanceOrJson]));
 	}
 	return instanceOrJson;
 };
