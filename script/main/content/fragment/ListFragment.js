@@ -18,7 +18,6 @@ ListFragment.prototype.resetContainer = function() {
 };
 
 ListFragment.prototype.resetListeners = function() {
-	BaseFragment.prototype.resetListeners.apply(this, arguments);
 	let list = this.getListView();
 	if (list == null) {
 		return;
