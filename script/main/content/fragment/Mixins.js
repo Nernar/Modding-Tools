@@ -314,7 +314,7 @@ SelectableLayoutFragment.prototype = {
 		if (this.isHoldActivatesMultipleSelection && this.isHoldActivatesMultipleSelection()) {
 			this.setSelectionMode(SelectableLayoutFragment.MODE_MULTIPLE);
 			if (this.canSelectItem(item)) {
-				this.selectItem(position);
+				this.selectItem(item);
 			}
 			return true;
 		}
