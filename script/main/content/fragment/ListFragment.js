@@ -1,3 +1,6 @@
+/**
+ * @type
+ */
 const ListFragment = function() {
 	BaseFragment.apply(this, arguments);
 };

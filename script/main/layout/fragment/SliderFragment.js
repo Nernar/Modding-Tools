@@ -86,11 +86,11 @@ SliderFragment.prototype.setValue = function(value) {
 	value = value - 0;
 	if (isNaN(value)) {
 		Logger.Log("Modding Tools: Passed NaN to SliderFragment.setValue(*), it may be string or number", "WARNING");
-		return this;
+		return false;
 	}
-	this.value = value;
+	this.value = preround(value);
 	this.updateCounter();
-	return this;
+	return true;
 };
 
 SliderFragment.prototype.setSuffix = function(suffix) {
@@ -136,23 +136,24 @@ SliderFragment.prototype.updateCounter = function() {
 
 SliderFragment.prototype.change = function(value, previous) {
 	previous == null && (previous = this.value);
-	this.value = preround(value);
-	this.updateCounter();
-	let parent = this.getParent();
-	parent && parent.changeItemInLayout && parent.changeItemInLayout(this, value, value - previous);
-	self.onChange && self.onChange(value, value - previous);
+	if (this.setValue(value)) {
+		let parent = this.getParent();
+		parent && parent.changeItemInLayout && parent.changeItemInLayout(this, value, value - previous);
+		self.onChange && self.onChange(value, value - previous);
+	}
 };
 
 SliderFragment.prototype.reset = function() {
 	let value = this.onReset && this.onReset(this.value);
-	if (value == null || isNaN(value)) {
+	if (value != true && (value == null || isNaN(value))) {
 		let parent = this.getParent();
 		value = parent && parent.resetItemInLayout && parent.resetItemInLayout(this, value);
 	}
-	if (value == null || isNaN(value)) {
-		return;
+	if (value != true && (value == null || isNaN(value))) {
+		return false;
 	}
-	this.change(value);
+	value == true || this.change(value);
+	return true;
 };
 
 SliderFragment.prototype.setOnChangeListener = function(listener) {
