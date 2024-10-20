@@ -9,6 +9,8 @@ const API = assign({}, {
 	PRODUCT_REVISION: REVISION,
 	CONTEXT: CONTEXT,
 	InnerCorePackages: InnerCorePackages,
+	isAndroid: isAndroid,
+	isCLI: isCLI,
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
 	launchIfSupported: launchIfSupported,
