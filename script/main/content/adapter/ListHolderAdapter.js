@@ -62,9 +62,9 @@ const ListHolderAdapter = function(proto) {
 	}));
 };
 
-ListHolderAdapter.prototype.setFragmentAdapter = function(binder) {
-	if (typeof binder == "function") {
-		this.fragmentAdapter = binder.bind(this);
+ListHolderAdapter.prototype.setFragmentAdapter = function(fragment) {
+	if (fragment != null) {
+		this.fragmentAdapter = fragment;
 	} else {
 		delete this.fragmentAdapter;
 	}
