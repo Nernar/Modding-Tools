@@ -139,7 +139,7 @@ SliderFragment.prototype.change = function(value, previous) {
 	if (this.setValue(value)) {
 		let parent = this.getParent();
 		parent && parent.changeItemInLayout && parent.changeItemInLayout(this, value, value - previous);
-		self.onChange && self.onChange(value, value - previous);
+		this.onChange && this.onChange(value, value - previous);
 	}
 };
 
