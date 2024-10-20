@@ -59,6 +59,24 @@ ListFragment.prototype.getListAdapter = function() {
 	return this.holderAdapter;
 };
 
+ListFragment.prototype.setItems = function(items) {
+	let adapter = this.getListAdapter();
+	if (adapter == null) {
+		return false;
+	}
+	if (Array.isArray(items)) {
+		adapter.setItems(items);
+	} else {
+		adapter.setItems([]);
+	}
+	return true;
+};
+
+ListFragment.prototype.updateItems = function() {
+	let adapter = this.getListAdapter();
+	adapter == null || adapter.notifyDataSetChanged();
+};
+
 ListFragment.prototype.setSelectionMode = function(mode) {
 	if (mode == null || this.getSelectionMode() == mode) {
 		return;
@@ -161,8 +179,8 @@ ListFragment.prototype.bindItemFragment = function(adapter, position, parent) {
 	return (this.onBindItem && this.onBindItem(this, adapter, position, parent)) || null;
 };
 
-ListFragment.prototype.describeItemFragment = function(adapter, item, position, parent) {
-	this.onDescribeItem && this.onDescribeItem(this, adapter, item, position, parent);
+ListFragment.prototype.describeItemFragment = function(adapter, holder, item, position, parent) {
+	this.onDescribeItem && this.onDescribeItem(this, adapter, holder, item, position, parent);
 };
 
 ListFragment.prototype.setOnBindItemListener = function(listener) {
@@ -198,6 +216,9 @@ ListFragment.parseJson = function(instanceOrJson, json) {
 	}
 	if (json.hasOwnProperty("describeItem")) {
 		instanceOrJson.setOnDescribeItemListener(parseCallback(json, json.describeItem, this));
+	}
+	if (json.hasOwnProperty("items")) {
+        instanceOrJson.setItems(calloutOrParse(json, json.items, [this, instanceOrJson]));
 	}
 	SelectableLayoutFragment.parseJson.call(this, instanceOrJson, json);
 	return instanceOrJson;

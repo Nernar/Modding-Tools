@@ -44,7 +44,7 @@ const ListHolderAdapter = function(proto) {
 					holder = convertView.getTag();
 				}
 				if (this.fragmentAdapter && this.fragmentAdapter.describeItemFragment) {
-					this.fragmentAdapter.describeItemFragment(this, this.getItem(position), position, parent);
+					this.fragmentAdapter.describeItemFragment(this, holder, this.getItem(position), position, parent);
 				} else {
 					this.describe(holder, position, convertView, parent);
 				}
