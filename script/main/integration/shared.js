@@ -12,6 +12,7 @@ const API = assign({}, {
 	isCoreEngineLoaded: isCoreEngineLoaded,
 	CoreEngine: CoreEngine,
 	launchIfSupported: launchIfSupported,
+	__inherit__: __inherit__,
 
 	// Retention
 	isHorizon: isHorizon,
@@ -145,8 +146,10 @@ const API = assign({}, {
 	FrameFragment: FrameFragment,
 	ScrollFragment: ScrollFragment,
 	HorizontalScrollFragment: HorizontalScrollFragment,
-	TextFragment: TextFragment,
-	ImageFragment: ImageFragment,
+    TextFragment: TextFragment,
+    TextFragmentMixin: TextFragmentMixin,
+    ImageFragment: ImageFragment,
+    ImageFragmentMixin: ImageFragmentMixin,
 	ListFragment: ListFragment,
 
 	// Adapters
