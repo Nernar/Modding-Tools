@@ -10,9 +10,12 @@ ListFragment.prototype.TYPE = "ListFragment";
 
 ListFragment.prototype.resetContainer = function() {
 	let content = new android.widget.ListView(getContext());
+	content.setLayoutDirection(android.view.View.LAYOUT_DIRECTION_RTL);
 	content.setDrawSelectorOnTop(false);
 	let adapter = this.getListAdapter();
 	adapter && content.setAdapter(adapter);
+	content.setLayoutParams(new android.view.ViewGroup.LayoutParams
+		(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 	this.setContainerView(content);
 	this.setSelectionMode(SelectableLayoutFragment.MODE_SINGLE);
 };
