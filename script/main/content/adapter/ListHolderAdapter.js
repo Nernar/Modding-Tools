@@ -31,8 +31,8 @@ const ListHolderAdapter = function(proto) {
 			try {
 				let holder;
 				if (convertView == null) {
-					if (this.fragmentAdapter && this.fragmentAdapter.bindItemFragment) {
-						holder = this.fragmentAdapter.bindItemFragment(this, position, parent);
+					if (this.holderFragmentAdapter && this.holderFragmentAdapter.bindItemFragment) {
+						holder = this.holderFragmentAdapter.bindItemFragment(this, position, parent);
 						holder && (convertView = holder.getContainer());
 					}
 					if (holder == null) {
@@ -43,8 +43,8 @@ const ListHolderAdapter = function(proto) {
 				} else {
 					holder = convertView.getTag();
 				}
-				if (this.fragmentAdapter && this.fragmentAdapter.describeItemFragment) {
-					this.fragmentAdapter.describeItemFragment(this, holder, this.getItem(position), position, parent);
+				if (this.holderFragmentAdapter && this.holderFragmentAdapter.describeItemFragment) {
+					this.holderFragmentAdapter.describeItemFragment(this, holder, this.getItem(position), position, parent);
 				} else {
 					this.describe(holder, position, convertView, parent);
 				}
@@ -64,9 +64,9 @@ const ListHolderAdapter = function(proto) {
 
 ListHolderAdapter.prototype.setFragmentAdapter = function(fragment) {
 	if (fragment != null) {
-		this.fragmentAdapter = fragment;
+		this.holderFragmentAdapter = fragment;
 	} else {
-		delete this.fragmentAdapter;
+		delete this.holderFragmentAdapter;
 	}
 	return this;
 };
