@@ -45,11 +45,10 @@ Worker.prototype.getProperty = function(source, properties, average) {
 		}
 		return arguments[arguments.length - 1] ? count > 0 ? result / count : 0 : null;
 	}
-	let value = source;
 	for (let argument = 1; argument < arguments.length - 1; argument++) {
-		value = value[arguments[argument]];
+		source = source[arguments[argument]];
 	}
-	return value != null ? value : null;
+	return source != null ? source : null;
 };
 
 Worker.prototype.appendProperty = function(source, properties, difference) {
@@ -95,8 +94,8 @@ Worker.prototype.setProperty = function(source, properties, value) {
 };
 
 Worker.prototype.resetProperty = function(source, properties) {
-	if (arguments.length < 3) {
-		Logger.Log("Modding Tools: Worker.resetProperty requires at least 3 arguments!", "WARNING");
+	if (arguments.length < 2) {
+		Logger.Log("Modding Tools: Worker.resetProperty requires at least 2 arguments!", "WARNING");
 		return;
 	}
 	if (Array.isArray(properties)) {

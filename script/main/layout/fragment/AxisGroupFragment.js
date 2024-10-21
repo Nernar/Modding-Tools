@@ -62,8 +62,8 @@ AxisGroupFragment.prototype.changeItemInLayout = function(item, value, differenc
 
 AxisGroupFragment.prototype.resetItemInLayout = function(item, value) {
 	if (this.onResetItem) {
-		let value = this.onResetItem(item, item.getIndex(), value);
-		return value != null && typeof value == "number" ? value : null;
+		let result = this.onResetItem(item, item.getIndex(), value);
+		return result != null && typeof result == "number" ? result : null;
 	}
 	return null;
 };

@@ -10,7 +10,7 @@ ListFragment.prototype.TYPE = "ListFragment";
 
 ListFragment.prototype.resetContainer = function() {
 	let content = new android.widget.ListView(getContext());
-	content.setLayoutDirection(android.view.View.LAYOUT_DIRECTION_RTL);
+	content.setLayoutDirection(android.view.View.LAYOUT_DIRECTION_LTR);
 	content.setDrawSelectorOnTop(false);
 	let adapter = this.getListAdapter();
 	adapter && content.setAdapter(adapter);

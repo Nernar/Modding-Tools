@@ -54,7 +54,7 @@ SliderFragment.prototype.resetContainer = function() {
 					self.modifier >= self.modifiers.length && (self.modifier = 0);
 					self.updateCounter();
 				} else if (currently != previous) {
-					self.change(this.value, currently);
+					self.change(self.value, currently);
 				}
 			} catch (e) {
 				reportError(e);
