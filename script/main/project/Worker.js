@@ -62,11 +62,17 @@ Worker.prototype.appendProperty = function(source, properties, difference) {
 			for (let argument = 2; argument < arguments.length - 2; argument++) {
 				property = property[arguments[argument]];
 			}
+			if (property[arguments[arguments.length - 2]] == null) {
+				property[arguments[arguments.length - 2]] = 0;
+			}
 			property[arguments[arguments.length - 2]] += arguments[arguments.length - 1];
 		}
 	} else {
 		for (let argument = 1; argument < arguments.length - 2; argument++) {
 			source = source[arguments[argument]];
+		}
+		if (source[arguments[arguments.length - 2]] == null) {
+			source[arguments[arguments.length - 2]] = 0;
 		}
 		source[arguments[arguments.length - 2]] += arguments[arguments.length - 1];
 	}
