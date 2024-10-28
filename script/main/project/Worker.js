@@ -43,10 +43,16 @@ Worker.prototype.getProperty = function(source, properties, average) {
 				return value;
 			}
 		}
-		return arguments[arguments.length - 1] ? count > 0 ? result / count : 0 : null;
+		if (arguments[arguments.length - 1]) {
+			return count > 0 ? result / count : 0;
+		}
+		return null;
 	}
 	for (let argument = 1; argument < arguments.length - 1; argument++) {
 		source = source[arguments[argument]];
+	}
+	if (arguments[arguments.length - 1]) {
+		return typeof source == "number" && !isNaN(source) ? source : 0;
 	}
 	return source != null ? source : null;
 };
