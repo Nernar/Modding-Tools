@@ -135,3 +135,23 @@ const parseCallback = function(scope, value, args) {
 	}
 	return null;
 };
+
+const stringifyObjectInline = function(prefix, what) {
+	if (what != null && what.length != null) {
+		let array = [];
+		for (let offset = 0; offset < what.length; offset++) {
+			try {
+				array.push(stringifyObject(what[offset], false));
+			} catch (e) {
+				array.push("/* " + e + " */");
+			}
+		}
+		Logger.Log("Modding Tools: " + prefix + "(" + array.join(", ") + ")", "DEBUG");
+	} else {
+		try {
+			Logger.Log("Modding Tools: " + prefix + "(" + stringifyObject(what, false) + ")", "DEBUG");
+		} catch (e) {
+			Logger.Log("Modding Tools: " + prefix + "(/* " + e + "*/)", "DEBUG");
+		}
+	}
+};

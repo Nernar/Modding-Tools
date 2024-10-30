@@ -105,6 +105,7 @@ const API = assign({}, {
 	showHint: showHint,
 	checkOnlineable: checkOnlineable,
 	stringifyObject: stringifyObject,
+	stringifyObjectInline: stringifyObjectInline,
 	formatExceptionReport: formatExceptionReport,
 	selectFile: selectFile,
 	saveFile: saveFile,
