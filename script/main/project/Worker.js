@@ -32,6 +32,9 @@ Worker.prototype.getProperty = function(source, properties, average) {
 		for (let offset = 0; offset < properties.length; offset++) {
 			let value = source[properties[offset]];
 			for (let argument = 2; argument < arguments.length - 1; argument++) {
+				if (value == null) {
+					break;
+				}
 				value = value[arguments[argument]];
 			}
 			if (arguments[arguments.length - 1]) {
@@ -49,6 +52,9 @@ Worker.prototype.getProperty = function(source, properties, average) {
 		return null;
 	}
 	for (let argument = 1; argument < arguments.length - 1; argument++) {
+		if (source == null) {
+			break;
+		}
 		source = source[arguments[argument]];
 	}
 	if (arguments[arguments.length - 1]) {
@@ -66,6 +72,9 @@ Worker.prototype.appendProperty = function(source, properties, difference) {
 		for (let offset = 0; offset < properties.length; offset++) {
 			let property = source[properties[offset]];
 			for (let argument = 2; argument < arguments.length - 2; argument++) {
+				if (property[arguments[argument]] == null) {
+					property[arguments[argument]] = {};
+				}
 				property = property[arguments[argument]];
 			}
 			if (property[arguments[arguments.length - 2]] == null) {
@@ -75,6 +84,9 @@ Worker.prototype.appendProperty = function(source, properties, difference) {
 		}
 	} else {
 		for (let argument = 1; argument < arguments.length - 2; argument++) {
+			if (source[arguments[argument]] == null) {
+				source[arguments[argument]] = {};
+			}
 			source = source[arguments[argument]];
 		}
 		if (source[arguments[arguments.length - 2]] == null) {
@@ -93,12 +105,18 @@ Worker.prototype.setProperty = function(source, properties, value) {
 		for (let offset = 0; offset < properties.length; offset++) {
 			let property = source[properties[offset]];
 			for (let argument = 2; argument < arguments.length - 2; argument++) {
+				if (property[arguments[argument]] == null) {
+					property[arguments[argument]] = {};
+				}
 				property = property[arguments[argument]];
 			}
 			property[arguments[arguments.length - 2]] = arguments[arguments.length - 1];
 		}
 	} else {
 		for (let argument = 1; argument < arguments.length - 2; argument++) {
+			if (source[arguments[argument]] == null) {
+				source[arguments[argument]] = {};
+			}
 			source = source[arguments[argument]];
 		}
 		source[arguments[arguments.length - 2]] = arguments[arguments.length - 1];
@@ -114,12 +132,20 @@ Worker.prototype.resetProperty = function(source, properties) {
 		for (let offset = 0; offset < properties.length; offset++) {
 			let property = source[properties[offset]];
 			for (let argument = 2; argument < arguments.length - 1; argument++) {
+				if (property[arguments[argument]] == null) {
+					break;
+				}
 				property = property[arguments[argument]];
+				if (argument == arguments.length - 2) {
+					delete property[arguments[arguments.length - 1]];
+				}
 			}
-			delete property[arguments[arguments.length - 1]];
 		}
 	} else {
 		for (let argument = 1; argument < arguments.length - 1; argument++) {
+			if (source[arguments[argument]] == null) {
+				return;
+			}
 			source = source[arguments[argument]];
 		}
 		delete source[arguments[arguments.length - 1]];
