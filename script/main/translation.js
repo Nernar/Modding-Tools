@@ -96,9 +96,9 @@ Translation.addTranslation("Log", {
 	ru: "Лог",
 	en: "Log"
 });
-Translation.addTranslation("Currently log", {
-	ru: "Текущий лог",
-	en: "Currently log"
+Translation.addTranslation("Current Log", {
+    ru: "Текущий лог",
+    en: "Current Log"
 });
 Translation.addTranslation("Console", {
 	ru: "Консоль",

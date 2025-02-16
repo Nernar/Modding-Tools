@@ -43,9 +43,10 @@ LogViewer.handle = function(text, scroll, horizontal, message) {
 
 LogViewer.show = function() {
 	let popup = new ExpandablePopup("log");
-	popup.setTitle(translate("Currently log"));
-   	popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.LayoutParams
-   		(getDisplayPercentWidth(25), getDisplayPercentHeight(35)));
+	popup.setTitle(translate("Current Log"));
+    popup.getFragment().getContainerScroll().setLayoutParams(new android.widget.LinearLayout.LayoutParams
+		(getDisplayPercentWidth(60), getDisplayPercentHeight(40))
+	);
 	let horizontal = new android.widget.HorizontalScrollView(getContext());
 	let text = new android.widget.TextView(getContext());
 	text.setPadding(toComplexUnitDip(6), 0, toComplexUnitDip(6), 0);
