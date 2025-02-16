@@ -2,7 +2,8 @@ LIBRARY({
 	name: "inherit",
 	version: 1,
 	shared: true,
-	api: "CoreEngine"
+	api: "Preloader",
+	shared: true
 });
 
 if (typeof Object.assign != "function") {
