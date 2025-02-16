@@ -159,7 +159,7 @@ SelectableFragment.prototype = {
 	},
 	setOnSelectListener(listener) {
 		if (listener != null) {
-			this.onSelect = listener.bind(this);
+			this.onSelect = listener;
 		} else {
 			delete this.onSelect;
 		}
@@ -167,7 +167,7 @@ SelectableFragment.prototype = {
 	},
 	setOnUnselectListener(listener) {
 		if (listener != null) {
-			this.onUnselect = listener.bind(this);
+			this.onUnselect = listener;
 		} else {
 			delete this.onUnselect;
 		}
@@ -322,7 +322,7 @@ SelectableLayoutFragment.prototype = {
 	},
 	setOnSelectItemListener(listener) {
 		if (listener != null) {
-			this.onSelectItem = listener.bind(this);
+			this.onSelectItem = listener;
 		} else {
 			delete this.onSelectItem;
 		}
@@ -330,7 +330,7 @@ SelectableLayoutFragment.prototype = {
 	},
 	setOnUnselectItemListener(listener) {
 		if (listener != null) {
-			this.onUnselectItem = listener.bind(this);
+			this.onUnselectItem = listener;
 		} else {
 			delete this.onUnselectItem;
 		}
@@ -338,7 +338,7 @@ SelectableLayoutFragment.prototype = {
 	},
 	setOnHoldItemListener(listener) {
 		if (listener != null) {
-			this.onHoldItem = listener.bind(this);
+			this.onHoldItem = listener;
 		} else {
 			delete this.onHoldItem;
 		}

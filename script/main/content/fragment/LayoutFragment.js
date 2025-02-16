@@ -157,12 +157,9 @@ LayoutFragment.prototype.removeFragment = function(indexOrFragment) {
 };
 
 LayoutFragment.prototype.removeFragments = function(condition) {
-	if (condition != null) {
-		condition = condition.bind(this);
-	}
 	for (let index = this.fragments.length - 1; index >= 0; index--) {
 		let fragment = this.fragments[index];
-		if (condition == null || condition(fragment, index)) {
+		if (condition == null || condition.call(this, fragment, index)) {
 			this.removeFragment(index);
 		}
 	}

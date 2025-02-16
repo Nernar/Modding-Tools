@@ -42,23 +42,24 @@ BaseFragment.prototype.resetListeners = function() {
 	if (container == null) {
 		return;
 	}
-	container.setOnClickListener((function() {
+	let self = this;
+	container.setOnClickListener(function() {
 		try {
-			this.click && this.click();
+			self.click && self.click();
 		} catch (e) {
 			reportError(e);
 		}
-	}).bind(this));
-	container.setOnLongClickListener((function() {
+	});
+	container.setOnLongClickListener(function() {
 		try {
-			if (this.hold && this.hold()) {
+			if (self.hold && self.hold()) {
 				return true;
 			}
 		} catch (e) {
 			reportError(e);
 		}
 		return false;
-	}).bind(this));
+	});
 };
 
 BaseFragment.prototype.getBackground = function(tag) {
@@ -142,7 +143,7 @@ BaseFragment.prototype.hold = function() {
 
 BaseFragment.prototype.setOnClickListener = function(listener) {
 	if (listener != null) {
-		this.onClick = listener.bind(this);
+		this.onClick = listener;
 	} else {
 		delete this.onClick;
 	}
@@ -151,7 +152,7 @@ BaseFragment.prototype.setOnClickListener = function(listener) {
 
 BaseFragment.prototype.setOnHoldListener = function(listener) {
 	if (listener != null) {
-		this.onHold = listener.bind(this);
+		this.onHold = listener;
 	} else {
 		delete this.onHold;
 	}
@@ -214,7 +215,7 @@ BaseFragment.prototype.remark = function() {
 
 BaseFragment.prototype.setOnRemarkListener = function(listener) {
 	if (listener != null) {
-		this.onRemark = listener.bind(this);
+		this.onRemark = listener;
 	} else {
 		delete this.onRemark;
 	}

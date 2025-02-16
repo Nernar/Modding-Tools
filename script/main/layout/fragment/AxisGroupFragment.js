@@ -70,7 +70,7 @@ AxisGroupFragment.prototype.resetItemInLayout = function(item, value) {
 
 AxisGroupFragment.prototype.setOnChangeItemListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onChangeItem = listener.bind(this);
+		this.onChangeItem = listener;
 	} else {
 		delete this.onChangeItem;
 	}
@@ -79,7 +79,7 @@ AxisGroupFragment.prototype.setOnChangeItemListener = function(listener) {
 
 AxisGroupFragment.prototype.setOnResetItemListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onResetItem = listener.bind(this);
+		this.onResetItem = listener;
 	} else {
 		delete this.onResetItem;
 	}

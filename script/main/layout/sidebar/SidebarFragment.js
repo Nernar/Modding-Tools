@@ -86,26 +86,20 @@ SidebarFragment.Rail.prototype.setContainerBackground = function(src) {
 };
 
 SidebarFragment.Rail.prototype.expand = function(condition) {
-	if (condition != null) {
-		condition = condition.bind(this);
-	}
 	let fragments = this.getFragments();
 	for (let offset = 0; offset < fragments.length; offset++) {
 		let fragment = fragments[offset];
-		if (fragment.expand && (!condition || condition(fragment))) {
+		if (fragment.expand && (!condition || condition.call(this, fragment))) {
 			fragment.expand();
 		}
 	}
 };
 
 SidebarFragment.Rail.prototype.collapse = function(condition) {
-	if (condition != null) {
-		condition = condition.bind(this);
-	}
 	let fragments = this.getFragments();
 	for (let offset = 0; offset < fragments.length; offset++) {
 		let fragment = fragments[offset];
-		if (fragment.collapse && (!condition || condition(fragment))) {
+		if (fragment.collapse && (!condition || condition.call(this, fragment))) {
 			fragment.collapse();
 		}
 	}
@@ -117,7 +111,7 @@ SidebarFragment.Rail.prototype.fetchItemInLayout = function(item) {
 
 SidebarFragment.Rail.prototype.setOnFetchItemListener = function(listener) {
 	if (listener != null) {
-		this.onFetchItem = listener.bind(this);
+		this.onFetchItem = listener;
 	} else {
 		delete this.onFetchItem;
 	}
@@ -228,7 +222,7 @@ SidebarFragment.Rail.Item.prototype.updateLayout = function() {
 
 SidebarFragment.Rail.Item.prototype.setOnFetchListener = function(listener) {
 	if (listener != null) {
-		this.onFetch = listener.bind(this);
+		this.onFetch = listener;
 	} else {
 		delete this.onFetch;
 	}

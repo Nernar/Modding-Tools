@@ -26,27 +26,28 @@ ListFragment.prototype.resetListeners = function() {
 	if (list == null) {
 		return;
 	}
-	list.setOnItemClickListener((function(parent, view, position, id) {
+	let self = this;
+	list.setOnItemClickListener(function(parent, view, position, id) {
 		try {
 			if (parent.isItemChecked(position)) {
-				this.selectItemInLayout(position);
+				self.selectItemInLayout(position);
 			} else {
-				this.unselectItemInLayout(position);
+				self.unselectItemInLayout(position);
 			}
 		} catch (e) {
 			reportError(e);
 		}
-	}).bind(this));
-	list.setOnItemLongClickListener((function(parent, view, position, id) {
+	});
+	list.setOnItemLongClickListener(function(parent, view, position, id) {
 		try {
-			if (this.holdItemInLayout(position)) {
+			if (self.holdItemInLayout(position)) {
 				return true;
 			}
 		} catch (e) {
 			reportError(e);
 		}
 		return false;
-	}).bind(this));
+	});
 };
 
 ListFragment.prototype.getListView = function() {
@@ -188,7 +189,7 @@ ListFragment.prototype.describeItemFragment = function(adapter, holder, item, po
 
 ListFragment.prototype.setOnBindItemListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onBindItem = listener.bind(this);
+		this.onBindItem = listener;
 	} else {
 		delete this.onBindItem;
 	}
@@ -197,7 +198,7 @@ ListFragment.prototype.setOnBindItemListener = function(listener) {
 
 ListFragment.prototype.setOnDescribeItemListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onDescribeItem = listener.bind(this);
+		this.onDescribeItem = listener;
 	} else {
 		delete this.onDescribeItem;
 	}

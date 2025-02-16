@@ -158,7 +158,7 @@ SliderFragment.prototype.reset = function() {
 
 SliderFragment.prototype.setOnChangeListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onChange = listener.bind(this);
+		this.onChange = listener;
 	} else {
 		delete this.onChange;
 	}
@@ -167,7 +167,7 @@ SliderFragment.prototype.setOnChangeListener = function(listener) {
 
 SliderFragment.prototype.setOnResetListener = function(listener) {
 	if (typeof listener == "function") {
-		this.onReset = listener.bind(this);
+		this.onReset = listener;
 	} else {
 		delete this.onReset;
 	}

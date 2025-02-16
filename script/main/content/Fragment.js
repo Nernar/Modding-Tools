@@ -134,12 +134,12 @@ Fragment.prototype.attach = function(parent) {
 		return;
 	}
 	this.parent = parent;
-	this.onAttach && this.onAttach(parent);
+	this.onAttach && this.onAttach.apply(this, arguments);
 };
 
 Fragment.prototype.deattach = function() {
 	if (this.parent != null) {
-		this.onDeattach && this.onDeattach();
+		this.onDeattach && this.onDeattach.apply(this, arguments);
 	}
 	delete this.parent;
 };
@@ -157,7 +157,7 @@ Fragment.prototype.updateWith = function(when) {
 
 Fragment.prototype.setOnAttachListener = function(listener) {
 	if (listener != null) {
-		this.onAttach = listener.bind(this);
+		this.onAttach = listener;
 	} else {
 		delete this.onAttach;
 	}
@@ -166,7 +166,7 @@ Fragment.prototype.setOnAttachListener = function(listener) {
 
 Fragment.prototype.setOnDeattachListener = function(listener) {
 	if (listener != null) {
-		this.onDeattach = listener.bind(this);
+		this.onDeattach = listener;
 	} else {
 		delete this.onDeattach;
 	}
@@ -175,7 +175,7 @@ Fragment.prototype.setOnDeattachListener = function(listener) {
 
 Fragment.prototype.setOnUpdateListener = function(listener) {
 	if (listener != null) {
-		this.onUpdate = listener.bind(this);
+		this.onUpdate = listener;
 	} else {
 		delete this.onUpdate;
 	}
