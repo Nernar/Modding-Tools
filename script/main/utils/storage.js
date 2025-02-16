@@ -124,10 +124,82 @@ const readFile = function(path, asBytes, action) {
 	});
 };
 
+const recursiveIndexateWithExport = function(path, what, timeout, cancelMessage, doneMessage, beautify) {
+	let file = Files.of(path);
+	if (what == null || typeof what != "object") {
+		MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Exportable instance should be valid object, got " + typeof what);
+	}
+
+	let done = false;
+
+	function recursiveIndexate(object, count, tree) {
+		if (count === undefined) {
+			count = 0;
+		}
+		if (done) MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Reached timeout...");
+		try {
+			if (object === undefined) {
+				return count;
+			}
+			if (object && typeof object == "object") {
+				for (let element in object) {
+					recursiveIndexate(object[item], count, tree ? tree + "." + element : element);
+				}
+			}
+			seek(translate("Indexating") + " (" + element + ")");
+		} catch (e) {
+			Logger.Log("Modding Tools#recursiveIndexateWithExport: Illegal object " + tree + ", it may be unsaved", "WARNING");
+			try {
+				Logger.Log("Modding Tools#recursiveIndexateWithExport: Object " + object + ", position " + count, "WARNING");
+			} catch (e) {}
+		}
+		return ++count;
+	}
+
+	handle(function() {
+		done = true;
+	}, (timeout > 0 ? timeout : 60) * 1000);
+
+	// shrink(..);
+	recursiveIndexate(what);
+	if (done) MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Reached timeout...");
+
+	let result = stringifyObject(what, beautify, {
+		onUpdate: function() {
+			if (done) MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Reached timeout...");
+			// seek(translate(cancelMessage || "Stringify"), 1);
+		},
+		onPassed: function(result, type) {
+			// seek(translate("Unreachable type %s", [type]));
+			Logger.Log("Modding Tools#recursiveIndexateWithExport: Unreachable value " + result + " of type " + type);
+		}
+	});
+
+	if (result === null || result === undefined) {
+		MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Something went wrong while exporting your object...");
+	}
+
+	result = compileToProduce(result);
+	file.getParentFile().mkdirs();
+	Files.writeBytes(file, result);
+
+	if (doneMessage !== undefined) {
+		// setCompletionMessage(doneMessage);
+		showHint(doneMessage);
+	}
+};
+
 const exportProject = function(object, isAutosave, path, action) {
-	return AsyncSequence.access("internal.dns", [path, object, 30,
-		isAutosave ? translate("Autosaving") : translate("Exporting"),
-		isAutosave ? translate("Autosaved") : translate("Exported")], action, new SnackSequence());
+	// return AsyncSequence.access("internal.dns", [path, object, 30,
+	// 	isAutosave ? translate("Autosaving") : translate("Exporting"),
+	// 	isAutosave ? translate("Autosaved") : translate("Exported")], action, new SnackSequence());
+	handleThread(function() {
+		recursiveIndexateWithExport(
+			path, object, 30,
+			isAutosave ? translate("Autosaving") : translate("Exporting"),
+			isAutosave ? translate("Autosaved") : translate("Exported")
+		);
+	});
 };
 
 const compileData = function(text, type, additional) {
