@@ -1,4 +1,7 @@
 output
+.gradle/
+oat/
+build.gradle
 tsconfig.json
 *.log
 *.icmod
@@ -8,6 +11,5 @@ projects/
 .todo/
 .eval/
 textures/
-script/main/auxiliary/
 assets/root/script/adaptive/bridge.js
 assets/root/script/adaptive/sequence/

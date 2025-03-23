@@ -105,7 +105,7 @@ STRATEGIES = {
         }
     },
     isHashingAlgorithm: function (algorithm) {
-        if (algorithm != null && !(algorithm instanceof java.security.MessageDigest || (algorithm = ("" + algorithm).toLowerCase()) == "md5" || algorithm == "sha-1" || algorithm == "sha-256")) {
+        if (algorithm != null && !(algorithm instanceof java.security.MessageDigest || (algorithm = ("" + algorithm).toLowerCase()) == "md5" || algorithm == "sha-1" || algorithm == "sha-256" || algorithm == "sha-384" || algorithm == "sha-512")) {
             throw null;
         }
     }
@@ -497,7 +497,7 @@ var Files = {
         }, filter == null ? "file" : filter, maxDepth, relativePath);
     }),
     copy: /** @type {(fromPathOrFile: any, toPathOrFile: any, filter?: "file" | "directory" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string, appendInstead?: boolean) => Nullable<void>} */ (constructSafe("copyUnsafe", "is", "isFileDirectoryOrNew")),
-    digestUnsafe: /** @type {() => ((pathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => string)} */ (function () {
+    digestUnsafe: /** @type {() => ((pathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | "sha-384" | "sha-512" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => string)} */ (function () {
         var digests = {};
         function toDigest(object) {
             if (object instanceof java.security.MessageDigest) {
@@ -533,11 +533,11 @@ var Files = {
             return stroke;
         };
     })(),
-    digest: /** @type {(pathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => Nullable<string>} */ (constructSafe("digestUnsafe", "is", "isHashingAlgorithm")),
-    compareUnsafe: /** @type {(leftPathOrFile: any, rightPathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => boolean} */ (function (leftPathOrFile, rightPathOrFile, algorithm, filter, maxDepth, relativePath) {
+    digest: /** @type {(pathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | "sha-384" | "sha-512" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => Nullable<string>} */ (constructSafe("digestUnsafe", "is", "isHashingAlgorithm")),
+    compareUnsafe: /** @type {(leftPathOrFile: any, rightPathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | "sha-384" | "sha-512" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => boolean} */ (function (leftPathOrFile, rightPathOrFile, algorithm, filter, maxDepth, relativePath) {
         return this.digestUnsafe(leftPathOrFile, algorithm, filter, maxDepth, relativePath) == this.digestUnsafe(rightPathOrFile, algorithm, filter, maxDepth, relativePath);
     }),
-    compare: /** @type {(leftPathOrFile: any, rightPathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => Nullable<boolean>} */ (constructSafe("compareUnsafe", "is", "is", "isHashingAlgorithm")),
+    compare: /** @type {(leftPathOrFile: any, rightPathOrFile: any, algorithm?: "md5" | "sha-1" | "sha-256" | "sha-384" | "sha-512" | java.security.MessageDigest, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => Nullable<boolean>} */ (constructSafe("compareUnsafe", "is", "is", "isHashingAlgorithm")),
     putEntryToZipUnsafe: /** @type {(zipOutputStream: java.util.zip.ZipOutputStream, pathOrFile: any, filter?: "file" | (file: java.io.File, relative: Nullable<string>) => boolean, maxDepth?: number | boolean, relativePath?: string) => void} */ (function (zipOutputStream, pathOrFile, filter, maxDepth, relativePath) {
         this.walkUnsafe(pathOrFile, function (file, relativePath) {
             var stream = new java.io.FileInputStream(file);
