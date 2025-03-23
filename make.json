@@ -1,17 +1,34 @@
 {
+	"$schema": "https://raw.githubusercontent.com/zheka2304/innercore-mod-toolchain/develop/toolchain/schemas/make.schema.json",
 	"info": {
 		"name": "Modding Tools",
 		"version": "0.4-snapshot3",
-		"author": "Nernar",
-		"description": "Develop your mods with in-game tools.",
-		"clientOnly": true,
-		"instantLaunch": true
+		"author": "Nernar"
 	},
 	"api": "AdaptedScript",
-	"target": {
-		"source": "script"
-	},
+	"denyTypeScript": true,
 	"sources": [
+		{
+			"type": "launcher",
+			"language": "javascript",
+			"source": "script/launcher.js"
+		},
+		{
+			"type": "custom",
+			"language": "javascript",
+			"api": "Instant",
+			"source": "script/instant.js"
+		},
+		{
+			"type": "main",
+			"language": "typescript",
+			"source": "script/main"
+		},
+		{
+			"source": "library/*",
+			"type": "library",
+			"language": "javascript"
+		},
 		{
 			"type": "custom",
 			"language": "javascript",
@@ -23,30 +40,9 @@
 			"source": "script/coreengine"
 		},
 		{
-			"source": "library/*",
-			"type": "library",
-			"language": "javascript"
-		},
-		{
-			"type": "launcher",
-			"language": "javascript",
-			"source": "script/launcher.js"
-		},
-		{
-			"type": "main",
-			"language": "typescript",
-			"source": "script/main"
-		},
-		{
 			"type": "custom",
 			"language": "javascript",
 			"source": "script/runtime"
-		},
-		{
-			"type": "custom",
-			"language": "javascript",
-			"api": "Instant",
-			"source": "script/instant.js"
 		}
 	],
 	"compile": [
@@ -55,10 +51,10 @@
 			"type": "java"
 		}
 	],
-	"additional": [
-		{
-			"source": "assets/*",
-			"targetDir": "."
-		}
-	]
+	"target": {
+		"java": "../java"
+	},
+	"adb": {
+		"doNothingIfDisconnected": true
+	}
 }
