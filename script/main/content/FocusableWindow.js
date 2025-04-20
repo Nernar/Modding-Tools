@@ -326,7 +326,7 @@ FocusableWindow.parseJson = function(instanceOrJson, json) {
 		instanceOrJson.setOnUpdateListener(parseCallback(json, json.onUpdate, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("onDismiss")) {
-		instanceOrJson.setOnAttachListener(parseCallback(json, json.onDismiss, [this, instanceOrJson]));
+		instanceOrJson.setOnDismissListener(parseCallback(json, json.onDismiss, [this, instanceOrJson]));
 	}
 	if (json.hasOwnProperty("enterTransition")) {
 		instanceOrJson.setEnterTransition(calloutOrParse(json, json.enterTransition, [this, instanceOrJson]));
