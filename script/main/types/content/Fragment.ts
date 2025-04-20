@@ -1,7 +1,3 @@
-type CallableJsonProperty0<T> = T | (() => T);
-type CallableJsonProperty1<S, T> = T | ((self: S) => T);
-type CallableJsonProperty2<S, E, T> = T | ((entry: E, self: S) => T);
-
 interface IBaseFragment<ABC = IBaseFragment<any>> {
 	type?: Nullable<string>;
 	attach?: (parent: Fragment | FocusableWindow) => void;
