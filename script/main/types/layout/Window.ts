@@ -1,10 +1,10 @@
 interface IControlWindow<ABC = IControlWindow<any>> extends IUniqueWindow<ABC> {
 	orientation?: CallableJsonProperty1<ABC, number>;
-	logotypeProgress?: CallableJsonProperty1<ABC, Nullable<object | string>>;
-	logotypeOutside?: CallableJsonProperty1<ABC, Nullable<object | string>>;
-	logotype?: CallableJsonProperty1<ABC, Nullable<object | string>>;
-	buttonBackground?: CallableJsonProperty1<ABC, Nullable<object | string>>;
-	logotypeBackground?: CallableJsonProperty1<ABC, Nullable<object | string>>;
+	logotypeProgress?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
+	logotypeOutside?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
+	logotype?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
+	buttonBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
+	logotypeBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
 	buttonClick?: Nullable<(self: ABC) => void>;
 	buttonHold?: Nullable<(self: ABC) => boolean>;
 	collapsedClick?: Nullable<(self: ABC) => void>;
@@ -13,7 +13,7 @@ interface IControlWindow<ABC = IControlWindow<any>> extends IUniqueWindow<ABC> {
 }
 
 interface IMenuWindow<ABC = IMenuWindow<any>> extends IUniqueWindow<ABC> {
-	background?: CallableJsonProperty1<ABC, Nullable<object | string>>;
+	background?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
 	click?: Nullable<(self: ABC) => void>;
 	closeable?: CallableJsonProperty1<ABC, boolean>;
 	elements?: CallableJsonProperty1<ABC, CallableJsonProperty2<ABC, object, MenuWindow.IElements> | CallableJsonProperty2<ABC, object, MenuWindow.IElements>[]>;
@@ -24,15 +24,15 @@ namespace MenuWindow {
 
 	export interface IHeader {
 		type: "header";
-		cover?: CallableJsonProperty1<IHeader, Nullable<object | string>>;
-		logotype?: CallableJsonProperty1<IHeader, Nullable<object | string>>;
+		cover?: CallableJsonProperty1<IHeader, Nullable<IDrawableJson>>;
+		logotype?: CallableJsonProperty1<IHeader, Nullable<IDrawableJson>>;
 		maxScroll?: CallableJsonProperty1<IHeader, Nullable<number>>;
 		slideOffset?: CallableJsonProperty1<IHeader, Nullable<number>>;
 	}
 
 	export interface IProjectHeader {
 		type: "projectHeader";
-		background?: CallableJsonProperty1<IProjectHeader, Nullable<object | string>>;
+		background?: CallableJsonProperty1<IProjectHeader, Nullable<IDrawableJson>>;
 		maxScroll?: CallableJsonProperty1<IProjectHeader, Nullable<number>>;
 		slideOffset?: CallableJsonProperty1<IProjectHeader, Nullable<number>>;
 		categories?: CallableJsonProperty1<IProjectHeader, CallableJsonProperty2<IProjectHeader, object, ProjectHeader.ICategory> | CallableJsonProperty2<IProjectHeader, object, ProjectHeader.ICategory>[]>;
@@ -48,8 +48,8 @@ namespace MenuWindow {
 	
 		namespace Category {
 			export interface IItem {
-				background?: CallableJsonProperty1<IItem, Nullable<object | string>>;
-				icon?: CallableJsonProperty1<IItem, Nullable<object | string>>;
+				background?: CallableJsonProperty1<IItem, Nullable<IDrawableJson>>;
+				icon?: CallableJsonProperty1<IItem, Nullable<IDrawableJson>>;
 				title?: CallableJsonProperty1<IItem, string>;
 				description?: CallableJsonProperty1<IItem, string>;
 				click?: Nullable<(self: IItem, index: number) => void>;
@@ -68,20 +68,20 @@ namespace MenuWindow {
 
 	namespace Category {
 		export interface IItem {
-			background?: CallableJsonProperty1<IItem, Nullable<object | string>>;
-			icon?: CallableJsonProperty1<IItem, Nullable<object | string>>;
+			background?: CallableJsonProperty1<IItem, Nullable<IDrawableJson>>;
+			icon?: CallableJsonProperty1<IItem, Nullable<IDrawableJson>>;
 			title?: CallableJsonProperty1<IItem, Nullable<string>>;
 			click?: Nullable<(self: IItem, index: number) => void>;
 			hold?: Nullable<(self: IItem, index: number) => boolean>;
-			badgeOverlay?: CallableJsonProperty1<IItem, Nullable<object | string>>;
+			badgeOverlay?: CallableJsonProperty1<IItem, Nullable<IDrawableJson>>;
 			badgeText?: CallableJsonProperty1<IItem, Nullable<string>>;
 		}
 	}
 
 	export interface IMessage {
 		type: "message";
-		background?: CallableJsonProperty1<IMessage, Nullable<object | string>>;
-		icon?: CallableJsonProperty1<IMessage, Nullable<object | string>>;
+		background?: CallableJsonProperty1<IMessage, Nullable<IDrawableJson>>;
+		icon?: CallableJsonProperty1<IMessage, Nullable<IDrawableJson>>;
 		message?: CallableJsonProperty1<IMessage, Nullable<string>>;
 		click?: Nullable<(self: IMessage) => void>;
 	}

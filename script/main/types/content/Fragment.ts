@@ -13,7 +13,7 @@ interface IBaseFragment<ABC = IBaseFragment<any>> {
 	visible?: CallableJsonProperty1<ABC, boolean>;
 	mark?: CallableJsonProperty1<ABC, Nullable<string>>;
 	marks?: CallableJsonProperty1<ABC, Nullable<string | string[]>>;
-	background?: CallableJsonProperty1<ABC, Nullable<object | string>>;
+	background?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
 	click?: () => void;
 	hold?: () => boolean | void;
 }
@@ -22,7 +22,7 @@ interface IBaseFragment<ABC = IBaseFragment<any>> {
  * @deprecated Use {@link ImageFragmentMixin} instead.
  */
 interface IImageFragment<ABC = IImageFragment<any>> extends IBaseFragment<ABC> {
-	icon?: CallableJsonProperty1<ABC, Nullable<object | string>>;
+	icon?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
 }
 
 /**
@@ -45,8 +45,8 @@ interface ILayoutFragment<ABC = ILayoutFragment<any>> extends IBaseFragment<ABC>
 
 interface ISelectableFragment<ABC = ISelectableFragment<any>> {
 	selectionType?: CallableJsonProperty1<ABC, Nullable<number>>;
-	selectedBackground?: CallableJsonProperty1<ABC, Nullable<object | string>>;
-	unselectedBackground?: CallableJsonProperty1<ABC, Nullable<object | string>>;
+	selectedBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
+	unselectedBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
 	selected?: CallableJsonProperty1<ABC, boolean>;
 	select?: (self: ABC) => any;
 	unselect?: (self: ABC) => any;
