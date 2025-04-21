@@ -1,5 +1,5 @@
-header.js
-translation.js
+cheader.ts
+translation.ts
 
 polyfill/Object.js
 polyfill/String.js
@@ -7,7 +7,7 @@ polyfill/Files.js
 polyfill/Drawable.js
 
 utils/object.js
-utils/math.js
+utils/math.ts
 utils/wrapping.js
 utils/storage.js
 utils/stringifyJson.js
@@ -66,12 +66,12 @@ layout/fragment/AngleCircleFragment.js
 layout/fragment/AxisGroupFragment.js
 layout/fragment/SegmentGroupFragment.js
 
-tool/Tool.js
-tool/InteractionTool.js
-tool/MenuTool.js
-tool/SidebarTool.js
-tool/ProjectTool.js
-tool/EditorTool.js
+tool/Tool.ts
+tool/InteractionTool.ts
+tool/MenuTool.ts
+tool/SidebarTool.ts
+tool/ProjectTool.ts
+tool/EditorTool.ts
 
 project/Worker.js
 project/Project.js
@@ -89,8 +89,8 @@ sequence/ControlSequence.js
 tools/project.js
 tools/console.js
 
-algorithm/config.js
-algorithm/auxiliary.js
+algorithm/config.ts
+algorithm/auxiliary.ts
 algorithm/interaction.js
 algorithm/keyboard.js
 algorithm/launcher.js

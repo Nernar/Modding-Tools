@@ -1,7 +1,7 @@
 /**
  * Some useful code; warnings and information.
  */
-const showHint = function(hint, color, reawait) {
+function showHint(hint: string, color?: string | number, reawait?: boolean) {
 	if (showHint.launchStacked !== undefined) {
 		showHint.launchStacked.push({
 			hint: hint,
@@ -23,7 +23,7 @@ const showHint = function(hint, color, reawait) {
 		window.addMessage(hint, color, reawait);
 		if (!window.isOpened()) window.attach();
 	});
-};
+}
 
 showHint.launchStacked = [];
 
@@ -42,7 +42,7 @@ showHint.unstackLaunch = function() {
  * exclusively for debugging purposes.
  * @requires `isAndroid()`
  */
-const playTuneDirectly = function() {
+function playTuneDirectly() {
 	let buffsize = android.media.AudioTrack.getMinBufferSize(4000,
 		android.media.AudioFormat.CHANNEL_OUT_MONO,
 		android.media.AudioFormat.ENCODING_PCM_16BIT);
@@ -57,7 +57,7 @@ const playTuneDirectly = function() {
 	audioTrack.play();
 	return {
 		track: audioTrack,
-		write: function(duration, min, max, static) {
+		write: function(duration: number, min: number, max: number, static?: boolean) {
 			let evaluate = Date.now(),
 				statable;
 			if (!static) {
@@ -73,16 +73,16 @@ const playTuneDirectly = function() {
 			audioTrack.write(samples, 0, buffsize);
 			return Date.now() - evaluate;
 		},
-		sleepDuration: function(duration, offset) {
+		sleepDuration: function(duration: number, offset: number) {
 			if (duration != null && offset < duration) {
 				java.lang.Thread.sleep(duration - offset);
 			}
 		},
-		writeDirectly: function(duration, min, max, static) {
+		writeDirectly: function(duration: number, min: number, max: number, static?: boolean) {
 			let offset = this.write(duration, min, max, static);
 			this.sleepDuration(duration, offset);
 		},
-		writeThenSleep: function(duration, min, max, static) {
+		writeThenSleep: function(duration: number, min: number, max: number, static?: boolean) {
 			let offset = this.write(duration, min, max, static),
 				instance = this;
 			handleThread(function() {
@@ -90,7 +90,7 @@ const playTuneDirectly = function() {
 				audioTrack.flush();
 			});
 		},
-		writeThenRelease: function(duration, min, max, static) {
+		writeThenRelease: function(duration: number, min: number, max: number, static?: boolean) {
 			let offset = this.write(duration, min, max, static),
 				instance = this;
 			handleThread(function() {
@@ -98,7 +98,7 @@ const playTuneDirectly = function() {
 				instance.release();
 			});
 		},
-		writeAsync: function(duration, min, max, static) {
+		writeAsync: function(duration: number, min: number, max: number, static?: boolean) {
 			let instance = this;
 			handleThread(function() {
 				instance.write(duration, min, max, static);
@@ -112,9 +112,9 @@ const playTuneDirectly = function() {
 			delete this.track;
 		}
 	};
-};
+}
 
-const playTune = function(duration, min, max, static, forever) {
+function playTune(duration: number, min: number, max: number, static?: boolean, forever?: boolean) {
 	let track = playTuneDirectly();
 	playTune.track = track;
 	handleThread(function() {
@@ -123,23 +123,27 @@ const playTune = function(duration, min, max, static, forever) {
 		} while (forever !== false && playTune.track == track);
 		track.release();
 	});
-};
+}
 
-const stopTune = function() {
+playTune.track = null;
+
+function stopTune() {
 	delete playTune.track;
-};
+}
 
-const RETRY_TIME = 60000;
+const NETWORK_RETRY_TIME = 60000;
 
-const checkOnlineable = function(action) {
+function checkOnlineable(action) {
 	handleThread(function() {
-		if (!Network.isOnline()) {
+		if (!Connectivity.isOnline()) {
 			warningMessage = "Please check network connection. Connect to collect updates, special events and prevent key deprecation.";
 			handle(function() {
 				checkOnlineable(action);
-			}, RETRY_TIME);
+			}, NETWORK_RETRY_TIME);
 			return;
-		} else warningMessage = null;
+		} else {
+			warningMessage = null;
+		}
 		action && action();
 	});
-};
+}

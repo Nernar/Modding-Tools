@@ -17,7 +17,7 @@
 */
 
 // Currently build information
-const REVISION = "develop-alpha-0.4-16.02.2025-0";
+const REVISION = "develop-alpha-0.4-21.04.2025-0";
 const NAME = __mod__.getInfoProperty("name");
 const AUTHOR = __mod__.getInfoProperty("author");
 const VERSION = __mod__.getInfoProperty("version");
@@ -146,7 +146,7 @@ toComplexUnitSp = function(value) {
 
 IMPORT("Drawable");
 
-const InnerCorePackages = isHorizon ? Packages.com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
+const InnerCorePackages = isHorizon ? com.zhekasmirnov.innercore : Packages.zhekasmirnov.launcher;
 
 IMPORT("Action");
 IMPORT("Sequence");
@@ -183,15 +183,15 @@ const CONTEXT = (function() {
 	}
 })();
 
-const isCoreEngineLoaded = function() {
+function isCoreEngineLoaded() {
 	return CoreEngine.CORE_ENGINE_API_LEVEL != 0;
-};
+}
 
-getPlayerEnt = function() {
+function getPlayerEnt() {
 	if ($.LevelInfo.isLoaded()) {
 		return Number(Player.get());
 	}
 	return 0;
-};
+}
 
 IMPORT("Connectivity");

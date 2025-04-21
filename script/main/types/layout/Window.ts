@@ -1,22 +1,22 @@
-interface IControlWindow<ABC = IControlWindow<any>> extends IUniqueWindow<ABC> {
-	orientation?: CallableJsonProperty1<ABC, number>;
-	logotypeProgress?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	logotypeOutside?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	logotype?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	buttonBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	logotypeBackground?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	buttonClick?: Nullable<(self: ABC) => void>;
-	buttonHold?: Nullable<(self: ABC) => boolean>;
-	collapsedClick?: Nullable<(self: ABC) => void>;
-	collapsedHold?: Nullable<(self: ABC) => boolean>;
-	hideable?: CallableJsonProperty1<ABC, boolean>;
+interface IControlWindow<CT = IControlWindow<any>> extends IUniqueWindow<CT> {
+	orientation?: CallableJsonProperty2<CT, ControlWindow, number>;
+	logotypeProgress?: CallableJsonProperty2<CT, ControlWindow, Nullable<IDrawableJson>>;
+	logotypeOutside?: CallableJsonProperty2<CT, ControlWindow, Nullable<IDrawableJson>>;
+	logotype?: CallableJsonProperty2<CT, ControlWindow, Nullable<IDrawableJson>>;
+	buttonBackground?: CallableJsonProperty2<CT, ControlWindow, Nullable<IDrawableJson>>;
+	logotypeBackground?: CallableJsonProperty2<CT, ControlWindow, Nullable<IDrawableJson>>;
+	buttonClick?: Nullable<(self: CT) => void>;
+	buttonHold?: Nullable<(self: CT) => boolean>;
+	collapsedClick?: Nullable<(self: CT) => void>;
+	collapsedHold?: Nullable<(self: CT) => boolean>;
+	hideable?: CallableJsonProperty2<CT, ControlWindow, boolean>;
 }
 
-interface IMenuWindow<ABC = IMenuWindow<any>> extends IUniqueWindow<ABC> {
-	background?: CallableJsonProperty1<ABC, Nullable<IDrawableJson>>;
-	click?: Nullable<(self: ABC) => void>;
-	closeable?: CallableJsonProperty1<ABC, boolean>;
-	elements?: CallableJsonProperty1<ABC, CallableJsonProperty2<ABC, object, MenuWindow.IElements> | CallableJsonProperty2<ABC, object, MenuWindow.IElements>[]>;
+interface IMenuWindow<CT = IMenuWindow<any>> extends IUniqueWindow<CT> {
+	background?: CallableJsonProperty2<CT, MenuWindow, Nullable<IDrawableJson>>;
+	click?: Nullable<(self: CT) => void>;
+	closeable?: CallableJsonProperty2<CT, MenuWindow, boolean>;
+	elements?: CallableJsonProperty2<CT, MenuWindow, CallableJsonProperty2<CT, object, MenuWindow.IElements> | CallableJsonProperty2<CT, object, MenuWindow.IElements>[]>;
 }
 
 namespace MenuWindow {

@@ -3,10 +3,12 @@
 	"info": {
 		"name": "Modding Tools",
 		"version": "0.4-snapshot3",
-		"author": "Nernar"
+		"author": "Nernar",
+		"description": "Develop your mods with in-game tools.",
+		"clientOnly": true,
+		"instantLaunch": true
 	},
 	"api": "AdaptedScript",
-	"denyTypeScript": true,
 	"sources": [
 		{
 			"type": "launcher",
@@ -51,10 +53,25 @@
 			"type": "java"
 		}
 	],
+	"additional": [
+		{
+			"source": "config.json",
+			"targetDir": "."
+		},
+		{
+			"source": "config.info.json",
+			"targetDir": "."
+		},
+		{
+			"source": "assets/",
+			"targetDir": "assets"
+		},
+		{
+			"source": "script/revision/",
+			"targetDir": "script/revision"
+		}
+	],
 	"target": {
-		"java": "../java"
-	},
-	"adb": {
-		"doNothingIfDisconnected": true
+		"source": "script"
 	}
 }
