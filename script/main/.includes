@@ -6,7 +6,7 @@ polyfill/String.js
 polyfill/Files.js
 polyfill/Drawable.js
 
-utils/object.js
+utils/object.ts
 utils/math.ts
 utils/wrapping.js
 utils/storage.js
@@ -91,9 +91,9 @@ tools/console.js
 
 algorithm/config.ts
 algorithm/auxiliary.ts
-algorithm/interaction.js
-algorithm/keyboard.js
-algorithm/launcher.js
+algorithm/interaction.ts
+algorithm/keyboard.ts
+algorithm/launcher.ts
 
 integration/launcher.js
 integration/shared.js

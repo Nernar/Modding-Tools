@@ -11,3 +11,9 @@ declare class JavaImporter {
 	importPackage(pkg: any): void;
 	[key: string]: any;
 }
+
+declare namespace org {
+	const mozilla: any;
+}
+
+declare function log(text: string): void;

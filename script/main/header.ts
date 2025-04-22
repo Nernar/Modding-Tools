@@ -79,6 +79,7 @@ IMPORT("inherit");
 if (this.isInstant === undefined) {
 	this.isInstant = false;
 }
+declare var isInstant: boolean;
 
 IMPORT("Files");
 IMPORT("Retention");

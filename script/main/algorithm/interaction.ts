@@ -1,21 +1,26 @@
 /**
  * Used to import, load, replace or merge project
  * provider data. User may select any availabled
- * data or {@link action} willn't launched.
- * @param {Array} result selectable data
- * @param {function} action to do with data
- * @param {string} type project required type
- * @param {boolean} single is requires single selection
+ * data or {@link complete} willn't launched.
+ * @param projectData selectable data
+ * @param complete to do with data
+ * @param projectType project required type
+ * @param chooseSingle is requires single selection
  */
-const selectProjectData = function(result, action, type, single) {
-	if (!result || result.length == 0) return;
+function selectProjectData<T extends Scriptable>(
+	projectData: T[],
+	complete: (data: T[]) => void,
+	projectType: string,
+	chooseSingle?: boolean
+) {
+	if (!projectData || projectData.length == 0) return;
 	let items = [],
 		data = [],
 		selected = [];
-	result.forEach(function(element, index) {
-		if (element && (type === undefined || element.type == type)) {
+	projectData.forEach(function(element, index) {
+		if (element && (projectType === undefined || element.type == projectType)) {
 			items.push(element.define && element.define.id !== undefined ? element.define.id : "unknown");
-			(!single) && selected.push(importAutoselect);
+			(!chooseSingle) && selected.push(importAutoselect);
 			data.push(element);
 		}
 	});
@@ -24,10 +29,10 @@ const selectProjectData = function(result, action, type, single) {
 		return;
 	}
 	if (items.length == 1) {
-		action && action(single ? data[0] : data);
+		complete && complete(chooseSingle ? data[0] : data);
 		return;
 	}
-	select(translate("Element selector"), items, function(selected, items) {
+	select(translate("Element selector"), items, (selected, items) => {
 		let value = [];
 		if (typeof selected == "object") {
 			selected.forEach(function(element, index) {
@@ -36,14 +41,19 @@ const selectProjectData = function(result, action, type, single) {
 		} else if (selected >= 0) {
 			value.push(data[selected]);
 		}
-		action && action(value);
-	}, !single, selected);
-};
+		complete && complete(value);
+	}, !chooseSingle, selected);
+}
 
 /**
  * @requires `isAndroid()`
  */
-const confirm = function(title, message, action, button) {
+function confirm(
+	title: Nullable<string>,
+	message: Nullable<string>,
+	complete?: () => void,
+	confirmation?: Nullable<string>
+) {
 	handle(function() {
 		let builder = new android.app.AlertDialog.Builder(getContext(),
 			android.R.style.Theme_DeviceDefault_Dialog);
@@ -52,9 +62,9 @@ const confirm = function(title, message, action, button) {
 		builder.setNegativeButton(translate("Cancel"), function() {
 			hideInsetsOnScreen();
 		});
-		builder.setPositiveButton(button || translate("Yes"), function() {
+		builder.setPositiveButton(confirmation || translate("Yes"), function() {
 			try {
-				action && action();
+				complete && complete();
 			} catch (e) {
 				reportError(e);
 			}
@@ -63,9 +73,9 @@ const confirm = function(title, message, action, button) {
 		builder.setCancelable(false);
 		builder.create().show();
 	});
-};
+}
 
-const willBeDeletedSoonSoYouShouldntUseIt = function() {
+function willBeDeletedSoonSoYouShouldntUseIt() {
 	let files = getDebugScripts();
 	ShellObserver.trim();
 	java.lang.System.out.println(ColorToCLI.DIM + "Requireable scripts: " + files.join(", ") + ColorToCLI.RESET);
@@ -103,12 +113,18 @@ const willBeDeletedSoonSoYouShouldntUseIt = function() {
 		}
 	}
 	java.lang.System.out.println("\r" + NAME + " " + VERSION + " (" + REVISION + ")");
-};
+}
 
 /**
  * @requires `isAndroid()`
  */
-const select = function(title, items, action, multiple, approved) {
+function select(
+	title: Nullable<string>,
+	items: string[],
+	complete: (approved: boolean[], items: string | string[]) => void,
+	multiple?: boolean,
+	checked?: boolean[]
+) {
 	handle(function() {
 		if (!Array.isArray(items)) {
 			MCSystem.throwException("Modding Tools: Nothing to select inside select()!");
@@ -122,31 +138,31 @@ const select = function(title, items, action, multiple, approved) {
 			hideInsetsOnScreen();
 		});
 		if (multiple) {
-			if (approved === undefined) approved = [];
-			builder.setMultiChoiceItems(items, approved, function(dialog, index, active) {
+			if (checked === undefined) checked = [];
+			builder.setMultiChoiceItems(items, checked, (dialog, index, active) => {
 				try {
-					approved[index] = !!active;
+					checked[index] = !!active;
 				} catch (e) {
 					reportError(e);
 				}
 			});
-			builder.setNeutralButton(translate("All"), function() {
+			builder.setNeutralButton(translate("All"), () => {
 				try {
-					for (let i = 0; i < approved.length; i++) {
-						approved[i] = true;
+					for (let i = 0; i < checked.length; i++) {
+						checked[i] = true;
 					}
-					action && action(approved, items);
+					complete && complete(checked, items);
 				} catch (e) {
 					reportError(e);
 				}
 				hideInsetsOnScreen();
 			});
-			builder.setPositiveButton(translate("Select"), function() {
+			builder.setPositiveButton(translate("Select"), () => {
 				try {
-					if (approved.indexOf(true) == -1) {
-						select(title, items, action, multiple, approved);
+					if (checked.indexOf(true) == -1) {
+						select(title, items, complete, multiple, checked);
 					} else {
-						action && action(approved, items);
+						complete && complete(checked, items);
 					}
 				} catch (e) {
 					reportError(e);
@@ -154,65 +170,76 @@ const select = function(title, items, action, multiple, approved) {
 				hideInsetsOnScreen();
 			});
 		} else {
-			builder.setItems(items, function(dialog, index) {
+			builder.setItems(items, (dialog, index) => {
 				try {
-					action && action(index, items[index]);
+					complete && complete(index, items[index]);
 				} catch (e) {
 					reportError(e);
 				}
 				hideInsetsOnScreen();
-			})
+			});
 		}
 		builder.setCancelable(false);
 		builder.create().show();
 	});
-};
+}
 
 /**
  * @requires `isAndroid()`
  */
-const selectFile = function(availabled, action, outside, directory) {
+function selectFile(
+	extensions: string | string[],
+	complete: (file: java.io.File) => void,
+	accept?: () => boolean,
+	directory?: Nullable<java.io.File | string>
+) {
 	handle(function() {
 		let explorer = new ExplorerWindow();
-		availabled && explorer.setFilter(availabled);
+		extensions && explorer.setFilter(extensions);
 		let bar = explorer.addPath().setPath(directory || Dirs.PROJECT);
-		bar.setOnOutsideListener(function(bar) {
-			if (outside !== undefined) {
-				outside && outside() !== false && explorer.dismiss();
+		bar.setOnOutsideListener(() => {
+			if (accept !== undefined) {
+				accept && accept() !== false && explorer.dismiss();
 			} else {
 				explorer.dismiss();
 			}
 		});
-		explorer.setOnSelectListener(function(popup, file) {
+		explorer.setOnSelectListener((popup, file) => {
 			explorer.dismiss();
-			action && action(file);
+			complete && complete(file);
 		});
 		explorer.attach();
 	});
-};
+}
 
 /**
  * @requires `isAndroid()`
  */
-const saveFile = function(name, availabled, action, outside, directory) {
+function saveFile(
+	name: Nullable<string>,
+	extensions: string | string[],
+	complete: (file: java.io.File, name: string) => void,
+	accept?: () => boolean,
+	directory?: Nullable<java.io.File | string>
+) {
 	handle(function() {
 		let explorer = new ExplorerWindow();
-		availabled && explorer.setFilter(availabled);
+		extensions && explorer.setFilter(extensions);
 		let bar = explorer.addPath().setPath(directory || Dirs.PROJECT);
-		bar.setOnOutsideListener(function(bar) {
-			if (outside !== undefined) {
-				outside && outside() !== false && explorer.dismiss();
+		bar.setOnOutsideListener(() => {
+			if (accept !== undefined) {
+				accept && accept() !== false && explorer.dismiss();
 			} else {
 				explorer.dismiss();
 			}
 		});
 		let rename = explorer.addRename();
-		availabled && rename.setAvailabledTypes(availabled);
+		extensions && rename.setAvailabledTypes(extensions);
 		name && rename.setCurrentName(name);
-		rename.setOnApproveListener(function(widget, file, last) {
+		rename.setOnApproveListener((widget, file, last) => {
 			let approve = function() {
 				explorer.dismiss();
-				action && action(file, last);
+				complete && complete(file, last);
 			};
 			if (file.exists()) {
 				confirm(translate("File is exists"), translate("File is already created, that process will be rewrite it. Continue?"), function() {
@@ -222,14 +249,14 @@ const saveFile = function(name, availabled, action, outside, directory) {
 		});
 		explorer.attach();
 	});
-};
+}
 
 /**
  * DEPRECATED SECTION
  * All this will be removed as soon as possible.
  */
 
-const registerAdditionalInformation = function() {
+function registerAdditionalInformation() {
 	if (AdditionalMessageFactory.getRegisteredCount() > 0) AdditionalMessageFactory.resetAll();
 	AdditionalMessageFactory.register("inspectorType", translate("Modification still in development state, so something may not work properly."), .2);
 	AdditionalMessageFactory.register("explorerExtensionProject", translate("Load or create your first editor, it'll appear here."), .75, function() {
@@ -286,4 +313,4 @@ const registerAdditionalInformation = function() {
 	}, function() {
 		return uiScaler != 1. || fontScale != 1.;
 	});
-};
+}

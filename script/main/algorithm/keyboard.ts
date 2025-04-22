@@ -1,7 +1,7 @@
 /**
  * @requires `isAndroid()`
  */
-const isKeyboardOnScreen = function() {
+function isKeyboardOnScreen() {
 	try {
 		let manager = getContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
 		let windowHeightMethod = android.view.inputmethod.InputMethodManager.__javaObject__.getMethod("getInputMethodWindowVisibleHeight");
@@ -10,18 +10,18 @@ const isKeyboardOnScreen = function() {
 		reportError(e);
 	}
 	return false;
-};
+}
 
 /**
  * @requires `isAndroid()`
  */
-const registerKeyboardWatcher = (function(state, watchers) {
+const registerKeyboardWatcher = ((state, watchers) => {
 	if (isCLI()) {
 		return function() {
 			MCSystem.throwException("Modding Tools: Keyboard watchers cannot be registered on CLI!");
 		};
 	}
-	getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(function() {
+	getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(() => {
 		try {
 			let onScreen = isKeyboardOnScreen();
 			if (onScreen == state) return;
@@ -33,7 +33,7 @@ const registerKeyboardWatcher = (function(state, watchers) {
 			reportError(e);
 		}
 	});
-	return function(who) {
+	return function(who: (keyboardOnScreen: boolean) => void) {
 		if (typeof who == "function" && watchers.indexOf(who) == -1) {
 			watchers.push(who);
 		}

@@ -1,4 +1,4 @@
-const assign = function(target, source) {
+function assign(target, source) {
 	if (source === null || source === undefined) {
 		source = target;
 		target = null;
@@ -11,9 +11,9 @@ const assign = function(target, source) {
 		}
 	}
 	return Object.assign(target, source);
-};
+}
 
-const merge = function(target, source) {
+function merge(target, source) {
 	if (target === null || target === undefined) {
 		return source;
 	}
@@ -32,9 +32,9 @@ const merge = function(target, source) {
 		return target;
 	}
 	return source;
-};
+}
 
-const _clone = function(target, source) {
+function _clone(target, source) {
 	if (source === null || source === undefined) {
 		return clone(target);
 	}
@@ -52,9 +52,9 @@ const _clone = function(target, source) {
 		return target;
 	}
 	return source;
-};
+}
 
-const clone = function(source) {
+function clone<T>(source: T): T {
 	if (source && (typeof source == "object" || typeof source == "function")) {
 		if (Array.isArray(source)) {
 			return _clone([], source);
@@ -62,9 +62,9 @@ const clone = function(source) {
 		return _clone({}, source);
 	}
 	return source;
-};
+}
 
-const sameAs = function(left, right) {
+function sameAs(left, right) {
 	if (left != null && typeof left == "object") {
 		if (right != null && typeof right == "object") {
 			for (let element in left) {
@@ -82,16 +82,16 @@ const sameAs = function(left, right) {
 		return false;
 	}
 	return left == right;
-};
+}
 
-const isEmpty = function(obj) {
+function isEmpty(obj) {
 	for (let item in obj) {
 		return false;
 	}
 	return true;
-};
+}
 
-const calloutOrParse = function(scope, value, args) {
+function calloutOrParse<T>(scope: any, value: Nullable<T | ((...args: any) => T)>, args?: any | any[]): Nullable<T> {
 	try {
 		if (typeof value == "function") {
 			if (args === undefined) {
@@ -110,9 +110,9 @@ const calloutOrParse = function(scope, value, args) {
 		}
 	}
 	return null;
-};
+}
 
-const parseCallback = function(scope, value, args) {
+function parseCallback<T>(scope: any, value: Nullable<((...args: any) => T)>, args?: any): () => T {
 	try {
 		if (args === undefined) {
 			args = [];
@@ -123,7 +123,7 @@ const parseCallback = function(scope, value, args) {
 			return function() {
 				let argArray = args.slice();
 				argArray = argArray.concat(Array.prototype.slice.call(arguments));
-				return value.apply(scope, argArray);
+				return value.apply(scope, argArray) as T;
 			};
 		}
 	} catch (e) {
@@ -134,9 +134,9 @@ const parseCallback = function(scope, value, args) {
 		}
 	}
 	return null;
-};
+}
 
-const stringifyObjectInline = function(prefix, what) {
+function stringifyObjectInline(prefix: string, what: any) {
 	if (what != null && what.length != null) {
 		let array = [];
 		for (let offset = 0; offset < what.length; offset++) {
@@ -154,4 +154,4 @@ const stringifyObjectInline = function(prefix, what) {
 			Logger.Log("Modding Tools: " + prefix + "(/* " + e + "*/)", "DEBUG");
 		}
 	}
-};
+}

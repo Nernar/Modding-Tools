@@ -2,6 +2,8 @@ class ProjectTool extends MenuTool {
 	protected contentProjectDescriptor: MenuWindow.IProjectHeader["categories"];
 	protected contentEntryDescriptor: MenuWindow.ICategory["items"];
 	private explorerLastName: Nullable<string>;
+	static launchDependencies: boolean;
+	static instantLaunchDependencies: boolean;
 
 	constructor(object?: Partial<ProjectTool>) {
 		super(object);
