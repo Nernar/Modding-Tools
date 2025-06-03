@@ -71,11 +71,11 @@ tool/SidebarTool.ts
 tool/ProjectTool.ts
 tool/EditorTool.ts
 
-project/Worker.js
-project/Project.js
-project/ProjectProvider.js
-project/ScriptConverter.js
-project/ScriptImporter.js
+project/Worker.ts
+project/Project.ts
+project/ProjectProvider.ts
+project/ScriptConverter.ts
+project/ScriptImporter.ts
 
 debug/LogViewer.js
 debug/RuntimeCodeEvaluate.js

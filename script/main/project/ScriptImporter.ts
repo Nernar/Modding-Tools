@@ -1,15 +1,29 @@
-const ScriptImporterFactory = {
-	buildAdaptedScript: function() {
+namespace ScriptImporterFactory {
+	export const scopes: Scriptable[] = [];
+	export const scopeByKey: { [key: string]: Scriptable } = {};
+	export function getScopes() {
+		return ScriptImporterFactory.scopes;
+	}
+	export function getScopeKeys() {
+		return Object.keys(ScriptImporterFactory.scopeByKey);
+	}
+	export function getScopesByKey(key: string) {
+		if (ScriptImporterFactory.scopeByKey.hasOwnProperty(key)) {
+			return ScriptImporterFactory.scopeByKey[key];
+		}
+		return null;
+	}
+	export function buildAdaptedScript() {
 		runCustomSource("script/adaptedscript.js");
 		let executable = __mod__.compiledCustomSources.get("script/adaptedscript.js");
 		return new ScriptImporter(executable, CONTEXT.newObject(executable.scriptScope));
-	},
-	buildCoreEngine: function() {
+	}
+	export function buildCoreEngine() {
 		runCustomSource("script/coreengine.js");
 		let executable = __mod__.compiledCustomSources.get("script/coreengine.js");
 		return new ScriptImporter(executable, CONTEXT.newObject(executable.scriptScope.CoreAPI));
-	},
-	build: function(source) {
+	}
+	export function build(source: any) {
 		if (source.api == "CoreEngine") {
 			return this.buildCoreEngine();
 		} else if (source.api == "AdaptedScript") {
@@ -18,24 +32,57 @@ const ScriptImporterFactory = {
 		Logger.Log("Modding Tools: Api " + source.api + " is not supported or found", "WARNING");
 		return null;
 	}
-};
-
-/**
- * @type
- */
-const ScriptImporter = function(executable, scope, key) {
-	this.inject = function(what) {
-		if (what !== undefined) {
-			key = what;
+	export function injectScopes(where: any) {
+		let injected = [];
+		for (let i = 0; i < ScriptImporterFactory.scopes.length; i++) {
+			try {
+				injected.push(ScriptImporterFactory.scopes[i].call(where));
+			} catch (e) {
+				Logger.Log("Modding Tools: ScriptImporterFactory.injectScopes#" + i + ": " + e, "WARNING");
+			}
 		}
-		if (key !== undefined) {
-			return ScriptImporterFactory.injectScopesByKey(key, scope);
-		}
-		return ScriptImporterFactory.injectScopes(scope);
+		return injected;
 	};
-	this.compile = function(who, optVariants) {
+	export function injectScopesByKey(key: string, where: any) {
+		let scopes = ScriptImporterFactory.scopeByKey[key];
+		if (scopes == null) {
+			return [];
+		}
+		let injected = [];
+		for (let i = 0; i < scopes.length; i++) {
+			try {
+				injected.push(scopes[i].call(where));
+			} catch (e) {
+				Logger.Log("Modding Tools: ScriptImporterFactory.injectScopesByKey#" + key + ".." + i + ": " + e, "WARNING");
+			}
+		}
+		return injected;
+	}
+}
+
+class ScriptImporter {
+	executable: any;
+	scope: Scriptable;
+	key: string;
+	constructor(executable: any, scope: Scriptable, key?: string) {
+		this.executable = executable;
+		this.scope = scope;
+		if (key !== undefined) {
+			this.key = key;
+		}
+	}
+	inject(what: string) {
+		if (what !== undefined) {
+			this.key = what;
+		}
+		if (this.key !== undefined) {
+			return ScriptImporterFactory.injectScopesByKey(this.key, this.scope);
+		}
+		return ScriptImporterFactory.injectScopes(this.scope);
+	}
+	compile(who: string, ...optVariants: string[]) {
 		/*
-		let script = Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateStringWithCorruptions(CONTEXT, scope, who, "script.js", 0, null);
+		let script = Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateStringWithCorruptions(CONTEXT, this.scope, who, "script.js", 0, null);
 		if (script instanceof Packages.io.nernar.moddingtools.rhino.CorruptedScript) {
 			let corruptions = script.getCorruptions();
 			for (let i = 0; i < corruptions.size(); i++) {
@@ -50,14 +97,14 @@ const ScriptImporter = function(executable, scope, key) {
 		let compilerEnvirons = null;
 		if (isHorizon) {
 			compilationErrorReporter = newLoggingErrorReporter("Modding Tools", false, {
-				error: function(message, sourceURI, line, lineText, lineOffset) {
+				error(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number) {
 					collectedMessages.push("E/" + message + " (at " + sourceURI + "#" + line + ")");
 					if (lineText != null) {
 						collectedMessages.push("E/" + lineText);
 						collectedMessages.push("E/" + " ".repeat(lineOffset) + "^");
 					}
 				},
-				warning: function(message, sourceURI, line, lineText, lineOffset) {
+				warning(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number) {
 					collectedMessages.push("W/" + message + " (at " + sourceURI + "#" + line + ")");
 					if (lineText != null) {
 						collectedMessages.push("W/" + lineText);
@@ -72,10 +119,10 @@ const ScriptImporter = function(executable, scope, key) {
 			if (element == null) {
 				continue;
 			}
-			resolveThrowable.invoke(function() {
+			resolveThrowable.invoke(() => {
 				let file = Files.of(element);
-				evaluateUniversal(scope, new java.io.FileReader(file), file.getName(), 0, null, null, compilationErrorReporter, compilerEnvirons);
-			}, function(th) {
+				evaluateUniversal(this.scope, new java.io.FileReader(file), file.getName(), 0, null, null, compilationErrorReporter, compilerEnvirons);
+			}, (th) => {
 				Logger.Log("Modding Tools: " + element, "WARNING");
 				Logger.Log("Modding Tools: " + InnerCorePackages.api.log.ICLog.getStackTrace(th), "WARNING");
 				collectedMessages.push("E/" + element);
@@ -83,61 +130,26 @@ const ScriptImporter = function(executable, scope, key) {
 			});
 		}
 		return collectedMessages;
-	};
-};
-
-const registerScriptScope = (function(everything, byKey) {
-	ScriptImporterFactory.getScopes = function() {
-		return everything;
-	};
-	ScriptImporterFactory.getScopeKeys = function() {
-		return Object.keys(byKey);
-	};
-	ScriptImporterFactory.getScopesByKey = function(key) {
-		if (byKey.hasOwnProperty(key)) {
-			return byKey[key];
-		}
-		return null;
-	};
-	(function(what) {
-		ScriptImporterFactory.injectScopes = function(where) {
-			return what(everything, where);
-		};
-		ScriptImporterFactory.injectScopesByKey = function(key, where) {
-			return what(byKey[key], where);
-		};
-	})(function(who, where) {
-		if (who === undefined) {
-			return [];
-		}
-		let injected = [];
-		for (let i = 0; i < who.length; i++) {
-			try {
-				injected.push(who[i].call(where));
-			} catch (e) {
-				Logger.Log("Modding Tools: ScriptImporterFactory.inject#" + i + ": " + e, "WARNING");
-			}
-		}
-		return injected;
-	});
-	return function(who, key) {
-		if (key !== undefined) {
-			if (!byKey.hasOwnProperty(key)) {
-				byKey[key] = [];
-			}
-			if (byKey[key].indexOf(who) != -1) {
-				Logger.Log("Modding Tools: Script scope " + key + " already has registered function, nothing will happened", "INFO");
-				return;
-			}
-			byKey[key].push(who);
-		}
-		if (everything.indexOf(who) == -1) {
-			everything.push(who);
-		}
 	}
-})([], {});
+}
 
-const importScript = function(path, when, key) {
+function registerScriptScope(who: Scriptable, key: string) {
+	if (key !== undefined) {
+		if (!ScriptImporterFactory.scopeByKey.hasOwnProperty(key)) {
+			ScriptImporterFactory.scopeByKey[key] = [];
+		}
+		if (ScriptImporterFactory.scopeByKey[key].indexOf(who) != -1) {
+			Logger.Log("Modding Tools: Script scope " + key + " already has registered function, nothing will happened", "INFO");
+			return;
+		}
+		ScriptImporterFactory.scopeByKey[key].push(who);
+	}
+	if (ScriptImporterFactory.scopes.indexOf(who) == -1) {
+		ScriptImporterFactory.scopes.push(who);
+	}
+}
+
+function importScript(path: string, when: (results: any[]) => void, key: string) {
 	let source = getSourceInBuildConfigDescription(path);
 	let results = compileScript(source, [source.source, path], key);
 	if (results != null) {
@@ -150,9 +162,9 @@ const importScript = function(path, when, key) {
 		loadSetting("user_login.imported_script", "boolean", true);
 		__config__.save();
 	}
-};
+}
 
-const compileScript = function(source, what, key) {
+function compileScript(source: any, what: any, key: string) {
 	let importer = ScriptImporterFactory.build(source);
 	if (importer == null) return null;
 	let results = importer.inject(key);
@@ -166,4 +178,4 @@ const compileScript = function(source, what, key) {
 		confirm(translate("Evaluator"), messages.join("\n"));
 	}
 	return results;
-};
+}
