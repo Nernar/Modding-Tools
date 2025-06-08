@@ -1,14 +1,19 @@
-const monthToName = function(number) {
+function monthToName(number: number) {
 	let monthes = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	return translate(monthes[number < 0 ? 0 : number > 11 ? 11 : number]);
-};
+}
 
-const stringifyObject = function(obj, beautify, callback) {
+interface StringifyObjectEvent {
+	onUpdate?(): void;
+	onPassed?(obj: any, type: typeof obj): void;
+}
+
+function stringifyObject(obj: any, beautify?: boolean, callback?: Nullable<StringifyObjectEvent>) {
 	if (callback === undefined) {
 		callback = {};
 	}
 
-	const recursiveStringify = function(obj, identation, depth) {
+	function recursiveStringify(obj: any, identation: string, depth: number) {
 		if (callback.onUpdate) {
 			callback.onUpdate();
 		}
@@ -107,24 +112,27 @@ const stringifyObject = function(obj, beautify, callback) {
 					callback.onPassed(obj, typeof obj);
 				}
 		}
-	};
+	}
 
 	if (typeof obj == "object" && !Array.isArray(obj)) {
 		return recursiveStringify(obj, "\t", 0);
 	}
 	return recursiveStringify(obj, "", 0);
-};
+}
 
-const readFile = function(path, asBytes, action) {
+function readFile(path: string | java.io.File, asBytes: true, action?: Nullable<(bytes: native.Array<number>) => void>): void;
+function readFile(path: string | java.io.File, asBytes: false, action?: Nullable<(text: string) => void>): void;
+
+function readFile(path: string | java.io.File, asBytes?: boolean, action?: Nullable<(content: any) => void>) {
 	handleThread(function() {
 		let file = Files.of(path);
 		if (!file.exists()) return;
 		let readed = asBytes ? Files.readAsBytes(file) : Files.read(file);
 		if (typeof action == "function") action(readed);
 	});
-};
+}
 
-const recursiveIndexateWithExport = function(path, what, timeout, cancelMessage, doneMessage, beautify) {
+function recursiveIndexateWithExport(path: string | java.io.File, what: Scriptable, timeout?: number, cancelMessage?: string, doneMessage?: string, beautify?: boolean) {
 	let file = Files.of(path);
 	if (what == null || typeof what != "object") {
 		MCSystem.throwException("Modding Tools#recursiveIndexateWithExport: Exportable instance should be valid object, got " + typeof what);
@@ -132,7 +140,7 @@ const recursiveIndexateWithExport = function(path, what, timeout, cancelMessage,
 
 	let done = false;
 
-	function recursiveIndexate(object, count, tree) {
+	function recursiveIndexate(object: any, count?: number, tree?: Nullable<string>) {
 		if (count === undefined) {
 			count = 0;
 		}
@@ -143,10 +151,10 @@ const recursiveIndexateWithExport = function(path, what, timeout, cancelMessage,
 			}
 			if (object && typeof object == "object") {
 				for (let element in object) {
-					recursiveIndexate(object[item], count, tree ? tree + "." + element : element);
+					recursiveIndexate(object[element], count, tree ? tree + "." + element : element);
 				}
 			}
-			seek(translate("Indexating") + " (" + element + ")");
+			seek(translate("Indexating") + " (" + tree + ")");
 		} catch (e) {
 			Logger.Log("Modding Tools#recursiveIndexateWithExport: Illegal object " + tree + ", it may be unsaved", "WARNING");
 			try {
@@ -187,9 +195,9 @@ const recursiveIndexateWithExport = function(path, what, timeout, cancelMessage,
 		// setCompletionMessage(doneMessage);
 		showHint(doneMessage);
 	}
-};
+}
 
-const exportProject = function(object, isAutosave, path, action) {
+function exportProject(object: Scriptable, isAutosave: boolean, path: string | java.io.File, action?) {
 	// return AsyncSequence.access("internal.dns", [path, object, 30,
 	// 	isAutosave ? translate("Autosaving") : translate("Exporting"),
 	// 	isAutosave ? translate("Autosaved") : translate("Exported")], action, new SnackSequence());
@@ -200,15 +208,15 @@ const exportProject = function(object, isAutosave, path, action) {
 			isAutosave ? translate("Autosaved") : translate("Exported")
 		);
 	});
-};
+}
 
-const compileData = function(text, type, additional) {
+function compileData(text: string, type?: string, additional?: Scriptable): any {
 	if (type == "string") {
-		text = new java.lang.String(text);
-		text = text.replaceAll("\"", "\\\\\"");
-		text = text.replaceAll("\t", "\\\\t");
-		text = text.replaceAll("\n", "\\\\n");
-		text = "\"" + text + "\"";
+		let jtext = new java.lang.String(text);
+		jtext = jtext.replaceAll("\"", "\\\\\"") as unknown as java.lang.String;
+		jtext = jtext.replaceAll("\t", "\\\\t") as unknown as java.lang.String;
+		jtext = jtext.replaceAll("\n", "\\\\n") as unknown as java.lang.String;
+		text = "\"" + jtext + "\"";
 	}
 	let code = "(function() { return " + text + "; })();",
 		scope = runAtScope(code, additional, "compile.js");
@@ -218,22 +226,22 @@ const compileData = function(text, type, additional) {
 		type == "number" ? parseFloat(scope.result) :
 		type == "integer" ? parseInt(scope.result) :
 		type == "object" ? scope.result : null;
-};
+}
 
-const formatExceptionReport = function(error, upper) {
+function formatExceptionReport(error: Nullable<Scriptable>, upper?: boolean): string {
 	let report = localizeError(error),
 		point = report.charAt(report.length - 1);
 	if (!/\.|\!|\?/.test(point)) report += ".";
 	let char = report.charAt(0);
 	if (upper) char = char.toUpperCase();
-	else if (upper !== null) char = char.toLowerCase();
+	else if (upper !== undefined) char = char.toLowerCase();
 	if (error && typeof error == "object" && error.lineNumber !== undefined) {
 		return char + report.substring(1) + " (#" + error.lineNumber + ")";
 	}
 	return char + report.substring(1);
-};
+}
 
-const importProject = function(path, action) {
+function importProject(path: string | java.io.File, action?: Nullable<(data: object | object[]) => void>) {
 	readFile(path, true, function(bytes) {
 		let result = decompileFromProduce(bytes),
 			data = compileData(result, "object");
@@ -255,9 +263,9 @@ const importProject = function(path, action) {
 					});
 		}
 	});
-};
+}
 
-const findBuildConfigLocation = function(path) {
+function findBuildConfigLocation(path: string | java.io.File): Nullable<java.io.File> {
 	try {
 		let file = Files.of(path);
 		do {
@@ -269,9 +277,9 @@ const findBuildConfigLocation = function(path) {
 		Logger.Log("Modding Tools: findBuildConfigLocation: " + e, "WARNING");
 	}
 	return null;
-};
+}
 
-const findSourceInBuildConfigLocation = function(buildConfig, path) {
+function findSourceInBuildConfigLocation(buildConfig: any, path: string): Nullable<string> {
 	 let highestPath = null;
 	 let sourcePath = null;
 	 for (let i = 0; i < buildConfig.buildDirs.length; i++) {
@@ -288,9 +296,14 @@ const findSourceInBuildConfigLocation = function(buildConfig, path) {
 	 	}
 	 }
 	 return sourcePath;
-};
+}
 
-const getSourceInBuildConfigDescription = function(path) {
+interface SourceInBuildConfig {
+	api: string;
+	source?: string;
+}
+
+function getSourceInBuildConfigDescription(path: string | java.io.File): SourceInBuildConfig {
 	try {
 		let buildConfigFile = findBuildConfigLocation(path);
 		if (buildConfigFile == null) throw null;
@@ -319,4 +332,4 @@ const getSourceInBuildConfigDescription = function(path) {
 	return {
 		api: "CoreEngine"
 	};
-};
+}

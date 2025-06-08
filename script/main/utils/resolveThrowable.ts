@@ -1,9 +1,14 @@
+interface ThrowableResolver {
+	invoke(what: Function, raise: (th: java.lang.Throwable) => void): any;
+	invokeRuntime(what: Function, raise: (th: java.lang.Throwable) => void): any;
+	invokeRhino(what: Function, raise: (th: java.lang.Throwable) => void): any;
+}
+
 /**
  * Directly redirects native rhino JavaScript {@link Error} to
  * {@link java.lang.Throwable} instances.
- * @type {{ invoke(what: Function, raise: (th: java.lang.Throwable) => void): any, invokeRuntime(what: Function, raise: (th: java.lang.Throwable) => void): any, invokeRhino(what: Function, raise: (th: java.lang.Throwable) => void): any }}
  */
-const resolveThrowable = (function() {
+const resolveThrowable: ThrowableResolver = (() => {
 	if (isCLI()) {
 		return Packages.io.nernar.rhino.ThrowableResolver;
 	}
@@ -66,7 +71,7 @@ const resolveThrowable = (function() {
 		"EwAAAPgBAAAGAAAAAQAAAJACAAACIAAAKAAAALACAAABEAAABwAAACwGAAADEAAA" +
 		"AQAAAGwGAAADIAAACQAAAHAGAAABIAAACQAAAMwGAAAAIAAAAQAAANwJAAAAEAAA" +
 		"AQAAAAwKAAA=").getBytes());
-	return java.lang.Class.forName("io.nernar.rhino.ThrowableResolver", false, (function() {
+	return java.lang.Class.forName("io.nernar.rhino.ThrowableResolver", false, (() => {
 		if (android.os.Build.VERSION.SDK_INT >= 26) {
 			let buffer = java.nio.ByteBuffer.wrap(bytes);
 			return new Packages.dalvik.system.InMemoryDexClassLoader(buffer, getContext().getClassLoader());

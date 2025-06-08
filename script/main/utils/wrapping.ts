@@ -1,62 +1,70 @@
-const compileString = function(source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function compileString(source: string, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (isHorizon) {
 		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileString(CONTEXT, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
 	}
 	return CONTEXT.compileString(source, sourceName, lineno, securityDomain);
-};
+}
 
-const compileReader = function(reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function compileReader(reader: java.io.Reader, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (isHorizon) {
 		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileReader(CONTEXT, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
 	}
 	return CONTEXT.compileReader(reader, sourceName, lineno, securityDomain);
-};
+}
 
-const compileFunction = function(scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function compileFunction(scope: Scriptable, source: string, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (isHorizon) {
 		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.compileFunction(CONTEXT, scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
 	}
 	return CONTEXT.compileFunction(scope, source, sourceName, lineno, securityDomain);
-};
+}
 
-const compileUniversal = function(what, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function compileUniversal(what: string | java.io.Reader, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (what instanceof java.io.Reader) {
 		return compileReader.apply(this, arguments);
 	}
 	return compileString.apply(this, arguments);
-};
+}
 
-const evaluateString = function(scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function evaluateString(scope: Scriptable, source: string, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (isHorizon) {
 		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateString(CONTEXT, scope, source, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
 	}
 	return CONTEXT.evaluateString(scope, source, sourceName, lineno, securityDomain);
-};
+}
 
-const evaluateReader = function(scope, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function evaluateReader(scope: Scriptable, reader: java.io.Reader, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (isHorizon) {
 		return Packages.io.nernar.moddingtools.rhino.EvaluatorFactory.evaluateReader(CONTEXT, scope, reader, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv);
 	}
 	return CONTEXT.evaluateReader(scope, reader, sourceName, lineno, securityDomain);
-};
+}
 
-const evaluateUniversal = function(scope, what, sourceName, lineno, securityDomain, evaluator, reporter, compilerEnv) {
+function evaluateUniversal(scope: Scriptable, what: string | java.io.Reader, sourceName: string, lineno: number, securityDomain: any, evaluator: any, reporter: any, compilerEnv: any) {
 	if (what instanceof java.io.Reader) {
 		return evaluateReader.apply(this, arguments);
 	}
 	return evaluateString.apply(this, arguments);
-};
+}
+
+interface RunInScopeResult {
+	source: string;
+	compilationErrorReporter?: any;
+	compilerEnvirons?: any;
+	result?: any;
+	error?: Scriptable;
+}
 
 /**
  * Runs code/reader in a separate data stream.
- * @param {string|java.io.Reader} what something to evaluate
- * @param {object} [scope] to resolve global variables
- * @param {string} [name] of running script in debuggers
- * @param {object} [prototype] to resolve this variables
- * @param {boolean} [isFatal] syntax error will be fatal or not
+ * @param what something to evaluate
+ * @param scope to resolve global variables
+ * @param name of running script in debuggers
+ * @param prototype to resolve this variables
+ * @param isFatal syntax error will be fatal or not
  * @returns evaluate `result` or `error`
  */
-const runAtScope = function(what, scope, name, prototype, isFatal) {
+function runAtScope(what: string | java.io.Reader, scope?: Scriptable, name?: string, prototype?: Scriptable, isFatal?: boolean) {
 	name = name ? NAME + "$" + name : "<no name>";
 	if (scope == null || typeof scope != "object") {
 		let executable = __mod__.compiledModSources.get(0);
@@ -65,18 +73,19 @@ const runAtScope = function(what, scope, name, prototype, isFatal) {
 	if (prototype != null) {
 		scope = org.mozilla.javascript.ScriptRuntime.enterWith(prototype, CONTEXT, scope);
 	}
-	let result = {
+	let result: RunInScopeResult = {
 		source: name.replace(/[^\w\$\<\>\.\-\s]/gi, "$")
 	};
-	resolveThrowable.invoke(function() {
+	resolveThrowable.invoke(() => {
 		if (isHorizon) {
 			result.compilationErrorReporter = newLoggingErrorReporter(result.source, isFatal);
 			result.compilerEnvirons = newRuntimeCompilerEnvirons(result.compilationErrorReporter);
 		}
 		result.result = evaluateUniversal(scope, what, result.source, 0, null, null, result.compilationErrorReporter || null, result.compilerEnvirons || null);
-	}, function(th) {
+	}, (th) => {
 		Logger.Log(result.source + ": " + InnerCorePackages.api.log.ICLog.getStackTrace(th), isFatal ? "ERROR" : "WARNING");
 		if (th instanceof org.mozilla.javascript.JavaScriptException) {
+			/// @ts-ignore
 			result.error = th.getValue();
 			return;
 		}
@@ -87,11 +96,17 @@ const runAtScope = function(what, scope, name, prototype, isFatal) {
 		}
 	});
 	return result;
-};
+}
 
-const newLoggingErrorReporter = function(name, isFatal, collector) {
+interface LoggingErrorCollector {
+	error?(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number): boolean;
+	warning?(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number): boolean;
+	runtimeError?(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number): java.lang.Throwable;
+}
+
+function newLoggingErrorReporter(name: string, isFatal?: boolean, collector?: LoggingErrorCollector) {
 	return new org.mozilla.javascript.ErrorReporter({
-		error: function(message, sourceURI, line, lineText, lineOffset) {
+		error(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number) {
 			if (collector == null || (collector.error != null && collector.error.apply(this, arguments) !== false)) {
 				Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "ERROR" : "WARNING");
 				if (lineText != null && lineText.length > 0) {
@@ -100,7 +115,7 @@ const newLoggingErrorReporter = function(name, isFatal, collector) {
 				}
 			}
 		},
-		warning: function(message, sourceURI, line, lineText, lineOffset) {
+		warning(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number) {
 			if (collector == null || (collector.warning != null && collector.warning.apply(this, arguments) !== false)) {
 				Logger.Log(name + ": " + message + " (at " + sourceURI + "#" + line + ")", isFatal ? "WARNING" : "INFO");
 				if (lineText != null && lineText.length > 0) {
@@ -109,13 +124,13 @@ const newLoggingErrorReporter = function(name, isFatal, collector) {
 				}
 			}
 		},
-		runtimeError: function(message, sourceURI, line, lineText, lineOffset) {
+		runtimeError(message: string, sourceURI: string, line: number, lineText: string, lineOffset: number) {
 			return new org.mozilla.javascript.EvaluatorException(message, sourceURI, line, lineText, lineOffset);
 		}
 	});
-};
+}
 
-const newRuntimeCompilerEnvirons = function(reporter) {
+function newRuntimeCompilerEnvirons(reporter?: any) {
 	let compilerEnv = new org.mozilla.javascript.CompilerEnvirons();
 	compilerEnv.initFromContext(CONTEXT);
 	if (reporter != null) {
@@ -126,7 +141,7 @@ const newRuntimeCompilerEnvirons = function(reporter) {
 	compilerEnv.setRecoverFromErrors(true);
 	compilerEnv.setIdeMode(true);
 	return compilerEnv;
-};
+}
 
 const Wrappables = [
 	Dirs.SCRIPT_REVISION,
@@ -134,7 +149,7 @@ const Wrappables = [
 	Dirs.EVALUATE
 ];
 
-const findWrappedScript = function(path) {
+function findWrappedScript(path: string): Nullable<string> {
 	let offset = 0;
 	let filename = path;
 	do {
@@ -144,9 +159,9 @@ const findWrappedScript = function(path) {
 		filename = Files.join(Wrappables[offset++], path);
 	} while (offset <= Wrappables.length);
 	return null;
-};
+}
 
-const UNWRAP = function(path, prototype, scope, mergeScriptables) {
+function UNWRAP(path: string, prototype?: Scriptable, scope?: Scriptable, mergeScriptables?: boolean): RunInScopeResult {
 	let file = findWrappedScript(path);
 	if (file == null) {
 		MCSystem.throwException("Modding Tools: Not found '" + path + "' " + (path.endsWith(".dns") ? "executable" : "script") + ", maybe you should try register it via modifying Wrappables?");
@@ -168,32 +183,34 @@ const UNWRAP = function(path, prototype, scope, mergeScriptables) {
 		}
 	}
 	return null;
-};
+}
 
-UNWRAP.initScriptable = function(path, name) {
-	let scope = __mod__.compiledModSources.get(0).getScope();
-	return {
-		__path__: path,
-		__name__: name,
-		log: function(message, prefix) {
-			Logger.Log(name + ": " + message, prefix || "SCRIPT");
-		},
-		raise: function(message) {
-			MCSystem.throwException(name + ": " + message);
-		},
-		SHARE: function(name, obj) {
-			if (REVISION.startsWith("develop")) {
-				if (typeof name == "object") {
-					Object.defineProperties(scope, name);
-				} else {
-					scope[name] = obj;
+namespace UNWRAP {
+	export function initScriptable(path, name) {
+		let scope = __mod__.compiledModSources.get(0).getScope();
+		return {
+			__path__: path,
+			__name__: name,
+			log: function(message, prefix) {
+				Logger.Log(name + ": " + message, prefix || "SCRIPT");
+			},
+			raise: function(message) {
+				MCSystem.throwException(name + ": " + message);
+			},
+			SHARE: function(name, obj) {
+				if (REVISION.startsWith("develop")) {
+					if (typeof name == "object") {
+						Object.defineProperties(scope, name);
+					} else {
+						scope[name] = obj;
+					}
 				}
 			}
-		}
-	};
-};
+		};
+	}
+}
 
-const REQUIRE = function(path, prototype, scope) {
+function REQUIRE(path: string, prototype?: Scriptable, scope?: Scriptable): RunInScopeResult {
 	if (REQUIRE.loaded.indexOf(path) == -1) {
 		MCSystem.setLoadingTip(NAME + ": Requiring " + path);
 		REQUIRE.results[path] = UNWRAP(path, prototype, scope);
@@ -201,12 +218,14 @@ const REQUIRE = function(path, prototype, scope) {
 		MCSystem.setLoadingTip(NAME);
 	}
 	return REQUIRE.results[path];
-};
+}
 
-REQUIRE.loaded = [];
-REQUIRE.results = {};
+namespace REQUIRE {
+	export const loaded: string[] = [];
+	export const results: { [path: string]: RunInScopeResult } = {};
+}
 
-const CHECKOUT = function(path, then, prototype, scope) {
+function CHECKOUT(path: string, then?: (result: RunInScopeResult) => void, prototype?: Scriptable, scope?: Scriptable): RunInScopeResult {
 	try {
 		let result = REQUIRE(path, prototype, scope);
 		then && then(result);
@@ -215,21 +234,21 @@ const CHECKOUT = function(path, then, prototype, scope) {
 		Logger.Log("Modding Tools: CHECKOUT: " + e, "WARNING");
 	}
 	return null;
-};
+}
 
 let currentLanguageTranslations;
 let defaultLanguageTranslations;
 
-const findTranslationByHash = function(hash, fallback) {
-	hash = java.lang.Integer.valueOf(hash);
+function findTranslationByHash(hash: number & string, fallback?: string): string {
+	let jhash = java.lang.Integer.valueOf(hash);
 	if (currentLanguageTranslations) {
-		let translation = currentLanguageTranslations.get(null).get(hash);
+		let translation = currentLanguageTranslations.get(null).get(jhash);
 		if (translation) {
 			return translation;
 		}
 	}
 	if (defaultLanguageTranslations) {
-		let translation = defaultLanguageTranslations.get(null).get(hash);
+		let translation = defaultLanguageTranslations.get(null).get(jhash);
 		if (translation) {
 			return translation;
 		}
@@ -238,9 +257,9 @@ const findTranslationByHash = function(hash, fallback) {
 		return fallback;
 	}
 	return translate("Deprecated translation");
-};
+}
 
-const translateCode = function(hash, args, fallback) {
+function translateCode(hash: number & string, args?: any[], fallback?: string): string {
 	try {
 		let text = findTranslationByHash(hash, fallback);
 		if (args !== undefined) {
@@ -257,7 +276,7 @@ const translateCode = function(hash, args, fallback) {
 		log("Modding Tools: translateCode: " + e);
 	}
 	return "...";
-};
+}
 
 try {
 	let $ = new JavaImporter(InnerCorePackages.api.runtime.other),

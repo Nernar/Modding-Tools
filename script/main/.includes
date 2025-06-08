@@ -8,10 +8,10 @@ polyfill/Drawable.js
 
 utils/object.ts
 utils/math.ts
-utils/wrapping.js
-utils/storage.js
-utils/stringifyJson.js
-utils/resolveThrowable.js
+utils/wrapping.ts
+utils/storage.ts
+utils/stringifyJson.ts
+utils/resolveThrowable.ts
 
 content/Fragment.ts
 content/fragment/BaseFragment.ts

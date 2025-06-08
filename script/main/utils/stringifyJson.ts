@@ -1,4 +1,11 @@
-const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, key) {
+function stringifyJson(
+	what: any,
+	keyReplacer?: (to: string, key: number | string, value: any) => string,
+	valueReplacer?: (key: number | string, value: any) => any,
+	tab?: string,
+	shifted?: number,
+	key?: number | string
+): string {
 	tab = tab ? "" + tab : "\t";
 	shifted = shifted || 0;
 	key = key || null;
@@ -18,7 +25,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 		return "null";
 	}
 	if (Array.isArray(what)) {
-		let buffer = [];
+		let buffer: string[] = [];
 		if (isLightweightArray(what)) {
 			for (let i = 0; i < what.length; i++) {
 				let next = stringifyJson(what[i], null, valueReplacer, null, 0, i);
@@ -39,7 +46,7 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 		return buffer.length > 0 ? "[\n" + tab.repeat(shifted + 1) + buffer.join(",\n" + tab.repeat(shifted + 1)) + "\n" + tab.repeat(shifted) + "]" : "[]";
 	}
 	if (typeof what == "object") {
-		let buffer = [];
+		let buffer: string[] = [];
 		for (let element in what) {
 			let to = element;
 			if (typeof keyReplacer == "function") {
@@ -68,9 +75,9 @@ const stringifyJson = function(what, keyReplacer, valueReplacer, tab, shifted, k
 	}
 	log("Modding Tools: Unresolved property " + what + " with type " + typeof what);
 	return null;
-};
+}
 
-const isLightweightArray = function(what) {
+function isLightweightArray(what: any[]) {
 	if (what.length > 8) {
 		return false;
 	}
@@ -96,10 +103,17 @@ const isLightweightArray = function(what) {
 		return false;
 	}
 	return true;
-};
+}
 
-const stringifyJsonIndented = function(what, keyReplacer, valueReplacer, tab, shifted, key) {
+function stringifyJsonIndented(
+	what: any,
+	keyReplacer?: (to: string, key: number | string, value: any) => string,
+	valueReplacer?: (key: number | string, value: any) => any,
+	tab?: string,
+	shifted?: number,
+	key?: number | string
+): string {
 	tab = tab ? "" + tab : "\t";
 	shifted = shifted || 0;
 	return tab.repeat(shifted) + stringifyJson(what, keyReplacer, valueReplacer, tab, shifted, key);
-};
+}
