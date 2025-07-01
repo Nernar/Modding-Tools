@@ -107,7 +107,7 @@ declare const isNumeralMany: (count: number) => boolean;
  * @param str stroke to translate
  * @param args to replace with `format`
  */
-declare const translate: (str: string, args?: any | any[]) => string;
+declare const translate: (str: string, args?: any[]) => string;
 /**
  * Translates existing strokes by numeral, added via
  * {@link Translation.addTranslation}, replaces
